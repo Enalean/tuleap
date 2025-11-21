@@ -37,6 +37,9 @@ msgstr "*lorem => finissant par \"lorem\""
 msgid "*lorem* => contains \"lorem\""
 msgstr "*lorem* => contenant \"lorem\""
 
+msgid "...and for the whole sub-hierarchy."
+msgstr "...ainsi que pour toute la sous-hiérarchie."
+
 msgid "1 warning"
 msgid_plural "%{ nb_warnings } warnings"
 msgstr[0] "1 avertissement"
@@ -67,6 +70,9 @@ msgstr "Un dossier existe déjà avec le même titre."
 
 msgid "Actions in Documents service"
 msgstr "Actions dans le service Documents"
+
+msgid "Add notification"
+msgstr "Ajouter une notification"
 
 msgid "Administration"
 msgstr "Administration"
@@ -159,6 +165,9 @@ msgstr "Description des changements"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Confirm deletion"
+msgstr "Confirmer la suppression"
 
 msgid ""
 "Contact your administrator or try to reorganize this folder, then try again."
@@ -293,6 +302,9 @@ msgstr "Embarqué"
 msgid "Empty"
 msgstr "Vide"
 
+msgid "Enable monitoring for the whole sub-hierarchy"
+msgstr "Monitoring activé pour toute la sous-hiérarchie"
+
 msgid "End"
 msgstr "Fin"
 
@@ -417,6 +429,9 @@ msgstr "Taille maximum de l'archive autorisée : %{ max_archive_size } Mo"
 msgid "Maximum archive size threshold exceeded"
 msgstr "Seuil de taille maximum de l'archive dépassé"
 
+msgid "Monitored document"
+msgstr "Document monitoré"
+
 msgid "My content..."
 msgstr "Mon contenu..."
 
@@ -465,6 +480,9 @@ msgstr "Suivant"
 msgid "No matching results"
 msgstr "Il n'y a aucun résultat"
 
+msgid "No notifications set"
+msgstr "Aucune notification définie"
+
 msgid "No version history"
 msgstr "Pas d'historique de version"
 
@@ -474,8 +492,14 @@ msgstr "Aucun"
 msgid "Not yet"
 msgstr "Pas encore"
 
+msgid "Notification deletion"
+msgstr "Suppression de notification"
+
 msgid "Notifications"
 msgstr "Notifications"
+
+msgid "Notified people or groups"
+msgstr "Personnes ou groupes notifiés"
 
 msgid "Obsolescence date"
 msgstr "Date d'obsolescence"
@@ -552,6 +576,9 @@ msgstr "Permanent"
 
 msgid "Permissions"
 msgstr "Permissions"
+
+msgid "Please confirm your action."
+msgstr "Merci de confirmer votre action."
 
 msgid "Please describe the changes of the new version here"
 msgstr "Merci de décrire ici le changement de version"
@@ -659,6 +686,9 @@ msgstr "Sélectionner le premier élément"
 msgid "Send mail"
 msgstr "Envoyer un Email"
 
+msgid "Send me an email whenever this item is updated."
+msgstr "Envoyez-moi un email dès que cet élément est modifié."
+
 msgid ""
 "Shortcuts will apply to the selected document or folder. If there is no "
 "selected item they will apply to the current folder."
@@ -688,6 +718,12 @@ msgstr "Commencer avec une nouvelle table d'approbation."
 
 msgid "Status"
 msgstr "Statut"
+
+msgid "Submit"
+msgstr "Valider"
+
+msgid "Subscribers"
+msgstr "Abonnés"
 
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
@@ -817,6 +853,15 @@ msgstr "Documents en cours de téléversement"
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
 
+msgid "User groups that will receive the notification"
+msgstr "Groupes d'utilisateurs qui recevront la notification"
+
+msgid "Users who will receive the notification"
+msgstr "Utilisateurs qui recevront la notification"
+
+msgid "Validate"
+msgstr "Valider"
+
 msgid "Validity"
 msgstr "Validité"
 
@@ -936,6 +981,14 @@ msgstr "Vous n'êtes pas autorisé à écrire dans ce dossier"
 msgid "You are viewing an old version (%{ version_number }) of this document."
 msgstr ""
 "Vous visualisez une ancienne version (%{ version_number }) de ce document."
+
+msgid ""
+"You cannot delete because a parent folder is monitored with its sub-"
+"hierarchy. You can delete that monitoring only from the parent itself."
+msgstr ""
+"Impossible de supprimer car un dossier parent est monitoré avec sa sous-"
+"hiérarchie. Vous pouvez supprimer ce monitoring uniquement depuis le parent "
+"en question."
 
 msgid "You don't have read permission for this item"
 msgstr "Vous n'avez pas le droit de lecture sur cet élément"

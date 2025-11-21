@@ -42,6 +42,7 @@ import {
 import type { SearchCriterion, SearchListOption } from "./type";
 import {
     CAN_USER_SWITCH_TO_OLD_UI,
+    CSRF_TOKEN,
     DATE_TIME_FORMAT,
     EMBEDDED_ARE_ALLOWED,
     FILENAME_PATTERN,
@@ -230,7 +231,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(IS_FILENAME_PATTERN_ENFORCED, is_filename_pattern_enforced)
         .provide(CAN_USER_SWITCH_TO_OLD_UI, can_user_switch_to_old_ui)
         .provide(PROJECT_PROPERTIES, ref(null))
-        .provide(PROJECT_USER_GROUPS, ref(null));
+        .provide(PROJECT_USER_GROUPS, ref(null))
+        .provide(CSRF_TOKEN, { name: csrf_token_name, value: csrf_token });
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

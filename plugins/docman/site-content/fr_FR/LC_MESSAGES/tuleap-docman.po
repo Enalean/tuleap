@@ -111,9 +111,6 @@ msgstr "-- Rapports projet:"
 msgid "-- Project saved search:"
 msgstr "-- Recherche projet sauvegardée :"
 
-msgid "...and for the whole sub-hierarchy."
-msgstr "...ainsi que pour toute la sous-hiérarchie."
-
 msgid "12 Months from today"
 msgstr "12 Mois"
 
@@ -1002,9 +999,6 @@ msgstr "Document vide"
 msgid "Empty documents:"
 msgstr "Documents vides :"
 
-msgid "Enable monitoring for the whole sub-hierarchy"
-msgstr "Monitoring activé pour toute la sous-hiérarchie"
-
 msgid "Enabled"
 msgstr "Activé"
 
@@ -1366,9 +1360,6 @@ msgstr "La metadonnée n'a pas été mise à jour."
 msgid "Metadata successfully updated."
 msgstr "La metadonnée a été mise à jour."
 
-msgid "Monitored document"
-msgstr "Document monitoré"
-
 #, php-format
 msgid "Monitoring for group(s) '%1$s' already exists"
 msgstr "Le monitoring pour le(s) groupe(s) '%1$s' existe déjà"
@@ -1485,9 +1476,6 @@ msgstr "Aucun élément séléctionné"
 msgid "No email sent to reviewers."
 msgstr "Pas d'email envoyé aux approbateurs."
 
-msgid "No notifications set"
-msgstr "Aucune notification définie"
-
 msgid "No review requested."
 msgstr "Pas d'approbation demandée."
 
@@ -1528,9 +1516,6 @@ msgstr "Notification :"
 
 msgid "Notifications"
 msgstr "Notifications"
-
-msgid "Notified people"
-msgstr "Personnes notifiées"
 
 msgid "Number of items in this folder:"
 msgstr "Nombre d'éléments dans ce dossier :"
@@ -1936,9 +1921,6 @@ msgstr "Sujet :"
 msgid "Submit permissions"
 msgstr "Valider les permissions"
 
-msgid "Subscribers"
-msgstr "Abonnés"
-
 msgid "Summary"
 msgstr "Résumé"
 
@@ -2307,12 +2289,6 @@ msgstr ""
 msgid "User successfully added to the approval table."
 msgstr "L'utilisateur a été ajouté à la table."
 
-msgid "User, group"
-msgstr "Utilisateur, groupe"
-
-msgid "Validate"
-msgstr "Valider"
-
 msgid "Validity:"
 msgstr "Validité :"
 
@@ -2661,9 +2637,6 @@ msgstr "Vous ne pouvez pas coller l'élément en lui même."
 msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
 msgstr "Vous ne pouvez cloner que les rapports 'projet' ou personnels."
 
-msgid "You cannot add emails"
-msgstr "Vous ne pouvez pas ajouter de mails"
-
 msgid "You cannot add people to an old approval table."
 msgstr ""
 "Il est impossible d'ajouter des approbateur à une ancienne table "
@@ -2679,14 +2652,6 @@ msgstr ""
 
 msgid "You cannot cut this folder."
 msgstr "Vous ne pouvez pas couper ce document."
-
-msgid ""
-"You cannot delete because a parent folder is monitored with its sub-"
-"hierarchy. You can delete that monitoring only from the parent itself."
-msgstr ""
-"Impossible de supprimer car un dossier parent est monitoré avec sa sous-"
-"hiérarchie. Vous pouvez supprimer ce monitoring uniquement depuis le parent "
-"en question."
 
 msgid "You cannot delete the root folder."
 msgstr "Vous ne pouvez pas supprimer le dossier racine."

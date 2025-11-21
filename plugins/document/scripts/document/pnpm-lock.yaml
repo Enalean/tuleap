@@ -14,6 +14,9 @@ dependencies:
   '@tuleap/core-constants':
     specifier: workspace:*
     version: link:../../../../lib/frontend/constants
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/rest-api-types
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../../lib/frontend/date-helper
@@ -29,6 +32,12 @@ dependencies:
   '@tuleap/keyboard-shortcuts':
     specifier: workspace:*
     version: link:../../../../lib/frontend/keyboard-shortcuts
+  '@tuleap/lazybox':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/lazybox
+  '@tuleap/lazybox-users-autocomplete':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/lazybox-users-autocomplete
   '@tuleap/locale':
     specifier: workspace:^
     version: link:../../../../lib/frontend/locale

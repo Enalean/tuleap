@@ -26,6 +26,7 @@ import DisplayHistory from "../components/History/DisplayHistory.vue";
 import DisplayVersions from "../components/Versions/DisplayVersions.vue";
 import DisplayReferences from "../components/References/DisplayReferences.vue";
 import SearchContainer from "../components/AdvancedSearch/SearchContainer.vue";
+import DisplayNotifications from "../components/Notifications/DisplayNotifications.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads";
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
 import type { Store } from "vuex";
@@ -90,6 +91,14 @@ export const routes: RouteRecordRaw[] = [
         path: "/references/:item_id",
         name: "references",
         component: DisplayReferences,
+        props: (route) => ({
+            item_id: Number(route.params.item_id),
+        }),
+    },
+    {
+        path: "/notifications/:item_id",
+        name: "notifications",
+        component: DisplayNotifications,
         props: (route) => ({
             item_id: Number(route.params.item_id),
         }),

@@ -48,6 +48,13 @@
         >
             {{ $gettext("References") }}
         </router-link>
+        <router-link
+            class="tlp-tab"
+            v-bind:class="{ 'tlp-tab-active': active_tab === NotificationsTab }"
+            v-bind:to="{ name: 'notifications', params: { item_id: item.id } }"
+        >
+            {{ $gettext("Notifications") }}
+        </router-link>
     </nav>
 </template>
 <script setup lang="ts">
@@ -56,7 +63,7 @@ import type { Item } from "../../type";
 import { computed } from "vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
 import type { DetailsTabs } from "../../helpers/details-tabs";
-import { LogsTab, ReferencesTab, VersionsTab } from "../../helpers/details-tabs";
+import { NotificationsTab, LogsTab, ReferencesTab, VersionsTab } from "../../helpers/details-tabs";
 
 const props = defineProps<{
     item: Item;

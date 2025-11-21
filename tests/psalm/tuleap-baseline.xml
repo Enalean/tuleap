@@ -6430,7 +6430,6 @@
       <code><![CDATA[$key]]></code>
       <code><![CDATA[$label]]></code>
       <code><![CDATA[$label]]></code>
-      <code><![CDATA[$listeners_to_add]]></code>
       <code><![CDATA[$love]]></code>
       <code><![CDATA[$loveId]]></code>
       <code><![CDATA[$md]]></code>
@@ -6539,7 +6538,6 @@
     </TooManyArguments>
     <UndefinedMethod>
       <code><![CDATA[_includeView]]></code>
-      <code><![CDATA[_setView]]></code>
       <code><![CDATA[_setView]]></code>
       <code><![CDATA[_setView]]></code>
       <code><![CDATA[_setView]]></code>
@@ -10275,15 +10273,6 @@
       <code><![CDATA[null|array{array{user_id: string,user_name: string, realname: string, has_custom_avatar: bool}}]]></code>
     </MoreSpecificReturnType>
   </file>
-  <file src="plugins/docman/include/Notifications/CollectionOfUgroupMonitoredItemsBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$monitored_items]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getCollectionOfUgroupMonitoredItems]]></code>
-      <code><![CDATA[sortUgroupAlphabetically]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/Notifications/NotificationBuilders.php">
     <MissingReturnType>
       <code><![CDATA[buildNotificationManager]]></code>
@@ -10308,32 +10297,6 @@
       <code><![CDATA[addNotificationManagement]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Notifications/NotificationListPresenter.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getAvatarUrl]]></code>
-    </DeprecatedMethod>
-    <MissingPropertyType>
-      <code><![CDATA[$cannot_delete_title]]></code>
-      <code><![CDATA[$empty_state]]></code>
-      <code><![CDATA[$enable_sub_hierarchy]]></code>
-      <code><![CDATA[$has_listeners]]></code>
-      <code><![CDATA[$monitored_doc]]></code>
-      <code><![CDATA[$notifications]]></code>
-      <code><![CDATA[$notified_people]]></code>
-      <code><![CDATA[$placeholder]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$ugroups_to_be_notified]]></code>
-      <code><![CDATA[$users_to_be_notified]]></code>
-      <code><![CDATA[$validate_button]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[buildNotificationsFromUGroups]]></code>
-      <code><![CDATA[buildNotificationsFromUsers]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[getId]]></code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/docman/include/Notifications/NotificationsForProjectMemberCleaner.php">
     <DeprecatedMethod>
       <code><![CDATA[$dar]]></code>
@@ -10346,6 +10309,20 @@
     <MissingReturnType>
       <code><![CDATA[cleanNotificationsAfterUserRemoval]]></code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Notifications/NotificationsSubscribersController.php">
+    <DeprecatedMethod>
+      <code><![CDATA[$users_iterator]]></code>
+      <code><![CDATA[$users_iterator]]></code>
+      <code><![CDATA[$users_iterator]]></code>
+      <code><![CDATA[$users_iterator]]></code>
+      <code><![CDATA[$users_iterator]]></code>
+      <code><![CDATA[$users_iterator]]></code>
+      <code><![CDATA[$users_iterator]]></code>
+      <code><![CDATA[$users_iterator]]></code>
+      <code><![CDATA[$users_iterator]]></code>
+      <code><![CDATA[$users_iterator]]></code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/docman/include/Notifications/NotifiedPeopleRetriever.php">
     <MissingParamType>
@@ -11854,21 +11831,6 @@
     <MissingReturnType>
       <code><![CDATA[_getApprovalTable]]></code>
       <code><![CDATA[_getReleaseLock]]></code>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionNotifications.php">
-    <MissingParamType>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$notificationsManager]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$token]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$token]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
       <code><![CDATA[getContent]]></code>
     </MissingReturnType>
   </file>
@@ -13492,16 +13454,6 @@
       <code><![CDATA[$reviewers]]></code>
       <code><![CDATA[$reviewers]]></code>
     </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/docman/tests/unit/ApprovalTable/ApprovalTableRetrieverTest.php">
-    <MissingReturnType>
-      <code><![CDATA[testItReturnsApprovalTable]]></code>
-      <code><![CDATA[testItReturnsNullWhenFactoryDoesNotExistForItem]]></code>
-      <code><![CDATA[testItReturnsNullWhenItemApprovalTableIsDisabled]]></code>
-      <code><![CDATA[testItReturnsNullWhenItemDoesNotHaveAnApprovalTable]]></code>
-      <code><![CDATA[testItReturnsNullWhenTableIsVersionedAndWhenNoVersionOfTableExists]]></code>
-      <code><![CDATA[testItReturnsTheLastTableWhenTableIsVersioned]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/docman/tests/unit/ApprovalTable/ApprovalTableTest.php">
     <PossiblyUndefinedVariable>
@@ -15439,7 +15391,6 @@
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$repoAccess]]></code>
-      <code><![CDATA[$toProject]]></code>
     </PossiblyUndefinedVariable>
     <TooManyArguments>
       <code><![CDATA[new Valid_GroupId('group_id')]]></code>
@@ -18555,53 +18506,6 @@
       <code><![CDATA[type]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/git/include/GitForkPermissionsManager.php">
-    <MissingParamType>
-      <code><![CDATA[$is_fork]]></code>
-      <code><![CDATA[$permission]]></code>
-      <code><![CDATA[$permission]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[areRegexpActivatedAtSiteLevel]]></code>
-      <code><![CDATA[displayAccessControl]]></code>
-      <code><![CDATA[displayAccessControlWhileForkingASingleRepository]]></code>
-      <code><![CDATA[displayDefaultAccessControlWhileForkingMultipleRepositories]]></code>
-      <code><![CDATA[getAllOptions]]></code>
-      <code><![CDATA[getDefaultOptions]]></code>
-      <code><![CDATA[getOptions]]></code>
-      <code><![CDATA[getWarningContentForRegexpDisableModal]]></code>
-      <code><![CDATA[isRWPlusBlocked]]></code>
-      <code><![CDATA[isRegexpActivatedForProject]]></code>
-      <code><![CDATA[isRegexpActivatedForRepository]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getID()]]></code>
-    </PossiblyInvalidOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[getFullName]]></code>
-    </PossiblyNullReference>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$warning]]></code>
-      <code><![CDATA[$warning]]></code>
-    </PossiblyUndefinedVariable>
-    <RedundantCast>
-      <code><![CDATA[(bool) ($this->git_permission_manager->userIsGitAdmin($user, $project) ||
-            $is_fork ||
-            $this->repository->belongsTo($user))]]></code>
-    </RedundantCast>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $groupId]]></code>
-    </RedundantCastGivenDocblockType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$project_id]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="plugins/git/include/GitLegacyURLRedirectController.php">
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['QUERY_STRING']]]></code>
@@ -19579,39 +19483,6 @@
       <code><![CDATA[$panes]]></code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/git/include/GitPresenters/AdminGerritTemplatesPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$has_gerrit_servers_set_up]]></code>
-      <code><![CDATA[$parent_templates_list]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$repository_list]]></code>
-      <code><![CDATA[$templates_list]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[cancel]]></code>
-      <code><![CDATA[config_option]]></code>
-      <code><![CDATA[configurations_text]]></code>
-      <code><![CDATA[create_new_template_text]]></code>
-      <code><![CDATA[delete_label]]></code>
-      <code><![CDATA[edit]]></code>
-      <code><![CDATA[edit_text]]></code>
-      <code><![CDATA[file_name_text]]></code>
-      <code><![CDATA[no_gerrit_servers]]></code>
-      <code><![CDATA[parent_templates_option]]></code>
-      <code><![CDATA[please_choose]]></code>
-      <code><![CDATA[save_text]]></code>
-      <code><![CDATA[template_action_text]]></code>
-      <code><![CDATA[template_from_gerrit_text]]></code>
-      <code><![CDATA[template_from_scratch_text]]></code>
-      <code><![CDATA[template_from_template_text]]></code>
-      <code><![CDATA[template_name_text]]></code>
-      <code><![CDATA[template_section_description]]></code>
-      <code><![CDATA[template_section_title]]></code>
-      <code><![CDATA[templates_option]]></code>
-      <code><![CDATA[templates_text]]></code>
-      <code><![CDATA[view]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/GitPresenters/AdminGitAdminsPresenter.php">
     <MissingParamType>
       <code><![CDATA[$project_id]]></code>
@@ -19644,7 +19515,6 @@
       <code><![CDATA[git_admin]]></code>
       <code><![CDATA[tab_gerrit_templates]]></code>
       <code><![CDATA[tab_git_admins]]></code>
-      <code><![CDATA[tab_mass_update]]></code>
       <code><![CDATA[tab_template_settings]]></code>
     </MissingReturnType>
   </file>
@@ -19946,13 +19816,9 @@
       <code><![CDATA[$currentProjectId]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[adminGerritTemplatesView]]></code>
       <code><![CDATA[adminGitAdminsView]]></code>
       <code><![CDATA[confirmPrivate]]></code>
-      <code><![CDATA[footer]]></code>
       <code><![CDATA[generateMassUpdateCSRF]]></code>
-      <code><![CDATA[getAccessRightsPresenterOptionsBuilder]]></code>
-      <code><![CDATA[getGitRepositoryFactory]]></code>
       <code><![CDATA[getUserProjectsAsOptions]]></code>
       <code><![CDATA[header]]></code>
       <code><![CDATA[index]]></code>
@@ -19963,17 +19829,10 @@
       <code><![CDATA[_tree]]></code>
     </UndefinedMethod>
     <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->groupId]]></code>
       <code><![CDATA[$this->projectName]]></code>
       <code><![CDATA[$this->userName]]></code>
     </UndefinedThisPropertyAssignment>
     <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->user]]></code>
       <code><![CDATA[$this->user]]></code>
       <code><![CDATA[$this->user]]></code>
       <code><![CDATA[$this->user]]></code>
@@ -20017,11 +19876,7 @@
     <InvalidOperand>
       <code><![CDATA[$are_regexp_conflicting]]></code>
       <code><![CDATA[$are_regexp_enabled]]></code>
-      <code><![CDATA[$this->accessControlGitolite()]]></code>
     </InvalidOperand>
-    <InvalidReturnStatement>
-      <code><![CDATA[$forkPermissionsManager->displayAccessControl()]]></code>
-    </InvalidReturnStatement>
     <MissingReturnType>
       <code><![CDATA[getAccessRightsPresenterOptionsBuilder]]></code>
     </MissingReturnType>
@@ -21072,7 +20927,6 @@
       <code><![CDATA[getBackendGitolite]]></code>
       <code><![CDATA[getBigObjectAuthorizationManager]]></code>
       <code><![CDATA[getCITokenRouter]]></code>
-      <code><![CDATA[getChainOfRouters]]></code>
       <code><![CDATA[getCreateRepositoryController]]></code>
       <code><![CDATA[getDefaultFineGrainedPermissionFactory]]></code>
       <code><![CDATA[getDefaultFineGrainedPermissionReplicator]]></code>
@@ -21124,7 +20978,6 @@
       <code><![CDATA[getUGroupManager]]></code>
       <code><![CDATA[getUserFromParams]]></code>
       <code><![CDATA[getUserWidgetList]]></code>
-      <code><![CDATA[getWebhookRouter]]></code>
       <code><![CDATA[importXmlProject]]></code>
       <code><![CDATA[isNameAvailable]]></code>
       <code><![CDATA[javascript]]></code>
@@ -21156,7 +21009,6 @@
       <code><![CDATA[restrictedUsersAreHandledByPluginEvent]]></code>
       <code><![CDATA[routeGetGit]]></code>
       <code><![CDATA[routeGetLegacyURLForRepository]]></code>
-      <code><![CDATA[routeGetPostLegacyController]]></code>
       <code><![CDATA[routeGetPostRepositoryView]]></code>
       <code><![CDATA[routeGetPostSmartHTTP]]></code>
       <code><![CDATA[services_truncated_emails]]></code>
@@ -32202,9 +32054,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
     </DeprecatedMethod>
     <MissingPropertyType>
       <code><![CDATA[$end_date]]></code>
@@ -32227,18 +32076,15 @@
       <code><![CDATA[getInfosFromTroveGroupLink]]></code>
       <code><![CDATA[getNameOfActiveProjectsBeforeEndDate]]></code>
       <code><![CDATA[getNumberOfCIJobs]]></code>
-      <code><![CDATA[getNumberOfClosedArtifactsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfDistinctWikiPages]]></code>
       <code><![CDATA[getNumberOfDownloadedFilesBeforeEndDate]]></code>
       <code><![CDATA[getNumberOfDownloadedFilesBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate]]></code>
-      <code><![CDATA[getNumberOfOpenArtifactsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfUserAddedBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfWikiDocuments]]></code>
       <code><![CDATA[getPrivacyOfActiveProjectsBeforeEndDate]]></code>
       <code><![CDATA[getProjectWithCIActivated]]></code>
       <code><![CDATA[getRegisterTimeOfActiveProjectsBeforeEndDate]]></code>
-      <code><![CDATA[getSVNActivities]]></code>
       <code><![CDATA[getShortNameOfActiveProjectsBeforeEndDate]]></code>
     </MissingReturnType>
   </file>
@@ -32656,7 +32502,6 @@
   </file>
   <file src="plugins/svn/include/SVN/Admin/AdminController.php">
     <MissingParamType>
-      <code><![CDATA[$emails]]></code>
       <code><![CDATA[$notification_to_add]]></code>
       <code><![CDATA[$notification_to_update]]></code>
       <code><![CDATA[$project_id]]></code>
@@ -32965,30 +32810,18 @@
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$cancel]]></code>
-      <code><![CDATA[$cannot_save_desc]]></code>
-      <code><![CDATA[$cannot_save_title]]></code>
       <code><![CDATA[$comment]]></code>
-      <code><![CDATA[$csrf_input]]></code>
-      <code><![CDATA[$csrf_input_delete]]></code>
-      <code><![CDATA[$csrf_mailing_list]]></code>
       <code><![CDATA[$delete]]></code>
       <code><![CDATA[$disabled]]></code>
       <code><![CDATA[$edit]]></code>
       <code><![CDATA[$has_notifications]]></code>
-      <code><![CDATA[$label_mail_to]]></code>
-      <code><![CDATA[$label_path]]></code>
       <code><![CDATA[$label_subject_header]]></code>
-      <code><![CDATA[$list_mails]]></code>
-      <code><![CDATA[$mail_to]]></code>
-      <code><![CDATA[$new_notification_placeholder]]></code>
       <code><![CDATA[$no_notifications_message]]></code>
       <code><![CDATA[$notification_subtitle]]></code>
       <code><![CDATA[$notifications]]></code>
       <code><![CDATA[$path]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$remove_notification_confirm]]></code>
-      <code><![CDATA[$remove_notification_desc]]></code>
-      <code><![CDATA[$remove_notification_title]]></code>
       <code><![CDATA[$repo_id]]></code>
       <code><![CDATA[$repository_full_name]]></code>
       <code><![CDATA[$repository_name]]></code>
@@ -32997,14 +32830,6 @@
       <code><![CDATA[$subject_header]]></code>
       <code><![CDATA[$title]]></code>
     </MissingPropertyType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->add_notification]]></code>
-      <code><![CDATA[$this->label_notification_aviable]]></code>
-      <code><![CDATA[$this->monitored_path]]></code>
-      <code><![CDATA[$this->notified_mails]]></code>
-      <code><![CDATA[$this->repository_id]]></code>
-      <code><![CDATA[$this->sections]]></code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/svn/include/SVN/Admin/MailReceivedFromUserExtractor.php">
     <MissingParamType>
@@ -33738,13 +33563,6 @@
       <code><![CDATA[getNotificationsForPath]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/svn/include/SVN/Notifications/NotificationPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$emails_to_be_notified_json]]></code>
-      <code><![CDATA[$ugroups_to_be_notified_json]]></code>
-      <code><![CDATA[$users_to_be_notified_json]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/svn/include/SVN/Notifications/NotificationsEmailsBuilder.php">
     <MissingParamType>
       <code><![CDATA[$emails]]></code>
@@ -34437,13 +34255,11 @@
       <code><![CDATA[statisticsCollectorSVN]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
-      <code><![CDATA[$_SERVER['QUERY_STRING']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$user]]></code>
     </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['QUERY_STRING']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -44728,14 +44544,6 @@
       <code><![CDATA[$current_color]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/include/Tracker/Config/ConfigController.php">
-    <MissingReturnType>
-      <code><![CDATA[checkUserIsSiteadmin]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[redirect]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="plugins/tracker/include/Tracker/ConfigNotificationEmailCustomSender.php">
     <MissingParamType>
       <code><![CDATA[$enabled]]></code>
@@ -50637,25 +50445,10 @@
       <code><![CDATA[$fields_have_good_type]]></code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="plugins/tracker/include/Workflow/Action/Triggers/AddTrigger.php">
-    <MissingReturnType>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Workflow/Action/Triggers/DeleteTrigger.php">
-    <MissingReturnType>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[isPost]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="plugins/tracker/include/Workflow/Action/Triggers/EditTriggers.php">
     <MissingPropertyType>
       <code><![CDATA[$rule_manager]]></code>
       <code><![CDATA[$template_renderer]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$token]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[process]]></code>
@@ -51850,17 +51643,6 @@
       <code><![CDATA[(int) $tracker->getId()]]></code>
     </RedundantCast>
   </file>
-  <file src="plugins/tracker/include/Workflow/WorkflowManager.php">
-    <MissingParamType>
-      <code><![CDATA[$tracker]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$tracker]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Workflow/WorkflowUpdateChecker.php">
     <MissingParamType>
       <code><![CDATA[$submitted_value]]></code>
@@ -52007,7 +51789,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$project_with_tracker_administration]]></code>
@@ -52063,7 +51844,6 @@
       <code><![CDATA[collect_errors_without_importing_xml_project]]></code>
       <code><![CDATA[configureAtXMLImport]]></code>
       <code><![CDATA[default_widgets_for_new_user]]></code>
-      <code><![CDATA[display_deleted_trackers]]></code>
       <code><![CDATA[event_additional_admin_buttons]]></code>
       <code><![CDATA[exportSingleTracker]]></code>
       <code><![CDATA[getArtifactFactory]]></code>
@@ -67205,15 +66985,6 @@
       <code><![CDATA[results_intro]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Search/Presenters/SearchTrackerV3ResultPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$result_display]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getTemplate]]></code>
-      <code><![CDATA[result_display]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Search/Presenters/SearchTypePresenter.php">
     <MissingParamType>
       <code><![CDATA[$facets]]></code>
@@ -67340,23 +67111,6 @@
     <MissingReturnType>
       <code><![CDATA[route]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/Search/SearchTrackerV3.php">
-    <DeprecatedMethod>
-      <code><![CDATA[foundRows]]></code>
-    </DeprecatedMethod>
-    <MissingReturnType>
-      <code><![CDATA[getFacets]]></code>
-      <code><![CDATA[getTrackersv3ForProject]]></code>
-      <code><![CDATA[search]]></code>
-    </MissingReturnType>
-    <TypeDoesNotContainType>
-      <code><![CDATA[! $ath]]></code>
-      <code><![CDATA[! $ath]]></code>
-      <code><![CDATA[! $ath || ! is_object($ath)]]></code>
-      <code><![CDATA[! $ath || ! is_object($ath)]]></code>
-      <code><![CDATA[! is_object($ath)]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/common/Search/SearchWiki.php">
     <MissingParamType>
@@ -70084,7 +69838,6 @@
     </MissingReturnType>
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->configuration_nav_predefined_references]]></code>
-      <code><![CDATA[$this->configuration_nav_tracker_restore]]></code>
       <code><![CDATA[$this->users_nav_validated_users]]></code>
     </UndefinedThisPropertyAssignment>
   </file>
@@ -73542,7 +73295,6 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$uri]]></code>
       <code><![CDATA[$uri]]></code>
       <code><![CDATA[$uri]]></code>
     </PossiblyNullArgument>
@@ -77390,26 +77142,6 @@
       <code><![CDATA[isMSBThatWasChangedIntoASB]]></code>
       <code><![CDATA[updateFieldsValues]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/tracker/ArtifactPendingDeletionPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$trackers]]></code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->cancel]]></code>
-      <code><![CDATA[$this->delete]]></code>
-      <code><![CDATA[$this->has_trackers]]></code>
-      <code><![CDATA[$this->remove_confirm_message]]></code>
-      <code><![CDATA[$this->remove_tracker]]></code>
-      <code><![CDATA[$this->restore]]></code>
-      <code><![CDATA[$this->table_deletion_date]]></code>
-      <code><![CDATA[$this->table_id]]></code>
-      <code><![CDATA[$this->table_project]]></code>
-      <code><![CDATA[$this->table_tracker]]></code>
-      <code><![CDATA[$this->title]]></code>
-      <code><![CDATA[$this->tracker_v3_empty_state]]></code>
-      <code><![CDATA[$this->trackers]]></code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/tracker/ArtifactPermissionsXMLExporter.php">
     <MissingParamType>
@@ -83270,52 +83002,6 @@
       <code><![CDATA[ugroup_id]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/www/project/admin/userperms.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($at_arr[$j]->getID())]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($number_per_page)]]></code>
-      <code><![CDATA[db_ei($offset)]]></code>
-      <code><![CDATA[db_ei($row_dev['user_id'])]]></code>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_es($request->get($svn_flags))]]></code>
-      <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_fetch_array($res_dev)]]></code>
-      <code><![CDATA[db_fetch_array($res_dev)]]></code>
-      <code><![CDATA[db_numrows($res_dev)]]></code>
-      <code><![CDATA[db_numrows($res_dev)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['filter'] . $sql['order'] . $sql['limit'])]]></code>
-      <code><![CDATA[db_query('SELECT * FROM user_group WHERE group_id=' . db_ei($group_id))]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[groupAddHistory]]></code>
-    </DeprecatedMethod>
-    <InvalidOperand>
-      <code><![CDATA[$current_page + $width / 2]]></code>
-      <code><![CDATA[$current_page - $width / 2]]></code>
-      <code><![CDATA[$current_page - $width / 2]]></code>
-      <code><![CDATA[$i + 1]]></code>
-      <code><![CDATA[$nb_of_pages - 1]]></code>
-      <code><![CDATA[$width / 2 + $current_page]]></code>
-    </InvalidOperand>
-    <ParadoxicalCondition>
-      <code><![CDATA[! $group || ! is_object($group) || $group->isError()]]></code>
-    </ParadoxicalCondition>
-    <PossiblyUndefinedGlobalVariable>
-      <code><![CDATA[$row_dev]]></code>
-    </PossiblyUndefinedGlobalVariable>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $res]]></code>
-      <code><![CDATA[$pattern]]></code>
-    </RiskyTruthyFalsyComparison>
-    <TypeDoesNotContainType>
-      <code><![CDATA[$number_per_page < 1]]></code>
-    </TypeDoesNotContainType>
-  </file>
   <file src="src/www/project/export/access_logs_export.php">
     <DeprecatedFunction>
       <code><![CDATA[db_fetch_array($result)]]></code>
@@ -83811,11 +83497,6 @@
       <code><![CDATA[! is_object($ath)]]></code>
       <code><![CDATA[$arh]]></code>
     </TypeDoesNotContainType>
-  </file>
-  <file src="src/www/tracker/admin/restore.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($trackers)]]></code>
-    </DeprecatedFunction>
   </file>
   <file src="src/www/tracker/admin/tracker_permissions.php">
     <TooManyArguments>

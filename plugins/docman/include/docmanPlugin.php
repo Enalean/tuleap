@@ -64,6 +64,7 @@ use Tuleap\Docman\Metadata\Owner\AllOwnerRetriever;
 use Tuleap\Docman\Metadata\Owner\OwnerDao;
 use Tuleap\Docman\Metadata\Owner\OwnerRequestHandler;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
+use Tuleap\Docman\Notifications\NotificationsSubscribersController;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
@@ -79,6 +80,7 @@ use Tuleap\Docman\Reference\DocumentFromReferenceValueFinder;
 use Tuleap\Docman\Reference\DocumentIconPresenterBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\Docman\REST\v1\DocmanItemsRequestBuilder;
 use Tuleap\Docman\REST\v1\Folders\ComputeFolderSizeVisitor;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 use Tuleap\Docman\Settings\ForbidWritersSettings;
@@ -1603,6 +1605,23 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         return HistoryEnforcementAdminSaveController::buildSelf();
     }
 
+    public function routeGetSubscribers(): NotificationsSubscribersController
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
+        $user_manager     = UserManager::instance();
+        return new NotificationsSubscribersController(
+            $user_manager,
+            new UGroupManager(),
+            $this->getUsersToNotifyDao(),
+            $this->getUGroupToNotifyDao(),
+            new DocmanItemsRequestBuilder($user_manager, ProjectManager::instance()),
+            new JSONResponseBuilder($response_factory, $stream_factory),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new SapiEmitter(),
+        );
+    }
+
     public function routeGetOwners(): OwnerRequestHandler
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
@@ -1667,6 +1686,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
                 '/{project_name:[A-z0-9-]+}/admin-search',
                 $this->getRouteHandler('routeUpdateAdminSearch')
             );
+            $r->get('/{item_id:\d+}/subscribers', $this->getRouteHandler('routeGetSubscribers'));
             $r->get('/{project_name:[A-z0-9-]+}/owners', $this->getRouteHandler('routeGetOwners'));
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));
         });
