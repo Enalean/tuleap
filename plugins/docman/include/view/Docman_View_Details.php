@@ -159,11 +159,6 @@ class Docman_View_Details extends Docman_View_Display // phpcs:ignore PSR1.Class
             $details->addSection($approval);
         }
 
-        if ($user_can_read && $params['item'] instanceof \Docman_Folder) {
-            $sections['statistics'] = true;
-            $details->addSection(new Docman_View_ItemDetailsSectionStatistics($params['item'], $params['default_url'], $this->_controller, $token));
-        }
-
         if ($section && isset($sections[$section])) {
             $details->setCurrentSection($section);
         } elseif (isset($params['section']) && isset($sections[$params['section']])) {

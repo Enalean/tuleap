@@ -630,6 +630,10 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                     $project = ProjectManager::instance()->getProject((int)$item->getGroupId());
                     $redirect_url = '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/notifications/' . urlencode($item->getId());
                     $GLOBALS['Response']->redirect($redirect_url);
+                } else if ($section === 'statistics') {
+                    $project      = ProjectManager::instance()->getProject((int) $item->getGroupId());
+                    $redirect_url = '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/statistics/' . urlencode($item->getId());
+                    $GLOBALS['Response']->redirect($redirect_url);
                 }
                 $this->view = ucfirst($view);
                 break;

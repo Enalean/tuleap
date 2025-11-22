@@ -195,12 +195,6 @@ msgstr ""
 msgid "<strong>Actions</strong> with selected reviewers:"
 msgstr ""
 
-msgid ""
-"<ul><li>The whole folder sub-tree is taken in account for these statistics.</"
-"li><li>To compute the size, only the last versions of \"file\" and "
-"\"embedded file\" documents are taken in account.</li></ul>"
-msgstr ""
-
 msgid "A directory already exists with this name under docman"
 msgstr ""
 
@@ -691,9 +685,6 @@ msgstr ""
 msgid "Description: <strong><em>new text</em></strong>"
 msgstr ""
 
-msgid "Details"
-msgstr "Detalhes"
-
 #, php-format
 msgid "Details of %1$s"
 msgstr ""
@@ -837,7 +828,7 @@ msgstr ""
 msgid "Embedded file"
 msgstr ""
 
-msgid "Embedded files:"
+msgid "Embedded files"
 msgstr ""
 
 msgid "Empty"
@@ -846,7 +837,7 @@ msgstr "Vazio"
 msgid "Empty document"
 msgstr ""
 
-msgid "Empty documents:"
+msgid "Empty documents"
 msgstr ""
 
 msgid "Enabled"
@@ -927,7 +918,7 @@ msgstr ""
 msgid "Filename pattern"
 msgstr ""
 
-msgid "Files:"
+msgid "Files"
 msgstr ""
 
 msgid "Fixed date"
@@ -939,7 +930,7 @@ msgstr ""
 msgid "Folder Properties"
 msgstr ""
 
-msgid "Folders:"
+msgid "Folders"
 msgstr ""
 
 msgid ""
@@ -1108,7 +1099,7 @@ msgstr ""
 msgid "Link"
 msgstr "Link"
 
-msgid "Links:"
+msgid "Links"
 msgstr ""
 
 msgid "List of locked documents."
@@ -1315,9 +1306,6 @@ msgstr ""
 
 msgid "Notifications"
 msgstr "Notificações"
-
-msgid "Number of items in this folder:"
-msgstr ""
 
 msgid "Obsolescence Date"
 msgstr ""
@@ -1658,9 +1646,6 @@ msgstr ""
 msgid "Show my saved search"
 msgstr ""
 
-msgid "Size:"
-msgstr ""
-
 msgid "Something happen!"
 msgstr ""
 
@@ -1673,9 +1658,6 @@ msgid "Start date"
 msgstr ""
 
 msgid "Start:"
-msgstr ""
-
-msgid "Statistics"
 msgstr ""
 
 msgid "Status"
@@ -1692,9 +1674,6 @@ msgstr ""
 
 msgid "Submit permissions"
 msgstr ""
-
-msgid "Summary"
-msgstr "Resumo"
 
 msgid "Switch to the new user interface"
 msgstr ""
@@ -1920,9 +1899,6 @@ msgstr ""
 msgid "This table is linked to an old version of the document."
 msgstr ""
 
-msgid "This table shows the number of elements of each type."
-msgstr ""
-
 msgid "Title"
 msgstr "Título"
 
@@ -2111,7 +2087,7 @@ msgstr ""
 msgid "Wiki page successfully deleted from wiki service."
 msgstr ""
 
-msgid "Wiki pages:"
+msgid "Wiki pages"
 msgstr ""
 
 msgid "Will be created with the same permissions than its parent."

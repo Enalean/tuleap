@@ -252,6 +252,9 @@ msgstr "Tri décroissant sur {label}."
 msgid "Description"
 msgstr "Description"
 
+msgid "Details"
+msgstr "Détails"
+
 msgid "Document locked by %{username}."
 msgstr "Document verrouillé par %{username}."
 
@@ -377,6 +380,9 @@ msgstr "Le contenu de cet élément n'a pas pu être chargé."
 msgid "It's time to add new documents!"
 msgstr "Il est temps d'ajouter des documents !"
 
+msgid "Item type"
+msgstr "Type d'élément"
+
 msgid "Keep lock?"
 msgstr "Garder le verrou ?"
 
@@ -500,6 +506,12 @@ msgstr "Notifications"
 
 msgid "Notified people or groups"
 msgstr "Personnes ou groupes notifiés"
+
+msgid "Number of item"
+msgstr "Nombre d'élément"
+
+msgid "Number of items in this folder"
+msgstr "Nombre d'éléments dans ce dossier"
 
 msgid "Obsolescence date"
 msgstr "Date d'obsolescence"
@@ -702,6 +714,9 @@ msgstr "Afficher"
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
+msgid "Size"
+msgstr "Taille"
+
 msgid "Size of the archive to be downloaded: %{ size_in_MB } MB"
 msgstr "Taille de l'archive à télécharger: %{ size_in_MB } Mo"
 
@@ -716,6 +731,9 @@ msgstr "Source"
 msgid "Start over with a completely new approval table."
 msgstr "Commencer avec une nouvelle table d'approbation."
 
+msgid "Statistics"
+msgstr "Statistiques"
+
 msgid "Status"
 msgstr "Statut"
 
@@ -724,6 +742,9 @@ msgstr "Valider"
 
 msgid "Subscribers"
 msgstr "Abonnés"
+
+msgid "Summary"
+msgstr "Résumé"
 
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
@@ -780,6 +801,11 @@ msgstr ""
 "La taille du fichier zip que vous tentez de télécharger dépasse le seuil "
 "défini par les administrateurs du site."
 
+msgid "The whole folder sub-tree is taken in account for these statistics."
+msgstr ""
+"Ces statistiques prennent en compte toute l'arborescence descendante de ce "
+"dossier."
+
 msgid "There are no items here or you don't have permissions to see them."
 msgstr ""
 "Il n’y a aucun élément ou alors vous n'avez pas le droit de le(s) voir."
@@ -792,6 +818,9 @@ msgstr "Il n'y a pas encore de versions"
 
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
+
+msgid "There isn't any item"
+msgstr "Il n'y a aucun élément"
 
 msgid "This document is currently locked by"
 msgstr "Ce document est actuellement verrouillé par"
@@ -813,12 +842,22 @@ msgstr ""
 "que vous avez entrées ne seront pas sauvegardées. Voulez-vous quitter cette "
 "page ?"
 
+msgid "This table shows the number of elements of each type."
+msgstr "Ce tableau présente le nombre d'éléments de chaque type."
+
 msgid "This wiki has a approval table, you can't update it."
 msgstr ""
 "Ce wiki a une table d'approbation, vous ne pouvez pas le mettre à jour."
 
 msgid "Title"
 msgstr "Titre"
+
+msgid ""
+"To compute the size, only the last versions of 'file' and 'embedded' file "
+"documents are taken in account."
+msgstr ""
+"Pour le calcul de la taille, seuls sont pris en compte les dernières "
+"versions des documents de type 'fichier' et 'fichier embarqué'."
 
 msgid "Today"
 msgstr "Aujourd'hui"

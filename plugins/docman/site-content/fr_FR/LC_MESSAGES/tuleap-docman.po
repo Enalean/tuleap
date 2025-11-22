@@ -270,16 +270,6 @@ msgstr ""
 msgid "<strong>Actions</strong> with selected reviewers:"
 msgstr "<strong>Actions</strong> pour les approbateurs sélectionnés:"
 
-msgid ""
-"<ul><li>The whole folder sub-tree is taken in account for these statistics.</"
-"li><li>To compute the size, only the last versions of \"file\" and "
-"\"embedded file\" documents are taken in account.</li></ul>"
-msgstr ""
-"<ul><li>Ces statistiques prennent en compte toute l'arborescence descendante "
-"de ce dossier.</li><li>Pour le calcul de la taille, seuls sont pris en "
-"compte les dernières versions des documents de type \"fichier\" et \"fichier "
-"embarqué\".</li></ul>"
-
 msgid "A directory already exists with this name under docman"
 msgstr "Un répertoire Docman existe déjà avec ce nom"
 
@@ -836,9 +826,6 @@ msgstr "Description :"
 msgid "Description: <strong><em>new text</em></strong>"
 msgstr "Description : <strong><em>nouveau texte</em></strong>"
 
-msgid "Details"
-msgstr "Détails"
-
 #, php-format
 msgid "Details of %1$s"
 msgstr "Détails de %1$s"
@@ -987,8 +974,8 @@ msgstr "Fichier embarqué"
 msgid "Embedded file"
 msgstr "Fichier embarqué"
 
-msgid "Embedded files:"
-msgstr "Fichiers embarqués :"
+msgid "Embedded files"
+msgstr "Fichiers embarqués"
 
 msgid "Empty"
 msgstr "Vide"
@@ -996,8 +983,8 @@ msgstr "Vide"
 msgid "Empty document"
 msgstr "Document vide"
 
-msgid "Empty documents:"
-msgstr "Documents vides :"
+msgid "Empty documents"
+msgstr "Documents vides"
 
 msgid "Enabled"
 msgstr "Activé"
@@ -1085,8 +1072,8 @@ msgstr "Limites de téléversement"
 msgid "Filename pattern"
 msgstr "Modèle de nom de fichier"
 
-msgid "Files:"
-msgstr "Fichiers :"
+msgid "Files"
+msgstr "Fichiers"
 
 msgid "Fixed date"
 msgstr "Date fixe"
@@ -1097,8 +1084,8 @@ msgstr "Dossier"
 msgid "Folder Properties"
 msgstr "Propriétés du dossier"
 
-msgid "Folders:"
-msgstr "Dossiers :"
+msgid "Folders"
+msgstr "Dossiers"
 
 msgid ""
 "Following table aims to organize the approval cycle:<ul><li>With "
@@ -1300,8 +1287,8 @@ msgstr "Dernière mise à jour du document ou de ses propriétés."
 msgid "Link"
 msgstr "Lien"
 
-msgid "Links:"
-msgstr "Liens :"
+msgid "Links"
+msgstr "Liens"
 
 msgid "List of locked documents."
 msgstr "Afficher la liste des documents réservés."
@@ -1516,9 +1503,6 @@ msgstr "Notification :"
 
 msgid "Notifications"
 msgstr "Notifications"
-
-msgid "Number of items in this folder:"
-msgstr "Nombre d'éléments dans ce dossier :"
 
 msgid "Obsolescence Date"
 msgstr "Date d'obsolescence"
@@ -1884,9 +1868,6 @@ msgstr "Afficher les actions"
 msgid "Show my saved search"
 msgstr "Afficher mes recherche sauvegardées"
 
-msgid "Size:"
-msgstr "Taille :"
-
 msgid "Something happen!"
 msgstr "Quelque chose a changé !"
 
@@ -1903,9 +1884,6 @@ msgstr "Date de début"
 msgid "Start:"
 msgstr "Début :"
 
-msgid "Statistics"
-msgstr "Statistiques"
-
 msgid "Status"
 msgstr "Statut"
 
@@ -1920,9 +1898,6 @@ msgstr "Sujet :"
 
 msgid "Submit permissions"
 msgstr "Valider les permissions"
-
-msgid "Summary"
-msgstr "Résumé"
 
 msgid "Switch to the new user interface"
 msgstr "Basculer sur la nouvelle interface utilisateur"
@@ -2185,9 +2160,6 @@ msgstr ""
 msgid "This table is linked to an old version of the document."
 msgstr "Cette table correspond à une ancienne version du document."
 
-msgid "This table shows the number of elements of each type."
-msgstr "Ce tableau présente le nombre d'éléments de chaque type."
-
 msgid "Title"
 msgstr "Titre"
 
@@ -2383,8 +2355,8 @@ msgstr "Nouvelle version de la page Wiki"
 msgid "Wiki page successfully deleted from wiki service."
 msgstr "Page wiki supprimé du service wiki avec succès."
 
-msgid "Wiki pages:"
-msgstr "Pages wiki :"
+msgid "Wiki pages"
+msgstr "Pages wiki"
 
 msgid "Will be created with the same permissions than its parent."
 msgstr "Les même permissions que celles du parent."

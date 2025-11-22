@@ -31,6 +31,7 @@ import { abortCurrentUploads } from "../helpers/abort-current-uploads";
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
 import type { Store } from "vuex";
 import type { RootState, GettextProvider, SearchCriteria } from "../type";
+import DisplayStatistics from "../components/Statisitcs/DisplayStatistics.vue";
 
 export const routes: RouteRecordRaw[] = [
     {
@@ -99,6 +100,14 @@ export const routes: RouteRecordRaw[] = [
         path: "/notifications/:item_id",
         name: "notifications",
         component: DisplayNotifications,
+        props: (route) => ({
+            item_id: Number(route.params.item_id),
+        }),
+    },
+    {
+        path: "/statistics/:item_id",
+        name: "statistics",
+        component: DisplayStatistics,
         props: (route) => ({
             item_id: Number(route.params.item_id),
         }),
