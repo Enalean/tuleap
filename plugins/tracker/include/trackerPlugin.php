@@ -85,7 +85,7 @@ use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\CheckCrossReferenceValidityEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
-use Tuleap\Reference\GetReferenceEvent;
+use Tuleap\Reference\GetProjectIdForSystemReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CurrentPage;
@@ -259,7 +259,6 @@ use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\PromotedTrackersRetriever;
 use Tuleap\Tracker\Reference\CrossReferenceValidator;
-use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
@@ -352,8 +351,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook('javascript_file');
         $this->addHook(NatureCollection::NAME);
         $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, 'get_artifact_reference_group_id');
-        $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
-        $this->addHook(Event::BUILD_REFERENCE, 'build_reference');
         $this->addHook(Event::JAVASCRIPT, 'javascript');
         $this->addHook(Event::TOGGLE, 'toggle');
         $this->addHook('permission_get_name', 'permission_get_name');
@@ -387,7 +384,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
         $this->addHook(ExportXmlProject::NAME);
-        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
@@ -949,7 +945,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     {
         $natures->addNature(
             Artifact::REFERENCE_NATURE,
-            new Nature('artifact', 'fas fa-list-ol', 'Artifact Tracker v5', true)
+            new Nature('artifact', 'fas fa-list-ol', dgettext('tuleap-tracker', 'Artifact'), true)
         );
     }
 
@@ -960,39 +956,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $tracker            = $artifact->getTracker();
             $params['group_id'] = $tracker->getGroupId();
         }
-    }
-
-    public function set_artifact_reference_group_id($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $reference = $params['reference'];
-        if ($this->isDefaultReferenceUrl($reference)) {
-            $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($params['artifact_id']);
-            if ($artifact) {
-                $tracker = $artifact->getTracker();
-                $reference->setGroupId($tracker->getGroupId());
-            }
-        }
-    }
-
-    private function isDefaultReferenceUrl(Reference $reference)
-    {
-        return $reference->getLink() === TRACKER_BASE_URL . '/?&aid=$1&group_id=$group_id';
-    }
-
-    public function build_reference($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $row           = $params['row'];
-        $params['ref'] = new Reference(
-            $params['ref_id'],
-            $row['keyword'],
-            $row['description'],
-            $row['link'],
-            $row['scope'],
-            $this->getServiceShortname(),
-            Artifact::REFERENCE_NATURE,
-            $row['is_active'],
-            $row['group_id']
-        );
     }
 
     #[ListeningToEventClass]
@@ -1088,19 +1051,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function project_registration_activate_service(ProjectRegistrationActivateService $event)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate(), $event->getLegacy());
-        $this->getReferenceCreator()->insertArtifactsReferencesFromLegacy($event->getProject());
-    }
-
-    /**
-     * @return ReferenceCreator
-     */
-    private function getReferenceCreator()
-    {
-        return new ReferenceCreator(
-            ServiceManager::instance(),
-            TrackerV3::instance(),
-            new ReferenceDao()
-        );
     }
 
     /**
@@ -1549,42 +1499,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             ->exportSingleTrackerToXml($into_xml, $tracker_id, $user, $archive);
     }
 
-    public function getReference(GetReferenceEvent $event): void
-    {
-        $keyword = $event->getKeyword();
-        if ($this->isArtifactReferenceInMultipleTrackerServicesContext($keyword)) {
-            $artifact_id       = $event->getValue();
-            $reference_manager = $event->getReferenceManager();
-
-            $tracker_reference_manager = $this->getTrackerReferenceManager($reference_manager);
-
-            $reference = $tracker_reference_manager->getReference(
-                $keyword,
-                $artifact_id
-            );
-
-            if ($reference !== null) {
-                $event->setReference($reference);
-            }
-        }
-    }
-
-    private function isArtifactReferenceInMultipleTrackerServicesContext($keyword)
-    {
-        return (TrackerV3::instance()->available() && ($keyword === 'art' || $keyword === 'artifact'));
-    }
-
-    /**
-     * @return Tracker_ReferenceManager
-     */
-    private function getTrackerReferenceManager(ReferenceManager $reference_manager)
-    {
-        return new Tracker_ReferenceManager(
-            $reference_manager,
-            $this->getArtifactFactory()
-        );
-    }
-
     /** @see TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS */
     public function event_additional_admin_buttons(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -1633,6 +1547,17 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $cleaner = $this->getNotificationForProjectMemberCleaner();
         $cleaner->cleanNotificationsAfterUserRemoval($project, $user);
+    }
+
+    #[ListeningToEventClass]
+    public function getProjectIdForSystemReferenceEvent(GetProjectIdForSystemReferenceEvent $event): void
+    {
+        if ($event->nature === Artifact::REFERENCE_NATURE) {
+            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById((int) $event->value);
+            if ($artifact) {
+                $event->setProjectId((int) $artifact->getTracker()->getGroupId());
+            }
+        }
     }
 
     /** @see Event::PROJECT_ACCESS_CHANGE */

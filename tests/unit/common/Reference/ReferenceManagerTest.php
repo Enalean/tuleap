@@ -29,6 +29,7 @@ use ReferenceDao;
 use ReferenceManager;
 use TestHelper;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\FakeDataAccessResult;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ServerHostname;
@@ -46,6 +47,7 @@ final class ReferenceManagerTest extends TestCase
     private ReferenceManager&MockObject $rm;
     private UserManager&MockObject $user_manager;
     private ProjectManager&MockObject $project_manager;
+    private GetProjectIdForSystemReference&MockObject $get_project_id_for_system_reference;
 
     #[\Override]
     protected function setUp(): void
@@ -61,13 +63,14 @@ final class ReferenceManagerTest extends TestCase
         UserManager::setInstance($this->user_manager);
         $this->user_manager->method('getCurrentUser');
 
-        $this->rm = $this->getMockBuilder(ReferenceManager::class)
-            ->setConstructorArgs([])
+        $this->get_project_id_for_system_reference = $this->createMock(GetProjectIdForSystemReference::class);
+        $this->rm                                  = $this->getMockBuilder(ReferenceManager::class)
+            ->setConstructorArgs([
+                $this->get_project_id_for_system_reference,
+            ])
             ->onlyMethods([
                 '_getReferenceDao',
                 '_getCrossReferenceDao',
-                'getGroupIdFromArtifactIdForCallbackFunction',
-                'getGroupIdFromArtifactId',
             ])
             ->getMock();
         ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, 'example.com');
@@ -91,55 +94,32 @@ final class ReferenceManagerTest extends TestCase
     {
         $GLOBALS['Language']->method('getOverridableText')->willReturn('some text');
 
-        $dao     = $this->createMock(ReferenceDao::class);
-        $matcher = $this->exactly(2);
-        $dao->expects($matcher)->method('searchActiveByGroupID')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame('100', $parameters[0]);
-                return TestHelper::arrayToDar([
-                    'id'                 => 1,
-                    'keyword'            => 'art',
-                    'description'        => 'reference_art_desc_key',
-                    'link'               => '/tracker/?func=detail&aid=$1&group_id=$group_id',
-                    'scope'              => 'S',
-                    'service_short_name' => 'tracker',
-                    'nature'             => 'artifact',
-                    'reference_id'       => 1,
-                    'group_id'           => 100,
-                    'is_active'          => 1,
-                ]);
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('1', $parameters[0]);
-                return TestHelper::arrayToDar(
-                    [
-                        'id'                 => 1,
-                        'keyword'            => 'art',
-                        'description'        => 'reference_art_desc_key',
-                        'link'               => '/tracker/?func=detail&aid=$1&group_id=$group_id',
-                        'scope'              => 'S',
-                        'service_short_name' => 'tracker',
-                        'nature'             => 'artifact',
-                        'reference_id'       => 1,
-                        'group_id'           => 1,
-                        'is_active'          => 1,
-                    ]
-                );
-            }
+        $dao = $this->createMock(ReferenceDao::class);
+        $dao->method('searchActiveByGroupID')->willReturnCallback(static fn (...$parameters): FakeDataAccessResult => match ((int) $parameters[0]) {
+            100, 1 => TestHelper::arrayToDar([
+                'id'                 => 1,
+                'keyword'            => 'foo',
+                'description'        => '',
+                'link'               => '/foo/?func=detail&aid=$1&group_id=$group_id',
+                'scope'              => 'S',
+                'service_short_name' => '',
+                'nature'             => 'other',
+                'reference_id'       => 1,
+                'group_id'           => $parameters[0],
+                'is_active'          => 1,
+            ])
         });
-        $dao->method('getSystemReferenceNatureByKeyword');
+        $this->get_project_id_for_system_reference->method('getProjectIdForSystemReference')->willReturn(null);
 
         //The Reference manager
         $this->rm->method('_getReferenceDao')->willReturn($dao);
-        $this->rm->method('getGroupIdFromArtifactIdForCallbackFunction')->willReturn('100', '1', '100');
-        $this->rm->method('getGroupIdFromArtifactId');
 
         $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        self::assertCount(1, $this->rm->extractReferences('art #123', 0), 'Art is a shared keyword for all projects');
-        self::assertCount(0, $this->rm->extractReferences('arto #123', 0), 'Should not extract a reference on unknown keyword');
-        self::assertCount(1, $this->rm->extractReferences('art #1:123', 0), 'Art is a reference for project num 1');
-        self::assertCount(1, $this->rm->extractReferences('art #100:123', 0), 'Art is a reference for project named codendi');
+        self::assertCount(1, $this->rm->extractReferences('foo #123', 0), 'Foo is a shared keyword for all projects');
+        self::assertCount(0, $this->rm->extractReferences('foobar #123', 0), 'Should not extract a reference on unknown keyword');
+        self::assertCount(1, $this->rm->extractReferences('foo #1:123', 0), 'Foo is a reference for project num 1');
+        self::assertCount(1, $this->rm->extractReferences('foo #100:123', 0), 'Foo is a reference for default template project');
     }
 
     public function testExtractRegexp(): void
@@ -264,7 +244,7 @@ final class ReferenceManagerTest extends TestCase
             false
         );
         $reference_dao->method('searchActiveByGroupID')->willReturn($data_access_result_reference);
-        $reference_dao->method('getSystemReferenceNatureByKeyword')->willReturn(false);
+        $this->get_project_id_for_system_reference->method('getProjectIdForSystemReference')->willReturn(null);
         $this->rm->method('_getReferenceDao')->willReturn($reference_dao);
 
         $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
@@ -288,7 +268,7 @@ final class ReferenceManagerTest extends TestCase
     {
         $reference_dao = $this->createStub(ReferenceDao::class);
         $reference_dao->method('searchActiveByGroupID')->willReturn(TestHelper::emptyDar());
-        $reference_dao->method('getSystemReferenceNatureByKeyword')->willReturn(false);
+        $this->get_project_id_for_system_reference->method('getProjectIdForSystemReference')->willReturn(null);
         $this->rm->method('_getReferenceDao')->willReturn($reference_dao);
 
         $this->project_manager->method('getProject')->willReturn(

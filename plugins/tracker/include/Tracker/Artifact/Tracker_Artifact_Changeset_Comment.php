@@ -387,7 +387,7 @@ class Tracker_Artifact_Changeset_Comment
 
     private function getCommentBodyWithEscapedCrossReferences()
     {
-        $reference_manager = new ReferenceManager();
+        $reference_manager = ReferenceManager::instance();
         $pattern           = $reference_manager->_getExpForRef();
         $matches           = [];
         $escaped_body      = $this->body;

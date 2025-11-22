@@ -85447,32 +85447,18 @@
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
     <TooManyArguments>
-      <code><![CDATA[TestHelper::arrayToDar(
-                    [
-                        'id'                 => 1,
-                        'keyword'            => 'art',
-                        'description'        => 'reference_art_desc_key',
-                        'link'               => '/tracker/?func=detail&aid=$1&group_id=$group_id',
-                        'scope'              => 'S',
-                        'service_short_name' => 'tracker',
-                        'nature'             => 'artifact',
-                        'reference_id'       => 1,
-                        'group_id'           => 1,
-                        'is_active'          => 1,
-                    ]
-                )]]></code>
       <code><![CDATA[TestHelper::arrayToDar([
-                    'id'                 => 1,
-                    'keyword'            => 'art',
-                    'description'        => 'reference_art_desc_key',
-                    'link'               => '/tracker/?func=detail&aid=$1&group_id=$group_id',
-                    'scope'              => 'S',
-                    'service_short_name' => 'tracker',
-                    'nature'             => 'artifact',
-                    'reference_id'       => 1,
-                    'group_id'           => 100,
-                    'is_active'          => 1,
-                ])]]></code>
+                'id'                 => 1,
+                'keyword'            => 'foo',
+                'description'        => '',
+                'link'               => '/foo/?func=detail&aid=$1&group_id=$group_id',
+                'scope'              => 'S',
+                'service_short_name' => '',
+                'nature'             => 'other',
+                'reference_id'       => 1,
+                'group_id'           => $parameters[0],
+                'is_active'          => 1,
+            ])]]></code>
     </TooManyArguments>
   </file>
   <file src="tests/unit/common/Request/ProjectRetrieverTest.php">
