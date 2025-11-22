@@ -299,6 +299,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                     $this->displayDefineDependencies($engine, $request, $current_user, $source_field, $target_field);
                 }
             } else {
+                $this->getToken()->check();
                 //We delete all previous rules
                 $this->deleteRulesBySourceTarget($this->tracker->id, $request->get('source_field'), $request->get('target_field'));
 
@@ -329,6 +330,14 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         } else {
             $this->displayChooseSourceAndTarget($engine, $request, $current_user, null);
         }
+    }
+
+    private function getToken(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken('/plugins/tracker/?' . http_build_query([
+            'tracker' => (int) $this->tracker->id,
+            'func'    => 'admin-dependencies',
+        ]));
     }
 
     private function displayChooseSourceAndTarget($engine, $request, $current_user, $source_field_id)
@@ -455,6 +464,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
 
         $purifier = Codendi_HTMLPurifier::instance();
         echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func' => 'admin-dependencies']) . '" method="POST">';
+        echo $this->getToken()->fetchHTMLInput();
         echo '<table class="tlp-table" id="tracker-field-dependencies-matrix" data-test="tracker-field-dependencies-matrix">';
 
         echo "<thead><th class='matrix-cell matrix-empty-cell matrix-label-cell'></th>";
@@ -543,7 +553,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         $csp_nonce = $GLOBALS['Response']->getCSPNonce();
         $html      = sprintf('<script type="text/javascript" nonce="%s">', $purifier->purify($csp_nonce));
         $html     .= "\n//------------------------------------------------------\n";
-        $rules     = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
+        $rules     = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
                 $trvv  = new Tracker_Rule_List_View($rules[$key]);
