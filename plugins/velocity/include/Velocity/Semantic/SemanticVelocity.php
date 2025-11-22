@@ -123,7 +123,11 @@ class SemanticVelocity extends TrackerSemantic
         Codendi_Request $request,
         PFUser $current_user,
     ) {
-        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
+        $this->tracker->displayAdminItemHeaderBurningParrot(
+            $tracker_manager,
+            'editsemantic',
+            $this->getLabel()
+        );
 
         $builder = new SemanticVelocityAdminPresenterBuilder(
             $this->getMissingRequirementRetriever(),
@@ -278,7 +282,7 @@ class SemanticVelocity extends TrackerSemantic
     private function getCSRFSynchronizerToken()
     {
         return new CSRFSynchronizerToken(
-            TRACKER_BASE_URL . '?' . http_build_query(
+            '/plugins/tracker/?' . http_build_query(
                 [
                     'semantic' => 'velocity',
                     'func'     => 'admin-semantic',
@@ -311,7 +315,7 @@ class SemanticVelocity extends TrackerSemantic
     private function redirectToVelocityAdmin($tracker_id)
     {
         $GLOBALS['Response']->redirect(
-            TRACKER_BASE_URL . '?' . http_build_query(
+            '/plugins/tracker/?' . http_build_query(
                 [
                     'semantic' => 'velocity',
                     'func'     => 'admin-semantic',

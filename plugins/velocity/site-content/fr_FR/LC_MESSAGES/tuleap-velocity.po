@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.4.2\n"
 
 msgid ""
 "<b>Done</b> semantic is needed since Velocity computation is made over "
@@ -56,7 +56,7 @@ msgid "Choose a field"
 msgstr "Choisissez un champ"
 
 msgid "Define the field to use to compute velocity."
-msgstr "Définissez le champ à utiliser pour calculer la vélocité"
+msgstr "Définissez le champ à utiliser pour calculer la vélocité."
 
 msgid "Field used for velocity computation:"
 msgstr "Champ utilisé pour le calcul de la vélocité:"
@@ -74,27 +74,27 @@ msgstr[1] ""
 
 msgid "Following tracker should have <b>velocity</b> semantic:"
 msgid_plural "Following trackers should have <b>velocity</b> semantic:"
-msgstr[0] "Le tracker suivant n'a pas de sémantique <b>vélocité</b>."
-msgstr[1] "Les trackers suivants n'ont pas de sémantique <b>vélocité</b>."
+msgstr[0] "Le tracker suivant n'a pas de sémantique <b>vélocité</b> :"
+msgstr[1] "Les trackers suivants n'ont pas de sémantique <b>vélocité</b> :"
 
 msgid "No field defined for velocity computation."
-msgstr "Aucun champ défini pour le calcul de la vélocité"
+msgstr "Aucun champ défini pour le calcul de la vélocité."
 
 msgid ""
 "Only integers and float fields are listed. By choosing one of these fields, "
 "it will be automatically computed in order to give you the velocity value."
 msgstr ""
 "Seuls les champs entiers et flottants sont listés. Ce champ contiendra la "
-"valeur de la vélocité calculée"
+"valeur de la vélocité calculée."
 
 msgid "Save your change"
 msgstr "Sauvegarder vos changements"
 
 msgid "Semantic done is not defined."
-msgstr "La sémantique finie n'est pas définie"
+msgstr "La sémantique finie n'est pas définie."
 
 msgid "Semantic updated successfully."
-msgstr "La sémantique a été correctement sauvegardée"
+msgstr "La sémantique a été correctement sauvegardée."
 
 msgid "Semantic velocity unset with success"
 msgstr "La sémantique vélocité a été réinitialisée avec succès"
@@ -116,7 +116,7 @@ msgstr[0] "La sémantique suivante n'est pas définie:"
 msgstr[1] "Les sémantiques suivantes ne sont pas définies:"
 
 msgid "The request is not valid."
-msgstr "La requête n'est pas valide"
+msgstr "La requête n'est pas valide."
 
 msgid "The velocity chart only displays the last 7 artifacts found."
 msgstr ""
@@ -149,10 +149,7 @@ msgid "Velocity semantic"
 msgstr "Sémantique vélocité"
 
 msgid "Velocity semantic successfully updated."
-msgstr "La sémantique vélocité a été mis à jour avec succès"
-
-msgid "go back to semantic overview"
-msgstr "retour à l'administration de la sémantique"
+msgstr "La sémantique vélocité a été mis à jour avec succès."
 
 msgid "or"
 msgstr "ou"

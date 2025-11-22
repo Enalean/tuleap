@@ -115,7 +115,7 @@ class velocityPlugin extends Plugin // phpcs:ignore
         $velocity = SemanticVelocity::load($event->getTracker());
 
         if ($velocity->getVelocityField()) {
-            $semantic_url  = TRACKER_BASE_URL . '?' . http_build_query(
+            $semantic_url  = '/plugins/tracker/?' . http_build_query(
                 [
                     'tracker'  => $event->getTracker()->getId(),
                     'func'     => 'admin-semantic',
@@ -126,16 +126,6 @@ class velocityPlugin extends Plugin // phpcs:ignore
             $event->addWarning(
                 new PlanningWarningPossibleMisconfigurationPresenter($semantic_url, $semantic_name)
             );
-        }
-    }
-
-    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
-    public function cssfile($params): void
-    {
-        if ($this->isInAdminSemantics()) {
-            $css_file_url = $this->getAssets()->getFileURL('style-fp.css');
-
-            echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
     }
 
@@ -150,7 +140,7 @@ class velocityPlugin extends Plugin // phpcs:ignore
     #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_STYLESHEETS)]
     public function burningParrotGetStylesheets(array $params): void
     {
-        if ($this->isAPlanningOverviewRequest()) {
+        if ($this->isAPlanningOverviewRequest() || $this->isInAdminSemantics()) {
             $params['stylesheets'][] = $this->getAssets()->getFileURL('velocity-style.css');
         }
     }

@@ -155,18 +155,6 @@ class TrackerSemanticManager
         $this->tracker->displayFooter($tracker_manager);
     }
 
-    public function displaySemanticHeader(TrackerSemantic $semantic, TrackerManager $tracker_manager)
-    {
-        $title = $semantic->getLabel();
-        $this->tracker->displayAdminItemHeader(
-            $tracker_manager,
-            'editsemantic',
-            $title
-        );
-
-        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
-    }
-
     public function displaySemanticFooter(TrackerSemantic $semantic, TrackerManager $tracker_manager)
     {
         $this->tracker->displayFooter($tracker_manager);

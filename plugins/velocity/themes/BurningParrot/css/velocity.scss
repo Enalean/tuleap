@@ -23,6 +23,18 @@
     fill: var(--tlp-main-color);
 }
 
+.velocity-missing-semantic {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+
 .misconfigured-semantic-display-comma:last-child {
     display: none;
+}
+
+.velocity-admin-buttons {
+    align-items: center;
+}
+
+.velocity-admin-field {
+    display: inline-flex;
 }
