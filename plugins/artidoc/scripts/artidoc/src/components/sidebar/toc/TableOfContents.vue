@@ -44,7 +44,7 @@
                 role="img"
                 v-bind:title="section_under_artifact_title"
                 data-test="warning-icon"
-                v-if="hasArtifactParent(section)"
+                v-if="isSectionInError(section)"
             ></i>
 
             <span class="toc-display-level" data-test="display-level">
@@ -120,6 +120,7 @@ import { isCannotReorderSectionsFault } from "@/sections/reorder/CannotReorderSe
 import { buildSectionsReorderer } from "@/sections/reorder/SectionsReorderer";
 import { getSectionsStructurer } from "@/sections/reorder/SectionsStructurer";
 import { SECTIONS_BELOW_ARTIFACTS } from "@/sections-below-artifacts-injection-key";
+import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
 
 const { $gettext } = useGettext();
 
@@ -130,6 +131,7 @@ const is_reorder_allowed = strictInject(CAN_USER_EDIT_DOCUMENT);
 const document_id = strictInject(DOCUMENT_ID);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 const bad_sections = strictInject(SECTIONS_BELOW_ARTIFACTS);
+const current_version_displayed = strictInject(CURRENT_VERSION_DISPLAYED);
 
 const sections_reorderer = buildSectionsReorderer(sections_collection);
 const sections_structurer = getSectionsStructurer(sections_collection);
@@ -160,8 +162,11 @@ function getTOCClasses(section: ReactiveStoredArtidocSection): Record<string, bo
     };
 }
 
-function hasArtifactParent(section: ReactiveStoredArtidocSection): boolean {
-    return bad_sections.value.includes(section.value.internal_id);
+function isSectionInError(section: ReactiveStoredArtidocSection): boolean {
+    return (
+        current_version_displayed.old_version.value.isNothing() &&
+        bad_sections.value.includes(section.value.internal_id)
+    );
 }
 
 const setSectionBeingHovered = (section: ReactiveStoredArtidocSection): void => {
