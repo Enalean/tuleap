@@ -315,7 +315,6 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 use Tuleap\User\Preferences\UserPreferencesGetDefaultValue;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
-use Tuleap\Widget\Event\GetPublicAreas;
 use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/constants.php';
@@ -346,7 +345,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(Event::BUILD_REFERENCE, 'build_reference');
         $this->addHook(Event::JAVASCRIPT, 'javascript');
         $this->addHook(Event::TOGGLE, 'toggle');
-        $this->addHook(GetPublicAreas::NAME);
         $this->addHook('permission_get_name', 'permission_get_name');
         $this->addHook('permission_get_object_type', 'permission_get_object_type');
         $this->addHook('permission_get_object_name', 'permission_get_object_name');
@@ -1067,40 +1065,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     {
         $injector = new Tracker_REST_ResourcesInjector();
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
-    }
-
-    public function service_public_areas(GetPublicAreas $event)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $project = $event->getProject();
-        if ($project->usesService($this->getServiceShortname())) {
-            $service = $project->getService($this->getServiceShortname());
-            $tf      = TrackerFactory::instance();
-
-            // Get the artfact type list
-            $trackers = $tf->getTrackersByGroupId($project->getGroupId());
-
-            if ($trackers) {
-                $entries  = [];
-                $purifier = Codendi_HTMLPurifier::instance();
-                foreach ($trackers as $t) {
-                    if ($t->userCanView()) {
-                        $name      = $purifier->purify($t->name, CODENDI_PURIFIER_CONVERT_HTML);
-                        $entries[] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $t->id . '">' . $name . '</a>';
-                    }
-                }
-                if ($service !== null && $entries) {
-                    $area  = '';
-                    $area .= '<a href="' . TRACKER_BASE_URL . '/?group_id=' . urlencode($project->getGroupId()) . '">';
-                    $area .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($service->getIcon()) . '"></i>';
-                    $area .= dgettext('tuleap-tracker', 'Trackers');
-                    $area .= '</a>';
-
-                    $area .= '<ul><li>' . implode('</li><li>', $entries) . '</li></ul>';
-
-                    $event->addArea($area);
-                }
-            }
-        }
     }
 
     public function project_creation_remove_legacy_services($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

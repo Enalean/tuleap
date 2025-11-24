@@ -182,7 +182,6 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetProjectWidgetList;
-use Tuleap\Widget\Event\GetPublicAreas;
 use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\Widget\Event\GetWidget;
 use Tuleap\wiki\Events\GetItemsReferencingWikiPageCollectionEvent;
@@ -394,21 +393,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         if ($project->usesService($this->getServiceShortname())) {
             $controler = $this->getHTTPController();
             $controler->logsDaily($params);
-        }
-    }
-
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function servicePublicAreas(GetPublicAreas $event): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $project = $event->getProject();
-        $service = $project->getService($this->getServiceShortname());
-        if ($service instanceof \Tuleap\Docman\ServiceDocman) {
-            $event->addArea(
-                '<a href="' . $service->getUrl() . '">' .
-                '<i class="dashboard-widget-content-projectpublicareas ' . Codendi_HTMLPurifier::instance()->purify($service->getIcon()) . '"></i>' .
-                dgettext('tuleap-docman', 'Document Manager') .
-                '</a>'
-            );
         }
     }
 

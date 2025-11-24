@@ -85,16 +85,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->service_collection->getMinimalRank();
     }
 
-    private function getServiceLink(string $short_name): string
-    {
-        $service = $this->getService($short_name);
-        if ($service === null) {
-            return '';
-        }
-
-        return $service->getUrl();
-    }
-
     public function getService(string $service_name): ?Service
     {
         return $this->service_collection->getService($service_name);
@@ -146,21 +136,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public function addUsedServices(...$services): void
     {
         $this->service_collection->addUsedServices(...$services);
-    }
-
-    public function getWikiPage(): string
-    {
-        return $this->getServiceLink(Service::WIKI);
-    }
-
-    public function isSVNMandatoryRef()
-    {
-        return $this->project_data_array['svn_mandatory_ref'];
-    }
-
-    public function canChangeSVNLog()
-    {
-        return $this->project_data_array['svn_can_change_log'];
     }
 
     /**

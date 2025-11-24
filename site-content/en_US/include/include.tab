@@ -144,7 +144,6 @@ include_project_home	no_files_released	This Project Has Not Released Any Files
 include_project_home	release_notes	Read Release Notes and Changelog
 include_project_home	monitor_pack	Monitor This Package
 include_project_home	view_all_files	View ALL Project Files
-include_project_home	public_areas	Public Areas
 include_project_home	project_description	Project Description
 include_project_home	project_classification	Project Classification
 include_project_home	homepage	Homepage
@@ -164,13 +163,9 @@ include_project_home	total	<B>$1</B> total
 include_project_home	task_manager	Task Manager
 include_project_home	proj_task_man	Project/Task Manager
 include_project_home	no_public_proj	There are no public projects available
-include_project_home	wiki	Wiki
-include_project_home	nb_wiki_pages	<B>$1</B> pages
 include_project_home	svn_repo	Subversion Repository
 include_project_home	browse_svn	Browse Subversion
 include_project_home	accesses	<B>$1</B> accesses
-include_project_home	file_releases	File Releases
-include_project_home	packages	<B>$1</B> packages
 include_project_home	trackers	Trackers
 include_project_home	no_arttypefact	Could Not Get ArtifactTypeFactory
 include_project_home	no_trackers_accessible	No Accessible Trackers Found

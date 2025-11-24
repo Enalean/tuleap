@@ -41,7 +41,6 @@ use Widget_MySystemEvent;
 use Widget_ProjectDescription;
 use Widget_ProjectImageViewer;
 use Widget_ProjectLatestFileReleases;
-use Widget_ProjectPublicAreas;
 use Widget_ProjectRss;
 
 class WidgetFactory implements IBuildInstanceOfWidgets
@@ -125,9 +124,6 @@ class WidgetFactory implements IBuildInstanceOfWidgets
                 break;
             case 'projectlatestfilereleases':
                 $widget = new Widget_ProjectLatestFileReleases();
-                break;
-            case 'projectpublicareas':
-                $widget = new Widget_ProjectPublicAreas();
                 break;
             case 'projectrss':
                 $widget = new Widget_ProjectRss();
