@@ -370,12 +370,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "20820de1cf80407918f48b1afce504f88dd67ca0"
+                "reference": "9b3dc46d6f7bdcddc294acfc392437e32d8af138"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/20820de1cf80407918f48b1afce504f88dd67ca0",
-                "reference": "20820de1cf80407918f48b1afce504f88dd67ca0",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/9b3dc46d6f7bdcddc294acfc392437e32d8af138",
+                "reference": "9b3dc46d6f7bdcddc294acfc392437e32d8af138",
                 "shasum": ""
             },
             "require": {
@@ -415,7 +415,7 @@
             "support": {
                 "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/REL1_43"
             },
-            "time": "2025-11-14T13:46:51+00:00"
+            "time": "2025-11-24T09:45:53+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
@@ -423,12 +423,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "72b3e121d4e257e2d02a3c0fda047ab6b52e0a2b"
+                "reference": "44f5601b4ba35e7eba519ed8e174d100ac9c2a49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/72b3e121d4e257e2d02a3c0fda047ab6b52e0a2b",
-                "reference": "72b3e121d4e257e2d02a3c0fda047ab6b52e0a2b",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/44f5601b4ba35e7eba519ed8e174d100ac9c2a49",
+                "reference": "44f5601b4ba35e7eba519ed8e174d100ac9c2a49",
                 "shasum": ""
             },
             "require": {
@@ -472,7 +472,7 @@
             "support": {
                 "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/REL1_43"
             },
-            "time": "2025-11-14T10:55:43+00:00"
+            "time": "2025-11-24T11:25:27+00:00"
         },
         {
             "name": "mpdf/mpdf",
