@@ -264,16 +264,6 @@ abstract class AdminView
     {
         $tab = [
             [
-                'id' => 'legacy-view',
-                'title' => \Docman_View_Admin_View::getTabTitle(),
-                'description' => \Docman_View_Admin_View::getTabDescription(),
-                'url' => DocmanViewURLBuilder::buildUrl(
-                    $default_url,
-                    ['action' => \Docman_View_Admin_View::IDENTIFIER],
-                    false,
-                ),
-            ],
-            [
                 'id' => 'filename-pattern',
                 'title' => Docman_View_Admin_FilenamePattern::getTabTitle(),
                 'description' => Docman_View_Admin_FilenamePattern::getTabDescription(),
@@ -286,7 +276,7 @@ abstract class AdminView
         ];
 
         return [
-            'is_active' => $this->getIdentifier() === \Docman_View_Admin_View::IDENTIFIER,
+            'is_active' => $this->getIdentifier() === 'filename-pattern',
             'tabs' => $tab,
         ];
     }

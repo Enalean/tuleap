@@ -21,13 +21,13 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-/* abstract */ class Docman_View_Browse extends Docman_View_Display
+/* abstract */ class Docman_View_Browse extends Docman_View_Display //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @access: protected
      */
     #[\Override]
-    public function _getTitle($params)
+    public function _getTitle($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // If a title is defined in the report, use it instead of the  default one
         $title = $this->getTitleWhenFilterIsSet($params);
@@ -94,7 +94,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
                          alt="' . dgettext('tuleap-docman', 'Table') . '"
                          /> ';
         $html .= '</span>';
-        $html .= '<input type="hidden" name="action" value="change_view" />';
         $html .= '<input type="hidden" name="id" value="' . $params['item']->getId() . '" />';
         $html .= '</form>';
         $html .= '</td>';
@@ -107,7 +106,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     }
 
     public $dfltParams = null;
-    public function _getDefaultUrlParams($params)
+    public function _getDefaultUrlParams($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($this->dfltParams === null) {
             $this->dfltParams = ['action' => 'search',
@@ -119,7 +118,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         return array_merge($this->dfltParams, $this->dfltSearchParams, $this->dfltSortParams);
     }
 
-    public function _buildSearchUrl($params, $extraParams = [])
+    public function _buildSearchUrl($params, $extraParams = []) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $parameters = array_merge($this->_getDefaultUrlParams($params), $extraParams);
         return DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $parameters);
@@ -129,7 +128,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
      * @access: protected
      */
     #[\Override]
-    public function _filter($params)
+    public function _filter($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html = '';
 

@@ -747,9 +747,6 @@ msgstr ""
 "Valeur par défaut: celui qui soumet. Correspond au propriétaire officiel du "
 "document."
 
-msgid "Default view"
-msgstr "Vue par défaut"
-
 msgid ""
 "Define a period of validity for your document. It will automatically be "
 "archived at the end of the period."
@@ -763,9 +760,6 @@ msgid ""
 msgstr ""
 "Définissez les propriétés par défaut pour les éléments qui seront créés dans "
 "ce dossier."
-
-msgid "Define the default view for the document manager."
-msgstr "Définir la vue par défaut pour le gestionnaire de documents."
 
 msgid "Define the properties of your documents."
 msgstr "Sélectionnez les propriétés que vous voulez pour vos documents."
@@ -842,12 +836,6 @@ msgstr "Lien direct :"
 
 msgid "Disabled"
 msgstr "Désactivé"
-
-msgid "Display"
-msgstr "Affichage"
-
-msgid "Display (legacy)"
-msgstr "Affichage (ancienne interface)"
 
 msgid ""
 "Display a docman item directly in the dashboard. <br /><em>For now, only "
@@ -1604,13 +1592,6 @@ msgstr "Veuillez choisir une option pour la création de la table d'approbation"
 msgid "Please enter a new search name:"
 msgstr "Merci d'entrer un nom pour la nouvelle recherche :"
 
-msgid ""
-"Please select the default view for browsing documents. Please note that this "
-"setting can be overridden by user preferences."
-msgstr ""
-"Selectionnez la vue par défaut pour le parcours des documents. Notez que ce "
-"paramètre pourra être ignoré selon les préférences utilisateurs."
-
 msgid "Please select the folder where you want this new document appears."
 msgstr ""
 "Merci de sélectionner le répertoire où vous souhaitez que ce document "
@@ -1850,17 +1831,11 @@ msgstr ""
 msgid "Sequential"
 msgstr "Sequentiellement"
 
-msgid "Settings cannot be updated."
-msgstr "Les paramètres ne peuvent pas être mis à jour."
-
 msgid "Settings differ"
 msgstr "Les paramètres diffèrent"
 
 msgid "Settings have been saved successfully"
 msgstr "Les paramètres ont été sauvegardés avec succès"
-
-msgid "Settings have been updated."
-msgstr "Paramètres mis à jour."
 
 msgid "Show actions"
 msgstr "Afficher les actions"

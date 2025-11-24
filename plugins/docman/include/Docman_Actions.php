@@ -1089,32 +1089,6 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
         }
     }
 
-    public function change_view()
-    {
-        $request = \Tuleap\HTTPRequest::instance();
-        if ($request->exist('selected_view')) {
-            if (is_numeric($request->get('selected_view'))) {
-                $this->_controler->setReportId($request->get('selected_view'));
-                $this->_controler->forceView('Table');
-            } elseif (is_array($request->get('selected_view')) && count($request->get('selected_view'))) {
-                $selected_view_request = $request->get('selected_view');
-                foreach ($selected_view_request as $selected_view => $id) {
-                    if (Docman_View_Browse::isViewAllowed($selected_view)) {
-                        $item_factory = $this->_getItemFactory();
-                        $folder       = $item_factory->getItemFromDb($request->get('id'));
-                        if ($folder) {
-                            user_set_preference(
-                                PLUGIN_DOCMAN_VIEW_PREF . '_' . $folder->getGroupId(),
-                                $selected_view
-                            );
-                            $this->_controler->forceView($selected_view);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public function delete()
     {
         $user    = $this->_controler->getUser();
@@ -1226,21 +1200,6 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
     public function _getActionsDeleteVisitor()
     {
         return new Docman_ActionsDeleteVisitor();
-    }
-
-    public function admin_change_view()
-    {
-        $request  = \Tuleap\HTTPRequest::instance();
-        $group_id = (int) $request->get('group_id');
-
-        if ($request->exist('selected_view') && Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
-            $sBo = Docman_SettingsBo::instance($group_id);
-            if ($sBo->updateView($request->get('selected_view'))) {
-                $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Settings have been updated.'));
-            } else {
-                $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Settings cannot be updated.'));
-            }
-        }
     }
 
     /**

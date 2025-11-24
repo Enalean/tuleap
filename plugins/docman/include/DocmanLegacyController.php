@@ -81,7 +81,6 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
                 \Docman_View_Admin_Metadata::IDENTIFIER,
                 \Docman_View_Admin_LockInfos::IDENTIFIER,
                 \Docman_View_Admin_Obsolete::IDENTIFIER,
-                \Docman_View_Admin_View::IDENTIFIER,
                 \Docman_View_Admin_Permissions::IDENTIFIER,
                 'admin',
                 \Docman_View_Admin_FilenamePattern::IDENTIFIER,
