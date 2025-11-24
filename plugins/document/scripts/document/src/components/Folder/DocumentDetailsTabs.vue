@@ -64,7 +64,7 @@
             {{ $gettext("Statistics") }}
         </router-link>
         <router-link
-            v-if="!isEmpty(item) && !isOtherType(item)"
+            v-if="isAnApprovableDocument(item)"
             class="tlp-tab"
             v-bind:class="{ 'tlp-tab-active': active_tab === ApprovalTableTab }"
             v-bind:to="{ name: 'approval-table', params: { item_id: item.id } }"
@@ -77,7 +77,7 @@
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import type { Item } from "../../type";
 import { computed } from "vue";
-import { isEmbedded, isEmpty, isFile, isLink, isOtherType } from "../../helpers/type-check-helper";
+import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
 import type { DetailsTabs } from "../../helpers/details-tabs";
 import {
     ApprovalTableTab,
@@ -88,6 +88,7 @@ import {
     VersionsTab,
 } from "../../helpers/details-tabs";
 import { TYPE_FOLDER } from "../../constants";
+import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
 
 const props = defineProps<{
     item: Item;

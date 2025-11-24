@@ -32,7 +32,15 @@
                     </div>
 
                     <section class="tlp-pane-section">
-                        <div class="tlp-alert-warning">
+                        <div
+                            v-if="!isAnApprovableDocument(item)"
+                            class="tlp-alert-danger"
+                            data-test="error-not-approvable"
+                        >
+                            {{ $gettext("This item cannot have an approval table") }}
+                        </div>
+
+                        <div v-else class="tlp-alert-warning">
                             <p class="tlp-alert-title">{{ $gettext("Under development") }}</p>
                             <a
                                 class="tlp-button-primary"
@@ -62,6 +70,7 @@ import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
 import { ApprovalTableTab } from "../../helpers/details-tabs";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT } from "../../configuration-keys";
+import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
 
 const props = defineProps<{
     item_id: number;

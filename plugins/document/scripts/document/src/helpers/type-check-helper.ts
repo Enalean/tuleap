@@ -40,43 +40,43 @@ import {
 } from "../constants";
 
 export function isFile(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem | DefaultFileItem,
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem | DefaultFileItem,
 ): item is ItemFile {
     return item.type === TYPE_FILE;
 }
 
 export function isEmpty(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem,
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem | DefaultFileItem,
 ): item is Empty {
     return item.type === TYPE_EMPTY;
 }
 
 export function isLink(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem,
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem | DefaultFileItem,
 ): item is Link {
     return item.type === TYPE_LINK;
 }
 
 export function isWiki(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem,
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem | DefaultFileItem,
 ): item is Wiki {
     return item.type === TYPE_WIKI;
 }
 
 export function isEmbedded(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem,
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem | DefaultFileItem,
 ): item is Embedded {
     return item.type === TYPE_EMBEDDED;
 }
 
 export function isFolder(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem,
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem | DefaultFileItem,
 ): item is Folder {
     return item.type === TYPE_FOLDER;
 }
 
 export function isOtherType(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki,
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem | DefaultFileItem,
 ): item is OtherTypeItem {
     return (
         !isFolder(item) &&

@@ -834,6 +834,9 @@ msgstr "Ce dossier est vide"
 msgid "This is a private folder"
 msgstr "Ce dossier est privé"
 
+msgid "This item cannot have an approval table"
+msgstr "Cet élément ne peut pas avoir de table d'approbation"
+
 msgid "This item is not versionable"
 msgstr "Cet élément n'est pas versionnable"
 
