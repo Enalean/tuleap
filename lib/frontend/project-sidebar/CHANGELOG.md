@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.3
+
+* No user facing changes, adjusted the URL homepage of the repository in the package metadata
+
 ## 2.7.2
 
 * No user facing changes, adjusted the URL of the repository in the package metadata
