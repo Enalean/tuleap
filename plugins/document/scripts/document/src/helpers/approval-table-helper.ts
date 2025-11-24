@@ -29,11 +29,18 @@ import type {
     Link,
     Wiki,
 } from "../type";
+import { isEmpty, isOtherType } from "./type-check-helper";
 
 export interface ApprovalTableBadge {
     icon_badge: string;
     badge_label: string;
     badge_class: string;
+}
+
+export function isAnApprovableDocument(
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem | DefaultFileItem,
+): item is ApprovableDocument {
+    return !isEmpty(item) && !isOtherType(item);
 }
 
 export function hasAnApprovalTable(

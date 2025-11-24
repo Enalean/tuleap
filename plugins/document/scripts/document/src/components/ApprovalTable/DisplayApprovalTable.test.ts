@@ -25,10 +25,13 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 import { PROJECT } from "../../configuration-keys";
+import { TYPE_EMPTY } from "../../constants";
 
 vi.useFakeTimers();
 
 describe("DisplayApprovalTable", () => {
+    const load_document = vi.fn();
+
     function getWrapper(): VueWrapper<InstanceType<typeof DisplayApprovalTable>> {
         return shallowMount(DisplayApprovalTable, {
             props: {
@@ -37,9 +40,7 @@ describe("DisplayApprovalTable", () => {
             global: {
                 ...getGlobalTestOptions({
                     actions: {
-                        loadDocumentWithAscendentHierarchy: vi
-                            .fn()
-                            .mockResolvedValue(new ItemBuilder(123).build()),
+                        loadDocumentWithAscendentHierarchy: load_document,
                     },
                 }),
                 provide: {
@@ -49,7 +50,17 @@ describe("DisplayApprovalTable", () => {
         });
     }
 
+    it("Should display error when item is not approvable", async () => {
+        load_document.mockResolvedValue(new ItemBuilder(123).withType(TYPE_EMPTY).build());
+        const wrapper = getWrapper();
+
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(wrapper.find("[data-test=error-not-approvable]").exists()).toBe(true);
+    });
+
     it("Should display button with link to old ui", async () => {
+        load_document.mockResolvedValue(new ItemBuilder(123).build());
         const wrapper = getWrapper();
 
         await vi.runOnlyPendingTimersAsync();

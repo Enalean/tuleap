@@ -777,6 +777,9 @@ msgstr ""
 msgid "This is a private folder"
 msgstr ""
 
+msgid "This item cannot have an approval table"
+msgstr ""
+
 msgid "This item is not versionable"
 msgstr ""
 
