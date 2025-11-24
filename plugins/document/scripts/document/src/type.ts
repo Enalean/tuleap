@@ -332,6 +332,10 @@ export interface ApprovalTable {
     approval_state: string;
     approval_request_date: string;
     has_been_approved: boolean;
+    version_number: number | null;
+    notification_type: string;
+    is_closed: boolean;
+    description: string;
 }
 
 export interface FolderProperties {

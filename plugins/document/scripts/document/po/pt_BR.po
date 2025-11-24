@@ -109,6 +109,12 @@ msgstr ""
 msgid "Approval"
 msgstr ""
 
+msgid "Approval cycle start date"
+msgstr ""
+
+msgid "Approval requester"
+msgstr ""
+
 msgid "Approval table"
 msgstr ""
 
@@ -125,6 +131,9 @@ msgid "Archive size warning threshold reached"
 msgstr ""
 
 msgid "Ascending sort on %{label}."
+msgstr ""
+
+msgid "Attached to document version"
 msgstr ""
 
 msgid "Author"
@@ -150,6 +159,9 @@ msgstr ""
 
 msgid "Close"
 msgstr "Fechar"
+
+msgid "Closed"
+msgstr ""
 
 msgid "Confirm deletion"
 msgstr ""
@@ -456,6 +468,9 @@ msgstr ""
 msgid "Next"
 msgstr "Próximo"
 
+msgid "No comment"
+msgstr ""
+
 msgid "No matching results"
 msgstr ""
 
@@ -472,6 +487,9 @@ msgid "Not yet"
 msgstr ""
 
 msgid "Notification deletion"
+msgstr ""
+
+msgid "Notification type"
 msgstr ""
 
 msgid "Notifications"
@@ -623,6 +641,9 @@ msgstr ""
 msgid "Reload the page"
 msgstr ""
 
+msgid "Requester comment"
+msgstr ""
+
 msgid "Reset the approval cycle."
 msgstr ""
 
@@ -710,6 +731,12 @@ msgid "Switch to old ui"
 msgstr ""
 
 msgid "Switch to old user interface"
+msgstr ""
+
+msgid "Table status"
+msgstr ""
+
+msgid "The approval table is not yet available"
 msgstr ""
 
 msgid ""

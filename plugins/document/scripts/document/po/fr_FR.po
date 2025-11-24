@@ -124,6 +124,12 @@ msgstr ""
 msgid "Approval"
 msgstr "Approbation"
 
+msgid "Approval cycle start date"
+msgstr "Date de début du cycle d'approbation"
+
+msgid "Approval requester"
+msgstr "Demandeur d'approbation"
+
 msgid "Approval table"
 msgstr "Table d'approbation"
 
@@ -141,6 +147,9 @@ msgstr "Seuil d'avertissement de taille d'archive atteint"
 
 msgid "Ascending sort on %{label}."
 msgstr "Tri ascendant sur %{label}."
+
+msgid "Attached to document version"
+msgstr "Associé à la version"
 
 msgid "Author"
 msgstr "Auteur"
@@ -165,6 +174,9 @@ msgstr "Description des changements"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Closed"
+msgstr "Fermé"
 
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
@@ -486,6 +498,9 @@ msgstr "Nouvelle version de \"%s\""
 msgid "Next"
 msgstr "Suivant"
 
+msgid "No comment"
+msgstr "Pas de commentaire"
+
 msgid "No matching results"
 msgstr "Il n'y a aucun résultat"
 
@@ -503,6 +518,9 @@ msgstr "Pas encore"
 
 msgid "Notification deletion"
 msgstr "Suppression de notification"
+
+msgid "Notification type"
+msgstr "Type de notification"
 
 msgid "Notifications"
 msgstr "Notifications"
@@ -662,6 +680,9 @@ msgstr "Rejeté"
 msgid "Reload the page"
 msgstr "Recharger la page"
 
+msgid "Requester comment"
+msgstr "Commentaire du demandeur"
+
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
 
@@ -754,6 +775,12 @@ msgstr ""
 
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
+
+msgid "Table status"
+msgstr "Status de la table"
+
+msgid "The approval table is not yet available"
+msgstr "La table d'approbation n'est pas encore disponible"
 
 msgid ""
 "The archive you want to download has a size greater than %"

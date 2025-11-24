@@ -28,6 +28,7 @@ import { PROJECT } from "../../configuration-keys";
 import { TYPE_EMPTY } from "../../constants";
 import NoApprovalTable from "./NoApprovalTable.vue";
 import { ApprovalTableBuilder } from "../../../tests/builders/ApprovalTableBuilder";
+import CurrentApprovalTable from "./CurrentApprovalTable.vue";
 
 vi.useFakeTimers();
 
@@ -80,6 +81,6 @@ describe("DisplayApprovalTable", () => {
 
         await vi.runOnlyPendingTimersAsync();
 
-        expect(wrapper.get("[data-test=old-ui-link]").text()).toBe("Switch to old ui");
+        expect(wrapper.findComponent(CurrentApprovalTable).exists()).toBe(true);
     });
 });
