@@ -21,9 +21,27 @@ import type { ApprovalTable } from "../../src/type";
 
 export class ApprovalTableBuilder {
     private readonly id: number;
+    private version_number: number | null = null;
+    private notification_type: string = "";
+    private description: string = "";
 
     constructor(id: number) {
         this.id = id;
+    }
+
+    public withVersionNumber(version_number: number): this {
+        this.version_number = version_number;
+        return this;
+    }
+
+    public withNotificationType(notification_type: string): this {
+        this.notification_type = notification_type;
+        return this;
+    }
+
+    public withDescription(description: string): this {
+        this.description = description;
+        return this;
     }
 
     public build(): ApprovalTable {
@@ -33,6 +51,10 @@ export class ApprovalTableBuilder {
             approval_state: "",
             approval_request_date: "",
             has_been_approved: false,
+            version_number: this.version_number,
+            notification_type: this.notification_type,
+            is_closed: false,
+            description: this.description,
         };
     }
 }

@@ -45,21 +45,7 @@
                             v-bind:item="item"
                         />
 
-                        <div v-else class="tlp-alert-warning">
-                            <p class="tlp-alert-title">{{ $gettext("Under development") }}</p>
-                            <a
-                                class="tlp-button-primary"
-                                role="button"
-                                v-bind:href="getLinkToOldUI()"
-                                data-test="old-ui-link"
-                            >
-                                <i
-                                    class="fa-solid fa-shuffle tlp-button-icon"
-                                    aria-hidden="true"
-                                ></i>
-                                {{ $gettext("Switch to old ui") }}
-                            </a>
-                        </div>
+                        <current-approval-table v-else v-bind:item="item" />
                     </section>
                 </div>
             </section>
@@ -73,10 +59,9 @@ import type { Item } from "../../type";
 import { useActions } from "vuex-composition-helpers";
 import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
 import { ApprovalTableTab } from "../../helpers/details-tabs";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT } from "../../configuration-keys";
 import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
 import NoApprovalTable from "./NoApprovalTable.vue";
+import CurrentApprovalTable from "./CurrentApprovalTable.vue";
 
 const props = defineProps<{
     item_id: number;
@@ -84,15 +69,9 @@ const props = defineProps<{
 
 const item = ref<Item | null>(null);
 
-const project = strictInject(PROJECT);
-
 const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
 
 onBeforeMount(async () => {
     item.value = await loadDocumentWithAscendentHierarchy(props.item_id);
 });
-
-function getLinkToOldUI(): string {
-    return `/plugins/docman/?group_id=${project.id}&action=details&id=${props.item_id}&section=approval`;
-}
 </script>

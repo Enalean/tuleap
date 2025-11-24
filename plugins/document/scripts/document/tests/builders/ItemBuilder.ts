@@ -31,6 +31,7 @@ export class ItemBuilder {
     private properties: Array<Property> = [];
     private approval_table: ApprovalTable | null = null;
     private user_can_write: boolean = false;
+    private is_approval_table_enabled: boolean = false;
 
     constructor(id: number) {
         this.id = id;
@@ -78,6 +79,11 @@ export class ItemBuilder {
 
     public withApprovalTable(approval_table: ApprovalTable): this {
         this.approval_table = approval_table;
+        return this;
+    }
+
+    public withApprovalTableEnabled(enabled: boolean): this {
+        this.is_approval_table_enabled = enabled;
         return this;
     }
 
@@ -131,7 +137,7 @@ export class ItemBuilder {
             level: this.level,
             has_approval_table: this.approval_table !== null,
             approval_table: this.approval_table,
-            is_approval_table_enabled: false,
+            is_approval_table_enabled: this.is_approval_table_enabled,
         };
     }
 }
