@@ -21,6 +21,9 @@ AutoReqProv: no
 Requires(pre):   /usr/sbin/useradd
 Requires: systemd, tuleap-node
 
+Obsoletes: tuleap-mercure <= 17.1
+Provides: tuleap-mercure
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
