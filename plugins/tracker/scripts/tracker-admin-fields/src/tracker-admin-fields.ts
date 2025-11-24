@@ -20,6 +20,7 @@
 import { createApp } from "vue";
 import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { getAttributeOrThrow } from "@tuleap/dom";
 import FieldsUsage from "./components/FieldsUsage.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -28,7 +29,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    createApp(FieldsUsage)
+    createApp(FieldsUsage, {
+        tracker_id: parseInt(getAttributeOrThrow(mount_point, "data-tracker-id"), 10),
+    })
         .use(
             /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
             await initVueGettext(createGettext, (locale) => {

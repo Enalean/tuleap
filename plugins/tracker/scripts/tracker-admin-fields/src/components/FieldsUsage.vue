@@ -20,11 +20,49 @@
 <template>
     <div class="tlp-framed">
         <h2>{{ $gettext("Fields usage") }}</h2>
+
+        <loading-state v-if="is_loading" />
+
+        <fields-used-in-tracker
+            v-bind:fields="fields"
+            v-if="!is_error && !is_loading && fields.length > 0"
+        />
+
+        <empty-state v-if="!is_loading && !is_error && fields.length === 0" />
+
+        <error-state v-if="is_error" />
     </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import FieldsUsedInTracker from "./FieldsUsedInTracker.vue";
+import { getJSON, uri } from "@tuleap/fetch-result";
+import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
+import EmptyState from "./EmptyState.vue";
+import LoadingState from "./LoadingState.vue";
+import ErrorState from "./ErrorState.vue";
 
 const { $gettext } = useGettext();
+
+const props = defineProps<{ tracker_id: number }>();
+const is_error = ref(false);
+const is_loading = ref(true);
+const fields = ref<TrackerResponseNoInstance["fields"]>([]);
+
+onMounted(() => {
+    getJSON<Pick<TrackerResponseNoInstance, "fields">>(
+        uri`/api/v1/trackers/${props.tracker_id}`,
+    ).match(
+        (tracker) => {
+            fields.value = tracker.fields;
+            is_loading.value = false;
+        },
+        () => {
+            is_loading.value = false;
+            is_error.value = true;
+        },
+    );
+});
 </script>

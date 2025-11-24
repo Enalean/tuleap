@@ -12,5 +12,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
+msgid "An error occurred while loading the fields."
+msgstr "Une erreur est survenue lors du chargement des champs."
+
 msgid "Fields usage"
 msgstr "Utilisation des champs"
+
+msgid "No fields"
+msgstr "Aucun champ"
+
+msgid "This tracker does not have any field yet."
+msgstr "Ce tracker n'a pas encore de champ."
