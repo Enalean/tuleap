@@ -1,0 +1,26 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-admin-fields",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/gettext": "workspace:^",
+    "@tuleap/vue3-gettext-init": "workspace:^",
+    "vue": "^3.5.25",
+    "vue3-gettext": "^2.4.0"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:^",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/test-utils": "^2.4.6"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vite build",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

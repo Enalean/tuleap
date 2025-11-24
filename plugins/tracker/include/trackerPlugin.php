@@ -187,6 +187,7 @@ use Tuleap\Tracker\Creation\TrackerCreationProcessorController;
 use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use Tuleap\Tracker\FormElement\Admin\FieldsUsageDisplayController;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
@@ -1922,6 +1923,15 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         );
     }
 
+    public function routeGetFieldsUsage(): DispatchableWithRequest
+    {
+        return new FieldsUsageDisplayController(
+            $this->getTrackerFactory(),
+            new TrackerManager(),
+            TemplateRendererFactory::build(),
+        );
+    }
+
     public function routePostNotifications(): NotificationsAdminSettingsUpdateController
     {
         return new NotificationsAdminSettingsUpdateController(
@@ -2173,6 +2183,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $r->get('/notifications/my/{id:\d+}/', $this->getRouteHandler('routeGetNotificationsMy'));
             $r->post('/notifications/my/{id:\d+}/', $this->getRouteHandler('routePostNotificationsMy'));
             $r->post('/notifications/user', $this->getRouteHandler('routePostNotificationsUser'));
+
+            $r->get('/fields/{id:\d+}/', $this->getRouteHandler('routeGetFieldsUsage'));
 
             $r->get(ByFieldController::URL . '/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByField'));
             $r->get(ByGroupController::URL . '/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByGroup'));

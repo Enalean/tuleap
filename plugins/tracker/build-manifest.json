@@ -50,6 +50,10 @@
         "workflow-transitions": {
             "src": "scripts/workflow-transitions/src",
             "po": "scripts/workflow-transitions/po"
+        },
+        "tracker-admin-fields": {
+            "src": "scripts/tracker-admin-fields/src",
+            "po": "scripts/tracker-admin-fields/po"
         }
     },
     "gettext-angularjs": {
