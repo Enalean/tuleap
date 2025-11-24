@@ -170,7 +170,12 @@ describe(`Backlog`, function () {
         addTask("task2");
         cy.wait("@saveChildren");
         cy.wait("@getItem");
+        addTask("task3");
+        cy.wait("@saveChildren");
+        cy.wait("@getItem");
         addUserStory("User story 2");
+        cy.wait("@getItem");
+        addUserStory("User story 3");
         cy.wait("@getItem");
 
         cy.getContains("[data-test=backlog-item]", "User story 1")
@@ -179,7 +184,8 @@ describe(`Backlog`, function () {
             .click();
         cy.getContains("[data-test=backlog-item]", "User story 1")
             .should("contain", "task1")
-            .should("contain", "task2");
+            .should("contain", "task2")
+            .should("contain", "task3");
 
         cy.log("story can be planned");
         cy.getContains("[data-test=milestone]", "R1").click();
@@ -198,6 +204,35 @@ describe(`Backlog`, function () {
         cy.getContains("[data-test=milestone]", "R1")
             .find("[data-test=milestone-content]")
             .should("contain", "User story 1");
+
+        cy.dragAndDrop(
+            "[data-test=backlog-item-handle]",
+            "User story 3",
+            "[data-test=milestone]",
+            "R1",
+            "[data-test=milestone-backlog-items]",
+        );
+        cy.wait("@dropElements");
+
+        cy.log("Stories can be reordered");
+        cy.get("[data-test=milestone-content]").within(() => {
+            cy.get("[data-test=backlog-item-handle]").eq(0).should("contain", "User story 3");
+            cy.get("[data-test=backlog-item-handle]").eq(1).should("contain", "User story 1");
+        });
+
+        cy.dragAndDrop(
+            "[data-test=backlog-item-handle]",
+            "User story 1",
+            "[data-test=milestone]",
+            "R1",
+            "[data-test=milestone-backlog-items]",
+        );
+        cy.wait("@dropElements");
+
+        cy.get("[data-test=milestone-content]").within(() => {
+            cy.get("[data-test=backlog-item-handle]").eq(0).should("contain", "User story 1");
+            cy.get("[data-test=backlog-item-handle]").eq(1).should("contain", "User story 3");
+        });
 
         cy.log("tasks can be moved from one story to another");
         cy.wait("@getItem");
@@ -238,6 +273,36 @@ describe(`Backlog`, function () {
         cy.getContains("[data-test=milestone]", "R2")
             .find("[data-test=milestone-content]")
             .should("contain", "User story 1");
+
+        cy.log("Reordering task");
+        cy.getContains("[data-test=milestone-content]", "User story 1")
+            .find("[data-test=backlog-item-show-children-handle]")
+            .should("be.visible")
+            .click();
+
+        cy.dragAndDrop(
+            "[data-test=backlog-item-child]",
+            "task3",
+            "[data-test=backlog-item-child]",
+            "task2",
+        );
+
+        /* There is a digest issue in AngularJS code, the User story 1 card should be refreshed,
+           but we cannot make cypress trigger it and wait for the request reliably.
+        */
+        cy.reload();
+        cy.getContains("[data-test=milestone]", "R2").click();
+        cy.wait("@getItem");
+        cy.getContains("[data-test=milestone-content]", "User story 1")
+            .find("[data-test=backlog-item-show-children-handle]")
+            .should("be.visible")
+            .click();
+        cy.wait("@getItem");
+
+        cy.getContains("[data-test=milestone-content]", "User story 1").within(() => {
+            cy.get("[data-test=backlog-item-child]").eq(0).should("contain", "task3");
+            cy.get("[data-test=backlog-item-child]").eq(1).should("contain", "task2");
+        });
     });
 
     it(`Multi drag and drop at top backlog level`, function () {
