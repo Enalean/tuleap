@@ -64,7 +64,7 @@ describe("IndividualNotifications", () => {
         is_user_anonymous = true;
         const wrapper = getWrapper();
         const input_checkbox = wrapper.find<HTMLInputElement>(
-            "[data-test=notify-me-hierarchy-checkbox]",
+            "[data-test=notify-me-checkbox-input]",
         );
 
         expect(input_checkbox.element.disabled).toBe(true);

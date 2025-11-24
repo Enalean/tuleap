@@ -50,6 +50,7 @@
                     type="button"
                     class="tlp-button-primary"
                     v-on:click="add_modal_should_be_displayed = true"
+                    data-test="add-notification-button"
                 >
                     <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
                     {{ $gettext("Add notification") }}
@@ -63,7 +64,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody data-test="notified-users">
                     <tr v-if="has_no_subscribers">
                         <td colspan="3" class="tlp-table-cell-empty">
                             {{ $gettext("No notifications set") }}
@@ -118,6 +119,7 @@
                                         : ''
                                 "
                                 v-on:click="user_to_remove = user.subscriber"
+                                data-test="remove-notification-button"
                             >
                                 <i
                                     class="tlp-button-icon fa-regular fa-trash-can"

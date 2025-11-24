@@ -42,7 +42,7 @@
                         name="monitor"
                         value="1"
                         id="plugin_docman_monitor_item"
-                        data-test="notify-me-hierarchy-checkbox"
+                        data-test="notify-me-checkbox-input"
                         v-bind:checked="checked"
                         v-bind:disabled="is_user_anonymous"
                     />

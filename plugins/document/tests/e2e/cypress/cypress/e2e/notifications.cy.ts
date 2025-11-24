@@ -51,13 +51,8 @@ function notifyMe(): void {
 }
 
 function addUserToNotifiedPeople(user_name: string): void {
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-container").click();
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-input").type(`${user_name}{enter}`);
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-result-label").last().click();
-
+    cy.get("[data-test=add-notification-button]").click();
+    cy.searchItemInLazyboxDropdown(`${user_name}`, `${user_name}`).click();
     cy.get("[data-test=validate-notification-button]").click();
     cy.get("[data-test=feedback]").contains(`Monitoring for user(s) "${user_name}" has been added`);
 }
@@ -173,7 +168,7 @@ describe("Document notifications", () => {
         openQuickLook(`Folder`);
         notifyMe();
 
-        cy.get("[data-test=user_to_be_notified]").first().click();
+        cy.get("[data-test=remove-notification-button]").first().click();
         cy.get("[data-test=validate-notification-button]").click();
 
         cy.get("[data-test=feedback]").contains("Removed monitoring for user(s) ");
