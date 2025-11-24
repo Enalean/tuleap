@@ -143,30 +143,23 @@ describe("Tracker notifications", () => {
         cy.get("[data-test=workflow]").click();
         cy.get("[data-test=field-dependencies]").click();
 
-        cy.get("[data-test=tracker-administration-content]").then(($field_dependency) => {
-            if (
-                $field_dependency.find("[data-test=existing-field-dependency-label]").length !== 0
-            ) {
-                return;
-            }
-            cy.log("Define field dependencies");
-            cy.get("[data-test=source_field]").select("Category");
-            cy.get("[data-test=target_field]").select("Coordinators");
-            cy.get("[data-test=choose_source_button]").click();
-            disableSpecificErrorThrownDueToConflictBetweenCypressAndPrototype();
-            cy.get("[data-test=tracker-field-dependencies-matrix]").within(() => {
-                cy.getContains("[data-test=matrix-row]", "Database").within(() => {
-                    cy.get("[data-test=create-dependency]").eq(1).click({ force: true });
-                });
-                cy.getContains("[data-test=matrix-row]", "User interface").within(() => {
-                    cy.get("[data-test=create-dependency]").eq(2).click({ force: true });
-                });
-                cy.getContains("[data-test=matrix-row]", "SOAP API").within(() => {
-                    cy.get("[data-test=create-dependency]").eq(1).click({ force: true });
-                });
+        cy.log("Define field dependencies");
+        cy.get("[data-test=source_field]").select("Category");
+        cy.get("[data-test=target_field]").select("Coordinators");
+        cy.get("[data-test=choose_source_button]").click();
+
+        cy.get("[data-test=tracker-field-dependencies-matrix]").within(() => {
+            cy.getContains("[data-test=matrix-row]", "Database").within(() => {
+                cy.get("[data-test=create-dependency]").eq(1).click({ force: true });
             });
-            cy.get("[data-test=create-field-dependencies-button]").click();
+            cy.getContains("[data-test=matrix-row]", "User interface").within(() => {
+                cy.get("[data-test=create-dependency]").eq(2).click({ force: true });
+            });
+            cy.getContains("[data-test=matrix-row]", "SOAP API").within(() => {
+                cy.get("[data-test=create-dependency]").eq(1).click({ force: true });
+            });
         });
+        cy.get("[data-test=create-field-dependencies-button]").click();
 
         cy.log(
             "When project admin creates an artifact and chooses Database category, then coordinator1 will receive notification",
@@ -440,11 +433,3 @@ describe("Tracker notifications", () => {
         });
     });
 });
-
-export function disableSpecificErrorThrownDueToConflictBetweenCypressAndPrototype(): void {
-    cy.on("uncaught:exception", (err) => {
-        // the message below is only thrown by Prototypejs, if any other js exception is thrown
-        // the test will fail
-        return !err.message.includes("ev.element is not a function");
-    });
-}
