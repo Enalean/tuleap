@@ -17,10 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type DetailsTabs = "versions" | "logs" | "references" | "notifications" | "statistics";
+export type DetailsTabs =
+    | "versions"
+    | "logs"
+    | "references"
+    | "notifications"
+    | "statistics"
+    | "approval-table";
 
 export const VersionsTab: DetailsTabs = "versions";
 export const LogsTab: DetailsTabs = "logs";
 export const ReferencesTab: DetailsTabs = "references";
 export const NotificationsTab: DetailsTabs = "notifications";
 export const StatisticsTab: DetailsTabs = "statistics";
+export const ApprovalTableTab: DetailsTabs = "approval-table";

@@ -2283,6 +2283,12 @@ msgstr ""
 msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
 msgstr ""
 
+#, php-format
+msgid ""
+"You can view this table in the %s. Please note the interface is under "
+"development"
+msgstr ""
+
 msgid "You cannot add people to an old approval table."
 msgstr ""
 
@@ -2535,6 +2541,9 @@ msgid "lorem must be in result"
 msgstr ""
 
 msgid "lorem must not be in result"
+msgstr ""
+
+msgid "new ui"
 msgstr ""
 
 msgid "null is not a valid status."

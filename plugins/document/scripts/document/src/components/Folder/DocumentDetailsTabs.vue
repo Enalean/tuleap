@@ -63,20 +63,29 @@
         >
             {{ $gettext("Statistics") }}
         </router-link>
+        <router-link
+            v-if="!isEmpty(item) && !isOtherType(item)"
+            class="tlp-tab"
+            v-bind:class="{ 'tlp-tab-active': active_tab === ApprovalTableTab }"
+            v-bind:to="{ name: 'approval-table', params: { item_id: item.id } }"
+        >
+            {{ $gettext("Approval table") }}
+        </router-link>
     </nav>
 </template>
 <script setup lang="ts">
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import type { Item } from "../../type";
 import { computed } from "vue";
-import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
+import { isEmbedded, isEmpty, isFile, isLink, isOtherType } from "../../helpers/type-check-helper";
 import type { DetailsTabs } from "../../helpers/details-tabs";
 import {
+    ApprovalTableTab,
     LogsTab,
-    ReferencesTab,
-    VersionsTab,
-    StatisticsTab,
     NotificationsTab,
+    ReferencesTab,
+    StatisticsTab,
+    VersionsTab,
 } from "../../helpers/details-tabs";
 import { TYPE_FOLDER } from "../../constants";
 

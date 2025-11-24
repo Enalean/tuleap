@@ -746,6 +746,9 @@ msgstr "Abonnés"
 msgid "Summary"
 msgstr "Résumé"
 
+msgid "Switch to old ui"
+msgstr ""
+
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
 
@@ -867,6 +870,9 @@ msgstr "Ouvrir ou fermer le dossier sélectionné"
 
 msgid "URL"
 msgstr "URL"
+
+msgid "Under development"
+msgstr "En développement"
 
 msgid "Unlock"
 msgstr "Déverrouiller"

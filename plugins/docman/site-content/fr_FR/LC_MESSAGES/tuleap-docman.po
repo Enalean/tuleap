@@ -2612,6 +2612,14 @@ msgstr "Vous ne pouvez pas coller l'élément en lui même."
 msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
 msgstr "Vous ne pouvez cloner que les rapports 'projet' ou personnels."
 
+#, php-format
+msgid ""
+"You can view this table in the %s. Please note the interface is under "
+"development"
+msgstr ""
+"Vous pouvez voir cette table dans la %s. Veuillez noter que l'interface est "
+"en cours de développement"
+
 msgid "You cannot add people to an old approval table."
 msgstr ""
 "Il est impossible d'ajouter des approbateur à une ancienne table "
@@ -2938,6 +2946,9 @@ msgstr "lorem doit figurer dans le résultat"
 
 msgid "lorem must not be in result"
 msgstr "lorem ne doit pas figurer dans le résultat"
+
+msgid "new ui"
+msgstr "nouvelle interface"
 
 msgid "null is not a valid status."
 msgstr "null n'est pas un statut valide."
