@@ -40,6 +40,11 @@
                             {{ $gettext("This item cannot have an approval table") }}
                         </div>
 
+                        <no-approval-table
+                            v-else-if="!item.has_approval_table"
+                            v-bind:item="item"
+                        />
+
                         <div v-else class="tlp-alert-warning">
                             <p class="tlp-alert-title">{{ $gettext("Under development") }}</p>
                             <a
@@ -71,6 +76,7 @@ import { ApprovalTableTab } from "../../helpers/details-tabs";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT } from "../../configuration-keys";
 import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
+import NoApprovalTable from "./NoApprovalTable.vue";
 
 const props = defineProps<{
     item_id: number;

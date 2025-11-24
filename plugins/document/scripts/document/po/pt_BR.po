@@ -188,6 +188,9 @@ msgstr ""
 msgid "Create a new folder"
 msgstr ""
 
+msgid "Create a new one"
+msgstr ""
+
 msgid "Create a new version of document"
 msgstr ""
 
@@ -760,6 +763,9 @@ msgid "There are no logs yet"
 msgstr ""
 
 msgid "There are no versions yet"
+msgstr ""
+
+msgid "There is no approval table for this document."
 msgstr ""
 
 msgid "There is no upload in progress"

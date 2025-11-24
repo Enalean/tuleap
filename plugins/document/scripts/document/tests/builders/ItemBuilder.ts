@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Item, Property, User } from "../../src/type";
+import type { ApprovableDocument, ApprovalTable, Item, Property, User } from "../../src/type";
 import { UserBuilder } from "./UserBuilder";
 
 export class ItemBuilder {
@@ -29,6 +29,8 @@ export class ItemBuilder {
     private owner: User = new UserBuilder(101).build();
     private status: string = "";
     private properties: Array<Property> = [];
+    private approval_table: ApprovalTable | null = null;
+    private user_can_write: boolean = false;
 
     constructor(id: number) {
         this.id = id;
@@ -74,6 +76,16 @@ export class ItemBuilder {
         return this;
     }
 
+    public withApprovalTable(approval_table: ApprovalTable): this {
+        this.approval_table = approval_table;
+        return this;
+    }
+
+    public withUserCanWrite(user_can_write: boolean): this {
+        this.user_can_write = user_can_write;
+        return this;
+    }
+
     public build(): Item {
         return {
             can_user_manage: false,
@@ -92,8 +104,34 @@ export class ItemBuilder {
             title: this.title,
             type: this.type,
             user_can_delete: false,
-            user_can_write: false,
+            user_can_write: this.user_can_write,
             level: this.level,
+        };
+    }
+
+    public buildApprovableDocument(): Item & ApprovableDocument {
+        return {
+            can_user_manage: false,
+            creation_date: "",
+            description: this.description,
+            id: this.id,
+            last_update_date: "",
+            lock_info: null,
+            move_uri: "",
+            obsolescence_date: null,
+            owner: this.owner,
+            parent_id: this.parent_id,
+            post_processed_description: "",
+            properties: this.properties,
+            status: this.status,
+            title: this.title,
+            type: this.type,
+            user_can_delete: false,
+            user_can_write: this.user_can_write,
+            level: this.level,
+            has_approval_table: this.approval_table !== null,
+            approval_table: this.approval_table,
+            is_approval_table_enabled: false,
         };
     }
 }
