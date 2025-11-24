@@ -30,7 +30,8 @@
       "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
       "hasown": "npm:@nolyfill/hasown@^1",
       "isarray": "npm:@nolyfill/isarray@^1",
-      "typed-array-buffer": "npm:@nolyfill/typed-array-buffer@^1"
+      "typed-array-buffer": "npm:@nolyfill/typed-array-buffer@^1",
+      "argparse": "npm:@types/argparse@^2"
     }
   }
 }
