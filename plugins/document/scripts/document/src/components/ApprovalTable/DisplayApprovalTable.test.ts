@@ -26,6 +26,8 @@ import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 import { PROJECT } from "../../configuration-keys";
 import { TYPE_EMPTY } from "../../constants";
+import NoApprovalTable from "./NoApprovalTable.vue";
+import { ApprovalTableBuilder } from "../../../tests/builders/ApprovalTableBuilder";
 
 vi.useFakeTimers();
 
@@ -59,8 +61,21 @@ describe("DisplayApprovalTable", () => {
         expect(wrapper.find("[data-test=error-not-approvable]").exists()).toBe(true);
     });
 
+    it("Should display NoApprovalTable when... no approval table", async () => {
+        load_document.mockResolvedValue(new ItemBuilder(123).buildApprovableDocument());
+        const wrapper = getWrapper();
+
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(wrapper.findComponent(NoApprovalTable).exists()).toBe(true);
+    });
+
     it("Should display button with link to old ui", async () => {
-        load_document.mockResolvedValue(new ItemBuilder(123).build());
+        load_document.mockResolvedValue(
+            new ItemBuilder(123)
+                .withApprovalTable(new ApprovalTableBuilder(35).build())
+                .buildApprovableDocument(),
+        );
         const wrapper = getWrapper();
 
         await vi.runOnlyPendingTimersAsync();

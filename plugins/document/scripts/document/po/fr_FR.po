@@ -205,6 +205,9 @@ msgstr "Créer un nouveau fichier"
 msgid "Create a new folder"
 msgstr "Créer un nouveau dossier"
 
+msgid "Create a new one"
+msgstr ""
+
 msgid "Create a new version of document"
 msgstr "Créer une nouvelle version du document"
 
@@ -818,6 +821,9 @@ msgstr "Il n'y a pas encore de logs"
 
 msgid "There are no versions yet"
 msgstr "Il n'y a pas encore de versions"
+
+msgid "There is no approval table for this document."
+msgstr "Il n'y a pas de table d'approbation pour ce document."
 
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
