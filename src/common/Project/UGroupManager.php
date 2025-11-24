@@ -600,7 +600,6 @@ class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever, Pr
         return new UserRemover(
             ProjectManager::instance(),
             $this->getEventManager(),
-            new ArtifactTypeFactory(false),
             new UserRemoverDao(),
             UserManager::instance(),
             new ProjectHistoryDao(),

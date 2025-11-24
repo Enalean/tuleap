@@ -78,7 +78,6 @@ project_admin_index	invalid_p	Projet invalide
 project_admin_index	p_not_found	Projet introuvable.
 project_admin_index	user_not_removed	L'utilisateur n'a pas été enlevé - Vous ne pouvez enlever un administrateur du projet. Vous devez d'abord lui ôter ces droits d'administrateur et, éventuellement, en désigner un autre.
 project_admin_index	not_get_atf	Impossible d'obtenir un ArtifactTypeFactory
-project_admin_index	del_tracker_perm_fail	L'annulation des permissions sur le tracker ($1) a échoué
 project_admin_index	del_user_from_ug_fail	Impossible d'enlever l'utilisateur des ugroups
 project_admin_index	user_removed	Utilisateur enlevé
 project_admin_index	self_user_remove	Vous n'êtes plus membre du projet

@@ -38,14 +38,12 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserRemover $remover;
     private MockObject&\EventManager $event_manager;
     private MockObject&\ProjectManager $project_manager;
-    private MockObject&\ArtifactTypeFactory $tv3_tracker_factory;
     private MockObject&UserRemoverDao $dao;
     private MockObject&\UserManager $user_manager;
     private MockObject&\ProjectHistoryDao $project_history_dao;
     private MockObject&\UGroupManager $ugroup_manager;
     private \Project $project;
     private PFUser $user;
-    private MockObject&\ArtifactType $tracker_v3;
     private MockObject&UserPermissionsDao $user_permissions_dao;
 
 
@@ -56,7 +54,6 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project_manager      = $this->createMock(\ProjectManager::class);
         $this->event_manager        = $this->createMock(\EventManager::class);
-        $this->tv3_tracker_factory  = $this->createMock(\ArtifactTypeFactory::class);
         $this->dao                  = $this->createMock(UserRemoverDao::class);
         $this->user_manager         = $this->createMock(\UserManager::class);
         $this->project_history_dao  = $this->createMock(\ProjectHistoryDao::class);
@@ -66,7 +63,6 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->remover = new UserRemover(
             $this->project_manager,
             $this->event_manager,
-            $this->tv3_tracker_factory,
             $this->dao,
             $this->user_manager,
             $this->project_history_dao,
@@ -74,12 +70,11 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_permissions_dao,
         );
 
-        $this->project    = ProjectTestBuilder::aProject()->withId(101)->withUnixName('')->withAccess(\Project::ACCESS_PRIVATE)->build();
-        $this->user       = new PFUser([
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->withUnixName('')->withAccess(\Project::ACCESS_PRIVATE)->build();
+        $this->user    = new PFUser([
             'language_id' => 'en',
             'user_id' => 102,
         ]);
-        $this->tracker_v3 = $this->createMock(\ArtifactType::class);
     }
 
     public function testItRemovesUserFromProjectMembersAndUgroups(): void
@@ -89,11 +84,9 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->expects($this->once())->method('removeNonAdminUserFromProject')->willReturn(true);
         $this->dao->expects($this->once())->method('removeUserFromProjectUgroups')->willReturn(true);
-        $this->tracker_v3->expects($this->once())->method('deleteUser')->with(102)->willReturn(true);
         $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
         $this->user_manager->method('getUserById')->with(102)->willReturn($this->user);
         $this->ugroup_manager->method('getStaticUGroups')->with($this->project)->willReturn([]);
-        $this->tv3_tracker_factory->method('getArtifactTypesFromId')->with(101)->willReturn([$this->tracker_v3]);
 
         $this->project_history_dao->expects($this->once())->method('groupAddHistory');
         $this->event_manager->expects($this->exactly(2))->method('processEvent');
@@ -111,11 +104,9 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_permissions_dao->expects($this->once())->method('removeUserFromProjectAdmin');
         $this->dao->expects($this->once())->method('removeNonAdminUserFromProject')->willReturn(true);
         $this->dao->expects($this->once())->method('removeUserFromProjectUgroups')->willReturn(true);
-        $this->tracker_v3->expects($this->once())->method('deleteUser')->with(102)->willReturn(true);
         $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
         $this->user_manager->method('getUserById')->with(102)->willReturn($this->user);
         $this->ugroup_manager->method('getStaticUGroups')->with($this->project)->willReturn([]);
-        $this->tv3_tracker_factory->method('getArtifactTypesFromId')->with(101)->willReturn([$this->tracker_v3]);
 
         $this->project_history_dao->expects($this->once())->method('groupAddHistory');
         $this->project_history_dao->expects($this->once())->method('addHistory');
@@ -134,7 +125,6 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects($this->never())->method('removeNonAdminUserFromProject');
         $this->dao->expects($this->never())->method('removeUserFromProjectUgroups');
         $this->project_history_dao->expects($this->never())->method('groupAddHistory');
-        $this->tracker_v3->expects($this->never())->method('deleteUser');
         $this->event_manager->expects($this->never())->method('processEvent');
         $this->event_manager->expects($this->never())->method('dispatch');
 
@@ -151,7 +141,6 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects($this->once())->method('removeNonAdminUserFromProject');
         $this->dao->expects($this->never())->method('removeUserFromProjectUgroups');
         $this->project_history_dao->expects($this->never())->method('groupAddHistory');
-        $this->tracker_v3->expects($this->never())->method('deleteUser');
         $this->event_manager->expects($this->never())->method('processEvent');
 
         $this->remover->removeUserFromProject($project_id, $user_id);

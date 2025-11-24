@@ -136,7 +136,6 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
             new UserRemover(
                 ProjectManager::instance(),
                 $event_manager,
-                new ArtifactTypeFactory(false),
                 new UserRemoverDao(),
                 $user_manager,
                 new ProjectHistoryDao(),

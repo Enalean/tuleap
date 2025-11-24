@@ -24,7 +24,6 @@
 
 namespace Tuleap\Project\Admin\ProjectMembers;
 
-use ArtifactTypeFactory;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
@@ -163,7 +162,6 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             new UserRemover(
                 ProjectManager::instance(),
                 $event_manager,
-                new ArtifactTypeFactory(false),
                 new UserRemoverDao(),
                 $user_manager,
                 new ProjectHistoryDao(),
