@@ -94,7 +94,6 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            false
         );
         self::assertEquals($expected_template, $presenter);
     }
@@ -119,7 +118,6 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            false
         );
         self::assertEquals($expected_template, $presenter);
     }
@@ -145,7 +143,6 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            false
         );
         self::assertEquals($expected_template, $presenter);
     }
@@ -188,7 +185,6 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            false
         );
         self::assertEquals($expected_template, $presenter);
     }
@@ -293,7 +289,6 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            false
         );
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);

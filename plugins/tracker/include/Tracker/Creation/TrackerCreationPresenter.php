@@ -69,10 +69,6 @@ class TrackerCreationPresenter
      * @var false|string
      */
     public $default_templates;
-    /**
-     * @var bool
-     */
-    public $are_there_tv3;
 
     public function __construct(
         array $default_templates,
@@ -82,7 +78,6 @@ class TrackerCreationPresenter
         array $tracker_colors,
         Project $current_project,
         CSRFSynchronizerTokenInterface $csrf,
-        bool $are_there_tv3,
     ) {
         $this->default_templates            = json_encode($default_templates, JSON_THROW_ON_ERROR);
         $this->project_templates            = json_encode($project_templates, JSON_THROW_ON_ERROR);
@@ -98,6 +93,5 @@ class TrackerCreationPresenter
             ]
         );
         $this->company_name                 = (string) ForgeConfig::get('sys_org_name');
-        $this->are_there_tv3                = $are_there_tv3;
     }
 }
