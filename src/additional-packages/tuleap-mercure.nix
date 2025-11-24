@@ -9,7 +9,7 @@ let
 
     src = ./tuleap-mercure;
 
-    vendorHash = "sha256-1uJoM8o9Bab1J4L7zVTjvqnlsvpXNFbnxfDfw1usXdI=";
+    vendorHash = "sha256-JUQxdtRIpqyXFNRw0WXVo2fUFG/AMiPxKXnjUGezjdA=";
 
     env.CGO_ENABLED = 0;
 

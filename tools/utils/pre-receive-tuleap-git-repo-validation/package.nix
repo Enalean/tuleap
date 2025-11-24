@@ -7,7 +7,7 @@ pkgs.buildGoLatestModule {
   src = ./src;
 
   goSum = ./src/go.sum;
-  vendorHash = "sha256-u5LoQnbN4zN8mCme7iRTNYZ/7WPc4ubgafhfV07Uq24=";
+  vendorHash = "sha256-vrvnVUDZ6Id3Lwvr5LsVJgr3uk3Yq50hvcfOzeUJoaQ=";
 
   preBuild = ''
     export GOARCH="wasm"
