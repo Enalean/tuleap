@@ -6,8 +6,13 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/dom": "workspace:^",
+    "@tuleap/fault": "workspace:^",
+    "@tuleap/fetch-result": "workspace:^",
     "@tuleap/gettext": "workspace:^",
+    "@tuleap/plugin-tracker-rest-api-types": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
+    "neverthrow": "6.0.0",
     "vue": "^3.5.25",
     "vue3-gettext": "^2.4.0"
   },

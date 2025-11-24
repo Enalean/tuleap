@@ -17,19 +17,99 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import FieldsUsage from "./FieldsUsage.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
+import LoadingState from "./LoadingState.vue";
+import ErrorState from "./ErrorState.vue";
+import EmptyState from "./EmptyState.vue";
+import FieldsUsedInTracker from "./FieldsUsedInTracker.vue";
+import * as fetch_result from "@tuleap/fetch-result";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
+import process from "node:process";
 
 describe("FieldsUsage", () => {
-    it("should display the title", () => {
+    it("should display a loading state", () => {
         const wrapper = shallowMount(FieldsUsage, {
+            props: {
+                tracker_id: 123,
+            },
             global: {
                 ...getGlobalTestOptions(),
             },
         });
 
-        expect(wrapper.find("h2").text()).toBe("Fields usage");
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(true);
+        expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
+        expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(FieldsUsedInTracker).exists()).toBe(false);
+    });
+
+    it("should display an error state", async () => {
+        const getJSON = vi.spyOn(fetch_result, "getJSON");
+
+        getJSON.mockReturnValue(errAsync(Fault.fromMessage("Oh no!")));
+
+        const wrapper = shallowMount(FieldsUsage, {
+            props: {
+                tracker_id: 123,
+            },
+            global: {
+                ...getGlobalTestOptions(),
+            },
+        });
+
+        await new Promise(process.nextTick);
+
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorState).exists()).toBe(true);
+        expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(FieldsUsedInTracker).exists()).toBe(false);
+    });
+
+    it("should display an empty state", async () => {
+        const getJSON = vi.spyOn(fetch_result, "getJSON");
+
+        getJSON.mockReturnValue(okAsync({ fields: [] }));
+
+        const wrapper = shallowMount(FieldsUsage, {
+            props: {
+                tracker_id: 123,
+            },
+            global: {
+                ...getGlobalTestOptions(),
+            },
+        });
+
+        await new Promise(process.nextTick);
+
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
+        expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldsUsedInTracker).exists()).toBe(false);
+    });
+
+    it("should display fields", async () => {
+        const getJSON = vi.spyOn(fetch_result, "getJSON");
+
+        getJSON.mockReturnValue(okAsync({ fields: [{ field_id: 123 }] }));
+
+        const wrapper = shallowMount(FieldsUsage, {
+            props: {
+                tracker_id: 123,
+            },
+            global: {
+                ...getGlobalTestOptions(),
+            },
+        });
+
+        await new Promise(process.nextTick);
+
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
+        expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(FieldsUsedInTracker).exists()).toBe(true);
     });
 });
