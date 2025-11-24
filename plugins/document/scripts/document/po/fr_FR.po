@@ -178,6 +178,9 @@ msgstr "Fermer"
 msgid "Closed"
 msgstr "Fermé"
 
+msgid "Comment"
+msgstr "Commentaire"
+
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
@@ -686,6 +689,9 @@ msgstr "Commentaire du demandeur"
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
 
+msgid "Review"
+msgstr "Approbation"
+
 msgid "Search"
 msgstr "Recherche"
 
@@ -857,6 +863,9 @@ msgstr "Il n'y a aucun téléversement en cours"
 
 msgid "There isn't any item"
 msgstr "Il n'y a aucun élément"
+
+msgid "There isn't any reviewers"
+msgstr "Il n'y a aucun approbateur"
 
 msgid "This document is currently locked by"
 msgstr "Ce document est actuellement verrouillé par"

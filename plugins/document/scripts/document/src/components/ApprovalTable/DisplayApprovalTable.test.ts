@@ -28,7 +28,7 @@ import { PROJECT } from "../../configuration-keys";
 import { TYPE_EMPTY } from "../../constants";
 import NoApprovalTable from "./NoApprovalTable.vue";
 import { ApprovalTableBuilder } from "../../../tests/builders/ApprovalTableBuilder";
-import CurrentApprovalTable from "./CurrentApprovalTable.vue";
+import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
 
 vi.useFakeTimers();
 

@@ -336,6 +336,17 @@ export interface ApprovalTable {
     notification_type: string;
     is_closed: boolean;
     description: string;
+    reviewers: ReadonlyArray<ApprovalTableReviewer>;
+}
+
+export interface ApprovalTableReviewer {
+    user: User;
+    rank: number;
+    review_date: string | null;
+    state: string;
+    comment: string;
+    version_id: number | null;
+    version_name: string | null;
 }
 
 export interface FolderProperties {
