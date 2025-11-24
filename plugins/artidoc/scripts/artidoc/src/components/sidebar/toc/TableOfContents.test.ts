@@ -22,7 +22,10 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import { ref } from "vue";
+import type { Ref } from "vue";
 import { noop } from "@/helpers/noop";
+import { Option } from "@tuleap/option";
+import type { Version } from "@/components/sidebar/versions/fake-list-of-versions";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
@@ -31,6 +34,7 @@ import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
+import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import { skeleton_sections_collection } from "@/helpers/get-skeleton-sections-collection";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
@@ -49,12 +53,15 @@ describe("TableOfContents", () => {
     let can_user_edit_document: boolean,
         is_loading_sections: boolean,
         sections: ReactiveStoredArtidocSection[],
-        section_below_artifacts: string[];
+        section_below_artifacts: string[],
+        old_version: Ref<Option<Version>>;
+
     beforeEach(() => {
         can_user_edit_document = true;
         is_loading_sections = true;
         sections = [];
         section_below_artifacts = [];
+        old_version = ref(Option.nothing());
     });
 
     const getWrapper = (): VueWrapper =>
@@ -71,6 +78,11 @@ describe("TableOfContents", () => {
                     [SECTIONS_STATES_COLLECTION.valueOf()]:
                         SectionsStatesCollectionStub.fromReactiveStoredArtifactSections(sections),
                     [SECTIONS_BELOW_ARTIFACTS.valueOf()]: ref(section_below_artifacts),
+                    [CURRENT_VERSION_DISPLAYED.valueOf()]: {
+                        old_version,
+                        switchToOldVersion: noop,
+                        switchToLatestVersion: noop,
+                    },
                 },
             },
         });
@@ -216,6 +228,14 @@ describe("TableOfContents", () => {
 
             const wrapper = getWrapper();
             expect(wrapper.find("[data-test=warning-icon]").exists()).toBe(true);
+        });
+
+        it(`should NOT show an icon to warn user of sections below artifacts when a previous version is being displayed`, () => {
+            section_below_artifacts = [sections[1].value.internal_id];
+            old_version.value = Option.fromValue({} as Version);
+
+            const wrapper = getWrapper();
+            expect(wrapper.find("[data-test=warning-icon]").exists()).toBe(false);
         });
 
         it("should have an url to redirect to the section", () => {

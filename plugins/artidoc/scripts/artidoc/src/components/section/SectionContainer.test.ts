@@ -18,9 +18,11 @@
  */
 import { beforeEach, describe, expect, it } from "vitest";
 import { ref } from "vue";
+import type { Ref } from "vue";
 import { createGettext } from "vue3-gettext";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { Option } from "@tuleap/option";
 import SectionContainer from "@/components/section/SectionContainer.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
@@ -28,11 +30,15 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import { SECTIONS_BELOW_ARTIFACTS } from "@/sections-below-artifacts-injection-key";
+import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
+import type { Version } from "@/components/sidebar/versions/fake-list-of-versions";
+import { noop } from "@/helpers/noop";
 
 describe("SectionContainer", () => {
-    let artidoc_section: ArtidocSection;
+    let artidoc_section: ArtidocSection, old_version: Ref<Option<Version>>;
     beforeEach(() => {
         artidoc_section = ArtifactSectionFactory.create();
+        old_version = ref(Option.nothing());
     });
 
     function getWrapper(is_bad: boolean = false): VueWrapper {
@@ -44,6 +50,11 @@ describe("SectionContainer", () => {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [SECTIONS_BELOW_ARTIFACTS.valueOf()]: ref(sections_below_artifacts),
+                    [CURRENT_VERSION_DISPLAYED.valueOf()]: {
+                        old_version,
+                        switchToOldVersion: noop,
+                        switchToLatestVersion: noop,
+                    },
                 },
             },
             props: {
@@ -81,6 +92,14 @@ describe("SectionContainer", () => {
     it(`should show a class when it is below an artifact section (which is not allowed)`, () => {
         expect(getWrapper(true).classes()).toStrictEqual([
             "artidoc-section-container",
+            "tlp-swatch-fiesta-red",
+            "section-with-artifact-parent",
+        ]);
+    });
+
+    it(`should not show a class when it is below an artifact section BUT a previous version is being displayed`, () => {
+        old_version.value = Option.fromValue({} as Version);
+        expect(getWrapper(true).classes()).not.toContain([
             "tlp-swatch-fiesta-red",
             "section-with-artifact-parent",
         ]);

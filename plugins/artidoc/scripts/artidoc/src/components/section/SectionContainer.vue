@@ -19,7 +19,7 @@
   -->
 <template>
     <div class="artidoc-section-container" v-bind:class="additional_class">
-        <p class="section-with-artifact-parent-error" v-if="has_artifact_parent">
+        <p class="section-with-artifact-parent-error" v-if="should_display_section_in_error">
             <i class="fa-solid fa-circle-exclamation alert-icon" aria-hidden="true"></i
             >{{
                 $gettext(
@@ -39,10 +39,12 @@ import SectionContent from "./SectionContent.vue";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import { SECTIONS_BELOW_ARTIFACTS } from "@/sections-below-artifacts-injection-key";
+import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
 
 const { $gettext } = useGettext();
 
 const bad_sections = strictInject(SECTIONS_BELOW_ARTIFACTS);
+const current_version_displayed = strictInject(CURRENT_VERSION_DISPLAYED);
 
 const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
 
@@ -50,6 +52,10 @@ const has_artifact_parent = computed((): boolean =>
     bad_sections.value.includes(props.section.value.internal_id),
 );
 
+const should_display_section_in_error = computed(
+    (): boolean =>
+        has_artifact_parent.value && current_version_displayed.old_version.value.isNothing(),
+);
 const additional_class = computed(() => {
     const color = isArtifactSection(props.section.value)
         ? props.section.value.artifact.tracker.color
@@ -59,7 +65,7 @@ const additional_class = computed(() => {
 
     const color_class = color !== "" ? `tlp-swatch-${color}` : "";
 
-    if (has_artifact_parent.value) {
+    if (should_display_section_in_error.value) {
         return [color_class, "section-with-artifact-parent"];
     }
     if (props.section.value.type === "artifact" && props.section.value.fields.length > 0) {
