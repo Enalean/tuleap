@@ -59,7 +59,6 @@ Requires: sudo, openssh
 Requires: perl(File::Copy)
 Requires: highlight, nginx, logrotate
 Requires: tuleap-realtime = %{tuleap_version}
-Requires: tuleap-mercure = %{tuleap_version}
 Requires: tuleap-smokescreen = %{tuleap_version}
 Requires: tuleap-wasmtime-wrapper-lib = %{tuleap_version}
 

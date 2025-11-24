@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,25 +16,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace TuleapCfg\Command\SiteDeploy\Mercure;
+declare(strict_types=1);
 
-final class SiteDeployMercure
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+final class b202511241645_drop_mercure_feature_flag extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public function __construct()
+    public function description(): string
     {
+        return 'Drop activated Mercure feature flags';
     }
 
-    public function deploy(): void
+    public function up(): void
     {
-        $file               = '/etc/tuleap/conf/mercure.env';
-        $private_key        = base64_encode(random_bytes(128));
-        $private_key_format = 'MERCURE_KEY=' . $private_key . PHP_EOL;
-        $return_val         = @file_put_contents($file, $private_key_format);
-        if (! $return_val) {
-            throw new \RuntimeException($file . ' write failed with user (uid ' . posix_getuid() . ')');
-        }
+        $this->api->dbh->exec('DELETE FROM forgeconfig WHERE name IN ("feature_flag_enable_mercure_dev_kanban", "feature_flag_enable_mercure_dev_testmanagement")');
     }
 }
