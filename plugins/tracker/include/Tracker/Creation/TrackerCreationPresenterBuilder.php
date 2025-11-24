@@ -104,20 +104,7 @@ class TrackerCreationPresenterBuilder
             $tracker_colors,
             $current_project,
             $csrf,
-            $this->areThereTV3($current_project)
         );
-    }
-
-    private function areThereTV3(Project $project): bool
-    {
-        if ($project->usesService('tracker')) {
-            $tv3_factory = new \ArtifactTypeFactory($project);
-            $tv3         = $tv3_factory->getArtifactTypes();
-
-            return ! empty($tv3);
-        }
-
-        return false;
     }
 
     private function getExistingTrackersNamesAndShortnamesInProject(Project $project): array

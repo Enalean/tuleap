@@ -102,8 +102,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         (color_name: string) => ({ id: color_name, text: "" }),
     );
 
-    const are_there_tv3 = Boolean(vue_mount_point.dataset.areThereTv3);
-
     const initial_state: State = {
         csrf_token,
         default_templates,
@@ -137,7 +135,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             project_list: null,
             tracker_list: null,
         },
-        are_there_tv3,
         project_unix_name,
     };
 
