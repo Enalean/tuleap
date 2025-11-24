@@ -22,7 +22,7 @@
  * Test for project delete system event
  */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Project delete Users fail
@@ -54,7 +54,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'deleteMembershipRequestNotificationEntries',
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
-                'getArtifactTypeFactory',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -77,11 +76,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
 
         //Cleanup FRS
         $evt->method('cleanupProjectFRS')->willReturn(true);
-
-        //Delete all trackers
-        $atf = $this->createMock(\ArtifactTypeFactory::class);
-        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
-        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
@@ -127,7 +121,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'deleteMembershipRequestNotificationEntries',
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
-                'getArtifactTypeFactory',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -150,11 +143,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
 
         //Cleanup FRS
         $evt->method('cleanupProjectFRS')->willReturn(true);
-
-        //Delete all trackers
-        $atf = $this->createMock(\ArtifactTypeFactory::class);
-        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
-        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
@@ -200,7 +188,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'deleteMembershipRequestNotificationEntries',
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
-                'getArtifactTypeFactory',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -224,11 +211,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         //Cleanup FRS
         $evt->method('cleanupProjectFRS')->willReturn(false);
 
-        //Delete all trackers
-        $atf = $this->createMock(\ArtifactTypeFactory::class);
-        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
-        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
-
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
         $wa->expects($this->once())->method('deleteProjectAttachments')->willReturn(true);
@@ -236,79 +218,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
 
         $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not remove FRS items');
-
-        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
-
-        // Launch the event
-        self::assertFalse($evt->process());
-    }
-
-    /**
-     * Project delete Trackers fail
-     *
-     * @return Void
-     */
-    public function testProjectDeleteTrackersFail(): void
-    {
-        $now = (new DateTimeImmutable())->getTimestamp();
-
-        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
-            ->setConstructorArgs(
-                [
-                    '1',
-                    SystemEvent::TYPE_PROJECT_DELETE,
-                    SystemEvent::OWNER_ROOT,
-                    '142',
-                    SystemEvent::PRIORITY_HIGH,
-                    SystemEvent::STATUS_RUNNING,
-                    $now,
-                    $now,
-                    $now,
-                    '',
-                ]
-            )
-            ->onlyMethods([
-                'getProject',
-                'removeProjectMembers',
-                'deleteMembershipRequestNotificationEntries',
-                'cleanupProjectUgroupsBinding',
-                'cleanupProjectFRS',
-                'getArtifactTypeFactory',
-                'getWikiAttachment',
-                'done',
-                'error',
-                'getEventManager',
-            ])
-            ->getMock();
-
-        // The project
-        $project = $this->createMock(\Project::class);
-        $project->method('usesSVN')->willReturn(true);
-        $evt->method('getProject')->with('142')->willReturn($project);
-
-        //Remove users from project
-        $evt->method('removeProjectMembers')->willReturn(true);
-
-        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(true);
-
-        //Cleanup ProjectUGroup binding
-        $evt->method('cleanupProjectUgroupsBinding')->willReturn(true);
-
-        //Cleanup FRS
-        $evt->method('cleanupProjectFRS')->willReturn(true);
-
-        //Delete all trackers
-        $atf = $this->createMock(\ArtifactTypeFactory::class);
-        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(false);
-        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
-
-        // Wiki attachments
-        $wa = $this->createMock(\WikiAttachment::class);
-        $wa->expects($this->once())->method('deleteProjectAttachments')->willReturn(true);
-        $evt->method('getWikiAttachment')->willReturn($wa);
-
-        $evt->expects($this->never())->method('done');
-        $evt->expects($this->once())->method('error')->with('Could not mark all trackers as deleted');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
@@ -346,7 +255,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'deleteMembershipRequestNotificationEntries',
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
-                'getArtifactTypeFactory',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -369,11 +277,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
 
         //Cleanup FRS
         $evt->method('cleanupProjectFRS')->willReturn(true);
-
-        //Delete all trackers
-        $atf = $this->createMock(\ArtifactTypeFactory::class);
-        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
-        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
@@ -419,7 +322,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'deleteMembershipRequestNotificationEntries',
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
-                'getArtifactTypeFactory',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -442,11 +344,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
 
         //Cleanup FRS
         $evt->method('cleanupProjectFRS')->willReturn(true);
-
-        //Delete all trackers
-        $atf = $this->createMock(\ArtifactTypeFactory::class);
-        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
-        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
@@ -492,7 +389,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'deleteMembershipRequestNotificationEntries',
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
-                'getArtifactTypeFactory',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -515,11 +411,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
 
         //Cleanup FRS
         $evt->method('cleanupProjectFRS')->willReturn(true);
-
-        //Delete all trackers
-        $atf = $this->createMock(\ArtifactTypeFactory::class);
-        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
-        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
