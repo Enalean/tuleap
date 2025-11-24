@@ -77,7 +77,10 @@
         data-test="document-dropdown-approval-tables"
         data-shortcut-approval-tables
     >
-        <i class="fa-regular fa-fw fa-square-check tlp-dropdown-menu-item-icon"></i>
+        <i
+            class="fa-regular fa-fw fa-square-check tlp-dropdown-menu-item-icon"
+            aria-hidden="true"
+        ></i>
         <span>{{ $gettext("Approval tables") }}</span>
     </a>
     <router-link

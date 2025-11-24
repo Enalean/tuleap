@@ -703,6 +703,9 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
+msgid "Switch to old ui"
+msgstr ""
+
 msgid "Switch to old user interface"
 msgstr ""
 
@@ -803,6 +806,9 @@ msgid "Toggle selected folder open and closed"
 msgstr ""
 
 msgid "URL"
+msgstr ""
+
+msgid "Under development"
 msgstr ""
 
 msgid "Unlock"

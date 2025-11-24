@@ -103,6 +103,13 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $uh    = UserHelper::instance();
         $rIter = $this->table->getReviewerIterator();
         if ($rIter !== null) {
+            $item_id      = $this->item->getId();
+            $project_slug = ProjectManager::instance()->getProject($this->item->getGroupId())->getUnixNameLowerCase();
+            $html        .= '<div class="alert alert-info">' . sprintf(
+                dgettext('tuleap-docman', 'You can view this table in the %s. Please note the interface is under development'),
+                "<a href=\"/plugins/document/$project_slug/approval-table/$item_id\">" . dgettext('tuleap-docman', 'new ui') . '</a>',
+            ) . '</div>';
+
             $html .= '<h3>' . dgettext('tuleap-docman', 'Approval table') . '</h3>';
 
             if (! $this->table->isCustomizable()) {
