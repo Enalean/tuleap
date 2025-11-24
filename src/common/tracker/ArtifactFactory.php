@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactFactory
+class ArtifactFactory // phpcs:ignore
 {
     /**
      * The ArtifactType object.
@@ -223,127 +223,6 @@ class ArtifactFactory
                 }
             }
         }
-        return $artifacts;
-    }
-
-    public function getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, &$total_artifacts)
-    {
-        global $ath, $art_field_fact, $Language;
-
-        $GLOBALS['group_id'] = $group_id;
-
-        $chunksz = $max_rows;
-        $advsrch = 0;   // ?
-        $prefs   = [];
-
-        $report = new ArtifactReport($report_id, $group_artifact_id);
-        if (! $report || ! is_object($report)) {
-            $this->setError('Cannot Get ArtifactReport From ID : ' . $report_id);
-            return false;
-        } elseif ($report->isError()) {
-            $this->setError($report->getErrorMessage());
-            return false;
-        }
-
-        $query_fields  = $report->getQueryFields();
-        $result_fields = $report->getResultFields();
-
-        // Filter part
-        if (is_array($criteria)) {
-            foreach ($criteria as $cr) {
-                $af = $art_field_fact->getFieldFromName($cr->field_name);
-                if (! $af || ! is_object($af)) {
-                    $this->setError('Cannot Get ArtifactField From Name : ' . $cr->field_name);
-                    return false;
-                } elseif ($art_field_fact->isError()) {
-                    $this->setError($art_field_fact->getErrorMessage());
-                    return false;
-                }
-
-                if (! array_key_exists($cr->field_name, $query_fields)) {
-                    $this->setError('You cannot filter on field ' . $cr->field_name . ': it is not a query field for report ' . $report_id);
-                    return false;
-                }
-
-                if ($af->isSelectBox() || $af->isMultiSelectBox()) {
-                    $prefs[$cr->field_name] = explode(',', $cr->field_value);
-                } else {
-                    $prefs[$cr->field_name] = [$cr->field_value];
-                    if (isset($cr->operator)) {
-                        $prefs[$cr->field_name][] = $cr->operator;
-                    }
-                }
-            }
-        }
-
-        // Sort part
-        $morder       = '';
-        $array_morder = [];
-        if (is_array($sort_criteria)) {
-            foreach ($sort_criteria as $sort_cr) {
-                $field_name = $sort_cr->field_name;
-                // check if fieldname is ok
-                $af = $art_field_fact->getFieldFromName($sort_cr->field_name);
-                if (! $af || ! is_object($af)) {
-                    $this->setError('Cannot Get ArtifactField From Name : ' . $sort_cr->field_name);
-                    return false;
-                } elseif ($art_field_fact->isError()) {
-                    $this->setError($art_field_fact->getErrorMessage());
-                    return false;
-                }
-
-                if (! array_key_exists($sort_cr->field_name, $result_fields)) {
-                    $this->setError('You cannot sort on field ' . $sort_cr->field_name . ': it is not a result field for report ' . $report_id);
-                    return false;
-                }
-
-                // check if direction is ok
-                $sort_direction = '>'; // by default, direction is ASC
-                if (isset($sort_cr->sort_direction) && $sort_cr->sort_direction == 'DESC') {
-                    $sort_direction = '<';
-                }
-
-                $array_morder[] = $field_name . $sort_direction;
-            }
-        }
-        $morder = implode(',', $array_morder);
-
-        $pm    = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        $ath   = new ArtifactTypeHtml($group);
-
-        $artifact_report = new ArtifactReport($report_id, $group_artifact_id);
-
-        // get the total number of artifact that answer the query, and the corresponding IDs
-        $total_artifacts = $artifact_report->selectReportItems($prefs, $morder, $advsrch, $aids);
-
-        // get the SQL query corresponding to the query
-        $sql = $artifact_report->createQueryReport($prefs, $morder, $advsrch, $offset, $chunksz, $aids);
-
-        $result        = $artifact_report->getResultQueryReport($sql);
-        $result_fields = $artifact_report->getResultFields();
-
-        //we get from result only fields that we need to display in the report (we add at the begining id and severity only to identify the artifact and for the severity color)
-        $artifacts = [];
-        $i         = 0;
-        foreach ($result as $art) {
-            $artifact_id = $art['artifact_id'];
-            $severity_id = $art['severity_id'];
-            $artifact    = new Artifact($this->ArtifactType, $art['artifact_id'], true);
-            if ($artifact->userCanView()) {
-                $fields = [];
-                reset($result_fields);
-                $fields['severity_id'] = $severity_id;
-                $fields['id']          = $artifact_id;
-                foreach ($result_fields as $key => $field) {
-                    $value        = $result[$i][$key];
-                    $fields[$key] = $value;
-                }
-                $artifacts[$artifact_id] = $fields;
-            }
-            $i++;
-        }
-
         return $artifacts;
     }
 

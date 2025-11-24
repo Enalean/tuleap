@@ -20,7 +20,7 @@
  */
 
 
-class ArtifactReportFactory
+class ArtifactReportFactory // phpcs:ignore
 {
     /**
      * @var string
@@ -39,25 +39,6 @@ class ArtifactReportFactory
     public function __construct()
     {
         return true;
-    }
-
-    /**
-     * Return a new ArtifactReport object
-     *
-     * @param report_id: the report id to create the new ArtifactReport
-     *
-     * @return void
-     */
-    public function getArtifactReportHtml($report_id, $atid)
-    {
-        $sql = 'SELECT * FROM artifact_report ' .
-         'WHERE report_id=' . db_ei($report_id);
-     //echo $sql.'<br>';
-        $res = db_query($sql);
-        if (! $res || db_numrows($res) < 1) {
-            return false;
-        }
-        return new ArtifactReportHtml($report_id, $atid);
     }
 
     /**
