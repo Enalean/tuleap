@@ -121,8 +121,5 @@ msgstr ""
 msgid "Velocity semantic successfully updated."
 msgstr ""
 
-msgid "go back to semantic overview"
-msgstr ""
-
 msgid "or"
 msgstr "ou"

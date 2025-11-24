@@ -26,7 +26,7 @@ class BacklogRequiredTrackerCollectionFormatter
 {
     public function formatTrackerWithoutDoneSemantic(Tracker $tracker)
     {
-        $url = TRACKER_BASE_URL . '?' . http_build_query(
+        $url = '/plugins/tracker/?' . http_build_query(
             [
                 'tracker'  => $tracker->getId(),
                 'func'     => 'admin-semantic',
@@ -42,7 +42,7 @@ class BacklogRequiredTrackerCollectionFormatter
 
     public function formatTrackerWithoutInitialEffortSemantic(Tracker $tracker)
     {
-        $url = TRACKER_BASE_URL . '?' . http_build_query(
+        $url = '/plugins/tracker/?' . http_build_query(
             [
                 'tracker'  => $tracker->getId(),
                 'func'     => 'admin-semantic',

@@ -9,7 +9,7 @@
         {{# has_velocity_field }}
             {{# dgettext }}tuleap-velocity | The <i>velocity</i> of this tracker will be represented in the Agile Dashboard by the field{{/ dgettext }}
         {{/ has_velocity_field }}
-        <select name="velocity_field">
+        <select name="velocity_field" class="tlp-select tlp-select-adjusted velocity-admin-field">
             {{^ has_a_selected_field }}
                 <option value="" selected="selected"> {{# dgettext }} tuleap-velocity | Choose a field{{/ dgettext }} </option>
             {{/ has_a_selected_field }}
@@ -24,15 +24,15 @@
             Only integers and float fields are listed. By choosing one of these fields, it will be automatically computed in order to give you the velocity value.
         {{/ dgettext }}
     </p>
-    <p>
+    <div class="tlp-pane-section-submit velocity-admin-buttons">
         <input type="submit"
-               class="btn btn-primary"
+               class="tlp-button-primary"
                name="submit"
                value="{{# dgettext }} tuleap-velocity | Save your change{{/ dgettext }}"/>
         {{# dgettext }} tuleap-velocity | or {{/ dgettext }}
         <input type="submit"
-               class="btn btn-danger"
+               class="tlp-button-danger"
                name="delete"
                value="{{# dgettext }} tuleap-velocity | Unset this semantic{{/ dgettext }}"/>
-    </p>
+    </div>
 </form>

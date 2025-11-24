@@ -38,7 +38,7 @@ class RequiredTrackerPresenter
     public function build(Tracker $tracker, array $misconfigured_semantics)
     {
         $this->name                        = $tracker->getName();
-        $this->tracker_url                 = TRACKER_BASE_URL . '?' . http_build_query(
+        $this->tracker_url                 = '/plugins/tracker/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func'    => 'admin',

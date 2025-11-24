@@ -1,5 +1,5 @@
 {{^ has_at_least_one_well_configured_children }}
-    <ul class="feedback_error">
+    <div class="tlp-alert-danger">
         {{# dngettext }}
             tuleap-velocity |
             Following tracker should have <b>velocity</b> semantic: |
@@ -9,5 +9,5 @@
         {{# children_misconfigured_semantic }}
             <a href="{{ tracker_url }}">{{ name }}</a><span class="misconfigured-semantic-display-comma">, </span>
         {{/ children_misconfigured_semantic }}
-    </ul>
+    </div>
 {{/ has_at_least_one_well_configured_children }}

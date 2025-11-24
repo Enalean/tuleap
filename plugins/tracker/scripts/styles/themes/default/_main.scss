@@ -2979,28 +2979,6 @@ td.tracker-unsubscriber-actions {
     }
 }
 
-#tracker-semantic-disabled {
-    $muted-text-color: #676767;
-
-    margin: 25vmin 0 0;
-    text-align: center;
-
-    > .tracker-semantic-content {
-        width: 550px;
-        margin: 0 auto 30px;
-        color: #2f2f2f;
-        font-size: 30px;
-        font-weight: 300;
-        line-height: 42px;
-
-        &.tracker-semantic-description {
-            color: $muted-text-color;
-            font-size: 18px;
-            line-height: 30px;
-        }
-    }
-}
-
 .tracker-semantic-admin-go-back {
     display: block;
 }
