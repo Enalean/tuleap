@@ -21,7 +21,7 @@
 $overrides['LocalSettingsGenerator'] = 'TuleapLocalSettingsGenerator';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TuleapLocalSettingsGenerator extends LocalSettingsGenerator
+class TuleapLocalSettingsGenerator extends \MediaWiki\Installer\LocalSettingsGenerator
 {
     public function getText(): string
     {
