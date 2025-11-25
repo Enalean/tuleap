@@ -24,12 +24,11 @@
         <loading-state v-if="is_loading" />
 
         <tracker-structure
-            v-bind:fields="fields"
-            v-bind:structure="structure"
-            v-if="!is_error && !is_loading && fields.length > 0"
+            v-bind:root="root"
+            v-if="!is_error && !is_loading && root.children.length > 0"
         />
 
-        <empty-state v-if="!is_loading && !is_error && fields.length === 0" />
+        <empty-state v-if="!is_loading && !is_error && root.children.length === 0" />
 
         <error-state v-if="is_error" />
     </div>
@@ -44,22 +43,22 @@ import EmptyState from "./EmptyState.vue";
 import LoadingState from "./LoadingState.vue";
 import ErrorState from "./ErrorState.vue";
 import TrackerStructure from "./TrackerStructure.vue";
+import { mapContentStructureToFields } from "../helpers/map-content-structure-to-fields";
+import type { ElementWithChildren } from "../type";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{ tracker_id: number }>();
 const is_error = ref(false);
 const is_loading = ref(true);
-const fields = ref<TrackerResponseNoInstance["fields"]>([]);
-const structure = ref<TrackerResponseNoInstance["structure"]>([]);
+const root = ref<ElementWithChildren>({ children: [] });
 
 onMounted(() => {
     getJSON<Pick<TrackerResponseNoInstance, "fields" | "structure">>(
         uri`/api/v1/trackers/${props.tracker_id}`,
     ).match(
         (tracker) => {
-            fields.value = tracker.fields;
-            structure.value = tracker.structure;
+            root.value = mapContentStructureToFields(tracker.structure, tracker.fields);
             is_loading.value = false;
         },
         () => {

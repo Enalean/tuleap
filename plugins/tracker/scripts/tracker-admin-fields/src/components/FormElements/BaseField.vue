@@ -22,15 +22,9 @@
 </template>
 
 <script setup lang="ts">
-import type {
-    ContainerFieldStructure,
-    StructureFormat,
-    TrackerResponseNoInstance,
-} from "@tuleap/plugin-tracker-rest-api-types";
+import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 
 defineProps<{
-    field: ContainerFieldStructure;
-    content: StructureFormat["content"];
-    fields: TrackerResponseNoInstance["fields"];
+    field: StructureFields;
 }>();
 </script>
