@@ -114,11 +114,12 @@ export const routes: RouteRecordRaw[] = [
         }),
     },
     {
-        path: "/approval-table/:item_id",
+        path: "/approval-table/:item_id/:version?",
         name: "approval-table",
         component: DisplayApprovalTable,
         props: (route) => ({
             item_id: Number(route.params.item_id),
+            version: route.params.version ? Number(route.params.version) : null,
         }),
     },
 ];

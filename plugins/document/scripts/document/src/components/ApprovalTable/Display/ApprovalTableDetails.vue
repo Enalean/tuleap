@@ -47,7 +47,11 @@
         <p v-else class="tlp-property-empty">{{ $gettext("No comment") }}</p>
     </div>
 
-    <approval-table-reviewers v-bind:reviewers="table.reviewers" v-bind:item="item" />
+    <approval-table-reviewers
+        v-bind:reviewers="table.reviewers"
+        v-bind:item="item"
+        v-bind:is_readonly="is_readonly"
+    />
 </template>
 
 <script setup lang="ts">
@@ -59,5 +63,6 @@ import ApprovalTableReviewers from "./ApprovalTableReviewers.vue";
 defineProps<{
     item: Item;
     table: ApprovalTable;
+    is_readonly: boolean;
 }>();
 </script>

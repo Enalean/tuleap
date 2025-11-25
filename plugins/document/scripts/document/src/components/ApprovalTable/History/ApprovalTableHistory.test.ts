@@ -19,7 +19,7 @@
 
 import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import { shallowMount } from "@vue/test-utils";
+import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import ApprovalTableHistory from "./ApprovalTableHistory.vue";
 import { ItemBuilder } from "../../../../tests/builders/ItemBuilder";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
@@ -29,12 +29,18 @@ import { Fault } from "@tuleap/fault";
 import { ApprovalTableBuilder } from "../../../../tests/builders/ApprovalTableBuilder";
 
 vi.useFakeTimers();
+vi.mock("vue-router");
 
 describe("ApprovalTableHistory", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof ApprovalTableHistory>> {
         return shallowMount(ApprovalTableHistory, {
-            props: { item: new ItemBuilder(123).build() },
-            global: { ...getGlobalTestOptions({}) },
+            props: { item: new ItemBuilder(123).buildApprovableDocument(), version: 2 },
+            global: {
+                ...getGlobalTestOptions({}),
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
+            },
         });
     }
 
@@ -78,9 +84,15 @@ describe("ApprovalTableHistory", () => {
         expect(rows).toHaveLength(2);
         // Row 0
         expect(rows[0].find("[data-test=history-row-number]").text()).toBe("2");
+        expect(
+            rows[0].find("[data-test=history-row-number]").findComponent(RouterLinkStub).exists(),
+        ).toBe(false);
         expect(rows[0].find("[data-test=history-row-label]").text()).toBe(version_label);
         // Row 1
         expect(rows[1].find("[data-test=history-row-number]").text()).toBe("1");
+        expect(
+            rows[1].find("[data-test=history-row-number]").findComponent(RouterLinkStub).exists(),
+        ).toBe(true);
         expect(rows[1].find("[data-test=history-row-label]").text()).toBe("");
     });
 });

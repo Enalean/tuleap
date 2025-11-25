@@ -39,6 +39,9 @@
         v-else-if="approval_table !== null"
         v-bind:table="approval_table"
         v-bind:item="item"
+        v-bind:is_readonly="
+            approval_table.id !== props.item.approval_table?.id || approval_table.is_closed
+        "
     />
 </template>
 
@@ -47,10 +50,13 @@ import type { ApprovableDocument, ApprovalTable, Item } from "../../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT } from "../../../configuration-keys";
 import ApprovalTableDetails from "./ApprovalTableDetails.vue";
-import { onBeforeMount, ref } from "vue";
+import { ref, watch } from "vue";
 import { getDocumentApprovalTable } from "../../../api/approval-table-rest-querier";
 
-const props = defineProps<{ item: Item & ApprovableDocument }>();
+const props = defineProps<{
+    item: Item & ApprovableDocument;
+    version: number | null;
+}>();
 
 const emit = defineEmits<{
     (e: "error", message: string): void;
@@ -60,22 +66,30 @@ const approval_table = ref<ApprovalTable | null>(props.item.approval_table);
 
 const project = strictInject(PROJECT);
 
-onBeforeMount(() => {
-    if (props.item.approval_table !== null && props.item.approval_table.version_number !== null) {
-        getDocumentApprovalTable(props.item.id, props.item.approval_table.version_number).match(
+function getLinkToApprovalTableAdmin(): string {
+    return `/plugins/docman/?group_id=${project.id}&action=approval_create&id=${props.item.id}`;
+}
+
+watch(
+    () => props.version,
+    () => {
+        const version = props.version ?? props.item.approval_table?.version_number;
+        if (version === null || version === undefined) {
+            approval_table.value = null;
+            return;
+        }
+        getDocumentApprovalTable(props.item.id, version).match(
             (table) => {
                 approval_table.value = table;
             },
             (fault) => {
+                approval_table.value = null;
                 emit("error", fault.toString());
             },
         );
-    }
-});
-
-function getLinkToApprovalTableAdmin(): string {
-    return `/plugins/docman/?group_id=${project.id}&action=approval_create&id=${props.item.id}`;
-}
+    },
+    { immediate: true },
+);
 </script>
 
 <style scoped lang="scss">

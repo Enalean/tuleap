@@ -42,7 +42,20 @@
                 v-bind:key="table.id"
                 data-test="history-row"
             >
-                <td data-test="history-row-number">{{ table.version_number }}</td>
+                <td data-test="history-row-number">
+                    <router-link
+                        v-if="shouldDisplayLinkToVersion(table)"
+                        v-bind:to="{
+                            name: 'approval-table',
+                            params: { item_id: item.id, version: table.version_number },
+                        }"
+                    >
+                        {{ table.version_number }}
+                    </router-link>
+                    <template v-else>
+                        {{ table.version_number }}
+                    </template>
+                </td>
                 <td data-test="history-row-label">{{ table.version_label }}</td>
                 <td><user-badge v-bind:user="table.table_owner" /></td>
                 <td>
@@ -64,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ApprovalTable, Item } from "../../../type";
+import type { ApprovableDocument, ApprovalTable, Item } from "../../../type";
 import { onBeforeMount, ref } from "vue";
 import ApprovalTableHistoryLoading from "./ApprovalTableHistoryLoading.vue";
 import { getAllDocumentApprovalTables } from "../../../api/approval-table-rest-querier";
@@ -72,7 +85,10 @@ import UserBadge from "../../User/UserBadge.vue";
 import ApprovalBadge from "../../Folder/ApprovalTables/ApprovalBadge.vue";
 import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
 
-const props = defineProps<{ item: Item }>();
+const props = defineProps<{
+    item: Item & ApprovableDocument;
+    version: number | null;
+}>();
 
 const emit = defineEmits<{
     (e: "error", message: string): void;
@@ -90,4 +106,11 @@ onBeforeMount(() => {
         },
     );
 });
+
+function shouldDisplayLinkToVersion(table: ApprovalTable): boolean {
+    if (props.version !== null) {
+        return props.version !== table.version_number;
+    }
+    return props.item.approval_table?.version_number !== table.version_number;
+}
 </script>
