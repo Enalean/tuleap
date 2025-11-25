@@ -21,12 +21,12 @@ import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CurrentApprovalTable from "./CurrentApprovalTable.vue";
-import type { ApprovableDocument, Item } from "../../type";
-import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { PROJECT } from "../../configuration-keys";
-import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
-import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
-import { ApprovalTableBuilder } from "../../../tests/builders/ApprovalTableBuilder";
+import type { ApprovableDocument, Item } from "../../../type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { PROJECT } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
+import { ItemBuilder } from "../../../../tests/builders/ItemBuilder";
+import { ApprovalTableBuilder } from "../../../../tests/builders/ApprovalTableBuilder";
 import ApprovalTableDetails from "./ApprovalTableDetails.vue";
 
 describe("CurrentApprovalTable", () => {

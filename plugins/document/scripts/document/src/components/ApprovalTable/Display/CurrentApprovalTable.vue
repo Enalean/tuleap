@@ -36,8 +36,9 @@
         {{ $gettext("The approval table is not yet available") }}
     </div>
     <approval-table-details
-        v-else-if="item.approval_table !== null"
-        v-bind:table="item.approval_table"
+        v-else-if="approval_table !== null"
+        v-bind:table="approval_table"
+        v-bind:item="item"
     />
 
     <div class="tlp-alert-warning">
@@ -55,14 +56,35 @@
 </template>
 
 <script setup lang="ts">
-import type { ApprovableDocument, Item } from "../../type";
+import type { ApprovableDocument, ApprovalTable, Item } from "../../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT } from "../../configuration-keys";
+import { PROJECT } from "../../../configuration-keys";
 import ApprovalTableDetails from "./ApprovalTableDetails.vue";
+import { onBeforeMount, ref } from "vue";
+import { getDocumentApprovalTable } from "../../../api/approval-table-rest-querier";
 
 const props = defineProps<{ item: Item & ApprovableDocument }>();
 
+const emit = defineEmits<{
+    (e: "error", message: string): void;
+}>();
+
+const approval_table = ref<ApprovalTable | null>(props.item.approval_table);
+
 const project = strictInject(PROJECT);
+
+onBeforeMount(() => {
+    if (props.item.approval_table !== null && props.item.approval_table.version_number !== null) {
+        getDocumentApprovalTable(props.item.id, props.item.approval_table.version_number).match(
+            (table) => {
+                approval_table.value = table;
+            },
+            (fault) => {
+                emit("error", fault.toString());
+            },
+        );
+    }
+});
 
 function getLinkToOldUI(): string {
     return `/plugins/docman/?group_id=${project.id}&action=details&id=${props.item.id}&section=approval`;

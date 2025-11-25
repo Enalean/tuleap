@@ -335,7 +335,8 @@ final class DocmanItemsResource extends AuthenticatedResource
         $item = $this->retrieveItem($id);
 
         $factories_factory        = new Docman_ApprovalTableFactoriesFactory();
-        $approval_table_retriever = new ApprovalTableRetriever($factories_factory, new Docman_VersionFactory());
+        $version_factory          = new Docman_VersionFactory();
+        $approval_table_retriever = new ApprovalTableRetriever($factories_factory, $version_factory);
         $user_manager             = UserManager::instance();
         $provide_user_avatar_url  = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
 
@@ -343,7 +344,7 @@ final class DocmanItemsResource extends AuthenticatedResource
 
         Header::sendPaginationHeaders($limit, $offset, $approval_table_retriever->getCountOfApprovalTable($item), self::MAX_LIMIT);
         return array_map(
-            function (Docman_ApprovalTable $table) use ($item, $user_manager, $factories_factory, $provide_user_avatar_url): ItemApprovalTableRepresentation {
+            function (Docman_ApprovalTable $table) use ($item, $user_manager, $factories_factory, $provide_user_avatar_url, $version_factory): ItemApprovalTableRepresentation {
                 $owner = $user_manager->getUserById((int) $table->getOwner());
                 if ($owner === null) {
                     $this->logger->error('An approval table has a non-existing user as owner', [
@@ -364,6 +365,7 @@ final class DocmanItemsResource extends AuthenticatedResource
                     $factories_factory,
                     $user_manager,
                     $provide_user_avatar_url,
+                    $version_factory,
                 );
             },
             $approval_tables,
@@ -400,7 +402,8 @@ final class DocmanItemsResource extends AuthenticatedResource
         $item = $this->retrieveItem($id);
 
         $factories_factory        = new Docman_ApprovalTableFactoriesFactory();
-        $approval_table_retriever = new ApprovalTableRetriever($factories_factory, new Docman_VersionFactory());
+        $version_factory          = new Docman_VersionFactory();
+        $approval_table_retriever = new ApprovalTableRetriever($factories_factory, $version_factory);
         $user_manager             = UserManager::instance();
         $provide_user_avatar_url  = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
 
@@ -428,6 +431,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             $factories_factory,
             $user_manager,
             $provide_user_avatar_url,
+            $version_factory,
         );
     }
 

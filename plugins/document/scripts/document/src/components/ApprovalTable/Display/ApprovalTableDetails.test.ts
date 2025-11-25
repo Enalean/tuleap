@@ -21,16 +21,20 @@ import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ApprovalTableDetails from "./ApprovalTableDetails.vue";
-import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import type { ApprovalTable } from "../../type";
-import { ApprovalTableBuilder } from "../../../tests/builders/ApprovalTableBuilder";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import type { ApprovalTable } from "../../../type";
+import { ApprovalTableBuilder } from "../../../../tests/builders/ApprovalTableBuilder";
+import { ItemBuilder } from "../../../../tests/builders/ItemBuilder";
 
 describe("ApprovalTableDetails", () => {
     function getWrapper(
         table: ApprovalTable,
     ): VueWrapper<InstanceType<typeof ApprovalTableDetails>> {
         return shallowMount(ApprovalTableDetails, {
-            props: { table },
+            props: {
+                table,
+                item: new ItemBuilder(123).build(),
+            },
             global: { ...getGlobalTestOptions({}) },
         });
     }

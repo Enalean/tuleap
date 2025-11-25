@@ -46,12 +46,18 @@
         <p v-if="table.description !== ''" data-test="table-description">{{ table.description }}</p>
         <p v-else class="tlp-property-empty">{{ $gettext("No comment") }}</p>
     </div>
+
+    <approval-table-reviewers v-bind:reviewers="table.reviewers" v-bind:item="item" />
 </template>
 
 <script setup lang="ts">
-import type { ApprovalTable } from "../../type";
-import UserBadge from "../User/UserBadge.vue";
-import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
+import type { ApprovalTable, Item } from "../../../type";
+import UserBadge from "../../User/UserBadge.vue";
+import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
+import ApprovalTableReviewers from "./ApprovalTableReviewers.vue";
 
-defineProps<{ table: ApprovalTable }>();
+defineProps<{
+    item: Item;
+    table: ApprovalTable;
+}>();
 </script>

@@ -32,6 +32,10 @@
                     </div>
 
                     <section class="tlp-pane-section">
+                        <div v-if="error_message !== ''" class="tlp-alert-danger">
+                            {{ error_message }}
+                        </div>
+
                         <div
                             v-if="!isAnApprovableDocument(item)"
                             class="tlp-alert-danger"
@@ -45,7 +49,11 @@
                             v-bind:item="item"
                         />
 
-                        <current-approval-table v-else v-bind:item="item" />
+                        <current-approval-table
+                            v-else
+                            v-bind:item="item"
+                            v-on:error="(message) => (error_message = message)"
+                        />
                     </section>
                 </div>
             </section>
@@ -61,13 +69,14 @@ import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
 import { ApprovalTableTab } from "../../helpers/details-tabs";
 import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
 import NoApprovalTable from "./NoApprovalTable.vue";
-import CurrentApprovalTable from "./CurrentApprovalTable.vue";
+import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
 
 const props = defineProps<{
     item_id: number;
 }>();
 
 const item = ref<Item | null>(null);
+const error_message = ref("");
 
 const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
 

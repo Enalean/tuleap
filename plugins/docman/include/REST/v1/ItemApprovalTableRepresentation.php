@@ -27,6 +27,7 @@ use Docman_ApprovalTable;
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableVersionned;
 use Docman_Item;
+use Docman_VersionFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
@@ -60,6 +61,7 @@ final readonly class ItemApprovalTableRepresentation
         Docman_ApprovalTableFactoriesFactory $factory,
         RetrieveUserById $user_manager,
         ProvideUserAvatarUrl $provide_user_avatar_url,
+        Docman_VersionFactory $version_factory,
     ): self {
         return new self(
             JsonCast::toInt($approval_table->getId()),
@@ -73,10 +75,12 @@ final readonly class ItemApprovalTableRepresentation
             $approval_table->getDescription() ?? '',
             array_map(
                 static fn(Docman_ApprovalReviewer $reviewer) => ItemApprovalTableReviewerRepresentation::build(
+                    $item,
                     $reviewer,
                     $status_mapper,
                     $user_manager,
                     $provide_user_avatar_url,
+                    $version_factory,
                 ),
                 $approval_table->getReviewerArray(),
             ),

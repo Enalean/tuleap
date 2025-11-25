@@ -163,6 +163,9 @@ msgstr "Fechar"
 msgid "Closed"
 msgstr ""
 
+msgid "Comment"
+msgstr ""
+
 msgid "Confirm deletion"
 msgstr ""
 
@@ -647,6 +650,9 @@ msgstr ""
 msgid "Reset the approval cycle."
 msgstr ""
 
+msgid "Review"
+msgstr ""
+
 msgid "Search"
 msgstr "Pesquisar"
 
@@ -799,6 +805,9 @@ msgid "There is no upload in progress"
 msgstr ""
 
 msgid "There isn't any item"
+msgstr ""
+
+msgid "There isn't any reviewers"
 msgstr ""
 
 msgid "This document is currently locked by"
