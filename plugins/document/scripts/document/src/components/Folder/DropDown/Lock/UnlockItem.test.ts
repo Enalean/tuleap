@@ -62,7 +62,7 @@ describe("UnlockItem", () => {
             id: 1,
             user_can_write: false,
             lock_info: {
-                lock_by: {},
+                locked_by: {},
             } as LockInfo,
         } as ItemFile;
         const wrapper = createWrapper(item);
@@ -77,7 +77,7 @@ describe("UnlockItem", () => {
             id: 1,
             user_can_write: true,
             lock_info: {
-                lock_by: {},
+                locked_by: {},
             } as LockInfo,
         } as ItemFile;
         const wrapper = createWrapper(item);
@@ -93,7 +93,7 @@ describe("UnlockItem", () => {
             id: 1,
             user_can_write: true,
             lock_info: {
-                lock_by: {},
+                locked_by: {},
             } as LockInfo,
         } as ItemFile;
         const wrapper = createWrapper(item);
@@ -108,7 +108,7 @@ describe("UnlockItem", () => {
             id: 1,
             user_can_write: true,
             lock_info: {
-                lock_by: {},
+                locked_by: {},
             } as LockInfo,
         } as ItemFile;
         const wrapper = createWrapper(item);

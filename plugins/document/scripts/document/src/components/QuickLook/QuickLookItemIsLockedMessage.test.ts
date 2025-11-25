@@ -29,7 +29,7 @@ describe("QuickLookItemIsLockedMessage", () => {
         const wrapper = shallowMount(QuickLookItemIsLockedMessage, {
             props: {
                 lock_info: {
-                    lock_by: { id: 1 } as User,
+                    locked_by: { id: 1 } as User,
                     lock_date: "2019-04-25T16:32:59+02:00",
                 },
             },

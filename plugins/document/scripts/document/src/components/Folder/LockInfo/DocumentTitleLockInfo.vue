@@ -45,12 +45,12 @@ const is_locked = computed((): boolean => {
 });
 
 const document_lock_info_title = computed((): string => {
-    if (!props.item || !props.item.lock_info || !props.item.lock_info.lock_by) {
+    if (!props.item || !props.item.lock_info || !props.item.lock_info.locked_by) {
         return "";
     }
 
     return interpolate($gettext("Document locked by %{username}."), {
-        username: props.item.lock_info.lock_by.display_name,
+        username: props.item.lock_info.locked_by.display_name,
     });
 });
 

@@ -343,13 +343,13 @@ function getDropZoneItem() {
 async function uploadNewFileVersion(event: DragEvent, dropzone_item: ItemFile): Promise<void> {
     const { lock_info, approval_table } = dropzone_item;
     const is_document_locked_by_current_user =
-        lock_info === null || lock_info.lock_by.id === user_id;
+        lock_info === null || lock_info.locked_by.id === user_id;
 
     if (!is_document_locked_by_current_user) {
         error_modal_shown.value = EDITION_LOCKED;
         error_modal_reasons.value.push({
             filename: dropzone_item.title,
-            lock_owner: lock_info.lock_by,
+            lock_owner: lock_info.locked_by,
         });
 
         return;

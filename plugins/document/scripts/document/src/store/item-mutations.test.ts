@@ -33,8 +33,8 @@ describe("Item mutations", () => {
         it("replace the element in folder content", () => {
             const state: State = {
                 folder_content: [
-                    { id: 1, lock_info: { lock_by: { id: 1 } as User, lock_date: "" } } as Item,
-                    { id: 2, lock_info: { lock_by: { id: 2 } as User, lock_date: "" } } as Item,
+                    { id: 1, lock_info: { locked_by: { id: 1 } as User, lock_date: "" } } as Item,
+                    { id: 2, lock_info: { locked_by: { id: 2 } as User, lock_date: "" } } as Item,
                 ],
             } as unknown as State;
 
@@ -45,7 +45,7 @@ describe("Item mutations", () => {
             }
             expect(state.folder_content[0].lock_info).toBeNull();
             expect(state.folder_content[1].lock_info).toEqual({
-                lock_by: { id: 2 } as User,
+                locked_by: { id: 2 } as User,
                 lock_date: "",
             });
         });
@@ -60,7 +60,7 @@ describe("Item mutations", () => {
 
             replaceFolderContentByItem(state, {
                 id: 3,
-                lock_info: { lock_by: { id: 1 } as User, lock_date: "" },
+                lock_info: { locked_by: { id: 1 } as User, lock_date: "" },
             } as Item);
 
             if (!isFolderContentArrayOfItem(state.folder_content)) {
@@ -73,7 +73,7 @@ describe("Item mutations", () => {
         it("replace the preview item", () => {
             const item = {
                 id: 3,
-                lock_info: { lock_by: { id: 1 } as User, lock_date: "" } as LockInfo,
+                lock_info: { locked_by: { id: 1 } as User, lock_date: "" } as LockInfo,
             } as Item;
 
             const state: State = {
@@ -96,7 +96,7 @@ describe("Item mutations", () => {
         });
 
         it("don't do anything when preview item is not the one updated", () => {
-            const lock_info: LockInfo = { lock_by: { id: 1 } as User, lock_date: "" } as LockInfo;
+            const lock_info: LockInfo = { locked_by: { id: 1 } as User, lock_date: "" } as LockInfo;
             const item = { id: 9, lock_info: lock_info } as Item;
 
             const state: State = {
