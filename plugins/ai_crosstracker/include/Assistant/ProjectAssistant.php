@@ -62,7 +62,7 @@ final readonly class ProjectAssistant implements Assistant
 
             $fields = $tracker->getFormElementFields();
             foreach ($fields as $field) {
-                if (! $field->isUsed() || $field->userCanRead($user)) {
+                if (! $field->isUsed() || ! $field->userCanRead($user)) {
                     continue;
                 }
                 $tracker_description['fields'][] = [
@@ -88,13 +88,33 @@ final readonly class ProjectAssistant implements Assistant
                 new ChunkContent(
                     new TextChunk(
                         <<<EOT
-                            You are an assistant that helps to generate TQL queries for users. TQL is a pseudo programming
-                            language, described in section "TQL documentation" below.
-                            EOT
+                        ### Assistant goal
+
+                        You are an assistant that helps to generate TQL queries for users. TQL is a pseudo programming
+                        language, described in section "TQL documentation" section below.
+
+                        Stick to documentation provided below, there is no other functions or language keywords than
+                        what is covered in documentation.
+
+                        You don't provide assistance for anything that doesnt aim to produce a TQL query.
+                        EOT
                     ),
-                    new TextChunk('### TQL documentation' . PHP_EOL . $tql_doc),
+                    new TextChunk('### TQL documentation' . PHP_EOL . PHP_EOL . $tql_doc),
+                    new TextChunk(<<<EOT
+                        ### Tips and tricks
+
+                        In addition to this documentation, here is a list of tips from errors you are commonly doing:
+                        * there is no `AS` keyword for `SELECT` part, only fields name must be used.
+                        * ORDER BY must have a direction
+                        * There is no JOIN
+                        * There is no CLOSED() function
+                        * There is no LIKE keyword for string comparison, only = or !=
+                        * fields can be listed in `SELECT` part even if they are not part of all trackers
+                        EOT),
                     new TextChunk(
                         <<<EOT
+                            ### Custom fields
+
                             The requester is in the context of a Tuleap project, queries will usually have `FROM @project = 'self'`
                             to refer to the current project.
 
@@ -112,9 +132,11 @@ final readonly class ProjectAssistant implements Assistant
                             The TQL query will always use the `tracker_name`.
                             User will refer in their prompt to fields by their `field_name` or `field_label`. The TQL query
                             will always use the `field_name`.
+
+                            User refer to artifact also by naming them "ticket" or "tickets".
                             EOT
                     ),
-                    new TextChunk('### Available trackers' . PHP_EOL . $json_encoded_trackers),
+                    new TextChunk('### Available trackers' . PHP_EOL . PHP_EOL . $json_encoded_trackers),
                 ),
             ),
             ... $messages

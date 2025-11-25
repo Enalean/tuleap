@@ -89,7 +89,7 @@ final class TQLAssistantResource extends AuthenticatedResource
 
                     $user_messages = array_map(static fn (MessageRepresentation $message): Message => $message->toMistralMessage(), $messages);
 
-                    $mistral_connector = new MistralConnectorLive(HttpClientFactory::createClientWithCustomTimeout(30));
+                    $mistral_connector = new MistralConnectorLive(HttpClientFactory::createClientWithCustomTimeout(60));
                     return $mistral_connector->sendCompletion($assistant->getCompletion($current_user, $user_messages))->match(
                         static fn (CompletionResponse $response) => new HelperRepresentation((string) $response->choices[0]->message->content),
                         static fn (Fault $fault) => throw new RestException(400, (string) $fault)
