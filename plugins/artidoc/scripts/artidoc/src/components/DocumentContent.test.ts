@@ -85,6 +85,8 @@ describe("DocumentContent", () => {
 
         current_version_displayed = {
             old_version: ref(Option.nothing()),
+            switchToLatestVersionFromFakeVersion: noop,
+            switchToFakeOldVersion: noop,
             switchToLatestVersion: noop,
             switchToOldVersion: noop,
         };

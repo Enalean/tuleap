@@ -34,6 +34,7 @@ use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SearchAllArtifactSectionsStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\ArtidocStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -49,10 +50,13 @@ use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnArtifactsStub;
 use Tuleap\Tracker\Test\Stub\Permission\TrackersPermissionsPassthroughRetriever;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
+use function Psl\Json\encode;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GETArtidocVersionsHandlerTest extends TestCase
 {
+    private const int CHANGESET_1001_ID = 1001;
+
     private PFUser $current_user;
     private ArtidocWithContext $artidoc;
     private int $limit;
@@ -68,6 +72,7 @@ final class GETArtidocVersionsHandlerTest extends TestCase
     private SearchAllArtifactSectionsStub $sections_retriever;
     private RetrieveArtifactStub $artifact_retriever;
     private RetrieveUserPermissionOnArtifacts $artifact_permissions_retriever;
+    private string $query = '';
 
     #[\Override]
     protected function setUp(): void
@@ -80,7 +85,7 @@ final class GETArtidocVersionsHandlerTest extends TestCase
         $this->user_110 = UserTestBuilder::buildWithId(110);
         $this->user_204 = UserTestBuilder::buildWithId(204);
 
-        $this->changeset_1001 = ChangesetTestBuilder::aChangeset(1001)
+        $this->changeset_1001 = ChangesetTestBuilder::aChangeset(self::CHANGESET_1001_ID)
             ->submittedBy((int) $this->user_110->getId())
             ->submittedOn(1480673101) // 2016-12-02T11:05:01
             ->build();
@@ -136,11 +141,13 @@ final class GETArtidocVersionsHandlerTest extends TestCase
                 $this->provide_user_avatar_url,
                 RetrieveUserByIdStub::withUsers($this->user_110, $this->user_204),
             ),
+            new QueryToSearchVersionsQueryConverter(ValinorMapperBuilderFactory::mapperBuilder()->mapper()),
         );
 
         return $handler->handle(
             $this->current_user,
             $this->artidoc->document->getId(),
+            $this->query,
             $this->limit,
             $this->offset
         );
@@ -220,5 +227,31 @@ final class GETArtidocVersionsHandlerTest extends TestCase
 
         self::assertTrue(Result::isErr($paginated_versions));
         self::assertInstanceOf(PartiallyReadableDocumentFault::class, $paginated_versions->error);
+    }
+
+    public function testItReturnsOnlyTheTargetVersion(): void
+    {
+        $this->query = encode(['versions_ids' => [self::CHANGESET_1001_ID]]);
+
+        $paginated_versions = $this->handle();
+
+        self::assertTrue(Result::isOk($paginated_versions));
+        self::assertSame(1, $paginated_versions->value->total);
+        self::assertEquals(
+            [
+                new ArtifactVersionRepresentation((int) $this->changeset_1001->id, '2016-12-02T11:05:01+01:00', $this->buildMinimalUserRepresentation($this->user_110)),
+            ],
+            $paginated_versions->value->versions
+        );
+    }
+
+    public function testItReturnsAVersionNotFoundFaultWhenTargetVersionIsNotFound(): void
+    {
+        $this->query = encode(['versions_ids' => [14200]]);
+
+        $paginated_versions = $this->handle();
+
+        self::assertTrue(Result::isErr($paginated_versions));
+        self::assertInstanceOf(VersionNotFoundFault::class, $paginated_versions->error);
     }
 }

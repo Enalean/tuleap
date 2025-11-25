@@ -24,8 +24,10 @@ import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
 export interface CurrentVersionDisplayed {
     old_version: Ref<Option<Version>>;
-    switchToOldVersion: (version: Version) => void;
-    switchToLatestVersion: () => void;
+    switchToFakeOldVersion(version: Version): void;
+    switchToLatestVersionFromFakeVersion(): void;
+    switchToOldVersion(version: Version): void;
+    switchToLatestVersion(): void;
 }
 
 export const CURRENT_VERSION_DISPLAYED: StrictInjectionKey<CurrentVersionDisplayed> = Symbol(

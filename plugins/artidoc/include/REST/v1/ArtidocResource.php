@@ -103,6 +103,8 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactVersionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
 use Tuleap\Artidoc\REST\v1\Versions\GETArtidocVersionsHandler;
 use Tuleap\Artidoc\REST\v1\Versions\PaginatedArtidocVersionRepresentationsCollection;
+use Tuleap\Artidoc\REST\v1\Versions\QueryToSearchVersionsQueryConverter;
+use Tuleap\Artidoc\REST\v1\Versions\VersionNotFoundFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -114,6 +116,7 @@ use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Option\Option;
@@ -483,6 +486,7 @@ final class ArtidocResource extends AuthenticatedResource
      * @hide This route exists for a prototyping purpose only.
      *
      * @param int $id Id of the document
+     * @param string $query JSON object of search criteria properties {@from path}
      * @param int $limit Number of elements retrieve {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to retrieve {@from path}{@min 0}
      *
@@ -491,7 +495,7 @@ final class ArtidocResource extends AuthenticatedResource
      * @status 200
      * @throws RestException
      */
-    public function getVersions(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    public function getVersions(int $id, string $query = '', int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
         $this->checkAccess();
 
@@ -507,9 +511,10 @@ final class ArtidocResource extends AuthenticatedResource
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 $user_manager,
             ),
+            new QueryToSearchVersionsQueryConverter(ValinorMapperBuilderFactory::mapperBuilder()->mapper()),
         );
 
-        return $handler->handle($user, $id, $limit, $offset)->match(
+        return $handler->handle($user, $id, $query, $limit, $offset)->match(
             function (PaginatedArtidocVersionRepresentationsCollection $collection) {
                 Header::sendPaginationHeaders($collection->limit, $collection->offset, $collection->total, self::MAX_LIMIT);
                 return $collection->versions;
@@ -517,6 +522,7 @@ final class ArtidocResource extends AuthenticatedResource
             function (Fault $fault): never {
                 match ($fault::class) {
                     UserCannotReadDocumentFault::class, PartiallyReadableDocumentFault::class => throw new RestException(404, 'Could not find the document'),
+                    VersionNotFoundFault::class => throw new RestException(404, 'Version not found'),
                     default => throw new RestException(500, (string) $fault),
                 };
             },

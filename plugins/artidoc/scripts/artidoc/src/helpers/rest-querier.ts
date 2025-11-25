@@ -36,6 +36,9 @@ import type {
     ConfigurationField,
     TrackerForFields,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import type { Version } from "@/components/sidebar/versions/fake-list-of-versions";
+import type { VersionPayload } from "@/components/sidebar/versions/VersionsLoader";
+import { Option } from "@tuleap/option";
 
 export function putConfiguration(
     document_id: number,
@@ -159,4 +162,22 @@ export function deleteSection(section_id: string): ResultAsync<Response, Fault> 
 
 export function getTracker(tracker_id: number): ResultAsync<TrackerForFields, Fault> {
     return getJSON<TrackerForFields>(uri`/api/trackers/${tracker_id}`);
+}
+
+export function getVersion(document_id: number, version_id: number): ResultAsync<Version, Fault> {
+    return getJSON<ReadonlyArray<VersionPayload>>(uri`/api/v1/artidoc/${document_id}/versions`, {
+        params: {
+            query: JSON.stringify({
+                versions_ids: [version_id],
+            }),
+        },
+    }).map((versions: readonly VersionPayload[]): Version => {
+        const version = versions[0];
+        return {
+            ...version,
+            title: Option.nothing(),
+            description: Option.nothing(),
+            created_on: new Date(version.created_on),
+        };
+    });
 }
