@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/gettext':
     specifier: workspace:^
     version: link:../../../../lib/frontend/gettext
+  '@tuleap/plugin-tracker-constants':
+    specifier: workspace:^
+    version: link:../lib/constants
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:^
     version: link:../lib/rest-api-types

@@ -18,15 +18,26 @@
   -->
 
 <template>
-    <ul>
-        <li v-for="field of fields" v-bind:key="field.field_id">
-            {{ field.label }}
-        </li>
-    </ul>
+    <component
+        v-for="child of children"
+        v-bind:key="child.field.field_id"
+        v-bind:is="getComponentForField(child.field)"
+        v-bind:field="child.field"
+        v-bind:content="child.content"
+        v-bind:fields="fields"
+    />
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
+import { mapContentStructureToFields } from "../helpers/map-content-structure-to-fields";
+import { getComponentForField } from "../helpers/get-component-for-field";
 
-defineProps<{ fields: TrackerResponseNoInstance["fields"] }>();
+const props = defineProps<{
+    fields: TrackerResponseNoInstance["fields"];
+    structure: TrackerResponseNoInstance["structure"];
+}>();
+
+const children = computed(() => mapContentStructureToFields(props.structure, props.fields));
 </script>

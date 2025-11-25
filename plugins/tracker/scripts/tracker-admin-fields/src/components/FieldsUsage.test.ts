@@ -24,7 +24,7 @@ import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import LoadingState from "./LoadingState.vue";
 import ErrorState from "./ErrorState.vue";
 import EmptyState from "./EmptyState.vue";
-import FieldsUsedInTracker from "./FieldsUsedInTracker.vue";
+import TrackerStructure from "./TrackerStructure.vue";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
@@ -44,7 +44,7 @@ describe("FieldsUsage", () => {
         expect(wrapper.findComponent(LoadingState).exists()).toBe(true);
         expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
-        expect(wrapper.findComponent(FieldsUsedInTracker).exists()).toBe(false);
+        expect(wrapper.findComponent(TrackerStructure).exists()).toBe(false);
     });
 
     it("should display an error state", async () => {
@@ -66,13 +66,13 @@ describe("FieldsUsage", () => {
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(ErrorState).exists()).toBe(true);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
-        expect(wrapper.findComponent(FieldsUsedInTracker).exists()).toBe(false);
+        expect(wrapper.findComponent(TrackerStructure).exists()).toBe(false);
     });
 
     it("should display an empty state", async () => {
         const getJSON = vi.spyOn(fetch_result, "getJSON");
 
-        getJSON.mockReturnValue(okAsync({ fields: [] }));
+        getJSON.mockReturnValue(okAsync({ fields: [], structure: [] }));
 
         const wrapper = shallowMount(FieldsUsage, {
             props: {
@@ -88,13 +88,15 @@ describe("FieldsUsage", () => {
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
-        expect(wrapper.findComponent(FieldsUsedInTracker).exists()).toBe(false);
+        expect(wrapper.findComponent(TrackerStructure).exists()).toBe(false);
     });
 
     it("should display fields", async () => {
         const getJSON = vi.spyOn(fetch_result, "getJSON");
 
-        getJSON.mockReturnValue(okAsync({ fields: [{ field_id: 123 }] }));
+        getJSON.mockReturnValue(
+            okAsync({ fields: [{ field_id: 123 }], structure: [{ id: 123, content: null }] }),
+        );
 
         const wrapper = shallowMount(FieldsUsage, {
             props: {
@@ -110,6 +112,6 @@ describe("FieldsUsage", () => {
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
-        expect(wrapper.findComponent(FieldsUsedInTracker).exists()).toBe(true);
+        expect(wrapper.findComponent(TrackerStructure).exists()).toBe(true);
     });
 });
