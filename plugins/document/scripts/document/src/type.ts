@@ -333,6 +333,7 @@ export interface ApprovalTable {
     approval_request_date: string;
     has_been_approved: boolean;
     version_number: number | null;
+    version_label: string;
     notification_type: string;
     is_closed: boolean;
     description: string;

@@ -19,11 +19,21 @@
 import type { ResultAsync } from "neverthrow";
 import type { ApprovalTable } from "../type";
 import type { Fault } from "@tuleap/fault";
-import { getJSON, uri } from "@tuleap/fetch-result";
+import { getJSON, uri, getAllJSON } from "@tuleap/fetch-result";
 
 export function getDocumentApprovalTable(
     item_id: number,
     version: number,
 ): ResultAsync<ApprovalTable, Fault> {
     return getJSON<ApprovalTable>(uri`/api/docman_items/${item_id}/approval_table/${version}`);
+}
+
+export function getAllDocumentApprovalTables(
+    item_id: number,
+): ResultAsync<ReadonlyArray<ApprovalTable>, Fault> {
+    return getAllJSON<ApprovalTable>(uri`/api/docman_items/${item_id}/approval_tables`, {
+        params: {
+            limit: 50,
+        },
+    });
 }

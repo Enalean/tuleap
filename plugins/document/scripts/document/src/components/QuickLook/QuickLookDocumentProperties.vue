@@ -64,7 +64,8 @@
                 </label>
                 <approval-badge
                     id="document-approval-table-status"
-                    v-bind:item="item"
+                    v-bind:approval_table="item.approval_table"
+                    v-bind:enabled="item.is_approval_table_enabled"
                     v-bind:is-in-folder-content-row="false"
                 />
             </div>

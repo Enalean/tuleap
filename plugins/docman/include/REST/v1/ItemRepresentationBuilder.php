@@ -97,6 +97,7 @@ class ItemRepresentationBuilder
         Codendi_HTMLPurifier $purifier,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
         private readonly Docman_ApprovalTableFactoriesFactory $factories_factory,
+        private readonly Docman_VersionFactory $version_factory,
     ) {
         $this->dao                                 = $dao;
         $this->user_manager                        = $user_manager;
@@ -189,7 +190,7 @@ class ItemRepresentationBuilder
                 $this->factories_factory,
                 $this->user_manager,
                 $this->provide_user_avatar_url,
-                new Docman_VersionFactory(),
+                $this->version_factory,
             ),
             $lock_info,
             $this->item_permissions_for_groups_builder->getRepresentation($current_user, $item),

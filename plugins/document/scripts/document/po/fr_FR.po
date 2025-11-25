@@ -133,6 +133,12 @@ msgstr "Demandeur d'approbation"
 msgid "Approval table"
 msgstr "Table d'approbation"
 
+msgid "Approval table details"
+msgstr "Détails de la table d'approbation"
+
+msgid "Approval table history"
+msgstr "Historique des tables d'approbation"
+
 msgid "Approval table status"
 msgstr "Status de la table d'approbation"
 
@@ -275,6 +281,9 @@ msgstr "Détails"
 
 msgid "Document locked by %{username}."
 msgstr "Document verrouillé par %{username}."
+
+msgid "Document version"
+msgstr "Version du document"
 
 msgid "Documents"
 msgstr "Documents"
@@ -758,6 +767,9 @@ msgstr ""
 msgid "Source"
 msgstr "Source"
 
+msgid "Start date"
+msgstr "Date de début"
+
 msgid "Start over with a completely new approval table."
 msgstr "Commencer avec une nouvelle table d'approbation."
 
@@ -775,9 +787,6 @@ msgstr "Abonnés"
 
 msgid "Summary"
 msgstr "Résumé"
-
-msgid "Switch to old ui"
-msgstr ""
 
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
@@ -858,6 +867,9 @@ msgstr "Il n'y a pas encore de versions"
 msgid "There is no approval table for this document."
 msgstr "Il n'y a pas de table d'approbation pour ce document."
 
+msgid "There is no history"
+msgstr "Il n'y a pas d'historique"
+
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
 
@@ -916,9 +928,6 @@ msgstr "Ouvrir ou fermer le dossier sélectionné"
 msgid "URL"
 msgstr "URL"
 
-msgid "Under development"
-msgstr "En développement"
-
 msgid "Unlock"
 msgstr "Déverrouiller"
 
@@ -960,6 +969,9 @@ msgstr "Version"
 
 msgid "Version %{ number } has been successfully deleted"
 msgstr "La version %{ number } a été supprimée"
+
+msgid "Version label"
+msgstr "Label de la version"
 
 msgid "Version name"
 msgstr "Nom de version"

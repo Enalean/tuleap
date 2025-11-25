@@ -21,33 +21,36 @@
     <span
         v-bind:class="approval_data.badge_class"
         class="document-approval-badge"
-        v-if="hasAnApprovalTable()"
+        v-if="has_an_approval_table && approval_data"
     >
-        <i class="fa-solid tlp-badge-icon" v-bind:class="approval_data.icon_badge"></i
-        >{{ approval_data.badge_label }}
+        <i
+            class="fa-solid tlp-badge-icon"
+            v-bind:class="approval_data.icon_badge"
+            aria-hidden="true"
+        ></i>
+        {{ approval_data.badge_label }}
     </span>
 </template>
 
 <script setup lang="ts">
+import type { ApprovalTableBadge } from "../../../helpers/approval-table-helper";
 import { extractApprovalTableData } from "../../../helpers/approval-table-helper";
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../../../constants";
-import type { ApprovableDocument } from "../../../type";
-import type { ApprovalTableBadge } from "../../../helpers/approval-table-helper";
+import type { ApprovalTable } from "../../../type";
 import type { Ref } from "vue";
-import { watch, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
-    item: ApprovableDocument;
+    approval_table: ApprovalTable | null;
+    enabled: boolean;
     isInFolderContentRow: boolean;
 }>();
 
 const { $gettext } = useGettext();
 const approval_data: Ref<ApprovalTableBadge | null> = ref(null);
 
-function hasAnApprovalTable(): boolean {
-    return props.item.approval_table !== null && approval_data.value !== null;
-}
+const has_an_approval_table = computed(() => props.approval_table !== null && props.enabled);
 
 function getTranslatedApprovalStatesMap(): Map<string, string> {
     const approval_states_map = new Map();
@@ -59,18 +62,13 @@ function getTranslatedApprovalStatesMap(): Map<string, string> {
     return approval_states_map;
 }
 
-watch(
-    () => props.item,
-    (): void => {
-        if (!props.item.approval_table) {
-            return;
-        }
+onMounted(() => {
+    if (props.approval_table) {
         approval_data.value = extractApprovalTableData(
             getTranslatedApprovalStatesMap(),
-            props.item.approval_table.approval_state,
+            props.approval_table.approval_state,
             props.isInFolderContentRow,
         );
-    },
-    { immediate: true },
-);
+    }
+});
 </script>

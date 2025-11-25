@@ -40,19 +40,6 @@
         v-bind:table="approval_table"
         v-bind:item="item"
     />
-
-    <div class="tlp-alert-warning">
-        <p class="tlp-alert-title">{{ $gettext("Under development") }}</p>
-        <a
-            class="tlp-button-primary"
-            role="button"
-            v-bind:href="getLinkToOldUI()"
-            data-test="old-ui-link"
-        >
-            <i class="fa-solid fa-shuffle tlp-button-icon" aria-hidden="true"></i>
-            {{ $gettext("Switch to old ui") }}
-        </a>
-    </div>
 </template>
 
 <script setup lang="ts">
@@ -85,10 +72,6 @@ onBeforeMount(() => {
         );
     }
 });
-
-function getLinkToOldUI(): string {
-    return `/plugins/docman/?group_id=${project.id}&action=details&id=${props.item.id}&section=approval`;
-}
 
 function getLinkToApprovalTableAdmin(): string {
     return `/plugins/docman/?group_id=${project.id}&action=approval_create&id=${props.item.id}`;

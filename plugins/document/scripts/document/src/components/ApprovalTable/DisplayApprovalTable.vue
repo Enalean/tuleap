@@ -27,7 +27,7 @@
                     <div class="tlp-pane-header">
                         <h1 class="tlp-pane-title">
                             <i class="fa-regular fa-fw fa-square-check" aria-hidden="true"></i>
-                            {{ $gettext("Approval table") }}
+                            {{ $gettext("Approval table details") }}
                         </h1>
                     </div>
 
@@ -57,6 +57,24 @@
                     </section>
                 </div>
             </section>
+
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="fa-solid fa-fw fa-list" aria-hidden="true"></i>
+                            {{ $gettext("Approval table history") }}
+                        </h1>
+                    </div>
+
+                    <section class="tlp-pane-section">
+                        <approval-table-history
+                            v-bind:item="item"
+                            v-on:error="(message) => (error_message = message)"
+                        />
+                    </section>
+                </div>
+            </section>
         </div>
     </section>
 </template>
@@ -70,6 +88,7 @@ import { ApprovalTableTab } from "../../helpers/details-tabs";
 import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
 import NoApprovalTable from "./NoApprovalTable.vue";
 import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
+import ApprovalTableHistory from "./History/ApprovalTableHistory.vue";
 
 const props = defineProps<{
     item_id: number;
