@@ -107,7 +107,8 @@
       "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
       "safer-buffer": "npm:@nolyfill/safer-buffer@^1",
       "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1",
-      "string.prototype.trimend": "npm:@nolyfill/string.prototype.trimend@^1"
+      "string.prototype.trimend": "npm:@nolyfill/string.prototype.trimend@^1",
+      "argparse": "npm:@types/argparse@^2"
     }
   }
 }

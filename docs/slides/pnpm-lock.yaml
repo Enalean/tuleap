@@ -8,6 +8,7 @@ overrides:
   isarray: npm:@nolyfill/isarray@^1
   safe-buffer: npm:@nolyfill/safe-buffer@^1
   safer-buffer: npm:@nolyfill/safer-buffer@^1
+  argparse: npm:@types/argparse@^2
 
 dependencies:
   '@fontsource-variable/public-sans':
@@ -1343,6 +1344,10 @@ packages:
       - vue-template-es2015-compiler
     dev: true
 
+  /@types/argparse@2.0.17:
+    resolution: {integrity: sha512-fueJssTf+4dW4HODshEGkIZbkLKHzgu1FvCI4cTc/MKum/534Euo3SrN+ilq8xgyHnOjtmg33/hee8iXLRg1XA==}
+    dev: true
+
   /@types/d3-array@3.2.2:
     resolution: {integrity: sha512-hOLWVbm7uRza0BYXpIIW5pxfrKe0W+D5lrFiAEYR+pb6w3N2SwSMaJbXdUfSEv+dT4MfHBLtn5js0LAWaO6otw==}
     dev: true
@@ -2113,16 +2118,6 @@ packages:
     dependencies:
       normalize-path: 3.0.0
       picomatch: 2.3.1
-    dev: true
-
-  /argparse@1.0.10:
-    resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
-    dependencies:
-      sprintf-js: 1.0.3
-    dev: true
-
-  /argparse@2.0.1:
-    resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
 
   /baseline-browser-mapping@2.8.22:
@@ -3304,7 +3299,7 @@ packages:
     resolution: {integrity: sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg==}
     hasBin: true
     dependencies:
-      argparse: 1.0.10
+      argparse: /@types/argparse@2.0.17
       esprima: 4.0.1
     dev: true
 
@@ -3461,7 +3456,7 @@ packages:
     resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
     hasBin: true
     dependencies:
-      argparse: 2.0.1
+      argparse: /@types/argparse@2.0.17
       entities: 4.5.0
       linkify-it: 5.0.0
       mdurl: 2.0.0
@@ -4357,10 +4352,6 @@ packages:
 
   /space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
-    dev: true
-
-  /sprintf-js@1.0.3:
-    resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
     dev: true
 
   /statuses@1.5.0:

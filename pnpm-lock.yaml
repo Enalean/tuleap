@@ -23,6 +23,7 @@ overrides:
   safer-buffer: npm:@nolyfill/safer-buffer@^1
   es-set-tostringtag: npm:@nolyfill/es-set-tostringtag@^1
   string.prototype.trimend: npm:@nolyfill/string.prototype.trimend@^1
+  argparse: npm:@types/argparse@^2
 
 devDependencies:
   '@babel/core':
@@ -2634,7 +2635,7 @@ packages:
     dependencies:
       '@rushstack/terminal': 0.15.2
       '@types/argparse': 1.0.38
-      argparse: 1.0.10
+      argparse: /@types/argparse@2.0.17
       string-argv: 0.3.2
     transitivePeerDependencies:
       - '@types/node'
@@ -2685,6 +2686,10 @@ packages:
 
   /@types/argparse@1.0.38:
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
+    dev: true
+
+  /@types/argparse@2.0.17:
+    resolution: {integrity: sha512-fueJssTf+4dW4HODshEGkIZbkLKHzgu1FvCI4cTc/MKum/534Euo3SrN+ilq8xgyHnOjtmg33/hee8iXLRg1XA==}
     dev: true
 
   /@types/babel__core@7.20.3:
@@ -3650,16 +3655,6 @@ packages:
 
   /arch@2.2.0:
     resolution: {integrity: sha512-Of/R0wqp83cgHozfIYLbBMnej79U/SVGOOyuB3VVFv1NRM/PSFMK12x9KVtiYzJqmnU5WR2qp0Z5rHb7sWGnFQ==}
-    dev: true
-
-  /argparse@1.0.10:
-    resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
-    dependencies:
-      sprintf-js: 1.0.3
-    dev: true
-
-  /argparse@2.0.1:
-    resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
 
   /array-union@2.1.0:
@@ -6586,7 +6581,7 @@ packages:
     resolution: {integrity: sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg==}
     hasBin: true
     dependencies:
-      argparse: 1.0.10
+      argparse: /@types/argparse@2.0.17
       esprima: 4.0.1
     dev: true
 
@@ -6594,7 +6589,7 @@ packages:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
     hasBin: true
     dependencies:
-      argparse: 2.0.1
+      argparse: /@types/argparse@2.0.17
     dev: true
 
   /jsbn@0.1.1:
@@ -8174,10 +8169,6 @@ packages:
 
   /spdx-license-ids@3.0.12:
     resolution: {integrity: sha512-rr+VVSXtRhO4OHbXUiAF7xW3Bo9DuuF6C5jH+q/x15j2jniycgKbxU09Hr0WqlSLUs4i4ltHGXqTe7VHclYWyA==}
-    dev: true
-
-  /sprintf-js@1.0.3:
-    resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
     dev: true
 
   /sshpk@1.18.0:
