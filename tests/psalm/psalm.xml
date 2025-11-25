@@ -47,7 +47,6 @@
 
     <taintAnalysis>
         <ignoreFiles>
-            <directory name="src/www/tracker/"/>
             <directory name="src/common/tracker/"/>
             <directory name="tests/"/>
             <directory name="plugins/*/tests/"/>

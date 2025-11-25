@@ -1779,34 +1779,6 @@ class ArtifactType // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     }
 
     /**
-         * Delete an email address in the CC list
-         *
-         * @param artifact_cc_id: cc list id
-         * @param changes (OUT): list of changes
-         *
-        * @return bool
-         */
-    public function deleteCC($delete_cc)
-    {
-        $ok = true;
-        foreach ($delete_cc as $artifact_ccs) {
-            $artifact_cc_ids = explode(',', $artifact_ccs);
-            $i               = 0;
-            foreach ($artifact_cc_ids as $artifact_cc_id) {
-                    $sql = 'SELECT artifact_id from artifact_cc WHERE artifact_cc_id=' . db_ei($artifact_cc_id);
-                    $res = db_query($sql);
-                if (db_numrows($res) > 0) {
-                    $i++;
-                    $aid = db_result($res, 0, 'artifact_id');
-                    $ah  = new ArtifactHtml($this, $aid);
-                    $ok &= $ah->deleteCC($artifact_cc_id, $changes, true);
-                }
-            }
-        }
-        return $ok;
-    }
-
-    /**
      * retrieves all the attached files with their size and id
      * for a list of artifact_ids
      * @param change_ids: the list of artifact_ids for which we search the attached files
@@ -1815,41 +1787,6 @@ class ArtifactType // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     {
         $sql = 'select filename,filesize,id from artifact_file where artifact_id in (' . db_es(implode(',', $change_ids)) . ') order by filename,filesize';
         return db_query($sql);
-    }
-
-    /**
-    * Delete the files with specified id from $ids
-    * @return bool
-    */
-    public function deleteAttachedFiles($delete_attached)
-    {
-        $ok = true;
-        $i  = 0;
-        foreach ($delete_attached as $id_list) {
-            $ids = explode(',', $id_list);
-            foreach ($ids as $id) {
-                $sql = 'SELECT artifact_id FROM artifact_file WHERE id = ' . db_ei($id);
-                $res = db_query($sql);
-                if (db_numrows($res) > 0) {
-                    $aid = db_result($res, 0, 'artifact_id');
-                    $ah  = new ArtifactHtml($this, $aid);
-                    $afh = new ArtifactFileHtml($ah, $id);
-                    if (! $afh || ! is_object($afh)) {
-                             $GLOBALS['Response']->addFeedback('error', 'Could Not Create File Object::' . $afh->getName());
-                    } elseif ($afh->isError()) {
-                            $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage() . '::' . $afh->getName());
-                    } else {
-                        $i++;
-                            $okthis = $afh->delete();
-                        if (! $okthis) {
-                            $GLOBALS['Response']->addFeedback('error', '<br>File Delete: ' . $afh->getErrorMessage());
-                        }
-                        $ok &= $okthis;
-                    }
-                }
-            }
-        }
-        return $ok;
     }
 
     /**
