@@ -779,16 +779,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getMove: function () {
-        var txtNode = Builder.node("span", { class: "docman_item_option_move" });
-        txtNode.appendChild(document.createTextNode(this.docman.options.language.action_move));
-        var li = this._createLi(txtNode);
-        this._appendQuickMoveIcon(li, "move-up");
-        this._appendQuickMoveIcon(li, "move-down");
-        this._appendQuickMoveIcon(li, "move-beginning");
-        this._appendQuickMoveIcon(li, "move-end");
-        return li;
-    },
     _getPermissions: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=details&section=permissions",
@@ -1232,10 +1222,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
 
         ul.appendChild(this._getSeparator());
 
-        // Move
-        if (this.docman.actionsForItem[this.item_id].canMove) {
-            ul.appendChild(this._getMove());
-        }
         // Cut
         if (this.docman.actionsForItem[this.item_id].canCut) {
             ul.appendChild(this._getCut());
