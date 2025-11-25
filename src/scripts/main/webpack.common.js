@@ -73,13 +73,12 @@ const webpack_config_for_flaming_parrot_code = {
 
 const webpack_config_for_rich_text_editor = {
     entry: {
-        "rich-text-editor-including-prototypejs": "./src/tuleap/textarea_rte.js",
+        "rich-text-editor-including-prototypejs": "./src/codendi/RichTextEditor.js",
     },
     context,
     output,
     externals: {
         ckeditor4: "CKEDITOR",
-        tuleap: "tuleap",
         jquery: "jQuery",
     },
     module: {
