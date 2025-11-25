@@ -236,7 +236,7 @@ describe("DragNDropHandler", () => {
                     type: TYPE_FILE,
                     user_can_write: true,
                     lock_info: {
-                        lock_by: {
+                        locked_by: {
                             id: 753,
                             name: "some dude",
                             display_name: "Some Dude",
@@ -391,7 +391,7 @@ describe("DragNDropHandler", () => {
                 type: TYPE_FILE,
                 user_can_write: true,
                 lock_info: {
-                    lock_by: {
+                    locked_by: {
                         id: CURRENT_USER_ID,
                         name: "current_user",
                     },
@@ -426,7 +426,7 @@ describe("DragNDropHandler", () => {
                 type: TYPE_FILE,
                 user_can_write: true,
                 lock_info: {
-                    lock_by: {
+                    locked_by: {
                         id: CURRENT_USER_ID,
                         name: "current_user",
                     },
@@ -456,7 +456,7 @@ describe("DragNDropHandler", () => {
                 type: TYPE_FILE,
                 user_can_write: true,
                 lock_info: {
-                    lock_by: {
+                    locked_by: {
                         id: CURRENT_USER_ID,
                         name: "current_user",
                     },

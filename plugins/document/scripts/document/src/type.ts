@@ -294,7 +294,7 @@ export interface Empty extends Item, Uploadable {
 
 export interface LockInfo {
     lock_date: string;
-    lock_by: User;
+    locked_by: User;
 }
 
 export interface User {

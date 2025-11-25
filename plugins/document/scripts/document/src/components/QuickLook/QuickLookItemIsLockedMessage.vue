@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-alert-info document-preview-item-is-locked-icon">
         {{ $gettext("This document is currently locked by") }}
-        <user-name v-bind:user="lock_info.lock_by" />
+        <user-name v-bind:user="lock_info.locked_by" />
     </div>
 </template>
 
