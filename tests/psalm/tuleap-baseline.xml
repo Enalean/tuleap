@@ -6080,12 +6080,6 @@
       <code><![CDATA[$newParentItem]]></code>
       <code><![CDATA[$newParentItem]]></code>
     </ArgumentTypeCoercion>
-    <DeprecatedFunction>
-      <code><![CDATA[user_set_preference(
-                                PLUGIN_DOCMAN_VIEW_PREF . '_' . $folder->getGroupId(),
-                                $selected_view
-                            )]]></code>
-    </DeprecatedFunction>
     <DeprecatedMethod>
       <code><![CDATA[createFromRow]]></code>
       <code><![CDATA[getFromLabel]]></code>
@@ -6184,7 +6178,6 @@
       <code><![CDATA[action_lock_del]]></code>
       <code><![CDATA[addMonitorinUgroups]]></code>
       <code><![CDATA[addMonitoringUsers]]></code>
-      <code><![CDATA[admin_change_view]]></code>
       <code><![CDATA[admin_create_love]]></code>
       <code><![CDATA[admin_create_metadata]]></code>
       <code><![CDATA[admin_delete_love]]></code>
@@ -6197,7 +6190,6 @@
       <code><![CDATA[approval_upd_user]]></code>
       <code><![CDATA[approval_update]]></code>
       <code><![CDATA[approval_user_commit]]></code>
-      <code><![CDATA[change_view]]></code>
       <code><![CDATA[collapseFolder]]></code>
       <code><![CDATA[createDocument]]></code>
       <code><![CDATA[createFolder]]></code>
@@ -11269,7 +11261,7 @@
   <file src="plugins/docman/include/view/Admin/AdminView.php">
     <InvalidReturnStatement>
       <code><![CDATA[[
-            'is_active' => $this->getIdentifier() === \Docman_View_Admin_View::IDENTIFIER,
+            'is_active' => $this->getIdentifier() === 'filename-pattern',
             'tabs' => $tab,
         ]]]></code>
     </InvalidReturnStatement>
@@ -11434,9 +11426,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$user_can_manage]]></code>
     </RiskyTruthyFalsyComparison>
-    <TooManyArguments>
-      <code><![CDATA[new Docman_View_ItemDetailsSectionStatistics($params['item'], $params['default_url'], $this->_controller, $token)]]></code>
-    </TooManyArguments>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Display.php">
     <MissingParamType>
@@ -11909,34 +11898,6 @@
     <TooManyArguments>
       <code><![CDATA[getInheritableMdLabelArray]]></code>
     </TooManyArguments>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionStatistics.php">
-    <InvalidArrayOffset>
-      <code><![CDATA[$s[$e]]]></code>
-    </InvalidArrayOffset>
-    <InvalidOperand>
-      <code><![CDATA[$displayedSize]]></code>
-    </InvalidOperand>
-    <MissingParamType>
-      <code><![CDATA[$bytes]]></code>
-      <code><![CDATA[$controller]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$_controller]]></code>
-      <code><![CDATA[$inheritableMetadataArray]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_getPropertyRow]]></code>
-      <code><![CDATA[_getStatisticsFields]]></code>
-      <code><![CDATA[convertBytesToHumanReadable]]></code>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionUpdate.php">
     <MissingParamType>
@@ -17734,7 +17695,6 @@
   <file src="plugins/git/include/Git/Repository/CollectAssets.php">
     <MissingReturnType>
       <code><![CDATA[addScript]]></code>
-      <code><![CDATA[addStylesheet]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Repository/DescriptionUpdater.php">
@@ -19871,10 +19831,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/AccessControl.php">
-    <InvalidOperand>
-      <code><![CDATA[$are_regexp_conflicting]]></code>
-      <code><![CDATA[$are_regexp_enabled]]></code>
-    </InvalidOperand>
     <MissingReturnType>
       <code><![CDATA[getAccessRightsPresenterOptionsBuilder]]></code>
     </MissingReturnType>
@@ -38184,17 +38140,12 @@
     <MissingParamType>
       <code><![CDATA[$artifact]]></code>
       <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$attachment_id]]></code>
       <code><![CDATA[$attachment_id]]></code>
       <code><![CDATA[$attachment_index]]></code>
       <code><![CDATA[$changeset_value_id]]></code>
       <code><![CDATA[$data]]></code>
-      <code><![CDATA[$fileinfo]]></code>
       <code><![CDATA[$last_changeset]]></code>
-      <code><![CDATA[$lytebox_id]]></code>
-      <code><![CDATA[$lytebox_id]]></code>
-      <code><![CDATA[$read_only]]></code>
       <code><![CDATA[$read_only]]></code>
       <code><![CDATA[$submitter_needed]]></code>
       <code><![CDATA[$value]]></code>
@@ -38207,8 +38158,6 @@
       <code><![CDATA[$values]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$artifact->id]]></code>
-      <code><![CDATA[$artifact->id]]></code>
       <code><![CDATA[$artifact->id]]></code>
       <code><![CDATA[$files_info_from_request]]></code>
     </MissingPropertyType>
@@ -38231,7 +38180,6 @@
       <code><![CDATA[getTrackerFileInfoFactory]]></code>
       <code><![CDATA[getUserManager]]></code>
       <code><![CDATA[getValueDao]]></code>
-      <code><![CDATA[getVisioningAttributeForLink]]></code>
       <code><![CDATA[isEmpty]]></code>
       <code><![CDATA[previewAttachment]]></code>
       <code><![CDATA[showAttachment]]></code>
@@ -41676,7 +41624,6 @@
     <MissingReturnType>
       <code><![CDATA[displayAdminSemantic]]></code>
       <code><![CDATA[displaySemanticFooter]]></code>
-      <code><![CDATA[displaySemanticHeader]]></code>
       <code><![CDATA[exportToREST]]></code>
       <code><![CDATA[getSemanticOrder]]></code>
       <code><![CDATA[process]]></code>
@@ -51786,7 +51733,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$project_with_tracker_administration]]></code>
@@ -51825,8 +51771,6 @@
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$_cached_permission_user_allowed_to_change]]></code>
-      <code><![CDATA[$t->id]]></code>
-      <code><![CDATA[$t->name]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[agiledashboard_event_rest_get_burndown]]></code>
@@ -51879,7 +51823,6 @@
       <code><![CDATA[project_registration_activate_service]]></code>
       <code><![CDATA[rest_project_resources]]></code>
       <code><![CDATA[rest_resources]]></code>
-      <code><![CDATA[service_public_areas]]></code>
       <code><![CDATA[services_truncated_emails]]></code>
       <code><![CDATA[set_artifact_reference_group_id]]></code>
       <code><![CDATA[site_access_change]]></code>
@@ -58336,7 +58279,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$params]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[getPluginInfo]]></code>
@@ -64761,13 +64703,11 @@
       <code><![CDATA[$project_data_array]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[canChangeSVNLog]]></code>
       <code><![CDATA[getAccess]]></code>
       <code><![CDATA[getProjectsCreatedFrom]]></code>
       <code><![CDATA[getProjectsDescFieldsValue]]></code>
       <code><![CDATA[getTruncatedEmailsUsage]]></code>
       <code><![CDATA[getUGroupManager]]></code>
-      <code><![CDATA[isSVNMandatoryRef]]></code>
       <code><![CDATA[isSuperPublic]]></code>
       <code><![CDATA[isSuspended]]></code>
       <code><![CDATA[projectsMustBeApprovedByAdmin]]></code>
@@ -65773,8 +65713,6 @@
       <code><![CDATA[$admin_action]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
@@ -65786,11 +65724,7 @@
       <code><![CDATA[getUserName]]></code>
       <code><![CDATA[removeUserFromProject]]></code>
       <code><![CDATA[removeUserFromProjectUgroups]]></code>
-      <code><![CDATA[removeUserFromTrackerV3]]></code>
     </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $tv3_trackers]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/Project/UserRemoverDao.php">
     <DeprecatedMethod>
@@ -80167,10 +80101,7 @@
       <code><![CDATA[db_ei($this->gid)]]></code>
       <code><![CDATA[db_ei($this->gid)]]></code>
       <code><![CDATA[db_ei($this->gid)]]></code>
-      <code><![CDATA[db_ei($this->gid)]]></code>
-      <code><![CDATA[db_es($excluded_page)]]></code>
       <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_query('  DELETE FROM wiki_link'
         . ' WHERE linkfrom=' . db_ei($id)
@@ -80188,20 +80119,13 @@
       <code><![CDATA[db_query(' SELECT count(*) as count'
         . ' FROM wiki_page, wiki_nonempty'
         . ' WHERE wiki_page.group_id="' . db_ei($this->gid) . '"'
-        . ' AND wiki_nonempty.id=wiki_page.id'
-            . ' AND wiki_page.pagename NOT IN (' . implode(',', $excluded_pages_db_escaped) . ')')]]></code>
-      <code><![CDATA[db_query(' SELECT count(*) as count'
-        . ' FROM wiki_page, wiki_nonempty'
-        . ' WHERE wiki_page.group_id="' . db_ei($this->gid) . '"'
         . ' AND wiki_nonempty.id=wiki_page.id')]]></code>
       <code><![CDATA[db_query('SELECT count(*) AS nb FROM wiki_page'
                           . ' WHERE group_id=' . db_ei($this->gid))]]></code>
       <code><![CDATA[db_result($res, 0, 'count')]]></code>
-      <code><![CDATA[db_result($res, 0, 'count')]]></code>
       <code><![CDATA[db_result($res, 0, 'nb')]]></code>
     </DeprecatedFunction>
     <InvalidReturnStatement>
-      <code><![CDATA[0]]></code>
       <code><![CDATA[0]]></code>
     </InvalidReturnStatement>
     <MissingParamType>
@@ -80228,7 +80152,6 @@
       <code><![CDATA[(int) $id]]></code>
     </RedundantCastGivenDocblockType>
     <UndefinedDocblockClass>
-      <code><![CDATA[number]]></code>
       <code><![CDATA[number]]></code>
     </UndefinedDocblockClass>
   </file>

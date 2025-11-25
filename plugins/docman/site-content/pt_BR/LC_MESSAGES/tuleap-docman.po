@@ -613,9 +613,6 @@ msgstr ""
 msgid "Default value: submitter. Correspond to official owner of the document."
 msgstr ""
 
-msgid "Default view"
-msgstr ""
-
 msgid ""
 "Define a period of validity for your document. It will automatically be "
 "archived at the end of the period."
@@ -624,9 +621,6 @@ msgstr ""
 msgid ""
 "Define the default properties values for the item that will be created "
 "within this folder."
-msgstr ""
-
-msgid "Define the default view for the document manager."
 msgstr ""
 
 msgid "Define the properties of your documents."
@@ -700,12 +694,6 @@ msgid "Direct link:"
 msgstr ""
 
 msgid "Disabled"
-msgstr ""
-
-msgid "Display"
-msgstr ""
-
-msgid "Display (legacy)"
 msgstr ""
 
 msgid ""
@@ -1405,11 +1393,6 @@ msgstr ""
 msgid "Please enter a new search name:"
 msgstr ""
 
-msgid ""
-"Please select the default view for browsing documents. Please note that this "
-"setting can be overridden by user preferences."
-msgstr ""
-
 msgid "Please select the folder where you want this new document appears."
 msgstr ""
 
@@ -1628,16 +1611,10 @@ msgstr ""
 msgid "Sequential"
 msgstr ""
 
-msgid "Settings cannot be updated."
-msgstr ""
-
 msgid "Settings differ"
 msgstr ""
 
 msgid "Settings have been saved successfully"
-msgstr ""
-
-msgid "Settings have been updated."
 msgstr ""
 
 msgid "Show actions"

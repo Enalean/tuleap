@@ -604,13 +604,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                 $this->action = $view;
                 $this->view   = 'Admin_Permissions';
                 break;
-            case 'admin_change_view':
-                $this->action                            = $view;
-                $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_View::IDENTIFIER,
-                    'id'      => $item->getParentId(),
-                ];
-                $this->view                              = 'RedirectAfterCrud';
-                break;
             case 'details':
                 $section = $this->request->get('section');
                 if ($section === 'properties') {
@@ -636,9 +629,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                     $GLOBALS['Response']->redirect($redirect_url);
                 }
                 $this->view = ucfirst($view);
-                break;
-            case \Docman_View_Admin_View::IDENTIFIER:
-                $this->view = 'Admin_View';
                 break;
             case 'admin':
                 $GLOBALS['Response']->redirect(
@@ -1520,9 +1510,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                         }
                     }
                 }
-                break;
-            case 'change_view':
-                $this->action = $view;
                 break;
             case 'install':
                 $this->feedback->log('error', dgettext('tuleap-docman', 'Document Manager already installed.'));
