@@ -553,5 +553,11 @@ msgstr ""
 msgid "Your artidoc is currently set up on \"%{ tracker_name }\""
 msgstr "Votre artidoc est actuellement configuré sur \"%{ tracker_name }\""
 
+msgid ""
+"You’re viewing an older version. Section order reflects the latest Artidoc."
+msgstr ""
+"Vous être en train de visionner une ancienne version. L'ordre des sections "
+"reflète celui du dernier Artidoc."
+
 msgid "by:"
 msgstr "par :"
