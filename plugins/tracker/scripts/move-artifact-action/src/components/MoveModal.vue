@@ -19,88 +19,98 @@
 
 <template>
     <div
-        class="modal fade hide"
+        class="tlp-modal"
         id="move-artifact-modal"
         role="dialog"
         aria-labelledby="modal-move-artifact-choose-trackers"
-        aria-hidden="true"
         ref="move_artifact_modal"
     >
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <a role="button" class="tuleap-modal-close close" data-dismiss="modal">
-                        <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
-                    </a>
-                    <move-modal-title />
-                </div>
-                <div class="modal-body move-artifact-modal-body">
-                    <div
-                        data-test="modal-loader"
-                        v-if="
-                            selectors_store.are_projects_loading || modal_store.is_processing_move
-                        "
-                        class="move-artifact-loader"
-                    ></div>
-                    <div
-                        data-test="modal-error-message"
-                        v-if="modal_store.error_message.length > 0"
-                        class="alert alert-error move-artifact-error"
-                    >
-                        {{ modal_store.error_message }}
-                    </div>
-                    <move-modal-selectors v-show="!modal_store.is_processing_move" />
-                    <dry-run-preview
-                        v-if="
-                            dry_run_store.has_processed_dry_run && !modal_store.is_processing_move
-                        "
-                    />
-                </div>
-                <div class="modal-footer">
-                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">
-                        {{ $gettext("Close") }}
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        v-on:click="modal_store.moveDryRun(artifact_id)"
-                        v-bind:disabled="has_no_selected_tracker || modal_store.is_processing_move"
-                        v-show="!dry_run_store.has_processed_dry_run"
-                        data-test="move-artifact"
-                    >
-                        <i class="fa fa-share"></i>
-                        {{ $gettext("Move artifact") }}
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        v-on:click="modal_store.move(artifact_id)"
-                        v-bind:disabled="
-                            modal_store.is_processing_move || !dry_run_store.is_move_possible
-                        "
-                        v-show="dry_run_store.has_processed_dry_run"
-                        data-test="confirm-move-artifact"
-                    >
-                        <i class="fa fa-check"></i>
-                        {{ $gettext("Confirm") }}
-                    </button>
-                </div>
+        <div class="tlp-modal-header">
+            <move-modal-title />
+            <button
+                class="tlp-modal-close"
+                type="button"
+                data-dismiss="modal"
+                v-bind:aria-label="$gettext('Close')"
+            >
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-body">
+            <div
+                data-test="modal-loader"
+                v-if="selectors_store.are_projects_loading || modal_store.is_processing_move"
+                class="tlp-form-element"
+            >
+                <label class="tlp-label tlp-skeleton-text"></label>
+                <input type="text" class="tlp-input tlp-skeleton-field" disabled />
             </div>
+            <div
+                v-if="modal_store.error_message.length > 0"
+                data-test="modal-error-message"
+                class="tlp-alert-danger"
+            >
+                {{ modal_store.error_message }}
+            </div>
+            <move-modal-selectors v-show="!modal_store.is_processing_move" />
+
+            <div
+                class="dry-run-feedbacks"
+                v-if="dry_run_store.has_processed_dry_run && !modal_store.is_processing_move"
+            >
+                <dry-run-not-migrated-field-state />
+                <dry-run-partially-migrated-field-state />
+                <dry-run-fully-migrated-field-state />
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button
+                type="reset"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
+            >
+                {{ $gettext("Close") }}
+            </button>
+            <button
+                type="button"
+                class="tlp-button-primary tlp-modal-action"
+                v-on:click="modal_store.moveDryRun(artifact_id)"
+                v-bind:disabled="has_no_selected_tracker || modal_store.is_processing_move"
+                v-show="!dry_run_store.has_processed_dry_run"
+                data-test="move-artifact"
+            >
+                <i class="fa-solid fa-share" aria-hidden="true"></i>
+                {{ $gettext("Move artifact") }}
+            </button>
+            <button
+                type="button"
+                class="tlp-button-primary tlp-modal-action"
+                v-on:click="modal_store.move(artifact_id)"
+                v-bind:disabled="modal_store.is_processing_move || !dry_run_store.is_move_possible"
+                v-show="dry_run_store.has_processed_dry_run"
+                data-test="confirm-move-artifact"
+            >
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                {{ $gettext("Confirm") }}
+            </button>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, onBeforeUnmount } from "vue";
 import { useGettext } from "vue3-gettext";
-import $ from "jquery";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
 import { useSelectorsStore } from "../stores/selectors";
 import { useDryRunStore } from "../stores/dry-run";
 import { useModalStore } from "../stores/modal";
 import { ARTIFACT_ID } from "../injection-symbols";
-import MoveModalTitle from "./MoveModalTitle.vue";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
-import DryRunPreview from "./DryRunPreview.vue";
+import DryRunNotMigratedFieldState from "./DryRunNotMigratedFieldState.vue";
+import DryRunPartiallyMigratedFieldState from "./DryRunPartiallyMigratedFieldState.vue";
+import DryRunFullyMigratedFieldState from "./DryRunFullyMigratedFieldState.vue";
+import MoveModalTitle from "./MoveModalTitle.vue";
 
 const { $gettext } = useGettext();
 
@@ -111,36 +121,30 @@ const dry_run_store = useDryRunStore();
 const modal_store = useModalStore();
 
 const move_artifact_modal = ref<HTMLElement>();
+const modal = ref<Modal | null>(null);
 const has_no_selected_tracker = computed(() => {
     return selectors_store.selected_tracker_id === null;
 });
 
-const isAnHTMLElement = (element: unknown): element is HTMLElement =>
-    element instanceof HTMLElement;
-
 onMounted(() => {
-    if (!isAnHTMLElement(move_artifact_modal.value)) {
+    if (!move_artifact_modal.value) {
         return;
     }
-    const $modal = $(move_artifact_modal.value);
 
-    $modal.on("show", () => {
-        selectors_store.loadProjectList();
+    modal.value = createModal(move_artifact_modal.value, {
+        destroy_on_hide: true,
+        dismiss_on_backdrop_click: false,
     });
-    $modal.on("hidden", () => {
-        selectors_store.$reset();
-        dry_run_store.$reset();
-        modal_store.$reset();
+    modal.value.show();
+    selectors_store.loadProjectList();
+});
 
-        if (!isAnHTMLElement(move_artifact_modal.value)) {
-            return;
-        }
-
-        move_artifact_modal.value.remove();
-    });
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    $modal.modal();
+onBeforeUnmount(() => {
+    modal.value?.destroy();
 });
 </script>
+<style scoped lang="scss">
+.dry-run-feedbacks {
+    margin: var(--tlp-medium-spacing) 0 0;
+}
+</style>

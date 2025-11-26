@@ -23,8 +23,8 @@ import type { VueWrapper } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import type { ArtifactField } from "../api/types";
 import type { DryRunFieldsType } from "../types";
-import { TYPE_FULLY_MIGRATED } from "../types";
-import FieldsListDisplayer from "./FieldsListDisplayer.vue";
+import { TYPE_FULLY_MIGRATED, TYPE_NOT_MIGRATED, TYPE_PARTIALLY_MIGRATED } from "../types";
+import FieldsListDisplayerFlamingParrot from "./FieldsListDisplayerFlamingParrot.vue";
 
 const getFields = (count: number): ArtifactField[] => {
     const fields: ArtifactField[] = [];
@@ -43,7 +43,7 @@ const getFields = (count: number): ArtifactField[] => {
 };
 
 const getWrapper = (fields: ArtifactField[], type: DryRunFieldsType): VueWrapper =>
-    shallowMount(FieldsListDisplayer, {
+    shallowMount(FieldsListDisplayerFlamingParrot, {
         global: {
             ...getGlobalTestOptions(),
         },
@@ -67,6 +67,17 @@ describe("FieldsListDisplayer", () => {
         expect(wrapper.findAll("[data-test=field-label]")).toHaveLength(5);
         expect(wrapper.find("[data-test=show-more-fields-button]").exists()).toBe(true);
     });
+
+    it.each([[TYPE_FULLY_MIGRATED], [TYPE_PARTIALLY_MIGRATED], [TYPE_NOT_MIGRATED]])(
+        "When the type of the fields %s, then [Show more] button classes should adapt",
+        (type) => {
+            const wrapper = getWrapper(getFields(6), type);
+
+            expect(wrapper.find("[data-test=show-more-fields-button]").classes()).toContain(
+                `move-artifact-display-more-field-${type}`,
+            );
+        },
+    );
 
     it("When the user clicks on [Show more], then all the fields are shown and the button disappears", async () => {
         const wrapper = getWrapper(getFields(10), TYPE_FULLY_MIGRATED);

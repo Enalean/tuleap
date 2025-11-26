@@ -21,8 +21,8 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { ColorName } from "@tuleap/core-constants";
 import { ARTIFACT_ID, TRACKER_COLOR, TRACKER_NAME } from "../injection-symbols";
-import MoveModalTitle from "./MoveModalTitle.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import MoveModalTitleFlamingParrot from "./MoveModalTitleFlamingParrot.vue";
 
 describe("MoveModalTitle", () => {
     it("should display the artifact id with its tracker name and color", () => {
@@ -30,7 +30,7 @@ describe("MoveModalTitle", () => {
         const tracker_name = "Tasks";
         const artifact_id = 126;
 
-        const wrapper = shallowMount(MoveModalTitle, {
+        const wrapper = shallowMount(MoveModalTitleFlamingParrot, {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
@@ -42,10 +42,7 @@ describe("MoveModalTitle", () => {
         });
 
         const artifact_xref = wrapper.find("[data-test=artifact-xref]");
-        expect(artifact_xref.classes()).toStrictEqual([
-            `tlp-swatch-${tracker_color}`,
-            "cross-ref-badge",
-        ]);
+        expect(artifact_xref.classes()).toStrictEqual([tracker_color, "xref-in-title"]);
         expect(artifact_xref.element.textContent?.trim()).toBe("Tasks #126");
     });
 });

@@ -18,17 +18,13 @@
   -->
 
 <template>
-    <div class="move-modal-title">
-        <h1 class="tlp-modal-title" id="modal-move-artifact-choose-trackers">
-            {{ $gettext("Move") }}
-        </h1>
-        <span
-            v-bind:class="`tlp-swatch-${tracker_color} cross-ref-badge`"
-            data-test="artifact-xref"
-        >
+    <h3 class="modal-title" id="modal-move-artifact-choose-trackers">
+        <i class="fa fa-share"></i>
+        <span class="modal-move-artifact-icon-title">{{ $gettext("Move") }}</span>
+        <span v-bind:class="`${tracker_color} xref-in-title`" data-test="artifact-xref">
             {{ tracker_name }} #{{ artifact_id }}
         </span>
-    </div>
+    </h3>
 </template>
 
 <script setup lang="ts">
@@ -42,11 +38,3 @@ const artifact_id: number = strictInject(ARTIFACT_ID);
 const tracker_name: string = strictInject(TRACKER_NAME);
 const tracker_color: string = strictInject(TRACKER_COLOR);
 </script>
-
-<style lang="scss" scoped>
-.move-modal-title {
-    display: flex;
-    gap: var(--tlp-small-spacing);
-    align-items: center;
-}
-</style>

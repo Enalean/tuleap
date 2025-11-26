@@ -43,6 +43,7 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
+                    "move-artifact-modal-fp": path.resolve(__dirname, "src/index-fp.ts"),
                     "move-artifact-modal": path.resolve(__dirname, "src/index.ts"),
                 },
             },

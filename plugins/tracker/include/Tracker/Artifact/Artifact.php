@@ -604,7 +604,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 '/assets/trackers/move-artifact-action'
             );
 
-            $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'src/modal.ts'));
+            $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'src/index-fp.ts'));
         }
 
         foreach ($action_buttons_fetcher->getAdditionalActions() as $additional_action) {

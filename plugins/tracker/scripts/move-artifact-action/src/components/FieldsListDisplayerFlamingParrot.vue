@@ -18,20 +18,25 @@
   -->
 
 <template>
-    <ul class="move-artifact-display-more-fields-message">
-        <li v-for="field in fields_to_display" v-bind:key="field.field_id" data-test="field-label">
-            {{ field.label }}
-        </li>
-    </ul>
-    <button
-        v-if="is_minimal_display && fields.length > 5"
-        type="button"
-        class="tlp-button-secondary"
-        v-on:click="is_minimal_display = false"
-        data-test="show-more-fields-button"
-    >
-        {{ $gettext("Show more") }}
-    </button>
+    <div>
+        <ul class="move-artifact-display-more-fields-message">
+            <li
+                v-for="field in fields_to_display"
+                v-bind:key="field.field_id"
+                data-test="field-label"
+            >
+                {{ field.label }}
+            </li>
+        </ul>
+        <button
+            v-on:click="is_minimal_display = false"
+            v-if="is_minimal_display && fields.length > 5"
+            v-bind:class="show_more_classes"
+            data-test="show-more-fields-button"
+        >
+            {{ $gettext("Show more") }}
+        </button>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -50,5 +55,8 @@ const props = defineProps<{
 const is_minimal_display = ref(true);
 const fields_to_display = computed((): ArtifactField[] =>
     is_minimal_display.value === true ? props.fields.slice(0, 5) : props.fields,
+);
+const show_more_classes = ref(
+    `btn btn-link move-artifact-display-more-field move-artifact-display-more-field-${props.type}`,
 );
 </script>
