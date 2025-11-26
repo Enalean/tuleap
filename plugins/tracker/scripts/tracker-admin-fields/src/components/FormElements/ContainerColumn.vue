@@ -19,16 +19,16 @@
 
 <template>
     <div class="tlp-property">
-        <label class="tlp-property-label">{{ column.field.label }}</label>
+        <label class="tlp-label">{{ column.field.label }}</label>
         <div class="column">
-            <display-children v-bind:children="column.children" />
+            <display-form-elements v-bind:elements="column.children" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import type { Column } from "../../type";
-import DisplayChildren from "../DisplayChildren.vue";
+import DisplayFormElements from "../DisplayFormElements.vue";
 
 defineProps<{
     column: Column;

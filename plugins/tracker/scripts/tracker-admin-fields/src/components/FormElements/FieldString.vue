@@ -18,25 +18,19 @@
   -->
 
 <template>
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">
-                    {{ fieldset.field.label }}
-                </h1>
-            </div>
-            <div class="tlp-pane-section">
-                <display-form-elements v-bind:elements="fieldset.children" />
-            </div>
-        </div>
-    </section>
+    <div class="tlp-form-element">
+        <label class="tlp-label" v-bind:for="id">{{ field.label }}</label>
+        <input class="tlp-input" v-bind:id="id" />
+    </div>
 </template>
 
 <script setup lang="ts">
-import type { Fieldset } from "../../type";
-import DisplayFormElements from "../DisplayFormElements.vue";
+import { computed } from "vue";
+import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 
-defineProps<{
-    fieldset: Fieldset;
+const props = defineProps<{
+    field: StructureFields;
 }>();
+
+const id = computed(() => "string-" + props.field.field_id);
 </script>
