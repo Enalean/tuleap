@@ -6122,7 +6122,6 @@
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
       <code><![CDATA[$sStatus]]></code>
       <code><![CDATA[$sUgroups]]></code>
       <code><![CDATA[$selectedUsers]]></code>
@@ -6135,7 +6134,6 @@
       <code><![CDATA[$event_manager]]></code>
       <code><![CDATA[$filestorage]]></code>
       <code><![CDATA[$permissions_manager]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
@@ -6173,7 +6171,6 @@
       <code><![CDATA[_raiseMetadataChangeEvent]]></code>
       <code><![CDATA[_storeFile]]></code>
       <code><![CDATA[action_copy]]></code>
-      <code><![CDATA[action_cut]]></code>
       <code><![CDATA[action_lock_add]]></code>
       <code><![CDATA[action_lock_del]]></code>
       <code><![CDATA[addMonitorinUgroups]]></code>
@@ -75237,15 +75234,12 @@
       <code><![CDATA[db_ei($this->getID())]]></code>
       <code><![CDATA[db_ei($this->getID())]]></code>
       <code><![CDATA[db_ei($this->getID())]]></code>
-      <code><![CDATA[db_ei($this->getID())]]></code>
-      <code><![CDATA[db_ei($this->getID())]]></code>
       <code><![CDATA[db_ei($type)]]></code>
       <code><![CDATA[db_ei($user)]]></code>
       <code><![CDATA[db_ei($user)]]></code>
       <code><![CDATA[db_ei($user)]]></code>
       <code><![CDATA[db_ei($user)]]></code>
       <code><![CDATA[db_ei($user_id)]]></code>
-      <code><![CDATA[db_ei($val)]]></code>
       <code><![CDATA[db_error($res)]]></code>
       <code><![CDATA[db_error($res)]]></code>
       <code><![CDATA[db_error($res2)]]></code>
@@ -75267,9 +75261,7 @@
       <code><![CDATA[db_es($new_value)]]></code>
       <code><![CDATA[db_es($old_value)]]></code>
       <code><![CDATA[db_es($value)]]></code>
-      <code><![CDATA[db_es($value)]]></code>
       <code><![CDATA[db_es(htmlspecialchars($vfl['summary']))]]></code>
-      <code><![CDATA[db_es(htmlspecialchars((string) $value))]]></code>
       <code><![CDATA[db_es(implode(',', $comment_array))]]></code>
       <code><![CDATA[db_es(implode(',', $comment_array))]]></code>
       <code><![CDATA[db_es(implode(',', $comment_array))]]></code>
@@ -75290,7 +75282,6 @@
       <code><![CDATA[db_fetch_array($res_cc)]]></code>
       <code><![CDATA[db_fetch_array($res_com)]]></code>
       <code><![CDATA[db_fetch_array($res_com)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
       <code><![CDATA[db_free_result($res)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
@@ -75314,10 +75305,8 @@
       <code><![CDATA[db_numrows($res_com)]]></code>
       <code><![CDATA[db_numrows($res_com)]]></code>
       <code><![CDATA[db_numrows($res_username)]]></code>
-      <code><![CDATA[db_numrows($res_username)]]></code>
       <code><![CDATA[db_numrows($res_value)]]></code>
       <code><![CDATA[db_numrows($res_value)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
@@ -75375,8 +75364,6 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query('SELECT *
                 FROM artifact
                 WHERE group_artifact_id = ' . db_ei($ath->getID()) . '
@@ -75386,12 +75373,9 @@
       <code><![CDATA[db_result($orig_date, 0, 'date')]]></code>
       <code><![CDATA[db_result($orig_date, 0, 'date')]]></code>
       <code><![CDATA[db_result($orig_date, 0, 'date')]]></code>
-      <code><![CDATA[db_result($orig_date, 0, 'date')]]></code>
       <code><![CDATA[db_result($orig_subm, 0, 'email')]]></code>
       <code><![CDATA[db_result($orig_subm, 0, 'email')]]></code>
       <code><![CDATA[db_result($orig_subm, 0, 'email')]]></code>
-      <code><![CDATA[db_result($orig_subm, 0, 'email')]]></code>
-      <code><![CDATA[db_result($orig_subm, 0, 'mod_by')]]></code>
       <code><![CDATA[db_result($orig_subm, 0, 'mod_by')]]></code>
       <code><![CDATA[db_result($orig_subm, 0, 'mod_by')]]></code>
       <code><![CDATA[db_result($orig_subm, 0, 'mod_by')]]></code>
@@ -75423,7 +75407,6 @@
       <code><![CDATA[db_result($res_latest, 0, 'new_value')]]></code>
       <code><![CDATA[db_result($res_oa, 0, 'user_id')]]></code>
       <code><![CDATA[db_result($res_u, 0, 'user_id')]]></code>
-      <code><![CDATA[db_result($res_username, 0, 'user_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'adddate')]]></code>
       <code><![CDATA[db_result($result, $i, 'adddate')]]></code>
       <code><![CDATA[db_result($result, $i, 'artifact_cc_id')]]></code>
@@ -75467,14 +75450,8 @@
       <code><![CDATA[DateHelper::timeAgoInWords(db_result($orig_date, 0, 'date'), false, true)]]></code>
       <code><![CDATA[DateHelper::timeAgoInWords(db_result($result, $i, 'date'), false, true)]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize($comment_type)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize($label)]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize($label)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->ArtifactType->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->ArtifactType->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->ArtifactType->getName())]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize($tracker_label)]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize(db_result($result, $i, 'comment'))]]></code>
       <code><![CDATA[SimpleSanitizer::unsanitize(db_result($result, $i, 'comment'))]]></code>
@@ -75519,18 +75496,12 @@
       <code><![CDATA[$artifact_href]]></code>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id_dependent]]></code>
-      <code><![CDATA[$artifact_id_dependent]]></code>
       <code><![CDATA[$ascii]]></code>
       <code><![CDATA[$ascii]]></code>
       <code><![CDATA[$ascii]]></code>
       <code><![CDATA[$canned_response]]></code>
-      <code><![CDATA[$canned_response]]></code>
       <code><![CDATA[$cc]]></code>
       <code><![CDATA[$cc]]></code>
-      <code><![CDATA[$changes]]></code>
-      <code><![CDATA[$changes]]></code>
-      <code><![CDATA[$changes]]></code>
-      <code><![CDATA[$changes]]></code>
       <code><![CDATA[$changes]]></code>
       <code><![CDATA[$changes]]></code>
       <code><![CDATA[$changes]]></code>
@@ -75571,21 +75542,13 @@
       <code><![CDATA[$email]]></code>
       <code><![CDATA[$email]]></code>
       <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
       <code><![CDATA[$field_name]]></code>
       <code><![CDATA[$field_name]]></code>
       <code><![CDATA[$field_perm]]></code>
       <code><![CDATA[$field_perm]]></code>
-      <code><![CDATA[$field_perm]]></code>
       <code><![CDATA[$group_artifact_id]]></code>
       <code><![CDATA[$group_artifact_id]]></code>
       <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
@@ -75596,17 +75559,12 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$import]]></code>
       <code><![CDATA[$import]]></code>
-      <code><![CDATA[$import]]></code>
       <code><![CDATA[$masschange]]></code>
       <code><![CDATA[$masschange]]></code>
       <code><![CDATA[$masschange]]></code>
-      <code><![CDATA[$masschange]]></code>
-      <code><![CDATA[$more_addresses]]></code>
       <code><![CDATA[$my_user_id]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$new_value]]></code>
-      <code><![CDATA[$ok]]></code>
-      <code><![CDATA[$ok]]></code>
       <code><![CDATA[$old_value]]></code>
       <code><![CDATA[$output]]></code>
       <code><![CDATA[$parsed_comments]]></code>
@@ -75617,29 +75575,21 @@
       <code><![CDATA[$result]]></code>
       <code><![CDATA[$row]]></code>
       <code><![CDATA[$status]]></code>
-      <code><![CDATA[$subject]]></code>
-      <code><![CDATA[$subject]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$ugroup_sets]]></code>
-      <code><![CDATA[$ugroups]]></code>
-      <code><![CDATA[$ugroups]]></code>
       <code><![CDATA[$ugroups]]></code>
       <code><![CDATA[$use_artifact_permissions]]></code>
       <code><![CDATA[$user_ids]]></code>
       <code><![CDATA[$user_ids]]></code>
       <code><![CDATA[$user_sets]]></code>
-      <code><![CDATA[$vfl]]></code>
       <code><![CDATA[$visible_change]]></code>
       <code><![CDATA[$visible_change]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_getFieldLabelAndValueForHTMLMail]]></code>
       <code><![CDATA[addFollowUpComment]]></code>
       <code><![CDATA[addHistory]]></code>
       <code><![CDATA[buildNotificationArrays]]></code>
       <code><![CDATA[checkAssignees]]></code>
-      <code><![CDATA[createHTMLMailForUsers]]></code>
-      <code><![CDATA[createMailForUsers]]></code>
       <code><![CDATA[deleteAllCC]]></code>
       <code><![CDATA[deleteAllDependencies]]></code>
       <code><![CDATA[groupNotificationList]]></code>
@@ -75655,11 +75605,7 @@
       <code><![CDATA[$changes]]></code>
       <code><![CDATA[$changes]]></code>
     </PossibleRawObjectIteration>
-    <PossiblyNullArgument>
-      <code><![CDATA[$body]]></code>
-    </PossiblyNullArgument>
     <PossiblyNullReference>
-      <code><![CDATA[getRealName]]></code>
       <code><![CDATA[isActive]]></code>
       <code><![CDATA[isActive]]></code>
       <code><![CDATA[isActive]]></code>
@@ -75671,8 +75617,6 @@
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable>
-      <code><![CDATA[$arr_addresses]]></code>
-      <code><![CDATA[$arr_addresses]]></code>
       <code><![CDATA[$ccNames]]></code>
       <code><![CDATA[$ccNames]]></code>
       <code><![CDATA[$data_fields]]></code>
@@ -75681,12 +75625,8 @@
       <code><![CDATA[$data_fields]]></code>
       <code><![CDATA[$dependencies]]></code>
       <code><![CDATA[$dependencies]]></code>
-      <code><![CDATA[$ok]]></code>
       <code><![CDATA[$sql]]></code>
     </PossiblyUndefinedVariable>
-    <RedundantCast>
-      <code><![CDATA[(int) $columns_number]]></code>
-    </RedundantCast>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $this->getID()]]></code>
       <code><![CDATA[(int) $this->getID()]]></code>
@@ -75697,7 +75637,6 @@
     </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $concerned_ids[$watcher]]]></code>
-      <code><![CDATA[! $res_upd]]></code>
       <code><![CDATA[! $user_ids[$user_id]]]></code>
       <code><![CDATA[$use_artifact_permissions]]></code>
       <code><![CDATA[$user_id]]></code>
@@ -75706,7 +75645,6 @@
       <code><![CDATA[db_error($res)]]></code>
       <code><![CDATA[db_error($res)]]></code>
       <code><![CDATA[db_error($res2)]]></code>
-      <code><![CDATA[user_get_result_set_from_email($address['address'], false)]]></code>
     </TooManyArguments>
     <UndefinedDocblockClass>
       <code><![CDATA[result]]></code>
@@ -75855,7 +75793,6 @@
     <MissingPropertyType>
       <code><![CDATA[$atid]]></code>
       <code><![CDATA[$this->atid]]></code>
-      <code><![CDATA[$this->atid]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[clearError]]></code>
@@ -75935,28 +75872,12 @@
     </InvalidReturnStatement>
     <MissingParamType>
       <code><![CDATA[$ArtifactType]]></code>
-      <code><![CDATA[$criteria]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$max_rows]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$sort_criteria]]></code>
       <code><![CDATA[$string]]></code>
-      <code><![CDATA[$total_artifacts]]></code>
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getArtifactsFromReport]]></code>
       <code><![CDATA[setError]]></code>
     </MissingReturnType>
-    <TypeDoesNotContainType>
-      <code><![CDATA[! $report]]></code>
-      <code><![CDATA[! $report]]></code>
-      <code><![CDATA[! $report || ! is_object($report)]]></code>
-      <code><![CDATA[! $report || ! is_object($report)]]></code>
-      <code><![CDATA[! is_object($report)]]></code>
-    </TypeDoesNotContainType>
     <UndefinedDocblockClass>
       <code><![CDATA[OUT]]></code>
     </UndefinedDocblockClass>
@@ -76867,8 +76788,6 @@
     <MissingParamType>
       <code><![CDATA[$add_cc]]></code>
       <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$aid_column]]></code>
       <code><![CDATA[$arr]]></code>
       <code><![CDATA[$arr]]></code>
       <code><![CDATA[$art_field_fact]]></code>
@@ -76876,7 +76795,6 @@
       <code><![CDATA[$art_id]]></code>
       <code><![CDATA[$artifact_depend_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifacts_data]]></code>
       <code><![CDATA[$artifacts_data]]></code>
       <code><![CDATA[$ath]]></code>
       <code><![CDATA[$cc_comment]]></code>
@@ -76890,12 +76808,7 @@
       <code><![CDATA[$data]]></code>
       <code><![CDATA[$data]]></code>
       <code><![CDATA[$data]]></code>
-      <code><![CDATA[$data]]></code>
-      <code><![CDATA[$data]]></code>
       <code><![CDATA[$details]]></code>
-      <code><![CDATA[$errors]]></code>
-      <code><![CDATA[$errors]]></code>
-      <code><![CDATA[$errors]]></code>
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field_name]]></code>
@@ -76908,17 +76821,11 @@
       <code><![CDATA[$insert]]></code>
       <code><![CDATA[$is_tmp]]></code>
       <code><![CDATA[$label]]></code>
-      <code><![CDATA[$notify]]></code>
-      <code><![CDATA[$notify]]></code>
-      <code><![CDATA[$notify]]></code>
       <code><![CDATA[$number_inserts]]></code>
       <code><![CDATA[$number_updates]]></code>
       <code><![CDATA[$parsed_comments]]></code>
       <code><![CDATA[$parsed_details]]></code>
-      <code><![CDATA[$parsed_labels]]></code>
       <code><![CDATA[$predef_vals]]></code>
-      <code><![CDATA[$row]]></code>
-      <code><![CDATA[$row]]></code>
       <code><![CDATA[$row]]></code>
       <code><![CDATA[$row]]></code>
       <code><![CDATA[$row]]></code>
@@ -76942,7 +76849,6 @@
       <code><![CDATA[$submitted_by_column]]></code>
       <code><![CDATA[$submitted_on_column]]></code>
       <code><![CDATA[$this->art_field_fact]]></code>
-      <code><![CDATA[$this->art_field_fact]]></code>
       <code><![CDATA[$used_fields]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -76958,7 +76864,6 @@
       <code><![CDATA[getPredefinedValues]]></code>
       <code><![CDATA[getUsedFields]]></code>
       <code><![CDATA[getUserManager]]></code>
-      <code><![CDATA[insertArtifact]]></code>
       <code><![CDATA[localizeLabels]]></code>
       <code><![CDATA[mandatoryFields]]></code>
       <code><![CDATA[parseFollowUpComments]]></code>
@@ -76966,7 +76871,6 @@
       <code><![CDATA[prepareVfl]]></code>
       <code><![CDATA[setError]]></code>
       <code><![CDATA[setPredefinedValue]]></code>
-      <code><![CDATA[updateArtifact]]></code>
     </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[$array]]></code>
@@ -77010,18 +76914,6 @@
       <code><![CDATA[$vfl]]></code>
       <code><![CDATA[$vfl]]></code>
     </PossiblyUndefinedVariable>
-    <TypeDoesNotContainType>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/common/tracker/ArtifactIntegerFieldXMLExporter.php">
     <MissingParamType>
@@ -77263,7 +77155,6 @@
       <code><![CDATA[$report_id]]></code>
       <code><![CDATA[$scope]]></code>
       <code><![CDATA[$this->group_artifact_id]]></code>
-      <code><![CDATA[$this->group_artifact_id]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[_ExecuteQueryForSelectReportItems]]></code>
@@ -77317,7 +77208,6 @@
       <code><![CDATA[db_ei($report_array['report_id'])]]></code>
       <code><![CDATA[db_ei($report_array['user_id'])]]></code>
       <code><![CDATA[db_ei($report_id)]]></code>
-      <code><![CDATA[db_ei($report_id)]]></code>
       <code><![CDATA[db_ei($show_on_query)]]></code>
       <code><![CDATA[db_ei($show_on_result)]]></code>
       <code><![CDATA[db_ei($user_id)]]></code>
@@ -77336,9 +77226,7 @@
       <code><![CDATA[db_fetch_array($result)]]></code>
       <code><![CDATA[db_fetch_array($result)]]></code>
       <code><![CDATA[db_insertid($res_insert, 'artifact_report', 'report_id')]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -77357,22 +77245,17 @@
     </InvalidFalsableReturnType>
     <InvalidReturnStatement>
       <code><![CDATA[$report_mapping]]></code>
-      <code><![CDATA[false]]></code>
-      <code><![CDATA[new ArtifactReportHtml($report_id, $atid)]]></code>
       <code><![CDATA[true]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[bool]]></code>
-      <code><![CDATA[void]]></code>
     </InvalidReturnType>
     <MissingParamType>
-      <code><![CDATA[$atid]]></code>
       <code><![CDATA[$atid]]></code>
       <code><![CDATA[$atid_dest]]></code>
       <code><![CDATA[$atid_source]]></code>
       <code><![CDATA[$group_artifact_id]]></code>
       <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$report_id]]></code>
       <code><![CDATA[$string]]></code>
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
@@ -77709,7 +77592,6 @@
       <code><![CDATA[db_ei($aid)]]></code>
       <code><![CDATA[db_ei($arr_notification[$role_id][$event_id])]]></code>
       <code><![CDATA[db_ei($arr_watchees[$i])]]></code>
-      <code><![CDATA[db_ei($artifact_cc_id)]]></code>
       <code><![CDATA[db_ei($artifact_type_id)]]></code>
       <code><![CDATA[db_ei($artifact_type_id)]]></code>
       <code><![CDATA[db_ei($artifact_type_id)]]></code>
@@ -77732,7 +77614,6 @@
       <code><![CDATA[db_ei($group_artifact_id)]]></code>
       <code><![CDATA[db_ei($group_artifact_id)]]></code>
       <code><![CDATA[db_ei($group_artifact_id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
       <code><![CDATA[db_ei($id)]]></code>
       <code><![CDATA[db_ei($id)]]></code>
       <code><![CDATA[db_ei($id)]]></code>
@@ -77817,8 +77698,6 @@
       <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($res_events)]]></code>
       <code><![CDATA[db_numrows($res_roles)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
@@ -77835,8 +77714,6 @@
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_query("SELECT artifact_id FROM artifact WHERE group_artifact_id='" . db_ei($from_atid) . "'")]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -77894,8 +77771,6 @@
                 'SELECT ' . $aid . ',description,bin_data,filename,filesize,filetype,adddate,submitted_by ' .
                 'FROM artifact_file ' .
                 "WHERE artifact_id='" . db_ei($from_aid) . "'")]]></code>
-      <code><![CDATA[db_result($res, 0, 'artifact_id')]]></code>
-      <code><![CDATA[db_result($res, 0, 'artifact_id')]]></code>
       <code><![CDATA[db_result($res, 0, 'user_id')]]></code>
       <code><![CDATA[db_result($res, 0, 'user_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'user_id')]]></code>
@@ -77929,10 +77804,6 @@
       <code><![CDATA[false]]></code>
       <code><![CDATA[false]]></code>
     </FalsableReturnStatement>
-    <InvalidOperand>
-      <code><![CDATA[$ah->deleteCC($artifact_cc_id, $changes, true)]]></code>
-      <code><![CDATA[$okthis]]></code>
-    </InvalidOperand>
     <InvalidParamDefault>
       <code><![CDATA[int]]></code>
     </InvalidParamDefault>
@@ -77941,8 +77812,6 @@
       <code><![CDATA[0]]></code>
     </InvalidPropertyAssignmentValue>
     <InvalidReturnStatement>
-      <code><![CDATA[$ok]]></code>
-      <code><![CDATA[$ok]]></code>
       <code><![CDATA[$results]]></code>
       <code><![CDATA[$results]]></code>
       <code><![CDATA[$this->cannedresponses_res]]></code>
@@ -77954,8 +77823,6 @@
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[array]]></code>
-      <code><![CDATA[bool]]></code>
-      <code><![CDATA[bool]]></code>
       <code><![CDATA[bool]]></code>
       <code><![CDATA[bool]]></code>
       <code><![CDATA[true]]></code>
@@ -77994,8 +77861,6 @@
       <code><![CDATA[$constraint]]></code>
       <code><![CDATA[$count_user_fields]]></code>
       <code><![CDATA[$date]]></code>
-      <code><![CDATA[$delete_attached]]></code>
-      <code><![CDATA[$delete_cc]]></code>
       <code><![CDATA[$delete_depend]]></code>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$dsc_list]]></code>
@@ -78094,10 +77959,6 @@
     <PossiblyInvalidArrayAssignment>
       <code><![CDATA[$arr_cc_changes[]]]></code>
     </PossiblyInvalidArrayAssignment>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$ok]]></code>
-      <code><![CDATA[$ok]]></code>
-    </PossiblyInvalidOperand>
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[null]]></code>
     </PossiblyNullPropertyAssignmentValue>
@@ -78152,13 +78013,6 @@
       <code><![CDATA[cutExportQuery]]></code>
       <code><![CDATA[db_error($res)]]></code>
     </TooManyArguments>
-    <TypeDoesNotContainType>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! is_object($afh)]]></code>
-    </TypeDoesNotContainType>
     <UndefinedDocblockClass>
       <code><![CDATA[database]]></code>
       <code><![CDATA[query]]></code>
@@ -78518,786 +78372,6 @@
     <MissingParamType>
       <code><![CDATA[$name]]></code>
     </MissingParamType>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactCannedHtml.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_result($result, $i, 'artifact_canned_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'artifact_canned_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'body')]]></code>
-      <code><![CDATA[db_result($result, $i, 'title')]]></code>
-      <code><![CDATA[db_result($result, $i, 'title')]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->ArtifactType->getName())]]></code>
-    </DeprecatedMethod>
-    <InvalidReturnStatement>
-      <code><![CDATA[parent::__construct($artifact_type)]]></code>
-    </InvalidReturnStatement>
-    <MissingParamType>
-      <code><![CDATA[$artifact_type]]></code>
-    </MissingParamType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $id]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactFieldHtml.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_reset_result($result)]]></code>
-      <code><![CDATA[db_reset_result($result)]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($row['1'])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($row['1'])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->description)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getValue($group_artifact_id, $arr[$i]))]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getValue($group_artifact_id, $arr[$i]))]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$art_field]]></code>
-      <code><![CDATA[$ascii]]></code>
-      <code><![CDATA[$ascii]]></code>
-      <code><![CDATA[$box_name]]></code>
-      <code><![CDATA[$box_name]]></code>
-      <code><![CDATA[$break]]></code>
-      <code><![CDATA[$break]]></code>
-      <code><![CDATA[$checked]]></code>
-      <code><![CDATA[$checked]]></code>
-      <code><![CDATA[$cols]]></code>
-      <code><![CDATA[$date_begin]]></code>
-      <code><![CDATA[$date_end]]></code>
-      <code><![CDATA[$default_value]]></code>
-      <code><![CDATA[$default_value]]></code>
-      <code><![CDATA[$display]]></code>
-      <code><![CDATA[$display]]></code>
-      <code><![CDATA[$form_name]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$htmlEmail]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$maxlength]]></code>
-      <code><![CDATA[$maxlength]]></code>
-      <code><![CDATA[$maxlength]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$ro]]></code>
-      <code><![CDATA[$ro]]></code>
-      <code><![CDATA[$ro]]></code>
-      <code><![CDATA[$ro]]></code>
-      <code><![CDATA[$rows]]></code>
-      <code><![CDATA[$show_any]]></code>
-      <code><![CDATA[$show_any]]></code>
-      <code><![CDATA[$show_any]]></code>
-      <code><![CDATA[$show_none]]></code>
-      <code><![CDATA[$show_none]]></code>
-      <code><![CDATA[$show_none]]></code>
-      <code><![CDATA[$show_unchanged]]></code>
-      <code><![CDATA[$show_unchanged]]></code>
-      <code><![CDATA[$show_unchanged]]></code>
-      <code><![CDATA[$show_value]]></code>
-      <code><![CDATA[$size]]></code>
-      <code><![CDATA[$size]]></code>
-      <code><![CDATA[$size]]></code>
-      <code><![CDATA[$text_any]]></code>
-      <code><![CDATA[$text_any]]></code>
-      <code><![CDATA[$text_any]]></code>
-      <code><![CDATA[$text_none]]></code>
-      <code><![CDATA[$text_none]]></code>
-      <code><![CDATA[$text_none]]></code>
-      <code><![CDATA[$text_unchanged]]></code>
-      <code><![CDATA[$text_unchanged]]></code>
-      <code><![CDATA[$text_unchanged]]></code>
-      <code><![CDATA[$text_unchanged]]></code>
-      <code><![CDATA[$today]]></code>
-      <code><![CDATA[$tooltip]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$values]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_getValuesAsJavascript]]></code>
-      <code><![CDATA[_isValueDefaultValue]]></code>
-      <code><![CDATA[disableJavascript]]></code>
-    </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactFileHtml.php">
-    <InvalidDocblock>
-      <code><![CDATA[public function __construct(&$Artifact, $data = false)]]></code>
-    </InvalidDocblock>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->create($input_file_name, $input_file_type, $size, $input_data, $description, $changes)]]></code>
-      <code><![CDATA[parent::__construct($Artifact, $data)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[bool]]></code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$Artifact]]></code>
-      <code><![CDATA[$changes]]></code>
-      <code><![CDATA[$data]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$input_file]]></code>
-      <code><![CDATA[$input_file_name]]></code>
-      <code><![CDATA[$input_file_type]]></code>
-    </MissingParamType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$input_data]]></code>
-      <code><![CDATA[$input_data]]></code>
-      <code><![CDATA[$size]]></code>
-      <code><![CDATA[@fopen($input_file, 'r')]]></code>
-    </PossiblyFalseArgument>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactHtml.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_numrows($field->getFieldPredefinedValues($group_artifact_id))]]></code>
-      <code><![CDATA[db_numrows($field->getFieldPredefinedValues($group_artifact_id))]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($this->ArtifactType->getCannedResponses())]]></code>
-      <code><![CDATA[db_numrows($this->ArtifactType->getCannedResponses())]]></code>
-      <code><![CDATA[db_numrows($this->getAttachedFiles())]]></code>
-      <code><![CDATA[db_numrows($this->getAttachedFiles())]]></code>
-      <code><![CDATA[db_numrows($this->getCCList())]]></code>
-      <code><![CDATA[db_numrows($this->getCCList())]]></code>
-      <code><![CDATA[db_numrows($this->getDependencies())]]></code>
-      <code><![CDATA[db_numrows($this->getDependencies())]]></code>
-      <code><![CDATA[db_numrows($this->getHistory())]]></code>
-      <code><![CDATA[db_numrows($this->getInverseDependencies())]]></code>
-      <code><![CDATA[db_numrows($this->getInverseDependencies())]]></code>
-      <code><![CDATA[db_result($orig_date, 0, 'date')]]></code>
-      <code><![CDATA[db_result($orig_subm, 0, 'mod_by')]]></code>
-      <code><![CDATA[db_result($result, $i, 'artifact_history_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'artifact_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'comment_type')]]></code>
-      <code><![CDATA[db_result($result, $i, 'comment_type_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'date')]]></code>
-      <code><![CDATA[db_result($result, $i, 'date')]]></code>
-      <code><![CDATA[db_result($result, $i, 'field_name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'field_name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'group_name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'new_value')]]></code>
-      <code><![CDATA[db_result($result, $i, 'new_value')]]></code>
-      <code><![CDATA[db_result($result, $i, 'old_value')]]></code>
-      <code><![CDATA[db_result($result, $i, 'status')]]></code>
-      <code><![CDATA[db_result($result, $i, 'summary')]]></code>
-      <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
-      <code><![CDATA[user_set_preference('tracker_' . $this->ArtifactType->getId() . '_artifact_' . $this->getId() . '_last_visit', time())]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[DateHelper::timeAgoInWords($followUp['date'], false, true)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->ArtifactType->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($tracker_label)]]></code>
-    </DeprecatedMethod>
-    <InvalidDocblock>
-      <code><![CDATA[public function __construct(&$ArtifactType, $artifact_id = false)]]></code>
-    </InvalidDocblock>
-    <InvalidOperand>
-      <code><![CDATA[$summary]]></code>
-      <code><![CDATA[$this->getValue($field->getName())]]></code>
-      <code><![CDATA[$this->getValue('summary')]]></code>
-    </InvalidOperand>
-    <InvalidReturnStatement>
-      <code><![CDATA[$html]]></code>
-      <code><![CDATA[parent::__construct($ArtifactType, $artifact_id)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[void]]></code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$ArtifactType]]></code>
-      <code><![CDATA[$alternate_text]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$ascii]]></code>
-      <code><![CDATA[$comment_id]]></code>
-      <code><![CDATA[$content]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$force_read_only]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$is_open]]></code>
-      <code><![CDATA[$pv]]></code>
-      <code><![CDATA[$pv]]></code>
-      <code><![CDATA[$ro]]></code>
-      <code><![CDATA[$ro]]></code>
-      <code><![CDATA[$title]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_getFieldLabelAndValueForUser]]></code>
-      <code><![CDATA[_getSection]]></code>
-      <code><![CDATA[displayAdd]]></code>
-      <code><![CDATA[displayRSS]]></code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$user]]></code>
-      <code><![CDATA[$user]]></code>
-    </PossiblyNullArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-    </PossiblyUndefinedArrayOffset>
-    <RedundantCast>
-      <code><![CDATA[(int) $columns_number]]></code>
-      <code><![CDATA[(int) $columns_number]]></code>
-      <code><![CDATA[(int) $columns_number]]></code>
-      <code><![CDATA[(int) $columns_number]]></code>
-      <code><![CDATA[(int) $columns_number]]></code>
-      <code><![CDATA[(int) $columns_number]]></code>
-    </RedundantCast>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactImportHtml.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[user_set_preference('tracker_import_notify_' . $this->ath->getID(), 0)]]></code>
-      <code><![CDATA[user_set_preference('tracker_import_notify_' . $this->ath->getID(), 1)]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[groupAddHistory]]></code>
-    </DeprecatedMethod>
-    <InvalidReturnStatement>
-      <code><![CDATA[parent::__construct($ath, $art_field_fact, $group)]]></code>
-    </InvalidReturnStatement>
-    <MissingParamType>
-      <code><![CDATA[$aid_column]]></code>
-      <code><![CDATA[$art_field_fact]]></code>
-      <code><![CDATA[$artifacts_data]]></code>
-      <code><![CDATA[$artifacts_data]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$count_artifacts]]></code>
-      <code><![CDATA[$csv_filename]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$parsed_labels]]></code>
-      <code><![CDATA[$parsed_labels]]></code>
-      <code><![CDATA[$user_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[displayCSVInput]]></code>
-      <code><![CDATA[displayImport]]></code>
-      <code><![CDATA[displayParse]]></code>
-      <code><![CDATA[displayShowFormat]]></code>
-      <code><![CDATA[showErrors]]></code>
-      <code><![CDATA[showParseResults]]></code>
-    </MissingReturnType>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$aid]]></code>
-    </PossiblyUndefinedVariable>
-    <UndefinedVariable>
-      <code><![CDATA[$submitted_on_column]]></code>
-    </UndefinedVariable>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactReportHtml.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_fetch_array($field_values)]]></code>
-      <code><![CDATA[db_fetch_array($reports)]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-    </DeprecatedMethod>
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[parent::__construct($report_id, $atid)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$advsrch]]></code>
-      <code><![CDATA[$advsrch]]></code>
-      <code><![CDATA[$advsrch]]></code>
-      <code><![CDATA[$aids]]></code>
-      <code><![CDATA[$aids]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$chunksz]]></code>
-      <code><![CDATA[$chunksz]]></code>
-      <code><![CDATA[$criteria_list]]></code>
-      <code><![CDATA[$criteria_list]]></code>
-      <code><![CDATA[$default_val]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$masschange]]></code>
-      <code><![CDATA[$masschange]]></code>
-      <code><![CDATA[$masschange]]></code>
-      <code><![CDATA[$morder]]></code>
-      <code><![CDATA[$morder]]></code>
-      <code><![CDATA[$msg]]></code>
-      <code><![CDATA[$msort]]></code>
-      <code><![CDATA[$msort]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$nolink]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$order]]></code>
-      <code><![CDATA[$order]]></code>
-      <code><![CDATA[$pref_stg]]></code>
-      <code><![CDATA[$prefs]]></code>
-      <code><![CDATA[$prefs]]></code>
-      <code><![CDATA[$prefs]]></code>
-      <code><![CDATA[$pv]]></code>
-      <code><![CDATA[$pv]]></code>
-      <code><![CDATA[$pv]]></code>
-      <code><![CDATA[$pv]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$reports]]></code>
-      <code><![CDATA[$scope]]></code>
-      <code><![CDATA[$scope]]></code>
-      <code><![CDATA[$set]]></code>
-      <code><![CDATA[$total_rows]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$used]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$field->description]]></code>
-      <code><![CDATA[$field->label]]></code>
-      <code><![CDATA[$fields_per_line]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getFieldsSelectbox]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$url_alternate_search]]></code>
-      <code><![CDATA[str_replace('msort=0', 'msort=1', $url)]]></code>
-      <code><![CDATA[str_replace('msort=1', 'msort=0', $url)]]></code>
-    </PossiblyInvalidOperand>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$arr]]></code>
-      <code><![CDATA[$arr]]></code>
-      <code><![CDATA[$arr]]></code>
-      <code><![CDATA[$values]]></code>
-      <code><![CDATA[$values]]></code>
-    </PossiblyUndefinedVariable>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $totalrows]]></code>
-    </RedundantCastGivenDocblockType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $rep_field]]></code>
-      <code><![CDATA[! $user_dont_want_to_see_query]]></code>
-      <code><![CDATA[! $user_dont_want_to_see_results]]></code>
-      <code><![CDATA[! $user_dont_want_to_see_results]]></code>
-      <code><![CDATA[! $user_dont_want_to_see_results]]></code>
-      <code><![CDATA[$rep_field->isShowOnQuery()]]></code>
-      <code><![CDATA[$user_dont_want_to_see_query]]></code>
-      <code><![CDATA[$user_dont_want_to_see_results]]></code>
-    </RiskyTruthyFalsyComparison>
-    <TypeDoesNotContainNull>
-      <code><![CDATA[! isset($mdir)]]></code>
-    </TypeDoesNotContainNull>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactRuleValueJavascript.php">
-    <MissingParamType>
-      <code><![CDATA[$rule]]></code>
-    </MissingParamType>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactRulesManagerHtml.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($source_values)]]></code>
-      <code><![CDATA[db_fetch_array($target_values)]]></code>
-      <code><![CDATA[db_fetch_array($values)]]></code>
-      <code><![CDATA[db_fetch_array($values)]]></code>
-      <code><![CDATA[db_fetch_array($values)]]></code>
-      <code><![CDATA[db_numrows($values)]]></code>
-      <code><![CDATA[db_numrows($values)]]></code>
-      <code><![CDATA[db_numrows($values)]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($row[1])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($row[1])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($row[1])]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$artifact_type_html]]></code>
-      <code><![CDATA[$href]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$source]]></code>
-      <code><![CDATA[$source_field]]></code>
-      <code><![CDATA[$source_field]]></code>
-      <code><![CDATA[$source_id]]></code>
-      <code><![CDATA[$source_value]]></code>
-      <code><![CDATA[$source_value]]></code>
-      <code><![CDATA[$source_value]]></code>
-      <code><![CDATA[$target]]></code>
-      <code><![CDATA[$target_field]]></code>
-      <code><![CDATA[$target_field]]></code>
-      <code><![CDATA[$target_id]]></code>
-      <code><![CDATA[$target_value]]></code>
-      <code><![CDATA[$target_value]]></code>
-      <code><![CDATA[$target_values]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$artifact_type]]></code>
-      <code><![CDATA[$href]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_footer]]></code>
-      <code><![CDATA[_header]]></code>
-      <code><![CDATA[badRequest]]></code>
-      <code><![CDATA[displayEditForm]]></code>
-      <code><![CDATA[displayFieldsAndValuesAsJavascript]]></code>
-      <code><![CDATA[displayRules]]></code>
-      <code><![CDATA[displayRulesAsJavascript]]></code>
-      <code><![CDATA[getAllSourceFields]]></code>
-      <code><![CDATA[getAllTargetFields]]></code>
-      <code><![CDATA[saveFromRequest]]></code>
-      <code><![CDATA[saveRule]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[str_replace('"', "'", $GLOBALS['HTML']->getImage('ic/spinner.gif'))]]></code>
-    </PossiblyInvalidArgument>
-    <UndefinedMethod>
-      <code><![CDATA[saveRule]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactTypeHtml.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_fetch_array($res_notif)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_fetch_array($values)]]></code>
-      <code><![CDATA[db_fetch_array($values)]]></code>
-      <code><![CDATA[db_numrows($res_username)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($ugroup_res)]]></code>
-      <code><![CDATA[db_numrows($ugroup_res)]]></code>
-      <code><![CDATA[db_numrows($values)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($result, $i, 'artifact_depend_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'artifact_depend_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'group_name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'is_dependent_on_artifact_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'is_dependent_on_artifact_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'perm_level')]]></code>
-      <code><![CDATA[db_result($result, $i, 'summary')]]></code>
-      <code><![CDATA[db_result($result, $i, 'user_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($ugroup_res, $i, 'name')]]></code>
-      <code><![CDATA[db_result($ugroup_res, $i, 'name')]]></code>
-      <code><![CDATA[db_result($ugroup_res, $i, 'ugroup_id')]]></code>
-      <code><![CDATA[db_result($ugroup_res, $i, 'ugroup_id')]]></code>
-      <code><![CDATA[db_result($ugroup_res, 0, 'name')]]></code>
-      <code><![CDATA[db_result($ugroup_res, 0, 'name')]]></code>
-      <code><![CDATA[db_result($ugroup_res, 0, 'name')]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$i]->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$i]->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$i]->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$i]->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($description ? $description : '')]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($description)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($description)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($description)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field_contained->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field_contained->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field_name)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getDescriptionText())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset_name ? $fieldset_name : '')]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset_name)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($label)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($label)]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($row['description'])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($row['value'])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($this->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($value)]]></code>
-    </DeprecatedMethod>
-    <InvalidArgument>
-      <code><![CDATA[$this->cannedResponseBox()]]></code>
-    </InvalidArgument>
-    <InvalidOperand>
-      <code><![CDATA[$this->displayPermValues($i, $perm_level)]]></code>
-    </InvalidOperand>
-    <InvalidParamDefault>
-      <code><![CDATA[int]]></code>
-      <code><![CDATA[int]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidParamDefault>
-    <InvalidReturnStatement>
-      <code><![CDATA[$out]]></code>
-      <code><![CDATA[html_build_select_box($this->getCannedResponses(), $name, $checked)]]></code>
-      <code><![CDATA[parent::__construct($Group, $artifact_type_id, $arr)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[void]]></code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$Group]]></code>
-      <code><![CDATA[$advsrch]]></code>
-      <code><![CDATA[$arr]]></code>
-      <code><![CDATA[$art_report_html]]></code>
-      <code><![CDATA[$artifact_type_id]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$change_ids]]></code>
-      <code><![CDATA[$change_ids]]></code>
-      <code><![CDATA[$change_ids]]></code>
-      <code><![CDATA[$checked]]></code>
-      <code><![CDATA[$data_type]]></code>
-      <code><![CDATA[$data_type]]></code>
-      <code><![CDATA[$default_value]]></code>
-      <code><![CDATA[$default_value]]></code>
-      <code><![CDATA[$default_value]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$display_size]]></code>
-      <code><![CDATA[$display_type]]></code>
-      <code><![CDATA[$display_type]]></code>
-      <code><![CDATA[$empty_ok]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_name]]></code>
-      <code><![CDATA[$fieldset_id]]></code>
-      <code><![CDATA[$form_name]]></code>
-      <code><![CDATA[$func]]></code>
-      <code><![CDATA[$func]]></code>
-      <code><![CDATA[$group_first]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$i]]></code>
-      <code><![CDATA[$items]]></code>
-      <code><![CDATA[$keep_history]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$mass_change_ids]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$or_label]]></code>
-      <code><![CDATA[$order_id]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$perm_level]]></code>
-      <code><![CDATA[$query]]></code>
-      <code><![CDATA[$rank_on_screen]]></code>
-      <code><![CDATA[$ro]]></code>
-      <code><![CDATA[$selected_id]]></code>
-      <code><![CDATA[$show_any]]></code>
-      <code><![CDATA[$show_none]]></code>
-      <code><![CDATA[$show_use]]></code>
-      <code><![CDATA[$show_value]]></code>
-      <code><![CDATA[$special]]></code>
-      <code><![CDATA[$status]]></code>
-      <code><![CDATA[$status]]></code>
-      <code><![CDATA[$text_any]]></code>
-      <code><![CDATA[$text_none]]></code>
-      <code><![CDATA[$title]]></code>
-      <code><![CDATA[$ugroups_permissions]]></code>
-      <code><![CDATA[$ugroups_permissions]]></code>
-      <code><![CDATA[$use_it]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value_function]]></code>
-      <code><![CDATA[$value_id]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$FIELD_VALUE_STATUS_HIDDEN]]></code>
-      <code><![CDATA[$FIELD_VALUE_STATUS_PERMANENT]]></code>
-      <code><![CDATA[$af->DATATYPE_DATE]]></code>
-      <code><![CDATA[$af->DATATYPE_FLOAT]]></code>
-      <code><![CDATA[$af->DATATYPE_INT]]></code>
-      <code><![CDATA[$af->DATATYPE_INT]]></code>
-      <code><![CDATA[$af->DATATYPE_TEXT]]></code>
-      <code><![CDATA[$af->DATATYPE_USER]]></code>
-      <code><![CDATA[$af->DATATYPE_USER]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_displayAdminMenu]]></code>
-      <code><![CDATA[displayAdminTitle]]></code>
-      <code><![CDATA[displayFieldSetDropDownList]]></code>
-      <code><![CDATA[displayNotificationForm]]></code>
-      <code><![CDATA[displayPermissionsFieldsTracker]]></code>
-      <code><![CDATA[displayPermissionsGeneralMenu]]></code>
-      <code><![CDATA[displayPermissionsTracker]]></code>
-      <code><![CDATA[showAttachedFiles]]></code>
-      <code><![CDATA[showCCList]]></code>
-    </MissingReturnType>
-    <NullArgument>
-      <code><![CDATA[null]]></code>
-      <code><![CDATA[null]]></code>
-    </NullArgument>
-    <PossiblyNullArrayOffset>
-      <code><![CDATA[$ugroups_permissions]]></code>
-      <code><![CDATA[$ugroups_permissions]]></code>
-    </PossiblyNullArrayOffset>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$arr_notif]]></code>
-      <code><![CDATA[$arr_notif]]></code>
-      <code><![CDATA[$arr_notif]]></code>
-      <code><![CDATA[$first_part]]></code>
-      <code><![CDATA[$first_part]]></code>
-      <code><![CDATA[$first_part]]></code>
-      <code><![CDATA[$first_part]]></code>
-      <code><![CDATA[$first_part]]></code>
-      <code><![CDATA[$first_part]]></code>
-      <code><![CDATA[$first_part]]></code>
-      <code><![CDATA[$related_parts]]></code>
-    </PossiblyUndefinedVariable>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $atid]]></code>
-      <code><![CDATA[(int) $atid]]></code>
-      <code><![CDATA[(int) $atid]]></code>
-      <code><![CDATA[(int) $fieldset_id]]></code>
-      <code><![CDATA[(int) $this->getGroupID()]]></code>
-      <code><![CDATA[(int) $this->getGroupID()]]></code>
-      <code><![CDATA[(int) $this->getGroupID()]]></code>
-      <code><![CDATA[(int) $this->getGroupID()]]></code>
-      <code><![CDATA[(int) $this->getGroupID()]]></code>
-      <code><![CDATA[(int) $this->getGroupID()]]></code>
-      <code><![CDATA[(int) $this->getGroupID()]]></code>
-      <code><![CDATA[(int) $this->getGroupID()]]></code>
-      <code><![CDATA[(int) $this->getGroupID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getId()]]></code>
-      <code><![CDATA[(int) $this->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-    <RiskyCast>
-      <code><![CDATA[$this->num_roles]]></code>
-    </RiskyCast>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$comment_type_field_id]]></code>
-      <code><![CDATA[$comment_type_field_id]]></code>
-      <code><![CDATA[$ok]]></code>
-      <code><![CDATA[$ok]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/tracker/TrackerV3.php">
     <PossiblyNullPropertyAssignmentValue>
@@ -81206,11 +80280,6 @@
       <code><![CDATA[$target_realpath]]></code>
     </PossiblyFalseArgument>
   </file>
-  <file src="src/tuleap-cfg/Command/SiteDeploy/Mercure/SiteDeployMercure.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $return_val]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="src/tuleap-cfg/Command/SiteDeploy/Nginx/NginxCommon.php">
     <PossiblyFalseArgument>
       <code><![CDATA[file_get_contents($template_path)]]></code>
@@ -82431,7 +81500,6 @@
       <code><![CDATA[db_ei($key)]]></code>
       <code><![CDATA[db_ei($key)]]></code>
       <code><![CDATA[db_ei($object_id)]]></code>
-      <code><![CDATA[db_ei($object_id)]]></code>
       <code><![CDATA[db_ei($row['ugroup_id'])]]></code>
       <code><![CDATA[db_ei($ugroup_id)]]></code>
       <code><![CDATA[db_ei($ugroup_id)]]></code>
@@ -82471,7 +81539,6 @@
       <code><![CDATA[db_fetch_array($res2)]]></code>
       <code><![CDATA[db_fetch_array($res_ugroups)]]></code>
       <code><![CDATA[db_fetch_array($res_ugroups)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
       <code><![CDATA[db_fetch_array(ugroup_db_get_ugroup($row['ugroup_id']))]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
@@ -82483,8 +81550,6 @@
       <code><![CDATA[db_numrows($res1)]]></code>
       <code><![CDATA[db_numrows($res2)]]></code>
       <code><![CDATA[db_numrows($res_ugroups)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -82673,9 +81738,6 @@
     <PossiblyNullReference>
       <code><![CDATA[isSuperUser]]></code>
     </PossiblyNullReference>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$atid]]></code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="src/www/project/admin/project_admin_utils.php">
     <InvalidArgument>
@@ -82956,17 +82018,9 @@
   </file>
   <file src="src/www/project/export/project_export_utils.php">
     <DeprecatedFunction>
-      <code><![CDATA[db_numrows($cc_list)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_result($cc_list, $i, 'email')]]></code>
-      <code><![CDATA[db_result($result, $i, 'is_dependent_on_artifact_id')]]></code>
       <code><![CDATA[db_result($result, $pickone, $col)]]></code>
     </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize(join(',', $label_values))]]></code>
-    </DeprecatedMethod>
     <MissingParamType>
-      <code><![CDATA[$at]]></code>
       <code><![CDATA[$col_list]]></code>
       <code><![CDATA[$col_list]]></code>
       <code><![CDATA[$col_list]]></code>
@@ -82983,19 +82037,13 @@
       <code><![CDATA[$result]]></code>
       <code><![CDATA[$sample_val]]></code>
       <code><![CDATA[$string]]></code>
-      <code><![CDATA[$textarea]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$field->DATATYPE_TEXT]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[build_csv_header]]></code>
       <code><![CDATA[build_csv_record]]></code>
       <code><![CDATA[display_exported_fields]]></code>
       <code><![CDATA[pick_a_record_at_random]]></code>
       <code><![CDATA[prepare_access_logs_record]]></code>
-      <code><![CDATA[prepare_artifact_record]]></code>
-      <code><![CDATA[prepare_textarea]]></code>
       <code><![CDATA[tocsv]]></code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
@@ -83195,682 +82243,6 @@
       <code><![CDATA[$HTML]]></code>
       <code><![CDATA[$HTML]]></code>
     </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/add.php">
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/admin/admin_trackers.php">
-    <InvalidArgument>
-      <code><![CDATA[$ath->displayAdminTrackers()]]></code>
-    </InvalidArgument>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$group_id]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/admin/field_sets.php">
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-    </DeprecatedMethod>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$group_id]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/admin/field_usage.php">
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-    </DeprecatedMethod>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$group_id]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/admin/field_values.php">
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-    </DeprecatedMethod>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$group_id]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/admin/field_values_details.php">
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-    </DeprecatedMethod>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-    </PossiblyUndefinedVariable>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$group_id]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/admin/index.php">
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($ath->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($fieldset->getLabel())]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-    </DeprecatedMethod>
-    <MissingPropertyType>
-      <code><![CDATA[$arh->scope]]></code>
-      <code><![CDATA[$arh->scope]]></code>
-    </MissingPropertyType>
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$value_array['description']]]></code>
-      <code><![CDATA[$value_array['order_id']]]></code>
-      <code><![CDATA[$value_array['status']]]></code>
-      <code><![CDATA[$value_array['value']]]></code>
-      <code><![CDATA[$value_array['value_id']]]></code>
-    </PossiblyNullArrayAccess>
-    <PossiblyUndefinedGlobalVariable>
-      <code><![CDATA[$agnf]]></code>
-      <code><![CDATA[$agnf]]></code>
-    </PossiblyUndefinedGlobalVariable>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$ok]]></code>
-      <code><![CDATA[$ok]]></code>
-      <code><![CDATA[$ok]]></code>
-    </RiskyTruthyFalsyComparison>
-    <TooManyArguments>
-      <code><![CDATA[getText]]></code>
-    </TooManyArguments>
-    <TypeDoesNotContainType>
-      <code><![CDATA[! $ach]]></code>
-      <code><![CDATA[! $ach]]></code>
-      <code><![CDATA[! $ach || ! is_object($ach)]]></code>
-      <code><![CDATA[! $ach || ! is_object($ach)]]></code>
-      <code><![CDATA[! $arh]]></code>
-      <code><![CDATA[! $ath]]></code>
-      <code><![CDATA[! $ath]]></code>
-      <code><![CDATA[! $ath]]></code>
-      <code><![CDATA[! $ath]]></code>
-      <code><![CDATA[! $ath || ! is_object($ath)]]></code>
-      <code><![CDATA[! $ath || ! is_object($ath)]]></code>
-      <code><![CDATA[! $ath || ! is_object($ath)]]></code>
-      <code><![CDATA[! $ath || ! is_object($ath)]]></code>
-      <code><![CDATA[! is_object($ach)]]></code>
-      <code><![CDATA[! is_object($ath)]]></code>
-      <code><![CDATA[! is_object($ath)]]></code>
-      <code><![CDATA[$arh]]></code>
-    </TypeDoesNotContainType>
-  </file>
-  <file src="src/www/tracker/admin/tracker_permissions.php">
-    <TooManyArguments>
-      <code><![CDATA[permission_get_field_tracker_ugroups_permissions($group_id, $atid, $art_field_fact->getAllUsedFields(), false)]]></code>
-    </TooManyArguments>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$art_field_fact]]></code>
-      <code><![CDATA[$art_field_fact]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/browse.php">
-    <AssignmentToVoid>
-      <code><![CDATA[$art_report_html]]></code>
-      <code><![CDATA[$art_report_html]]></code>
-    </AssignmentToVoid>
-    <DeprecatedFunction>
-      <code><![CDATA[user_set_preference('artifact_browse_report' . $atid, $report_id)]]></code>
-      <code><![CDATA[user_set_preference('artifact_browse_report' . $atid, $report_id)]]></code>
-      <code><![CDATA[user_set_preference('artifact_browse_report' . $atid, $report_id)]]></code>
-    </DeprecatedFunction>
-    <NullReference>
-      <code><![CDATA[addSortCriteria]]></code>
-    </NullReference>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$advsrch]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$art_field_fact]]></code>
-      <code><![CDATA[$art_field_fact]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/copy.php">
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/detail.php">
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/download.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($artifact_id)]]></code>
-      <code><![CDATA[db_ei($artifact_id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($result, 0, 'bin_data')]]></code>
-      <code><![CDATA[db_result($result, 0, 'description')]]></code>
-      <code><![CDATA[db_result($result, 0, 'filename')]]></code>
-      <code><![CDATA[db_result($result, 0, 'filesize')]]></code>
-      <code><![CDATA[db_result($result, 0, 'filesize')]]></code>
-      <code><![CDATA[db_result($result, 0, 'filetype')]]></code>
-    </DeprecatedFunction>
-  </file>
-  <file src="src/www/tracker/edit_comment.php">
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/export.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_es($export_aids)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($q)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($v)]]></code>
-    </DeprecatedMethod>
-    <PossiblyUndefinedGlobalVariable>
-      <code><![CDATA[$all_results]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$result]]></code>
-      <code><![CDATA[$result]]></code>
-      <code><![CDATA[$rows]]></code>
-    </PossiblyUndefinedGlobalVariable>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$group_id]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/get_comment.php">
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$ah]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/gotoid.php">
-    <MissingParamType>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$art_group_id]]></code>
-      <code><![CDATA[$art_name]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$atn]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$location]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[generic_redirect]]></code>
-    </MissingReturnType>
-    <PossiblyUndefinedGlobalVariable>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-    </PossiblyUndefinedGlobalVariable>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$aid]]></code>
-    </PossiblyUndefinedVariable>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$aid]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/group_selection.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($results)]]></code>
-    </DeprecatedFunction>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_field'))]]></code>
-      <code><![CDATA[preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_form'))]]></code>
-    </PossiblyInvalidArgument>
-  </file>
-  <file src="src/www/tracker/import_admin.php">
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$j]->getName())]]></code>
-    </DeprecatedMethod>
-    <ParadoxicalCondition>
-      <code><![CDATA[! $group || ! is_object($group) || $group->isError()]]></code>
-    </ParadoxicalCondition>
-  </file>
-  <file src="src/www/tracker/index.php">
-    <AssignmentToVoid>
-      <code><![CDATA[$art_report_html]]></code>
-      <code><![CDATA[$report]]></code>
-      <code><![CDATA[$report]]></code>
-      <code><![CDATA[$report]]></code>
-      <code><![CDATA[$report]]></code>
-    </AssignmentToVoid>
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($aid)]]></code>
-      <code><![CDATA[db_ei($atid)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$j]->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$j]->getName())]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-      <code><![CDATA[sanitize]]></code>
-    </DeprecatedMethod>
-    <InaccessibleMethod>
-      <code><![CDATA[_getFieldLabelAndValueForUser]]></code>
-    </InaccessibleMethod>
-    <InvalidArgument>
-      <code><![CDATA[1]]></code>
-    </InvalidArgument>
-    <NullReference>
-      <code><![CDATA[getQueryElements]]></code>
-    </NullReference>
-    <ParadoxicalCondition>
-      <code><![CDATA[! $group || ! is_object($group) || $group->isError()]]></code>
-    </ParadoxicalCondition>
-    <PossiblyUndefinedGlobalVariable>
-      <code><![CDATA[$data]]></code>
-      <code><![CDATA[$data]]></code>
-      <code><![CDATA[$params]]></code>
-    </PossiblyUndefinedGlobalVariable>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$changed]]></code>
-      <code><![CDATA[$current_user->getPreference($pref_name)]]></code>
-    </RiskyTruthyFalsyComparison>
-    <TypeDoesNotContainType>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $afh || ! is_object($afh)]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ah || ! is_object($ah)]]></code>
-      <code><![CDATA[! $ath]]></code>
-      <code><![CDATA[! $ath]]></code>
-      <code><![CDATA[! $ath || ! is_object($ath)]]></code>
-      <code><![CDATA[! $ath || ! is_object($ath)]]></code>
-      <code><![CDATA[! is_object($afh)]]></code>
-      <code><![CDATA[! is_object($afh)]]></code>
-      <code><![CDATA[! is_object($afh)]]></code>
-      <code><![CDATA[! is_object($afh)]]></code>
-      <code><![CDATA[! is_object($afh)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ah)]]></code>
-      <code><![CDATA[! is_object($ath)]]></code>
-      <code><![CDATA[$report = $arf->getArtifactReportHtml($report_id, $atid)]]></code>
-      <code><![CDATA[$report = $arf->getArtifactReportHtml($report_id, $atid)]]></code>
-      <code><![CDATA[$report = $arf->getArtifactReportHtml($report_id, $atid)]]></code>
-      <code><![CDATA[$report = $arf->getArtifactReportHtml($report_id, $atid)]]></code>
-    </TypeDoesNotContainType>
-  </file>
-  <file src="src/www/tracker/invert_comments_order.php">
-    <DeprecatedFunction>
-      <code><![CDATA[user_set_preference('tracker_comment_invertorder', '1')]]></code>
-    </DeprecatedFunction>
-  </file>
-  <file src="src/www/tracker/masschange_detail.php">
-    <AssignmentToVoid>
-      <code><![CDATA[$art_report_html]]></code>
-    </AssignmentToVoid>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[strstr($submit, $Language->getText('tracker_masschange_detail', 'selected_items'))]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$art_field_fact]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/mod.php">
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$Language]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ah]]></code>
-      <code><![CDATA[$ath]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/tracker/tracker_selection.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_field'))]]></code>
-      <code><![CDATA[preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_form'))]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/www/user/autocomplete.php">
     <DeprecatedMethod>
