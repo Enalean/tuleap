@@ -18,7 +18,9 @@
   -->
 
 <template>
-    <p>{{ field.label }}</p>
+    <div class="tlp-form-element">
+        <label class="tlp-label">{{ field.label }}</label>
+    </div>
 </template>
 
 <script setup lang="ts">

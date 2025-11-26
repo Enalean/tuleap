@@ -18,12 +18,12 @@
   -->
 
 <template>
-    <display-children v-bind:children="root.children" />
+    <display-form-elements v-bind:elements="root.children" />
 </template>
 
 <script setup lang="ts">
 import type { ElementWithChildren } from "../type";
-import DisplayChildren from "./DisplayChildren.vue";
+import DisplayFormElements from "./DisplayFormElements.vue";
 
 defineProps<{
     root: ElementWithChildren;
