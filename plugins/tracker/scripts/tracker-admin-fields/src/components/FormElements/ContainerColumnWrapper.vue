@@ -18,31 +18,27 @@
   -->
 
 <template>
-    <div class="tlp-property">
-        <label class="tlp-property-label">{{ column.field.label }}</label>
-        <div class="column">
-            <display-children v-bind:children="column.children" />
-        </div>
+    <div class="column-wrapper">
+        <container-column
+            v-for="column of columns"
+            v-bind:key="column.field.field_id"
+            v-bind:column="column"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
 import type { Column } from "../../type";
-import DisplayChildren from "../DisplayChildren.vue";
+import ContainerColumn from "./ContainerColumn.vue";
 
 defineProps<{
-    column: Column;
+    columns: Array<Column>;
 }>();
 </script>
 
 <style lang="scss" scoped>
-.tlp-property {
-    flex: 1 1 auto;
-}
-
-.column {
-    padding: var(--tlp-medium-spacing);
-    border: 1px dashed var(--tlp-neutral-normal-color);
-    border-radius: var(--tlp-medium-radius);
+.column-wrapper {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
 }
 </style>

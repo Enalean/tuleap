@@ -18,18 +18,25 @@
  */
 
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
-import { type Component } from "vue";
-import ContainerColumn from "../components/FormElements/ContainerColumn.vue";
-import { CONTAINER_COLUMN, CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
-import ContainerFieldset from "../components/FormElements/ContainerFieldset.vue";
-import BaseField from "../components/FormElements/BaseField.vue";
 
-export function getComponentForField(field: StructureFields): Component {
-    if (field.type === CONTAINER_COLUMN) {
-        return ContainerColumn;
-    } else if (field.type === CONTAINER_FIELDSET) {
-        return ContainerFieldset;
-    }
+type Child = Field | Fieldset | ColumnWrapper;
 
-    return BaseField;
+export interface ElementWithChildren {
+    readonly children: Array<Child>;
+}
+
+export interface ColumnWrapper {
+    readonly columns: Array<Column>;
+}
+
+interface Field {
+    readonly field: StructureFields;
+}
+
+export interface Fieldset extends ElementWithChildren {
+    readonly field: StructureFields;
+}
+
+export interface Column extends ElementWithChildren {
+    readonly field: StructureFields;
 }

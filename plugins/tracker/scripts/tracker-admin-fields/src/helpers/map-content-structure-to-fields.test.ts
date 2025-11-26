@@ -18,14 +18,32 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { CONTAINER_COLUMN, CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
+import {
+    CONTAINER_COLUMN,
+    CONTAINER_FIELDSET,
+    LAST_UPDATE_DATE_FIELD,
+    LAST_UPDATED_BY_FIELD,
+    STATIC_RICH_TEXT,
+    STRING_FIELD,
+    SUBMISSION_DATE_FIELD,
+    SUBMITTED_BY_FIELD,
+} from "@tuleap/plugin-tracker-constants";
 import { mapContentStructureToFields } from "./map-content-structure-to-fields";
 import type {
     StructureFields,
+    StructureFormat,
     TrackerResponseNoInstance,
 } from "@tuleap/plugin-tracker-rest-api-types";
 
 describe("mapContentStructureToFields", () => {
+    const summary: StructureFields = {
+        field_id: 122,
+        name: "summary",
+        label: "Summary",
+        type: STRING_FIELD,
+        required: false,
+    };
+
     const fieldset: StructureFields = {
         field_id: 123,
         name: "details",
@@ -33,32 +51,128 @@ describe("mapContentStructureToFields", () => {
         type: CONTAINER_FIELDSET,
         required: false,
     };
-    const column: StructureFields = {
+
+    const staticrichtext: StructureFields = {
         field_id: 124,
+        name: "static",
+        label: "Static",
+        type: STATIC_RICH_TEXT,
+        required: false,
+    };
+
+    const column_0: StructureFields = {
+        field_id: 125,
         name: "col0",
         label: "col0",
         type: CONTAINER_COLUMN,
         required: false,
     };
 
-    const fields: TrackerResponseNoInstance["fields"] = [fieldset, column];
+    const column_1: StructureFields = {
+        field_id: 126,
+        name: "col1",
+        label: "col1",
+        type: CONTAINER_COLUMN,
+        required: false,
+    };
+
+    const lubby: StructureFields = {
+        field_id: 127,
+        name: "lubby",
+        label: "Last updated by",
+        type: LAST_UPDATED_BY_FIELD,
+        required: false,
+    };
+
+    const lud: StructureFields = {
+        field_id: 128,
+        name: "lud",
+        label: "Last updated on",
+        type: LAST_UPDATE_DATE_FIELD,
+        required: false,
+        is_time_displayed: true,
+    };
+
+    const subby: StructureFields = {
+        field_id: 129,
+        name: "subby",
+        label: "Submitted by",
+        type: SUBMITTED_BY_FIELD,
+        required: false,
+    };
+
+    const subon: StructureFields = {
+        field_id: 130,
+        name: "subon",
+        label: "Submitted on",
+        type: SUBMISSION_DATE_FIELD,
+        required: false,
+        is_time_displayed: true,
+    };
+
+    const fields: TrackerResponseNoInstance["fields"] = [
+        summary,
+        fieldset,
+        staticrichtext,
+        column_0,
+        column_1,
+        lubby,
+        lud,
+        subby,
+        subon,
+    ];
+
+    const structure: StructureFormat["content"] = [
+        { id: summary.field_id, content: null },
+        {
+            id: fieldset.field_id,
+            content: [
+                { id: staticrichtext.field_id, content: null },
+                {
+                    id: column_0.field_id,
+                    content: [
+                        { id: lubby.field_id, content: null },
+                        { id: lud.field_id, content: null },
+                    ],
+                },
+                {
+                    id: column_1.field_id,
+                    content: [
+                        { id: subby.field_id, content: null },
+                        { id: subon.field_id, content: null },
+                    ],
+                },
+            ],
+        },
+    ];
 
     it("should return empty array when no content", () => {
-        expect(mapContentStructureToFields(null, fields)).toStrictEqual([]);
+        expect(mapContentStructureToFields(null, fields)).toStrictEqual({ children: [] });
     });
 
     it("should return the corresponding fields based on content information", () => {
-        expect(
-            mapContentStructureToFields(
-                [
-                    { id: 124, content: null },
-                    { id: 123, content: [{ id: 1231, content: null }] },
-                ],
-                fields,
-            ),
-        ).toStrictEqual([
-            { field: column, content: null },
-            { field: fieldset, content: [{ id: 1231, content: null }] },
-        ]);
+        expect(mapContentStructureToFields(structure, fields)).toStrictEqual({
+            children: [
+                { field: summary },
+                {
+                    field: fieldset,
+                    children: [
+                        { field: staticrichtext },
+                        {
+                            columns: [
+                                {
+                                    field: column_0,
+                                    children: [{ field: lubby }, { field: lud }],
+                                },
+                                {
+                                    field: column_1,
+                                    children: [{ field: subby }, { field: subon }],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
     });
 });

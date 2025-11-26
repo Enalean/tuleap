@@ -38,6 +38,9 @@ import type {
     SubmittedByFieldIdentifier,
     TextFieldIdentifier,
     UpdatePermission,
+    LineBreak,
+    Separator,
+    StaticRichText,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -114,6 +117,20 @@ export interface UserFieldStructure extends BaseFieldStructure {
     readonly type: SubmittedByFieldIdentifier | LastUpdateByFieldIdentifier;
 }
 
+interface LineBreakStructure extends BaseFieldStructure {
+    readonly type: LineBreak;
+}
+
+interface SeparatorStructure extends BaseFieldStructure {
+    readonly type: Separator;
+}
+
+export interface StaticRichTextStructure extends BaseFieldStructure {
+    readonly type: StaticRichText;
+}
+
+type StaticField = LineBreakStructure | SeparatorStructure | StaticRichTextStructure;
+
 export type StructureFields =
     | UnknownFieldStructure
     | ArtifactLinkFieldStructure
@@ -125,6 +142,7 @@ export type StructureFields =
     | StringFieldStructure
     | TextFieldStructure
     | NumericFieldStructure
+    | StaticField
     | UserFieldStructure;
 
 export interface StructureFormat {

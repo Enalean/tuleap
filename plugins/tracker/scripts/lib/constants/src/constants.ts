@@ -44,6 +44,9 @@ export type StringFieldIdentifier = "string";
 export type SubmissionDateFieldIdentifier = "subon";
 export type SubmittedByFieldIdentifier = "subby";
 export type TextFieldIdentifier = "text";
+export type LineBreak = "linebreak";
+export type Separator = "separator";
+export type StaticRichText = "staticrichtext";
 
 export const ARTIFACT_ID_FIELD: ArtifactIdFieldIdentifier = "aid";
 export const ARTIFACT_ID_IN_TRACKER_FIELD: ArtifactIdInTrackerFieldIdentifier = "atid";
@@ -69,20 +72,23 @@ export const STRING_FIELD: StringFieldIdentifier = "string";
 export const SUBMISSION_DATE_FIELD: SubmissionDateFieldIdentifier = "subon";
 export const SUBMITTED_BY_FIELD: SubmittedByFieldIdentifier = "subby";
 export const TEXT_FIELD: TextFieldIdentifier = "text";
+export const LINE_BREAK = "linebreak";
+export const SEPARATOR = "separator";
+export const STATIC_RICH_TEXT = "staticrichtext";
 
 export type StructuralFieldIdentifier =
     | ColumnIdentifier
     | FieldSetIdentifier
-    | "linebreak"
-    | "separator"
-    | "staticrichtext";
+    | LineBreak
+    | Separator
+    | StaticRichText;
 
 export const STRUCTURAL_FIELDS: ReadonlyArray<StructuralFieldIdentifier> = [
     CONTAINER_COLUMN,
     CONTAINER_FIELDSET,
-    "linebreak",
-    "separator",
-    "staticrichtext",
+    LINE_BREAK,
+    SEPARATOR,
+    STATIC_RICH_TEXT,
 ];
 
 export type ReadOnlyFieldIdentifier =

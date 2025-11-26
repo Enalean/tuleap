@@ -22,28 +22,51 @@ import {
     type StructureFormat,
     type TrackerResponseNoInstance,
 } from "@tuleap/plugin-tracker-rest-api-types";
-
-interface FieldWithContent {
-    readonly field: StructureFields;
-    readonly content: StructureFormat["content"];
-}
+import type { ColumnWrapper, ElementWithChildren } from "../type";
+import { CONTAINER_COLUMN, CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
 
 export function mapContentStructureToFields(
     content: StructureFormat["content"],
     fields: TrackerResponseNoInstance["fields"],
-): FieldWithContent[] {
-    return (content || []).reduce(
-        (fields_with_content: FieldWithContent[], child: StructureFormat) => {
-            const field = fields.find((element: StructureFields) => element.field_id === child.id);
-            if (field !== undefined) {
-                fields_with_content.push({
-                    field,
-                    content: child.content,
-                });
-            }
+): ElementWithChildren {
+    if (content === null) {
+        return {
+            children: [],
+        };
+    }
 
-            return fields_with_content;
-        },
-        [],
-    );
+    const children: ElementWithChildren["children"] = [];
+    let column_wrapper: ColumnWrapper | null = null;
+
+    for (const child of content) {
+        const field = fields.find((element: StructureFields) => element.field_id === child.id);
+        if (field === undefined) {
+            continue;
+        }
+
+        if (field.type === CONTAINER_COLUMN) {
+            if (column_wrapper === null) {
+                column_wrapper = {
+                    columns: [],
+                };
+                children.push(column_wrapper);
+            }
+            column_wrapper.columns.push({
+                field,
+                ...mapContentStructureToFields(child.content, fields),
+            });
+        } else {
+            column_wrapper = null;
+            children.push({
+                field,
+                ...(field.type === CONTAINER_FIELDSET
+                    ? mapContentStructureToFields(child.content, fields)
+                    : {}),
+            });
+        }
+    }
+
+    return {
+        children,
+    };
 }

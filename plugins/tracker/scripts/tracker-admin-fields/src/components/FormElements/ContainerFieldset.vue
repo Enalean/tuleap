@@ -22,38 +22,21 @@
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
-                    {{ field.label }}
+                    {{ fieldset.field.label }}
                 </h1>
             </div>
             <div class="tlp-pane-section">
-                <component
-                    v-for="child of children"
-                    v-bind:key="child.field.field_id"
-                    v-bind:is="getComponentForField(child.field)"
-                    v-bind:field="child.field"
-                    v-bind:content="child.content"
-                    v-bind:fields="fields"
-                />
+                <display-children v-bind:children="fieldset.children" />
             </div>
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import type {
-    ContainerFieldStructure,
-    StructureFormat,
-    TrackerResponseNoInstance,
-} from "@tuleap/plugin-tracker-rest-api-types";
-import { mapContentStructureToFields } from "../../helpers/map-content-structure-to-fields";
-import { getComponentForField } from "../../helpers/get-component-for-field";
+import type { Fieldset } from "../../type";
+import DisplayChildren from "../DisplayChildren.vue";
 
-const props = defineProps<{
-    field: ContainerFieldStructure;
-    content: StructureFormat["content"];
-    fields: TrackerResponseNoInstance["fields"];
+defineProps<{
+    fieldset: Fieldset;
 }>();
-
-const children = computed(() => mapContentStructureToFields(props.content, props.fields));
 </script>
