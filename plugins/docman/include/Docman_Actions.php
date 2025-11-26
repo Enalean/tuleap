@@ -930,41 +930,6 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
         $itemFactory->delCutPreference();
     }
 
-    public function move()
-    {
-        $request = $this->_controler->request;
-        if ($request->exist('id')) {
-            $item_factory = $this->_getItemFactory();
-            //Move in a specific folder (maybe the same)
-            if ($request->exist('item_to_move')) {
-                $item          = $item_factory->getItemFromDb($request->get('item_to_move'));
-                $new_parent_id = $request->get('id');
-                $ordering      = $request->get('ordering');
-            } else {
-                //Move in the same folder
-                if ($request->exist('quick_move')) {
-                    $item          = $item_factory->getItemFromDb($request->get('id'));
-                    $new_parent_id = $item->getParentId();
-                    switch ($request->get('quick_move')) {
-                        case 'move-up':
-                        case 'move-down':
-                        case 'move-beginning':
-                        case 'move-end':
-                            $ordering = substr($request->get('quick_move'), 5);
-                            break;
-                        default:
-                            $ordering = 'beginning';
-                            break;
-                    }
-                }
-            }
-            $newParentItem = $item_factory->getItemFromDb($new_parent_id ?? 0);
-            $user          = $this->_controler->getUser();
-            $this->_doCutPaste($item, $newParentItem, $user, $ordering);
-        }
-        $this->event_manager->processEvent('send_notifications', []);
-    }
-
     public function action_cut($params)
     {
         // Param

@@ -24,7 +24,7 @@ use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 
-class Docman_View_GetMenuItemsVisitor implements ItemVisitor
+class Docman_View_GetMenuItemsVisitor implements ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $actions;
     private $user;
@@ -58,9 +58,8 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
         // have only one file in only one writable folder (so it
         // shouldn't be movable). But this case is not worth the time
         // to develop and compute that case.
-        if ($this->if->isMoveable($item) && $this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
-            $this->actions['canMove'] = true;
-            $this->actions['canCut']  = true;
+        if ($this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
+            $this->actions['canCut'] = true;
         }
         if (! $this->if->isRoot($item) && $this->dPm->userCanDelete($this->user, $item)) {
             $this->actions['canDelete'] = true;

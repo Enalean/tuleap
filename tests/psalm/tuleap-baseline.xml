@@ -6201,7 +6201,6 @@
       <code><![CDATA[install]]></code>
       <code><![CDATA[manageLockNewVersion]]></code>
       <code><![CDATA[monitor]]></code>
-      <code><![CDATA[move]]></code>
       <code><![CDATA[newVersionApprovalTable]]></code>
       <code><![CDATA[new_version]]></code>
       <code><![CDATA[paste]]></code>
@@ -6224,9 +6223,7 @@
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable>
-      <code><![CDATA[$item]]></code>
       <code><![CDATA[$mdrow]]></code>
-      <code><![CDATA[$ordering]]></code>
     </PossiblyUndefinedVariable>
     <TooManyArguments>
       <code><![CDATA[new Docman_MetadataListOfValuesElement($md->getId())]]></code>
