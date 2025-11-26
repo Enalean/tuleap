@@ -175,9 +175,6 @@ msgid ""
 "<strong>no automatic notification</strong> of the reviewers.</p>"
 msgstr ""
 
-msgid "<p>Paste operation successfully completed.</p>"
-msgstr ""
-
 #, php-format
 msgid ""
 "<p>The table below highlight the differences between %1$s and %2$s "
@@ -185,11 +182,6 @@ msgid ""
 "button at the bottom of the page. The properties of %1$s will be modified "
 "match what is defined in %2$s.</p><p><strong>Note:</strong> this operation "
 "delete neither properties nor values in %1$s and %2$s won't be modified.</p>"
-msgstr ""
-
-#, php-format
-msgid ""
-"<p>You will be redirected to <a href=\"%1$s\"> %2$s </a> in %3$s seconds</p>"
 msgstr ""
 
 msgid "<strong>Actions</strong> with selected reviewers:"
@@ -420,9 +412,6 @@ msgstr ""
 
 #, php-format
 msgid "Can't delete folder %s because it is not empty."
-msgstr ""
-
-msgid "Can't move item."
 msgstr ""
 
 #, php-format
@@ -1047,13 +1036,6 @@ msgstr ""
 msgid "Item successfully deleted."
 msgstr ""
 
-#, php-format
-msgid ""
-"Item successfully moved form <a href=\"?"
-"group_id=%1$s&amp;action=show&amp;id=%2$s\">%3$s</a> to <a href=\"?"
-"group_id=%1$s&amp;action=show&amp;id=%4$s\">%5$s</a>."
-msgstr ""
-
 msgid "Item successfully updated"
 msgstr ""
 
@@ -1252,10 +1234,6 @@ msgstr ""
 msgid "No review requested."
 msgstr ""
 
-msgid ""
-"No valid item to paste. Either no item was copied or item no longer exist."
-msgstr ""
-
 msgid "No, I do not want to delete it"
 msgstr ""
 
@@ -1335,13 +1313,6 @@ msgstr ""
 msgid "Paste Anyway"
 msgstr ""
 
-#, php-format
-msgid "Paste in progress '%1$s' in '%2$s'"
-msgstr ""
-
-msgid "Paste in progress..."
-msgstr ""
-
 msgid "Pattern"
 msgstr ""
 
@@ -1388,12 +1359,6 @@ msgid "Please enter a new search name:"
 msgstr ""
 
 msgid "Please select the folder where you want this new document appears."
-msgstr ""
-
-#, php-format
-msgid ""
-"Please wait for the paste to complete. This may take a while depending on "
-"size of data to be copied <img src=\"%1$s\" />"
 msgstr ""
 
 msgid "Position:"
@@ -2189,10 +2154,6 @@ msgid ""
 msgstr ""
 
 #, php-format
-msgid "You can <a href=\"%1$s\">paste '%2$s' into this folder</a>."
-msgstr ""
-
-#, php-format
 msgid "You can <a href=\"%1$s\">update</a> this document."
 msgstr ""
 
@@ -2232,9 +2193,6 @@ msgstr ""
 msgid "You can not delete report you do not own. Cancel deletion."
 msgstr ""
 
-msgid "You can not paste an item into itself."
-msgstr ""
-
 msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
 msgstr ""
 
@@ -2248,9 +2206,6 @@ msgid "You cannot add people to an old approval table."
 msgstr ""
 
 msgid "You cannot create a new version."
-msgstr ""
-
-msgid "You cannot cut something and then paste it into its child."
 msgstr ""
 
 msgid "You cannot delete the root folder."
@@ -2274,9 +2229,6 @@ msgid "You cannot move this document."
 msgstr ""
 
 msgid "You cannot move this folder."
-msgstr ""
-
-msgid "You cannot paste something into a document."
 msgstr ""
 
 msgid "You cannot update this document."

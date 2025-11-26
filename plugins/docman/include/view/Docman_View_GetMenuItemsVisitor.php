@@ -88,16 +88,9 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor //phpcs:ignore PSR1
         if ($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewDocument'] = true;
             $this->actions['canNewFolder']   = true;
-            $pasteItemId                     = $this->if->getCutPreference($this->user, $item->getGroupId());
             $itemFactory                     = Docman_ItemFactory::instance($item->getGroupId());
             $parents                         = $itemFactory->getParents($item->getId());
             $this->actions['parents']        = $parents;
-            if (
-                $this->if->getCopyPreference($this->user) !== false ||
-                $pasteItemId !== false && $pasteItemId != $item->getId() && ! (isset($parents[$pasteItemId]) && $parents[$pasteItemId])
-            ) {
-                $this->actions['canPaste'] = true;
-            }
         }
         $actions = $this->visitItem($item, $params);
 

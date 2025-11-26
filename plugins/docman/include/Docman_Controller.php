@@ -1019,63 +1019,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                 }
                 break;
 
-            case 'action_paste':
-                $itemToPaste = null;
-                $mode        = null;
-                $allowed     = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
-                if (! $allowed) {
-                    $this->view = 'Details';
-                } else {
-                    $this->_viewParams['itemToPaste'] = $itemToPaste;
-                    $this->_viewParams['srcMode']     = $mode;
-                    $this->view                       = 'Paste';
-                }
-                break;
-
-            case 'paste_cancel':
-                // intend to be only called through ajax call
-                $item_factory->delCopyPreference();
-                $item_factory->delCutPreference();
-                break;
-
-            case 'paste':
-                if ($this->request->exist('cancel')) {
-                    $this->_viewParams['default_url_params'] = ['action'  => 'show'];
-                    $this->view                              = 'RedirectAfterCrud';
-                } else {
-                    $itemToPaste = null;
-                    $mode        = null;
-                    $allowed     = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
-                    if (! $allowed) {
-                        $this->view = 'Details';
-                    } else {
-                        $this->_viewParams['importMd'] = false;
-                        if ($this->userCanAdmin()) {
-                            if (
-                                $this->request->exist('import_md') &&
-                                $this->request->get('import_md') == '1'
-                            ) {
-                                $this->_viewParams['importMd'] = true;
-                            }
-                        }
-                        $this->_viewParams['item']        = $item;
-                        $this->_viewParams['rank']        = $this->request->get('rank');
-                        $this->_viewParams['itemToPaste'] = $itemToPaste;
-                        $this->_viewParams['srcMode']     = $mode;
-                        /*$this->action = $view;
-
-                        $this->_viewParams['default_url_params'] = array('action'  => 'show',
-                                                                     'id'      => $item->getId());
-                        $this->view = 'RedirectAfterCrud';*/
-                        $this->_viewParams['item']        = $item;
-                        $this->_viewParams['rank']        = $this->request->get('rank');
-                        $this->_viewParams['itemToPaste'] = $itemToPaste;
-                        $this->_viewParams['srcMode']     = $mode;
-                        $this->view                       = 'PasteInProgress';
-                    }
-                }
-                break;
-
             case 'approval_create':
                 if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
@@ -1708,51 +1651,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
         }
 
         return $valid;
-    }
-
-    public function checkPasteIsAllowed($item, &$itemToPaste, &$mode)
-    {
-        $isAllowed = false;
-
-        $itemFactory = $this->getItemFactory();
-        $user        = $this->getUser();
-
-        $type = $itemFactory->getItemTypeForItem($item);
-        if (PLUGIN_DOCMAN_ITEM_TYPE_FOLDER != $type) {
-            $this->feedback->log('error', dgettext('tuleap-docman', 'You cannot paste something into a document.'));
-        } elseif (! $this->userCanWrite($item->getId())) {
-            $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
-        } else {
-            $copiedItemId = $itemFactory->getCopyPreference($user);
-            $cutItemId    = $itemFactory->getCutPreference($user, $item->getGroupId());
-            $itemToPaste  = null;
-
-            if ($copiedItemId !== false && $cutItemId === false) {
-                $itemToPaste = $itemFactory->getItemFromDb($copiedItemId);
-                $mode        = 'copy';
-            } elseif ($item->getId() == $cutItemId) {
-                $this->feedback->log('error', dgettext('tuleap-docman', 'You can not paste an item into itself.'));
-                return false;
-            } elseif ($copiedItemId === false && $cutItemId !== false) {
-                if ($itemFactory->isInSubTree($item->getId(), $cutItemId)) {
-                    $this->feedback->log('error', dgettext('tuleap-docman', 'You cannot cut something and then paste it into its child.'));
-                    return false;
-                }
-                $itemToPaste = $itemFactory->getItemFromDb($cutItemId);
-                $mode        = 'cut';
-            } else {
-                $this->feedback->log('error', dgettext('tuleap-docman', 'No valid item to paste. Either no item was copied or item no longer exist.'));
-                return false;
-            }
-
-            if ($itemToPaste == null) {
-                $this->feedback->log('error', dgettext('tuleap-docman', 'No valid item to paste. Either no item was copied or item no longer exist.'));
-            } else {
-                $isAllowed = true;
-            }
-        }
-
-        return $isAllowed;
     }
 
     #[\Override]
