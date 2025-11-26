@@ -930,25 +930,6 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
         $itemFactory->delCutPreference();
     }
 
-    public function action_copy($params)
-    {
-        // Param
-        $user = $this->_controler->getUser();
-        $item = $this->_controler->_actionParams['item'];
-        $hp   = Codendi_HTMLPurifier::instance();
-
-        // Action
-        $itemFactory = $this->_getItemFactory();
-
-        $itemFactory->delCopyPreference();
-        $itemFactory->delCutPreference();
-        $itemFactory->setCopyPreference($item);
-
-        // Message
-        $msg = $hp->purify($item->getTitle()) . ' ' . dgettext('tuleap-docman', 'copied. you can now paste it wherever you want (even across projects) with \'Paste\' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while cut does. <br />Note that only the link of the <strong>wiki pages</strong> is copied, not the <strong>content</strong>.');
-        $this->_controler->feedback->log('info', $msg, CODENDI_PURIFIER_DISABLED);
-    }
-
     /**
      * Perform paste action (after a copy or a cut)
      *

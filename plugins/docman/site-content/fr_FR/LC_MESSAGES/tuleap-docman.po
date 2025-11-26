@@ -619,9 +619,6 @@ msgstr "Commenté"
 msgid "Content:"
 msgstr "Contenu :"
 
-msgid "Copy"
-msgstr "Copier"
-
 msgid "Copy from template"
 msgstr "Copier du template"
 
@@ -689,9 +686,6 @@ msgstr "Image courrante :"
 
 msgid "Customize filters"
 msgstr "Personnaliser les filtres"
-
-msgid "Cut"
-msgstr "Couper"
 
 msgid "Date"
 msgstr "Date"
@@ -2470,14 +2464,6 @@ msgstr ""
 msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this folder</a>."
 msgstr ""
 "Vous pouvez <a href=\"%1$s\" data-test=\"%s\">supprimer ce dossier</a>."
-
-#, php-format
-msgid "You can <a href=\"%1$s\">copy this document</a>."
-msgstr "Vous pouvez <a href=\"%1$s\">copier ce document</a>."
-
-#, php-format
-msgid "You can <a href=\"%1$s\">copy this folder</a>."
-msgstr "Vous pouvez <a href=\"%1$s\">copier ce dossier</a>."
 
 #, php-format
 msgid "You can <a href=\"%1$s\">create a new document</a> in this folder."
