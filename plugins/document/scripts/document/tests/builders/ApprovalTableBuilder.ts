@@ -22,8 +22,10 @@ import type { ApprovalTable } from "../../src/type";
 export class ApprovalTableBuilder {
     private readonly id: number;
     private version_number: number | null = null;
+    private version_label: string = "";
     private notification_type: string = "";
     private description: string = "";
+    private approval_state: string = "";
 
     constructor(id: number) {
         this.id = id;
@@ -31,6 +33,11 @@ export class ApprovalTableBuilder {
 
     public withVersionNumber(version_number: number): this {
         this.version_number = version_number;
+        return this;
+    }
+
+    public withVersionLabel(version_label: string): this {
+        this.version_label = version_label;
         return this;
     }
 
@@ -44,17 +51,24 @@ export class ApprovalTableBuilder {
         return this;
     }
 
+    public withApprovalState(approval_state: string): this {
+        this.approval_state = approval_state;
+        return this;
+    }
+
     public build(): ApprovalTable {
         return {
             id: this.id,
             table_owner: new UserBuilder(102).build(),
-            approval_state: "",
+            approval_state: this.approval_state,
             approval_request_date: "",
             has_been_approved: false,
             version_number: this.version_number,
+            version_label: this.version_label,
             notification_type: this.notification_type,
             is_closed: false,
             description: this.description,
+            reviewers: [],
         };
     }
 }

@@ -292,6 +292,7 @@ final class SearchResource extends AuthenticatedResource
             $html_purifier,
             $provide_user_avatar_url,
             $factories_factory,
+            $version_factory,
         );
 
 

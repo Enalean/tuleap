@@ -32,7 +32,11 @@
 
             <actions-header v-bind:item="embedded_file" />
 
-            <approval-badge v-bind:item="embedded_file" v-bind:is-in-folder-content-row="false" />
+            <approval-badge
+                v-bind:approval_table="embedded_file.approval_table"
+                v-bind:enabled="embedded_file.is_approval_table_enabled"
+                v-bind:is-in-folder-content-row="false"
+            />
 
             <embedded-file-edition-switcher
                 v-bind:is-in-large-view="is_embedded_in_large_view"

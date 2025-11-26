@@ -46,6 +46,7 @@ final readonly class ItemApprovalTableRepresentation
         public ?string $approval_request_date,
         public ?bool $has_been_approved,
         public ?int $version_number,
+        public string $version_label,
         public string $notification_type,
         public bool $is_closed,
         public string $description,
@@ -63,6 +64,12 @@ final readonly class ItemApprovalTableRepresentation
         ProvideUserAvatarUrl $provide_user_avatar_url,
         Docman_VersionFactory $version_factory,
     ): self {
+        if ($approval_table instanceof Docman_ApprovalTableVersionned) {
+            $version_label = (string) $version_factory->getSpecificVersion($item, $approval_table->getVersionNumber())?->getLabel();
+        } else {
+            $version_label = '';
+        }
+
         return new self(
             JsonCast::toInt($approval_table->getId()),
             $table_owner,
@@ -70,6 +77,7 @@ final readonly class ItemApprovalTableRepresentation
             JsonCast::toDate($approval_table->getDate()),
             JsonCast::toBoolean($approval_table->getApprovalState() === PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED),
             $approval_table instanceof Docman_ApprovalTableVersionned ? (int) $approval_table->getVersionNumber() : null,
+            $version_label,
             $factory->getFromItem($item)?->getNotificationTypeName($approval_table->getNotification()) ?? '',
             $approval_table->isClosed(),
             $approval_table->getDescription() ?? '',

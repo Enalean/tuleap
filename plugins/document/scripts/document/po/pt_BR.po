@@ -118,6 +118,12 @@ msgstr ""
 msgid "Approval table"
 msgstr ""
 
+msgid "Approval table details"
+msgstr ""
+
+msgid "Approval table history"
+msgstr ""
+
 msgid "Approval table status"
 msgstr ""
 
@@ -255,6 +261,9 @@ msgid "Details"
 msgstr ""
 
 msgid "Document locked by %{username}."
+msgstr ""
+
+msgid "Document version"
 msgstr ""
 
 msgid "Documents"
@@ -715,6 +724,9 @@ msgstr ""
 msgid "Source"
 msgstr ""
 
+msgid "Start date"
+msgstr ""
+
 msgid "Start over with a completely new approval table."
 msgstr ""
 
@@ -731,9 +743,6 @@ msgid "Subscribers"
 msgstr ""
 
 msgid "Summary"
-msgstr ""
-
-msgid "Switch to old ui"
 msgstr ""
 
 msgid "Switch to old user interface"
@@ -801,6 +810,9 @@ msgstr ""
 msgid "There is no approval table for this document."
 msgstr ""
 
+msgid "There is no history"
+msgstr ""
+
 msgid "There is no upload in progress"
 msgstr ""
 
@@ -853,9 +865,6 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-msgid "Under development"
-msgstr ""
-
 msgid "Unlock"
 msgstr ""
 
@@ -896,6 +905,9 @@ msgid "Version"
 msgstr "Versão"
 
 msgid "Version %{ number } has been successfully deleted"
+msgstr ""
+
+msgid "Version label"
 msgstr ""
 
 msgid "Version name"

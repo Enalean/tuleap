@@ -496,6 +496,7 @@ final class DocmanItemsResource extends AuthenticatedResource
 
         $permissions_manager = $this->getDocmanPermissionManager($project);
         $factories_factory   = new \Docman_ApprovalTableFactoriesFactory();
+        $version_factory     = new Docman_VersionFactory();
 
         return new ItemRepresentationBuilder(
             $this->item_dao,
@@ -509,7 +510,7 @@ final class DocmanItemsResource extends AuthenticatedResource
                 $html_purifier,
                 UserHelper::instance()
             ),
-            new ApprovalTableRetriever($factories_factory, new Docman_VersionFactory()),
+            new ApprovalTableRetriever($factories_factory, $version_factory),
             new DocmanItemPermissionsForGroupsBuilder(
                 $permissions_manager,
                 ProjectManager::instance(),
@@ -519,6 +520,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             $html_purifier,
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             $factories_factory,
+            $version_factory,
         );
     }
 

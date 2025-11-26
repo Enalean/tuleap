@@ -21,17 +21,17 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import ApprovalBadge from "./ApprovalBadge.vue";
-import { TYPE_EMBEDDED } from "../../../constants";
-import type { ApprovableDocument, Embedded } from "../../../type";
+import type { ApprovalTable } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { ApprovalTableBuilder } from "../../../../tests/builders/ApprovalTableBuilder";
 
 describe("ApprovalBadge", () => {
     function createWrapper(
-        item: ApprovableDocument,
+        approval_table: ApprovalTable | null,
         isInFolderContentRow: boolean,
     ): VueWrapper<InstanceType<typeof ApprovalBadge>> {
         return shallowMount(ApprovalBadge, {
-            props: { item, isInFolderContentRow },
+            props: { approval_table, enabled: true, isInFolderContentRow },
             global: { ...getGlobalTestOptions({}) },
         });
     }
@@ -39,13 +39,7 @@ describe("ApprovalBadge", () => {
     it(`Given document has no approval status
         When we display approval badge
         Then we should not display anything`, () => {
-        const item = {
-            id: 42,
-            title: "my unlocked document",
-            type: TYPE_EMBEDDED,
-        } as Embedded;
-
-        const wrapper = createWrapper(item, false);
+        const wrapper = createWrapper(null, false);
 
         expect(wrapper.find(".document-approval-badge").exists()).toBeFalsy();
     });
@@ -53,16 +47,9 @@ describe("ApprovalBadge", () => {
     it(`Given document has approval status
         When we display approval badge
         Then we should display the corresponding badge`, async () => {
-        const item = {
-            id: 42,
-            title: "my locked document",
-            type: TYPE_EMBEDDED,
-            approval_table: {
-                approval_state: "Approved",
-            },
-        } as Embedded;
+        const table = new ApprovalTableBuilder(35).withApprovalState("Approved").build();
 
-        const wrapper = await createWrapper(item, false);
+        const wrapper = await createWrapper(table, false);
 
         expect(wrapper.find(".document-approval-badge").exists()).toBeTruthy();
         expect(wrapper.element).toMatchInlineSnapshot(`
@@ -70,9 +57,10 @@ describe("ApprovalBadge", () => {
               class="tlp-badge-success document-approval-badge"
             >
               <i
+                aria-hidden="true"
                 class="fa-solid tlp-badge-icon fa-tlp-gavel-approved"
               />
-              Approved
+               Approved
             </span>
         `);
     });
@@ -80,16 +68,9 @@ describe("ApprovalBadge", () => {
     it(`Given document has approval status and given we are in folder content row
         When we display approval badge
         Then we should display the corresponding badge with custom classes`, async () => {
-        const item = {
-            id: 42,
-            title: "my locked document",
-            type: TYPE_EMBEDDED,
-            approval_table: {
-                approval_state: "Approved",
-            },
-        } as Embedded;
+        const table = new ApprovalTableBuilder(35).withApprovalState("Approved").build();
 
-        const wrapper = await createWrapper(item, true);
+        const wrapper = await createWrapper(table, true);
 
         expect(wrapper.find(".document-approval-badge").exists()).toBeTruthy();
         expect(wrapper.element).toMatchInlineSnapshot(`
@@ -97,9 +78,10 @@ describe("ApprovalBadge", () => {
               class="tlp-badge-success document-tree-item-toggle-quicklook-approval-badge document-approval-badge"
             >
               <i
+                aria-hidden="true"
                 class="fa-solid tlp-badge-icon fa-tlp-gavel-approved"
               />
-              Approved
+               Approved
             </span>
         `);
     });

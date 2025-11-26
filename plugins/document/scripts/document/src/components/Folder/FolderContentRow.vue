@@ -119,7 +119,12 @@
                     v-bind:item="item"
                     v-bind:is-displaying-in-header="false"
                 />
-                <approval-badge v-bind:item="item" v-bind:is-in-folder-content-row="true" />
+                <approval-badge
+                    v-if="isAnApprovableDocument(item)"
+                    v-bind:approval_table="item.approval_table"
+                    v-bind:enabled="item.is_approval_table_enabled"
+                    v-bind:is-in-folder-content-row="true"
+                />
             </div>
         </td>
         <template v-if="is_item_uploading_without_quick_look_mode">
@@ -169,6 +174,7 @@ import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
 import { computed, defineAsyncComponent, onMounted, ref } from "vue";
 import type { FolderContentItem, RootState } from "../../type";
 import { useState } from "vuex-composition-helpers";
+import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
 
 const FileUploadingCellTitle = defineAsyncComponent(
     () => import("./ItemTitle/FileUploadingCellTitle.vue"),

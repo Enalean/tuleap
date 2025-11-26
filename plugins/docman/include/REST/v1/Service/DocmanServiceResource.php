@@ -70,6 +70,7 @@ final class DocmanServiceResource extends AuthenticatedResource
         $permissions_manager = \Docman_PermissionsManager::instance($id);
         $ugroup_manager      = new UGroupManager();
         $factories_factory   = new \Docman_ApprovalTableFactoriesFactory();
+        $version_factory     = new Docman_VersionFactory();
 
         $builder = new DocmanServiceRepresentationBuilder(
             new ItemRepresentationBuilder(
@@ -84,7 +85,7 @@ final class DocmanServiceResource extends AuthenticatedResource
                     $html_purifier,
                     UserHelper::instance()
                 ),
-                new ApprovalTableRetriever($factories_factory, new Docman_VersionFactory()),
+                new ApprovalTableRetriever($factories_factory, $version_factory),
                 new DocmanItemPermissionsForGroupsBuilder(
                     $permissions_manager,
                     ProjectManager::instance(),
@@ -94,6 +95,7 @@ final class DocmanServiceResource extends AuthenticatedResource
                 $html_purifier,
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 $factories_factory,
+                $version_factory,
             ),
             $permissions_manager,
             new DocmanServicePermissionsForGroupsBuilder(

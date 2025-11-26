@@ -31,6 +31,8 @@ use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_LockFactory;
 use Docman_PermissionsManager;
+use Docman_Version;
+use Docman_VersionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
@@ -58,6 +60,7 @@ final class ItemRepresentationBuilderTest extends TestCase
     private DocmanItemPermissionsForGroupsBuilder&MockObject $item_permissions_for_groups_builder;
     private Codendi_HTMLPurifier&MockObject $html_purifier;
     private Docman_ApprovalTableFactoriesFactory&MockObject $factories_factory;
+    private Docman_VersionFactory&MockObject $version_factory;
 
     #[\Override]
     protected function setUp(): void
@@ -72,6 +75,7 @@ final class ItemRepresentationBuilderTest extends TestCase
         $this->item_permissions_for_groups_builder = $this->createMock(DocmanItemPermissionsForGroupsBuilder::class);
         $this->html_purifier                       = $this->createMock(Codendi_HTMLPurifier::class);
         $this->factories_factory                   = $this->createMock(Docman_ApprovalTableFactoriesFactory::class);
+        $this->version_factory                     = $this->createMock(Docman_VersionFactory::class);
 
         $this->item_representation_builder = new ItemRepresentationBuilder(
             $this->createMock(Docman_ItemDao::class),
@@ -86,6 +90,7 @@ final class ItemRepresentationBuilderTest extends TestCase
             $this->html_purifier,
             ProvideUserAvatarUrlStub::build(),
             $this->factories_factory,
+            $this->version_factory,
         );
 
         UserManager::setInstance($this->user_manager);
@@ -163,6 +168,10 @@ final class ItemRepresentationBuilderTest extends TestCase
         $this->item_permissions_for_groups_builder->method('getRepresentation')
             ->with($current_user, $docman_item)->willReturn($permissions_for_groups_representation);
 
+        $this->version_factory->method('getSpecificVersion')->with($docman_item, '2')->willReturn(new Docman_Version([
+            'label' => '1.0.0-rc3',
+        ]));
+
         $representation = $this->item_representation_builder->buildItemRepresentation(
             $docman_item,
             $current_user,
@@ -192,6 +201,7 @@ final class ItemRepresentationBuilderTest extends TestCase
         self::assertSame('Disabled', $representation->approval_table?->notification_type);
         self::assertSame(2, $representation->approval_table?->version_number);
         self::assertSame([], $representation->approval_table?->reviewers);
+        self::assertSame('1.0.0-rc3', $representation->approval_table?->version_label);
         self::assertSame('2019-02-06T15:00:00+01:00', $representation->metadata[0]->value);
         self::assertSame('2019-02-06T15:00:00+01:00', $representation->metadata[0]->post_processed_value);
         self::assertSame('metadata name', $representation->metadata[0]->name);
