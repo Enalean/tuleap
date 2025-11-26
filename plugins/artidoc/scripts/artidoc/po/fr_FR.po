@@ -133,6 +133,9 @@ msgstr "Configuration sauvegardée"
 msgid "Configure document"
 msgstr "Configurer le document"
 
+msgid "Continue anyway"
+msgstr "Continuer quand même"
+
 msgid "Data is fake in order to gather feedback about the feature."
 msgstr ""
 "Les données sont simulées afin de pouvoir obtenir des retours à propos de la "
@@ -487,6 +490,9 @@ msgstr "Avatar de l'utilisateur"
 msgid "Versions"
 msgstr "Versions"
 
+msgid "Wait a minute…"
+msgstr "Attendez une minute…"
+
 msgid "You are currently viewing \"%{ title }\" in read-only mode."
 msgstr ""
 "Vous être actuellement en train de visionner \"%{ title }\" en lecture seule."
@@ -535,6 +541,17 @@ msgstr "Vous ne pouvez pas lire ou éditer ce document"
 
 msgid "You don't have access to this document"
 msgstr "Vous n'avez pas les droits d'accès à ce document"
+
+msgid "You have currently unsaved work"
+msgstr "Vous avez du travail non sauvegardé"
+
+msgid ""
+"You may want to save it before displaying an older version of the document. "
+"Do you want to display it anyway and lose your unsaved work?"
+msgstr ""
+"Vous voudriez peut-être le sauvegarder avant d'afficher une version plus "
+"ancienne du document. Voulez-vous l'afficher quand même et perdre votre "
+"travail non sauvegardé ?"
 
 msgid ""
 "You should reload the page to have a clean state (you will loose your "
