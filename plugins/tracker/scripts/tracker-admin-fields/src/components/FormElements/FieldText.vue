@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" v-bind:for="id">{{ field.label }}</label>
+        <label-for-field v-bind:id="id" v-bind:field="field" />
         <textarea class="tlp-textarea" v-bind:id="id"></textarea>
     </div>
 </template>
@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+import LabelForField from "./LabelForField.vue";
 
 const props = defineProps<{
     field: StructureFields;

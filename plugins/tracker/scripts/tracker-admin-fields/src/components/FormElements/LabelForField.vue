@@ -18,20 +18,17 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <label-for-field v-bind:id="id" v-bind:field="field" />
-        <select class="tlp-select" v-bind:id="id"></select>
-    </div>
+    <label class="tlp-label" v-bind:for="id">
+        {{ field.label }}
+        <i class="fa-solid fa-asterisk" aria-hidden="true" v-if="field.required"></i>
+    </label>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
-import LabelForField from "./LabelForField.vue";
 
-const props = defineProps<{
+defineProps<{
     field: StructureFields;
+    id: string;
 }>();
-
-const id = computed(() => "select-" + props.field.field_id);
 </script>
