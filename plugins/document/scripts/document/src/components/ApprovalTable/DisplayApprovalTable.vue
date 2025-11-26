@@ -52,6 +52,7 @@
                         <current-approval-table
                             v-else
                             v-bind:item="item"
+                            v-bind:version="version"
                             v-on:error="(message) => (error_message = message)"
                         />
                     </section>
@@ -69,7 +70,9 @@
 
                     <section class="tlp-pane-section">
                         <approval-table-history
+                            v-if="isAnApprovableDocument(item)"
                             v-bind:item="item"
+                            v-bind:version="version"
                             v-on:error="(message) => (error_message = message)"
                         />
                     </section>
@@ -92,6 +95,7 @@ import ApprovalTableHistory from "./History/ApprovalTableHistory.vue";
 
 const props = defineProps<{
     item_id: number;
+    version: number | null;
 }>();
 
 const item = ref<Item | null>(null);

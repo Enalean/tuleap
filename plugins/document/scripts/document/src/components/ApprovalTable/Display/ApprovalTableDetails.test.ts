@@ -34,6 +34,7 @@ describe("ApprovalTableDetails", () => {
             props: {
                 table,
                 item: new ItemBuilder(123).build(),
+                is_readonly: false,
             },
             global: { ...getGlobalTestOptions({}) },
         });

@@ -38,14 +38,16 @@
                 v-else
                 v-for="reviewer in reviewers"
                 v-bind:key="reviewer.rank"
-                v-bind:class="{ 'reviewer-not-current': reviewer.user.id !== user_id }"
+                v-bind:class="{
+                    'reviewer-not-current': is_readonly || reviewer.user.id !== user_id,
+                }"
                 data-test="reviewer-row"
             >
                 <td>
                     <user-badge v-bind:user="reviewer.user" />
                 </td>
                 <td data-test="reviewer-state">
-                    <template v-if="reviewer.user.id !== user_id">
+                    <template v-if="is_readonly || reviewer.user.id !== user_id">
                         {{ reviewer.state }}
                     </template>
                     <a v-else v-bind:href="getLinkToReview()">{{ reviewer.state }}</a>
@@ -89,6 +91,7 @@ import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
 const props = defineProps<{
     item: Item;
     reviewers: ReadonlyArray<ApprovalTableReviewer>;
+    is_readonly: boolean;
 }>();
 
 const user_id = strictInject(USER_ID);

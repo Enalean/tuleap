@@ -31,11 +31,13 @@ import { UserBuilder } from "../../../../tests/builders/UserBuilder";
 describe("ApprovalTableReviewers", () => {
     function getWrapper(
         reviewers: ReadonlyArray<ApprovalTableReviewer>,
+        is_readonly: boolean,
     ): VueWrapper<InstanceType<typeof ApprovalTableReviewers>> {
         return shallowMount(ApprovalTableReviewers, {
             props: {
                 item: new ItemBuilder(123).build(),
                 reviewers,
+                is_readonly,
             },
             global: {
                 ...getGlobalTestOptions({}),
@@ -48,30 +50,35 @@ describe("ApprovalTableReviewers", () => {
     }
 
     it("Should display empty state when no reviewers", () => {
-        const wrapper = getWrapper([]);
+        const wrapper = getWrapper([], false);
 
         expect(wrapper.find("[data-test=no-reviewer]").exists()).toBe(true);
     });
 
     it("Should display each reviewers", () => {
-        const wrapper = getWrapper([
-            {
-                user: new UserBuilder(102).build(),
-                rank: 1,
-                review_date: null,
-                state: "Not yet",
-                comment: "",
-                version: "",
-            },
-            {
-                user: new UserBuilder(103).build(),
-                rank: 2,
-                review_date: "2025-11-27 17:28:35",
-                state: "Approved",
-                comment: "",
-                version: "2",
-            },
-        ]);
+        const wrapper = getWrapper(
+            [
+                {
+                    user: new UserBuilder(102).build(),
+                    rank: 1,
+                    review_date: null,
+                    state: "Not yet",
+                    comment: "",
+                    version_id: null,
+                    version_name: "",
+                },
+                {
+                    user: new UserBuilder(103).build(),
+                    rank: 2,
+                    review_date: "2025-11-27 17:28:35",
+                    state: "Approved",
+                    comment: "",
+                    version_id: null,
+                    version_name: "2",
+                },
+            ],
+            false,
+        );
 
         const rows = wrapper.findAll("[data-test=reviewer-row]");
         expect(rows).toHaveLength(2);
@@ -79,6 +86,43 @@ describe("ApprovalTableReviewers", () => {
         expect(rows[0].classes()).not.toContain("reviewer-not-current");
         expect(rows[0].find("[data-test=reviewer-state]").text()).toBe("Not yet");
         expect(rows[0].find("[data-test=reviewer-state] > a").exists()).toBe(true);
+        // Row 1
+        expect(rows[1].classes()).toContain("reviewer-not-current");
+        expect(rows[1].find("[data-test=reviewer-state]").text()).toBe("Approved");
+        expect(rows[1].find("[data-test=reviewer-state] > a").exists()).toBe(false);
+    });
+
+    it("Should display each reviewers in readonly", () => {
+        const wrapper = getWrapper(
+            [
+                {
+                    user: new UserBuilder(102).build(),
+                    rank: 1,
+                    review_date: null,
+                    state: "Not yet",
+                    comment: "",
+                    version_id: null,
+                    version_name: "",
+                },
+                {
+                    user: new UserBuilder(103).build(),
+                    rank: 2,
+                    review_date: "2025-11-27 17:28:35",
+                    state: "Approved",
+                    comment: "",
+                    version_id: null,
+                    version_name: "2",
+                },
+            ],
+            true,
+        );
+
+        const rows = wrapper.findAll("[data-test=reviewer-row]");
+        expect(rows).toHaveLength(2);
+        // Row 0
+        expect(rows[0].classes()).toContain("reviewer-not-current");
+        expect(rows[0].find("[data-test=reviewer-state]").text()).toBe("Not yet");
+        expect(rows[0].find("[data-test=reviewer-state] > a").exists()).toBe(false);
         // Row 1
         expect(rows[1].classes()).toContain("reviewer-not-current");
         expect(rows[1].find("[data-test=reviewer-state]").text()).toBe("Approved");
