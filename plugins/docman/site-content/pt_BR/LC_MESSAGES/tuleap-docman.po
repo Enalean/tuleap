@@ -503,9 +503,6 @@ msgstr ""
 msgid "Content:"
 msgstr ""
 
-msgid "Copy"
-msgstr ""
-
 msgid "Copy from template"
 msgstr ""
 
@@ -572,9 +569,6 @@ msgid "Current image:"
 msgstr ""
 
 msgid "Customize filters"
-msgstr ""
-
-msgid "Cut"
 msgstr ""
 
 msgid "Date"
@@ -2168,14 +2162,6 @@ msgstr ""
 
 #, php-format
 msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this folder</a>."
-msgstr ""
-
-#, php-format
-msgid "You can <a href=\"%1$s\">copy this document</a>."
-msgstr ""
-
-#, php-format
-msgid "You can <a href=\"%1$s\">copy this folder</a>."
 msgstr ""
 
 #, php-format

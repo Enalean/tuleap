@@ -6121,7 +6121,6 @@
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
       <code><![CDATA[$sStatus]]></code>
       <code><![CDATA[$sUgroups]]></code>
       <code><![CDATA[$selectedUsers]]></code>
@@ -6134,7 +6133,6 @@
       <code><![CDATA[$event_manager]]></code>
       <code><![CDATA[$filestorage]]></code>
       <code><![CDATA[$permissions_manager]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
@@ -6170,7 +6168,6 @@
       <code><![CDATA[_getVersionFactory]]></code>
       <code><![CDATA[_raiseMetadataChangeEvent]]></code>
       <code><![CDATA[_storeFile]]></code>
-      <code><![CDATA[action_copy]]></code>
       <code><![CDATA[action_lock_add]]></code>
       <code><![CDATA[action_lock_del]]></code>
       <code><![CDATA[addMonitorinUgroups]]></code>
@@ -7458,10 +7455,6 @@
   <file src="plugins/docman/include/Docman_ItemFactory.php">
     <DeprecatedFunction>
       <code><![CDATA[user_set_preference(
-            PLUGIN_DOCMAN_PREF . '_item_copy',
-            $item->getId()
-        )]]></code>
-      <code><![CDATA[user_set_preference(
             PLUGIN_DOCMAN_PREF . '_item_cut',
             $item->getId()
         )]]></code>
@@ -7527,7 +7520,6 @@
       <code><![CDATA[$ignoreObsolete]]></code>
       <code><![CDATA[$ignorePerms]]></code>
       <code><![CDATA[$instance]]></code>
-      <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
@@ -7612,7 +7604,6 @@
       <code><![CDATA[massUpdate]]></code>
       <code><![CDATA[preloadItemPerms]]></code>
       <code><![CDATA[rawCreate]]></code>
-      <code><![CDATA[setCopyPreference]]></code>
       <code><![CDATA[setCutPreference]]></code>
       <code><![CDATA[setGroupId]]></code>
       <code><![CDATA[setNewParent]]></code>

@@ -9,7 +9,6 @@
     Insertion:readonly
     Effect:readonly
     Position:readonly
-    tuleap:readonly
 */
 
 if (!com) {
@@ -891,71 +890,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
         return this._createLi(a);
     },
-    _getCopy: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=action_copy",
-            class: "docman_item_option_copy",
-            title: this.docman.options.language.action_copy,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_copy);
-        a.appendChild(title_txt);
-        Event.observe(
-            a,
-            "click",
-            function (evt) {
-                new Ajax.Request(this.defaultUrl + "&action=action_copy&ajax_copy=true", {
-                    onComplete: function () {
-                        // Hide menu
-                        this.hide();
 
-                        // Display feedback message
-                        var li = Builder.node("li");
-
-                        // Search item title
-                        var title = $("docman_item_title_link_" + this.item_id).firstChild
-                            .nodeValue;
-                        // eslint-disable-next-line no-unsanitized/property
-                        li.innerHTML =
-                            '"' +
-                            tuleap.escaper.html(title) +
-                            '" ' +
-                            this.docman.options.language.feedback_copy;
-
-                        // Hide previous feedback
-                        if ($("item_copied")) {
-                            $("item_copied").remove();
-                        }
-                        if ($("item_cut")) {
-                            $("item_cut").remove();
-                        }
-
-                        var ul = Builder.node("ul", { class: "feedback_info", id: "item_copied" });
-                        ul.appendChild(li);
-                        var feedback = $("feedback");
-                        feedback.appendChild(ul);
-                        feedback.show();
-
-                        // There is sth to paste.
-                        //this.docman.canPaste = true;
-
-                        // There is something to paste & user have write permission on a folder -> user can paste inside that folder.
-                        $H(this.docman.actionsForItem)
-                            .keys()
-                            .each(
-                                function (id) {
-                                    if (this.docman.actionsForItem[id].canNewDocument) {
-                                        this.docman.actionsForItem[id].canPaste = true;
-                                    }
-                                }.bind(this),
-                            );
-                    }.bindAsEventListener(this),
-                });
-                Event.stop(evt);
-                return false;
-            }.bindAsEventListener(this),
-        );
-        return this._createLi(a);
-    },
     _getPaste: function () {
         var title_txt = document.createTextNode(this.docman.options.language.action_paste);
         var a = Builder.node("a", {
@@ -1157,10 +1092,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             ul.appendChild(this._getApproval());
         }
 
-        ul.appendChild(this._getSeparator());
-
-        // Copy
-        ul.appendChild(this._getCopy());
         // Paste
         if (this.docman.actionsForItem[this.item_id].canPaste) {
             ul.appendChild(this._getPaste());

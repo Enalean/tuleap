@@ -30,7 +30,7 @@ use Tuleap\Document\RecentlyVisited\DeleteVisitByItemId;
 use Tuleap\Document\RecentlyVisited\RecentlyVisitedDocumentDao;
 use Tuleap\PHPWiki\WikiPage;
 
-class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
+class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public array $rootItems;
     public array $onlyOneChildForRoot;
@@ -373,7 +373,7 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
      * @param int $userId Id of current user.
      * @return Array List of items to exclude for a search
      **/
-    private function _getExpandedUserPrefs($parentId, $userId)
+    private function _getExpandedUserPrefs($parentId, $userId) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $collapsedItems = [];
         // Retreive the list of collapsed folders in prefs
@@ -844,7 +844,7 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
     /**
      * @return Docman_ItemDao
      */
-    public function _getItemDao()
+    public function _getItemDao() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $this->dao) {
             $this->dao = new Docman_ItemDao(CodendiDataAccess::instance());
@@ -863,17 +863,17 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
         return $this->recently_visited_dao;
     }
 
-    protected function _getVersionFactory()
+    protected function _getVersionFactory() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_VersionFactory();
     }
 
-    protected function _getUserManager()
+    protected function _getUserManager() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return UserManager::instance();
     }
 
-    protected function _getEventManager()
+    protected function _getEventManager() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return EventManager::instance();
     }
@@ -1333,14 +1333,6 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
     {
         user_set_preference(
             PLUGIN_DOCMAN_PREF . '_item_cut',
-            $item->getId()
-        );
-    }
-
-    public function setCopyPreference($item)
-    {
-        user_set_preference(
-            PLUGIN_DOCMAN_PREF . '_item_copy',
             $item->getId()
         );
     }

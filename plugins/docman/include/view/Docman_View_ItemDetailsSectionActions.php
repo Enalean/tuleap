@@ -75,21 +75,6 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content .= '</dd>';
         //}}}
 
-        //{{{ Copy
-        $content .= '<dt>' . dgettext('tuleap-docman', 'Copy') . '</dt><dd>';
-        $copyurl  = DocmanViewURLBuilder::buildActionUrl(
-            $this->item,
-            ['default_url' => $this->url],
-            ['action' => 'action_copy', 'id' => $this->item->getId(), 'orig_action' => 'details', 'orig_id' => $this->item->getId()]
-        );
-        if ($this->item instanceof \Docman_Folder) {
-            $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">copy this folder</a>.'), $copyurl);
-        } else {
-            $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">copy this document</a>.'), $copyurl);
-        }
-        $content .= '</dd>';
-        //}}}
-
         //{{{ Delete
         $content .= '<dt>' . dgettext('tuleap-docman', 'Delete') . '</dt><dd>';
         if (! $this->is_deleteable || $this->_controller->userCannotDelete($user, $this->item)) {
