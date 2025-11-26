@@ -19,27 +19,20 @@
 
 <template>
     <p>{{ $gettext("There is no approval table for this document.") }}</p>
-    <a
+    <approval-table-creation-modal
         v-if="item.user_can_write"
-        role="button"
-        class="tlp-button-primary"
-        v-bind:href="getLinkToApprovalTableCreation(item)"
-        data-test="creation-button"
-    >
-        {{ $gettext("Create a new one") }}
-    </a>
+        v-bind:item="item"
+        v-on:table-created="$emit('table-created')"
+    />
 </template>
 
 <script setup lang="ts">
-import type { Item } from "../../type";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT } from "../../configuration-keys";
+import type { Item } from "../../../type";
+import ApprovalTableCreationModal from "./ApprovalTableCreationModal.vue";
 
 defineProps<{ item: Item }>();
 
-const project = strictInject(PROJECT);
-
-function getLinkToApprovalTableCreation(item: Item): string {
-    return `/plugins/docman/?group_id=${project.id}&action=approval_create&id=${item.id}`;
-}
+defineEmits<{
+    (e: "table-created"): void;
+}>();
 </script>

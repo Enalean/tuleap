@@ -38,6 +38,9 @@ dependencies:
   '@tuleap/lazybox-users-autocomplete':
     specifier: workspace:^
     version: link:../../../../lib/frontend/lazybox-users-autocomplete
+  '@tuleap/list-picker':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/list-picker
   '@tuleap/locale':
     specifier: workspace:^
     version: link:../../../../lib/frontend/locale

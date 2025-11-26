@@ -74,6 +74,9 @@ msgstr "Actions dans le service Documents"
 msgid "Add notification"
 msgstr "Ajouter une notification"
 
+msgid "Add reviewers"
+msgstr "Ajouter des approbateurs"
+
 msgid "Administration"
 msgstr "Administration"
 
@@ -107,6 +110,9 @@ msgstr "Une erreur est survenue lors de la recherche."
 
 msgid "Any"
 msgstr "Tous"
+
+msgid "Append members of user groups to the table"
+msgstr "Ajouter les membres des groupes d'utilisateurs à la table"
 
 msgid "Apply"
 msgstr "Appliquer"
@@ -178,6 +184,12 @@ msgstr "Description des changements"
 msgid "Changelog"
 msgstr "Description des changements"
 
+msgid "Choose which users need to approve the document"
+msgstr "Choisissez quels utilisateurs ont besoin d'approuver ce document"
+
+msgid "Choose zero, one or multiple user group"
+msgstr "Choisissez zéro, un ou plusieurs groupes d'utilisateur"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -214,6 +226,12 @@ msgstr "Copier la table d'approbation précédente."
 msgid "Corrupted"
 msgstr "Corrompu"
 
+msgid "Create"
+msgstr "Créer"
+
+msgid "Create a new approval table"
+msgstr "Créer une nouvelle table d'approbation"
+
 msgid "Create a new document"
 msgstr "Créer un nouveau document"
 
@@ -227,7 +245,7 @@ msgid "Create a new folder"
 msgstr "Créer un nouveau dossier"
 
 msgid "Create a new one"
-msgstr ""
+msgstr "En créer une nouvelle"
 
 msgid "Create a new version of document"
 msgstr "Créer une nouvelle version du document"
@@ -337,6 +355,9 @@ msgstr "Monitoring activé pour toute la sous-hiérarchie"
 
 msgid "End"
 msgstr "Fin"
+
+msgid "Error while creating approval table"
+msgstr "Erreur lors de la création de la table d'approbation"
 
 msgid "File"
 msgstr "Fichier"
@@ -519,6 +540,12 @@ msgstr "Il n'y a aucun résultat"
 msgid "No notifications set"
 msgstr "Aucune notification définie"
 
+msgid "No results found"
+msgstr "Aucun résultat trouvé"
+
+msgid "No values to select"
+msgstr "Aucune valeur à sélectionner"
+
 msgid "No version history"
 msgstr "Pas d'historique de version"
 
@@ -691,6 +718,9 @@ msgstr "Rejeté"
 
 msgid "Reload the page"
 msgstr "Recharger la page"
+
+msgid "Remove all values"
+msgstr "Enlever toutes les valeurs"
 
 msgid "Requester comment"
 msgstr "Commentaire du demandeur"

@@ -19,7 +19,7 @@
 import type { ResultAsync } from "neverthrow";
 import type { ApprovalTable } from "../type";
 import type { Fault } from "@tuleap/fault";
-import { getJSON, uri, getAllJSON } from "@tuleap/fetch-result";
+import { getJSON, uri, getAllJSON, postResponse } from "@tuleap/fetch-result";
 
 export function getDocumentApprovalTable(
     item_id: number,
@@ -36,4 +36,19 @@ export function getAllDocumentApprovalTables(
             limit: 50,
         },
     });
+}
+
+export function postApprovalTable(
+    item_id: number,
+    users: ReadonlyArray<number>,
+    user_groups: ReadonlyArray<number>,
+): ResultAsync<null, Fault> {
+    return postResponse(
+        uri`/api/docman_items/${item_id}/approval_table`,
+        {},
+        {
+            users,
+            user_groups,
+        },
+    ).map(() => null);
 }

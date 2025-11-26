@@ -400,6 +400,7 @@ export interface ItemReferencingWikiPageRepresentation {
 export interface UserGroup {
     id: string;
     label: string;
+    short_name: string;
 }
 
 export const AllowedSearchDateOperator = [">", "=", "<"];
