@@ -1034,20 +1034,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                 }
                 break;
 
-            case 'action_cut':
-                $_action                     = $this->request->get('orig_action');
-                $_id                         = (int) $this->request->get('orig_id');
-                $this->_actionParams['item'] = $item;
-
-                $this->action = $view;
-                if (! $this->request->exist('ajax_cut')) {
-                    $this->_viewParams['default_url_params'] = ['action'  => $_action,
-                        'id'      => $_id,
-                    ];
-                    $this->view                              = 'RedirectAfterCrud';
-                }
-                break;
-
             case 'action_paste':
                 $itemToPaste = null;
                 $mode        = null;

@@ -930,24 +930,6 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
         $itemFactory->delCutPreference();
     }
 
-    public function action_cut($params)
-    {
-        // Param
-        $user = $this->_controler->getUser();
-        $item = $this->_controler->_actionParams['item'];
-        $hp   = Codendi_HTMLPurifier::instance();
-
-        // Action
-        $itemFactory = $this->_getItemFactory();
-
-        $itemFactory->delCopyPreference();
-        $itemFactory->delCutPreference();
-        $itemFactory->setCutPreference($item);
-
-        // Message
-        $this->_controler->feedback->log('info', $hp->purify($item->getTitle()) . ' ' . dgettext('tuleap-docman', 'cut. You can now paste it wherever you want with \'Paste\' action in popup menu.'));
-    }
-
     public function action_copy($params)
     {
         // Param

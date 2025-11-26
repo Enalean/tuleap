@@ -2191,14 +2191,6 @@ msgid "You can <a href=\"%1$s\">create a new version</a>."
 msgstr ""
 
 #, php-format
-msgid "You can <a href=\"%1$s\">cut this document</a>."
-msgstr ""
-
-#, php-format
-msgid "You can <a href=\"%1$s\">cut this folder</a>."
-msgstr ""
-
-#, php-format
 msgid ""
 "You can <a href=\"%1$s\">move this document</a> to another folder or inside "
 "the current folder."
@@ -2273,9 +2265,6 @@ msgid "You cannot create a new version."
 msgstr ""
 
 msgid "You cannot cut something and then paste it into its child."
-msgstr ""
-
-msgid "You cannot cut this folder."
 msgstr ""
 
 msgid "You cannot delete the root folder."

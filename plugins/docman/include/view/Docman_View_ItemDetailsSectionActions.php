@@ -27,11 +27,11 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 /**
  * @template-implements ItemVisitor<string>
  */
-class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSection implements ItemVisitor
+class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSection implements ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $is_moveable;
     public $is_deleteable;
-    public $_controller;
+    public $_controller; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     public function __construct($item, $url, $is_moveable, $is_deleteable, $controller)
     {
         $this->is_moveable   = $is_moveable;
@@ -70,26 +70,6 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                 $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">move this folder</a> to another folder or inside the current folder.'), $move_url);
             } else {
                 $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">move this document</a> to another folder or inside the current folder.'), $move_url);
-            }
-        }
-        $content .= '</dd>';
-        //}}}
-
-        //{{{ Cut
-        $content    .= '<dt>' . dgettext('tuleap-docman', 'Cut') . '</dt><dd>';
-        $itemFactory = Docman_ItemFactory::instance($this->item->getGroupId());
-        if ($itemFactory->isRoot($this->item)) {
-            $content .= dgettext('tuleap-docman', 'You cannot cut this folder.');
-        } else {
-            $cuturl = DocmanViewURLBuilder::buildActionUrl(
-                $this->item,
-                ['default_url' => $this->url],
-                ['action' => 'action_cut', 'id' => $this->item->getId(), 'orig_action' => 'details', 'orig_id' => $this->item->getId()]
-            );
-            if ($this->item instanceof \Docman_Folder) {
-                $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">cut this folder</a>.'), $cuturl);
-            } else {
-                $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">cut this document</a>.'), $cuturl);
             }
         }
         $content .= '</dd>';

@@ -58,9 +58,6 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor //phpcs:ignore PSR1
         // have only one file in only one writable folder (so it
         // shouldn't be movable). But this case is not worth the time
         // to develop and compute that case.
-        if ($this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
-            $this->actions['canCut'] = true;
-        }
         if (! $this->if->isRoot($item) && $this->dPm->userCanDelete($this->user, $item)) {
             $this->actions['canDelete'] = true;
         }

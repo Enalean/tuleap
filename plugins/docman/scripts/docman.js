@@ -891,69 +891,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
         return this._createLi(a);
     },
-    _getCut: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=action_cut",
-            class: "docman_item_option_cut",
-            title: this.docman.options.language.action_cut,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_cut);
-        a.appendChild(title_txt);
-        Event.observe(
-            a,
-            "click",
-            function (evt) {
-                new Ajax.Request(this.defaultUrl + "&action=action_cut&ajax_cut=true", {
-                    onComplete: function () {
-                        // Hide menu
-                        this.hide();
-
-                        // Display feedback message
-                        var li = Builder.node("li");
-
-                        // Search item title
-                        var title = $("docman_item_title_link_" + this.item_id).firstChild
-                            .nodeValue;
-                        li.textContent =
-                            '"' + title + '" ' + this.docman.options.language.feedback_cut;
-
-                        // Hide previous feedback
-                        if ($("item_copied")) {
-                            $("item_copied").remove();
-                        }
-                        if ($("item_cut")) {
-                            $("item_cut").remove();
-                        }
-
-                        var ul = Builder.node("ul", { class: "feedback_info", id: "item_cut" });
-                        ul.appendChild(li);
-                        var feedback = $("feedback");
-                        feedback.appendChild(ul);
-                        feedback.show();
-
-                        // There is something to paste & user have write permission on a folder -> user can paste inside that folder.
-                        $H(this.docman.actionsForItem)
-                            .keys()
-                            .each(
-                                function (id) {
-                                    if (this.docman.actionsForItem[id].canNewDocument) {
-                                        const parents = this.docman.actionsForItem[id].parents;
-                                        if (this.item_id == id || parents[this.item_id] == true) {
-                                            this.docman.actionsForItem[id].canPaste = false;
-                                        } else {
-                                            this.docman.actionsForItem[id].canPaste = true;
-                                        }
-                                    }
-                                }.bind(this),
-                            );
-                    }.bindAsEventListener(this),
-                });
-                Event.stop(evt);
-                return false;
-            }.bindAsEventListener(this),
-        );
-        return this._createLi(a);
-    },
     _getCopy: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=action_copy",
@@ -1222,10 +1159,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
 
         ul.appendChild(this._getSeparator());
 
-        // Cut
-        if (this.docman.actionsForItem[this.item_id].canCut) {
-            ul.appendChild(this._getCut());
-        }
         // Copy
         ul.appendChild(this._getCopy());
         // Paste

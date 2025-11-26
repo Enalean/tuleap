@@ -2494,14 +2494,6 @@ msgid "You can <a href=\"%1$s\">create a new version</a>."
 msgstr "Vous pouvez <a href=\"%1$s\">créer une nouvelle version</a>."
 
 #, php-format
-msgid "You can <a href=\"%1$s\">cut this document</a>."
-msgstr "Vous pouvez <a href=\"%1$s\">couper ce document</a>."
-
-#, php-format
-msgid "You can <a href=\"%1$s\">cut this folder</a>."
-msgstr "Vous pouvez <a href=\"%1$s\">couper ce dossier</a>."
-
-#, php-format
 msgid ""
 "You can <a href=\"%1$s\">move this document</a> to another folder or inside "
 "the current folder."
@@ -2607,9 +2599,6 @@ msgid "You cannot cut something and then paste it into its child."
 msgstr ""
 "Vous ne pouvez pas couper un élément et le coller ensuite dans l'un de ses "
 "enfants."
-
-msgid "You cannot cut this folder."
-msgstr "Vous ne pouvez pas couper ce document."
 
 msgid "You cannot delete the root folder."
 msgstr "Vous ne pouvez pas supprimer le dossier racine."
