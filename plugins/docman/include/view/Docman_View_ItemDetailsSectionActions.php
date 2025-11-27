@@ -128,23 +128,6 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             $content .= '</dd>';
             $content .= '<dt>' . dgettext('tuleap-docman', 'New folder') . '</dt><dd>';
             $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">create a new folder</a> in this folder.'), DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'newFolder', 'id' => $item->getId()]));
-            //{{{ Paste
-            $itemFactory  = Docman_ItemFactory::instance($item->getGroupId());
-            $copiedItemId = $itemFactory->getCopyPreference($this->_controller->getUser());
-            $cutItemId    = $itemFactory->getCutPreference($this->_controller->getUser(), $item->getGroupId());
-            $srcItem      = null;
-            if ($copiedItemId !== false && $cutItemId === false) {
-                $srcItem = $itemFactory->getItemFromDb($copiedItemId);
-            } elseif ($copiedItemId === false && $cutItemId !== false && $item->getId() != $cutItemId) {
-                $srcItem = $itemFactory->getItemFromDb($cutItemId);
-            }
-            if ($srcItem && ! $itemFactory->isInSubTree($this->item->getId(), $srcItem->getId())) {
-                $content .= '</dd>';
-                $content .= '<dt>' . dgettext('tuleap-docman', 'Paste') . '</dt><dd>';
-                $copyurl  = DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'action_paste', 'id' => $this->item->getId()]);
-                $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">paste \'%2$s\' into this folder</a>.'), $copyurl, $this->hp->purify($srcItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
-            }
-            //}}}
         }
         $content .= '</dd>';
         return $content;

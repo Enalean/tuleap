@@ -891,74 +891,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         return this._createLi(a);
     },
 
-    _getPaste: function () {
-        var title_txt = document.createTextNode(this.docman.options.language.action_paste);
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=action_paste",
-            class: "docman_item_option_paste",
-            title: this.docman.options.language.action_paste,
-        });
-        a.appendChild(title_txt);
-
-        const spanCancel = Builder.node("span", {
-            style: "width:100%; align: right; vertical-align: middle;",
-        });
-        spanCancel.appendChild(this._getCancelPaste());
-
-        const li = this._createLi(a);
-        li.appendChild(spanCancel);
-        return li;
-    },
-    _getCancelPaste: function () {
-        this.docman.options.language.action_paste_cancel = "Cancel paste";
-        var im = Builder.node("img", {
-            src: this.docman.options.themePath + "/images/ic/cancel.png",
-            style: "margin:0; padding:0, border:0;",
-            title: "",
-        });
-
-        Event.observe(
-            im,
-            "click",
-            function (evt) {
-                new Ajax.Request(this.defaultUrl + "&action=paste_cancel", {
-                    onComplete: function () {
-                        // Hide menu
-                        this.hide();
-
-                        // There disable paste for all items
-                        $H(this.docman.actionsForItem)
-                            .keys()
-                            .each(
-                                function (id) {
-                                    this.docman.actionsForItem[id].canPaste = false;
-                                }.bind(this),
-                            );
-
-                        // Hide previous feedback
-                        if ($("item_copied")) {
-                            $("item_copied").remove();
-                        }
-                        if ($("item_cut")) {
-                            $("item_cut").remove();
-                        }
-                    }.bindAsEventListener(this),
-                });
-                Event.stop(evt);
-                return false;
-            }.bindAsEventListener(this),
-        );
-
-        // Display the pointer when the mouse is over the image (as a link does)
-        Event.observe(im, "mouseover", function () {
-            Element.setStyle(document.body, { cursor: "pointer" });
-        });
-        Event.observe(im, "mouseout", function () {
-            Element.setStyle(document.body, { cursor: "default" });
-        });
-
-        return im;
-    },
     _getApproval: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=details&section=approval",
@@ -1090,11 +1022,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         // Approval table
         if (this.docman.actionsForItem[this.item_id].canApproval) {
             ul.appendChild(this._getApproval());
-        }
-
-        // Paste
-        if (this.docman.actionsForItem[this.item_id].canPaste) {
-            ul.appendChild(this._getPaste());
         }
 
         ul.appendChild(this._getSeparator());

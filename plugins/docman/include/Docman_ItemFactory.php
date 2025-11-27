@@ -36,7 +36,6 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow //phpcs:i
     public array $onlyOneChildForRoot;
     public array $copiedItem;
     public mixed $groupId;
-    private array $cutItem;
 
     private static array $instance;
 
@@ -46,7 +45,6 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow //phpcs:i
         $this->rootItems[]           = [];
         $this->onlyOneChildForRoot[] = [];
         $this->copiedItem            = [];
-        $this->cutItem               = [];
 
         // Parameter
         $this->groupId = $groupId;
@@ -1329,86 +1327,6 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow //phpcs:i
         return $itemMapping;
     }
 
-    public function setCutPreference($item)
-    {
-        user_set_preference(
-            PLUGIN_DOCMAN_PREF . '_item_cut',
-            $item->getId()
-        );
-    }
-
-    /**
-     * Get the item_id that was cut by the user.
-     *
-     * If groupId is given, only items that belongs to this groupId will be
-     * returned.
-     * If no item match, returns false.
-     *
-     * @param PFUser    $user
-     * @param int $groupId
-     *
-     * @return int|false
-     */
-    public function getCutPreference($user, $groupId = null)
-    {
-        if (! isset($this->cutItem[$user->getId()])) {
-            $cutId = false;
-            $id    = user_get_preference(PLUGIN_DOCMAN_PREF . '_item_cut');
-            if ($groupId !== null && $id !== false) {
-                $item = $this->getItemFromDb($id);
-                if ($item && $item->getGroupId() == $groupId) {
-                    $cutId = $id;
-                }
-            }
-            $this->cutItem[$user->getId()] = $cutId;
-        }
-        return $this->cutItem[$user->getId()];
-    }
-
-    public function getCopyPreference($user)
-    {
-        if (! isset($this->copiedItem[$user->getId()])) {
-            $this->copiedItem[$user->getId()] = user_get_preference(PLUGIN_DOCMAN_PREF . '_item_copy');
-        }
-        return $this->copiedItem[$user->getId()];
-    }
-
-    public function delCutPreference()
-    {
-        user_del_preference(PLUGIN_DOCMAN_PREF . '_item_cut');
-    }
-
-    public function delCopyPreference()
-    {
-        user_del_preference(PLUGIN_DOCMAN_PREF . '_item_copy');
-    }
-
-    /**
-    * This order deletion of cut preferences of all users set on item identified by $item_id.
-    *
-    * @param int $item_id identifier of docman item that has been marked as deleted.
-    * @return void
-    *
-    */
-    public function delCutPreferenceForAllUsers($item_id)
-    {
-        $dao = $this->_getItemDao();
-        $dao->deleteCutPreferenceForAllUsers($item_id);
-    }
-
-    /**
-    * This order deletion of copy preferences of all users set on item identified by $item_id.
-    *
-    * @param int $item_id identifier of docman item that has been marked as deleted.
-    * @return void
-    *
-    */
-    public function delCopyPreferenceForAllUsers($item_id)
-    {
-        $dao = $this->_getItemDao();
-        $dao->deleteCopyPreferenceForAllUsers($item_id);
-    }
-
     public function getCurrentWikiVersion($item)
     {
         $version = null;
@@ -1501,8 +1419,6 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow //phpcs:i
         }
 
         $item->setDeleteDate(time());
-        $this->delCutPreferenceForAllUsers($item->getId());
-        $this->delCopyPreferenceForAllUsers($item->getId());
         $this->deleteNotifications($item->getId());
         $dao = $this->_getItemDao();
         $dao->updateFromRow($item->toRow());

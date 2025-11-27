@@ -242,9 +242,6 @@ msgstr ""
 "totalement nouvelle.</li></ul>Dans tous les cas : Les <strong>approbateurs "
 "ne sont pas notifiés automatiquement</strong>.</p>"
 
-msgid "<p>Paste operation successfully completed.</p>"
-msgstr "<p>Opération \"Coller\" terminée avec succès.</p>"
-
 #, php-format
 msgid ""
 "<p>The table below highlight the differences between %1$s and %2$s "
@@ -259,13 +256,6 @@ msgstr ""
 "correspondre à ce qui est défini dans %2$s.</p><p><strong>Note :</strong> "
 "cette opération supprime ni les propriétes ni les valeurs de %1$s et %2$s.</"
 "p>"
-
-#, php-format
-msgid ""
-"<p>You will be redirected to <a href=\"%1$s\"> %2$s </a> in %3$s seconds</p>"
-msgstr ""
-"<p>Vous allez être redirigé vers <a href=\"%1$s\"> %2$s </a> dans %3$s "
-"secondes</p>"
 
 msgid "<strong>Actions</strong> with selected reviewers:"
 msgstr "<strong>Actions</strong> pour les approbateurs sélectionnés:"
@@ -528,9 +518,6 @@ msgstr "Début"
 #, php-format
 msgid "Can't delete folder %s because it is not empty."
 msgstr "Impossible de supprimer le dossier %s car il n'est pas vide."
-
-msgid "Can't move item."
-msgstr "Impossible de déplacer l'élément."
 
 #, php-format
 msgid "Cannot add  following user(s). Internal error: %1$s."
@@ -1232,16 +1219,6 @@ msgstr "Nature du document"
 msgid "Item successfully deleted."
 msgstr "Elément supprimé."
 
-#, php-format
-msgid ""
-"Item successfully moved form <a href=\"?"
-"group_id=%1$s&amp;action=show&amp;id=%2$s\">%3$s</a> to <a href=\"?"
-"group_id=%1$s&amp;action=show&amp;id=%4$s\">%5$s</a>."
-msgstr ""
-"Elément déplacé de <a href=\"?"
-"group_id=%1$s&amp;action=show&amp;id=%2$s\">%3$s</a> vers <a href=\"?"
-"group_id=%1$s&amp;action=show&amp;id=%4$s\">%5$s</a>."
-
 msgid "Item successfully updated"
 msgstr "Élément mis à jour"
 
@@ -1448,11 +1425,6 @@ msgstr "Pas d'email envoyé aux approbateurs."
 msgid "No review requested."
 msgstr "Pas d'approbation demandée."
 
-msgid ""
-"No valid item to paste. Either no item was copied or item no longer exist."
-msgstr ""
-"Pas d'élément valide à coller. L'élément n'a pas été copié ou n'existe plus."
-
 msgid "No, I do not want to delete it"
 msgstr "Non, je ne veux pas le supprimer"
 
@@ -1532,13 +1504,6 @@ msgstr "Coller '%1$s' dans '%2$s'"
 msgid "Paste Anyway"
 msgstr "Coller [force]"
 
-#, php-format
-msgid "Paste in progress '%1$s' in '%2$s'"
-msgstr "Coller '%1$s' dans '%2$s' en cours"
-
-msgid "Paste in progress..."
-msgstr "Coller en cours..."
-
 msgid "Pattern"
 msgstr "Modèle"
 
@@ -1590,14 +1555,6 @@ msgid "Please select the folder where you want this new document appears."
 msgstr ""
 "Merci de sélectionner le répertoire où vous souhaitez que ce document "
 "apparaisse."
-
-#, php-format
-msgid ""
-"Please wait for the paste to complete. This may take a while depending on "
-"size of data to be copied <img src=\"%1$s\" />"
-msgstr ""
-"Veuillez attendre que la copie soit terminée. L'opération peut prendre du "
-"temps en fonction de la taille des données à coller <img src=\"%1$s\" />"
 
 msgid "Position:"
 msgstr "Position :"
@@ -2496,10 +2453,6 @@ msgstr ""
 "ou au sein de son dossier actuel."
 
 #, php-format
-msgid "You can <a href=\"%1$s\">paste '%2$s' into this folder</a>."
-msgstr "Vous pouvez <a href=\"%1$s\">coller '%2$s' dans ce dossier</a>."
-
-#, php-format
 msgid "You can <a href=\"%1$s\">update</a> this document."
 msgstr "Vous pouvez <a href=\"%1$s\">mettre à jour</a> ce document."
 
@@ -2559,9 +2512,6 @@ msgstr ""
 "Vous ne pouvez pas supprimer un rapport que vous ne possédez pas. "
 "Suppression annulée."
 
-msgid "You can not paste an item into itself."
-msgstr "Vous ne pouvez pas coller l'élément en lui même."
-
 msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
 msgstr "Vous ne pouvez cloner que les rapports 'projet' ou personnels."
 
@@ -2580,11 +2530,6 @@ msgstr ""
 
 msgid "You cannot create a new version."
 msgstr "Vous ne pouvez pas créer une nouvelle version."
-
-msgid "You cannot cut something and then paste it into its child."
-msgstr ""
-"Vous ne pouvez pas couper un élément et le coller ensuite dans l'un de ses "
-"enfants."
 
 msgid "You cannot delete the root folder."
 msgstr "Vous ne pouvez pas supprimer le dossier racine."
@@ -2611,9 +2556,6 @@ msgstr "Vous ne pouvez pas déplacer ce document."
 
 msgid "You cannot move this folder."
 msgstr "Vous ne pouvez pas déplacer ce dossier."
-
-msgid "You cannot paste something into a document."
-msgstr "Vous ne pouvez pas coller un élément dans un document."
 
 msgid "You cannot update this document."
 msgstr "Vous ne pouvez pas mettre à jour ce document."
