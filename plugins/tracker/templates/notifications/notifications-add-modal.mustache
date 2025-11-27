@@ -1,0 +1,71 @@
+<div id="tracker-global-notifications-add-modal" role="dialog" aria-labelledby="tracker-notification-add-title" class="tlp-modal">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-notification-add-title">{{# dgettext }}tuleap-tracker | Add notification {{/dgettext}}</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }} tuleap-tracker | Close {{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+        <div class="tlp-modal-body">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="ugroups-add">
+                    {{# dgettext }} tuleap-tracker | User groups that will receive the notification {{/dgettext}}
+                </label>
+                <select id="ugroups-add"
+                        name="new_global_notification[ugroup_ids][]"
+                        class="tlp-select"
+                        data-test="add-notifications-add-ugroup"
+                        multiple
+                >
+                    {{# all_user_groups }}
+                        <option value="{{id}}">{{name}}</option>
+                    {{/ all_user_groups }}
+                </select>
+            </div>
+            <div
+                 class="tlp-form-element tracker-global-notifications-autocomplete"
+                 data-id="tracker-global-notifications-user-add"
+                 data-name="new_global_notification[users]"
+                 data-existing="[]"
+                 data-test="add-notifications-add-user"
+            >
+                <label class="tlp-label" for="tracker-global-notifications-user-add">
+                    {{# dgettext }}tuleap-tracker| Users who will receive the notification {{/dgettext}}
+                </label>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="email-add">
+                    {{# dgettext }}tuleap-tracker | Emails who will receive the notification {{/dgettext}}
+                </label>
+                <input type="text"
+                       id="email-add"
+                       data-test="tracker-notification-add-email"
+                       name="new_global_notification[emails]"
+                       class="tlp-input"
+                       placeholder="developers@example.com"
+                />
+                <p class="tlp-text-info">
+                    {{# dgettext }}tuleap-svn | A comma-separated list of email addresses. {{/dgettext}}
+                    {{# dgettext }}
+                        tuleap-svn | These can be mailing list addresses or external recipients. {{/dgettext}}
+                </p>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" name="new_global_notification[all_updates]" value="1" data-test="all-updates">
+                    {{ send_all }}
+                </label>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" name="new_global_notification[check_permissions]" value="1">
+                    {{ check_perms }}
+                </label>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
+                {{# gettext }}Cancel{{/ gettext }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="save-notification-button">{{ save }}</button>
+        </div>
+</div>

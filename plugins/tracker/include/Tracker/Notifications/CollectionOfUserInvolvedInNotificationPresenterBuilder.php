@@ -22,32 +22,19 @@ namespace Tuleap\Tracker\Notifications;
 
 use Iterator;
 use Tracker_GlobalNotification;
-use Tuleap\Notification\UserInvolvedInNotificationPresenter;
 use Tuleap\Tracker\Tracker;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use UserHelper;
 
 class CollectionOfUserInvolvedInNotificationPresenterBuilder
 {
-    /**
-     * @var UsersToNotifyDao
-     */
-    private $users_to_notify_dao;
-    /**
-     * @var UnsubscribersNotificationDAO
-     */
-    private $unsubscribers_notification_dao;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-
     public function __construct(
-        UsersToNotifyDao $users_to_notify_dao,
-        UnsubscribersNotificationDAO $unsubscribers_notification_dao,
-        \UserManager $user_manager,
+        private readonly UsersToNotifyDao $users_to_notify_dao,
+        private readonly UnsubscribersNotificationDAO $unsubscribers_notification_dao,
+        private readonly \UserManager $user_manager,
+        private readonly UserHelper $user_helper,
+        private readonly ProvideUserAvatarUrl $avatar_url_provider,
     ) {
-        $this->users_to_notify_dao            = $users_to_notify_dao;
-        $this->unsubscribers_notification_dao = $unsubscribers_notification_dao;
-        $this->user_manager                   = $user_manager;
     }
 
     public function getCollectionOfUserToBeNotifiedPresenter(Tracker_GlobalNotification $notification)
@@ -57,18 +44,18 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilder
     }
 
     /**
-     * @return UserInvolvedInNotificationPresenter[]
+     * @return UserInvolvedInTrackerNotificationPresenter[]
      */
-    public function getCollectionOfNotificationUnsubscribersPresenter(Tracker $tracker)
+    public function getCollectionOfNotificationUnsubscribersPresenter(Tracker $tracker): array
     {
         $user_rows = $this->unsubscribers_notification_dao->searchUsersUnsubcribedFromNotificationByTrackerID($tracker->getId());
         return $this->getCollectionOfUserPresenters(new \ArrayIterator($user_rows));
     }
 
     /**
-     * @return UserInvolvedInNotificationPresenter[]
+     * @return UserInvolvedInTrackerNotificationPresenter[]
      */
-    private function getCollectionOfUserPresenters(Iterator $user_rows)
+    private function getCollectionOfUserPresenters(Iterator $user_rows): array
     {
         $presenters = [];
         foreach ($user_rows as $row) {
@@ -76,12 +63,10 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilder
             if (! $user) {
                 continue;
             }
-
-            $presenters[] = new UserInvolvedInNotificationPresenter(
-                $row['user_id'],
-                $row['user_name'],
-                $row['realname'],
-                $user->getAvatarUrl()
+            $presenters[] = UserInvolvedInTrackerNotificationPresenter::fromPFUser(
+                $user,
+                $this->user_helper,
+                $this->avatar_url_provider,
             );
         }
         $this->sortUsersAlphabetically($presenters);
@@ -89,10 +74,14 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilder
         return $presenters;
     }
 
-    private function sortUsersAlphabetically(&$presenters)
+    /**
+     * @param UserInvolvedInTrackerNotificationPresenter[] $presenters
+     *
+     */
+    private function sortUsersAlphabetically(array &$presenters): void
     {
-        usort($presenters, function (UserInvolvedInNotificationPresenter $a, UserInvolvedInNotificationPresenter $b) {
-            return strnatcasecmp($a->label, $b->label);
+        usort($presenters, function (UserInvolvedInTrackerNotificationPresenter $a, UserInvolvedInTrackerNotificationPresenter $b) {
+            return strnatcasecmp($a->display_name, $b->display_name);
         });
     }
 }

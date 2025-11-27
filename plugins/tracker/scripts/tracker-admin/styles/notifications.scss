@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./notifications";
-import "./notifications-popover";
+@use "pkg:@tuleap/lazybox";
+
+.tracker-notification-email-list-entry {
+    white-space: nowrap;
+
+    &:last-child > .tracker-notification-email-list-separator {
+        display: none;
+    }
+}
+
+.tracker-global-notifications-checkbox-cell {
+    text-align: center;
+}
+
+.tracker-unsubscriber-actions {
+    text-align: right;
+}
+
+.tracker-admin-date-reminder-when {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+    align-items: center;
+}
+
+.tracker-admin-email-custom-from {
+    margin: 0 0 0 var(--tlp-large-spacing);
+}
+
+.tracker-global-notification-frame {
+    margin: var(--tlp-medium-spacing) 0;
+}

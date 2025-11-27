@@ -1,79 +1,107 @@
-<h2 class="almost-tlp-title">{{# dgettext }} tuleap-tracker | Notifications {{/ dgettext }}</h2>
-{{# is_disabled }}
-    <h3>{{# dgettext }} tuleap-tracker | Enable notifications {{/ dgettext }}</h3>
-    <p>
-        {{# dgettext }}
-            tuleap-tracker
-            | Enable notifications for this tracker, you will be able to choose the notifications level once enabled.
-        {{/ dgettext }}
-    </p>
-    <button name="enable_notifications" data-test="enable-notifications" class="btn">
-        {{# dgettext }} tuleap-tracker | Enable notifications {{/ dgettext }}
-    </button>
+<div class="tlp-framed-horizontally tracker-global-notification-frame">
+<section class="tlp-pane">
+<div class="tlp-pane-container">
+    {{# is_disabled }}
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# dgettext }} tuleap-tracker | Enable notifications {{/ dgettext }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>
+                {{# dgettext }}
+                    tuleap-tracker
+                    | Enable notifications for this tracker, you will be able to choose the notifications level once enabled.
+                {{/ dgettext }}
+            </p>
+            <div class="tlp-pane-section-submit">
+                <button name="enable_notifications" data-test="enable-notifications" class="tlp-button-primary">
+                    {{# dgettext }} tuleap-tracker | Enable notifications {{/ dgettext }}
+                </button>
+            </div>
+        </section>
+    {{/ is_disabled }}
 
-{{/ is_disabled }}
+    {{^ is_disabled }}
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# dgettext }} tuleap-tracker | Disable all notifications {{/ dgettext }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p class="tlp-text">
+                {{# dgettext }}
+                    tuleap-tracker
+                    | Disable all notifications, regardless of user preferences and regardless of "Global Email Notifications" below.
+                {{/ dgettext }}
+            </p>
+            <div class="tlp-pane-section-submit">
+                <button name="disable_notifications" class="tlp-button-danger">
+                    {{# dgettext }} tuleap-tracker | Disable notifications {{/ dgettext }}
+                </button>
+            </div>
+        </section>
+    </div>
+    </section>
 
-{{^ is_disabled }}
-    <h3>{{# dgettext }} tuleap-tracker | Disable all notifications {{/ dgettext }}</h3>
-    <p>
-        {{# dgettext }}
-            tuleap-tracker
-            | Disable all notifications, regardless of user preferences and regardless of "Global Email Notifications" below.
-        {{/ dgettext }}
-    </p>
-    <button name="disable_notifications" class="btn btn-danger">
-        {{# dgettext }} tuleap-tracker | Disable notifications {{/ dgettext }}
-    </button>
-
-    <h3>{{# dgettext }} tuleap-tracker | Default notifications {{/ dgettext }}</h3>
-    {{^ has_status_semantic_defined }}
-        <p class="alert alert-info">
+    <section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# dgettext }} tuleap-tracker | Default notifications {{/ dgettext }}</h1>
+        </div>
+    <section class="tlp-pane-section">
+        {{^ has_status_semantic_defined }}
+            <p class="tlp-alert-info">
+                {{# dgettext }}
+                    tuleap-tracker
+                    | You must configure a status semantic if you want to use the "status change notifications" notification level for this tracker.
+                {{/ dgettext }}
+            </p>
+        {{/ has_status_semantic_defined }}
+        <p class="tlp-text">
             {{# dgettext }}
                 tuleap-tracker
-                | You must configure a status semantic if you want to use the "status change notifications" notification level for this tracker.
+                | As a tracker administrator, you can choose the e-mail notifications level in this tracker.
             {{/ dgettext }}
         </p>
-    {{/ has_status_semantic_defined }}
-    <p>
-        {{# dgettext }}
-            tuleap-tracker
-            | As a tracker administrator, you can choose the e-mail notifications level in this tracker.
-        {{/ dgettext }}
-    </p>
-    <input type="hidden" name="notifications_level" value="0"/>
-    <label class="radio">
-        <input type="radio" name="notifications_level" value="{{ default_value }}"
-               {{# is_default }}checked{{/ is_default }} />
-        {{# dgettext }}
-            tuleap-tracker
-            | Default Tuleap notifications (people will get notified when they are submitter, assignee, commenter or CC)
-        {{/ dgettext }}
-    </label>
-    {{# has_status_semantic_defined }}
-        <label class="radio">
-            <input type="radio" name="notifications_level" value="{{ status_change_value }}" data-test="status-change-level"
-                   {{# is_status_change }}checked{{/ is_status_change }} />
-            {{# dgettext }}
-                tuleap-tracker
-                | Status change notifications (people will get notified when they are submitter, assignee, commenter or CC and artifact status is updated)
-            {{/ dgettext }}
-        </label>
-    {{/ has_status_semantic_defined }}
-
-    <p class="notifications-level-force-usage">
-        <label class="checkbox">
-            <input
+        <input type="hidden" name="notifications_level" value="0"/>
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-radio">
+                <input type="radio" name="notifications_level" value="{{ default_value }}"
+                       {{# is_default }}checked{{/ is_default }} />
+                {{# dgettext }}
+                    tuleap-tracker
+                    | Default Tuleap notifications (people will get notified when they are submitter, assignee, commenter or CC)
+                {{/ dgettext }}
+            </label>
+            {{# has_status_semantic_defined }}
+                <label class="tlp-label tlp-radio">
+                    <input type="radio" name="notifications_level" value="{{ status_change_value }}"
+                           data-test="status-change-level"
+                           {{# is_status_change }}checked{{/ is_status_change }} />
+                    {{# dgettext }}
+                        tuleap-tracker
+                        | Status change notifications (people will get notified when they are submitter, assignee, commenter or CC and artifact status is updated)
+                    {{/ dgettext }}
+                </label>
+            {{/ has_status_semantic_defined }}
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input
                     type="checkbox"
                     name="submit_and_force_notifications_level"
-            />
-            {{# dgettext }}
-                tuleap-tracker
-                | Force notification configuration usage to all users
-            {{/ dgettext }}
-        </label>
-    </p>
-
-    <button name="submit_notifications_level" class="btn" type="submit" data-test="submit-notifications-level">
-        {{# dgettext }} tuleap-tracker | Submit {{/ dgettext }}
-    </button>
-{{/ is_disabled }}
+                />
+                {{# dgettext }}
+                    tuleap-tracker
+                    | Force notification configuration usage to all users
+                {{/ dgettext }}
+            </label>
+        </div>
+        <div class="tlp-pane-section-submit">
+            <button name="submit_notifications_level" class="tlp-button-primary" type="submit"
+                    data-test="submit-notifications-level">
+                {{# dgettext }} tuleap-tracker | Submit {{/ dgettext }}
+            </button>
+        </div>
+    {{/ is_disabled }}
+</section>
+</div>
+</section>
+</div>

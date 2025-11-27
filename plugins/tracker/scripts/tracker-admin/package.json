@@ -5,9 +5,13 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/core-rest-api-types": "workspace:^",
     "@tuleap/dom": "workspace:*",
     "@tuleap/gettext": "workspace:*",
+    "@tuleap/lazybox": "workspace:^",
+    "@tuleap/lazybox-users-autocomplete": "workspace:^",
     "@tuleap/list-picker": "workspace:*",
+    "@tuleap/locale": "workspace:^",
     "@tuleap/plugin-tracker-email-copy-paste": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-color-picker": "workspace:*",

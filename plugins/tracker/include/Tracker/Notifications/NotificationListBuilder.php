@@ -26,30 +26,15 @@ use UGroupDao;
 
 class NotificationListBuilder
 {
-    /**
-     * @var CollectionOfUserInvolvedInNotificationPresenterBuilder
-     */
-    private $user_involved_in_notification_presenter_builder;
-    /**
-     * @var CollectionOfUgroupToBeNotifiedPresenterBuilder
-     */
-    private $ugroup_to_be_notified_builder;
-    /**
-     * @var UGroupDao
-     */
-    private $ugroup_dao;
-
     public function __construct(
-        UGroupDao $ugroup_dao,
-        CollectionOfUserInvolvedInNotificationPresenterBuilder $user_involved_in_notification_presenter_builder,
-        CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder,
+        private UGroupDao $ugroup_dao,
+        private CollectionOfUserInvolvedInNotificationPresenterBuilder $user_involved_in_notification_presenter_builder,
+        private CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder,
+        private CollectionOfUserGroupPresenterBuilder $user_group_presenter_builder,
     ) {
-        $this->ugroup_dao                                      = $ugroup_dao;
-        $this->user_involved_in_notification_presenter_builder = $user_involved_in_notification_presenter_builder;
-        $this->ugroup_to_be_notified_builder                   = $ugroup_to_be_notified_builder;
     }
 
-    public function getNotificationsPresenter(array $notifications, GlobalNotificationsAddressesBuilder $addresses_builder)
+    public function getNotificationsPresenter(array $notifications, GlobalNotificationsAddressesBuilder $addresses_builder, array $all_user_groups)
     {
         $notifications_presenters = [];
         foreach ($notifications as $notification) {
@@ -58,6 +43,7 @@ class NotificationListBuilder
             );
             $user_presenters            = $this->user_involved_in_notification_presenter_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
             $ugroup_presenters          = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
+            $all_user_groups_presenters = $this->user_group_presenter_builder->getAllUserGroupsPresenter($all_user_groups, $ugroup_presenters);
             $notifications_presenters[] = new PaneNotificationPresenter(
                 $notification,
                 $emails_to_be_notified,
@@ -65,7 +51,8 @@ class NotificationListBuilder
                 $ugroup_presenters,
                 json_encode($this->transformEmailsData($emails_to_be_notified)),
                 json_encode($this->transformUsersData($user_presenters)),
-                json_encode($this->transformUgroupsData($ugroup_presenters))
+                json_encode($this->transformUgroupsData($ugroup_presenters)),
+                $all_user_groups_presenters
             );
         }
         return $notifications_presenters;
@@ -105,8 +92,8 @@ class NotificationListBuilder
         foreach ($users_to_be_notified as $user_presenter) {
             $user_parsed                   = (array) $user_presenter;
             $user_parsed['type']           = 'user';
-            $user_parsed['id']             = $user_presenter->label;
-            $user_parsed['text']           = $user_presenter->label;
+            $user_parsed['id']             = $user_presenter->user_id;
+            $user_parsed['text']           = $user_presenter->display_name;
             $users_to_be_notified_parsed[] = $user_parsed;
         }
         return $users_to_be_notified_parsed;

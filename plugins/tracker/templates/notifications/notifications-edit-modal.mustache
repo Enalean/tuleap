@@ -1,0 +1,74 @@
+<div id="tracker-notification-edit-{{ notification_id }}-modal" role="dialog" aria-labelledby="tracker-notification-edit-{{ notification_id }}-title"
+     class="tlp-modal">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-notification-edit-{{ notification_id }}-title">{{# dgettext }}
+            tuleap-tracker | Edit notification {{/dgettext}}</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }} tuleap-tracker | Close {{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+        <div class="tlp-modal-body">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="ugroups-add">
+                    {{# dgettext }}
+                        tuleap-tracker | User groups that will receive the notification {{/dgettext}}
+                </label>
+                <select id="ugroups-add"
+                        name="global_notification[{{ notification_id }}][ugroup_ids][]"
+                        class="tlp-select"
+                        multiple
+                >
+                    {{# all_user_groups }}
+                        <option value="{{id}}" {{# selected }}selected{{/ selected }}>{{name}}</option>
+                    {{/ all_user_groups }}
+                </select>
+            </div>
+            <div
+                 class="tlp-form-element tracker-global-notifications-autocomplete"
+                 data-id="tracker-global-notifications-user-edit-{{ notification_id }}"
+                 data-name="global_notification[{{ notification_id }}][users]"
+                 data-existing="{{users_to_be_notified_json}}"
+            >
+                <label class="tlp-label" for="tracker-global-notifications-user-add">
+                    {{# dgettext }}tuleap-tracker| Users who will receive the notification {{/dgettext}}
+                </label>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="email-add">
+                    {{# dgettext }}tuleap-tracker | Emails who will receive the notification {{/dgettext}}
+                </label>
+                <input type="text"
+                       id="email-add"
+                       data-test="tracker-notification-add-email"
+                       name="global_notification[{{ notification_id }}][emails]"
+                       class="tlp-input"
+                       placeholder="developers@example.com"
+                       value="{{emails_separated_with_comma}}"
+                />
+                <p class="tlp-text-info">
+                    {{# dgettext }}tuleap-svn | A comma-separated list of email addresses. {{/dgettext}}
+                    {{# dgettext }}
+                        tuleap-svn | These can be mailing list addresses or external recipients. {{/dgettext}}
+                </p>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" name="global_notification[{{ notification_id }}][all_updates]" value="1"  {{# all_updates }} checked {{/ all_updates }}>
+                    {{ send_all }}
+                </label>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" name="global_notification[{{ notification_id }}][check_permissions]" value="1" {{# check_permissions }} checked {{/ check_permissions }}>
+                    {{ check_perms }}
+                </label>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" data-dismiss="modal"
+                    class="tlp-button-primary tlp-button-outline tlp-modal-action">
+                {{# gettext }}Cancel{{/ gettext }}
+            </button>
+            <button type="submit" name="submit_notification_edit"  value="{{ notification_id }}" class="tlp-button-primary tlp-modal-action">{{ save }}</button>
+        </div>
+</div>

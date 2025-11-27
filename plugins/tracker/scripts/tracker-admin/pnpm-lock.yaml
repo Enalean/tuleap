@@ -5,15 +5,27 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/rest-api-types
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../../lib/frontend/dom
   '@tuleap/gettext':
     specifier: workspace:*
     version: link:../../../../lib/frontend/gettext
+  '@tuleap/lazybox':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/lazybox
+  '@tuleap/lazybox-users-autocomplete':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/lazybox-users-autocomplete
   '@tuleap/list-picker':
     specifier: workspace:*
     version: link:../../../../lib/frontend/list-picker
+  '@tuleap/locale':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/locale
   '@tuleap/plugin-tracker-email-copy-paste':
     specifier: workspace:*
     version: link:../lib/email-copy-paste

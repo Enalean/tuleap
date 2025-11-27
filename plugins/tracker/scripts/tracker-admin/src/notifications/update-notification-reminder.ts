@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright Enalean (c) 2017 - Present. All rights reserved.
+/*
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Notification;
+import { createModal } from "@tuleap/tlp-modal";
 
-use ProjectUGroup;
+const url = new URL(window.location.href);
+url.searchParams.delete("action");
+url.searchParams.delete("reminder_id");
 
-class UgroupToBeNotifiedPresenter
-{
-    public string $label;
-    public int $ugroup_id;
+window.history.replaceState("", "", url.pathname + url.search + window.location.hash);
 
-    public function __construct(ProjectUGroup $ugroup)
-    {
-        $this->label     = $ugroup->getTranslatedName();
-        $this->ugroup_id = $ugroup->getId();
+document.addEventListener("DOMContentLoaded", () => {
+    const modal_mount = document.getElementById("notification-date-reminder-update");
+    if (!modal_mount) {
+        return;
     }
-}
+    createModal(modal_mount).show();
+});

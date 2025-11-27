@@ -1,93 +1,122 @@
-<h2 class="almost-tlp-title">{{# dgettext }} tuleap-tracker | Mail configuration {{/ dgettext }}</h2>
+<div class="tlp-framed-horizontally">
+    <div class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }} tuleap-tracker | Mail configuration {{/ dgettext }}</h1>
+            </div>
+            <div class="tlp-pane-section">
+                <h1 class="tlp-pane-subtitle">{{# dgettext }}
+                    tuleap-tracker | Calendar events{{/ dgettext }}</h1>
+                <p class="tlp-text">
+                    {{# dgettext }}
+                        tuleap-tracker | When there is a timeframe associated with a tracker, email notifications for artifacts include the necessary information for adding the event to a calendar (Outlook, Google Calendar, etc.).{{/ dgettext }}
+                </p>
+                <div class="tlp-form-element
+                    {{^ should_send_event_in_notification }}
+                        {{^ are_calendar_events_allowed }}
+                            tlp-form-element-disabled"
+                        {{/ are_calendar_events_allowed }}
+                    {{/ should_send_event_in_notification }}>
+                    <input type="hidden"
+                           name="enable-calendar-events"
+                           value="0"
+                    >
+                    <label class="tlp-label tlp-checkbox">
+                        <input
+                            type="checkbox"
+                            id="enable-calendar-events"
+                            name="enable-calendar-events"
+                            data-test="enable-calendar-events"
+                            {{^ should_send_event_in_notification }}
+                                {{^ are_calendar_events_allowed }}
+                            disabled
+                                {{/ are_calendar_events_allowed }}
+                            {{/ should_send_event_in_notification }}
+                            value="1"
+                            {{# should_send_event_in_notification }}checked{{/ should_send_event_in_notification }}
+                        >
+                        {{# dgettext }}
+                            tuleap-tracker | Include calendar event in the artifact email notification{{/ dgettext }}
+                    </label>
+                </div>
+                {{# is_semantic_timeframe_defined }}
+                    {{# is_semantic_timeframe_inherited }}
+                        <p class="tlp-text-muted">
+                            {{# dgettext }}tuleap-tracker
+                                | The semantic %stimeframe%s cannot be inherited from another tracker to activate this setting.
+                                | <a href="{{ semantic_timeframe_admin_url }}">
+                                    | </a>
+                            {{/ dgettext }}
+                        </p>
+                    {{/ is_semantic_timeframe_inherited }}
+                    {{^ is_semantic_title_defined }}
+                        <p class="tlp-text-muted">
+                            {{# dgettext }}tuleap-tracker
+                                | The semantic %stitle%s is requested to activate this setting.
+                                | <a href="{{ semantic_title_admin_url }}">
+                                    | </a>
+                            {{/ dgettext }}
+                        </p>
+                    {{/ is_semantic_title_defined }}
+                {{/ is_semantic_timeframe_defined }}
+                {{^ is_semantic_timeframe_defined }}
+                    {{# is_semantic_title_defined }}
+                        <p class="tlp-text-muted">
+                            {{# dgettext }}tuleap-tracker
+                                | The semantic %stimeframe%s is requested to activate this setting.
+                                | <a href="{{ semantic_timeframe_admin_url }}">
+                                    | </a>
+                            {{/ dgettext }}
+                        </p>
+                    {{/ is_semantic_title_defined }}
+                    {{^ is_semantic_title_defined }}
+                        <p class="tlp-text-muted">
+                            {{# dgettext }}tuleap-tracker
+                                | The semantic %stimeframe%s and %stitle%s are requested to activate this setting.
+                                | <a href="{{ semantic_timeframe_admin_url }}">
+                                    | </a>
+                                | <a href="{{ semantic_title_admin_url }}">
+                                    | </a>
+                            {{/ dgettext }}
+                        </p>
+                    {{/ is_semantic_title_defined }}
+                {{/ is_semantic_timeframe_defined }}
+            </div>
+            <div class="tlp-pane-section">
+                <div class="tlp-form-element">
+                    <h2 class="tlp-pane-subtitle">{{ notification_customisation_title }}</h2>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label tlp-checkbox" for="enable-assigned-to-me">
+                            <input
+                                type="checkbox" id="enable-assigned-to-me" name="enable-assigned-to-me"
+                                {{# assign_to_me_enabled }}checked{{/ assign_to_me_enabled }}>
+                            {{ assign_to_me_description }}
+                        </label>
+                    </div>
 
-<h3>{{# dgettext }}tuleap-tracker | Calendar events{{/ dgettext }}</h3>
-
-<p>
-    {{# dgettext }}tuleap-tracker | When there is a timeframe associated with a tracker, email notifications for artifacts include the necessary information for adding the event to a calendar (Outlook, Google Calendar, etc.).{{/ dgettext }}
-</p>
-
-<div class="checkbox disabled">
-    <input type="hidden"
-           name="enable-calendar-events"
-           value="0"
-    >
-    <input
-        type="checkbox"
-        id="enable-calendar-events"
-        name="enable-calendar-events"
-        data-test="enable-calendar-events"
-        {{^ should_send_event_in_notification }}
-            {{^ are_calendar_events_allowed }}
-                disabled
-            {{/ are_calendar_events_allowed }}
-        {{/ should_send_event_in_notification }}
-        value="1"
-{{# should_send_event_in_notification }}checked{{/ should_send_event_in_notification }}
-    >
-    <label for="enable-calendar-events">
-        {{# dgettext }}tuleap-tracker | Include calendar event in the artifact email notification{{/ dgettext }}
-    </label>
-    {{# is_semantic_timeframe_defined }}
-        {{# is_semantic_timeframe_inherited }}
-            <p class="muted">
-                {{# dgettext }}tuleap-tracker
-                    | The semantic %stimeframe%s cannot be inherited from another tracker to activate this setting.
-                    | <a href="{{ semantic_timeframe_admin_url }}">
-                        | </a>
-                {{/ dgettext }}
-            </p>
-        {{/ is_semantic_timeframe_inherited }}
-        {{^ is_semantic_title_defined }}
-            <p class="muted">
-                {{# dgettext }}tuleap-tracker
-                    | The semantic %stitle%s is requested to activate this setting.
-                    | <a href="{{ semantic_title_admin_url }}">
-                        | </a>
-                {{/ dgettext }}
-            </p>
-        {{/ is_semantic_title_defined }}
-    {{/ is_semantic_timeframe_defined }}
-    {{^ is_semantic_timeframe_defined }}
-        {{# is_semantic_title_defined }}
-            <p class="muted">
-                {{# dgettext }}tuleap-tracker
-                    | The semantic %stimeframe%s is requested to activate this setting.
-                    | <a href="{{ semantic_timeframe_admin_url }}">
-                    | </a>
-                {{/ dgettext }}
-            </p>
-        {{/ is_semantic_title_defined }}
-        {{^ is_semantic_title_defined }}
-            <p class="muted">
-                {{# dgettext }}tuleap-tracker
-                    | The semantic %stimeframe%s and %stitle%s are requested to activate this setting.
-                    | <a href="{{ semantic_timeframe_admin_url }}">
-                    | </a>
-                    | <a href="{{ semantic_title_admin_url }}">
-                    | </a>
-                {{/ dgettext }}
-            </p>
-        {{/ is_semantic_title_defined }}
-    {{/ is_semantic_timeframe_defined }}
+                    <div class="tlp-form-element">
+                        <label class="tlp-label tlp-checkbox" for="enable-email-custom-from">
+                            <input type="checkbox" id="enable-email-custom-from" name="email-custom-enabled"
+                                   {{# custom_email_enabled }}checked{{/ custom_email_enabled }}>
+                            {{# dgettext }}
+                                tuleap-tracker | Enable custom sender fields for email notifications {{/ dgettext }}
+                        </label>
+                        <input type="text" name="email-custom-from" placeholder="Tuleap"
+                               class="tlp-input tlp-input-small tracker-admin-email-custom-from"
+                               size="30"
+                               value="{{ custom_email_content }}">
+                        <p class="tlp-text-info">
+                            {{# dgettext }}
+                                tuleap-tracker | You can use variables to customize the sender field. The available variables are %%realname and %%username.
+                                These will be replaced by the full name and username of the user who updated the artifact. {{/ dgettext }}
+                        </p>
+                    </div>
+                </div>
+                <div class="tlp-pane-section-submit">
+                    <input class="tlp-button-primary" type="submit" data-test="submit-changes"
+                           value="{{ submit_changes }}">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<h3>{{ notification_customisation_title }}</h3>
-
-<div class="checkbox">
-    <input type="checkbox" id="enable-assigned-to-me" name="enable-assigned-to-me" {{# assign_to_me_enabled }}checked{{/ assign_to_me_enabled }}>
-    <label for="enable-assigned-to-me">{{ assign_to_me_description }}</label>
-</div>
-
-<div class="checkbox">
-    <input type="checkbox" id="enable-email-custom-from" name="email-custom-enabled" {{# custom_email_enabled }}checked{{/ custom_email_enabled }}>
-    <label for="enable-email-custom-from">{{# dgettext }} tuleap-tracker | Enable custom sender fields for email notifications {{/ dgettext }}</label>
-    <input type="text" id="email-custom-from" name="email-custom-from" placeholder="Tuleap" value="{{ custom_email_content }}"></input>
-    <p>
-    {{# dgettext }} tuleap-tracker | You can use variables to customize the sender field. The available variables are %%realname and %%username.
-    These will be replaced by the full name and username of the user who updated the artifact. {{/ dgettext }}
-    </p>
-</div>
-
-<br>
-
-<input class="btn" type="submit" data-test="submit-changes" value="{{ submit_changes }}">

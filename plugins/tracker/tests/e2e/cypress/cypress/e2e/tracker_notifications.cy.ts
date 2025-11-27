@@ -19,16 +19,6 @@
 
 const PROJECT_NAME = "conditional-notifications";
 
-function addToNotifications(label: string): void {
-    // ignore rule for select2
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-container").first().click();
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-input").first().type(`${label}{enter}`);
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-result-label").last().click();
-}
-
 function createAndUpdateArtifact(title: string, edited_title: string): void {
     cy.get("[data-test=project-sidebar]")
         .shadow()
@@ -251,8 +241,10 @@ describe("Tracker notifications", () => {
 
         cy.log("Add user group and a random user to all_updates notifications");
         cy.get("[data-test=add-notification]").click();
-        addToNotifications("my_custom_group");
-        addToNotifications("ProjectMember");
+        cy.get("[data-test=add-notifications-add-ugroup]").select([
+            "my_custom_group",
+            "Project members",
+        ]);
         cy.get("[data-test=all-updates]").check();
         cy.get("[data-test=save-notification-button]").click();
 
@@ -301,8 +293,10 @@ describe("Tracker notifications", () => {
 
         cy.log("Add user group and a random user to all_updates notifications");
         cy.get("[data-test=add-notification]").click();
-        addToNotifications("my_custom_group");
-        addToNotifications("ProjectMember");
+        cy.get("[data-test=add-notifications-add-ugroup]").select([
+            "my_custom_group",
+            "Project members",
+        ]);
         cy.get("[data-test=save-notification-button]").click();
 
         cy.get("[data-test=project-sidebar]")
@@ -362,18 +356,9 @@ describe("Tracker notifications", () => {
         cy.log("Configure tracker notifications");
         goToNotificationAdministration();
 
-        cy.log("Add an invalid user can not be notified");
-        cy.get("[data-test=add-notification]").click();
-        addToNotifications("NonExistingTuleapUser");
-        cy.get("[data-test=save-notification-button]").click();
-
-        cy.get("[data-test=feedback]").contains(
-            "The entered value 'NonExistingTuleapUser' is invalid.",
-        );
-
         cy.log("Add an empty user group can not be notified");
         cy.get("[data-test=add-notification]").click();
-        addToNotifications("empty");
+        cy.get("[data-test=add-notifications-add-ugroup]").select("empty");
         cy.get("[data-test=save-notification-button]").click();
 
         cy.get("[data-test=feedback]").contains("The entered value 'empty' is invalid.");

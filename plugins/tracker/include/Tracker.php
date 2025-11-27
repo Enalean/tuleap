@@ -200,6 +200,7 @@ use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\CollectionOfUserGroupPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
@@ -230,6 +231,7 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tooltip\TrackerStats;
+use Tuleap\Tracker\Tracker\dao\TrackerGlobalNotificationDao;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
@@ -247,11 +249,16 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\Widget\WidgetFactory;
 use UGroupDao;
 use UGroupManager;
+use User_ForgeUserGroupFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
+use UserGroupDao;
 use UserManager;
 use UserPreferencesDao;
 use UserXMLExportedCollection;
@@ -1949,9 +1956,15 @@ class Tracker implements Tracker_Dispatchable_Interface
             new CollectionOfUserInvolvedInNotificationPresenterBuilder(
                 $user_to_notify_dao,
                 $unsubscribers_notification_dao,
-                $user_manager
+                $user_manager,
+                \UserHelper::instance(),
+                new UserAvatarUrlProvider(
+                    new AvatarHashDao(),
+                    new ComputeAvatarHash()
+                )
             ),
-            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
+            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),
+            new \Tuleap\Tracker\Notifications\CollectionOfUserGroupPresenterBuilder()
         );
         return new Tracker_NotificationsManager(
             $this,
@@ -1983,7 +1996,10 @@ class Tracker implements Tracker_Dispatchable_Interface
                     new MentionedUserInTextRetriever($user_manager),
                 ),
                 $user_notification_settings_dao
-            )
+            ),
+            new User_ForgeUserGroupFactory(new UserGroupDao()),
+            new CollectionOfUserGroupPresenterBuilder(),
+            new TrackerGlobalNotificationDao()
         );
     }
 
