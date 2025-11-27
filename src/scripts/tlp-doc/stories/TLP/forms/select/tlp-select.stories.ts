@@ -78,7 +78,7 @@ function getTemplate(args: SelectProps): TemplateResult {
     return html`
 <div class=${getFormClasses(args)}>
     <label class="tlp-label" for="option">${args.label} ${args.mandatory ? asterisk : ``}</label>
-    <select class=${getSelectClasses(args)} id="option" name="option" ?multiple=${args.multiple} ?disabled=${args.disabled}>
+    <select class=${getSelectClasses(args)} id="option" name="option" ?multiple=${args.multiple} ?disabled=${args.disabled} ?required="${args.mandatory}">
         <option value=""></option>
         <option value="option-1">Option 1</option>
         <option value="option-2">Option 2</option>
@@ -132,6 +132,7 @@ const meta: Meta<SelectProps> = {
         },
         mandatory: {
             name: "Mandatory",
+            description: "Add required attribute and icon",
             table: {
                 type: { summary: undefined },
             },

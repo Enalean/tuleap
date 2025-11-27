@@ -117,7 +117,7 @@ function getTemplate(args: ListPickerProps): TemplateResult {
     return html`
 <div class=${getFormClasses(args)}>
     <label class="tlp-label" for="${args.story}-select">ListPicker ${args.mandatory ? asterisk : ``}</label>
-    <select id="${args.story}-select" name="list-value" ?disabled=${args.disabled} ?multiple=${args.multiple}>${getOptions(args)}</select>${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
+    <select id="${args.story}-select" name="list-value" ?disabled=${args.disabled} ?multiple=${args.multiple} ?required="${args.mandatory}">${getOptions(args)}</select>${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
 </div>`;
 }
 
@@ -175,6 +175,7 @@ const meta: Meta<ListPickerProps> = {
         },
         mandatory: {
             name: "Mandatory",
+            description: "Add required attribute and icon",
             table: {
                 type: { summary: undefined },
             },
