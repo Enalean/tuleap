@@ -20,6 +20,9 @@ dependencies:
   '@tuleap/list-picker':
     specifier: workspace:*
     version: link:../../../../lib/frontend/list-picker
+  '@tuleap/tlp-modal':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-modal
   '@tuleap/vue-strict-inject':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue-strict-inject

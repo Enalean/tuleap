@@ -17,30 +17,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { selectOrThrow } from "@tuleap/dom";
-import { addFeedback } from "@tuleap/fp-feedback";
+import { createApp } from "vue";
+import { createGettext } from "vue3-gettext";
+import { createPinia } from "pinia";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
+import type { ColorName } from "@tuleap/core-constants";
+import {
+    ARTIFACT_ID,
+    PROJECT_ID,
+    TRACKER_COLOR,
+    TRACKER_ID,
+    TRACKER_NAME,
+} from "./injection-symbols";
+import MoveModal from "./components/MoveModal.vue";
 
 document.addEventListener("DOMContentLoaded", () => {
     const move_link = selectOrThrow(document, "#tracker-action-button-move");
     const vue_mount_point = selectOrThrow(document, "#move-artifact-modal");
-    const move_dropdown_icon = selectOrThrow(document, "#tracker-artifact-action-icon");
 
     move_link.addEventListener("click", async () => {
-        if (move_link.classList.contains("disabled")) {
-            return;
-        }
-
-        move_dropdown_icon.classList.add("fa-spin", "fa-spinner");
-        move_link.classList.add("disabled");
-        try {
-            const { init } = await import(/* webpackChunkName: "move-modal" */ "./modal");
-
-            await init(vue_mount_point);
-        } catch (_e) {
-            addFeedback("error", "Error while loading the Move Artifact modal.");
-        } finally {
-            move_dropdown_icon.classList.remove("fa-spin", "fa-spinner");
-            move_link.classList.remove("disabled");
-        }
+        createApp(MoveModal)
+            .provide(
+                TRACKER_ID,
+                Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-tracker-id"), 10),
+            )
+            .provide(TRACKER_NAME, getAttributeOrThrow(vue_mount_point, "data-tracker-name"))
+            .provide(
+                TRACKER_COLOR,
+                // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Assume that the backend does not send any string
+                getAttributeOrThrow(vue_mount_point, "data-tracker-color") as ColorName,
+            )
+            .provide(
+                ARTIFACT_ID,
+                Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-artifact-id"), 10),
+            )
+            .provide(
+                PROJECT_ID,
+                Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-project-id"), 10),
+            )
+            .use(
+                await initVueGettext(
+                    createGettext,
+                    (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+                ),
+            )
+            .use(createPinia())
+            .mount(vue_mount_point);
     });
 });

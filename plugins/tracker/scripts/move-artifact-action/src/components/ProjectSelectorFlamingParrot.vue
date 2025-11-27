@@ -18,10 +18,10 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <label class="tlp-label" for="move-artifact-project-selector">
+    <div class="move-artifact-project-selector-section">
+        <label for="move-artifact-project-selector">
             {{ $gettext("Destination project") }}
-            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+            <span class="highlight">*</span>
         </label>
 
         <select
@@ -31,7 +31,6 @@
             v-model="selected_project_id"
             v-on:change="selectors_store.loadTrackerList(selected_project_id)"
             ref="move_artifact_project_selector"
-            required
         >
             <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">
                 {{ project.label }}

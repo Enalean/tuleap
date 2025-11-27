@@ -20,12 +20,12 @@
 <template>
     <div
         v-if="!dry_run_store.is_move_possible || not_migrated_fields_count > 0"
-        class="tlp-alert-danger"
+        class="alert alert-error"
         data-test="dry-run-message-error"
     >
-        <p
+        <i class="fa-solid fa-circle-exclamation move-artifact-icon move-artifact-error-icon"></i>
+        <span
             v-if="!dry_run_store.is_move_possible"
-            class="tlp-alert-title"
             data-test="move-action-not-possible-error-message"
         >
             {{
@@ -33,16 +33,12 @@
                     "This artifact cannot be moved to the selected tracker because none of its fields matches with it.",
                 )
             }}
-        </p>
+        </span>
 
-        <p
-            v-if="dry_run_store.is_move_possible"
-            class="tlp-alert-title"
-            data-test="not-migrated-field-error-message"
-        >
+        <span v-if="dry_run_store.is_move_possible" data-test="not-migrated-field-error-message">
             {{ message }}
-        </p>
-        <fields-list-displayer
+        </span>
+        <fields-list-displayer-flaming-parrot
             v-if="dry_run_store.is_move_possible"
             v-bind:fields="not_migrated_fields"
             v-bind:type="TYPE_NOT_MIGRATED"
@@ -55,7 +51,7 @@ import { useGettext } from "vue3-gettext";
 import { useDryRunStore } from "../stores/dry-run";
 import type { ArtifactField } from "../api/types";
 import { TYPE_NOT_MIGRATED } from "../types";
-import FieldsListDisplayer from "./FieldsListDisplayer.vue";
+import FieldsListDisplayerFlamingParrot from "./FieldsListDisplayerFlamingParrot.vue";
 
 const dry_run_store = useDryRunStore();
 
@@ -76,8 +72,3 @@ const message = computed((): string => {
     );
 });
 </script>
-<style scoped lang="scss">
-.tlp-alert-danger {
-    margin: var(--tlp-medium-spacing) 0;
-}
-</style>

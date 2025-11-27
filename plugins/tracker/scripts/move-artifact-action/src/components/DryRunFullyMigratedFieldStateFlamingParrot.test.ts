@@ -22,28 +22,32 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import { useDryRunStore } from "../stores/dry-run";
-import DryRunPartiallyMigratedFieldState from "./DryRunPartiallyMigratedFieldState.vue";
-import FieldsListDisplayer from "./FieldsListDisplayer.vue";
+import DryRunFullyMigratedFieldStateFlamingParrot from "./DryRunFullyMigratedFieldStateFlamingParrot.vue";
+import FieldsListDisplayerFlamingParrot from "./FieldsListDisplayerFlamingParrot.vue";
 
 const getWrapper = (): VueWrapper =>
-    shallowMount(DryRunPartiallyMigratedFieldState, {
+    shallowMount(DryRunFullyMigratedFieldStateFlamingParrot, {
         global: {
             ...getGlobalTestOptions(),
         },
     });
 
-describe("DryRunPartiallyMigratedFieldState", () => {
-    it("should not display anything when there are no partially migrated fields.", () => {
-        const wrapper = getWrapper();
-
-        expect(wrapper.find("[data-test=dry-run-message-warning]").exists()).toBe(false);
-    });
-
-    it("should display the list of the partially migrated fields when there are some.", async () => {
+describe("DryRunFullyMigratedFieldState", () => {
+    it("should not display anything when there are no fully migrated fields.", async () => {
         const wrapper = getWrapper();
 
         await useDryRunStore().$patch({
-            fields_partially_migrated: [
+            fields_migrated: [],
+        });
+
+        expect(wrapper.find("[data-test=dry-run-message-info]").exists()).toBe(false);
+    });
+
+    it("should display the list of the fully migrated fields when there are some.", async () => {
+        const wrapper = getWrapper();
+
+        await useDryRunStore().$patch({
+            fields_migrated: [
                 {
                     field_id: 123,
                     label: "A field",
@@ -52,7 +56,7 @@ describe("DryRunPartiallyMigratedFieldState", () => {
             ],
         });
 
-        expect(wrapper.find("[data-test=dry-run-message-warning]").exists()).toBe(true);
-        expect(wrapper.findComponent(FieldsListDisplayer).exists()).toBe(true);
+        expect(wrapper.find("[data-test=dry-run-message-info]").exists()).toBe(true);
+        expect(wrapper.findComponent(FieldsListDisplayerFlamingParrot).exists()).toBe(true);
     });
 });

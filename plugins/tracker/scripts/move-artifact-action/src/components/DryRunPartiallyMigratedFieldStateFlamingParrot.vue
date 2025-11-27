@@ -20,11 +20,12 @@
 <template>
     <div
         v-if="partially_migrated_fields_count > 0"
-        class="tlp-alert-warning"
+        class="alert block"
         data-test="dry-run-message-warning"
     >
-        <p class="tlp-alert-title">{{ message }}</p>
-        <fields-list-displayer
+        <i class="fa-solid fa-circle-exclamation move-artifact-icon"></i>
+        <span>{{ message }}</span>
+        <fields-list-displayer-flaming-parrot
             v-bind:fields="partially_migrated_fields"
             v-bind:type="TYPE_PARTIALLY_MIGRATED"
         />
@@ -37,7 +38,7 @@ import { useGettext } from "vue3-gettext";
 import { useDryRunStore } from "../stores/dry-run";
 import type { ArtifactField } from "../api/types";
 import { TYPE_PARTIALLY_MIGRATED } from "../types";
-import FieldsListDisplayer from "./FieldsListDisplayer.vue";
+import FieldsListDisplayerFlamingParrot from "./FieldsListDisplayerFlamingParrot.vue";
 
 const { interpolate, $ngettext } = useGettext();
 

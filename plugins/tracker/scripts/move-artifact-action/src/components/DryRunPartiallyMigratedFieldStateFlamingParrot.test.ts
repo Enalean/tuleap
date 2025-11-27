@@ -22,11 +22,11 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import { useDryRunStore } from "../stores/dry-run";
-import DryRunPartiallyMigratedFieldState from "./DryRunPartiallyMigratedFieldState.vue";
-import FieldsListDisplayer from "./FieldsListDisplayer.vue";
+import FieldsListDisplayerFlamingParrot from "./FieldsListDisplayerFlamingParrot.vue";
+import DryRunPartiallyMigratedFieldStateFlamingParrot from "./DryRunPartiallyMigratedFieldStateFlamingParrot.vue";
 
 const getWrapper = (): VueWrapper =>
-    shallowMount(DryRunPartiallyMigratedFieldState, {
+    shallowMount(DryRunPartiallyMigratedFieldStateFlamingParrot, {
         global: {
             ...getGlobalTestOptions(),
         },
@@ -53,6 +53,6 @@ describe("DryRunPartiallyMigratedFieldState", () => {
         });
 
         expect(wrapper.find("[data-test=dry-run-message-warning]").exists()).toBe(true);
-        expect(wrapper.findComponent(FieldsListDisplayer).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldsListDisplayerFlamingParrot).exists()).toBe(true);
     });
 });

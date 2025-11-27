@@ -23,7 +23,6 @@ import { createPinia } from "pinia";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import type { ColorName } from "@tuleap/core-constants";
-import MoveModal from "./components/MoveModal.vue";
 import {
     ARTIFACT_ID,
     PROJECT_ID,
@@ -31,9 +30,10 @@ import {
     TRACKER_ID,
     TRACKER_NAME,
 } from "./injection-symbols";
+import MoveModalFlamingParrot from "./components/MoveModalFlamingParrot.vue";
 
 export async function init(vue_mount_point: HTMLElement): Promise<void> {
-    createApp(MoveModal)
+    createApp(MoveModalFlamingParrot)
         .provide(
             TRACKER_ID,
             Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-tracker-id"), 10),
