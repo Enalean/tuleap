@@ -24,7 +24,7 @@
             v-else-if="isColumnWrapper(element)"
             v-bind:columns="element.columns"
         />
-        <field-text v-else-if="isTextField(element)" v-bind:field="element.field" />
+        <field-text v-else-if="isTextField(element.field)" v-bind:field="element.field" />
         <field-string v-else-if="isStringField(element)" v-bind:field="element.field" />
         <field-select v-else-if="isSelectField(element)" v-bind:field="element.field" />
         <field-multi-select v-else-if="isMultiSelectField(element)" v-bind:field="element.field" />
@@ -50,6 +50,7 @@ import FieldText from "./FormElements/FieldText.vue";
 import FieldString from "./FormElements/FieldString.vue";
 import FieldSelect from "./FormElements/FieldSelect.vue";
 import FieldMultiSelect from "./FormElements/FieldMultiSelect.vue";
+import type { TextFieldStructure, StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -57,8 +58,8 @@ defineProps<{
 
 type Element = ElementWithChildren | ElementWithChildren["children"][0];
 
-function isTextField(element: Element): boolean {
-    return "field" in element && element.field.type === TEXT_FIELD;
+function isTextField(field: StructureFields): field is TextFieldStructure {
+    return field.type === TEXT_FIELD;
 }
 
 function isStringField(element: Element): boolean {

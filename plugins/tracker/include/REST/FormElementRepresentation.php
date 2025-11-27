@@ -110,6 +110,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         array $rest_binding_properties,
         array $permissions,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
+        public array $specific_properties,
     ) {
         $this->field_id = JsonCast::toInt($form_element->getId());
         $this->name     = $form_element->getName();
@@ -169,6 +170,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
             $form_element->getRESTBindingProperties(),
             $permissions,
             $permissions_for_groups,
+            $form_element->getFlattenPropertiesValues(),
         );
     }
 }

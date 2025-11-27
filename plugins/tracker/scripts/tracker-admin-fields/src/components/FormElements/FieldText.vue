@@ -20,17 +20,22 @@
 <template>
     <div class="tlp-form-element">
         <label-for-field v-bind:id="id" v-bind:field="field" />
-        <textarea class="tlp-textarea" v-bind:id="id"></textarea>
+        <textarea
+            class="tlp-textarea"
+            v-bind:id="id"
+            v-bind:rows="field.specific_properties.rows"
+            v-bind:value="field.specific_properties.default_value"
+        ></textarea>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+import type { TextFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import LabelForField from "./LabelForField.vue";
 
 const props = defineProps<{
-    field: StructureFields;
+    field: TextFieldStructure;
 }>();
 
 const id = computed(() => "textarea-" + props.field.field_id);

@@ -71,8 +71,12 @@ interface StringFieldStructure extends BaseFieldStructure {
     readonly type: StringFieldIdentifier;
 }
 
-interface TextFieldStructure extends BaseFieldStructure {
+export interface TextFieldStructure extends BaseFieldStructure {
     readonly type: TextFieldIdentifier;
+    readonly specific_properties: {
+        readonly rows: number;
+        readonly default_value: string;
+    };
 }
 
 export interface CommonDateFieldStructure extends BaseFieldStructure {
