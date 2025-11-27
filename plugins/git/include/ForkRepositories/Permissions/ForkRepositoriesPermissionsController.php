@@ -71,10 +71,10 @@ final readonly class ForkRepositoriesPermissionsController implements Dispatchab
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
+        $user = $request->getCurrentUser();
 
-        $this->inputs_builder->fromRequest($request)->match(
-            function ($inputs) use ($layout, $request, $project) {
-                $user                = $request->getCurrentUser();
+        $this->inputs_builder->fromRequest($request, $user)->match(
+            function ($inputs) use ($layout, $request, $project, $user) {
                 $destination_project = $inputs->destination_project_id !== null
                     ? $this->retrieve_projects_by_id->getProjectById((int) $inputs->destination_project_id)
                     : $project;

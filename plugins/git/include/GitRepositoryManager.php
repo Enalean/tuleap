@@ -27,13 +27,17 @@ use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 /**
  * This class is responsible of management of several repositories.
  *
  * It works in close cooperation with GitRepositoryFactory (to instanciate repo)
  */
-class GitRepositoryManager
+class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var HistoryValueFormatter
@@ -322,17 +326,15 @@ class GitRepositoryManager
      * @param String        $scope           Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
      * @param array         $forkPermissions Permissions to be applied for the new repository
      *
-     * @return bool
-     *
-     * @throws Exception
+     * @return Ok<list<Fault>>|Err<Fault>
      */
-    public function forkRepositories(array $repositories, Project $to_project, PFUser $user, $namespace, $scope, array $forkPermissions)
+    public function forkRepositories(array $repositories, Project $to_project, PFUser $user, $namespace, $scope, array $forkPermissions): Ok|Err
     {
         $repos = array_filter($repositories);
         if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
             return $this->forkAllRepositories($repos, $user, $namespace, $scope, $to_project, $forkPermissions);
         }
-        throw new Exception(dgettext('tuleap-git', 'No repository has been forked.'));
+        return Result::Err(Fault::fromMessage(dgettext('tuleap-git', 'No repository has been forked.')));
     }
 
     private function isNamespaceValid(GitRepository $repository, $namespace)
@@ -349,9 +351,12 @@ class GitRepositoryManager
         return true;
     }
 
-    private function forkAllRepositories(array $repos, PFUser $user, $namespace, $scope, Project $project, array $forkPermissions)
+    /**
+     * @return Ok<list<Fault>>
+     */
+    private function forkAllRepositories(array $repos, PFUser $user, $namespace, $scope, Project $project, array $forkPermissions): Ok
     {
-        $forked = false;
+        $warnings = [];
         foreach ($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {
@@ -360,16 +365,19 @@ class GitRepositoryManager
                     } else {
                         $this->fork($repo, $project, $user, $namespace, $scope, $forkPermissions);
                     }
-
-                    $forked = true;
                 }
             } catch (GitRepositoryAlreadyExistsException $e) {
-                $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-git', 'Repository %1$s already exists on target, skipped.'), $repo->getName()));
+                $warnings[] = Fault::fromMessage(
+                    sprintf(dgettext('tuleap-git', 'Repository %1$s already exists on target, skipped.'), $repo->getName())
+                );
             } catch (Exception $e) {
-                $GLOBALS['Response']->addFeedback('warning', 'Got an unexpected error while forking ' . $repo->getName() . ': ' . $e->getMessage());
+                $warnings[] =
+                    Fault::fromMessage(
+                        sprintf(dgettext('tuleap-git', 'Got an unexpected error while forking %s: %s'), $repo->getName(), $e->getMessage())
+                    );
             }
         }
-        return $forked;
+        return Result::ok($warnings);
     }
 
     /**

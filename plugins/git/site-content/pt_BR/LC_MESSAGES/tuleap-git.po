@@ -509,6 +509,10 @@ msgstr ""
 msgid "Global permissions"
 msgstr ""
 
+#, php-format
+msgid "Got an unexpected error while forking %s: %s"
+msgstr ""
+
 msgid "Granted groups"
 msgstr ""
 
@@ -647,9 +651,6 @@ msgstr "Não"
 msgid "No CI Token"
 msgstr ""
 
-msgid "No access selected for the fork"
-msgstr ""
-
 msgid "No data retrieved from the request"
 msgstr ""
 
@@ -674,16 +675,10 @@ msgstr ""
 msgid "No project selected"
 msgstr ""
 
-msgid "No project selected for the fork"
-msgstr ""
-
 msgid "No pushes to display"
 msgstr ""
 
 msgid "No repository has been forked."
-msgstr ""
-
-msgid "No repository selected for the fork"
 msgstr ""
 
 msgid "No restorable git repositories found"

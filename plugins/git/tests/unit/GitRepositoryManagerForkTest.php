@@ -41,6 +41,10 @@ use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\GlobalResponseMock;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -226,7 +230,11 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->backend->expects($this->exactly(count($repo_ids)))->method('userCanRead')->with($this->user)->willReturn(true);
         $this->backend->method('isNameValid')->with($namespace)->willReturn(true);
         $this->backend->method('fork')->willReturnOnConsecutiveCalls(667, 668, 669);
-        self::assertTrue($this->manager->forkRepositories($repos, $this->project, $this->user, $namespace, null, $this->forkPermissions));
+
+        $result = $this->manager->forkRepositories($repos, $this->project, $this->user, $namespace, null, $this->forkPermissions);
+
+        self::assertTrue(Result::isOk($result));
+        self::assertCount(0, $result->value);
     }
 
     public function testCloneManyCrossProjectRepositories(): void
@@ -253,10 +261,10 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
 
-    public function testWhenNoRepositorySelectedItAddsWarning(): void
+    public function testWhenNoRepositorySelectedItReturnsAnError(): void
     {
-        $this->expectException(Exception::class);
-        $this->manager->forkRepositories([], $this->project, $this->user, '', null, $this->forkPermissions);
+        $result = $this->manager->forkRepositories([], $this->project, $this->user, '', null, $this->forkPermissions);
+        self::assertTrue(Result::isErr($result));
     }
 
     public function testClonesOneRepository(): void
@@ -354,15 +362,6 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->project_history_dao->method('groupAddHistory');
         $this->git_system_event_manager->method('queueRepositoryFork');
 
-        $GLOBALS['Response']->expects($this->atLeastOnce())->method('addFeedback')->willReturnCallback(
-            function (string $level, string $message): void {
-                match (true) {
-                    $level === 'warning' &&
-                    ($message === 'Repository my-repo-123 already exists on target, skipped.' || str_contains($message, 'my-repo-456')) => true,
-                };
-            }
-        );
-
         $repo1 = $this->givenARepository(123);
         $repo2 = $this->givenARepository(456);
         $this->backend->method('userCanRead')->willReturn(true);
@@ -376,7 +375,13 @@ final class GitRepositoryManagerForkTest extends TestCase
             return 667;
         });
 
-        $this->forkRepositories([$repo1, $repo2]);
+        $result = $this->forkRepositories([$repo1, $repo2]);
+        self::assertTrue(Result::isOk($result));
+
+        $warnings = $result->value;
+
+        self::assertCount(1, $warnings);
+        self::assertStringContainsString('my-repo-123 already exists', (string) $warnings[0]);
     }
 
     public function testForkGiveInformationAboutUnexpectedErrors(): void
@@ -390,11 +395,15 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->backend->method('isNameValid')->willReturn(true);
         $repo2->setName('megaRepoGit');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('warning', 'Got an unexpected error while forking ' . $repo2->getName() . ': ' . $errorMessage);
-
         $this->backend->expects($this->once())->method('fork')->willThrowException(new Exception($errorMessage));
 
-        $this->forkRepositories([$repo2]);
+        $result = $this->forkRepositories([$repo2]);
+        self::assertTrue(Result::isOk($result));
+
+        $warnings = $result->value;
+
+        self::assertCount(1, $warnings);
+        self::assertStringContainsString('unexpected error while forking ' . $repo2->getName(), (string) $warnings[0]);
     }
 
     public function testForkAssertNamespaceIsValid(): void
@@ -418,10 +427,11 @@ final class GitRepositoryManagerForkTest extends TestCase
 
     /**
      * @param list<GitRepository> $repositories
+     * @return Ok<list<Fault>>|Err<Fault>
      * @throws Exception
      */
-    private function forkRepositories(array $repositories, ?string $namespace = null): void
+    private function forkRepositories(array $repositories, ?string $namespace = null): Ok|Err
     {
-        $this->manager->forkRepositories($repositories, $this->project, $this->user, $namespace, null, $this->forkPermissions);
+        return $this->manager->forkRepositories($repositories, $this->project, $this->user, $namespace, null, $this->forkPermissions);
     }
 }

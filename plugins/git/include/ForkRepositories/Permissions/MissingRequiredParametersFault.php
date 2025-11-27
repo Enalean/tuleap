@@ -29,7 +29,7 @@ use Tuleap\NeverThrow\Fault;
  */
 final readonly class MissingRequiredParametersFault extends Fault
 {
-    public static function build(): self
+    public static function build(): Fault
     {
         return new self(
             dgettext('tuleap-git', 'Empty required parameter(s)')

@@ -20,24 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\ForkRepositories;
+namespace Tuleap\Git\ForkRepositories\DoFork;
 
-use Project;
-
-final readonly class ForkRepositoriesUrlsBuilder
+/**
+ * @psalm-immutable
+ */
+final readonly class DoPersonalForkFormInputs
 {
-    public static function buildGETForksAndDestinationSelectionURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/';
-    }
-
-    public static function buildPOSTForksPermissionsURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/permissions/';
-    }
-
-    public static function buildPOSTDoForksRepositoriesURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/fork/';
+    /**
+     * @param array<string, list<string>> $permissions
+     */
+    public function __construct(
+        public string $fork_path,
+        public string $repositories_ids,
+        public array $permissions,
+    ) {
     }
 }

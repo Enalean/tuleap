@@ -20,24 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\ForkRepositories;
+namespace Tuleap\Git\ForkRepositories\DoFork;
 
-use Project;
+use Tuleap\NeverThrow\Fault;
 
-final readonly class ForkRepositoriesUrlsBuilder
+/**
+ * @psalm-immutable
+ */
+final readonly class UserIsNotProjectMemberFault extends Fault
 {
-    public static function buildGETForksAndDestinationSelectionURL(Project $project): string
+    public static function build(): Fault
     {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/';
-    }
-
-    public static function buildPOSTForksPermissionsURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/permissions/';
-    }
-
-    public static function buildPOSTDoForksRepositoriesURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/fork/';
+        return new self(dgettext('tuleap-git', 'You are not allowed to access this page'));
     }
 }

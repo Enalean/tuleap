@@ -18,26 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Git\ForkRepositories\DoFork;
 
-namespace Tuleap\Git\ForkRepositories;
-
+use PFUser;
 use Project;
+use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-final readonly class ForkRepositoriesUrlsBuilder
+interface ProcessPersonalRepositoryFork
 {
-    public static function buildGETForksAndDestinationSelectionURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/';
-    }
-
-    public static function buildPOSTForksPermissionsURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/permissions/';
-    }
-
-    public static function buildPOSTDoForksRepositoriesURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/fork/';
-    }
+    /**
+     * @return Ok<list<Fault>>|Err<Fault>
+     */
+    public function processPersonalFork(PFUser $user, Project $project, ServerRequestInterface $request): Ok|Err;
 }

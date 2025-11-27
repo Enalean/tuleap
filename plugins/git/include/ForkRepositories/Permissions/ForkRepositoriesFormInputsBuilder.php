@@ -25,7 +25,11 @@ namespace Tuleap\Git\ForkRepositories\Permissions;
 use CuyZ\Valinor\Mapper\MappingError;
 use CuyZ\Valinor\Mapper\TreeMapper;
 use Tuleap\HTTPRequest;
+use MalformedPathException;
+use Tuleap\Git\ForkRepositories\ForkPathContainsDoubleDotsFault;
+use Tuleap\Git\PathJoinUtil;
 use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
@@ -36,9 +40,9 @@ final readonly class ForkRepositoriesFormInputsBuilder
     }
 
     /**
-     * @return Ok<ForkRepositoriesFormInputs>|Err<MissingRequiredParametersFault>
+     * @return Ok<ForkRepositoriesFormInputs>|Err<Fault>
      */
-    public function fromRequest(HTTPRequest $request): Ok|Err
+    public function fromRequest(HTTPRequest $request, \PFUser $user): Ok|Err
     {
         try {
             $inputs = $this->object_mapper->map(
@@ -53,6 +57,12 @@ final readonly class ForkRepositoriesFormInputsBuilder
 
             if (empty($inputs->repositories_ids)) {
                 return Result::Err(MissingRequiredParametersFault::build());
+            }
+
+            try {
+                PathJoinUtil::userRepoPath($user->getUserName(), $inputs->path);
+            } catch (MalformedPathException $e) {
+                return Result::err(ForkPathContainsDoubleDotsFault::build());
             }
 
             return Result::Ok($inputs);

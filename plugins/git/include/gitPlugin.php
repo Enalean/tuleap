@@ -21,6 +21,7 @@
  */
 
 use Cocur\Slugify\Slugify;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Lcobucci\Clock\SystemClock;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
@@ -59,6 +60,10 @@ use Tuleap\Git\DefaultSettings\DefaultSettingsRouter;
 use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
+use Tuleap\Git\ForkRepositories\DoFork\DoForkRepositoriesController;
+use Tuleap\Git\ForkRepositories\DoFork\DoForkRepositoriesCSRFChecker;
+use Tuleap\Git\ForkRepositories\DoFork\DoForkRepositoriesFormInputsBuilder;
+use Tuleap\Git\ForkRepositories\DoFork\ForkCreator;
 use Tuleap\Git\ForkRepositories\ForkRepositoriesController;
 use Tuleap\Git\ForkRepositories\ForkRepositoriesPresenterBuilder;
 use Tuleap\Git\ForkRepositories\Permissions\ForkRepositoriesFormInputsBuilder;
@@ -179,8 +184,11 @@ use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\GitBundle;
 use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
@@ -209,6 +217,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\PluginWithService;
@@ -222,6 +231,7 @@ use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ProjectRetriever;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
@@ -2640,6 +2650,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $event->getRouteCollector()->addGroup('/projects', function (FastRoute\RouteCollector $r) {
             $r->get('/{project_name}/fork-repositories[/]', $this->getRouteHandler('routeForkRepositories'));
             $r->post('/{project_name}/fork-repositories/permissions[/]', $this->getRouteHandler('routeForkRepositoriesPermissions'));
+            $r->post('/{project_name}/fork-repositories/fork[/]', $this->getRouteHandler('routeDoForkRepositories'));
         });
     }
 
@@ -2701,6 +2712,35 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     $this->getRegexpFineGrainedRetriever(),
                 ),
             ),
+        );
+    }
+
+    public function routeDoForkRepositories(): DoForkRepositoriesController
+    {
+        $project_manager = ProjectManager::instance();
+
+        $fork_creator = new ForkCreator(
+            $this->getRepositoryManager(),
+            $this->getGitPermissionsManager(),
+            new ProjectHistoryDao(),
+            $project_manager,
+            $this->getRepositoryFactory(),
+            new DoForkRepositoriesFormInputsBuilder(
+                \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->mapper(),
+            ),
+            new DoForkRepositoriesCSRFChecker(),
+        );
+
+        return new DoForkRepositoriesController(
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao()),
+            ),
+            UserManager::instance(),
+            $fork_creator,
+            $fork_creator,
+            new SapiEmitter(),
+            new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
         );
     }
 
