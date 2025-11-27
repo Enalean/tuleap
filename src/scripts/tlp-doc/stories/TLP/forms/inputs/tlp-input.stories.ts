@@ -75,11 +75,11 @@ function getInput(args: InputProps): TemplateResult {
     if (args.size_attribute) {
         // prettier-ignore
         return html`
-    <input type="text" class=${getInputClasses(args)} id="input-example" name="username" size=${args.size_attribute} placeholder=${args.placeholder} ?disabled=${args.disabled}>`;
+    <input type="text" class=${getInputClasses(args)} id="input-example" name="username" size=${args.size_attribute} placeholder=${args.placeholder} ?disabled=${args.disabled} ?required="${args.mandatory}">`;
     }
     // prettier-ignore
     return html`
-    <input type="text" class=${getInputClasses(args)} id="input-example" name="username" placeholder=${args.placeholder} ?disabled=${args.disabled}>`;
+    <input type="text" class=${getInputClasses(args)} id="input-example" name="username" placeholder=${args.placeholder} ?disabled=${args.disabled} ?required="${args.mandatory}">`;
 }
 
 function getTemplate(args: InputProps): TemplateResult {
@@ -141,6 +141,7 @@ const meta: Meta<InputProps> = {
         },
         mandatory: {
             name: "Mandatory",
+            description: "Add required attribute and icon",
             table: {
                 type: { summary: undefined },
             },

@@ -76,11 +76,11 @@ function getTextarea(args: TextareaProps): TemplateResult {
     if (args.with_given_dimensions) {
         // prettier-ignore
         return html`
-    <textarea class=${getTextareaClasses(args)} id="textarea-example" name="commit-message" cols=${args.cols} rows=${args.rows} placeholder=${args.placeholder} ?disabled=${args.disabled}></textarea>`;
+    <textarea class=${getTextareaClasses(args)} id="textarea-example" name="commit-message" cols=${args.cols} rows=${args.rows} placeholder=${args.placeholder} ?disabled=${args.disabled} ?required="${args.mandatory}"></textarea>`;
     }
     // prettier-ignore
     return html`
-    <textarea class=${getTextareaClasses(args)} id="textarea-example" name="commit-message" placeholder=${args.placeholder} ?disabled=${args.disabled}></textarea>`;
+    <textarea class=${getTextareaClasses(args)} id="textarea-example" name="commit-message" placeholder=${args.placeholder} ?disabled=${args.disabled} ?required="${args.mandatory}"></textarea>`;
 }
 
 function getTemplate(args: TextareaProps): TemplateResult {
@@ -144,6 +144,7 @@ const meta: Meta<TextareaProps> = {
         },
         mandatory: {
             name: "Mandatory",
+            description: "Add required attribute and icon",
             table: {
                 type: { summary: undefined },
             },
