@@ -96,6 +96,8 @@ In addition to tests, there are automated inspection of the code for correctness
   * ESLint
   * Taint analysis
   * Dependencies vulnerabilities scanner
+  * Secrets Scanning
+  * Licenses compatibility verification
 * Architecture analysis
   * Deptrac
 * Build & run
@@ -156,6 +158,11 @@ dependencies (php, javascript, rust, go) that are affected by a published vulner
 
 Repository is scanned with [trufflehog](https://trufflesecurity.com/trufflehog) to detect committed secrets early.
 
+### Licenses compatibility verification
+
+The licenses used by the software dependencies of Tuleap are verified against allowlists to ensure no license
+incompatibility is introduced.
+
 ## What is run and when (aka Continuous Integration rules)
 
 All automations are centralized on https://ci.tuleap.org/jenkins/. The jobs that matters regarding previous content:
@@ -179,3 +186,4 @@ All automations are centralized on https://ci.tuleap.org/jenkins/. The jobs that
 | Taint analysis (SAST)                      |  |  |  | x |  |  |
 | Dependencies vulnerabilities scanner (SCA) |  |  |  |  | x |  |
 | Secrets scanning                           | x | x |  |  |  |  |
+| Licenses compatibility verification        | x | x |  |  |  |  |

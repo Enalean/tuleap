@@ -63,12 +63,16 @@ preload:
 generate-sbom: ## Generate Software-Bill-of-Materials
 	COMPOSER_HOME="$(CURDIR)/src/" COMPOSER_CACHE_DIR=/dev/null COMPOSER_HTACCESS_PROTECT=0 COMPOSER_DISABLE_NETWORK=1 \
 		$(MAKE) composer COMPOSER_INSTALL='composer --quiet CycloneDX:make-sbom --output-format=json --output-reproducible --output-file=bom.json --spec-version=1.6'
-	cdxgen -t pnpm --spec-version=1.6 --profile=license-compliance -o bom.json --no-recurse .
-	pnpm -r --no-bail exec -- cdxgen -t pnpm --spec-version=1.6 --profile=license-compliance -o bom.json --no-recurse .
+	cdxgen --noBanner -t pnpm --spec-version=1.6 --profile=license-compliance -o bom.json --no-recurse .
+	pnpm -r --no-bail exec -- cdxgen --noBanner -t pnpm --spec-version=1.6 --profile=license-compliance -o bom.json --no-recurse .
 	git ls-files --cached --modified --other --exclude-standard -z -- '*/go.mod' | \
 		xargs -0 -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && cyclonedx-gomod mod -licenses -type application -json -output-version 1.6 -test -output bom.json'
 	git ls-files --cached --modified --other --exclude-standard -z -- '*/Cargo.toml' | \
-		xargs -0 -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && cdxgen -t cargo --spec-version=1.6 --profile=license-compliance -o bom.json --no-install-deps --no-recurse .'
+		xargs -0 -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && cdxgen --noBanner -t cargo --spec-version=1.6 --profile=license-compliance -o bom.json --no-install-deps --no-recurse .'
+
+.PHONY: verify-licenses
+verify-licenses: ## Verify that only allowed licenses are used
+	@find . -name "bom.json"  -print0 | xargs -0 -n1 ./tools/utils/licenses-verification/policy.php
 
 ## RNG generation
 

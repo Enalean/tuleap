@@ -140,6 +140,9 @@ pipeline {
                         }
                     }
                 }
+                stage ('Verify licenses') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.verifyLicenses() }) } }
+                }
             }
             post {
                 always {

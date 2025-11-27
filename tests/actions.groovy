@@ -85,6 +85,12 @@ def runTreefmt(String filesToAnalyze = '.') {
     }
 }
 
+def verifyLicenses() {
+    dir ('sources') {
+        runInsideNixShell('make generate-sbom && make verify-licenses', 'dev')
+    }
+}
+
 def runPsalm(String configPath, String root='.') {
     withEnv(['XDG_CACHE_HOME=/tmp/psalm_cache/']) {
         dir ('sources') {
