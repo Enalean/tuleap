@@ -42,6 +42,11 @@ describe("mapContentStructureToFields", () => {
         label: "Summary",
         type: STRING_FIELD,
         required: false,
+        specific_properties: {
+            size: 42,
+            maxchars: 0,
+            default_value: "",
+        },
     };
 
     const fieldset: StructureFields = {

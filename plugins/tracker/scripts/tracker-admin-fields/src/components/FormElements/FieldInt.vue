@@ -23,12 +23,12 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { StringFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import type { IntFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import FieldAlphaNumeric from "./FieldAlphaNumeric.vue";
 
 const props = defineProps<{
-    field: StringFieldStructure;
+    field: IntFieldStructure;
 }>();
 
-const id = computed(() => "string-" + props.field.field_id);
+const id = computed(() => "int-" + props.field.field_id);
 </script>
