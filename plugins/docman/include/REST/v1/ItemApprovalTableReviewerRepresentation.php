@@ -76,7 +76,7 @@ final readonly class ItemApprovalTableReviewerRepresentation
             MinimalUserRepresentation::build($user, $provide_user_avatar_url),
             JsonCast::toInt($reviewer->getRank()),
             JsonCast::toDate($reviewer->getReviewDate()),
-            $status_mapper->getStatusStringFromStatusId((int) $reviewer->getState()),
+            $status_mapper->getStatusStringNotTranslatedFromStatusId((int) $reviewer->getState()),
             $reviewer->getComment() ?? '',
             $version_id,
             $version_name,

@@ -47,7 +47,7 @@
                         <no-approval-table
                             v-else-if="!item.has_approval_table"
                             v-bind:item="item"
-                            v-on:table-created="onTableCreated()"
+                            v-on:table-created="refreshData()"
                         />
 
                         <current-approval-table
@@ -55,6 +55,7 @@
                             v-bind:item="item"
                             v-bind:version="version"
                             v-on:error="(message) => (error_message = message)"
+                            v-on:refresh-data="refreshData()"
                         />
                     </section>
                 </div>
@@ -108,7 +109,7 @@ onBeforeMount(async () => {
     item.value = await loadDocumentWithAscendentHierarchy(props.item_id);
 });
 
-async function onTableCreated(): Promise<void> {
+async function refreshData(): Promise<void> {
     item.value = await loadDocumentWithAscendentHierarchy(props.item_id);
 }
 </script>
