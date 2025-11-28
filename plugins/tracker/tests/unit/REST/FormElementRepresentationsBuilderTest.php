@@ -53,6 +53,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
             'bind_type' => null,
             'bind_list' => [],
         ]);
+        $field1->method('getFlattenPropertiesValues')->willReturn([]);
 
         $field2 = $this->createMock(StringField::class);
         $field2->method('getId')->willReturn(2);
@@ -67,6 +68,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
             'bind_type' => null,
             'bind_list' => [],
         ]);
+        $field2->method('getFlattenPropertiesValues')->willReturn([]);
 
         $field3 = $this->createMock(StringField::class);
         $field3->method('getId')->willReturn(3);
@@ -81,6 +83,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
             'bind_type' => null,
             'bind_list' => [],
         ]);
+        $field3->method('getFlattenPropertiesValues')->willReturn([]);
 
         $form_element_factory           = $this->createMock(Tracker_FormElementFactory::class);
         $permission_exporter            = $this->createMock(PermissionsExporter::class);

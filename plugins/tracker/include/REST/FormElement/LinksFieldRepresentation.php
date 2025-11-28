@@ -50,6 +50,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
         array $permissions,
         array $allowed_types,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
+        array $specific_properties,
     ) {
         parent::__construct(
             $form_element,
@@ -59,7 +60,8 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
             $values,
             $rest_binding_properties,
             $permissions,
-            $permissions_for_groups
+            $permissions_for_groups,
+            $specific_properties,
         );
 
         $this->allowed_types = $allowed_types;
@@ -85,6 +87,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
             $permissions,
             self::buildTypesRepresentations($allowed_link_types_presenters),
             $permissions_for_groups,
+            $form_element->getFlattenPropertiesValues(),
         );
     }
 
