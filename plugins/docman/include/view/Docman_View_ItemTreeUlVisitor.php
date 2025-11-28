@@ -27,7 +27,7 @@
 use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
+class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $html;
     public $js;
@@ -74,12 +74,12 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         return $this->js;
     }
 
-    public function _canDisplayItem($item)
+    public function _canDisplayItem($item) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return true;
     }
 
-    public function _canDisplaySubItems($item)
+    public function _canDisplaySubItems($item) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return true;
     }
@@ -168,7 +168,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
 
 
     //{{{
-    public function _displayItem(&$item, $params)
+    public function _displayItem(&$item, $params)  //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $li_displayed = false;
         if ($this->stripFirstNode && ! $this->firstNodeStripped) {
@@ -234,11 +234,6 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
                 }
                 $this->html .=  '</span>';
 
-                if ($dpm->getLockFactory()->itemIsLocked($item)) {
-                    $lockIconSrc = $this->params['docman_icons']->getIcon('lock_delete.png');
-                    $lockIcon    = '<i id="docman_item_icon_locked_' . $purifier->purify($item->getId()) . '"  title="' . dgettext('tuleap-docman', 'Locked document') . '" class="fa fa-lock"></i>';
-                    $this->html .=  $lockIcon;
-                }
                 $this->html .= $this->view->getItemMenu($item, $this->params);
                 $this->js   .= $this->view->getActionForItem($item);
                 $this->html .= '</div>';

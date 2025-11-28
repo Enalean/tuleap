@@ -689,7 +689,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             "&id=" +
             item_id;
         Event.observe($("docman_item_show_menu_" + item_id), "click", this.show.bind(this));
-        this._lockIcon();
     },
     _createLi: function (element) {
         var li = Builder.node("li");
@@ -830,66 +829,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getLock: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=action_lock_add",
-            class: "docman_item_option_lock_add",
-            title: this.docman.options.language.action_lock_add,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_lock_add);
-        a.appendChild(title_txt);
-        Event.observe(
-            a,
-            "click",
-            function (evt) {
-                new Ajax.Request(this.defaultUrl + "&action=action_lock_add&ajax=true", {
-                    onComplete: function () {
-                        this.docman.actionsForItem[this.item_id].isLocked = true;
-                        this.docman.actionsForItem[this.item_id].canUnlock = true;
-                        this.docman.actionsForItem[this.item_id].canLockInfo = true;
-
-                        // Disable other "edit actions"
-                        this.docman.actionsForItem[this.item_id].canLock = false;
-
-                        // Hide menu
-                        this.hide();
-                    }.bindAsEventListener(this),
-                });
-                Event.stop(evt);
-                return false;
-            }.bindAsEventListener(this),
-        );
-        return this._createLi(a);
-    },
-    _getUnlock: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=action_lock_del",
-            class: "docman_item_option_lock_del",
-            title: this.docman.options.language.action_lock_del,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_lock_del);
-        a.appendChild(title_txt);
-        Event.observe(
-            a,
-            "click",
-            function (evt) {
-                new Ajax.Request(this.defaultUrl + "&action=action_lock_del&ajax=true", {
-                    onComplete: function () {
-                        this.docman.actionsForItem[this.item_id].isLocked = false;
-                        this.docman.actionsForItem[this.item_id].canLock = true;
-                        this.docman.actionsForItem[this.item_id].canLockInfo = false;
-                        this.docman.actionsForItem[this.item_id].canUnlock = false;
-
-                        // Hide menu
-                        this.hide();
-                    }.bindAsEventListener(this),
-                });
-                Event.stop(evt);
-                return false;
-            }.bindAsEventListener(this),
-        );
-        return this._createLi(a);
-    },
 
     _getApproval: function () {
         var a = Builder.node("a", {
@@ -906,25 +845,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         sepLi.appendChild(Builder.node("hr", { class: "docman_item_option_separator" }));
         return sepLi;
     },
-    _lockIcon: function () {
-        if (this.docman.actionsForItem[this.item_id].isLocked) {
-            if (!$("docman_item_icon_locked_" + this.item_id)) {
-                var lock_icon = new Element("i", {
-                    id: "docman_item_icon_locked_" + this.item_id,
-                    title: this.docman.options.language.event_lock_add,
-                }).addClassName("fa fa-lock");
-                $("docman_item_title_link_" + this.item_id)
-                    .up()
-                    .insert({ after: lock_icon });
-            }
-        } else {
-            if ($("docman_item_icon_locked_" + this.item_id)) {
-                $("docman_item_icon_locked_" + this.item_id).remove();
-            }
-        }
-    },
     show: function (evt) {
-        this._lockIcon();
         var menu = "docman_item_menu_" + this.item_id;
         // In the previous version of the menu, once a menu was built for an
         // item, it was cached and re-used as is if user close and then re-open
@@ -996,16 +917,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             ul.appendChild(this._getUpdate());
             writeAction = true;
         }
-        // Lock
-        if (this.docman.actionsForItem[this.item_id].canLock) {
-            ul.appendChild(this._getLock());
-            writeAction = true;
-        }
-        // Unlock
-        if (this.docman.actionsForItem[this.item_id].canUnlock) {
-            ul.appendChild(this._getUnlock());
-            writeAction = true;
-        }
 
         if (writeAction == true) {
             ul.appendChild(this._getSeparator());
@@ -1056,7 +967,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         return false;
     },
     hide: function (evt) {
-        this._lockIcon();
         if (com.xerox.codendi.openedMenu) {
             $(com.xerox.codendi.openedMenu).remove();
             com.xerox.codendi.openedMenu = null;
