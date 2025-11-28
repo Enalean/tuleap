@@ -1493,16 +1493,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                 $this->view                              = 'RedirectAfterCrud';
                 break;
 
-            case 'action_lock_add':
-                $this->_actionParams['item'] = $item;
-                $this->action                = 'action_lock_add';
-                break;
-
-            case 'action_lock_del':
-                $this->_actionParams['item'] = $item;
-                $this->action                = 'action_lock_del';
-                break;
-
             case 'ajax_reference_tooltip':
                 $this->view = 'AjaxReferenceTooltip';
                 break;

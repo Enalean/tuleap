@@ -1273,9 +1273,6 @@ msgstr "Chemin :"
 msgid "Locations:"
 msgstr "Chemins:"
 
-msgid "Lock for edition"
-msgstr "Réserver l'édition"
-
 msgid "Locked Documents"
 msgstr "Documents Réservés"
 
@@ -1654,9 +1651,6 @@ msgstr "Rejeté"
 
 msgid "Relaunch notification:"
 msgstr "Relancer la notification :"
-
-msgid "Release lock"
-msgstr "Annuler réservation"
 
 msgid "Released lock"
 msgstr "Réservation annulée"
@@ -2832,9 +2826,6 @@ msgstr ""
 #, php-format
 msgid "length must be greater than %1$s"
 msgstr "la longueur doit dépasser %1$s"
-
-msgid "locked"
-msgstr "réservé"
 
 msgid "look for exact sentence"
 msgstr "chercher la phrase complète"

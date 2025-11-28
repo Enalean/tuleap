@@ -1090,9 +1090,6 @@ msgstr ""
 msgid "Locations:"
 msgstr ""
 
-msgid "Lock for edition"
-msgstr ""
-
 msgid "Locked Documents"
 msgstr ""
 
@@ -1445,9 +1442,6 @@ msgid "Rejected"
 msgstr ""
 
 msgid "Relaunch notification:"
-msgstr ""
-
-msgid "Release lock"
 msgstr ""
 
 msgid "Released lock"
@@ -2440,9 +2434,6 @@ msgstr ""
 #, php-format
 msgid "length must be greater than %1$s"
 msgstr ""
-
-msgid "locked"
-msgstr "bloqueado"
 
 msgid "look for exact sentence"
 msgstr ""

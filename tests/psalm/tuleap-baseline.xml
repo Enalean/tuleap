@@ -6139,8 +6139,6 @@
       <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$userManager]]></code>
       <code><![CDATA[$version_factory]]></code>
     </MissingPropertyType>
@@ -6162,8 +6160,6 @@
       <code><![CDATA[_getVersionFactory]]></code>
       <code><![CDATA[_raiseMetadataChangeEvent]]></code>
       <code><![CDATA[_storeFile]]></code>
-      <code><![CDATA[action_lock_add]]></code>
-      <code><![CDATA[action_lock_del]]></code>
       <code><![CDATA[addMonitorinUgroups]]></code>
       <code><![CDATA[addMonitoringUsers]]></code>
       <code><![CDATA[admin_create_love]]></code>
@@ -15244,25 +15240,13 @@
       <code><![CDATA[$repository]]></code>
       <code><![CDATA[$repositoryName]]></code>
       <code><![CDATA[$repositoryName]]></code>
-      <code><![CDATA[$repository_ids]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
       <code><![CDATA[$url]]></code>
       <code><![CDATA[$user]]></code>
       <code><![CDATA[$user]]></code>
       <code><![CDATA[$user]]></code>
-      <code><![CDATA[$user]]></code>
-      <code><![CDATA[$user]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$validator->key]]></code>
-      <code><![CDATA[$validator->key]]></code>
-      <code><![CDATA[$validator->key]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[_dispatchActionAndView]]></code>
-      <code><![CDATA[_doDispatchForkCrossProject]]></code>
-      <code><![CDATA[_doDispatchForkRepositories]]></code>
       <code><![CDATA[_informAboutPendingEvents]]></code>
       <code><![CDATA[addAdditionalPermittedActions]]></code>
       <code><![CDATA[addRedirectToDefaultSettingsAction]]></code>
@@ -15271,7 +15255,6 @@
       <code><![CDATA[emitFeedbackForPermissionDeletion]]></code>
       <code><![CDATA[gerritProjectAlreadyExists]]></code>
       <code><![CDATA[getPermissionId]]></code>
-      <code><![CDATA[getRepositoriesFromIds]]></code>
       <code><![CDATA[getValidatedGerritTemplateId]]></code>
       <code><![CDATA[instantiateView]]></code>
       <code><![CDATA[processRepoManagementNotifications]]></code>
@@ -18190,7 +18173,6 @@
       <code><![CDATA[groupAddHistory]]></code>
       <code><![CDATA[groupAddHistory]]></code>
       <code><![CDATA[groupAddHistory]]></code>
-      <code><![CDATA[groupAddHistory]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$enable_fine_grained_permissions]]></code>
@@ -18222,7 +18204,6 @@
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$redirect_url]]></code>
       <code><![CDATA[$remote_server_id]]></code>
       <code><![CDATA[$repoAccess]]></code>
       <code><![CDATA[$repoAccess]]></code>
@@ -18243,7 +18224,6 @@
       <code><![CDATA[$repository_id]]></code>
       <code><![CDATA[$repository_id]]></code>
       <code><![CDATA[$repository_id]]></code>
-      <code><![CDATA[$scope]]></code>
       <code><![CDATA[$template_id]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -18257,7 +18237,6 @@
       <code><![CDATA[deleteRepository]]></code>
       <code><![CDATA[disconnectFromGerrit]]></code>
       <code><![CDATA[displayFeedbacksOnRepoManagement]]></code>
-      <code><![CDATA[fork]]></code>
       <code><![CDATA[generateGerritRepositoryAndTemplateList]]></code>
       <code><![CDATA[getDao]]></code>
       <code><![CDATA[getGitRepository]]></code>
@@ -19654,7 +19633,6 @@
       <code><![CDATA[doFork]]></code>
       <code><![CDATA[doForkRepository]]></code>
       <code><![CDATA[fork]]></code>
-      <code><![CDATA[forkAllRepositories]]></code>
       <code><![CDATA[forkUniqueRepository]]></code>
       <code><![CDATA[getTmpPath]]></code>
       <code><![CDATA[initRepository]]></code>
@@ -21534,31 +21512,6 @@
         ])]]></code>
     </TooManyArguments>
   </file>
-  <file src="plugins/git/tests/unit/GitForkCrossProjectTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[setProject]]></code>
-      <code><![CDATA[setProject]]></code>
-      <code><![CDATA[setProject]]></code>
-      <code><![CDATA[setProject]]></code>
-      <code><![CDATA[setProject]]></code>
-    </DeprecatedMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
-  </file>
-  <file src="plugins/git/tests/unit/GitForkRepositoriesTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[setProject]]></code>
-      <code><![CDATA[setProject]]></code>
-    </DeprecatedMethod>
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
-  </file>
   <file src="plugins/git/tests/unit/GitGerritRouteTest.php">
     <InternalMethod>
       <code><![CDATA[numberOfInvocations]]></code>
@@ -21686,11 +21639,6 @@
       <code><![CDATA[$uri]]></code>
       <code><![CDATA[$uri]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/git/tests/unit/GitTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[setProject]]></code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/git/tests/unit/GitViewsTest.php">
     <MissingClosureParamType>

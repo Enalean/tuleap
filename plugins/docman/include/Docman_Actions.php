@@ -1836,51 +1836,6 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
         }
     }
 
-    public function action_lock_add()
-    {
-        $item = $this->_controler->_actionParams['item'];
-        if ($this->_controler->userCanWrite($item->getId())) {
-            $user        = $this->_controler->getUser();
-            $lockFactory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
-            $dIF         = $this->_getItemFactory();
-            $canLock     = true;
-
-            // Cannot lock a wiki with a page already locked
-            if ($dIF->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
-                $pagename    = $item->getPagename();
-                $group_id    = $item->getGroupId();
-                $referencers = $dIF->getWikiPageReferencers($pagename, $group_id);
-                foreach ($referencers as $referencer) {
-                    if ($lockFactory->itemIsLockedByItemId($referencer->getId())) {
-                        $canLock = false;
-                        break;
-                        // wiki page is locked by another item.
-                    }
-                }
-            }
-
-            // Cannot lock a folder
-            if ($dIF->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-                $canLock = false;
-            }
-
-            if ($canLock) {
-                $lockFactory->lock($item, $user);
-            }
-        }
-    }
-
-    public function action_lock_del()
-    {
-        assert($this->_controler instanceof Docman_Controller);
-        $item        = $this->_controler->_actionParams['item'];
-        $user        = $this->_controler->getUser();
-        $lockFactory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
-        if ($user !== null && $this->_controler->userCanWrite($item->getId())) {
-            $lockFactory->unlock($item, $user);
-        }
-    }
-
     public function admin_change_filename_pattern(): void
     {
         $request = \Tuleap\HTTPRequest::instance();
