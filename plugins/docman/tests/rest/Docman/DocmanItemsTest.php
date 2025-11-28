@@ -26,6 +26,9 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use ProjectUGroup;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
@@ -33,10 +36,10 @@ use Tuleap\REST\RESTTestDataBuilder;
 use function Psl\Json\decode as json_decode;
 use function Psl\Json\encode as json_encode;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class DocmanItemsTest extends DocmanTestExecutionHelper
+#[DisableReturnValueGenerationForTestDoubles]
+final class DocmanItemsTest extends DocmanTestExecutionHelper
 {
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
         $this->getDocmanRegularUser();
@@ -74,7 +77,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         return $items;
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
+    #[Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsWithUserRESTReadOnlyAdmin(int $root_id): array
     {
         $root_folder = $this->loadRootFolderContent($root_id, RESTTestDataBuilder::TEST_BOT_USER_NAME);
@@ -111,7 +114,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         return $items;
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testRegularUserCantSeeFolderHeCantRead(int $root_id): void
     {
         $response = $this->getResponseByName(
@@ -126,7 +129,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertNull($denied_folder);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testOPTIONSDocmanItemsId($root_id): void
     {
         $response = $this->getResponse(
@@ -137,7 +140,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testOPTIONSId($root_id): void
     {
         $response = $this->getResponse(
@@ -148,7 +151,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testAllOPTIONSDocmanItemsWithUserRESTReadOnlyAdmin($root_id): void
     {
         $response = $this->getResponse(
@@ -166,7 +169,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testGetId($root_id): void
     {
         $response = $this->getResponse(
@@ -181,7 +184,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertNull($item['permissions_for_groups']);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testGetIdWithUserRESTReadOnlyAdmin($root_id): void
     {
         $response = $this->getResponse(
@@ -196,7 +199,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertIsArray($item['permissions_for_groups']);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testGetFolderWithSize(int $root_id): void
     {
         $root_folder        = $this->loadRootFolderContent($root_id);
@@ -219,7 +222,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         );
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
+    #[Depends('testGetDocumentItemsForAdminUser')]
     public function testGetAllItemParents(array $items): void
     {
         $embedded_2 = $this->findItemByTitle($items, 'GET EM');
@@ -232,7 +235,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($json_parents[2]['title'], 'GET FO');
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
+    #[Depends('testGetDocumentItemsForAdminUser')]
     public function testGetAllItemParentsWithUserRESTReadOnlyAdmin(array $items): void
     {
         $embedded_2 = $this->findItemByTitle($items, 'GET EM');
@@ -249,7 +252,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($json_parents[2]['title'], 'GET FO');
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testLog(int $root_id): void
     {
         $uri = 'docman_items/' . $root_id . '/logs';
@@ -275,14 +278,14 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         );
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testGetAllApprovalTables(int $root_id): void
     {
         // Create embedded file
         $post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', "docman_folders/$root_id/embedded_files")
                 ->withBody($this->stream_factory->createStream(json_encode([
-                    'title'               => 'My embedded file',
+                    'title'               => 'Test all approval tables',
                     'embedded_properties' => [
                         'content' => 'Hello World!',
                     ],
@@ -292,15 +295,26 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertSame(201, $post_response->getStatusCode());
         $post_body = json_decode($post_response->getBody()->getContents());
         $item_id   = $post_body['id'];
+        // With an approval table
+        $post_table_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_items/$item_id/approval_table")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'users'       => [],
+                    'user_groups' => [ProjectUGroup::PROJECT_ADMIN],
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(201, $post_table_response->getStatusCode());
 
         // Create new version of file
         $new_version_response = $this->getResponse(
             $this->request_factory->createRequest('POST', "docman_embedded_files/$item_id/versions")
                 ->withBody($this->stream_factory->createStream(json_encode([
-                    'embedded_properties' => [
+                    'embedded_properties'   => [
                         'content' => 'No longer "Hello World!"',
                     ],
-                    'should_lock_file'    => false,
+                    'should_lock_file'      => false,
+                    'approval_table_action' => 'reset',
                 ]))),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
         );
@@ -314,7 +328,15 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertSame(200, $get_response->getStatusCode());
         $get_body = json_decode($get_response->getBody()->getContents());
         self::assertIsArray($get_body);
-        self::assertCount(0, $get_body);
+        self::assertCount(2, $get_body);
+        self::assertSame(2, $get_body[0]['version_number']);
+        self::assertSame('Not yet', $get_body[0]['approval_state']);
+        self::assertSame('Disabled', $get_body[0]['notification_type']);
+        self::assertCount(0, $get_body[0]['reviewers']);
+        self::assertSame(1, $get_body[1]['version_number']);
+        self::assertSame('Not yet', $get_body[1]['approval_state']);
+        self::assertSame('Disabled', $get_body[1]['notification_type']);
+        self::assertCount(0, $get_body[1]['reviewers']);
 
         // Cleanup (delete file)
         $delete_response = $this->getResponse(
@@ -324,14 +346,14 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertSame(200, $delete_response->getStatusCode());
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[Depends('testGetRootId')]
     public function testGetApprovalTableVersion(int $root_id): void
     {
         // Create embedded file
         $post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', "docman_folders/$root_id/embedded_files")
                 ->withBody($this->stream_factory->createStream(json_encode([
-                    'title'               => 'My embedded file',
+                    'title'               => 'Test one approval table',
                     'embedded_properties' => [
                         'content' => 'Hello World!',
                     ],
@@ -341,14 +363,29 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertSame(201, $post_response->getStatusCode());
         $post_body = json_decode($post_response->getBody()->getContents());
         $item_id   = $post_body['id'];
+        // With an approval table
+        $post_table_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_items/$item_id/approval_table")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'users'       => [],
+                    'user_groups' => [ProjectUGroup::PROJECT_ADMIN],
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(201, $post_table_response->getStatusCode());
 
         // Get approval table
         $get_response = $this->getResponse(
-            $this->request_factory->createRequest('GET', "docman_items/$item_id/approval_table/2"),
+            $this->request_factory->createRequest('GET', "docman_items/$item_id/approval_table/1"),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
         );
-        // Expected, we cannot yet create a table through API
-        self::assertSame(404, $get_response->getStatusCode());
+        self::assertSame(200, $get_response->getStatusCode());
+        $table = json_decode($get_response->getBody()->getContents());
+        self::assertSame('Not yet', $table['approval_state']);
+        self::assertSame(1, $table['version_number']);
+        self::assertSame('Disabled', $table['notification_type']);
+        self::assertSame(false, $table['is_closed']);
+        self::assertCount(1, $table['reviewers']);
 
         // Cleanup (delete file)
         $delete_response = $this->getResponse(
@@ -358,14 +395,6 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertSame(200, $delete_response->getStatusCode());
     }
 
-    /**
-     * @param array|null $folder
-     * @param array|null $empty
-     * @param array|null $file
-     * @param array|null $link
-     * @param array|null $embedded
-     * @param array|null $wiki
-     */
     private function assertGetDocumentItems(
         array $items,
         ?array $folder,

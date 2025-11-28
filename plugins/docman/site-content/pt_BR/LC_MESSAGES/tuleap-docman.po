@@ -426,6 +426,9 @@ msgstr ""
 msgid "Cannot add following user(s). Not registered users. %1$s."
 msgstr ""
 
+msgid "Cannot create approval table for document"
+msgstr ""
+
 msgid "Cannot delete a version on something that is not a file."
 msgstr ""
 
@@ -846,6 +849,9 @@ msgstr ""
 
 msgid "Every"
 msgstr "Cada"
+
+msgid "Failed to create approval table"
+msgstr ""
 
 msgid "File"
 msgstr "Arquivo"

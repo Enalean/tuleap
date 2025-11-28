@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableFactoriesFactory implements \Tuleap\Docman\ApprovalTable\TableFactoryForFileBuilder
+use Tuleap\Docman\Item\OtherDocument;
+
+class Docman_ApprovalTableFactoriesFactory implements \Tuleap\Docman\ApprovalTable\TableFactoryForFileBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function getTableFactoryForFile(Docman_File $item): Docman_ApprovalTableFileFactory
@@ -38,8 +40,8 @@ class Docman_ApprovalTableFactoriesFactory implements \Tuleap\Docman\ApprovalTab
             $appTableFactory = new Docman_ApprovalTableWikiFactory($item, $version);
         } elseif ($item instanceof Docman_Link) {
             $appTableFactory = new Docman_ApprovalTableLinkFactory($item, $version);
-        } elseif ($item instanceof Docman_Empty) {
-            // there is no approval table for empty documents.
+        } elseif ($item instanceof Docman_Empty || $item instanceof OtherDocument) {
+            // there is no approval table for empty and other documents.
         } else {
             $appTableFactory = new Docman_ApprovalTableItemFactory($item);
         }
