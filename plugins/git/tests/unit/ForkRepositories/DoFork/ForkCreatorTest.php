@@ -31,6 +31,7 @@ use ProjectUGroup;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Git\ForkRepositories\ForkPathContainsDoubleDotsFault;
 use Tuleap\Git\ForkRepositories\Permissions\MissingRequiredParametersFault;
+use Tuleap\Git\PathJoinUtil;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Git\Tests\Stub\ForkRepositories\DoFork\CheckDoForkRepositoriesCSRFStub;
 use Tuleap\Git\Tests\Stub\RetrieveGitRepositoryStub;
@@ -109,7 +110,7 @@ final class ForkCreatorTest extends TestCase
             [$this->repository_1, $this->repository_2],
             $this->source_project,
             $user,
-            $fork_path,
+            PathJoinUtil::userRepoPath($user->getUserName(), $fork_path),
             \GitRepository::REPO_SCOPE_INDIVIDUAL,
             $this->permissions,
         )->willReturn(Result::ok([]));

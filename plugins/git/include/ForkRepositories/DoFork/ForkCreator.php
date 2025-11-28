@@ -27,6 +27,7 @@ use PFUser;
 use Project;
 use ProjectHistoryDao;
 use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\Git\PathJoinUtil;
 use Tuleap\Git\Permissions\VerifyUserIsGitAdministrator;
 use Tuleap\Git\RetrieveGitRepository;
 use Tuleap\NeverThrow\Err;
@@ -62,7 +63,7 @@ final readonly class ForkCreator implements ProcessPersonalRepositoryFork, Proce
                 $user,
                 $project,
                 array_map(fn (string $id) => $this->retrieve_git_repository->getRepositoryById((int) $id), explode(',', $inputs->repositories_ids)),
-                $inputs->fork_path,
+                PathJoinUtil::userRepoPath($user->getUserName(), $inputs->fork_path),
                 \GitRepository::REPO_SCOPE_INDIVIDUAL,
                 $inputs->permissions,
             )
