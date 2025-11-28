@@ -19,6 +19,18 @@
   -->
 
 <template>
+    <div
+        class="tlp-alert-info old-version-info"
+        v-if="current_version_displayed.old_version.value.isValue()"
+    >
+        <p>
+            {{
+                $gettext(
+                    "You’re viewing an older version. Section order reflects the latest Artidoc.",
+                )
+            }}
+        </p>
+    </div>
     <ul ref="list" data-is-container="true">
         <li
             data-test="section-in-toc"
@@ -516,5 +528,9 @@ li[draggable="false"] {
 .section-under-artifact-icon {
     margin: 0 5px 0 0;
     color: var(--tlp-danger-color);
+}
+
+.old-version-info {
+    margin: 0;
 }
 </style>
