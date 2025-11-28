@@ -26,7 +26,8 @@ describe("destination-selection", () => {
         project_select_box: HTMLSelectElement,
         fork_path_input: HTMLInputElement,
         project_fork_radio_button: HTMLInputElement,
-        personal_fork_radio_button: HTMLInputElement;
+        personal_fork_radio_button: HTMLInputElement,
+        fork_path_form_element: HTMLElement;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
@@ -46,7 +47,9 @@ describe("destination-selection", () => {
                     <option>Project 1</option>
                     <option>Project 2</option>
                 </select>
-                <input type="text" data-test="fork-path"/>
+                <div class="tlp-form-element" data-test="fork-path-form-element">
+                    <input type="text" data-test="fork-path"/>
+                </div>
                 <button type="submit" data-test="submit-button">Submit</button>
             </form>
         `,
@@ -68,12 +71,14 @@ describe("destination-selection", () => {
             "[data-test=personal-fork]",
             HTMLInputElement,
         );
+        fork_path_form_element = selectOrThrow(doc, "[data-test=fork-path-form-element]");
 
         initProjectDestinationSelection(
             project_select_box,
             fork_path_input,
             project_fork_radio_button,
             personal_fork_radio_button,
+            fork_path_form_element,
         );
     });
 
@@ -82,6 +87,7 @@ describe("destination-selection", () => {
 
         expect(project_select_box.disabled).toBe(true);
         expect(fork_path_input.disabled).toBe(false);
+        expect(fork_path_form_element.classList).not.toContain("tlp-form-element-disabled");
     });
 
     it("When the 'project fork' radio button is clicked, then it should enable the project select box and disable the fork path input", () => {
@@ -89,5 +95,6 @@ describe("destination-selection", () => {
 
         expect(project_select_box.disabled).toBe(false);
         expect(fork_path_input.disabled).toBe(true);
+        expect(fork_path_form_element.classList).toContain("tlp-form-element-disabled");
     });
 });

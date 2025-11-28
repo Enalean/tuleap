@@ -1200,7 +1200,7 @@ msgid "There are open changes for this project."
 msgstr "Il y'a des revues ouvertes concernant ce projet."
 
 msgid "There aren't any forkable repositories in this project."
-msgstr "Il n'y a aucun dépôt dans ce project que vous pouvez forker."
+msgstr "Il n'y a aucun dépôt dans ce projet que vous pouvez forker."
 
 msgid ""
 "There does not appear to be any %1$s Gerrit server %2$s set up for this "
@@ -1506,6 +1506,13 @@ msgid_plural "You are going to fork the repositories:"
 msgstr[0] "Vous êtes sur le point de créer un fork du dépôt:"
 msgstr[1] "Vous êtes sur le point de créer un fork des dépôts:"
 
+msgid ""
+"You are neither a member of the current project nor project administrator of "
+"a project having the Git service enabled."
+msgstr ""
+"Vous n'êtes ni membre du projet actuel ni administrateur d'un projet où le "
+"service Git est activé."
+
 msgid "You are not allowed to access this page"
 msgstr "Vous n'êtes pas autorisé à accéder à cette page"
 
@@ -1547,6 +1554,9 @@ msgid ""
 msgstr ""
 "Vous pouvez utiliser le bouton suivant pour forcer la synchronisation de vos "
 "<a href=\"%s\">clefs SSH</a> sur les serveurs gerrit suivants : "
+
+msgid "You cannot fork repositories from this project:"
+msgstr "Vous ne pouvez pas forker de dépôts depuis ce projet :"
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes utilisateur."

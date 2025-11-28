@@ -31,6 +31,8 @@ final readonly class ForkRepositoriesPresenter
     public string $user_name;
     public string $post_url;
     public bool $is_user_project_member_of_current_project;
+    public bool $can_user_fork_repositories;
+    public bool $can_user_choose_fork_destination;
     public bool $has_forkable_repositories;
     public bool $has_user_projects;
     public int $project_id;
@@ -47,10 +49,12 @@ final readonly class ForkRepositoriesPresenter
         public array $user_projects,
     ) {
         $this->is_user_project_member_of_current_project = $user->isMember((int) $project->getId());
-        $this->has_forkable_repositories                 = ! empty($forkable_repositories);
-        $this->has_user_projects                         = ! empty($user_projects);
+        $this->has_forkable_repositories                 = $forkable_repositories !== [];
+        $this->has_user_projects                         = $user_projects !== [];
         $this->user_name                                 = $user->getUserName();
         $this->post_url                                  = ForkRepositoriesUrlsBuilder::buildPOSTForksPermissionsURL($project);
         $this->project_id                                = (int) $project->getID();
+        $this->can_user_choose_fork_destination          = $this->is_user_project_member_of_current_project || $this->has_user_projects;
+        $this->can_user_fork_repositories                = $this->has_forkable_repositories && $this->can_user_choose_fork_destination;
     }
 }

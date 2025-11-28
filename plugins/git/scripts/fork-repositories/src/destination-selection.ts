@@ -22,15 +22,18 @@ export function initProjectDestinationSelection(
     fork_path_input: HTMLInputElement,
     project_fork_radio_button: HTMLInputElement,
     personal_fork_radio_button: HTMLInputElement,
+    fork_path_form_element: HTMLElement,
 ): void {
     const enableForkDestinationProjectSelectBox = (): void => {
         project_select_box.disabled = false;
         fork_path_input.disabled = true;
+        fork_path_form_element.classList.add("tlp-form-element-disabled");
     };
 
     const disableForkDestinationProjectSelectBox = (): void => {
         project_select_box.disabled = true;
         fork_path_input.disabled = false;
+        fork_path_form_element.classList.remove("tlp-form-element-disabled");
     };
 
     project_fork_radio_button.addEventListener("click", enableForkDestinationProjectSelectBox);
