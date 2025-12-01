@@ -54,6 +54,31 @@ msgstr "3 mois"
 msgid "6 months"
 msgstr "6 mois"
 
+msgid ""
+": Sends an email to the approval requester and notify next reviewer in "
+"sequence if any."
+msgstr ""
+" : Envoie un email au demandeur d'approbation et notifie le prochain "
+"approbateur dans la séquence si besoin."
+
+msgid ""
+": Sends an email to the approval requester and stops the approval sequence "
+"if any."
+msgstr ""
+" : Envoie un email au demandeur d'apporbation et stoppe la sequence si "
+"besoin."
+
+msgid ""
+": Sends an email to the approval requester to inform there are comments. In "
+"Sequential notification type, the notification workflow is frozen."
+msgstr ""
+" : Envoie une email au demandeur d'approbation pour l'informer qu'il y a des "
+"commentaires. Dans le mode Séquentiel, le workflow de notification est "
+"suspendu."
+
+msgid ": Status quo. You can add comment but nobody will be notified."
+msgstr " : Status quo. Vous pouvez commenter mais personne ne sera notifié."
+
 msgid "A document already exists with the same title."
 msgstr "Un document existe déjà avec le même titre."
 
@@ -70,6 +95,9 @@ msgstr "Un dossier existe déjà avec le même titre."
 
 msgid "Actions in Documents service"
 msgstr "Actions dans le service Documents"
+
+msgid "Add a comment"
+msgstr "Ajouter un commentaire"
 
 msgid "Add notification"
 msgstr "Ajouter une notification"
@@ -129,6 +157,9 @@ msgstr ""
 
 msgid "Approval"
 msgstr "Approbation"
+
+msgid "Approval cycle details"
+msgstr "Détails du cycle d'approbation"
 
 msgid "Approval cycle start date"
 msgstr "Date de début du cycle d'approbation"
@@ -198,6 +229,12 @@ msgstr "Fermé"
 
 msgid "Comment"
 msgstr "Commentaire"
+
+msgid "Comment only"
+msgstr "Commentaire seulement"
+
+msgid "Commented"
+msgstr "Commenté"
 
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
@@ -271,6 +308,9 @@ msgstr "Couper"
 msgid "Date"
 msgstr "Date"
 
+msgid "Declined"
+msgstr "Décliné"
+
 msgid "Default properties"
 msgstr "Propriétés par défaut"
 
@@ -299,6 +339,12 @@ msgstr "Détails"
 
 msgid "Document locked by %{username}."
 msgstr "Document verrouillé par %{username}."
+
+msgid "Document name"
+msgstr "Nom du document"
+
+msgid "Document under review"
+msgstr "Document sous approbation"
 
 msgid "Document version"
 msgstr "Version du document"
@@ -358,6 +404,9 @@ msgstr "Fin"
 
 msgid "Error while creating approval table"
 msgstr "Erreur lors de la création de la table d'approbation"
+
+msgid "Error while saving your review"
+msgstr "Erreur lors de la sauvegarde de votre approbation"
 
 msgid "File"
 msgstr "Fichier"
@@ -683,6 +732,9 @@ msgstr "Merci d'attendre que les téléversements en cours soient terminés."
 msgid "Please write something meaningful for the admin."
 msgstr "Veuillez soumettre un message pertinent afin d'aider l'administrateur."
 
+msgid "Possible commitment are:"
+msgstr "Engagements possibles :"
+
 msgid "Previous"
 msgstr "Précédent"
 
@@ -720,7 +772,7 @@ msgid "Reload the page"
 msgstr "Recharger la page"
 
 msgid "Remove all values"
-msgstr "Enlever toutes les valeurs"
+msgstr "Supprimer toutes les valeurs"
 
 msgid "Requester comment"
 msgstr "Commentaire du demandeur"
@@ -730,6 +782,12 @@ msgstr "Recommencer le cycle d'approbation."
 
 msgid "Review"
 msgstr "Approbation"
+
+msgid "Review date"
+msgstr "Date d'approbation"
+
+msgid "Review:"
+msgstr "Approbation :"
 
 msgid "Search"
 msgstr "Recherche"
@@ -769,6 +827,9 @@ msgstr "Envoyer un Email"
 
 msgid "Send me an email whenever this item is updated."
 msgstr "Envoyez-moi un email dès que cet élément est modifié."
+
+msgid "Send my review"
+msgstr "Envoyer mon approbation"
 
 msgid ""
 "Shortcuts will apply to the selected document or folder. If there is no "
@@ -1040,6 +1101,9 @@ msgstr "Qui"
 
 msgid "Wiki page"
 msgstr "Page wiki"
+
+msgid "Will not review"
+msgstr "Pas d'avis"
 
 msgid ""
 "Write your message below and click on the button to send your request to the "

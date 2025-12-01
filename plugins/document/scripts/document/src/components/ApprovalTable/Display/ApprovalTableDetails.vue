@@ -51,6 +51,8 @@
         v-bind:reviewers="table.reviewers"
         v-bind:item="item"
         v-bind:is_readonly="is_readonly"
+        v-bind:table="table"
+        v-on:refresh-data="$emit('refresh-data')"
     />
 </template>
 
@@ -65,4 +67,6 @@ defineProps<{
     table: ApprovalTable;
     is_readonly: boolean;
 }>();
+
+defineEmits<{ (e: "refresh-data"): void }>();
 </script>

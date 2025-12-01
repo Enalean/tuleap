@@ -63,6 +63,7 @@ export class ApprovalTableBuilder {
             approval_state: this.approval_state,
             approval_request_date: "",
             has_been_approved: false,
+            version_id: null,
             version_number: this.version_number,
             version_label: this.version_label,
             notification_type: this.notification_type,

@@ -332,6 +332,7 @@ export interface ApprovalTable {
     approval_state: string;
     approval_request_date: string;
     has_been_approved: boolean;
+    version_id: number | null;
     version_number: number | null;
     version_label: string;
     notification_type: string;

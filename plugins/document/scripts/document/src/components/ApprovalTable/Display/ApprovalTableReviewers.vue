@@ -48,9 +48,16 @@
                 </td>
                 <td data-test="reviewer-state">
                     <template v-if="is_readonly || reviewer.user.id !== user_id">
-                        {{ reviewer.state }}
+                        {{ translateStatus(reviewer.state) }}
                     </template>
-                    <a v-else v-bind:href="getLinkToReview()">{{ reviewer.state }}</a>
+                    <button
+                        v-else
+                        ref="modal_trigger"
+                        type="button"
+                        class="tlp-button-secondary tlp-button-mini"
+                    >
+                        {{ translateStatus(reviewer.state) }}
+                    </button>
                 </td>
                 <td>{{ reviewer.comment }}</td>
                 <td>
@@ -79,26 +86,61 @@
             </tr>
         </tbody>
     </table>
+
+    <approval-table-review-modal
+        v-if="!is_readonly && modal_trigger && current_reviewer"
+        v-bind:item="item"
+        v-bind:trigger="modal_trigger[0]"
+        v-bind:reviewer="current_reviewer"
+        v-bind:table="table"
+        v-on:refresh-data="$emit('refresh-data')"
+    />
 </template>
 
 <script setup lang="ts">
-import type { ApprovalTableReviewer, Item } from "../../../type";
+import type { ApprovalTable, ApprovalTableReviewer, Item } from "../../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT, USER_ID } from "../../../configuration-keys";
+import { USER_ID } from "../../../configuration-keys";
 import UserBadge from "../../User/UserBadge.vue";
 import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
+import ApprovalTableReviewModal from "../Review/ApprovalTableReviewModal.vue";
+import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     item: Item;
     reviewers: ReadonlyArray<ApprovalTableReviewer>;
     is_readonly: boolean;
+    table: ApprovalTable;
 }>();
 
-const user_id = strictInject(USER_ID);
-const project = strictInject(PROJECT);
+defineEmits<{ (e: "refresh-data"): void }>();
 
-function getLinkToReview(): string {
-    return `/plugins/docman/?group_id=${project.id}&action=details&id=${props.item.id}&section=approval&review=1`;
+const user_id = strictInject(USER_ID);
+
+const modal_trigger = ref<Array<HTMLButtonElement>>();
+
+const current_reviewer = computed(() =>
+    props.reviewers.find((reviewer) => reviewer.user.id === user_id),
+);
+
+function translateStatus(status: string): string {
+    switch (status) {
+        case "not_yet":
+            return $gettext("Not yet");
+        case "approved":
+            return $gettext("Approved");
+        case "rejected":
+            return $gettext("Rejected");
+        case "comment_only":
+            return $gettext("Commented");
+        case "will_not_review":
+            return $gettext("Declined");
+        default:
+            throw Error("Unknown status " + status);
+    }
 }
 </script>
 

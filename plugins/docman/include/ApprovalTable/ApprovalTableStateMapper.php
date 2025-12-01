@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\ApprovalTable;
 
-class ApprovalTableStateMapper
+use Exception;
+
+final class ApprovalTableStateMapper
 {
     /**
      * @param int $state_id the ID of the approval table state.
      * @return string The label corresponding to $state_id
-     * @throws \Exception
+     * @throws Exception
      *
      * @psalm-mutation-free
      */
@@ -42,7 +44,7 @@ class ApprovalTableStateMapper
         ];
 
         if (! isset($statuses_map[$state_id])) {
-            throw new \Exception(
+            throw new Exception(
                 sprintf(
                     'Approval table state id %s does not match a valid state.',
                     $state_id
@@ -51,5 +53,27 @@ class ApprovalTableStateMapper
         }
 
         return $statuses_map[$state_id];
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @psalm-mutation-free
+     */
+    public function getStatusStringNotTranslatedFromStatusId(int $status_id): string
+    {
+        return match ($status_id) {
+            PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET    => 'not_yet',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED  => 'approved',
+            PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED  => 'rejected',
+            PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED => 'comment_only',
+            PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED  => 'will_not_review',
+            default                                => throw new Exception(
+                sprintf(
+                    'Approval table state id %s does not match a valid state.',
+                    $status_id
+                )
+            ),
+        };
     }
 }

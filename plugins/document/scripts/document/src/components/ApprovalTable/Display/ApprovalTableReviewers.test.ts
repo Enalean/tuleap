@@ -19,7 +19,7 @@
 
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import { shallowMount } from "@vue/test-utils";
+import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import ApprovalTableReviewers from "./ApprovalTableReviewers.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { PROJECT, USER_ID } from "../../../configuration-keys";
@@ -27,6 +27,7 @@ import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 import { ItemBuilder } from "../../../../tests/builders/ItemBuilder";
 import type { ApprovalTableReviewer } from "../../../type";
 import { UserBuilder } from "../../../../tests/builders/UserBuilder";
+import { ApprovalTableBuilder } from "../../../../tests/builders/ApprovalTableBuilder";
 
 describe("ApprovalTableReviewers", () => {
     function getWrapper(
@@ -38,12 +39,16 @@ describe("ApprovalTableReviewers", () => {
                 item: new ItemBuilder(123).build(),
                 reviewers,
                 is_readonly,
+                table: new ApprovalTableBuilder(35).build(),
             },
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
                     [USER_ID.valueOf()]: 102,
                     [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
+                },
+                stubs: {
+                    RouterLink: RouterLinkStub,
                 },
             },
         });
@@ -62,7 +67,7 @@ describe("ApprovalTableReviewers", () => {
                     user: new UserBuilder(102).build(),
                     rank: 1,
                     review_date: null,
-                    state: "Not yet",
+                    state: "not_yet",
                     comment: "",
                     version_id: null,
                     version_name: "",
@@ -71,7 +76,7 @@ describe("ApprovalTableReviewers", () => {
                     user: new UserBuilder(103).build(),
                     rank: 2,
                     review_date: "2025-11-27 17:28:35",
-                    state: "Approved",
+                    state: "approved",
                     comment: "",
                     version_id: null,
                     version_name: "2",
@@ -85,11 +90,11 @@ describe("ApprovalTableReviewers", () => {
         // Row 0
         expect(rows[0].classes()).not.toContain("reviewer-not-current");
         expect(rows[0].find("[data-test=reviewer-state]").text()).toBe("Not yet");
-        expect(rows[0].find("[data-test=reviewer-state] > a").exists()).toBe(true);
+        expect(rows[0].find("[data-test=reviewer-state] > button").exists()).toBe(true);
         // Row 1
         expect(rows[1].classes()).toContain("reviewer-not-current");
         expect(rows[1].find("[data-test=reviewer-state]").text()).toBe("Approved");
-        expect(rows[1].find("[data-test=reviewer-state] > a").exists()).toBe(false);
+        expect(rows[1].find("[data-test=reviewer-state] > button").exists()).toBe(false);
     });
 
     it("Should display each reviewers in readonly", () => {
@@ -99,7 +104,7 @@ describe("ApprovalTableReviewers", () => {
                     user: new UserBuilder(102).build(),
                     rank: 1,
                     review_date: null,
-                    state: "Not yet",
+                    state: "not_yet",
                     comment: "",
                     version_id: null,
                     version_name: "",
@@ -108,7 +113,7 @@ describe("ApprovalTableReviewers", () => {
                     user: new UserBuilder(103).build(),
                     rank: 2,
                     review_date: "2025-11-27 17:28:35",
-                    state: "Approved",
+                    state: "approved",
                     comment: "",
                     version_id: null,
                     version_name: "2",

@@ -45,6 +45,24 @@ msgstr ""
 msgid "6 months"
 msgstr ""
 
+msgid ""
+": Sends an email to the approval requester and notify next reviewer in "
+"sequence if any."
+msgstr ""
+
+msgid ""
+": Sends an email to the approval requester and stops the approval sequence "
+"if any."
+msgstr ""
+
+msgid ""
+": Sends an email to the approval requester to inform there are comments. In "
+"Sequential notification type, the notification workflow is frozen."
+msgstr ""
+
+msgid ": Status quo. You can add comment but nobody will be notified."
+msgstr ""
+
 msgid "A document already exists with the same title."
 msgstr ""
 
@@ -57,6 +75,9 @@ msgid "A folder already exists with the same title."
 msgstr ""
 
 msgid "Actions in Documents service"
+msgstr ""
+
+msgid "Add a comment"
 msgstr ""
 
 msgid "Add notification"
@@ -113,6 +134,9 @@ msgid "Apply same permissions to all sub-items of this folder"
 msgstr ""
 
 msgid "Approval"
+msgstr ""
+
+msgid "Approval cycle details"
 msgstr ""
 
 msgid "Approval cycle start date"
@@ -182,6 +206,12 @@ msgid "Closed"
 msgstr ""
 
 msgid "Comment"
+msgstr ""
+
+msgid "Comment only"
+msgstr ""
+
+msgid "Commented"
 msgstr ""
 
 msgid "Confirm deletion"
@@ -254,6 +284,9 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+msgid "Declined"
+msgstr ""
+
 msgid "Default properties"
 msgstr ""
 
@@ -279,6 +312,12 @@ msgid "Details"
 msgstr ""
 
 msgid "Document locked by %{username}."
+msgstr ""
+
+msgid "Document name"
+msgstr ""
+
+msgid "Document under review"
 msgstr ""
 
 msgid "Document version"
@@ -334,6 +373,9 @@ msgid "End"
 msgstr ""
 
 msgid "Error while creating approval table"
+msgstr ""
+
+msgid "Error while saving your review"
 msgstr ""
 
 msgid "File"
@@ -644,6 +686,9 @@ msgstr ""
 msgid "Please write something meaningful for the admin."
 msgstr "Por favor escreva algo significativo para o admin."
 
+msgid "Possible commitment are:"
+msgstr ""
+
 msgid "Previous"
 msgstr "Anterior"
 
@@ -692,6 +737,12 @@ msgstr ""
 msgid "Review"
 msgstr ""
 
+msgid "Review date"
+msgstr ""
+
+msgid "Review:"
+msgstr ""
+
 msgid "Search"
 msgstr "Pesquisar"
 
@@ -729,6 +780,9 @@ msgid "Send mail"
 msgstr ""
 
 msgid "Send me an email whenever this item is updated."
+msgstr ""
+
+msgid "Send my review"
 msgstr ""
 
 msgid ""
@@ -972,6 +1026,9 @@ msgid "Who"
 msgstr ""
 
 msgid "Wiki page"
+msgstr ""
+
+msgid "Will not review"
 msgstr ""
 
 msgid ""
