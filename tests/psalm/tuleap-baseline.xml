@@ -11355,18 +11355,6 @@
       <code><![CDATA[getViewForCurrentUser]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_Delete.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$section]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_getTitle]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_Details.php">
     <MissingParamType>
       <code><![CDATA[$params]]></code>
@@ -11378,9 +11366,6 @@
       <code><![CDATA[_content]]></code>
       <code><![CDATA[_getTitle]]></code>
     </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$user_can_manage]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Display.php">
     <MissingParamType>
@@ -11584,9 +11569,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionActions.php">
-    <InvalidOperand>
-      <code><![CDATA[$this->item->getId()]]></code>
-    </InvalidOperand>
     <MissingParamType>
       <code><![CDATA[$controller]]></code>
       <code><![CDATA[$is_deleteable]]></code>
@@ -11707,28 +11689,6 @@
       <code><![CDATA[getContent]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionDelete.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['Docman_File']]></code>
-      <code><![CDATA['Docman_Folder']]></code>
-    </ArgumentTypeCoercion>
-    <MissingParamType>
-      <code><![CDATA[$controller]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$token]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$token]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
-      <code><![CDATA[getWikiDeleteInfo]]></code>
-      <code><![CDATA[getWikiDocumentPath]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionMove.php">
     <MissingParamType>
       <code><![CDATA[$controller]]></code>
@@ -11791,16 +11751,6 @@
     <MissingReturnType>
       <code><![CDATA[_getDocmanIcons]]></code>
       <code><![CDATA[checkMdDifferences]]></code>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionPermissions.php">
-    <MissingParamType>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingReturnType>
       <code><![CDATA[getContent]]></code>
     </MissingReturnType>
   </file>

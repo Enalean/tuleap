@@ -711,16 +711,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getDelete: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=confirmDelete",
-            class: "docman_item_option_delete",
-            title: this.docman.options.language.action_delete,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_delete);
-        a.appendChild(title_txt);
-        return this._createLi(a);
-    },
     _getUpdate: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=action_update",
@@ -830,12 +820,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         }
 
         ul.appendChild(this._getSeparator());
-
-        // Delete
-        if (this.docman.actionsForItem[this.item_id].canDelete) {
-            ul.appendChild(this._getDelete());
-            ul.appendChild(this._getSeparator());
-        }
 
         // Properties
         const is_root = Number(this.docman.actionsForItem[this.item_id].parent_id) === 0;

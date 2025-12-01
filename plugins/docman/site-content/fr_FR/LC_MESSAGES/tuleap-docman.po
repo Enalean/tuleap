@@ -157,51 +157,6 @@ msgstr ""
 
 #, php-format
 msgid ""
-"<h3>Confirm deletion of document %1$s</h3><p>You are going to delete a "
-"document. </p><p>Are you sure that you want to delete this document?</p>"
-msgstr ""
-"<h3>Confirmez la suppression du document %1$s</h3><p>Vous êtes sur le point "
-"de supprimer un document.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>"
-
-#, php-format
-msgid ""
-"<h3>Confirm deletion of document %1$s</h3><p>You are going to delete a file. "
-"Please note that all versions will be deleted.</p><p>Are you sure that you "
-"want to delete this file?</p>"
-msgstr ""
-"<h3>Confirmez la suppression du document %1$s</h3><p>Vous êtes sur le point "
-"de supprimer un fichier. Avant de confirmer, notez que toutes les versions "
-"seront supprimées.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>"
-
-#, php-format
-msgid ""
-"<h3>Confirm deletion of folder %1$s</h3><p>You are going to delete a folder. "
-"Please note that all sub-items and their versions will be deleted.</p><p>Are "
-"you sure that you want to delete this folder?</p>"
-msgstr ""
-"<h3>Confirmez la suppression du dossier %1$s</h3><p>Vous êtes sur le point "
-"de supprimer un dossier. Avant de confirmer, notez que tous les sous-"
-"éléments et leurs versions seront supprimés.</p><p>Êtes-vous sûr de vouloir "
-"le supprimer ?</p>"
-
-msgid ""
-"<p><em>Please Note that if you check the 'Cascade deletion to wiki' option, "
-"the referenced wiki page will no longer exist in wiki service too.</em></p>"
-msgstr ""
-"<p><em>Veuillez noter que si vous cochez l'option 'Propager la suppression "
-"au service wiki', la page wiki référencée par ce document sera également "
-"supprimée dans le service wiki.</em></p>"
-
-msgid ""
-"<p><em>You should also be aware that the following documents will no longer "
-"be valid if you choose to cascade deletion to wiki service:</em></p>"
-msgstr ""
-"<p><em> Vous devez aussi noter que si vous cochez l'option 'Propager la "
-"suppression au service wiki', les documents suivants seront imacptés:</em></"
-"p>"
-
-#, php-format
-msgid ""
 "<p><img src=\"%3$s\" /> There are differences in properties definitions "
 "between %1$s and %2$s. You <strong>may loose</strong> some "
 "<strong>properties informations</strong>.</p><p>You may either:<ul><li>Paste "
@@ -563,9 +518,6 @@ msgstr ""
 msgid "Cannot remove from the approval table."
 msgstr "Impossible de supprimer de la table d'approbation."
 
-msgid "Cascade deletion to wiki service"
-msgstr "Propager la suppression au service wiki"
-
 #, php-format
 msgid "Change \"%1$s\""
 msgstr "Changer \"%1$s\""
@@ -762,10 +714,6 @@ msgstr "Définir qui peut administrer le gestionnaire de documents."
 
 msgid "Delete"
 msgstr "Supprimer"
-
-#, php-format
-msgid "Delete %1$s"
-msgstr "Supprimer %1$s"
 
 msgid "Delete date"
 msgstr "Date de suppression"
@@ -2224,9 +2172,6 @@ msgstr "Numéro de la version"
 msgid "Version reviewed:"
 msgstr "Version en cours d'approbation :"
 
-msgid "Versions"
-msgstr "Versions"
-
 msgid "View and update obsolete documents."
 msgstr "Afficher et modifier les documents obsolètes."
 
@@ -2413,16 +2358,6 @@ msgstr ""
 "email."
 
 #, php-format
-msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this document</a>."
-msgstr ""
-"Vous pouvez <a href=\"%1$s\" data-test=\"%s\">supprimer ce document</a>."
-
-#, php-format
-msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this folder</a>."
-msgstr ""
-"Vous pouvez <a href=\"%1$s\" data-test=\"%s\">supprimer ce dossier</a>."
-
-#, php-format
 msgid "You can <a href=\"%1$s\">create a new document</a> in this folder."
 msgstr ""
 "Vous pouvez <a href=\"%1$s\">créer un nouveau document</a> dans ce dossier."
@@ -2533,12 +2468,6 @@ msgstr "Vous ne pouvez pas créer une nouvelle version."
 
 msgid "You cannot delete the root folder."
 msgstr "Vous ne pouvez pas supprimer le dossier racine."
-
-msgid "You cannot delete this document."
-msgstr "Vous ne pouvez pas supprimer ce document."
-
-msgid "You cannot delete this folder."
-msgstr "Vous ne pouvez pas supprimer ce dossier."
 
 msgid "You cannot enforce an empty filename pattern"
 msgstr ""
