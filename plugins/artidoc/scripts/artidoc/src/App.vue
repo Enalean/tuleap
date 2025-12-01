@@ -56,16 +56,22 @@ import {
     REGISTER_FULLSCREEN_SHORTCUT_HANDLER,
     REGISTER_VERSIONS_SHORTCUT_HANDLER,
 } from "@/register-shortcut-handler-injection-keys";
-import { CAN_USER_DISPLAY_VERSIONS } from "@/can-user-display-versions-injection-key";
+import {
+    ARE_VERSIONS_DISPLAYED,
+    CAN_USER_DISPLAY_VERSIONS,
+} from "@/can-user-display-versions-injection-key";
 import {
     CAN_USER_EDIT_DOCUMENT,
     ORIGINAL_CAN_USER_EDIT_DOCUMENT,
 } from "@/can-user-edit-document-injection-key";
 import type { Version } from "@/components/sidebar/versions/fake-list-of-versions";
+import type { CurrentVersionDisplayed } from "@/components/current-version-displayed";
 import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
 import { getVersionedSectionsLoader } from "@/sections/VersionedSectionsLoader";
 import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import { getVersion } from "@/helpers/rest-querier";
+import { getShareableVersionsUrlsHistory } from "@/helpers/shareable-version-url-history";
 
 const { scrollToAnchor } = useScrollToAnchor();
 
@@ -73,6 +79,7 @@ const error_message = ref<GlobalErrorMessage | null>(null);
 const has_error_message = computed(() => error_message.value !== null);
 const container = ref<HTMLElement>();
 const is_loading_sections = ref(true);
+const is_first_loading = ref(true);
 const is_loading_failed = strictInject(IS_LOADING_SECTIONS_FAILED);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
 const document_id = strictInject(DOCUMENT_ID);
@@ -125,6 +132,7 @@ const displayLoadedSections = (collection: StoredArtidocSection[]): void => {
     sections_numberer.updateSectionsLevels();
     bad_sections.value = bad_sections_detector.detect(sections_collection.sections.value);
     is_loading_sections.value = false;
+    is_first_loading.value = false;
 
     const hash = window.location.hash.slice(1);
     if (hash) {
@@ -142,38 +150,80 @@ const handleLoadSectionsError = (): void => {
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const original_can_user_edit_document = strictInject(ORIGINAL_CAN_USER_EDIT_DOCUMENT);
 const use_fake_versions = strictInject(USE_FAKE_VERSIONS);
+const are_versions_displayed = strictInject(ARE_VERSIONS_DISPLAYED);
+const shareable_versions_urls_history = getShareableVersionsUrlsHistory(window);
 let old_version = ref<Option<Version>>(Option.nothing());
 
 const sections_loader = getSectionsLoader(document_id);
 const versioned_sections_loader = getVersionedSectionsLoader(document_id);
 
-provide(CURRENT_VERSION_DISPLAYED, {
+const current_version_displayed: CurrentVersionDisplayed = {
     old_version,
+    switchToFakeOldVersion(version: Version) {
+        old_version.value = Option.fromValue(version);
+        can_user_edit_document.value = false;
+    },
+    switchToLatestVersionFromFakeVersion() {
+        old_version.value = Option.nothing();
+        can_user_edit_document.value = original_can_user_edit_document;
+    },
     switchToOldVersion(version: Version) {
         old_version.value = Option.fromValue(version);
         can_user_edit_document.value = false;
 
-        if (use_fake_versions.value) {
-            return;
+        if (!is_first_loading.value) {
+            shareable_versions_urls_history.pushVersionUrl(version);
         }
 
+        is_loading_sections.value = true;
         versioned_sections_loader
             .loadVersionedSections(version)
             .match(displayLoadedSections, handleLoadSectionsError);
     },
     switchToLatestVersion() {
-        old_version.value = Option.nothing();
-        can_user_edit_document.value = original_can_user_edit_document;
-
-        if (use_fake_versions.value) {
+        if (old_version.value.isNothing() && !is_first_loading.value) {
             return;
         }
 
+        if (!is_first_loading.value) {
+            shareable_versions_urls_history.pushLatestVersionUrl();
+        }
+
+        old_version.value = Option.nothing();
+        can_user_edit_document.value = original_can_user_edit_document;
+
+        is_loading_sections.value = true;
         sections_loader.loadSections().match(displayLoadedSections, handleLoadSectionsError);
     },
-});
+};
 
-sections_loader.loadSections().match(displayLoadedSections, handleLoadSectionsError);
+provide(CURRENT_VERSION_DISPLAYED, current_version_displayed);
+
+const loadArtidocContent = (version_id: Option<number>): void => {
+    is_first_loading.value = true;
+
+    version_id.match((id: number): void => {
+        use_fake_versions.value = false;
+        are_versions_displayed.value = true;
+
+        getVersion(document_id, id).match(
+            current_version_displayed.switchToOldVersion,
+            handleLoadSectionsError,
+        );
+    }, current_version_displayed.switchToLatestVersion);
+};
+
+const version_url_param = new URLSearchParams(window.location.search).get("version");
+const version_id = Option.fromNullable(
+    version_url_param !== null ? Number.parseInt(version_url_param, 10) : null,
+);
+
+loadArtidocContent(version_id);
+
+window.addEventListener("popstate", (event: PopStateEvent) => {
+    // Load versioned artidoc sections when the user goes back/forward in browser navigation history
+    loadArtidocContent(Option.fromNullable(event.state?.version_id ?? null));
+});
 
 onMounted(() => {
     container.value?.addEventListener("scroll", onScroll);

@@ -61,6 +61,10 @@ const { $gettext } = useGettext();
 
 const current_tab = ref<SidebarTab>(TOC_TAB);
 
+if (are_versions_displayed.value && window.location.search.includes("version")) {
+    current_tab.value = VERSIONS_TAB;
+}
+
 watch(are_versions_displayed, (are_versions_displayed) => {
     if (!are_versions_displayed) {
         current_tab.value = TOC_TAB;

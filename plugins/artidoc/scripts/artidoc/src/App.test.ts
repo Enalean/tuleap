@@ -37,7 +37,10 @@ import {
 } from "@/configuration/AllowedTrackersCollection";
 import { SELECTED_FIELDS } from "@/configuration/SelectedFieldsCollection";
 import { createGettext } from "vue3-gettext";
-import { CAN_USER_DISPLAY_VERSIONS } from "@/can-user-display-versions-injection-key";
+import {
+    ARE_VERSIONS_DISPLAYED,
+    CAN_USER_DISPLAY_VERSIONS,
+} from "@/can-user-display-versions-injection-key";
 import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
 
 describe("App", () => {
@@ -56,6 +59,7 @@ describe("App", () => {
                     [SELECTED_FIELDS.valueOf()]: ref([]),
                     [CAN_USER_DISPLAY_VERSIONS.valueOf()]: true,
                     [USE_FAKE_VERSIONS.valueOf()]: false,
+                    [ARE_VERSIONS_DISPLAYED.valueOf()]: false,
                 },
             },
         });

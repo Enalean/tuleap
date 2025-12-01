@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { Version } from "@/components/sidebar/versions/fake-list-of-versions";
+
+export type ShareableVersionsUrlsHistory = {
+    pushLatestVersionUrl(): void;
+    pushVersionUrl(version: Version): void;
+};
+
+export const getShareableVersionsUrlsHistory = (window: Window): ShareableVersionsUrlsHistory => ({
+    pushLatestVersionUrl(): void {
+        if (!window.location.search.includes("version")) {
+            return;
+        }
+
+        const url = new URL(window.location.href);
+        url.searchParams.delete("version");
+        window.history.pushState(null, "", url);
+    },
+    pushVersionUrl(version: Version): void {
+        const url = new URL(window.location.href);
+        url.searchParams.set("version", String(version.id));
+        window.history.pushState({ version_id: version.id }, "", url);
+    },
+});

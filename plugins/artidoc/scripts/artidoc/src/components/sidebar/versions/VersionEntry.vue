@@ -64,12 +64,14 @@ import VersionToggle from "@/components/sidebar/versions/VersionToggle.vue";
 import type { ToggleState } from "@/components/sidebar/versions/toggle-state";
 import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
 import DisplayVersionButton from "@/components/sidebar/versions/DisplayVersionButton.vue";
+import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
 
 const props = defineProps<{ version: Version; is_latest: boolean; toggle_state?: ToggleState }>();
 
 const { $gettext } = useGettext();
 
 const user_preferences = strictInject<UserPreferences>(USER_PREFERENCES);
+const use_fake_versions = strictInject(USE_FAKE_VERSIONS);
 
 const formatter = IntlFormatter(
     user_preferences.locale,
@@ -96,10 +98,20 @@ function click(event: Event): void {
     }
 
     if (props.is_latest) {
+        if (use_fake_versions.value) {
+            current_version_displayed.switchToLatestVersionFromFakeVersion();
+            return;
+        }
+
         current_version_displayed.switchToLatestVersion();
-    } else {
-        current_version_displayed.switchToOldVersion(props.version);
+        return;
     }
+
+    if (use_fake_versions.value) {
+        current_version_displayed.switchToFakeOldVersion(props.version);
+        return;
+    }
+    current_version_displayed.switchToOldVersion(props.version);
 }
 
 function hasClickOccurredOnSummaryElement(event: Event): boolean {
@@ -115,12 +127,9 @@ const classes = computed(() => {
     const version_displayed_class = "version-displayed";
 
     return current_version_displayed.old_version.value.match(
-        (version_displayed: Version) => {
-            return version_displayed === props.version ? version_displayed_class : "";
-        },
-        () => {
-            return props.is_latest ? version_displayed_class : "";
-        },
+        (version_displayed: Version) =>
+            version_displayed.id === props.version.id ? version_displayed_class : "",
+        () => (props.is_latest ? version_displayed_class : ""),
     );
 });
 </script>

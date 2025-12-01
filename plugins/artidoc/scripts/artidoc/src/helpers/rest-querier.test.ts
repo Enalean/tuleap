@@ -18,13 +18,14 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import * as fetch from "@tuleap/fetch-result";
 import { errAsync, okAsync } from "neverthrow";
+import * as fetch from "@tuleap/fetch-result";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import {
     getAllSections,
     getSection,
     getTracker,
+    getVersion,
     getVersionedSections,
     putSection,
 } from "@/helpers/rest-querier";
@@ -36,6 +37,7 @@ import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 const DOCUMENT_ID = 123;
+const VERSION_ID = 45210;
 
 describe("rest-querier", () => {
     describe("getAllSections", () => {
@@ -214,8 +216,6 @@ describe("rest-querier", () => {
     });
 
     describe("getVersionedSections", () => {
-        const VERSION_ID = 45210;
-
         it("should returns retrieved versioned sections", async () => {
             const section_a = FreetextSectionFactory.create();
             const section_b = ArtifactSectionFactory.create();
@@ -257,6 +257,43 @@ describe("rest-querier", () => {
             expect(all_sections).toHaveLength(2);
             expect(all_sections[0].title).toBe("Le title A");
             expect(all_sections[1].title).toBe("Le title B");
+        });
+    });
+
+    describe("getVersion", () => {
+        it("should return the version", async () => {
+            const version_payload = {
+                id: VERSION_ID,
+                created_on: "2025-11-24T15:30:00+01:00",
+                created_by: {
+                    id: 102,
+                    user_url: "example.com",
+                    avatar_url: "example.com",
+                    display_name: "John Doe",
+                },
+            };
+
+            vi.spyOn(fetch, "getJSON").mockReturnValue(okAsync([version_payload]));
+
+            const result = await getVersion(DOCUMENT_ID, VERSION_ID);
+
+            expect(fetch.getJSON).toHaveBeenCalledWith(
+                uri`/api/v1/artidoc/${DOCUMENT_ID}/versions`,
+                {
+                    params: {
+                        query: JSON.stringify({ versions_ids: [VERSION_ID] }),
+                    },
+                },
+            );
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+
+            expect(result.value.id).toBe(version_payload.id);
+            expect(result.value.title.isNothing()).toBe(true);
+            expect(result.value.description.isNothing()).toBe(true);
+            expect(result.value.created_by).toBe(version_payload.created_by);
+            expect(result.value.created_on).toStrictEqual(new Date(version_payload.created_on));
         });
     });
 });
