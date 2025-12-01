@@ -2845,11 +2845,6 @@ msgstr "null n'est pas un statut valide."
 msgid "other folders:"
 msgstr "autres dossiers:"
 
-msgid "recursive (apply same permissions to all sub-items of this folder)"
-msgstr ""
-"récursif (appliquer les mêmes permissions pour tous les sous-éléments de ce "
-"dossier)"
-
 msgid "report_id"
 msgstr "report_id"
 
