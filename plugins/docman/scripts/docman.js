@@ -271,74 +271,8 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                         );
                     }.bind(this),
                 );
-
-            //7. Do manually the first ajax call for the preselected parent
-            this.newItem_update_position(folder_id, this.options.newItem.default_position);
-            if (this.options.newItem.update_permissions_on_init) {
-                this.newItem_update_permissions(folder_id);
-            }
         }
         //}}}
-
-        //{{{ Permissions
-        if ($("docman_new_permissions_panel")) {
-            if (this.options.newItem.hide_permissions) {
-                new Insertion.Before(
-                    "docman_new_permissions_panel",
-                    '<div id="docman_new_permissions_text">' +
-                        this.options.language.new_same_perms_as_parent +
-                        ' <a href="" onclick="' +
-                        "Element.show('docman_new_permissions_panel'); " +
-                        "Element.hide('docman_new_permissions_text'); " +
-                        "new Insertion.Before('docman_new_permissions_panel', '<input type=hidden name=user_has_displayed_permissions value=1 />'); " +
-                        'return false;">[' +
-                        this.options.language.new_view_change +
-                        "]</a></div>",
-                );
-                Element.hide("docman_new_permissions_panel");
-            } else {
-                new Insertion.Before(
-                    "docman_new_permissions_panel",
-                    "<input type=hidden name=user_has_displayed_permissions value=1 />",
-                );
-            }
-        }
-        //}}}
-    },
-    onNewItemParentChange: function (folder_id) {
-        this.newItem_update_permissions(folder_id);
-        this.newItem_update_position(folder_id);
-    },
-    newItem_update_position: function (folder_id, default_position) {
-        var parameters = "";
-        if (default_position) {
-            parameters += "&default_position=" + default_position;
-        }
-        if (this.options.move.item_id) {
-            parameters += "&exclude=" + this.options.move.item_id;
-        }
-        new Ajax.Updater(
-            "docman_new_item_location_position",
-            "?group_id=" +
-                this.group_id +
-                "&action=positionWithinFolder&id=" +
-                folder_id +
-                parameters,
-            {
-                onComplete: function () {
-                    Element.hide("docman_new_item_location_spinner");
-                },
-                onLoading: function () {
-                    Element.show("docman_new_item_location_spinner");
-                },
-            },
-        );
-    },
-    newItem_update_permissions: function (folder_id) {
-        new Ajax.Updater(
-            "docman_new_permissions_panel",
-            "?group_id=" + this.group_id + "&action=permissionsForItem&id=" + folder_id,
-        );
     },
     _highlight: function (element_name) {
         if (!this["_highlight_" + element_name]) {
@@ -777,16 +711,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getPermissions: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=details&section=permissions",
-            class: "docman_item_option_permissions",
-            title: this.docman.options.language.action_permissions,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_permissions);
-        a.appendChild(title_txt);
-        return this._createLi(a);
-    },
     _getHistory: function () {
         var a = Builder.node("a", {
             href:
@@ -926,10 +850,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         ul.appendChild(this._getNotification());
         // History
         ul.appendChild(this._getHistory());
-        // Permissions
-        if (this.docman.actionsForItem[this.item_id].canPermissions) {
-            ul.appendChild(this._getPermissions());
-        }
+
         // Approval table
         if (this.docman.actionsForItem[this.item_id].canApproval) {
             ul.appendChild(this._getApproval());

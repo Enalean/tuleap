@@ -2453,9 +2453,6 @@ msgstr ""
 msgid "other folders:"
 msgstr ""
 
-msgid "recursive (apply same permissions to all sub-items of this folder)"
-msgstr ""
-
 msgid "report_id"
 msgstr ""
 

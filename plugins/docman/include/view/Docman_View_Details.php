@@ -143,11 +143,6 @@ class Docman_View_Details extends Docman_View_Display // phpcs:ignore PSR1.Class
                 $details->addSection($actions);
             }
         }
-        if ($user_can_manage && $is_old_ui_allowed) {
-            $sections['permissions'] = true;
-            $permissions             = new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url']);
-            $details->addSection($permissions);
-        }
 
         if ($user_can_read && ! ($params['item'] instanceof Docman_Empty)) {
             if ($view && $section == 'approval') {
@@ -163,9 +158,8 @@ class Docman_View_Details extends Docman_View_Display // phpcs:ignore PSR1.Class
             $details->setCurrentSection($section);
         } elseif (isset($params['section']) && isset($sections[$params['section']])) {
             $details->setCurrentSection($params['section']);
-        } elseif ($this->_controller->request->get('action') == 'permissions' && isset($sections['permissions'])) {
-            $details->setCurrentSection('permissions');
         }
+
         $details->display();
     }
 }
