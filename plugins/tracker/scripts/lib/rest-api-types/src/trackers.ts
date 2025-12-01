@@ -67,8 +67,13 @@ export interface UnknownFieldStructure extends BaseFieldStructure {
     readonly type: never;
 }
 
-interface StringFieldStructure extends BaseFieldStructure {
+export interface StringFieldStructure extends BaseFieldStructure {
     readonly type: StringFieldIdentifier;
+    readonly specific_properties: {
+        readonly maxchars: number;
+        readonly size: number;
+        readonly default_value: string;
+    };
 }
 
 export interface TextFieldStructure extends BaseFieldStructure {
@@ -115,6 +120,24 @@ export interface NumericFieldStructure extends BaseFieldStructure {
         | IntFieldIdentifier
         | PriorityFieldIdentifier
         | ComputedFieldIdentifier;
+}
+
+export interface IntFieldStructure extends NumericFieldStructure {
+    readonly type: IntFieldIdentifier;
+    readonly specific_properties: {
+        readonly maxchars: number;
+        readonly size: number;
+        readonly default_value: string;
+    };
+}
+
+export interface FloatFieldStructure extends NumericFieldStructure {
+    readonly type: FloatFieldIdentifier;
+    readonly specific_properties: {
+        readonly maxchars: number;
+        readonly size: number;
+        readonly default_value: string;
+    };
 }
 
 export interface UserFieldStructure extends BaseFieldStructure {

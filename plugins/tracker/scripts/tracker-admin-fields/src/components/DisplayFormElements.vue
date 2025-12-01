@@ -25,7 +25,9 @@
             v-bind:columns="element.columns"
         />
         <field-text v-else-if="isTextField(element.field)" v-bind:field="element.field" />
-        <field-string v-else-if="isStringField(element)" v-bind:field="element.field" />
+        <field-string v-else-if="isStringField(element.field)" v-bind:field="element.field" />
+        <field-int v-else-if="isIntField(element.field)" v-bind:field="element.field" />
+        <field-float v-else-if="isFloatField(element.field)" v-bind:field="element.field" />
         <field-select v-else-if="isSelectField(element)" v-bind:field="element.field" />
         <field-multi-select v-else-if="isMultiSelectField(element)" v-bind:field="element.field" />
         <base-field v-else v-bind:field="element.field" />
@@ -43,6 +45,13 @@ import {
     STRING_FIELD,
     TEXT_FIELD,
 } from "@tuleap/plugin-tracker-constants";
+import type {
+    IntFieldStructure,
+    FloatFieldStructure,
+    StringFieldStructure,
+    TextFieldStructure,
+    StructureFields,
+} from "@tuleap/plugin-tracker-rest-api-types";
 import ContainerFieldset from "./FormElements/ContainerFieldset.vue";
 import ContainerColumnWrapper from "./FormElements/ContainerColumnWrapper.vue";
 import BaseField from "./FormElements/BaseField.vue";
@@ -50,7 +59,8 @@ import FieldText from "./FormElements/FieldText.vue";
 import FieldString from "./FormElements/FieldString.vue";
 import FieldSelect from "./FormElements/FieldSelect.vue";
 import FieldMultiSelect from "./FormElements/FieldMultiSelect.vue";
-import type { TextFieldStructure, StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+import FieldInt from "./FormElements/FieldInt.vue";
+import FieldFloat from "./FormElements/FieldFloat.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -62,13 +72,16 @@ function isTextField(field: StructureFields): field is TextFieldStructure {
     return field.type === TEXT_FIELD;
 }
 
-function isStringField(element: Element): boolean {
-    return (
-        "field" in element &&
-        (element.field.type === STRING_FIELD ||
-            element.field.type === INT_FIELD ||
-            element.field.type === FLOAT_FIELD)
-    );
+function isIntField(field: StructureFields): field is IntFieldStructure {
+    return field.type === INT_FIELD;
+}
+
+function isFloatField(field: StructureFields): field is FloatFieldStructure {
+    return field.type === FLOAT_FIELD;
+}
+
+function isStringField(field: StructureFields): field is StringFieldStructure {
+    return field.type === STRING_FIELD;
 }
 
 function isSelectField(element: Element): boolean {

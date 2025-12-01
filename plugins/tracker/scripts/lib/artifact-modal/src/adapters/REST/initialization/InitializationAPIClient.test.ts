@@ -63,6 +63,12 @@ describe(`InitializationAPIClient`, () => {
                         name: "unpredisposed",
                         label: "Interseamed",
                         required: false,
+
+                        specific_properties: {
+                            size: 42,
+                            maxchars: 0,
+                            default_value: "",
+                        },
                     },
                     {
                         field_id: 468,
@@ -70,6 +76,11 @@ describe(`InitializationAPIClient`, () => {
                         name: "coracler",
                         label: "Unwittily",
                         required: false,
+                        specific_properties: {
+                            size: 42,
+                            maxchars: 0,
+                            default_value: "",
+                        },
                     },
                 ],
                 notifications: { enabled: true },
