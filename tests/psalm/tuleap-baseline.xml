@@ -11959,28 +11959,6 @@
       <code><![CDATA[_getTitle]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_NewFolder.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_getAction]]></code>
-      <code><![CDATA[_getActionText]]></code>
-      <code><![CDATA[_getDefaultValuesFields]]></code>
-      <code><![CDATA[_getDefaultValuesFieldset]]></code>
-      <code><![CDATA[_getGeneralProperties]]></code>
-      <code><![CDATA[_getNewItem]]></code>
-      <code><![CDATA[_getSpecificPropertiesFieldset]]></code>
-      <code><![CDATA[_getTitle]]></code>
-    </MissingReturnType>
-    <TooManyArguments>
-      <code><![CDATA[getInheritableMdLabelArray]]></code>
-    </TooManyArguments>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_NewVersion.php">
     <MissingParamType>
       <code><![CDATA[$params]]></code>
@@ -11991,16 +11969,6 @@
     <MissingReturnType>
       <code><![CDATA[_content]]></code>
       <code><![CDATA[_getTitle]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_New_FolderSelection.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_title]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_ParentsTree.php">
