@@ -75,44 +75,6 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content .= '</dd>';
         //}}}
 
-        //{{{ Delete
-        $content .= '<dt>' . dgettext('tuleap-docman', 'Delete') . '</dt><dd>';
-        if (! $this->is_deleteable || $this->_controller->userCannotDelete($user, $this->item)) {
-            if ($this->item instanceof \Docman_Folder) {
-                $content .= dgettext('tuleap-docman', 'You cannot delete this folder.');
-            } else {
-                $content .= dgettext('tuleap-docman', 'You cannot delete this document.');
-            }
-        } else {
-            $delete_url = DocmanViewURLBuilder::buildActionUrl(
-                $this->item,
-                ['default_url' => $this->url],
-                ['action' => 'confirmDelete', 'id' => $this->item->getId()]
-            );
-
-            $data_test = 'delete-item-' . $this->item->getId();
-            if ($this->item instanceof \Docman_Folder) {
-                $content .= sprintf(
-                    dgettext(
-                        'tuleap-docman',
-                        'You can <a href="%1$s" data-test="%s">delete this folder</a>.'
-                    ),
-                    $delete_url,
-                    $data_test
-                );
-            } else {
-                $content .= sprintf(
-                    dgettext(
-                        'tuleap-docman',
-                        'You can <a href="%1$s" data-test="%s">delete this document</a>.'
-                    ),
-                    $delete_url,
-                    $data_test
-                );
-            }
-        }
-        $content .= '</dd>';
-        //}}}
 
         $content .= '</dl>';
         return $content;

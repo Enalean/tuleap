@@ -124,36 +124,6 @@ msgstr ""
 
 #, php-format
 msgid ""
-"<h3>Confirm deletion of document %1$s</h3><p>You are going to delete a "
-"document. </p><p>Are you sure that you want to delete this document?</p>"
-msgstr ""
-
-#, php-format
-msgid ""
-"<h3>Confirm deletion of document %1$s</h3><p>You are going to delete a file. "
-"Please note that all versions will be deleted.</p><p>Are you sure that you "
-"want to delete this file?</p>"
-msgstr ""
-
-#, php-format
-msgid ""
-"<h3>Confirm deletion of folder %1$s</h3><p>You are going to delete a folder. "
-"Please note that all sub-items and their versions will be deleted.</p><p>Are "
-"you sure that you want to delete this folder?</p>"
-msgstr ""
-
-msgid ""
-"<p><em>Please Note that if you check the 'Cascade deletion to wiki' option, "
-"the referenced wiki page will no longer exist in wiki service too.</em></p>"
-msgstr ""
-
-msgid ""
-"<p><em>You should also be aware that the following documents will no longer "
-"be valid if you choose to cascade deletion to wiki service:</em></p>"
-msgstr ""
-
-#, php-format
-msgid ""
 "<p><img src=\"%3$s\" /> There are differences in properties definitions "
 "between %1$s and %2$s. You <strong>may loose</strong> some "
 "<strong>properties informations</strong>.</p><p>You may either:<ul><li>Paste "
@@ -449,9 +419,6 @@ msgstr ""
 msgid "Cannot remove from the approval table."
 msgstr ""
 
-msgid "Cascade deletion to wiki service"
-msgstr ""
-
 #, php-format
 msgid "Change \"%1$s\""
 msgstr ""
@@ -623,10 +590,6 @@ msgstr ""
 
 msgid "Delete"
 msgstr "Excluir"
-
-#, php-format
-msgid "Delete %1$s"
-msgstr ""
 
 msgid "Delete date"
 msgstr ""
@@ -1971,9 +1934,6 @@ msgstr ""
 msgid "Version reviewed:"
 msgstr ""
 
-msgid "Versions"
-msgstr ""
-
 msgid "View and update obsolete documents."
 msgstr ""
 
@@ -2122,14 +2082,6 @@ msgid ""
 msgstr ""
 
 #, php-format
-msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this document</a>."
-msgstr ""
-
-#, php-format
-msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this folder</a>."
-msgstr ""
-
-#, php-format
 msgid "You can <a href=\"%1$s\">create a new document</a> in this folder."
 msgstr ""
 
@@ -2209,12 +2161,6 @@ msgid "You cannot create a new version."
 msgstr ""
 
 msgid "You cannot delete the root folder."
-msgstr ""
-
-msgid "You cannot delete this document."
-msgstr ""
-
-msgid "You cannot delete this folder."
 msgstr ""
 
 msgid "You cannot enforce an empty filename pattern"
