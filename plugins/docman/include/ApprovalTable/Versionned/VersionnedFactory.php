@@ -169,7 +169,8 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
         $dao = $this->_getDao();
         $dar = $dao->getCountOfApprovalTableItemId($this->item->getId());
         if ($dar && ! $dar->isError()) {
-            return (int) $dar->getRow()['nb_table'];
+            $row = $dar->getRow();
+            return $row ? (int) $row['nb_table'] : 0;
         }
 
         return 0;

@@ -78,7 +78,7 @@
 
 <script setup lang="ts">
 import type { ApprovableDocument, ApprovalTable, Item } from "../../../type";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import ApprovalTableHistoryLoading from "./ApprovalTableHistoryLoading.vue";
 import { getAllDocumentApprovalTables } from "../../../api/approval-table-rest-querier";
 import UserBadge from "../../User/UserBadge.vue";
@@ -106,6 +106,20 @@ onBeforeMount(() => {
         },
     );
 });
+
+watch(
+    () => props.item,
+    () => {
+        getAllDocumentApprovalTables(props.item.id).match(
+            (tables) => {
+                approval_tables.value = tables;
+            },
+            (fault) => {
+                emit("error", fault.toString());
+            },
+        );
+    },
+);
 
 function shouldDisplayLinkToVersion(table: ApprovalTable): boolean {
     if (props.version !== null) {

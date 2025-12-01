@@ -47,6 +47,7 @@
                         <no-approval-table
                             v-else-if="!item.has_approval_table"
                             v-bind:item="item"
+                            v-on:table-created="onTableCreated()"
                         />
 
                         <current-approval-table
@@ -89,7 +90,7 @@ import { useActions } from "vuex-composition-helpers";
 import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
 import { ApprovalTableTab } from "../../helpers/details-tabs";
 import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
-import NoApprovalTable from "./NoApprovalTable.vue";
+import NoApprovalTable from "./Creation/NoApprovalTable.vue";
 import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
 import ApprovalTableHistory from "./History/ApprovalTableHistory.vue";
 
@@ -106,4 +107,8 @@ const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAsce
 onBeforeMount(async () => {
     item.value = await loadDocumentWithAscendentHierarchy(props.item_id);
 });
+
+async function onTableCreated(): Promise<void> {
+    item.value = await loadDocumentWithAscendentHierarchy(props.item_id);
+}
 </script>

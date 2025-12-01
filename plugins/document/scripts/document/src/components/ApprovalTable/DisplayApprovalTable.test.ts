@@ -26,7 +26,7 @@ import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 import { PROJECT } from "../../configuration-keys";
 import { TYPE_EMPTY } from "../../constants";
-import NoApprovalTable from "./NoApprovalTable.vue";
+import NoApprovalTable from "./Creation/NoApprovalTable.vue";
 import { ApprovalTableBuilder } from "../../../tests/builders/ApprovalTableBuilder";
 import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
 
@@ -39,6 +39,7 @@ describe("DisplayApprovalTable", () => {
         return shallowMount(DisplayApprovalTable, {
             props: {
                 item_id: 123,
+                version: null,
             },
             global: {
                 ...getGlobalTestOptions({

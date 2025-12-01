@@ -35,7 +35,8 @@ export default vite.defineAppConfig(
             vue({
                 template: {
                     compilerOptions: {
-                        isCustomElement: (tag: string) => tag === "tlp-relative-date",
+                        isCustomElement: (tag: string) =>
+                            tag === "tlp-relative-date" || tag === "tuleap-lazybox",
                     },
                 },
             }),

@@ -20,12 +20,13 @@
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Item } from "../../type";
+import type { Item } from "../../../type";
 import NoApprovalTable from "./NoApprovalTable.vue";
-import { PROJECT } from "../../configuration-keys";
-import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
-import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
+import { PROJECT } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { ItemBuilder } from "../../../../tests/builders/ItemBuilder";
+import ApprovalTableCreationModal from "./ApprovalTableCreationModal.vue";
 
 describe("NoApprovalTable", () => {
     function getWrapper(item: Item): VueWrapper<InstanceType<typeof NoApprovalTable>> {
@@ -46,6 +47,6 @@ describe("NoApprovalTable", () => {
     ])(`%s`, (_: string, can_write: boolean) => {
         const wrapper = getWrapper(new ItemBuilder(123).withUserCanWrite(can_write).build());
 
-        expect(wrapper.find("[data-test=creation-button]").exists()).toBe(can_write);
+        expect(wrapper.findComponent(ApprovalTableCreationModal).exists()).toBe(can_write);
     });
 });

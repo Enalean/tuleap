@@ -62,6 +62,9 @@ msgstr ""
 msgid "Add notification"
 msgstr ""
 
+msgid "Add reviewers"
+msgstr ""
+
 msgid "Administration"
 msgstr "Administração"
 
@@ -92,6 +95,9 @@ msgid "An error occurred while searching for results."
 msgstr ""
 
 msgid "Any"
+msgstr ""
+
+msgid "Append members of user groups to the table"
 msgstr ""
 
 msgid "Apply"
@@ -163,6 +169,12 @@ msgstr ""
 msgid "Changelog"
 msgstr ""
 
+msgid "Choose which users need to approve the document"
+msgstr ""
+
+msgid "Choose zero, one or multiple user group"
+msgstr ""
+
 msgid "Close"
 msgstr "Fechar"
 
@@ -195,6 +207,12 @@ msgid "Copy the previous approval table."
 msgstr ""
 
 msgid "Corrupted"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "Create a new approval table"
 msgstr ""
 
 msgid "Create a new document"
@@ -313,6 +331,9 @@ msgid "Enable monitoring for the whole sub-hierarchy"
 msgstr ""
 
 msgid "End"
+msgstr ""
+
+msgid "Error while creating approval table"
 msgstr ""
 
 msgid "File"
@@ -489,6 +510,12 @@ msgstr ""
 msgid "No notifications set"
 msgstr ""
 
+msgid "No results found"
+msgstr ""
+
+msgid "No values to select"
+msgstr ""
+
 msgid "No version history"
 msgstr ""
 
@@ -651,6 +678,9 @@ msgid "Rejected"
 msgstr ""
 
 msgid "Reload the page"
+msgstr ""
+
+msgid "Remove all values"
 msgstr ""
 
 msgid "Requester comment"

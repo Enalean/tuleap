@@ -17,6 +17,7 @@
     "@tuleap/keyboard-shortcuts": "workspace:*",
     "@tuleap/lazybox": "workspace:^",
     "@tuleap/lazybox-users-autocomplete": "workspace:^",
+    "@tuleap/list-picker": "workspace:^",
     "@tuleap/locale": "workspace:^",
     "@tuleap/option": "workspace:*",
     "@tuleap/project-background": "workspace:^",
