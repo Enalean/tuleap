@@ -668,16 +668,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         element.appendChild(sep);
         element.appendChild(this._createQuickMoveIcon(action));
     },
-    _getNewFolder: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=newFolder",
-            class: "docman_item_option_newfolder",
-            title: this.docman.options.language.action_newfolder,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_newfolder);
-        a.appendChild(title_txt);
-        return this._createLi(a);
-    },
     _getNewDocument: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=newDocument",
@@ -789,11 +779,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
 
         var writeAction = false;
 
-        // New folder
-        if (this.docman.actionsForItem[this.item_id].canNewFolder) {
-            ul.appendChild(this._getNewFolder(this.item_id));
-            writeAction = true;
-        }
         // New document
         if (this.docman.actionsForItem[this.item_id].canNewDocument) {
             ul.appendChild(this._getNewDocument(this.item_id));

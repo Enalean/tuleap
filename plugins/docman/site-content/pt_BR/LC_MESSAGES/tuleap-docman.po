@@ -485,12 +485,6 @@ msgstr "Criar"
 msgid "Create Date"
 msgstr ""
 
-msgid "Create a document"
-msgstr ""
-
-msgid "Create a folder"
-msgstr ""
-
 msgid "Create a new approval table"
 msgstr ""
 
@@ -507,9 +501,6 @@ msgid "Create an new empty table."
 msgstr ""
 
 msgid "Create document"
-msgstr ""
-
-msgid "Create folder"
 msgstr ""
 
 msgid "Create new version"
@@ -918,12 +909,6 @@ msgstr ""
 msgid "Granted groups"
 msgstr ""
 
-msgid ""
-"How to use folder selector:<ul><li><em>[other folders: ]</em> link displays "
-"the whole folder tree.</li><li><em>Position</em> select box allows to select "
-"the position within the selected folder.</li></ul>"
-msgstr ""
-
 msgid "Image Id:"
 msgstr ""
 
@@ -997,9 +982,6 @@ msgid "It is not possible to update a wiki page with approval table."
 msgstr ""
 
 msgid "Item Id"
-msgstr ""
-
-msgid "Item nature"
 msgstr ""
 
 msgid "Item successfully deleted."
@@ -1149,13 +1131,7 @@ msgstr ""
 msgid "New document"
 msgstr ""
 
-msgid "New document - Parent Folder Selection"
-msgstr ""
-
 msgid "New filter name:"
-msgstr ""
-
-msgid "New folder"
 msgstr ""
 
 msgid "New personal report..."
@@ -1322,9 +1298,6 @@ msgid "Please choose option for creating approval table"
 msgstr ""
 
 msgid "Please enter a new search name:"
-msgstr ""
-
-msgid "Please select the folder where you want this new document appears."
 msgstr ""
 
 msgid "Position:"
@@ -2086,10 +2059,6 @@ msgid "You can <a href=\"%1$s\">create a new document</a> in this folder."
 msgstr ""
 
 #, php-format
-msgid "You can <a href=\"%1$s\">create a new folder</a> in this folder."
-msgstr ""
-
-#, php-format
 msgid "You can <a href=\"%1$s\">create a new version</a>."
 msgstr ""
 
@@ -2113,10 +2082,6 @@ msgid ""
 "You can customize your report by adding text and an image. Note: an image is "
 "just a reference on any valid image available in documentation manager "
 "(across projects)."
-msgstr ""
-
-msgid ""
-"You can either create a new document (file, link, wiki, etc) or a new folder."
 msgstr ""
 
 msgid ""

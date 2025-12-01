@@ -87,7 +87,6 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor //phpcs:ignore PSR1
     {
         if ($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewDocument'] = true;
-            $this->actions['canNewFolder']   = true;
             $itemFactory                     = Docman_ItemFactory::instance($item->getGroupId());
             $parents                         = $itemFactory->getParents($item->getId());
             $this->actions['parents']        = $parents;

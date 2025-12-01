@@ -584,12 +584,6 @@ msgstr "Créer"
 msgid "Create Date"
 msgstr "Date de création"
 
-msgid "Create a document"
-msgstr "Créer un document"
-
-msgid "Create a folder"
-msgstr "Créer un dossier"
-
 msgid "Create a new approval table"
 msgstr "Créer une nouvelle table d'approbation"
 
@@ -607,9 +601,6 @@ msgstr "Créer une nouvelle table vide."
 
 msgid "Create document"
 msgstr "Créer le document"
-
-msgid "Create folder"
-msgstr "Créer le dossier"
 
 msgid "Create new version"
 msgstr "Créer une nouvelle version"
@@ -1073,16 +1064,6 @@ msgstr "Recherche globale de texte"
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
-msgid ""
-"How to use folder selector:<ul><li><em>[other folders: ]</em> link displays "
-"the whole folder tree.</li><li><em>Position</em> select box allows to select "
-"the position within the selected folder.</li></ul>"
-msgstr ""
-"Comment utiliser le sélecteur de dossier:<ul><li>Le lien <em>[autres "
-"dossiers: ]</em> affiche toute l'arborescence.</li><li>La liste déroulante "
-"<em>Position</em> permet de sélectionner la position au sein du dossier "
-"sélectionné.</li></ul>"
-
 msgid "Image Id:"
 msgstr "Id de l'image :"
 
@@ -1166,9 +1147,6 @@ msgstr ""
 
 msgid "Item Id"
 msgstr "Identifiant du document"
-
-msgid "Item nature"
-msgstr "Nature du document"
 
 msgid "Item successfully deleted."
 msgstr "Elément supprimé."
@@ -1325,14 +1303,8 @@ msgstr "Nouvelle version"
 msgid "New document"
 msgstr "Nouveau document"
 
-msgid "New document - Parent Folder Selection"
-msgstr "Nouveau document - Sélection du répertoire parent"
-
 msgid "New filter name:"
 msgstr "Nouveau nom de filtre :"
-
-msgid "New folder"
-msgstr "Nouveau dossier"
 
 msgid "New personal report..."
 msgstr "Nouveau rapport personnel..."
@@ -1501,11 +1473,6 @@ msgstr "Veuillez choisir une option pour la création de la table d'approbation"
 
 msgid "Please enter a new search name:"
 msgstr "Merci d'entrer un nom pour la nouvelle recherche :"
-
-msgid "Please select the folder where you want this new document appears."
-msgstr ""
-"Merci de sélectionner le répertoire où vous souhaitez que ce document "
-"apparaisse."
 
 msgid "Position:"
 msgstr "Position :"
@@ -2363,11 +2330,6 @@ msgstr ""
 "Vous pouvez <a href=\"%1$s\">créer un nouveau document</a> dans ce dossier."
 
 #, php-format
-msgid "You can <a href=\"%1$s\">create a new folder</a> in this folder."
-msgstr ""
-"Vous pouvez <a href=\"%1$s\">créer un nouveau dossier</a> dans ce dossier."
-
-#, php-format
 msgid "You can <a href=\"%1$s\">create a new version</a>."
 msgstr "Vous pouvez <a href=\"%1$s\">créer une nouvelle version</a>."
 
@@ -2399,12 +2361,6 @@ msgstr ""
 "Vous pouvez personnaliser votre rapport en ajoutant un texte et une image. "
 "Note : une image est juste une reference sur une image valide disponible "
 "dans le gestionnaire de document (indépendamment des projets)."
-
-msgid ""
-"You can either create a new document (file, link, wiki, etc) or a new folder."
-msgstr ""
-"Vous pouvez soit créer un nouveau document (fichier, lien, wiki, etc) ou un "
-"nouveau dossier."
 
 msgid ""
 "You can enforce the filename to follow a pattern. This filename will be "
