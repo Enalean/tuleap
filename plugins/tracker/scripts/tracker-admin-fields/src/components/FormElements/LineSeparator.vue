@@ -18,27 +18,15 @@
   -->
 
 <template>
-    <div class="tlp-form-element column-wrapper">
-        <container-column
-            v-for="column of columns"
-            v-bind:key="column.field.field_id"
-            v-bind:column="column"
-        />
+    <div class="tlp-form-element">
+        <hr />
     </div>
 </template>
 
 <script setup lang="ts">
-import type { Column } from "../../type";
-import ContainerColumn from "./ContainerColumn.vue";
+import type { SeparatorStructure } from "@tuleap/plugin-tracker-rest-api-types";
 
 defineProps<{
-    columns: Array<Column>;
+    field: SeparatorStructure;
 }>();
 </script>
-
-<style lang="scss" scoped>
-.column-wrapper {
-    display: flex;
-    gap: var(--tlp-medium-spacing);
-}
-</style>

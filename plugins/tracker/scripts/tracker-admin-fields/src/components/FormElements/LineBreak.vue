@@ -18,27 +18,22 @@
   -->
 
 <template>
-    <div class="tlp-form-element column-wrapper">
-        <container-column
-            v-for="column of columns"
-            v-bind:key="column.field.field_id"
-            v-bind:column="column"
-        />
+    <div class="tlp-form-element">
+        <i class="fa-solid fa-paragraph" role="img" v-bind:aria-label="field.label"></i>
     </div>
 </template>
 
 <script setup lang="ts">
-import type { Column } from "../../type";
-import ContainerColumn from "./ContainerColumn.vue";
+import type { LineBreakStructure } from "@tuleap/plugin-tracker-rest-api-types";
 
 defineProps<{
-    columns: Array<Column>;
+    field: LineBreakStructure;
 }>();
 </script>
 
 <style lang="scss" scoped>
-.column-wrapper {
-    display: flex;
-    gap: var(--tlp-medium-spacing);
+div {
+    opacity: 0.5;
+    color: var(--tlp-dimmed-color);
 }
 </style>
