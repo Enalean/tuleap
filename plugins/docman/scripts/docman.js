@@ -711,28 +711,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getHistory: function () {
-        var a = Builder.node("a", {
-            href:
-                this.docman.options.document_path + "/versions/" + encodeURIComponent(this.item_id),
-            class: "docman_item_option_history",
-            title: this.docman.options.language.action_history,
-        });
-        a.setAttribute("data-test", "history");
-        var title_txt = document.createTextNode(this.docman.options.language.action_history);
-        a.appendChild(title_txt);
-        return this._createLi(a);
-    },
-    _getNotification: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=details&section=notifications",
-            class: "docman_item_option_notifications",
-            title: this.docman.options.language.action_notifications,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_notifications);
-        a.appendChild(title_txt);
-        return this._createLi(a);
-    },
     _getDelete: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=confirmDelete",
@@ -845,11 +823,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         if (writeAction == true) {
             ul.appendChild(this._getSeparator());
         }
-
-        // Notification
-        ul.appendChild(this._getNotification());
-        // History
-        ul.appendChild(this._getHistory());
 
         // Approval table
         if (this.docman.actionsForItem[this.item_id].canApproval) {
