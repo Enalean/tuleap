@@ -29,6 +29,9 @@ dependencies:
   '@tuleap/plugin-tracker-email-copy-paste':
     specifier: workspace:*
     version: link:../lib/email-copy-paste
+  '@tuleap/plugin-tracker-rte-creator':
+    specifier: workspace:^
+    version: link:../lib/rte-creator
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../../../lib/frontend/project-background

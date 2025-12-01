@@ -24,6 +24,7 @@ import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue
 import { getAttributeOrThrow } from "@tuleap/dom";
 import FieldsUsage from "./components/FieldsUsage.vue";
 import "./styles/tracker-admin-fields.scss";
+import { PROJECT_ID } from "./type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("tracker-admin-fields-usage-mount-point");
@@ -43,5 +44,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }),
         )
         .use(VueDOMPurifyHTML)
+        .provide(PROJECT_ID, parseInt(getAttributeOrThrow(mount_point, "data-project-id"), 10))
         .mount(mount_point);
 });

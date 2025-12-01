@@ -46,7 +46,7 @@ describe(`PreviewEditButton`, () => {
 
     it.each([
         [true, "Preview", "fa-eye"],
-        [false, "Edit", "fa-pencil-alt"],
+        [false, "Edit", "fa-pencil"],
     ])(
         `when is_in_edit_mode is %s, it will create a %s button`,
         async (is_in_edit_mode: boolean, button_name: string, button_icon: string) => {
@@ -86,8 +86,8 @@ describe(`PreviewEditButton`, () => {
         return presenter.promise_of_preview.catch(identity).then(() => {
             const button = getButton();
             expect(stripLitExpressionComments(button.outerHTML)).toMatchInlineSnapshot(`
-                <button type="button" class="btn btn-small rte-button">
-                  <i aria-hidden="true" class="fas fa-fw fa-eye"></i>
+                <button type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small rte-button">
+                  <i aria-hidden="true" class="fa-fw fa-solid fa-eye tlp-button-icon"></i>
                   Preview
                 </button>
             `);
@@ -104,8 +104,8 @@ describe(`PreviewEditButton`, () => {
         render(template, mount_point);
         const button = getButton();
         expect(stripLitExpressionComments(button.outerHTML)).toMatchInlineSnapshot(`
-            <button type="button" class="btn btn-small rte-button" disabled="">
-              <i class="fas fa-fw fa-spin fa-circle-notch" aria-hidden="true"></i>
+            <button type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small rte-button" disabled="">
+              <i class="fa-solid fa-fw fa-spin fa-circle-notch tlp-button-icon" aria-hidden="true"></i>
               Preview
             </button>
         `);

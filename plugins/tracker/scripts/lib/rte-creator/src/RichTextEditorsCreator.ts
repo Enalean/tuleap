@@ -44,6 +44,7 @@ export interface RichTextEditorsCreator {
      * @throws
      */
     createTextFieldEditors(): void;
+    createTextFieldEditor(text_field_textarea: Element): void;
 }
 
 export const RichTextEditorsCreator = (
@@ -147,5 +148,6 @@ export const RichTextEditorsCreator = (
         createNewCommentEditor,
         createEditCommentEditor,
         createTextFieldEditors,
+        createTextFieldEditor,
     };
 };

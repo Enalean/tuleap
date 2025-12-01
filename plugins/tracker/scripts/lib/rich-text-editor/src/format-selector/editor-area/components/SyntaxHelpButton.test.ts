@@ -18,9 +18,9 @@
  */
 
 import { createSyntaxHelpButton } from "./SyntaxHelpButton";
+import { selectOrThrow } from "@tuleap/dom";
 import type { GettextProvider } from "@tuleap/gettext";
 import { render } from "lit-html";
-import { stripLitExpressionComments } from "../../../test-helper";
 import { initGettextSync } from "@tuleap/gettext";
 
 describe(`SyntaxHelpButton`, () => {
@@ -34,7 +34,9 @@ describe(`SyntaxHelpButton`, () => {
     it(`will create a custom element with the button and the popover content`, () => {
         const template = createSyntaxHelpButton({ is_disabled: false }, gettext_provider);
         render(template, mount_point);
-        expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchSnapshot();
+
+        expect(selectOrThrow(mount_point, "[data-test=help-button]")).toBeDefined();
+        expect(selectOrThrow(mount_point, "[data-popover-content]")).toBeDefined();
     });
 
     it(`when is_selected is true, it will disable the button`, () => {

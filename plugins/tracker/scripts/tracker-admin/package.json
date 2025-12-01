@@ -13,6 +13,7 @@
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/locale": "workspace:^",
     "@tuleap/plugin-tracker-email-copy-paste": "workspace:*",
+    "@tuleap/plugin-tracker-rte-creator": "workspace:^",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-color-picker": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",

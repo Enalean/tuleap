@@ -41,18 +41,11 @@ $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $track
         padding: 30px 12px $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom;
     }
 
-    h1 {
+    h1:not(.tlp-popover-title) {
         margin: 0 0 20px;
         color: #474747;
         font-size: 2em;
         font-weight: bold;
-    }
-
-    // To avoid to apply the generic H1 style class.
-    .helper-popover-title {
-        margin: 0;
-        color: var(--tlp-white-color);
-        font-size: 16px;
     }
 
     /* stylelint-disable-next-line selector-class-pattern */

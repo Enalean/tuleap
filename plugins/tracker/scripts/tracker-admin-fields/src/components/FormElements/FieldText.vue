@@ -25,18 +25,47 @@
             v-bind:id="id"
             v-bind:rows="field.specific_properties.rows"
             v-bind:value="field.specific_properties.default_value"
+            v-bind:data-project-id="project_id"
+            ref="textarea"
         ></textarea>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
 import type { TextFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import LabelForField from "./LabelForField.vue";
+import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
+import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
+import { getLocaleWithDefault } from "@tuleap/locale";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../type";
 
 const props = defineProps<{
     field: TextFieldStructure;
 }>();
 
-const id = computed(() => "textarea-" + props.field.field_id);
+const id = computed(() => "textarea_" + props.field.field_id);
+
+const project_id = strictInject(PROJECT_ID);
+
+const textarea = ref<InstanceType<typeof HTMLTextAreaElement>>();
+
+onMounted(() => {
+    if (textarea.value === undefined) {
+        return;
+    }
+
+    const user_locale = getLocaleWithDefault(document);
+    const creator = RichTextEditorsCreator(
+        document,
+        UploadImageFormFactory(document, user_locale),
+        RichTextEditorFactory.forBurningParrotWithFormatSelector(document, user_locale),
+    );
+    creator.createTextFieldEditor(textarea.value);
+});
 </script>
+<style lang="scss">
+@use "pkg:@tuleap/plugin-tracker-rich-text-editor";
+</style>

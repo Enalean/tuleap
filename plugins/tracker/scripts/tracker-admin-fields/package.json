@@ -10,9 +10,14 @@
     "@tuleap/dom": "workspace:^",
     "@tuleap/gettext": "workspace:^",
     "@tuleap/list-picker": "workspace:^",
+    "@tuleap/locale": "workspace:^",
+    "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:^",
     "@tuleap/plugin-tracker-constants": "workspace:^",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:^",
+    "@tuleap/plugin-tracker-rich-text-editor": "workspace:^",
+    "@tuleap/plugin-tracker-rte-creator": "workspace:^",
     "@tuleap/tlp-date-picker": "workspace:^",
+    "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
     "vue": "^3.5.25",
     "vue-dompurify-html": "^5.3.0",
@@ -20,6 +25,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/mention": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.4.6"

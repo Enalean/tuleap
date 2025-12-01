@@ -21,6 +21,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 import type { TemplateResult } from "lit-html";
 import type { EditorAreaStateInterface } from "./EditorAreaStateInterface";
 import "./FlamingParrotPopoverButtonElement";
+import "./BurningParrotPopoverButtonElement";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,

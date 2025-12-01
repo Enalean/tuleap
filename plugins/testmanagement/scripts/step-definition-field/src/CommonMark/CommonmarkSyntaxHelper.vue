@@ -21,7 +21,7 @@
     <div>
         <button
             type="button"
-            class="btn btn-small button-commonmark-syntax-helper"
+            class="tlp-button-secondary tlp-button-outline tlp-button-small button-commonmark-syntax-helper"
             ref="button_helper"
             v-bind:disabled="is_in_preview_mode"
             data-test="button-helper"

@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\FormElement\Admin;
 
 use Tracker_IDisplayTrackerLayout;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssetsGeneric;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -41,6 +42,7 @@ final readonly class FieldsUsageDisplayController implements DispatchableWithReq
         private \TemplateRendererFactory $renderer_factory,
         private StructureRepresentationBuilder $structure_representation_builder,
         private FormElementRepresentationsBuilder $form_element_representations_builder,
+        private IncludeAssetsGeneric $ckeditor_assets,
     ) {
     }
 
@@ -54,6 +56,7 @@ final readonly class FieldsUsageDisplayController implements DispatchableWithReq
             throw new NotFoundException(dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
         }
 
+        $layout->includeFooterJavascriptFile($this->ckeditor_assets->getFileURL('ckeditor.js'));
         $layout->addJavascriptAsset(
             new \Tuleap\Layout\JavascriptViteAsset(
                 new IncludeViteAssets(

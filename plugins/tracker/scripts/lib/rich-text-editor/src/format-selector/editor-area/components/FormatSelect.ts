@@ -90,7 +90,7 @@ export function createSelect(
         <select
             id="${presenter.id}"
             name="${presenter.name}"
-            class="small"
+            class="tlp-select tlp-select-adjusted tlp-select-small format-select-box"
             ?disabled="${presenter.is_disabled}"
             @input="${inputHandler}"
             data-test="format-select"

@@ -24,7 +24,9 @@ namespace Tuleap\Tracker\FormElement\Admin;
 
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\IncludeAssetsBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -48,6 +50,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(StructureRepresentationBuilder::class),
             $this->createMock(FormElementRepresentationsBuilder::class),
+            IncludeAssetsBuilder::build(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -74,6 +77,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(StructureRepresentationBuilder::class),
             $this->createMock(FormElementRepresentationsBuilder::class),
+            IncludeAssetsBuilder::build(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -92,6 +96,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(123);
         $tracker->method('userIsAdmin')->willReturn(true);
+        $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
         $tracker->expects($this->once())->method('displayAdminItemHeaderBurningParrot');
         $tracker->expects($this->once())->method('displayFooter');
 
@@ -107,6 +112,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $structure_representation_builder,
             $form_element_representations_builder,
+            IncludeAssetsBuilder::build(),
         );
 
         ob_start();

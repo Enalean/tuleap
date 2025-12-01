@@ -36,20 +36,31 @@ export function createPreviewEditButton(
         ? gettext_provider.gettext("Preview")
         : gettext_provider.gettext("Edit");
     const loading_button = html`
-        <button type="button" class="btn btn-small rte-button" disabled>
-            <i class="fas fa-fw fa-spin fa-circle-notch" aria-hidden="true"></i>
+        <button
+            type="button"
+            class="tlp-button-secondary tlp-button-outline tlp-button-small rte-button"
+            disabled
+        >
+            <i
+                class="fa-solid fa-fw fa-spin fa-circle-notch tlp-button-icon"
+                aria-hidden="true"
+            ></i>
             ${button_label}
         </button>
     `;
-    const icon_class = presenter.is_in_edit_mode ? "fa-eye" : "fa-pencil-alt";
+    const icon_class = presenter.is_in_edit_mode ? "fa-solid fa-eye" : "fa-solid fa-pencil";
     const enabled_button = html`
         <button
             type="button"
-            class="btn btn-small rte-button"
-            @click="${presenter.onClickCallback}"
+            class="tlp-button-secondary tlp-button-outline tlp-button-small rte-button"
             data-test="preview-edit-button"
+            @click="${presenter.onClickCallback}"
         >
-            <i class="fas fa-fw ${icon_class}" aria-hidden="true" data-test="button-icon"></i>
+            <i
+                class="fa-fw ${icon_class} tlp-button-icon"
+                aria-hidden="true"
+                data-test="button-icon"
+            ></i>
             ${button_label}
         </button>
     `;

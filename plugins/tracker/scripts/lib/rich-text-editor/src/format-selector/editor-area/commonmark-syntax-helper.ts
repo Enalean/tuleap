@@ -26,13 +26,14 @@ export function getCommonMarkSyntaxPopoverHelperContent(
     gettext_provider: GettextProvider,
 ): TemplateResult {
     return html`
-        <template data-popover-content>
-            <section data-popover-root>
-                <div class="tlp-popover-header">
-                    <h1 class="tlp-popover-title helper-popover-title">
-                        ${unsafeStatic(gettext_provider.gettext("For your information..."))}
-                    </h1>
-                </div>
+        <section data-popover-content class="tlp-popover popover">
+            <div class="tlp-popover-arrow"></div>
+            <div class="tlp-popover-header">
+                <h1 class="tlp-popover-title">
+                    ${unsafeStatic(gettext_provider.gettext("For your information..."))}
+                </h1>
+            </div>
+            <div class="tlp-popover-body popover-content">
                 <table class="tlp-table">
                     <thead>
                         <tr>
@@ -122,7 +123,7 @@ export function getCommonMarkSyntaxPopoverHelperContent(
                                 \`\`\`
                             </td>
                             <td>
-                                <pre><code>a = 'Hello';
+                                <pre class="popover-code-block-example"><code>a = 'Hello';
 b = 'World';
 echo a.b;
 #display Hello World
@@ -131,7 +132,7 @@ echo a.b;
                         </tr>
                     </tbody>
                 </table>
-            </section>
-        </template>
+            </div>
+        </section>
     `;
 }

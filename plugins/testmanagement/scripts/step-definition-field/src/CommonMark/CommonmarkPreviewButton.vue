@@ -20,7 +20,7 @@
 
 <template>
     <button
-        class="btn btn-small button-commonmark-preview"
+        class="tlp-button-secondary tlp-button-outline tlp-button-small button-commonmark-preview"
         type="button"
         v-on:click="$emit('commonmark-preview-event')"
         v-bind:disabled="is_preview_loading"
