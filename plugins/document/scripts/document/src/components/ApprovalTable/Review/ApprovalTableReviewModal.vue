@@ -207,7 +207,7 @@ const error_message = ref<string>("");
 const modal = ref<Modal | null>(null);
 const review_value = ref<string>(props.reviewer.state);
 const comment_value = ref<string>(props.reviewer.comment);
-const notification_value = ref<boolean>(false);
+const notification_value = ref<boolean>(props.reviewer.notification);
 const popover_trigger = ref<HTMLElement>();
 
 onMounted(() => {

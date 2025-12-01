@@ -72,26 +72,25 @@ function getLinkToApprovalTableAdmin(): string {
     return `/plugins/docman/?group_id=${project.id}&action=approval_create&id=${props.item.id}`;
 }
 
-watch(
-    () => props.version,
-    () => {
-        const version = props.version ?? props.item.approval_table?.version_number;
-        if (version === null || version === undefined) {
+function refreshTable(): void {
+    const version = props.version ?? props.item.approval_table?.version_number;
+    if (version === null || version === undefined) {
+        approval_table.value = null;
+        return;
+    }
+    getDocumentApprovalTable(props.item.id, version).match(
+        (table) => {
+            approval_table.value = table;
+        },
+        (fault) => {
             approval_table.value = null;
-            return;
-        }
-        getDocumentApprovalTable(props.item.id, version).match(
-            (table) => {
-                approval_table.value = table;
-            },
-            (fault) => {
-                approval_table.value = null;
-                emit("error", fault.toString());
-            },
-        );
-    },
-    { immediate: true },
-);
+            emit("error", fault.toString());
+        },
+    );
+}
+
+watch(() => props.version, refreshTable, { immediate: true });
+watch(() => props.item, refreshTable);
 </script>
 
 <style scoped lang="scss">

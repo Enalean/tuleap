@@ -35,6 +35,7 @@ use Docman_MetadataListOfValuesElementFactory;
 use Docman_PermissionsManager;
 use Docman_VersionFactory;
 use EventManager;
+use Lcobucci\Clock\SystemClock;
 use Luracast\Restler\RestException;
 use PermissionsManager;
 use Project;
@@ -44,7 +45,11 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Log\LogEntry;
 use Tuleap\Docman\Log\LogRetriever;
+use Tuleap\Docman\Notifications\NotificationBuilders;
+use Tuleap\Docman\ResponseFeedbackWrapper;
 use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTablePostRepresentation;
+use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTableReviewPutRepresentation;
+use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTableReviewUpdater;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Log\LogEntryRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
@@ -335,7 +340,9 @@ final class DocmanItemsResource extends AuthenticatedResource
         $this->checkAccess();
         Header::allowOptionsGet();
 
-        $item = $this->retrieveItem($id);
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
 
         $factories_factory        = new Docman_ApprovalTableFactoriesFactory();
         $version_factory          = new Docman_VersionFactory();
@@ -347,7 +354,7 @@ final class DocmanItemsResource extends AuthenticatedResource
 
         Header::sendPaginationHeaders($limit, $offset, $approval_table_retriever->getCountOfApprovalTable($item), self::MAX_LIMIT);
         return array_map(
-            function (Docman_ApprovalTable $table) use ($item, $user_manager, $factories_factory, $provide_user_avatar_url, $version_factory): ItemApprovalTableRepresentation {
+            function (Docman_ApprovalTable $table) use ($item, $user_manager, $factories_factory, $provide_user_avatar_url, $version_factory, $project): ItemApprovalTableRepresentation {
                 $owner = $user_manager->getUserById((int) $table->getOwner());
                 if ($owner === null) {
                     $this->logger->error('An approval table has a non-existing user as owner', [
@@ -369,6 +376,7 @@ final class DocmanItemsResource extends AuthenticatedResource
                     $user_manager,
                     $provide_user_avatar_url,
                     $version_factory,
+                    new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
                 );
             },
             $approval_tables,
@@ -402,7 +410,9 @@ final class DocmanItemsResource extends AuthenticatedResource
         $this->checkAccess();
         Header::allowOptionsGet();
 
-        $item = $this->retrieveItem($id);
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
 
         $factories_factory        = new Docman_ApprovalTableFactoriesFactory();
         $version_factory          = new Docman_VersionFactory();
@@ -435,6 +445,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             $user_manager,
             $provide_user_avatar_url,
             $version_factory,
+            new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
         );
     }
 
@@ -494,6 +505,68 @@ final class DocmanItemsResource extends AuthenticatedResource
         foreach ($representation->user_groups as $user_group) {
             $reviewer_factory->addUgroup($user_group);
         }
+    }
+
+    /**
+     * @url OPTIONS {id}/approval_table/review
+     */
+    public function optionsPutApprovalTableReview(int $id): void
+    {
+        Header::allowOptionsPut();
+    }
+
+    /**
+     * Change user review on approval table
+     *
+     * @url    PUT {id}/approval_table/review
+     * @access hybrid
+     *
+     * @param int $id ID of the item {@from path}
+     * @param ApprovalTableReviewPutRepresentation $representation Review of the user {@from body}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function putApprovalTableReview(int $id, ApprovalTableReviewPutRepresentation $representation): void
+    {
+        $this->checkAccess();
+        Header::allowOptionsPut();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
+        $user          = $items_request->getUser();
+
+        $permissions_manager = Docman_PermissionsManager::instance((int) $project->getID());
+        $factories_factory   = new Docman_ApprovalTableFactoriesFactory();
+
+        if (! $permissions_manager->userCanRead($user, $item->getId())) {
+            throw new RestException(404);
+        }
+
+        $table_factory = $factories_factory->getFromItem($item);
+        if ($table_factory === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'Cannot review an item without approval table'));
+        }
+
+        $table = $table_factory->getTable();
+        if (! ($table instanceof Docman_ApprovalTable)) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'This document does not have an approval table. Please create one before'));
+        }
+
+        $reviewer_factory      = new Docman_ApprovalTableReviewerFactory($table, $item);
+        $notifications_manager = new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager();
+        $reviewer_factory->setNotificationManager($notifications_manager);
+
+        new ApprovalTableReviewUpdater(
+            $reviewer_factory,
+            $notifications_manager,
+            EventManager::instance(),
+            SystemClock::fromSystemTimezone(),
+        )->update($item, $user, $table, $representation);
     }
 
     /**
@@ -582,18 +655,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             $factories_factory,
             $version_factory,
+            new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
         );
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function retrieveItem(int $id): Docman_Item
-    {
-        $request_builder = new DocmanItemsRequestBuilder(UserManager::instance(), ProjectManager::instance());
-
-        $request = $request_builder->buildFromItemId($id);
-
-        return $request->getItem();
     }
 }

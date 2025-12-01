@@ -311,6 +311,9 @@ msgstr "Une erreur s'est produite pendant la suppression de l'élément."
 msgid "An error occured on property creation"
 msgstr "Une erreur s'est produite pendant la création de la propriété"
 
+msgid "An error occured while saving review"
+msgstr "Une erreur est survenue pendant la sauvegarde de l'approbation"
+
 msgid "An error occurred during the update of the max file size"
 msgstr ""
 "Une erreur est survenue durant la mise à jour de la taille maximale des "
@@ -378,6 +381,11 @@ msgstr "Paramètres globaux de la table d'approbation"
 
 msgid "Approval table history"
 msgstr "Historique des tables d'approbation"
+
+#, php-format
+msgid "Approval table state string %s does not match a valid state."
+msgstr ""
+"L'état %s de la table d'approbation ne correspond pas à un état valide."
 
 msgid "Approval table:"
 msgstr "Table d'approbation :"
@@ -517,6 +525,9 @@ msgstr ""
 
 msgid "Cannot remove from the approval table."
 msgstr "Impossible de supprimer de la table d'approbation."
+
+msgid "Cannot review an item without approval table"
+msgstr "Impossible d'approuver un item sans table d'approbation"
 
 #, php-format
 msgid "Change \"%1$s\""
@@ -1967,6 +1978,9 @@ msgstr "Il y a une erreur dans les paramètres. Retour vers l'écran précédent
 msgid "There is no data attached to this item."
 msgstr "Il n'y a pas de donnée pour cet élément."
 
+msgid "This document does not have an approval table. Please create one before"
+msgstr ""
+
 msgid "This is an automatic message. Please do not reply to this email"
 msgstr ""
 "Ceci est un message généré automatiquement. Merci de ne pas répondre à cet "
@@ -2441,6 +2455,9 @@ msgstr "Vous ne pouvez pas déplacer ce document."
 
 msgid "You cannot move this folder."
 msgstr "Vous ne pouvez pas déplacer ce dossier."
+
+msgid "You cannot review this approval table"
+msgstr ""
 
 msgid "You cannot update this document."
 msgstr "Vous ne pouvez pas mettre à jour ce document."

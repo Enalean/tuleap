@@ -37,6 +37,8 @@ use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\Notifications\NotificationBuilders;
+use Tuleap\Docman\ResponseFeedbackWrapper;
 use Tuleap\Docman\REST\v1\Folders\BuildSearchedItemRepresentationsFromSearchReport;
 use Tuleap\Docman\REST\v1\Folders\SearchReportBuilder;
 use Tuleap\Docman\REST\v1\Folders\SearchRepresentation;
@@ -293,6 +295,7 @@ final class SearchResource extends AuthenticatedResource
             $provide_user_avatar_url,
             $factories_factory,
             $version_factory,
+            new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
         );
 
 

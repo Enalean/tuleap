@@ -97,6 +97,10 @@ const emit = defineEmits<{
 const approval_tables = ref<ReadonlyArray<ApprovalTable> | null>(null);
 
 onBeforeMount(() => {
+    refreshHistory();
+});
+
+function refreshHistory(): void {
     getAllDocumentApprovalTables(props.item.id).match(
         (tables) => {
             approval_tables.value = tables;
@@ -105,21 +109,7 @@ onBeforeMount(() => {
             emit("error", fault.toString());
         },
     );
-});
-
-watch(
-    () => props.item,
-    () => {
-        getAllDocumentApprovalTables(props.item.id).match(
-            (tables) => {
-                approval_tables.value = tables;
-            },
-            (fault) => {
-                emit("error", fault.toString());
-            },
-        );
-    },
-);
+}
 
 function shouldDisplayLinkToVersion(table: ApprovalTable): boolean {
     if (props.version !== null) {
@@ -127,4 +117,6 @@ function shouldDisplayLinkToVersion(table: ApprovalTable): boolean {
     }
     return props.item.approval_table?.version_number !== table.version_number;
 }
+
+watch(() => props.item, refreshHistory);
 </script>

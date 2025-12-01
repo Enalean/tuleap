@@ -246,6 +246,9 @@ msgstr ""
 msgid "An error occured on property creation"
 msgstr ""
 
+msgid "An error occured while saving review"
+msgstr ""
+
 msgid "An error occurred during the update of the max file size"
 msgstr ""
 
@@ -304,6 +307,10 @@ msgid "Approval table global settings"
 msgstr ""
 
 msgid "Approval table history"
+msgstr ""
+
+#, php-format
+msgid "Approval table state string %s does not match a valid state."
 msgstr ""
 
 msgid "Approval table:"
@@ -417,6 +424,9 @@ msgid ""
 msgstr ""
 
 msgid "Cannot remove from the approval table."
+msgstr ""
+
+msgid "Cannot review an item without approval table"
 msgstr ""
 
 #, php-format
@@ -1747,6 +1757,9 @@ msgstr ""
 msgid "There is no data attached to this item."
 msgstr ""
 
+msgid "This document does not have an approval table. Please create one before"
+msgstr ""
+
 msgid "This is an automatic message. Please do not reply to this email"
 msgstr ""
 
@@ -2140,6 +2153,9 @@ msgid "You cannot move this document."
 msgstr ""
 
 msgid "You cannot move this folder."
+msgstr ""
+
+msgid "You cannot review this approval table"
 msgstr ""
 
 msgid "You cannot update this document."

@@ -27,6 +27,7 @@ use Docman_ApprovalTable;
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableVersionned;
 use Docman_Item;
+use Docman_NotificationsManager;
 use Docman_VersionFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\REST\JsonCast;
@@ -64,6 +65,7 @@ final readonly class ItemApprovalTableRepresentation
         RetrieveUserById $user_manager,
         ProvideUserAvatarUrl $provide_user_avatar_url,
         Docman_VersionFactory $version_factory,
+        Docman_NotificationsManager $notifications_manager,
     ): self {
         $version_label  = '';
         $version_id     = null;
@@ -95,6 +97,7 @@ final readonly class ItemApprovalTableRepresentation
                     $user_manager,
                     $provide_user_avatar_url,
                     $version_factory,
+                    $notifications_manager,
                 ),
                 $approval_table->getReviewerArray(),
             )),

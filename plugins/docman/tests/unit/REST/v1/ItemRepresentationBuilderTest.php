@@ -30,6 +30,7 @@ use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_LockFactory;
+use Docman_NotificationsManager;
 use Docman_PermissionsManager;
 use Docman_Version;
 use Docman_VersionFactory;
@@ -91,6 +92,7 @@ final class ItemRepresentationBuilderTest extends TestCase
             ProvideUserAvatarUrlStub::build(),
             $this->factories_factory,
             $this->version_factory,
+            $this->createStub(Docman_NotificationsManager::class),
         );
 
         UserManager::setInstance($this->user_manager);
