@@ -37,10 +37,15 @@ defineProps<{
 
 <style lang="scss" scoped>
 .tlp-property {
+    display: flex;
     flex: 1 1 auto;
+    flex-direction: column;
+    margin: 0;
+    gap: var(--tlp-small-spacing);
 }
 
 .column {
+    flex: 1 1 auto;
     padding: var(--tlp-medium-spacing);
     border: 1px dashed var(--tlp-neutral-normal-color);
     border-radius: var(--tlp-medium-radius);

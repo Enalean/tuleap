@@ -144,11 +144,11 @@ export interface UserFieldStructure extends BaseFieldStructure {
     readonly type: SubmittedByFieldIdentifier | LastUpdateByFieldIdentifier;
 }
 
-interface LineBreakStructure extends BaseFieldStructure {
+export interface LineBreakStructure extends BaseFieldStructure {
     readonly type: LineBreak;
 }
 
-interface SeparatorStructure extends BaseFieldStructure {
+export interface SeparatorStructure extends BaseFieldStructure {
     readonly type: Separator;
 }
 

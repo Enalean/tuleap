@@ -30,6 +30,8 @@
         <field-float v-else-if="isFloatField(element.field)" v-bind:field="element.field" />
         <field-select v-else-if="isSelectField(element)" v-bind:field="element.field" />
         <field-multi-select v-else-if="isMultiSelectField(element)" v-bind:field="element.field" />
+        <line-separator v-else-if="isLineSeparator(element.field)" v-bind:field="element.field" />
+        <line-break v-else-if="isLineBreak(element.field)" v-bind:field="element.field" />
         <base-field v-else v-bind:field="element.field" />
     </template>
 </template>
@@ -40,8 +42,10 @@ import {
     CONTAINER_FIELDSET,
     FLOAT_FIELD,
     INT_FIELD,
+    LINE_BREAK,
     MULTI_SELECTBOX_FIELD,
     SELECTBOX_FIELD,
+    SEPARATOR,
     STRING_FIELD,
     TEXT_FIELD,
 } from "@tuleap/plugin-tracker-constants";
@@ -51,6 +55,8 @@ import type {
     StringFieldStructure,
     TextFieldStructure,
     StructureFields,
+    SeparatorStructure,
+    LineBreakStructure,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import ContainerFieldset from "./FormElements/ContainerFieldset.vue";
 import ContainerColumnWrapper from "./FormElements/ContainerColumnWrapper.vue";
@@ -61,6 +67,8 @@ import FieldSelect from "./FormElements/FieldSelect.vue";
 import FieldMultiSelect from "./FormElements/FieldMultiSelect.vue";
 import FieldInt from "./FormElements/FieldInt.vue";
 import FieldFloat from "./FormElements/FieldFloat.vue";
+import LineSeparator from "./FormElements/LineSeparator.vue";
+import LineBreak from "./FormElements/LineBreak.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -98,5 +106,13 @@ function isFieldset(element: Element): element is Fieldset {
 
 function isColumnWrapper(element: Element): element is ColumnWrapper {
     return "columns" in element;
+}
+
+function isLineSeparator(field: StructureFields): field is SeparatorStructure {
+    return field.type === SEPARATOR;
+}
+
+function isLineBreak(field: StructureFields): field is LineBreakStructure {
+    return field.type === LINE_BREAK;
 }
 </script>
