@@ -88,6 +88,7 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
+use Tuleap\Request\CurrentPage;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
@@ -284,6 +285,7 @@ use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\User\UserPreferencesPostController;
 use Tuleap\Tracker\User\UserPreferencesPresenter;
+use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
 use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
@@ -378,6 +380,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
         $this->addHook(SiteAdministrationAddOption::NAME);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(PermissionPerGroupDisplayEvent::NAME);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
@@ -497,35 +500,66 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         );
     }
 
-    #[ListeningToEventClass]
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
     {
-        if ($this->isNotYetMigratedToBurningParrot()) {
-            return;
+        if (
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0 ||
+            $this->isInTrackersHomepage() ||
+            $this->isInDashboard() ||
+            $this->isAConvertedSemanticPage() ||
+            $this->isInTrackerAdmin()
+        ) {
+            $event->setIsInBurningParrotCompatiblePage();
         }
-        $event->setIsInBurningParrotCompatiblePage();
     }
 
-    private function isNotYetMigratedToBurningParrot(): bool
+    private function isAConvertedSemanticPage(): bool
     {
-        $server_uri = $_SERVER['REQUEST_URI'] ?? '';
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) !== 0) {
+            return false;
+        }
+
         parse_str($_SERVER['QUERY_STRING'], $query_string);
-        $func = $query_string['func'] ?? '';
 
-        $is_admin_fields        = ($func === 'admin-formElements' || $func === 'admin' || $func === 'admin-formElement-update-view');
-        $is_admin_notifications = str_contains($server_uri, '/plugins/tracker/notifications/');
-        $is_artifact_view       = array_key_exists('aid', $query_string);
-        $is_submit_artifact     = ($func === 'new-artifact' || $func === 'submit-artifact');
-        $is_confirm_deletion    = $func === 'admin-delete-artifact-confirm';
-        $is_tracker_report      = array_key_exists('report', $query_string)
-            || (array_key_exists('tracker', $query_string) && $func === '');
+        if (array_keys($query_string) !== ['tracker', 'func']) {
+            if (
+                ! isset($query_string['semantic'])
+            ) {
+                return false;
+            }
+        }
 
-        return $is_admin_fields
-            || $is_admin_notifications
-            || $is_artifact_view
-            || $is_submit_artifact
-            || $is_confirm_deletion
-            || $is_tracker_report;
+        return $query_string['func'] === 'admin-semantic';
+    }
+
+    private function isInTrackersHomepage(): bool
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) !== 0) {
+            return false;
+        }
+
+        parse_str($_SERVER['QUERY_STRING'], $output);
+
+        return array_keys($output) === ['group_id'];
+    }
+
+    private function isInTrackerAdmin(): bool
+    {
+        return in_array(
+            \Tuleap\HTTPRequest::instance()->get('func'),
+            [
+                'admin-canned',
+                'admin-hierarchy',
+                'admin-editoptions',
+                'admin-csvimport',
+                'admin-perms-tracker',
+                Workflow::FUNC_ADMIN_RULES,
+                Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
+                AdminWebhooks::FUNC_ADMIN_WEBHOOKS,
+                Workflow::FUNC_ADMIN_DEPENDENCIES,
+            ],
+            true,
+        );
     }
 
     #[ListeningToEventName('cssfile')]
@@ -1734,6 +1768,13 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             EventManager::instance()
         );
         $collector->collect($collection);
+    }
+
+    private function isInDashboard()
+    {
+        $current_page = new CurrentPage();
+
+        return $current_page->isDashboard();
     }
 
     public function workerEvent(WorkerEvent $event): void
