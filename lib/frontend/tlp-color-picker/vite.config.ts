@@ -18,9 +18,10 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 import vue from "@vitejs/plugin-vue";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [vue(), POGettextPlugin.vite(), viteDtsPlugin()],
@@ -30,7 +31,7 @@ export default vite.defineLibConfig({
             name: "TlpColorPicker",
         },
         rollupOptions: {
-            external: ["vue", "vue3-gettext"],
+            external: Object.keys(pkg.dependencies),
         },
     },
 });

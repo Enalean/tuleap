@@ -20,6 +20,7 @@
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
@@ -30,19 +31,10 @@ export default vite.defineLibConfig({
         },
         rollupOptions: {
             external: [
-                "lit-html",
                 "lit-html/directives/style-map.js",
                 "lit-html/directives/class-map.js",
-                "@tuleap/gettext",
+                ...Object.keys(pkg.dependencies),
             ],
-            output: {
-                globals: {
-                    "lit-html": "lit-html",
-                    "lit-html/directives/style-map.js": "lit-html/directives/style-map.js",
-                    "lit-html/directives/class-map.js": "lit-html/directives/class-map.js",
-                    "@tuleap/gettext": "@tuleap/gettext",
-                },
-            },
         },
     },
 });

@@ -19,12 +19,16 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/main.ts"),
             name: "PluginAgileDashboardScrumMilestoneHeader",
+        },
+        rollupOptions: {
+            external: Object.keys(pkg.dependencies),
         },
     },
 });

@@ -18,10 +18,11 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
-import pkg from "./package.json";
+import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/error-message-helper.ts"),
@@ -31,5 +32,4 @@ export default vite.defineLibConfig({
             external: Object.keys(pkg.dependencies),
         },
     },
-    plugins: [viteDtsPlugin()],
 });

@@ -19,7 +19,7 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
-import pkg from "./package.json";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     build: {
@@ -29,12 +29,6 @@ export default vite.defineLibConfig({
         },
         rollupOptions: {
             external: Object.keys(pkg.dependencies),
-            output: {
-                globals: {
-                    "@tuleap/tlp-fetch": "TlpFetch",
-                    "tus-js-client": "tus",
-                },
-            },
         },
     },
 });

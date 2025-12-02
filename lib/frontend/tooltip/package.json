@@ -4,10 +4,8 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "types": "./dist/tooltip.d.ts",
-  "module": "./dist/tooltip.js",
   "exports": {
     ".": {
       "types": "./dist/tooltip.d.ts",
@@ -15,17 +13,17 @@
       "require": "./dist/tooltip.umd.cjs"
     }
   },
+  "dependencies": {
+    "dompurify": "^3.2.4",
+    "@tuleap/option": "workspace:^"
+  },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*",
-    "dompurify": "^3.2.4"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "vitest"
-  },
-  "dependencies": {
-    "@tuleap/option": "workspace:^"
   }
 }

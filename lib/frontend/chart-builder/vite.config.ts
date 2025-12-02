@@ -18,9 +18,9 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 import PoGettextPlugin from "@tuleap/po-gettext-plugin";
-import pkg from "./package.json";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [PoGettextPlugin.vite(), viteDtsPlugin()],
@@ -31,18 +31,6 @@ export default vite.defineLibConfig({
         },
         rollupOptions: {
             external: Object.keys(pkg.dependencies),
-            output: {
-                globals: {
-                    "d3-array": "d3Array",
-                    "d3-axis": "d3Axis",
-                    "d3-scale": "d3Scale",
-                    "d3-selection": "d3Selection",
-                    "d3-shape": "d3Shape",
-                    moment: "moment",
-                    "sprintf-js": "sprintfJs",
-                    "@tuleap/gettext": "TuleapGettext",
-                },
-            },
         },
     },
 });

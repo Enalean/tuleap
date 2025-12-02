@@ -18,7 +18,8 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     build: {
@@ -27,13 +28,7 @@ export default vite.defineLibConfig({
             name: "TuleapUserAndUGroupAutocompleter",
         },
         rollupOptions: {
-            external: ["jquery", "@tuleap/html-escaper"],
-            output: {
-                globals: {
-                    jquery: "jquery",
-                    "@tuleap/html-escaper": "tuleap.escaper",
-                },
-            },
+            external: ["jquery", ...Object.keys(pkg.dependencies)],
         },
     },
 });

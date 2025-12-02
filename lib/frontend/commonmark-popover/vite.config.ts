@@ -18,8 +18,9 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
@@ -27,6 +28,9 @@ export default vite.defineLibConfig({
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),
             name: "CommonmarkPopover",
+        },
+        rollupOptions: {
+            external: Object.keys(pkg.dependencies),
         },
     },
 });

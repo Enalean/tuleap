@@ -22,32 +22,18 @@
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import vue from "@vitejs/plugin-vue";
-import * as path from "path";
+import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
+    plugins: [vue({ customElement: true }), viteDtsPlugin()],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/main.ts"),
             name: "TuleapProjectSidebarInternal",
         },
         rollupOptions: {
-            external: [
-                "vue",
-                "vue-dompurify-html",
-                "@vueuse/core",
-                "@tuleap/tlp-popovers",
-                "@tuleap/project-privacy-helper",
-            ],
-            output: {
-                globals: {
-                    vue: "Vue",
-                    "vue-dompurify-html": "VueDOMPurifyHTML",
-                    "@vueuse/core": "VueUse",
-                    "@tuleap/tlp-popovers": "TlpPopovers",
-                    "@tuleap/project-privacy-helper": "ProjectPrivacyHelper",
-                },
-            },
+            external: Object.keys(pkg.dependencies),
         },
     },
-    plugins: [vue({ customElement: true }), viteDtsPlugin()],
 });

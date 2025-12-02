@@ -18,8 +18,9 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
@@ -32,21 +33,11 @@ export default vite.defineLibConfig({
             external: [
                 "ckeditor4",
                 "jquery",
-                "lit-html",
                 "lit-html/static.js",
                 "lit-html/directives/unsafe-html.js",
                 "lit-html/directives/until.js",
+                ...Object.keys(pkg.dependencies),
             ],
-            output: {
-                globals: {
-                    ckeditor4: "ckeditor4",
-                    jquery: "jquery",
-                    "lit-html": "lit-html",
-                    "lit-html/static.js": "lit-html/static.js",
-                    "lit-html/directives/unsafe-html.js": "lit-html/directives/unsafe-html.js",
-                    "lit-html/directives/until.js": "lit-html/directives/until.js",
-                },
-            },
         },
     },
 });

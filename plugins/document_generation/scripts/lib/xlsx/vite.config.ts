@@ -18,14 +18,14 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 
 export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),
             name: "DocGenXlsx",
         },
     },
-    plugins: [viteDtsPlugin()],
 });

@@ -18,7 +18,8 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     build: {
@@ -27,12 +28,7 @@ export default vite.defineLibConfig({
             name: "Mention",
         },
         rollupOptions: {
-            external: ["jquery"],
-            output: {
-                globals: {
-                    jquery: "jquery",
-                },
-            },
+            external: ["jquery", ...Object.keys(pkg.dependencies)],
         },
     },
 });
