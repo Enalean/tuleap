@@ -533,9 +533,6 @@ msgstr "Impossible d'approuver un item sans table d'approbation"
 msgid "Change \"%1$s\""
 msgstr "Changer \"%1$s\""
 
-msgid "Change Log:"
-msgstr "Description des changements :"
-
 msgid "Check before import"
 msgstr "Vérification avant import"
 
@@ -612,9 +609,6 @@ msgstr "Créer une nouvelle table vide."
 
 msgid "Create document"
 msgstr "Créer le document"
-
-msgid "Create new version"
-msgstr "Créer une nouvelle version"
 
 msgid "Create property"
 msgstr "Créer une propriété"
@@ -1177,9 +1171,6 @@ msgstr "Garde l'historique"
 msgid "Keep the current table."
 msgstr "Conserver l'ancienne table."
 
-msgid "Keep the lock:"
-msgstr "Garder la réservation :"
-
 msgid "Last update date:"
 msgstr "Date de dernière mise à jour :"
 
@@ -1308,9 +1299,6 @@ msgstr "Nom"
 msgid "Name conflict"
 msgstr "Conflit de nommage"
 
-msgid "New Version"
-msgstr "Nouvelle version"
-
 msgid "New document"
 msgstr "Nouveau document"
 
@@ -1325,10 +1313,6 @@ msgstr "Nouveau rapport projet..."
 
 msgid "New version"
 msgstr "Nouvelle version"
-
-#, php-format
-msgid "New version for %1$s"
-msgstr "Nouvelle version pour %1$s"
 
 #, php-format
 msgid "New version of %s wiki page was created by %s."
@@ -2137,9 +2121,6 @@ msgstr "Date de la version"
 msgid "Version label"
 msgstr "Label de la version"
 
-msgid "Version name:"
-msgstr "Nom de version :"
-
 msgid "Version number"
 msgstr "Numéro de la version"
 
@@ -2337,10 +2318,6 @@ msgstr ""
 "Vous pouvez <a href=\"%1$s\">créer un nouveau document</a> dans ce dossier."
 
 #, php-format
-msgid "You can <a href=\"%1$s\">create a new version</a>."
-msgstr "Vous pouvez <a href=\"%1$s\">créer une nouvelle version</a>."
-
-#, php-format
 msgid ""
 "You can <a href=\"%1$s\">move this document</a> to another folder or inside "
 "the current folder."
@@ -2421,9 +2398,6 @@ msgid "You cannot add people to an old approval table."
 msgstr ""
 "Il est impossible d'ajouter des approbateur à une ancienne table "
 "d'approbation."
-
-msgid "You cannot create a new version."
-msgstr "Vous ne pouvez pas créer une nouvelle version."
 
 msgid "You cannot delete the root folder."
 msgstr "Vous ne pouvez pas supprimer le dossier racine."

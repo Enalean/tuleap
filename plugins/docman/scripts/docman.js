@@ -690,17 +690,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getNewVersion: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=action_new_version",
-            class: "docman_item_option_newversion",
-            title: this.docman.options.language.action_newversion,
-        });
-        a.setAttribute("data-test", "new-version");
-        var title_txt = document.createTextNode(this.docman.options.language.action_newversion);
-        a.appendChild(title_txt);
-        return this._createLi(a);
-    },
 
     _getApproval: function () {
         var a = Builder.node("a", {
@@ -767,21 +756,9 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         // All the supported actions
         //
 
-        var writeAction = false;
-
         // New document
         if (this.docman.actionsForItem[this.item_id].canNewDocument) {
             ul.appendChild(this._getNewDocument(this.item_id));
-            writeAction = true;
-        }
-        // New version (files)
-        if (this.docman.actionsForItem[this.item_id].canNewVersion) {
-            ul.appendChild(this._getNewVersion());
-            writeAction = true;
-        }
-
-        if (writeAction == true) {
-            ul.appendChild(this._getSeparator());
         }
 
         // Approval table

@@ -998,18 +998,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                     $this->view = 'Delete';
                 }
                 break;
-            case 'action_new_version':
-                if (! $this->userCanWrite($item->getId())) {
-                    $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
-                    $this->view = 'Details';
-                } else {
-                    $dPm = $this->_getPermissionsManager();
-                    if ($dPm->getLockFactory()->itemIsLocked($item)) {
-                        $this->feedback->log('warning', dgettext('tuleap-docman', 'Locked document'));
-                    }
-                    $this->view = 'NewVersion';
-                }
-                break;
 
             case 'approval_create':
                 if (! $this->userCanWrite($item->getId())) {
