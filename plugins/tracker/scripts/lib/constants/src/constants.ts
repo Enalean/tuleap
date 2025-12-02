@@ -76,6 +76,17 @@ export const LINE_BREAK = "linebreak";
 export const SEPARATOR = "separator";
 export const STATIC_RICH_TEXT = "staticrichtext";
 
+type DefaultValueDateTypeToday = 0;
+type DefaultValueDateTypeSpecificDate = 1;
+export type DefaultValueDateType = DefaultValueDateTypeToday | DefaultValueDateTypeSpecificDate;
+export const DEFAULT_VALUE_DATE_TYPE_TODAY: DefaultValueDateTypeToday = 0;
+
+type DisplayOnlyDate = 0;
+type DisplayDateAndTime = 1;
+export type ShouldDisplayTime = DisplayOnlyDate | DisplayDateAndTime;
+
+export const DISPLAY_DATE_AND_TIME: DisplayDateAndTime = 1;
+
 export type StructuralFieldIdentifier =
     | ColumnIdentifier
     | FieldSetIdentifier

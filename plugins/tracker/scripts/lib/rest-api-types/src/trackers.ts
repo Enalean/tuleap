@@ -41,6 +41,8 @@ import type {
     LineBreak,
     Separator,
     StaticRichText,
+    DefaultValueDateType,
+    ShouldDisplayTime,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -95,6 +97,11 @@ export interface ReadonlyDateFieldStructure extends CommonDateFieldStructure {
 export interface EditableDateFieldStructure extends CommonDateFieldStructure {
     readonly type: DateFieldIdentifier;
     readonly permissions: PermissionsArray;
+    readonly specific_properties: {
+        readonly default_value_type: DefaultValueDateType;
+        readonly default_value: number;
+        readonly display_time: ShouldDisplayTime;
+    };
 }
 
 export type DateFieldStructure = ReadonlyDateFieldStructure | EditableDateFieldStructure;

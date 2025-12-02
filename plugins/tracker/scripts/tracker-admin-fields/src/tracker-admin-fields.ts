@@ -22,6 +22,7 @@ import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import FieldsUsage from "./components/FieldsUsage.vue";
+import "./styles/tracker-admin-fields.scss";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("tracker-admin-fields-usage-mount-point");
