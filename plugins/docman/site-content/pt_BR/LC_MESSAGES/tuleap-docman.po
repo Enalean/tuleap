@@ -433,9 +433,6 @@ msgstr ""
 msgid "Change \"%1$s\""
 msgstr ""
 
-msgid "Change Log:"
-msgstr ""
-
 msgid "Check before import"
 msgstr ""
 
@@ -511,9 +508,6 @@ msgid "Create an new empty table."
 msgstr ""
 
 msgid "Create document"
-msgstr ""
-
-msgid "Create new version"
 msgstr ""
 
 msgid "Create property"
@@ -1012,9 +1006,6 @@ msgstr ""
 msgid "Keep the current table."
 msgstr ""
 
-msgid "Keep the lock:"
-msgstr ""
-
 msgid "Last update date:"
 msgstr ""
 
@@ -1135,9 +1126,6 @@ msgstr "Nome"
 msgid "Name conflict"
 msgstr ""
 
-msgid "New Version"
-msgstr ""
-
 msgid "New document"
 msgstr ""
 
@@ -1151,10 +1139,6 @@ msgid "New project report..."
 msgstr ""
 
 msgid "New version"
-msgstr ""
-
-#, php-format
-msgid "New version for %1$s"
 msgstr ""
 
 #, php-format
@@ -1904,9 +1888,6 @@ msgstr ""
 msgid "Version label"
 msgstr ""
 
-msgid "Version name:"
-msgstr ""
-
 msgid "Version number"
 msgstr ""
 
@@ -2065,10 +2046,6 @@ msgid "You can <a href=\"%1$s\">create a new document</a> in this folder."
 msgstr ""
 
 #, php-format
-msgid "You can <a href=\"%1$s\">create a new version</a>."
-msgstr ""
-
-#, php-format
 msgid ""
 "You can <a href=\"%1$s\">move this document</a> to another folder or inside "
 "the current folder."
@@ -2122,9 +2099,6 @@ msgid ""
 msgstr ""
 
 msgid "You cannot add people to an old approval table."
-msgstr ""
-
-msgid "You cannot create a new version."
 msgstr ""
 
 msgid "You cannot delete the root folder."

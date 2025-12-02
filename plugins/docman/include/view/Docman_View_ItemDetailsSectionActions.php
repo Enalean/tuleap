@@ -115,26 +115,13 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): string
     {
-        return $this->getSectionForNewVersion();
+        return '';
     }
 
     #[\Override]
     public function visitFile(Docman_File $item, array $params = []): string
     {
-        return $this->getSectionForNewVersion();
-    }
-
-    private function getSectionForNewVersion(): string
-    {
-        $content = '<dt>' . dgettext('tuleap-docman', 'New Version') . '</dt><dd>';
-        if (! $this->_controller->userCanWrite($this->item->getid())) {
-            $content .= dgettext('tuleap-docman', 'You cannot create a new version.');
-        } else {
-            $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">create a new version</a>.'), DocmanViewURLBuilder::buildActionUrl($this->item, ['default_url' => $this->url], ['action' => 'action_new_version', 'id' => $this->item->getId()]));
-        }
-        $content .= '</dd>';
-
-        return $content;
+        return '';
     }
 
     #[\Override]

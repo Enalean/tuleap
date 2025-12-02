@@ -11712,26 +11712,6 @@
       <code><![CDATA[$this->params]]></code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionNewVersion.php">
-    <MissingParamType>
-      <code><![CDATA[$controller]]></code>
-      <code><![CDATA[$force]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$token]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$force]]></code>
-      <code><![CDATA[$token]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_getApprovalTable]]></code>
-      <code><![CDATA[_getReleaseLock]]></code>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionPaste.php">
     <MissingParamType>
       <code><![CDATA[$controller]]></code>
@@ -11935,18 +11915,6 @@
       <code><![CDATA[_getEnctype]]></code>
       <code><![CDATA[_getNewItem]]></code>
       <code><![CDATA[_getSpecificProperties]]></code>
-      <code><![CDATA[_getTitle]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_NewVersion.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$section]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
       <code><![CDATA[_getTitle]]></code>
     </MissingReturnType>
   </file>
