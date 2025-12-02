@@ -11378,12 +11378,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Docman.php">
-    <MissingParamType>
-      <code><![CDATA[$tools]]></code>
-    </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[addDocmanTool]]></code>
-      <code><![CDATA[addNewDocumentEntry]]></code>
       <code><![CDATA[getToolbar]]></code>
     </MissingReturnType>
   </file>
@@ -11902,20 +11898,6 @@
       <code><![CDATA[_getSpecificPropertiesFieldset]]></code>
       <code><![CDATA[metadataToSkip]]></code>
       <code><![CDATA[setupNewItem]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_NewDocument.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_getAction]]></code>
-      <code><![CDATA[_getActionText]]></code>
-      <code><![CDATA[_getEnctype]]></code>
-      <code><![CDATA[_getNewItem]]></code>
-      <code><![CDATA[_getSpecificProperties]]></code>
-      <code><![CDATA[_getTitle]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_ParentsTree.php">

@@ -86,7 +86,6 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content = '';
         if ($this->_controller->userCanWrite($this->item->getid())) {
             $content .= '<dt>' . dgettext('tuleap-docman', 'New document') . '</dt><dd>';
-            $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">create a new document</a> in this folder.'), DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'newDocument', 'id' => $item->getId()]));
             $content .= '</dd>';
         }
         $content .= '</dd>';

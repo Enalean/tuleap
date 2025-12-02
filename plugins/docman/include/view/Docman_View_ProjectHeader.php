@@ -47,7 +47,6 @@
                     'report_name_new'          => dgettext('tuleap-docman', 'Please enter a new search name:'),
                     'report_name_upd'          => dgettext('tuleap-docman', 'Update search:'),
                     'action_doc_id'            => dgettext('tuleap-docman', 'Document id:'),
-                    'action_newdocument'       => dgettext('tuleap-docman', 'New document'),
                     'action_details'           => dgettext('tuleap-docman', 'Properties'),
                     'action_newversion'        => dgettext('tuleap-docman', 'New version'),
                     'action_notifications'     => dgettext('tuleap-docman', 'Notifications'),
