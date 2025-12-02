@@ -607,9 +607,6 @@ msgstr "Créer une nouvelle valeur"
 msgid "Create an new empty table."
 msgstr "Créer une nouvelle table vide."
 
-msgid "Create document"
-msgstr "Créer le document"
-
 msgid "Create property"
 msgstr "Créer une propriété"
 
@@ -2169,9 +2166,6 @@ msgstr "Qui"
 msgid "Wiki"
 msgstr "Wiki"
 
-msgid "Wiki Page"
-msgstr "Page wiki"
-
 msgid "Wiki page"
 msgstr "Page wiki"
 
@@ -2311,11 +2305,6 @@ msgstr ""
 "--\n"
 "Ceci est un message généré automatiquement. Merci de ne pas répondre à cet "
 "email."
-
-#, php-format
-msgid "You can <a href=\"%1$s\">create a new document</a> in this folder."
-msgstr ""
-"Vous pouvez <a href=\"%1$s\">créer un nouveau document</a> dans ce dossier."
 
 #, php-format
 msgid ""

@@ -86,16 +86,12 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor //phpcs:ignore PSR1
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         if ($this->dPm->userCanWrite($this->user, $item->getId())) {
-            $this->actions['canNewDocument'] = true;
-            $itemFactory                     = Docman_ItemFactory::instance($item->getGroupId());
-            $parents                         = $itemFactory->getParents($item->getId());
-            $this->actions['parents']        = $parents;
+            $itemFactory              = Docman_ItemFactory::instance($item->getGroupId());
+            $parents                  = $itemFactory->getParents($item->getId());
+            $this->actions['parents'] = $parents;
         }
         $actions = $this->visitItem($item, $params);
 
-        // Cannot lock nor unlock a folder yet.
-        $this->actions['canUnlock'] = false;
-        $this->actions['canLock']   = false;
         return $this->actions;
     }
 

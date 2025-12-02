@@ -19,9 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Docman extends Docman_View_ProjectHeader
+class Docman_View_Docman extends Docman_View_ProjectHeader //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     protected function getToolbar(array $params)
@@ -30,7 +29,6 @@ class Docman_View_Docman extends Docman_View_ProjectHeader
 
         if (\Tuleap\Document\Tree\SwitchToOldUi::isAllowed($params['user'], ProjectManager::instance()->getProject($this->_controller->getGroupId()))) {
             $this->addDocmanTool($params, $tools);
-            $this->addNewDocumentEntry($params, $tools);
 
             if ($this->_controller->userCanAdmin()) {
                 $tools[] = [
@@ -45,23 +43,5 @@ class Docman_View_Docman extends Docman_View_ProjectHeader
 
     protected function addDocmanTool(array $params, array &$toolbar)
     {
-    }
-
-    private function addNewDocumentEntry(array $params, &$tools)
-    {
-        $permission_manager      = Docman_PermissionsManager::instance($params['group_id']);
-        $user                    = $this->_controller->getUser();
-        $has_one_folder_writable = $permission_manager->oneFolderIsWritable($user);
-        if ($has_one_folder_writable) {
-            $url_params = ['action' => 'newGlobalDocument'];
-            if (isset($params['item'])) {
-                $url_params['id'] = $params['item']->accept(new Docman_View_ToolbarNewDocumentVisitor());
-            }
-            $tools[] = [
-                'title' => dgettext('tuleap-docman', 'New document'),
-                'url'   => DocmanViewURLBuilder::buildUrl($params['default_url'], $url_params),
-                'data-test' => 'new-document',
-            ];
-        }
     }
 }

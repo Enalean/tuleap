@@ -668,16 +668,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         element.appendChild(sep);
         element.appendChild(this._createQuickMoveIcon(action));
     },
-    _getNewDocument: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=newDocument",
-            class: "docman_item_option_newdocument",
-            title: this.docman.options.language.action_newdocument,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_newdocument);
-        a.appendChild(title_txt);
-        return this._createLi(a);
-    },
     _getProperties: function (is_root) {
         var a = Builder.node("a", {
             href: is_root
@@ -755,11 +745,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         //
         // All the supported actions
         //
-
-        // New document
-        if (this.docman.actionsForItem[this.item_id].canNewDocument) {
-            ul.appendChild(this._getNewDocument(this.item_id));
-        }
 
         // Approval table
         if (this.docman.actionsForItem[this.item_id].canApproval) {
