@@ -26,9 +26,7 @@ import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/Error/PermissionError.vue";
 import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
 import LoadingError from "./Folder/Error/LoadingError.vue";
-import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-test";
-import { CAN_USER_SWITCH_TO_OLD_UI } from "../configuration-keys";
 
 describe("App", () => {
     let factory: () => VueWrapper<InstanceType<typeof App>>;
@@ -37,8 +35,7 @@ describe("App", () => {
         has_folder_loading_error: boolean,
         has_document_permission_error: boolean,
         has_document_loading_error: boolean,
-        has_document_lock_error: boolean,
-        can_user_switch_to_old_ui: boolean;
+        has_document_lock_error: boolean;
 
     beforeEach(() => {
         const default_prop = {
@@ -51,7 +48,6 @@ describe("App", () => {
         has_document_permission_error = false;
         has_document_loading_error = false;
         has_document_lock_error = false;
-        can_user_switch_to_old_ui = false;
 
         factory = (): VueWrapper<InstanceType<typeof App>> => {
             return shallowMount(App, {
@@ -79,9 +75,6 @@ describe("App", () => {
                     }),
                     stubs: {
                         RouterView: RouterViewStub,
-                    },
-                    provide: {
-                        [CAN_USER_SWITCH_TO_OLD_UI.valueOf()]: can_user_switch_to_old_ui,
                     },
                 },
             });
@@ -136,18 +129,5 @@ describe("App", () => {
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
         expect(wrapper.findComponent(ItemPermissionError).exists()).toBeFalsy();
         expect(wrapper.findComponent(LoadingError).exists()).toBeTruthy();
-    });
-
-    it(`Does not display link back to old UI if user is not allowed to`, () => {
-        const wrapper = factory();
-
-        expect(wrapper.findComponent(SwitchToOldUI).exists()).toBeFalsy();
-    });
-
-    it(`Displays a switch back link if user is allowed to`, () => {
-        can_user_switch_to_old_ui = true;
-        const wrapper = factory();
-
-        expect(wrapper.vm.can_user_switch_to_old_ui).toBeTruthy();
     });
 });

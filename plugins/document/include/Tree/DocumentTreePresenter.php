@@ -144,7 +144,6 @@ class DocumentTreePresenter
     public string $filename_pattern;
 
     public bool $is_filename_pattern_enforced;
-    public bool $can_user_switch_to_old_ui;
     public string $create_new_item_alternatives;
     public string $other_item_types;
 
@@ -203,8 +202,6 @@ class DocumentTreePresenter
 
         $this->filename_pattern             = $filename_pattern->getPattern();
         $this->is_filename_pattern_enforced = $filename_pattern->isEnforced();
-
-        $this->can_user_switch_to_old_ui = SwitchToOldUi::isAllowed($user, $project);
 
         $this->create_new_item_alternatives = json_encode($create_new_item_alternatives, JSON_THROW_ON_ERROR);
         $this->other_item_types             = encode($other_item_types);
