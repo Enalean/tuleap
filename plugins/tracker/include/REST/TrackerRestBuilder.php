@@ -25,19 +25,19 @@ use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
-use Tuleap\Tracker\REST\StructureElementRepresentation;
+use Tuleap\Tracker\REST\StructureRepresentationBuilder;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\BuildCompleteTrackerRESTRepresentation;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @psalm-param \Closure(Tracker): \Tuleap\Tracker\Semantic\TrackerSemanticManager $semantic_manager_instantiator
      */
     public function __construct(
-        private Tracker_FormElementFactory $formelement_factory,
+        private StructureRepresentationBuilder $structure_representation_builder,
         private FormElementRepresentationsBuilder $form_element_representations_builder,
         private PermissionsRepresentationBuilder $permissions_representation_builder,
         private WorkflowRestBuilder $workflow_rest_builder,
@@ -82,29 +82,12 @@ class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTReprese
         return CompleteTrackerRepresentation::build(
             $tracker,
             $rest_fields,
-            $this->getStructureRepresentation($tracker),
+            $this->structure_representation_builder->getStructureRepresentation($tracker),
             $semantic_manager->exportToREST($user),
             $parent_tracker,
             $this->workflow_rest_builder->getWorkflowRepresentation($tracker->getWorkflow(), $user),
             $this->permissions_representation_builder->getPermissionsRepresentation($tracker, $user)
         );
-    }
-
-    private function getStructureRepresentation(Tracker $tracker): array
-    {
-        $structure_element_representations = [];
-        $form_elements                     = $this->formelement_factory->getUsedFormElementForTracker($tracker);
-
-        if ($form_elements) {
-            foreach ($form_elements as $form_element) {
-                $structure_element_representation = new StructureElementRepresentation();
-                $structure_element_representation->build($form_element);
-
-                $structure_element_representations[] = $structure_element_representation;
-            }
-        }
-
-        return $structure_element_representations;
     }
 
     /**

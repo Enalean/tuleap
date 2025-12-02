@@ -50,6 +50,7 @@ use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\REST\StructureRepresentationBuilder;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
@@ -126,7 +127,7 @@ class ProjectResource
             $permissions_retriever,
             $tracker_factory,
             new Tracker_REST_TrackerRestBuilder(
-                $form_element_factory,
+                new StructureRepresentationBuilder($form_element_factory),
                 new FormElementRepresentationsBuilder(
                     $form_element_factory,
                     new PermissionsExporter($frozen_fields_detector),

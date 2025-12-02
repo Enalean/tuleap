@@ -191,6 +191,8 @@ use Tuleap\Tracker\FormElement\Admin\FieldsUsageDisplayController;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactLinkConfigController;
@@ -251,6 +253,7 @@ use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
+use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\PromotedTrackerDao;
@@ -260,7 +263,10 @@ use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
+use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
+use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Search\IndexAllArtifactsProcessor;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
@@ -296,7 +302,11 @@ use Tuleap\Tracker\Widget\ProjectRendererWidgetXMLImporter;
 use Tuleap\Tracker\Widget\WidgetRendererDao;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
@@ -1925,10 +1935,51 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function routeGetFieldsUsage(): DispatchableWithRequest
     {
+        $formelement_factory = Tracker_FormElementFactory::instance();
+
+        $transition_retriever = new TransitionRetriever(
+            new StateFactory(
+                TransitionFactory::instance(),
+                new SimpleWorkflowDao(),
+            ),
+            new TransitionExtractor(),
+        );
+
+        $frozen_fields_detector = new FrozenFieldDetector(
+            $transition_retriever,
+            new FrozenFieldsRetriever(new FrozenFieldsDao(), $formelement_factory),
+        );
+
+        $ugroup_manager                = new \UGroupManager();
+        $permissions_functions_wrapper = new PermissionsFunctionsWrapper();
+
         return new FieldsUsageDisplayController(
             $this->getTrackerFactory(),
             new TrackerManager(),
             TemplateRendererFactory::build(),
+            new \Tuleap\Tracker\REST\StructureRepresentationBuilder($formelement_factory),
+            new FormElementRepresentationsBuilder(
+                $formelement_factory,
+                new PermissionsExporter($frozen_fields_detector),
+                new HiddenFieldsetChecker(
+                    new HiddenFieldsetsDetector(
+                        $transition_retriever,
+                        new HiddenFieldsetsRetriever(new HiddenFieldsetsDao(), $formelement_factory),
+                        $formelement_factory,
+                    ),
+                    new FieldsExtractor(),
+                ),
+                new PermissionsForGroupsBuilder(
+                    $ugroup_manager,
+                    $frozen_fields_detector,
+                    $permissions_functions_wrapper,
+                ),
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao(),
+                    new SystemTypePresenterBuilder(\EventManager::instance()),
+                ),
+            )
         );
     }
 

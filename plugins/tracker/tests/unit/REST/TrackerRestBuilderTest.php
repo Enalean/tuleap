@@ -98,7 +98,7 @@ final class TrackerRestBuilderTest extends TestCase
         $semantic_manager = $this->createMock(\Tuleap\Tracker\Semantic\TrackerSemanticManager::class);
         $semantic_manager->method('exportToREST')->willReturn([]);
         $builder = new Tracker_REST_TrackerRestBuilder(
-            $this->form_element_factory,
+            new StructureRepresentationBuilder($this->form_element_factory),
             new FormElementRepresentationsBuilder(
                 $this->form_element_factory,
                 new PermissionsExporter($frozen_field_detector),

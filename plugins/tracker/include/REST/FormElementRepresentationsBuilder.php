@@ -77,7 +77,27 @@ class FormElementRepresentationsBuilder
      */
     public function buildRepresentationsInTrackerContext(Tracker $tracker, PFUser $user): array
     {
-        return $this->buildRepresentations($tracker, null, $user);
+        return $this->buildRepresentations(
+            $this->removeUnreadableElements(
+                $this->getFormElementsList($tracker),
+            ),
+            $tracker,
+            null,
+            $user,
+        );
+    }
+
+    /**
+     * @return Tracker_REST_FormElementRepresentation[]
+     */
+    public function buildRepresentationsInTrackerContextIgnoringReadPermission(Tracker $tracker, PFUser $user): array
+    {
+        return $this->buildRepresentations(
+            $this->getFormElementsList($tracker),
+            $tracker,
+            null,
+            $user,
+        );
     }
 
     /**
@@ -85,20 +105,41 @@ class FormElementRepresentationsBuilder
      */
     public function buildRepresentationsInArtifactContext(Artifact $artifact, PFUser $user): array
     {
-        return $this->buildRepresentations($artifact->getTracker(), $artifact, $user);
+        return $this->buildRepresentations(
+            $this->removeUnreadableElements(
+                $this->getFormElementsList($artifact->getTracker()),
+            ),
+            $artifact->getTracker(),
+            $artifact,
+            $user,
+        );
     }
 
     /**
+     * @return TrackerFormElement[]
+     */
+    private function getFormElementsList(Tracker $tracker): array
+    {
+        return $this->form_element_factory->getAllUsedFormElementOfAnyTypesForTracker($tracker);
+    }
+
+    /**
+     * @param TrackerFormElement[] $form_elements_list
+     * @return TrackerFormElement[]
+     */
+    private function removeUnreadableElements(array $form_elements_list): array
+    {
+        return array_filter($form_elements_list, fn (TrackerFormElement $form_element) => $form_element->userCanRead());
+    }
+
+    /**
+     * @param TrackerFormElement[] $form_elements_list
      * @return Tracker_REST_FormElementRepresentation[]
      */
-    private function buildRepresentations(Tracker $tracker, ?Artifact $artifact, PFUser $user): array
+    private function buildRepresentations(array $form_elements_list, Tracker $tracker, ?Artifact $artifact, PFUser $user): array
     {
         $representation_collection = [];
-        foreach ($this->form_element_factory->getAllUsedFormElementOfAnyTypesForTracker($tracker) as $form_element) {
-            if (! $form_element->userCanRead($user)) {
-                continue;
-            }
-
+        foreach ($form_elements_list as $form_element) {
             if ($form_element instanceof FilesField) {
                 $form_element_representation = FieldFileRepresentation::build(
                     $form_element,

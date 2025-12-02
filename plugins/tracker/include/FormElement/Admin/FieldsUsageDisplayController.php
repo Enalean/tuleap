@@ -28,6 +28,8 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
+use Tuleap\Tracker\REST\StructureRepresentationBuilder;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Tracker;
 
@@ -37,6 +39,8 @@ final readonly class FieldsUsageDisplayController implements DispatchableWithReq
         private RetrieveTracker $tracker_factory,
         private Tracker_IDisplayTrackerLayout $layout,
         private \TemplateRendererFactory $renderer_factory,
+        private StructureRepresentationBuilder $structure_representation_builder,
+        private FormElementRepresentationsBuilder $form_element_representations_builder,
     ) {
     }
 
@@ -63,7 +67,15 @@ final readonly class FieldsUsageDisplayController implements DispatchableWithReq
         $tracker->displayAdminItemHeaderBurningParrot($this->layout, 'editformElements', dgettext('tuleap-tracker', 'Manage Field Usage'));
         $this->renderer_factory
             ->getRenderer(__DIR__)
-            ->renderToPage('fields-usage', FieldsUsageDisplayPresenter::build($tracker));
+            ->renderToPage(
+                'fields-usage',
+                FieldsUsageDisplayPresenter::build(
+                    $tracker,
+                    $current_user,
+                    $this->form_element_representations_builder,
+                    $this->structure_representation_builder,
+                ),
+            );
         $tracker->displayFooter($this->layout);
     }
 
