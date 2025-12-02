@@ -347,9 +347,9 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
     }
 
     #[Depends('testGetRootId')]
-    public function testGetApprovalTableVersion(int $root_id): void
+    public function testApprovalTableWorkflow(int $root_id): void
     {
-        // Create embedded file
+        // Create embedded file...
         $post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', "docman_folders/$root_id/embedded_files")
                 ->withBody($this->stream_factory->createStream(json_encode([
@@ -363,16 +363,29 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertSame(201, $post_response->getStatusCode());
         $post_body = json_decode($post_response->getBody()->getContents());
         $item_id   = $post_body['id'];
-        // With an approval table
+        // ...with an approval table...
         $post_table_response = $this->getResponse(
             $this->request_factory->createRequest('POST', "docman_items/$item_id/approval_table")
                 ->withBody($this->stream_factory->createStream(json_encode([
-                    'users'       => [],
-                    'user_groups' => [ProjectUGroup::PROJECT_ADMIN],
+                    'users'       => [$this->user_ids[BaseTestDataBuilder::TEST_USER_1_NAME]],
+                    'user_groups' => [],
                 ]))),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
         );
         self::assertSame(201, $post_table_response->getStatusCode());
+        // ...and reviewed
+        $put_response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', "docman_items/$item_id/approval_table/review")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'review'       => 'rejected',
+                    'comment'      => 'I do not like it',
+                    'notification' => false,
+                ]))),
+            BaseTestDataBuilder::TEST_USER_1_NAME,
+        );
+        // Expected, the table is disabled (it can not be enabled by REST yet)
+        self::assertSame('You cannot review this approval table', json_decode($put_response->getBody()->getContents())['error']['i18n_error_message']);
+        self::assertSame(400, $put_response->getStatusCode());
 
         // Get approval table
         $get_response = $this->getResponse(
@@ -386,6 +399,7 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertSame('Disabled', $table['notification_type']);
         self::assertSame(false, $table['is_closed']);
         self::assertCount(1, $table['reviewers']);
+        self::assertSame(BaseTestDataBuilder::TEST_USER_1_NAME, $table['reviewers'][0]['user']['username']);
 
         // Cleanup (delete file)
         $delete_response = $this->getResponse(

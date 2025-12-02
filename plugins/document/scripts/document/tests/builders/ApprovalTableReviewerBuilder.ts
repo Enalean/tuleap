@@ -31,6 +31,7 @@ export class ApprovalTableReviewerBuilder {
             comment: "",
             version_id: null,
             version_name: null,
+            notification: false,
         };
     }
 }

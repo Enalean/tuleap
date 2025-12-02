@@ -24,6 +24,7 @@ use Codendi_HTMLPurifier;
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_ItemDao;
 use Docman_ItemFactory;
+use Docman_NotificationsManager;
 use Docman_VersionFactory;
 use Project;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
@@ -98,6 +99,7 @@ class ItemRepresentationBuilder
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
         private readonly Docman_ApprovalTableFactoriesFactory $factories_factory,
         private readonly Docman_VersionFactory $version_factory,
+        private readonly Docman_NotificationsManager $notifications_manager,
     ) {
         $this->dao                                 = $dao;
         $this->user_manager                        = $user_manager;
@@ -191,6 +193,7 @@ class ItemRepresentationBuilder
                 $this->user_manager,
                 $this->provide_user_avatar_url,
                 $this->version_factory,
+                $this->notifications_manager,
             ),
             $lock_info,
             $this->item_permissions_for_groups_builder->getRepresentation($current_user, $item),

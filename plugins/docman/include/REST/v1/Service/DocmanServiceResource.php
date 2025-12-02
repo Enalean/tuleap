@@ -29,6 +29,8 @@ use PermissionsManager;
 use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\Notifications\NotificationBuilders;
+use Tuleap\Docman\ResponseFeedbackWrapper;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
@@ -96,6 +98,7 @@ final class DocmanServiceResource extends AuthenticatedResource
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 $factories_factory,
                 $version_factory,
+                new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
             ),
             $permissions_manager,
             new DocmanServicePermissionsForGroupsBuilder(

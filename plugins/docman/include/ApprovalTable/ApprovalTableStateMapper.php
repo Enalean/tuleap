@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman\ApprovalTable;
 
 use Exception;
+use Luracast\Restler\RestException;
+use Tuleap\REST\I18NRestException;
 
 final class ApprovalTableStateMapper
 {
@@ -73,6 +75,29 @@ final class ApprovalTableStateMapper
                     'Approval table state id %s does not match a valid state.',
                     $status_id
                 )
+            ),
+        };
+    }
+
+    /**
+     * @throws RestException
+     *
+     * @psalm-mutation-free
+     */
+    public function getStatusIdFromStatusString(string $status_string): int
+    {
+        return match ($status_string) {
+            'not_yet'         => PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
+            'approved'        => PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            'rejected'        => PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED,
+            'comment_only'    => PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED,
+            'will_not_review' => PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED,
+            default           => throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-docman', 'Approval table state string %s does not match a valid state.'),
+                    $status_string,
+                ),
             ),
         };
     }

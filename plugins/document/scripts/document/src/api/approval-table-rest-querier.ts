@@ -19,7 +19,7 @@
 import type { ResultAsync } from "neverthrow";
 import type { ApprovalTable } from "../type";
 import type { Fault } from "@tuleap/fault";
-import { getJSON, uri, getAllJSON, postResponse, putJSON } from "@tuleap/fetch-result";
+import { getJSON, uri, getAllJSON, postResponse, putResponse } from "@tuleap/fetch-result";
 
 export function getDocumentApprovalTable(
     item_id: number,
@@ -59,9 +59,13 @@ export function putReview(
     comment: string,
     notification: boolean,
 ): ResultAsync<null, Fault> {
-    return putJSON(uri`/api/docman_items/${item_id}/approval_table/review`, {
-        review,
-        comment,
-        notification,
-    });
+    return putResponse(
+        uri`/api/docman_items/${item_id}/approval_table/review`,
+        {},
+        {
+            review,
+            comment,
+            notification,
+        },
+    ).map(() => null);
 }

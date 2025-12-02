@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1;
 
 use Docman_ApprovalReviewer;
 use Docman_Item;
+use Docman_NotificationsManager;
 use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
@@ -45,6 +46,7 @@ final readonly class ItemApprovalTableReviewerRepresentation
         public string $comment,
         public ?int $version_id,
         public ?string $version_name,
+        public bool $notification,
     ) {
     }
 
@@ -55,6 +57,7 @@ final readonly class ItemApprovalTableReviewerRepresentation
         RetrieveUserById $user_manager,
         ProvideUserAvatarUrl $provide_user_avatar_url,
         Docman_VersionFactory $version_factory,
+        Docman_NotificationsManager $notifications_manager,
     ): self {
         $user = $user_manager->getUserById((int) $reviewer->getId());
         if ($user === null) {
@@ -80,6 +83,7 @@ final readonly class ItemApprovalTableReviewerRepresentation
             $reviewer->getComment() ?? '',
             $version_id,
             $version_name,
+            $notifications_manager->userExists($user->getId(), $item->getId()),
         );
     }
 }

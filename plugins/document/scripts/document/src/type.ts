@@ -349,6 +349,7 @@ export interface ApprovalTableReviewer {
     comment: string;
     version_id: number | null;
     version_name: string | null;
+    notification: boolean;
 }
 
 export interface FolderProperties {
