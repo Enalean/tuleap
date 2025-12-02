@@ -829,9 +829,6 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-msgid "Switch to old user interface"
-msgstr ""
-
 msgid "Table status"
 msgstr ""
 

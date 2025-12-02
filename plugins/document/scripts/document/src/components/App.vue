@@ -34,7 +34,6 @@
         />
         <router-view v-else />
         <global-error-modal v-if="has_global_modal_error" />
-        <switch-to-old-u-i v-if="can_user_switch_to_old_ui" />
         <post-item-deletion-notification />
     </div>
 </template>
@@ -44,15 +43,12 @@ import PermissionError from "./Folder/Error/PermissionError.vue";
 import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
 import LoadingError from "./Folder/Error/LoadingError.vue";
 import GlobalErrorModal from "./Folder/Error/GlobalErrorModal.vue";
-import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 import PostItemDeletionNotification from "./Folder/DropDown/Delete/PostItemDeletionNotification.vue";
 import { onMounted } from "vue";
 import { useGetters, useNamespacedState, useStore } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import type { ErrorState } from "../store/error/module";
 import type { RootGetter } from "../store/getters";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { CAN_USER_SWITCH_TO_OLD_UI } from "../configuration-keys";
 
 const { $gettext } = useGettext();
 const store = useStore();
@@ -88,8 +84,6 @@ defineProps<{
     csrf_token: string;
     csrf_token_name: string;
 }>();
-
-const can_user_switch_to_old_ui = strictInject(CAN_USER_SWITCH_TO_OLD_UI);
 
 onMounted(() => {
     const base_title = document.title;

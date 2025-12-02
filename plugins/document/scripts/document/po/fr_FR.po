@@ -879,9 +879,6 @@ msgstr "Abonnés"
 msgid "Summary"
 msgstr "Résumé"
 
-msgid "Switch to old user interface"
-msgstr "Basculer sur l'ancienne interface utilisateur"
-
 msgid "Table status"
 msgstr "Status de la table"
 

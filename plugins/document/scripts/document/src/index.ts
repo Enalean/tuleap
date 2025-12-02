@@ -42,7 +42,6 @@ import {
 } from "./injection-keys";
 import type { SearchCriterion, SearchListOption } from "./type";
 import {
-    CAN_USER_SWITCH_TO_OLD_UI,
     CSRF_TOKEN,
     DATE_TIME_FORMAT,
     EMBEDDED_ARE_ALLOWED,
@@ -147,9 +146,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_filename_pattern_enforced = Boolean(
         getAttributeOrThrow(vue_mount_point, "data-is-filename-pattern-enforced"),
     );
-    const can_user_switch_to_old_ui = Boolean(
-        getAttributeOrThrow(vue_mount_point, "data-can-user-switch-to-old-ui"),
-    );
     const should_display_source_column_for_versions = Boolean(
         getAttributeOrThrow(vue_mount_point, "data-should-display-source-column"),
     );
@@ -232,7 +228,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(FORBID_WRITERS_TO_DELETE, forbid_writers_to_delete)
         .provide(FILENAME_PATTERN, filename_pattern)
         .provide(IS_FILENAME_PATTERN_ENFORCED, is_filename_pattern_enforced)
-        .provide(CAN_USER_SWITCH_TO_OLD_UI, can_user_switch_to_old_ui)
         .provide(PROJECT_PROPERTIES, ref(null))
         .provide(PROJECT_USER_GROUPS, ref(null))
         .provide(CSRF_TOKEN, { name: csrf_token_name, value: csrf_token });

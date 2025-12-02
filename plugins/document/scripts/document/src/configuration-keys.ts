@@ -71,7 +71,4 @@ export const FILENAME_PATTERN: StrictInjectionKey<string> = Symbol("filename-pat
 export const IS_FILENAME_PATTERN_ENFORCED: StrictInjectionKey<boolean> = Symbol(
     "is-filename-pattern-enforced",
 );
-export const CAN_USER_SWITCH_TO_OLD_UI: StrictInjectionKey<boolean> = Symbol(
-    "can-user-switch-to-old-ui",
-);
 export const CSRF_TOKEN: StrictInjectionKey<CsrfToken> = Symbol("csrf_token");
