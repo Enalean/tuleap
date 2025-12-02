@@ -27,13 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const project_select_box = document.getElementById("fork-destination");
     const project_fork_radio_button = document.getElementById("project-fork");
     const personal_fork_radio_button = selectOrThrow(document, "#personal-fork", HTMLInputElement);
+    const fork_path_form_element = selectOrThrow(document, "#fork-repository-path-form-element");
     const fork_path_input = selectOrThrow(document, "#fork-repositories-path", HTMLInputElement);
     const forkable_repositories = selectOrThrow(
         document,
         "#forkable-repositories",
         HTMLSelectElement,
     );
-    const preview_element = selectOrThrow(document, "#fork-path-preview", HTMLElement);
+    const preview_element = selectOrThrow(document, "#fork-path-preview");
     const form = selectOrThrow(document, "#fork-repositories-form", HTMLFormElement);
     const submit_button = selectOrThrow(
         document,
@@ -50,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fork_path_input,
             project_fork_radio_button,
             personal_fork_radio_button,
+            fork_path_form_element,
         );
     }
 

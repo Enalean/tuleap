@@ -27,7 +27,7 @@
                         You need to be administrator of the target project to do so and Git service must be activated.
                     {{/dgettext}}
                 </p>
-                {{# has_forkable_repositories }}
+                {{# can_user_fork_repositories }}
                     <form action="{{ post_url }}" method="POST" id="fork-repositories-form">
                         <input type="hidden" name="group_id" value="{{ project_id }}" />
                         <input type="hidden" name="action" value="fork_repositories_permissions" />
@@ -52,7 +52,7 @@
                                     <label class="tlp-label">
                                         {{# dgettext }} tuleap-git | Choose a destination project {{/ dgettext }}
                                     </label>
-                                    <label class="tlp-label tlp-radio" for="personal-fork">
+                                    <label class="tlp-label tlp-radio {{^ is_user_project_member_of_current_project }}personal-fork-disallowed{{/ is_user_project_member_of_current_project }}" for="personal-fork">
                                         <input
                                             id="personal-fork"
                                             type="radio"
@@ -92,7 +92,7 @@
                                 </div>
                             </div>
                             <div class="git-fork-repository-form-content-column">
-                                <div class="tlp-form-element">
+                                <div id="fork-repository-path-form-element" class="tlp-form-element {{^ is_user_project_member_of_current_project }}tlp-form-element-disabled{{/ is_user_project_member_of_current_project }}">
                                     <label class="tlp-label" for="fork-repositories-path">
                                         {{# dgettext }} tuleap-git | Choose the path for the forks {{/ dgettext }}
                                     </label>
@@ -121,12 +121,24 @@
                             </div>
                         </div>
                     </form>
-                {{/has_forkable_repositories}}
-                {{^ has_forkable_repositories }}
+                {{/can_user_fork_repositories}}
+                {{^ can_user_fork_repositories }}
                     <div class="tlp-alert-warning">
-                        {{# dgettext }} tuleap-git | There aren't any forkable repositories in this project. {{/ dgettext }}
+                        <p class="tlp-alert-title"> {{# dgettext }} tuleap-git | You cannot fork repositories from this project: {{/ dgettext }}</p>
+                        <ul>
+                            {{^ has_forkable_repositories }}
+                                <li>
+                                    {{# dgettext }} tuleap-git | There aren't any forkable repositories in this project. {{/ dgettext }}
+                                </li>
+                            {{/ has_forkable_repositories }}
+                            {{^ can_user_choose_fork_destination }}
+                                <li>
+                                    {{# dgettext }} tuleap-git | You are neither a member of the current project nor project administrator of a project having the Git service enabled. {{/ dgettext }}
+                                </li>
+                            {{/ can_user_choose_fork_destination }}
+                        </ul>
                     </div>
-                {{/ has_forkable_repositories }}
+                {{/ can_user_fork_repositories }}
             </div>
         </div>
     </section>

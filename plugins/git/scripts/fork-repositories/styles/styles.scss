@@ -39,3 +39,8 @@
     font-size: 14px;
     gap: 4px;
 }
+
+.tlp-label.personal-fork-disallowed {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

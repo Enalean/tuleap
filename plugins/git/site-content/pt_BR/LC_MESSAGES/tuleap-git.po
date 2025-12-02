@@ -1346,6 +1346,11 @@ msgid_plural "You are going to fork the repositories:"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid ""
+"You are neither a member of the current project nor project administrator of "
+"a project having the Git service enabled."
+msgstr ""
+
 msgid "You are not allowed to access this page"
 msgstr ""
 
@@ -1376,6 +1381,9 @@ msgstr ""
 msgid ""
 "You can use the following button to force push your <a href=\"%s\">ssh keys</"
 "a> to following gerrit servers:"
+msgstr ""
+
+msgid "You cannot fork repositories from this project:"
 msgstr ""
 
 msgid "You don't have permissions to see user groups."
