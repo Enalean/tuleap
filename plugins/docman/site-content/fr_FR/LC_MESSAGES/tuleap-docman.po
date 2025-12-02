@@ -1979,7 +1979,7 @@ msgid "There is no data attached to this item."
 msgstr "Il n'y a pas de donnée pour cet élément."
 
 msgid "This document does not have an approval table. Please create one before"
-msgstr ""
+msgstr "Ce document n'a pas de table d'approbation. Merci d'en créer un avant"
 
 msgid "This is an automatic message. Please do not reply to this email"
 msgstr ""
@@ -2076,18 +2076,11 @@ msgstr "Inutilisée"
 msgid "Update"
 msgstr "Modifier"
 
-#, php-format
-msgid "Update %1$s"
-msgstr "Mise à jour de %1$s"
-
 msgid "Update Date"
 msgstr "Date de mise à jour"
 
 msgid "Update search:"
 msgstr "Mise à jour de la recherche :"
-
-msgid "Update this document"
-msgstr "Modifier ce document"
 
 #, php-format
 msgid "Update value \"%2$s\" in \"%1$s\" property"
@@ -2363,10 +2356,6 @@ msgstr ""
 "Vous pouvez <a href=\"%1$s\">déplacer ce dossier</a> dans un autre dossier "
 "ou au sein de son dossier actuel."
 
-#, php-format
-msgid "You can <a href=\"%1$s\">update</a> this document."
-msgstr "Vous pouvez <a href=\"%1$s\">mettre à jour</a> ce document."
-
 msgid ""
 "You can customize your report by adding text and an image. Note: an image is "
 "just a reference on any valid image available in documentation manager "
@@ -2458,9 +2447,6 @@ msgstr "Vous ne pouvez pas déplacer ce dossier."
 
 msgid "You cannot review this approval table"
 msgstr ""
-
-msgid "You cannot update this document."
-msgstr "Vous ne pouvez pas mettre à jour ce document."
 
 msgid ""
 "You do not have sufficient access rights to administrate the document "

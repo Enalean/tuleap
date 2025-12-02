@@ -1845,17 +1845,10 @@ msgstr ""
 msgid "Update"
 msgstr "Atualizar"
 
-#, php-format
-msgid "Update %1$s"
-msgstr ""
-
 msgid "Update Date"
 msgstr ""
 
 msgid "Update search:"
-msgstr ""
-
-msgid "Update this document"
 msgstr ""
 
 #, php-format
@@ -2087,10 +2080,6 @@ msgid ""
 "the current folder."
 msgstr ""
 
-#, php-format
-msgid "You can <a href=\"%1$s\">update</a> this document."
-msgstr ""
-
 msgid ""
 "You can customize your report by adding text and an image. Note: an image is "
 "just a reference on any valid image available in documentation manager "
@@ -2156,9 +2145,6 @@ msgid "You cannot move this folder."
 msgstr ""
 
 msgid "You cannot review this approval table"
-msgstr ""
-
-msgid "You cannot update this document."
 msgstr ""
 
 msgid ""

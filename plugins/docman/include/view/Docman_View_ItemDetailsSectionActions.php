@@ -97,15 +97,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     public function visitItem(Docman_Item $item, array $params = []): string
     {
         $content  = '';
-        $content .= '<dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
-
-        if (! $this->_controller->userCanWrite($this->item->getid())) {
-            $content .= dgettext('tuleap-docman', 'You cannot update this document.');
-        } else {
-            $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">update</a> this document.'), DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'action_update', 'id' => $this->item->getId()]));
-        }
-
-        $content .= '</dd>';
+        $content .= '<dt>' . dgettext('tuleap-docman', 'Update') . '</dt>';
         return $content;
     }
 

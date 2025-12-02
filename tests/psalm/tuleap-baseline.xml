@@ -11800,27 +11800,6 @@
       <code><![CDATA[getInheritableMdLabelArray]]></code>
     </TooManyArguments>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionUpdate.php">
-    <MissingParamType>
-      <code><![CDATA[$controller]]></code>
-      <code><![CDATA[$enctype]]></code>
-      <code><![CDATA[$force]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$token]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$force]]></code>
-      <code><![CDATA[$token]]></code>
-      <code><![CDATA[$validate]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_updateFooter]]></code>
-      <code><![CDATA[_updateHeader]]></code>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_ItemRanking.php">
     <MissingParamType>
       <code><![CDATA[$parentItem]]></code>
@@ -12164,18 +12143,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[_content]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Update.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$section]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_getTitle]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_View.php">
