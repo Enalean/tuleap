@@ -215,14 +215,14 @@ msgstr ""
 
 msgid ""
 "This tracker uses the Step definition field, which can only be used with\n"
-"          TestManagement. Please <a href=\"%s\">remove the field</a> before "
-"choosing another tracker."
+"                                TestManagement. Please <a href=\"%s\">remove "
+"the field</a> before choosing another tracker."
 msgstr ""
 
 msgid ""
 "This tracker uses the Step execution field, which can only be used with\n"
-"          TestManagement. Please <a href=\"%s\">remove the field</a> before "
-"choosing another tracker."
+"                                TestManagement. Please <a href=\"%s\">remove "
+"the field</a> before choosing another tracker."
 msgstr ""
 
 msgid "Update the configuration of Test Management"

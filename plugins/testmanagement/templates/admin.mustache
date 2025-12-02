@@ -1,109 +1,121 @@
 <h1 class="test-administration-title">{{ title }}</h1>
-<div class="tlp-framed testmanagement-administration">
-  <form action="" method="POST">
-    {{# csrf_token }}
-      {{> csrf_token_input }}
-    {{/ csrf_token }}
-    <input type="hidden" name="action" value="admin-update"/>
-    <div class="tlp-form-element">
-      <label class="tlp-label" for="campaign_id">{{ campaigns }}
-        <i class="fa-solid fa-asterisk"></i>
-      </label>
-      <select class="list-picker-sb" name="campaign_tracker_id" id="campaign_id" required>
-        {{# campaign_tracker_config}}
-          {{# selected_tracker}}
-            <option value="{{tracker_id}}" selected> {{tracker_name}}</option>
-          {{/selected_tracker}}
-          {{^selected_tracker}}
-            <option disabled selected>Please choose a Tracker</option>
-          {{/selected_tracker}}
-          {{# available_trackers}}
-            <option value="{{tracker_id}}"> {{tracker_name}}</option>
-          {{/available_trackers}}
-        {{/campaign_tracker_config}}
-      </select>
-    </div>
-    <div class="tlp-form-element
-            {{# is_definition_disabled }} tlp-form-element-disabled {{/ is_definition_disabled }}
-        ">
-      <label class="tlp-label" for="test_definition_id">{{ definitions }} <i class="fa-solid fa-asterisk"></i>
-      </label>
 
-      <select class="list-picker-sb" name="test_definition_tracker_id" id="test_definition_id" required
-              {{# is_definition_disabled }} disabled {{/ is_definition_disabled }}
-      >
-        {{# test_definition_tracker_config}}
-          {{# selected_tracker}}
-            <option value="{{tracker_id}}" selected> {{tracker_name}}</option>
-          {{/selected_tracker}}
-          {{^selected_tracker}}
-            <option disabled selected>Please choose a Tracker</option>
-          {{/selected_tracker}}
-          {{# available_trackers}}
-            <option value="{{tracker_id}}"> {{tracker_name}}</option>
-          {{/available_trackers}}
-        {{/test_definition_tracker_config}}
-      </select>
-    </div>
-    {{# is_definition_disabled }}
-      <p class="tlp-text-info">
-        {{# dgettext }}
-          tuleap-testmanagement | This tracker uses the Step definition field, which can only be used with
-          TestManagement. Please <a href="%s">remove the field</a> before choosing another tracker.
-          | {{ definition_admin_url }}
-        {{/ dgettext }}
-      </p>
-    {{/ is_definition_disabled }}
-    <div class="tlp-form-element
-            {{# is_execution_disabled }} tlp-form-element-disabled {{/ is_execution_disabled }}
-        ">
-      <label class="tlp-label" for="test_execution_id">{{ executions }}
-        <i class="fa-solid fa-asterisk"></i>
-      </label>
-      <select class="list-picker-sb" name="test_execution_tracker_id" id="test_execution_id" required
-              {{# is_execution_disabled }}disabled{{/ is_execution_disabled }}
-      >
-        {{# test_execution_tracker_config}}
-          {{# selected_tracker}}
-            <option value="{{tracker_id}}" selected> {{tracker_name}}</option>
-          {{/selected_tracker}}
-          {{^selected_tracker}}
-            <option disabled selected>Please choose a Tracker</option>
-          {{/selected_tracker}}
-          {{# available_trackers}}
-            <option value="{{tracker_id}}"> {{tracker_name}}</option>
-          {{/available_trackers}}
-        {{/test_execution_tracker_config}}
-      </select>
-    </div>
-    {{# is_execution_disabled }}
-      <p class="tlp-text-info">
-        {{# dgettext }}
-          tuleap-testmanagement | This tracker uses the Step execution field, which can only be used with
-          TestManagement. Please <a href="%s">remove the field</a> before choosing another tracker.
-          | {{ execution_admin_url }}
-        {{/ dgettext }}
-      </p>
-    {{/ is_execution_disabled }}
-    <div class="tlp-form-element">
-      <label class="tlp-label" for="issue_id"> {{ issues }} </label>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{ title }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <form action="" method="POST">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+                    <input type="hidden" name="action" value="admin-update"/>
 
-      <select class="list-picker-sb" name="issue_tracker_id" id="issue_id" required>
-        {{# issue_tracker_config}}
-          {{# selected_tracker}}
-            <option value="{{tracker_id}}" selected> {{tracker_name}}</option>
-          {{/selected_tracker}}
-          {{^selected_tracker}}
-            <option disabled selected>Please choose a Tracker</option>
-          {{/selected_tracker}}
-          {{# available_trackers}}
-            <option value="{{tracker_id}}"> {{tracker_name}}</option>
-          {{/available_trackers}}
-        {{/issue_tracker_config}}
-      </select>
-    </div>
-    <div class="tlp-form-element">
-      <button type="submit" class="tlp-button-primary">{{ submit }}</button>
-    </div>
-  </form>
+
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="campaign_id">{{ campaigns }}
+                            <i class="fa-solid fa-asterisk"></i>
+                        </label>
+                        <select class="list-picker-sb" name="campaign_tracker_id" id="campaign_id" required>
+                            {{# campaign_tracker_config}}
+                                {{# selected_tracker}}
+                                    <option value="{{tracker_id}}" selected> {{tracker_name}}</option>
+                                {{/selected_tracker}}
+                                {{^selected_tracker}}
+                                    <option disabled selected>Please choose a Tracker</option>
+                                {{/selected_tracker}}
+                                {{# available_trackers}}
+                                    <option value="{{tracker_id}}"> {{tracker_name}}</option>
+                                {{/available_trackers}}
+                            {{/campaign_tracker_config}}
+                        </select>
+                    </div>
+                    <div class="tlp-form-element
+                                {{# is_definition_disabled }} tlp-form-element-disabled {{/ is_definition_disabled }}
+                            ">
+                        <label class="tlp-label" for="test_definition_id">{{ definitions }} <i class="fa-solid fa-asterisk"></i>
+                        </label>
+
+                        <select class="list-picker-sb" name="test_definition_tracker_id" id="test_definition_id" required
+                            {{# is_definition_disabled }} disabled {{/ is_definition_disabled }}
+                        >
+                            {{# test_definition_tracker_config}}
+                                {{# selected_tracker}}
+                                    <option value="{{tracker_id}}" selected> {{tracker_name}}</option>
+                                {{/selected_tracker}}
+                                {{^selected_tracker}}
+                                    <option disabled selected>Please choose a Tracker</option>
+                                {{/selected_tracker}}
+                                {{# available_trackers}}
+                                    <option value="{{tracker_id}}"> {{tracker_name}}</option>
+                                {{/available_trackers}}
+                            {{/test_definition_tracker_config}}
+                        </select>
+                    </div>
+                    {{# is_definition_disabled }}
+                        <p class="tlp-text-info">
+                            {{# dgettext }}
+                                tuleap-testmanagement | This tracker uses the Step definition field, which can only be used with
+                                TestManagement. Please <a href="%s">remove the field</a> before choosing another tracker.
+                                | {{ definition_admin_url }}
+                            {{/ dgettext }}
+                        </p>
+                    {{/ is_definition_disabled }}
+                    <div class="tlp-form-element
+                                {{# is_execution_disabled }} tlp-form-element-disabled {{/ is_execution_disabled }}
+                            ">
+                        <label class="tlp-label" for="test_execution_id">{{ executions }}
+                            <i class="fa-solid fa-asterisk"></i>
+                        </label>
+                        <select class="list-picker-sb" name="test_execution_tracker_id" id="test_execution_id" required
+                                {{# is_execution_disabled }}disabled{{/ is_execution_disabled }}
+                        >
+                            {{# test_execution_tracker_config}}
+                                {{# selected_tracker}}
+                                    <option value="{{tracker_id}}" selected> {{tracker_name}}</option>
+                                {{/selected_tracker}}
+                                {{^selected_tracker}}
+                                    <option disabled selected>Please choose a Tracker</option>
+                                {{/selected_tracker}}
+                                {{# available_trackers}}
+                                    <option value="{{tracker_id}}"> {{tracker_name}}</option>
+                                {{/available_trackers}}
+                            {{/test_execution_tracker_config}}
+                        </select>
+                    </div>
+                    {{# is_execution_disabled }}
+                        <p class="tlp-text-info">
+                            {{# dgettext }}
+                                tuleap-testmanagement | This tracker uses the Step execution field, which can only be used with
+                                TestManagement. Please <a href="%s">remove the field</a> before choosing another tracker.
+                                | {{ execution_admin_url }}
+                            {{/ dgettext }}
+                        </p>
+                    {{/ is_execution_disabled }}
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="issue_id"> {{ issues }} </label>
+
+                        <select class="list-picker-sb" name="issue_tracker_id" id="issue_id" required>
+                            {{# issue_tracker_config}}
+                                {{# selected_tracker}}
+                                    <option value="{{tracker_id}}" selected> {{tracker_name}}</option>
+                                {{/selected_tracker}}
+                                {{^selected_tracker}}
+                                    <option disabled selected>Please choose a Tracker</option>
+                                {{/selected_tracker}}
+                                {{# available_trackers}}
+                                    <option value="{{tracker_id}}"> {{tracker_name}}</option>
+                                {{/available_trackers}}
+                            {{/issue_tracker_config}}
+                        </select>
+                    </div>
+                    <div class="tlp-form-element">
+                        <button type="submit" class="tlp-button-primary">{{ submit }}</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
 </div>
