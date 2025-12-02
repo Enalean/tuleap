@@ -336,6 +336,7 @@ export interface ApprovalTable {
     version_number: number | null;
     version_label: string;
     notification_type: string;
+    state: string;
     is_closed: boolean;
     description: string;
     reviewers: ReadonlyArray<ApprovalTableReviewer>;

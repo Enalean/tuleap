@@ -18,32 +18,27 @@
  */
 
 import fr_FR from "../po/fr_FR.po";
-import type { Lazybox } from "@tuleap/lazybox";
+import type { Lazybox, LazyboxOptions } from "@tuleap/lazybox";
 import type { User } from "@tuleap/core-rest-api-types";
 import { initGettextSync } from "@tuleap/gettext";
 import { getAssignableUserTemplate, getSelectedUsers } from "./AssignableUserTemplate";
-import type { FetchMatchingUsers } from "./UsersAutocompleter";
+import type { AutocompleteUsers, FetchMatchingUsers } from "./UsersAutocompleter";
 import { UsersAutocompleter } from "./UsersAutocompleter";
 import { GroupOfUsersBuilder } from "./GroupOfUsersBuilder";
 import { UsersToLazyboxItemsTransformer } from "./UsersToLazyboxItemsTransformer";
 import { fetchMatchingUsers } from "./api/rest-querier";
+import type { GettextProvider } from "@tuleap/gettext/src/types";
 
 type OnSelectionCallback = (selected_users: ReadonlyArray<User>) => void;
 
-export const initUsersAutocompleter = (
+function getOptionsForMultiple(
+    gettext_provider: GettextProvider,
+    autocompleter: AutocompleteUsers,
     lazybox: Lazybox,
     already_selected_users: ReadonlyArray<User>,
-    selection_callback: OnSelectionCallback,
-    locale: string = "en_US",
-    fetch_matching_users_callback: FetchMatchingUsers = fetchMatchingUsers,
-): void => {
-    const gettext_provider = initGettextSync("lazybox-users-autocomplete", { fr_FR }, locale);
-
-    const users_transformer = UsersToLazyboxItemsTransformer();
-    const group_builder = GroupOfUsersBuilder(users_transformer, gettext_provider);
-    const autocompleter = UsersAutocompleter(group_builder, fetch_matching_users_callback);
-
-    lazybox.options = {
+    selection_callback: (selected_users: ReadonlyArray<User>) => void,
+): LazyboxOptions {
+    return {
         is_multiple: true,
         placeholder: gettext_provider.gettext("Search users by their names"),
         templating_callback: getAssignableUserTemplate,
@@ -56,6 +51,62 @@ export const initUsersAutocompleter = (
             selection_callback(already_selected_users);
         },
     };
+}
+
+function getOptionsForSingle(
+    gettext_provider: GettextProvider,
+    autocompleter: AutocompleteUsers,
+    lazybox: Lazybox,
+    already_selected_users: ReadonlyArray<User>,
+    selection_callback: (selected_users: ReadonlyArray<User>) => void,
+): LazyboxOptions {
+    return {
+        is_multiple: false,
+        placeholder: gettext_provider.gettext("Search user by its name"),
+        templating_callback: getAssignableUserTemplate,
+        search_input_callback: (query): void => {
+            autocompleter.autocomplete(lazybox, already_selected_users, query);
+        },
+        selection_callback: (selected_users): void => {
+            already_selected_users = getSelectedUsers(selected_users);
+
+            selection_callback(already_selected_users);
+        },
+        search_input_placeholder: gettext_provider.gettext("Search user by its name"),
+    };
+}
+
+export const initUsersAutocompleter = (
+    lazybox: Lazybox,
+    already_selected_users: ReadonlyArray<User>,
+    selection_callback: OnSelectionCallback,
+    locale: string = "en_US",
+    fetch_matching_users_callback: FetchMatchingUsers = fetchMatchingUsers,
+    is_multiple: boolean = true,
+): void => {
+    const gettext_provider = initGettextSync("lazybox-users-autocomplete", { fr_FR }, locale);
+
+    const users_transformer = UsersToLazyboxItemsTransformer();
+    const group_builder = GroupOfUsersBuilder(users_transformer, gettext_provider);
+    const autocompleter = UsersAutocompleter(group_builder, fetch_matching_users_callback);
+
+    if (is_multiple) {
+        lazybox.options = getOptionsForMultiple(
+            gettext_provider,
+            autocompleter,
+            lazybox,
+            already_selected_users,
+            selection_callback,
+        );
+    } else {
+        lazybox.options = getOptionsForSingle(
+            gettext_provider,
+            autocompleter,
+            lazybox,
+            already_selected_users,
+            selection_callback,
+        );
+    }
     lazybox.replaceDropdownContent([group_builder.buildEmpty()]);
     lazybox.replaceSelection(users_transformer.buildForSelection(already_selected_users));
 };

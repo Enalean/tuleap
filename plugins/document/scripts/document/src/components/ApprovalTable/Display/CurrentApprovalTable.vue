@@ -18,16 +18,6 @@
   -->
 
 <template>
-    <a
-        v-if="item.user_can_write"
-        class="tlp-button-primary admin-button"
-        v-bind:href="getLinkToApprovalTableAdmin()"
-        data-test="table-admin-button"
-    >
-        <i class="fa-solid fa-gear tlp-button-icon" aria-hidden="true"></i>
-        {{ $gettext("Administration") }}
-    </a>
-
     <div
         v-if="!item.is_approval_table_enabled"
         class="tlp-alert-info"
@@ -48,8 +38,6 @@
 
 <script setup lang="ts">
 import type { ApprovableDocument, ApprovalTable, Item } from "../../../type";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT } from "../../../configuration-keys";
 import ApprovalTableDetails from "./ApprovalTableDetails.vue";
 import { ref, watch } from "vue";
 import { getDocumentApprovalTable } from "../../../api/approval-table-rest-querier";
@@ -65,12 +53,6 @@ const emit = defineEmits<{
 }>();
 
 const approval_table = ref<ApprovalTable | null>(props.item.approval_table);
-
-const project = strictInject(PROJECT);
-
-function getLinkToApprovalTableAdmin(): string {
-    return `/plugins/docman/?group_id=${project.id}&action=approval_create&id=${props.item.id}`;
-}
 
 function refreshTable(): void {
     const version = props.version ?? props.item.approval_table?.version_number;

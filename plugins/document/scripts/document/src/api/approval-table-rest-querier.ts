@@ -19,7 +19,15 @@
 import type { ResultAsync } from "neverthrow";
 import type { ApprovalTable } from "../type";
 import type { Fault } from "@tuleap/fault";
-import { getJSON, uri, getAllJSON, postResponse, putResponse } from "@tuleap/fetch-result";
+import {
+    del,
+    getAllJSON,
+    getJSON,
+    patchResponse,
+    postResponse,
+    putResponse,
+    uri,
+} from "@tuleap/fetch-result";
 
 export function getDocumentApprovalTable(
     item_id: number,
@@ -66,6 +74,27 @@ export function putReview(
             review,
             comment,
             notification,
+        },
+    ).map(() => null);
+}
+
+export function deleteApprovalTable(item_id: number): ResultAsync<null, Fault> {
+    return del(uri`/api/docman_items/${item_id}/approval_table`).map(() => null);
+}
+
+export function updateApprovalTable(
+    item_id: number,
+    owner: number,
+    status: string,
+    comment: string,
+): ResultAsync<null, Fault> {
+    return patchResponse(
+        uri`/api/docman_items/${item_id}/approval_table`,
+        {},
+        {
+            owner,
+            status,
+            comment,
         },
     ).map(() => null);
 }

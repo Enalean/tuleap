@@ -170,8 +170,14 @@ msgstr "Demandeur d'approbation"
 msgid "Approval table"
 msgstr "Table d'approbation"
 
+msgid "Approval table administration"
+msgstr "Administration de la table d'approbation"
+
 msgid "Approval table details"
 msgstr "Détails de la table d'approbation"
+
+msgid "Approval table global settings"
+msgstr "Paramètres généraux de la table d'approbation"
 
 msgid "Approval table history"
 msgstr "Historique des tables d'approbation"
@@ -196,6 +202,9 @@ msgstr "Associé à la version"
 
 msgid "Author"
 msgstr "Auteur"
+
+msgid "Available"
+msgstr "Disponible"
 
 msgid "Before"
 msgstr "Avant"
@@ -337,6 +346,9 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
+msgid "Disabled"
+msgstr "Désactivé"
+
 msgid "Document locked by %{username}."
 msgstr "Document verrouillé par %{username}."
 
@@ -407,6 +419,9 @@ msgstr "Erreur lors de la création de la table d'approbation"
 
 msgid "Error while saving your review"
 msgstr "Erreur lors de la sauvegarde de votre approbation"
+
+msgid "Error while updating table"
+msgstr "Erreur lors de la mise à jour de la table"
 
 msgid "File"
 msgstr "Fichier"
@@ -601,6 +616,9 @@ msgstr "Pas d'historique de version"
 msgid "None"
 msgstr "Aucun"
 
+msgid "Not implemented yet"
+msgstr "Pas encore implémenté"
+
 msgid "Not yet"
 msgstr "Pas encore"
 
@@ -788,6 +806,9 @@ msgstr "Date d'approbation"
 
 msgid "Review:"
 msgstr "Approbation :"
+
+msgid "Reviewers"
+msgstr "Approbateurs"
 
 msgid "Search"
 msgstr "Recherche"
@@ -982,6 +1003,11 @@ msgstr "Cet élément ne peut pas avoir de table d'approbation"
 msgid "This item is not versionable"
 msgstr "Cet élément n'est pas versionnable"
 
+msgid "This modal is not functional yet, you can retrieve old ui"
+msgstr ""
+"Cette modale n'est pas encore fonctionnelle, vous pouvez retrouver "
+"l'ancienne interface"
+
 msgid ""
 "This page is asking you to confirm that you want to leave - data you have "
 "entered may not be saved. Do you want to leave this page?"
@@ -1018,6 +1044,9 @@ msgstr "URL"
 
 msgid "Unlock"
 msgstr "Déverrouiller"
+
+msgid "Update"
+msgstr "Mettre à jour"
 
 msgid "Update permissions"
 msgstr "Mettre à jour les permissions"
@@ -1202,6 +1231,9 @@ msgstr ""
 
 msgid "diff"
 msgstr "diff"
+
+msgid "here."
+msgstr "ici."
 
 msgid "lorem => exactly \"lorem\""
 msgstr "lorem => exactement \"lorem\""

@@ -20,3 +20,4 @@
 import "../themes/style.scss";
 
 export { initUsersAutocompleter } from "./InitUsersAutocompleter";
+export { fetchMatchingUsers } from "./api/rest-querier";
