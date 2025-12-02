@@ -67,27 +67,7 @@ msgstr ""
 msgid "(The maximum upload file size is %1$s MByte)"
 msgstr ""
 
-#, php-format
-msgid "(or use <a href=\"%1$s\">Advanced Search</a>)"
-msgstr ""
-
-#, php-format
-msgid "(or use <a href=\"%1$s\">Simple Search</a>)"
-msgstr ""
-
 msgid "* Mandatory field"
-msgstr ""
-
-msgid "-- My saved search:"
-msgstr ""
-
-msgid "-- Personal reports:"
-msgstr ""
-
-msgid "-- Project reports:"
-msgstr ""
-
-msgid "-- Project saved search:"
 msgstr ""
 
 msgid "12 Months from today"
@@ -227,9 +207,6 @@ msgstr ""
 msgid "Allow multiple selection: <strong>%1$s</strong>"
 msgstr ""
 
-msgid "Allowed patterns:"
-msgstr ""
-
 #, php-format
 msgid "Already in this approval table: %1$s."
 msgstr ""
@@ -271,11 +248,6 @@ msgid "An error occurred on review recording."
 msgstr ""
 
 msgid "An error occurred: the approval table was not deleted."
-msgstr ""
-
-msgid ""
-"An image is associated to this report but you don't have the permission to "
-"see it."
 msgstr ""
 
 msgid "Append the members to the table:"
@@ -326,10 +298,6 @@ msgid "Are you sure you want to delete the property '%1$s'?"
 msgstr ""
 
 msgid "Are you sure you want to remove this filter from the list?"
-msgstr ""
-
-#, php-format
-msgid "Are your sure you want to delete report '%1$s'?"
 msgstr ""
 
 #, php-format
@@ -436,9 +404,6 @@ msgstr ""
 msgid "Check before import"
 msgstr ""
 
-msgid "Clear all"
-msgstr ""
-
 msgid "Click on the following link to approve or reject the document"
 msgstr ""
 
@@ -516,9 +481,6 @@ msgstr ""
 msgid "Creation date:"
 msgstr ""
 
-msgid "Current image:"
-msgstr ""
-
 msgid "Customize filters"
 msgstr ""
 
@@ -584,10 +546,6 @@ msgid "Delete"
 msgstr "Excluir"
 
 msgid "Delete date"
-msgstr ""
-
-#, php-format
-msgid "Delete report '%1$s'"
 msgstr ""
 
 msgid "Delete the property"
@@ -787,9 +745,6 @@ msgstr ""
 msgid "Enter list by hand (separate by ','):"
 msgstr ""
 
-msgid "Enter project short name or identifier here."
-msgstr ""
-
 msgid "Error"
 msgstr "Erro"
 
@@ -910,9 +865,6 @@ msgstr ""
 msgid "Granted groups"
 msgstr ""
 
-msgid "Image Id:"
-msgstr ""
-
 msgid "Import"
 msgstr ""
 
@@ -934,9 +886,6 @@ msgstr ""
 msgid "Import properties from another project"
 msgstr ""
 
-msgid "Import reports from another project."
-msgstr ""
-
 #, php-format
 msgid ""
 "Important note: this approval table is configured in 'Sequential' mode.\n"
@@ -954,11 +903,6 @@ msgid "In:&nbsp;"
 msgstr ""
 
 msgid "Inactive"
-msgstr ""
-
-msgid ""
-"Info: Global text search will search pattern in all \"Text\" properties (but "
-"not within documents yet)."
 msgstr ""
 
 msgid "Initial version"
@@ -1126,15 +1070,6 @@ msgstr ""
 msgid "New document"
 msgstr ""
 
-msgid "New filter name:"
-msgstr ""
-
-msgid "New personal report..."
-msgstr ""
-
-msgid "New project report..."
-msgstr ""
-
 msgid "New version"
 msgstr ""
 
@@ -1282,9 +1217,6 @@ msgstr ""
 msgid "Permissions:"
 msgstr ""
 
-msgid "Personal"
-msgstr ""
-
 msgid "Please choose option for creating approval table"
 msgstr ""
 
@@ -1360,11 +1292,6 @@ msgstr ""
 msgid "Redirect to document with given id."
 msgstr ""
 
-msgid ""
-"Refer to a document id available in the document manager (Warning: "
-"<strong>permissions apply</strong>)."
-msgstr ""
-
 msgid "Rejected"
 msgstr ""
 
@@ -1391,12 +1318,6 @@ msgstr ""
 msgid "Removed:"
 msgstr ""
 
-msgid "Report"
-msgstr ""
-
-msgid "Report list"
-msgstr ""
-
 msgid "Report not found. Cancel deletion."
 msgstr ""
 
@@ -1407,9 +1328,6 @@ msgid "Report successfully cloned."
 msgstr ""
 
 msgid "Report successfully deleted"
-msgstr ""
-
-msgid "Report:"
 msgstr ""
 
 msgid "Requester"
@@ -1445,31 +1363,16 @@ msgstr ""
 msgid "Reviewers were notified."
 msgstr ""
 
-msgid "Save as"
-msgstr ""
-
 msgid "Save options"
-msgstr ""
-
-msgid "Save options:"
 msgstr ""
 
 msgid "Save settings"
 msgstr ""
 
-msgid "Scope:"
-msgstr ""
-
 msgid "Search"
 msgstr "Pesquisar"
 
-msgid "Search criteria:"
-msgstr ""
-
 msgid "Search document id"
-msgstr ""
-
-msgid "Search report administration"
 msgstr ""
 
 msgid "See the notification email"
@@ -1504,9 +1407,6 @@ msgid "Settings have been saved successfully"
 msgstr ""
 
 msgid "Show actions"
-msgstr ""
-
-msgid "Show my saved search"
 msgstr ""
 
 msgid "Something happen!"
@@ -1780,9 +1680,6 @@ msgstr ""
 msgid "To stop monitoring, please visit:"
 msgstr ""
 
-msgid "Toggle search criteria selection"
-msgstr ""
-
 msgid "Tree"
 msgstr "Árvore"
 
@@ -1907,9 +1804,6 @@ msgid "When"
 msgstr ""
 
 msgid "When the document was added into the document manager."
-msgstr ""
-
-msgid "When the pattern doesn't start with * (pattern #1 or #2):"
 msgstr ""
 
 msgid ""
@@ -2048,32 +1942,14 @@ msgid ""
 msgstr ""
 
 msgid ""
-"You can customize your report by adding text and an image. Note: an image is "
-"just a reference on any valid image available in documentation manager "
-"(across projects)."
-msgstr ""
-
-msgid ""
 "You can enforce the filename to follow a pattern. This filename will be "
 "automatically updated during the upload (filename of already existing "
 "documents are not affected by the configuration, only new ones will be)."
 msgstr ""
 
 msgid ""
-"You can import in this project a report defined in another project (either "
-"your 'Personal' reports or any 'Project' wide). The import only works if "
-"properties and values are the same in the two projects (same name, case "
-"sensitive). The import will work as best by trying to import as much as "
-"possible."
-msgstr ""
-
-msgid ""
 "You can import properties from any public projects or private projects you "
 "are member of."
-msgstr ""
-
-msgid ""
-"You can modify the settings of the report you already saved for this project."
 msgstr ""
 
 msgid "You can not delete report you do not own. Cancel deletion."
@@ -2308,19 +2184,6 @@ msgid ""
 " %s"
 msgstr ""
 
-#, php-format
-msgid "length must be greater than %1$s"
-msgstr ""
-
-msgid "look for exact sentence"
-msgstr ""
-
-msgid "lorem must be in result"
-msgstr ""
-
-msgid "lorem must not be in result"
-msgstr ""
-
 msgid "new ui"
 msgstr ""
 
@@ -2328,9 +2191,6 @@ msgid "null is not a valid status."
 msgstr ""
 
 msgid "other folders:"
-msgstr ""
-
-msgid "report_id"
 msgstr ""
 
 #, php-format

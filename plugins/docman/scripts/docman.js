@@ -85,12 +85,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         // Approval table
         this.approvalTableCreateDetailsHidden = false;
 
-        // Table Report
-        if (this.options.action == "browse") {
-            this.initTableReportEvent = this.initTableReport.bindAsEventListener(this);
-            document.observe("dom:loaded", this.initTableReportEvent);
-        }
-
         // Metadata multiple value checkbox toggling
         this.toggleMultipleValuesChoiceEvent =
             this.toggleMultipleValuesChoice.bindAsEventListener(this);
@@ -112,10 +106,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         document.stopObserving("dom:loaded", this.initExpandCollapseEvent);
         // Expand/Collapse
         document.stopObserving("dom:loaded", this.focusEvent);
-        // Table Report
-        if (this.initTableReportEvent) {
-            document.stopObserving("dom:loaded", this.initTableReportEvent);
-        }
+
         //itemHighlight
         $H(this.itemHighlight)
             .keys()
@@ -427,116 +418,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     //}}}
 
-    //{{{----------------------------- Table report
-    initTableReport: function () {
-        if ($("docman_filters_fieldset")) {
-            // Setup event observe
-            var icon = $("docman_toggle_filters");
-            icon.observe("click", this.toggleReport.bindAsEventListener(this));
-            $("plugin_docman_select_saved_report").observe("change", this.reportSelectSavedReport);
-            $("plugin_docman_report_add_filter").observe("change", this.reportSelectAddFilter);
-            $("plugin_docman_report_save").observe(
-                "change",
-                this.reportSelectSave.bindAsEventListener(this),
-            );
-
-            var btn_name = $("plugin_docman_report_form_global").down("input[type=submit]").name;
-            var url = location.href.parseQuery();
-            var global_search_is_used = typeof url[btn_name] !== "undefined";
-            if (!global_search_is_used && (url.del_filter || url.add_filter)) {
-                this.showReport();
-            } else {
-                this.hideReport();
-            }
-        }
-    },
-    toggleReport: function () {
-        if ($("docman_filters_fieldset").visible()) {
-            this.hideReport();
-        } else {
-            this.showReport();
-        }
-    },
-    showReport: function () {
-        $("docman_filters_fieldset").show();
-        $("docman_toggle_filters").src = $("docman_toggle_filters").src.replace(
-            "toggle_plus.png",
-            "toggle_minus.png",
-        );
-        $("plugin_docman_report_form_global")
-            .select("input")
-            .each(function (elem) {
-                elem.disabled = true;
-                elem.readonly = true;
-            });
-    },
-    hideReport: function () {
-        $("docman_filters_fieldset").hide();
-        $("docman_toggle_filters").src = $("docman_toggle_filters").src.replace(
-            "toggle_minus.png",
-            "toggle_plus.png",
-        );
-        $("plugin_docman_report_form_global")
-            .select("input")
-            .each(function (elem) {
-                elem.disabled = false;
-                elem.readonly = false;
-            });
-    },
-    reportSelectSavedReport: function (event) {
-        var form = $("plugin_docman_select_report_id");
-        var select = form.report_id;
-        if (select[select.selectedIndex].value != "-1") {
-            form.submit();
-        }
-        Event.stop(event);
-        return false;
-    },
-    reportSelectAddFilter: function (event) {
-        var form = $("plugin_docman_report_form");
-        var select = form.plugin_docman_report_add_filter;
-        if (select[select.selectedIndex].value != "-1") {
-            form.submit();
-        }
-        Event.stop(event);
-        return false;
-    },
-    // Warning: The 2 "Insersion after" should have their values (name) escaped to avoid XSS.
-    // But I think this kind of attack cannot be used against codendi.
-    reportSelectSave: function (event) {
-        var form = $("plugin_docman_report_form");
-        var select = form.plugin_docman_report_save;
-        var value = select[select.selectedIndex].value;
-        var nameField = Builder.node("input", { type: "hidden", name: "report_name" });
-        if (value == "newp" || value == "newi") {
-            // Create new report
-            //eslint-disable-next-line no-alert
-            const name = window.prompt(this.options.language.report_name_new, "");
-            if (name != null && name.strip() != "") {
-                nameField.value = name.escapeHTML().replace(/"/, "&quot;");
-                form.appendChild(nameField);
-                form.submit();
-            }
-        } else {
-            // Update existing report
-            var selectedValue = parseInt(value, 10);
-            if (selectedValue > 0) {
-                //eslint-disable-next-line no-alert
-                const name = window.prompt(
-                    this.options.language.report_name_upd,
-                    select.options[select.selectedIndex].innerHTML.unescapeHTML(),
-                );
-                if (name != null && name.strip() != "") {
-                    nameField.value = name.escapeHTML().replace(/"/, "&quot;");
-                    form.appendChild(nameField);
-                    form.submit();
-                }
-            }
-        }
-        Event.stop(event);
-        return false;
-    },
-    //}}}
     //{{{----------------------------- Approval table create
     approvalTableCreate: function (form) {
         var selected;

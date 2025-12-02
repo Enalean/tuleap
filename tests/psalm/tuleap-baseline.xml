@@ -9327,45 +9327,6 @@
       <code><![CDATA[$request->exist('save_report')]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/docman/include/Docman_ReportHtml.php">
-    <MissingParamType>
-      <code><![CDATA[$current]]></code>
-      <code><![CDATA[$defaultUrl]]></code>
-      <code><![CDATA[$displayedFilters]]></code>
-      <code><![CDATA[$displayedFilters]]></code>
-      <code><![CDATA[$displayedFilters]]></code>
-      <code><![CDATA[$filter]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$report]]></code>
-      <code><![CDATA[$reportIter]]></code>
-      <code><![CDATA[$selected]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$trashLinkBase]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$defaultUrl]]></code>
-      <code><![CDATA[$report]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_getFilterDisplayBox]]></code>
-      <code><![CDATA[getFiltersOptions]]></code>
-      <code><![CDATA[getReportCustomization]]></code>
-      <code><![CDATA[getReportImage]]></code>
-      <code><![CDATA[getReportOptions]]></code>
-      <code><![CDATA[getReportSelector]]></code>
-      <code><![CDATA[getSelectOption]]></code>
-      <code><![CDATA[getSelectOptionFromReportIterator]]></code>
-      <code><![CDATA[getSelectedFilters]]></code>
-      <code><![CDATA[toHtml]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/Docman_SettingsBo.php">
     <MissingParamType>
       <code><![CDATA[$dstGroupId]]></code>
@@ -12049,34 +12010,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[_content]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ReportSettings.php">
-    <DeprecatedFunction>
-      <code><![CDATA[html_build_select_box_from_arrays($vals, $txts, 'scope', $r->getScope(), false)]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code><![CDATA[$altRowClass]]></code>
-      <code><![CDATA[$isAdmin]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$reportId]]></code>
-      <code><![CDATA[$reportIter]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$controller]]></code>
-      <code><![CDATA[$defaultUrl]]></code>
-      <code><![CDATA[$groupId]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_getImportForm]]></code>
-      <code><![CDATA[_getReportSettings]]></code>
-      <code><![CDATA[_getReportTable]]></code>
-      <code><![CDATA[_getReportTableContent]]></code>
-      <code><![CDATA[_title]]></code>
-      <code><![CDATA[init]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Table.php">

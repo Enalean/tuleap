@@ -88,28 +88,8 @@ msgstr "%s a été supprimé par %s."
 msgid "(The maximum upload file size is %1$s MByte)"
 msgstr "(La taille maximum d'un fichier est de %1$s MOctets)"
 
-#, php-format
-msgid "(or use <a href=\"%1$s\">Advanced Search</a>)"
-msgstr "(ou utiliser <a href=\"%1$s\">la recherche avancée</a>)"
-
-#, php-format
-msgid "(or use <a href=\"%1$s\">Simple Search</a>)"
-msgstr "(ou utiliser <a href=\"%1$s\">la recherche simple</a>)"
-
 msgid "* Mandatory field"
 msgstr "* Champ obligatoire"
-
-msgid "-- My saved search:"
-msgstr "-- Mes recherches sauvegardées :"
-
-msgid "-- Personal reports:"
-msgstr "-- Rapports personnels:"
-
-msgid "-- Project reports:"
-msgstr "-- Rapports projet:"
-
-msgid "-- Project saved search:"
-msgstr "-- Recherche projet sauvegardée :"
 
 msgid "12 Months from today"
 msgstr "12 Mois"
@@ -289,9 +269,6 @@ msgstr "Autorise les valeurs multiples"
 msgid "Allow multiple selection: <strong>%1$s</strong>"
 msgstr "Autoriser la sélection multiple : <strong>%1$s</strong>"
 
-msgid "Allowed patterns:"
-msgstr "Les motifs autorisés :"
-
 #, php-format
 msgid "Already in this approval table: %1$s."
 msgstr "Déjà dans la table d'approbation : %1$s."
@@ -344,13 +321,6 @@ msgstr "Une erreur est survenue lors de l'enregistrement de votre approbation."
 msgid "An error occurred: the approval table was not deleted."
 msgstr "Une erreur est survenue. La table n'a pas été supprimée."
 
-msgid ""
-"An image is associated to this report but you don't have the permission to "
-"see it."
-msgstr ""
-"Une image est associée à ce rapport mais vous n'avez pas les permissions de "
-"la voir."
-
 msgid "Append the members to the table:"
 msgstr "Ajouter les membres d'un groupe d'utilisateurs :"
 
@@ -401,10 +371,6 @@ msgstr "Etes-vous sûr de vouloir supprimer la propriété '%1$s' ?"
 
 msgid "Are you sure you want to remove this filter from the list?"
 msgstr "Etes-vous sûr de vouloir enlever ce filtre de la liste ?"
-
-#, php-format
-msgid "Are your sure you want to delete report '%1$s'?"
-msgstr "Êtes vous sûrs de vouloir supprimer le rapport '%1$s'?"
 
 #, php-format
 msgid ""
@@ -536,9 +502,6 @@ msgstr "Changer \"%1$s\""
 msgid "Check before import"
 msgstr "Vérification avant import"
 
-msgid "Clear all"
-msgstr "Tout effacer"
-
 msgid "Click on the following link to approve or reject the document"
 msgstr "Cliquez sur le lien suivant pour approuver ou réprouver le document"
 
@@ -615,9 +578,6 @@ msgstr "Créer une nouvelle valeur"
 
 msgid "Creation date:"
 msgstr "Date de création :"
-
-msgid "Current image:"
-msgstr "Image courrante :"
 
 msgid "Customize filters"
 msgstr "Personnaliser les filtres"
@@ -710,10 +670,6 @@ msgstr "Supprimer"
 
 msgid "Delete date"
 msgstr "Date de suppression"
-
-#, php-format
-msgid "Delete report '%1$s'"
-msgstr "Supprimer le rapport '%1$s'"
 
 msgid "Delete the property"
 msgstr "Supprimer la propriété"
@@ -917,9 +873,6 @@ msgstr "Entrez le nom ou l'identificateur d'un project ici."
 msgid "Enter list by hand (separate by ','):"
 msgstr "Entrez la liste manuellement (separés par ',') :"
 
-msgid "Enter project short name or identifier here."
-msgstr "Entrez le nom ou l'identificateur d'un project ici."
-
 msgid "Error"
 msgstr "Erreur"
 
@@ -1066,9 +1019,6 @@ msgstr "Recherche globale de texte"
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
-msgid "Image Id:"
-msgstr "Id de l'image :"
-
 msgid "Import"
 msgstr "Importer"
 
@@ -1089,9 +1039,6 @@ msgstr "Importer les propriétés de %1$s :"
 
 msgid "Import properties from another project"
 msgstr "Importer les propriétés d'un projet"
-
-msgid "Import reports from another project."
-msgstr "Importer les rapports d'un autre projet."
 
 #, php-format
 msgid ""
@@ -1114,13 +1061,6 @@ msgstr "Dans :&nbsp;"
 
 msgid "Inactive"
 msgstr "Inactive"
-
-msgid ""
-"Info: Global text search will search pattern in all \"Text\" properties (but "
-"not within documents yet)."
-msgstr ""
-"Info: Global text search va chercher le motif dans tout les champs \"Texte\" "
-"(mais pas dans le contenu du document)."
 
 msgid "Initial version"
 msgstr "Version initiale"
@@ -1299,15 +1239,6 @@ msgstr "Conflit de nommage"
 msgid "New document"
 msgstr "Nouveau document"
 
-msgid "New filter name:"
-msgstr "Nouveau nom de filtre :"
-
-msgid "New personal report..."
-msgstr "Nouveau rapport personnel..."
-
-msgid "New project report..."
-msgstr "Nouveau rapport projet..."
-
 msgid "New version"
 msgstr "Nouvelle version"
 
@@ -1457,9 +1388,6 @@ msgstr "Permissions mises à jour."
 msgid "Permissions:"
 msgstr "Permissions :"
 
-msgid "Personal"
-msgstr "Personnel"
-
 msgid "Please choose option for creating approval table"
 msgstr "Veuillez choisir une option pour la création de la table d'approbation"
 
@@ -1546,13 +1474,6 @@ msgstr "Rang :"
 msgid "Redirect to document with given id."
 msgstr "Redirige au document correspondant à l'ID donné."
 
-msgid ""
-"Refer to a document id available in the document manager (Warning: "
-"<strong>permissions apply</strong>)."
-msgstr ""
-"Se réfère à un id de document disponible dans le gestionnaire de document "
-"(Attention : <strong>les permissions s'appliquent</strong>)."
-
 msgid "Rejected"
 msgstr "Rejeté"
 
@@ -1579,12 +1500,6 @@ msgstr "Le monitoring a été supprimé pour le(s) utilisateur(s) \"%s\""
 msgid "Removed:"
 msgstr "Supprimé :"
 
-msgid "Report"
-msgstr "Rapport"
-
-msgid "Report list"
-msgstr "Liste des rapports"
-
 msgid "Report not found. Cancel deletion."
 msgstr "Rapport non trouvé. Suppression annulée."
 
@@ -1596,9 +1511,6 @@ msgstr "Rapport cloné."
 
 msgid "Report successfully deleted"
 msgstr "Rapport supprimé"
-
-msgid "Report:"
-msgstr "Rapport :"
 
 msgid "Requester"
 msgstr "Demandeur d'approbation"
@@ -1633,32 +1545,17 @@ msgstr "Approbateur"
 msgid "Reviewers were notified."
 msgstr "Les approbateurs ont été notfiés."
 
-msgid "Save as"
-msgstr "Sauver en tant que"
-
 msgid "Save options"
 msgstr "Sauver les options"
-
-msgid "Save options:"
-msgstr "Sauver les options:"
 
 msgid "Save settings"
 msgstr "Enregistrer"
 
-msgid "Scope:"
-msgstr "Portée :"
-
 msgid "Search"
 msgstr "Rechercher"
 
-msgid "Search criteria:"
-msgstr "Critères de recherche :"
-
 msgid "Search document id"
 msgstr "Recherche de document par id"
-
-msgid "Search report administration"
-msgstr "Administration des rapports de recherche"
 
 msgid "See the notification email"
 msgstr "Voir l'email de notification"
@@ -1697,9 +1594,6 @@ msgstr "Les paramètres ont été sauvegardés avec succès"
 
 msgid "Show actions"
 msgstr "Afficher les actions"
-
-msgid "Show my saved search"
-msgstr "Afficher mes recherche sauvegardées"
 
 msgid "Something happen!"
 msgstr "Quelque chose a changé !"
@@ -2011,9 +1905,6 @@ msgstr "Pour restaurer le monitoring, veuillez visiter :"
 msgid "To stop monitoring, please visit:"
 msgstr "Pour arrêter le monitoring, veuillez visiter :"
 
-msgid "Toggle search criteria selection"
-msgstr "Basculer la sélection des critères de recherche"
-
 msgid "Tree"
 msgstr "Arbre"
 
@@ -2141,9 +2032,6 @@ msgstr "Quand"
 
 msgid "When the document was added into the document manager."
 msgstr "Date d'ajout du document dans le gestionnaire."
-
-msgid "When the pattern doesn't start with * (pattern #1 or #2):"
-msgstr "Si le motif ne commence pas par * (motif #1 or #2) :"
 
 msgid ""
 "When turned on, Writers will be allowed to set properties when they create a "
@@ -2323,15 +2211,6 @@ msgstr ""
 "ou au sein de son dossier actuel."
 
 msgid ""
-"You can customize your report by adding text and an image. Note: an image is "
-"just a reference on any valid image available in documentation manager "
-"(across projects)."
-msgstr ""
-"Vous pouvez personnaliser votre rapport en ajoutant un texte et une image. "
-"Note : une image est juste une reference sur une image valide disponible "
-"dans le gestionnaire de document (indépendamment des projets)."
-
-msgid ""
 "You can enforce the filename to follow a pattern. This filename will be "
 "automatically updated during the upload (filename of already existing "
 "documents are not affected by the configuration, only new ones will be)."
@@ -2342,30 +2221,11 @@ msgstr ""
 "le seront)."
 
 msgid ""
-"You can import in this project a report defined in another project (either "
-"your 'Personal' reports or any 'Project' wide). The import only works if "
-"properties and values are the same in the two projects (same name, case "
-"sensitive). The import will work as best by trying to import as much as "
-"possible."
-msgstr ""
-"Vous pouvez importer dans ce projet un rapport défini dans un autre projet "
-"(parmis vos rapports personnels ou n'importe quel rapport 'projet'). "
-"L'import ne fonctionnera que si les propriétés et les valeurs sont les mêmes "
-"dans les deux projets (même nom, sensible à la casse). L'import fera de son "
-"mieux pour importer le plus de données possible."
-
-msgid ""
 "You can import properties from any public projects or private projects you "
 "are member of."
 msgstr ""
 "Vous pouvez importer des propriétés de n'importe quel projet auquel vous "
 "avez accès."
-
-msgid ""
-"You can modify the settings of the report you already saved for this project."
-msgstr ""
-"Vous pouvez modifier les paramêtres du rapport que vous avez créer pour ce "
-"projet."
 
 msgid "You can not delete report you do not own. Cancel deletion."
 msgstr ""
@@ -2674,19 +2534,6 @@ msgstr ""
 "depuis :\n"
 "%s"
 
-#, php-format
-msgid "length must be greater than %1$s"
-msgstr "la longueur doit dépasser %1$s"
-
-msgid "look for exact sentence"
-msgstr "chercher la phrase complète"
-
-msgid "lorem must be in result"
-msgstr "lorem doit figurer dans le résultat"
-
-msgid "lorem must not be in result"
-msgstr "lorem ne doit pas figurer dans le résultat"
-
 msgid "new ui"
 msgstr "nouvelle interface"
 
@@ -2695,9 +2542,6 @@ msgstr "null n'est pas un statut valide."
 
 msgid "other folders:"
 msgstr "autres dossiers:"
-
-msgid "report_id"
-msgstr "report_id"
 
 #, php-format
 msgid ""
