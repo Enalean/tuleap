@@ -701,16 +701,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getUpdate: function () {
-        var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=action_update",
-            class: "docman_item_option_update",
-            title: this.docman.options.language.action_update,
-        });
-        var title_txt = document.createTextNode(this.docman.options.language.action_update);
-        a.appendChild(title_txt);
-        return this._createLi(a);
-    },
 
     _getApproval: function () {
         var a = Builder.node("a", {
@@ -787,11 +777,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         // New version (files)
         if (this.docman.actionsForItem[this.item_id].canNewVersion) {
             ul.appendChild(this._getNewVersion());
-            writeAction = true;
-        }
-        // Update (empty, wiki, link)
-        if (this.docman.actionsForItem[this.item_id].canUpdate) {
-            ul.appendChild(this._getUpdate());
             writeAction = true;
         }
 

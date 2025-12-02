@@ -51,7 +51,6 @@
                     'action_details'           => dgettext('tuleap-docman', 'Properties'),
                     'action_newversion'        => dgettext('tuleap-docman', 'New version'),
                     'action_notifications'     => dgettext('tuleap-docman', 'Notifications'),
-                    'action_update'            => dgettext('tuleap-docman', 'Update'),
                     'action_paste'             => dgettext('tuleap-docman', 'Paste'),
                     'action_approval'          => dgettext('tuleap-docman', 'Approval table'),
                     'feedback_cut'             => dgettext('tuleap-docman', 'cut. You can now paste it wherever you want with \'Paste\' action in popup menu.'),
