@@ -42,6 +42,8 @@ import {
     CAN_USER_DISPLAY_VERSIONS,
 } from "@/can-user-display-versions-injection-key";
 import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 
 describe("App", () => {
     it("should load and display the document view", () => {
@@ -55,6 +57,7 @@ describe("App", () => {
                     [ORIGINAL_CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(true),
                     [DOCUMENT_ID.valueOf()]: 1,
                     [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
+                    [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
                     [IS_LOADING_SECTIONS_FAILED.valueOf()]: ref(false),
                     [SELECTED_FIELDS.valueOf()]: ref([]),
                     [CAN_USER_DISPLAY_VERSIONS.valueOf()]: true,

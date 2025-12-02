@@ -25,6 +25,11 @@
             <document-view />
         </div>
         <global-error-message-modal v-if="has_error_message" v-bind:error="error_message" />
+        <unsaved-work-warning-modal
+            v-if="old_version_in_stand_by.isValue()"
+            v-on:cancel="cancelOldVersionDisplay"
+            v-on:continue-anyway="displayOldVersionAnyway"
+        />
     </section>
 </template>
 
@@ -72,6 +77,8 @@ import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 import { getVersion } from "@/helpers/rest-querier";
 import { getShareableVersionsUrlsHistory } from "@/helpers/shareable-version-url-history";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
+import UnsavedWorkWarningModal from "@/components/UnsavedWorkWarningModal.vue";
 
 const { scrollToAnchor } = useScrollToAnchor();
 
@@ -151,11 +158,38 @@ const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const original_can_user_edit_document = strictInject(ORIGINAL_CAN_USER_EDIT_DOCUMENT);
 const use_fake_versions = strictInject(USE_FAKE_VERSIONS);
 const are_versions_displayed = strictInject(ARE_VERSIONS_DISPLAYED);
+const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
 const shareable_versions_urls_history = getShareableVersionsUrlsHistory(window);
-let old_version = ref<Option<Version>>(Option.nothing());
+const old_version = ref<Option<Version>>(Option.nothing());
+const old_version_in_stand_by = ref<Option<Version>>(Option.nothing());
 
 const sections_loader = getSectionsLoader(document_id);
 const versioned_sections_loader = getVersionedSectionsLoader(document_id);
+
+const loadAndDisplayOldVersion = (version: Version): void => {
+    old_version.value = Option.fromValue(version);
+    can_user_edit_document.value = false;
+
+    if (!is_first_loading.value) {
+        shareable_versions_urls_history.pushVersionUrl(version);
+    }
+
+    is_loading_sections.value = true;
+    versioned_sections_loader
+        .loadVersionedSections(version)
+        .match(displayLoadedSections, handleLoadSectionsError);
+};
+
+const displayOldVersionAnyway = (): void => {
+    old_version_in_stand_by.value = old_version_in_stand_by.value.andThen((version) => {
+        loadAndDisplayOldVersion(version);
+        return Option.nothing<Version>();
+    });
+};
+
+const cancelOldVersionDisplay = (): void => {
+    old_version_in_stand_by.value = Option.nothing();
+};
 
 const current_version_displayed: CurrentVersionDisplayed = {
     old_version,
@@ -168,17 +202,16 @@ const current_version_displayed: CurrentVersionDisplayed = {
         can_user_edit_document.value = original_can_user_edit_document;
     },
     switchToOldVersion(version: Version) {
+        if (states_collection.has_at_least_one_section_in_edit_mode.value) {
+            old_version_in_stand_by.value = Option.fromValue(version);
+            shareable_versions_urls_history.pushLatestVersionUrl();
+            return;
+        }
+
         old_version.value = Option.fromValue(version);
         can_user_edit_document.value = false;
 
-        if (!is_first_loading.value) {
-            shareable_versions_urls_history.pushVersionUrl(version);
-        }
-
-        is_loading_sections.value = true;
-        versioned_sections_loader
-            .loadVersionedSections(version)
-            .match(displayLoadedSections, handleLoadSectionsError);
+        loadAndDisplayOldVersion(version);
     },
     switchToLatestVersion() {
         if (old_version.value.isNothing() && !is_first_loading.value) {
