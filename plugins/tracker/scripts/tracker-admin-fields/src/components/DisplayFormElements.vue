@@ -28,6 +28,7 @@
         <field-string v-else-if="isStringField(element.field)" v-bind:field="element.field" />
         <field-int v-else-if="isIntField(element.field)" v-bind:field="element.field" />
         <field-float v-else-if="isFloatField(element.field)" v-bind:field="element.field" />
+        <field-date v-else-if="isDateField(element.field)" v-bind:field="element.field" />
         <field-select v-else-if="isSelectField(element)" v-bind:field="element.field" />
         <field-multi-select v-else-if="isMultiSelectField(element)" v-bind:field="element.field" />
         <line-separator v-else-if="isLineSeparator(element.field)" v-bind:field="element.field" />
@@ -40,6 +41,7 @@
 import type { ColumnWrapper, ElementWithChildren, Fieldset } from "../type";
 import {
     CONTAINER_FIELDSET,
+    DATE_FIELD,
     FLOAT_FIELD,
     INT_FIELD,
     LINE_BREAK,
@@ -57,6 +59,7 @@ import type {
     StructureFields,
     SeparatorStructure,
     LineBreakStructure,
+    EditableDateFieldStructure,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import ContainerFieldset from "./FormElements/ContainerFieldset.vue";
 import ContainerColumnWrapper from "./FormElements/ContainerColumnWrapper.vue";
@@ -69,12 +72,17 @@ import FieldInt from "./FormElements/FieldInt.vue";
 import FieldFloat from "./FormElements/FieldFloat.vue";
 import LineSeparator from "./FormElements/LineSeparator.vue";
 import LineBreak from "./FormElements/LineBreak.vue";
+import FieldDate from "./FormElements/FieldDate.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
 }>();
 
 type Element = ElementWithChildren | ElementWithChildren["children"][0];
+
+function isDateField(field: StructureFields): field is EditableDateFieldStructure {
+    return field.type === DATE_FIELD;
+}
 
 function isTextField(field: StructureFields): field is TextFieldStructure {
     return field.type === TEXT_FIELD;

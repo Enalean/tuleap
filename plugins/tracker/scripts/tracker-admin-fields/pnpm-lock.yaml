@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:^
     version: link:../lib/rest-api-types
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-date-picker
   '@tuleap/vue3-gettext-init':
     specifier: workspace:^
     version: link:../../../../lib/frontend/vue3-gettext-init
