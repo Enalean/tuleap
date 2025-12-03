@@ -21,6 +21,7 @@
 
 namespace Tuleap\AI\Mistral;
 
+use Tuleap\AI\Requestor\AIRequestorEntity;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeySecret;
@@ -45,5 +46,5 @@ interface MistralConnector
     /**
      * @return Ok<CompletionResponse>|Err<Fault>
      */
-    public function sendCompletion(Completion $completion): Ok|Err;
+    public function sendCompletion(AIRequestorEntity $requestor, Completion $completion): Ok|Err;
 }

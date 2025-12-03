@@ -28,6 +28,8 @@ use ProjectManager;
 use Tuleap\AI\Mistral\CompletionResponse;
 use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\MistralConnectorLive;
+use Tuleap\AI\Requestor\AIRequestorEntity;
+use Tuleap\AI\Requestor\EndUserAIRequestor;
 use Tuleap\AICrossTracker\Assistant\ProjectAssistant;
 use Tuleap\AICrossTracker\Assistant\UserAssistant;
 use Tuleap\CrossTracker\REST\v1\CrossTrackerWidgetNotFoundException;
@@ -59,7 +61,7 @@ final class TQLAssistantResource extends AuthenticatedResource
      * (EXPERIMENTAL) Get help on TQL
      *
      * @url    POST {id}/helper
-     * @access hybrid
+     * @access protected
      *
      * @param int $id Widget Id {@from body}
      * @param array $messages {@from body} {@type \Tuleap\AICrossTracker\REST\v1\MessageRepresentation}
@@ -67,21 +69,21 @@ final class TQLAssistantResource extends AuthenticatedResource
      * @status 200
      * @throws RestException
      */
-    public function post(int $id, array $messages): HelperRepresentation
+    protected function post(int $id, array $messages): HelperRepresentation
     {
         $this->checkAccess();
 
-        try {
-            if (! $this->getWidgetDao()->searchWidgetExistence($id)) {
-                throw new CrossTrackerWidgetNotFoundException();
-            }
+        if (! $this->getWidgetDao()->searchWidgetExistence($id)) {
+            throw new CrossTrackerWidgetNotFoundException();
+        }
 
-            $current_user = \UserManager::instance()->getCurrentUser();
-            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $id);
+        $current_user_with_logged_in_information = \UserManager::instance()->getCurrentUserWithLoggedInInformation();
+        try {
+            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user_with_logged_in_information->user, $id);
 
             $cross_tracker_retriever = new CrossTrackerWidgetRetriever($this->getWidgetDao());
             return $cross_tracker_retriever->retrieveWidgetById($id)->match(
-                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($current_user, $messages): HelperRepresentation {
+                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($current_user_with_logged_in_information, $messages): HelperRepresentation {
                     $assistant = match ($widget::class) {
                         ProjectCrossTrackerWidget::class => new ProjectAssistant($widget),
                         UserCrossTrackerWidget::class => new UserAssistant(),
@@ -90,10 +92,17 @@ final class TQLAssistantResource extends AuthenticatedResource
                     $user_messages = array_map(static fn (MessageRepresentation $message): Message => $message->toMistralMessage(), $messages);
 
                     $mistral_connector = new MistralConnectorLive(HttpClientFactory::createClientWithCustomTimeout(60));
-                    return $mistral_connector->sendCompletion($assistant->getCompletion($current_user, $user_messages))->match(
-                        static fn (CompletionResponse $response) => new HelperRepresentation((string) $response->choices[0]->message->content),
-                        static fn (Fault $fault) => throw new RestException(400, (string) $fault)
-                    );
+                    return EndUserAIRequestor::fromCurrentUser($current_user_with_logged_in_information)
+                        ->andThen(
+                            fn (AIRequestorEntity $requestor) => $mistral_connector->sendCompletion(
+                                $requestor,
+                                $assistant->getCompletion($current_user_with_logged_in_information->user, $user_messages)
+                            )
+                        )
+                        ->match(
+                            static fn (CompletionResponse $response) => new HelperRepresentation((string) $response->choices[0]->message->content),
+                            static fn (Fault $fault) => throw new RestException(400, (string) $fault)
+                        );
                 },
                 static fn() => throw new RestException(400, 'Unknown widget type'),
             );

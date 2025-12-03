@@ -28,6 +28,7 @@ use CuyZ\Valinor\Mapper\Source\JsonSource;
 use ForgeConfig;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Tuleap\AI\Requestor\AIRequestorEntity;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\NeverThrow\Err;
@@ -72,7 +73,7 @@ final readonly class MistralConnectorLive implements MistralConnector
     }
 
     #[\Override]
-    public function sendCompletion(Completion $completion): Ok|Err
+    public function sendCompletion(AIRequestorEntity $requestor, Completion $completion): Ok|Err
     {
         try {
             if (ForgeConfig::get(self::CONFIG_API_KEY) === '') {
