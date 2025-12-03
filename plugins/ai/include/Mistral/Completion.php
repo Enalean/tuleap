@@ -41,6 +41,7 @@ final readonly class Completion implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
+            'safe_prompt' => true,
             'model' => $this->model,
             'messages' => $this->messages,
         ];
