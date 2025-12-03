@@ -33,7 +33,8 @@ use Tuleap\AI\Mistral\StringContent;
 final class MessageRepresentation
 {
     /**
-     * @var string Role of the message {@required true}
+     * @var string Role of the message {@required true}{@choice user,assistant}
+     * @psalm-var 'user'|'assistant'
      */
     public string $role;
     /**
