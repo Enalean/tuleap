@@ -75,7 +75,7 @@ function getLinkToApprovalTableAdmin(): string {
 function refreshTable(): void {
     const version = props.version ?? props.item.approval_table?.version_number;
     if (version === null || version === undefined) {
-        approval_table.value = null;
+        approval_table.value = props.item.approval_table;
         return;
     }
     getDocumentApprovalTable(props.item.id, version).match(

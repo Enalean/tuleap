@@ -61,7 +61,7 @@
                 </div>
             </section>
 
-            <section class="tlp-pane">
+            <section class="tlp-pane" v-if="is_item_versionable">
                 <div class="tlp-pane-container">
                     <div class="tlp-pane-header">
                         <h1 class="tlp-pane-title">
@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import type { Item } from "../../type";
 import { useActions } from "vuex-composition-helpers";
 import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
@@ -94,6 +94,7 @@ import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
 import NoApprovalTable from "./Creation/NoApprovalTable.vue";
 import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
 import ApprovalTableHistory from "./History/ApprovalTableHistory.vue";
+import { isEmbedded, isFile, isLink, isWiki } from "../../helpers/type-check-helper";
 
 const props = defineProps<{
     item_id: number;
@@ -102,6 +103,12 @@ const props = defineProps<{
 
 const item = ref<Item | null>(null);
 const error_message = ref("");
+
+const is_item_versionable = computed(
+    () =>
+        item.value &&
+        (isEmbedded(item.value) || isFile(item.value) || isWiki(item.value) || isLink(item.value)),
+);
 
 const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
 
