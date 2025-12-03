@@ -109,3 +109,6 @@ id = "RUSTSEC-2024-0384"
 reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
 
 ### TO BE FIXED
+[[IgnoredVulns]]
+id = "GO-2025-4155" # CVE-2025-61729
+reason = "Our code does not call the impacted parts of the Go stdlib."
