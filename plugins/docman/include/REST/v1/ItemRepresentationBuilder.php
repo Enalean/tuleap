@@ -21,12 +21,12 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Codendi_HTMLPurifier;
-use Docman_ApprovalTableFactoriesFactory;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_NotificationsManager;
 use Docman_VersionFactory;
 use Project;
+use Tuleap\Docman\ApprovalTable\ApprovalTableNotificationMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\IEmbeddedFilePropertiesRepresentation;
@@ -97,7 +97,7 @@ class ItemRepresentationBuilder
         DocmanItemPermissionsForGroupsBuilder $item_permissions_for_groups_builder,
         Codendi_HTMLPurifier $purifier,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
-        private readonly Docman_ApprovalTableFactoriesFactory $factories_factory,
+        private readonly ApprovalTableNotificationMapper $notification_mapper,
         private readonly Docman_VersionFactory $version_factory,
         private readonly Docman_NotificationsManager $notifications_manager,
     ) {
@@ -189,7 +189,7 @@ class ItemRepresentationBuilder
                 $approval_table,
                 $this->getMinimalUserRepresentation((int) $approval_table->getOwner()),
                 $this->approval_table_state_mapper,
-                $this->factories_factory,
+                $this->notification_mapper,
                 $this->user_manager,
                 $this->provide_user_avatar_url,
                 $this->version_factory,

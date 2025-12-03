@@ -20,7 +20,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import ApprovalTableAdministrationModal from "./ApprovalTableAdministrationModal.vue";
 import type { VueWrapper } from "@vue/test-utils";
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { PROJECT, USER_LOCALE } from "../../../configuration-keys";
 import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
@@ -29,12 +29,14 @@ import { ItemBuilder } from "../../../../tests/builders/ItemBuilder";
 import * as rest_querier from "../../../api/approval-table-rest-querier";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+import AdministrationModalGlobalSettings from "./AdministrationModalGlobalSettings.vue";
+import AdministrationModalNotifications from "./AdministrationModalNotifications.vue";
 
 describe("ApprovalTableAdministrationModal", () => {
     let trigger: HTMLButtonElement;
 
     function getWrapper(): VueWrapper<InstanceType<typeof ApprovalTableAdministrationModal>> {
-        return mount(ApprovalTableAdministrationModal, {
+        return shallowMount(ApprovalTableAdministrationModal, {
             props: {
                 trigger,
                 table: new ApprovalTableBuilder(35).build(),
@@ -85,12 +87,25 @@ describe("ApprovalTableAdministrationModal", () => {
             .mockReturnValue(okAsync(null));
         const wrapper = getWrapper();
 
-        await wrapper.find("[data-test=table-status-select]").setValue("enabled");
-        await wrapper.find("[data-test=table-comment-input]").setValue("My comment");
+        await wrapper
+            .findComponent(AdministrationModalGlobalSettings)
+            .setValue("enabled", "table_status_value");
+        await wrapper
+            .findComponent(AdministrationModalGlobalSettings)
+            .setValue("My comment", "table_comment_value");
+        await wrapper
+            .findComponent(AdministrationModalNotifications)
+            .setValue("all_at_once", "table_notification_value");
 
         await wrapper.find("[data-test=update-table-button]").trigger("click");
 
-        expect(updateApprovalTable).toHaveBeenCalledWith(123, 102, "enabled", "My comment");
+        expect(updateApprovalTable).toHaveBeenCalledWith(
+            123,
+            102,
+            "enabled",
+            "My comment",
+            "all_at_once",
+        );
         expect(wrapper.emitted("refresh-data")).not.toBe(undefined);
     });
 
@@ -102,7 +117,7 @@ describe("ApprovalTableAdministrationModal", () => {
 
         await wrapper.find("[data-test=update-table-button]").trigger("click");
 
-        expect(updateApprovalTable).toHaveBeenCalledWith(123, 102, "disabled", "");
+        expect(updateApprovalTable).toHaveBeenCalledWith(123, 102, "disabled", "", "");
         expect(wrapper.find("[data-test=admin-modal-error]").text()).toContain("Oh no!");
     });
 });

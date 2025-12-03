@@ -87,6 +87,7 @@ export function updateApprovalTable(
     owner: number,
     status: string,
     comment: string,
+    notification_type: string,
 ): ResultAsync<null, Fault> {
     return patchResponse(
         uri`/api/docman_items/${item_id}/approval_table`,
@@ -95,6 +96,13 @@ export function updateApprovalTable(
             owner,
             status,
             comment,
+            notification_type,
         },
     ).map(() => null);
+}
+
+export function postApprovalTableReminder(item_id: number): ResultAsync<null, Fault> {
+    return postResponse(uri`/api/docman_items/${item_id}/approval_table/reminder`, {}, {}).map(
+        () => null,
+    );
 }

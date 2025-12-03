@@ -24,11 +24,11 @@ namespace Tuleap\Docman\REST\v1;
 
 use Docman_ApprovalReviewer;
 use Docman_ApprovalTable;
-use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableVersionned;
 use Docman_Item;
 use Docman_NotificationsManager;
 use Docman_VersionFactory;
+use Tuleap\Docman\ApprovalTable\ApprovalTableNotificationMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonCast;
@@ -63,7 +63,7 @@ final readonly class ItemApprovalTableRepresentation
         Docman_ApprovalTable $approval_table,
         MinimalUserRepresentation $table_owner,
         ApprovalTableStateMapper $status_mapper,
-        Docman_ApprovalTableFactoriesFactory $factory,
+        ApprovalTableNotificationMapper $notification_mapper,
         RetrieveUserById $user_manager,
         ProvideUserAvatarUrl $provide_user_avatar_url,
         Docman_VersionFactory $version_factory,
@@ -88,7 +88,7 @@ final readonly class ItemApprovalTableRepresentation
             $version_id,
             $version_number,
             $version_label,
-            $factory->getFromItem($item)?->getNotificationTypeName($approval_table->getNotification()) ?? '',
+            $notification_mapper->getNotificationStringNotTranslatedFromNotificationType((int) $approval_table->getNotification()),
             match ((int) $approval_table->getStatus()) {
                 PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED => 'disabled',
                 PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED  => 'enabled',
