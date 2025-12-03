@@ -25,9 +25,10 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\OAuth2ServerCore\App\NewOAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\ServerHostname;
 
-final class MediaWikiNewOAuth2AppBuilder
+final class MediaWikiOAuth2AppBuilder
 {
     private const string OAUTH2_REDIRECT_ENDPOINT = '/mediawiki/_oauth/Special:TuleapLogin/callback';
 
@@ -43,6 +44,17 @@ final class MediaWikiNewOAuth2AppBuilder
             true,
             $this->hasher,
             MediawikiStandaloneService::SERVICE_SHORTNAME,
+        );
+    }
+
+    public function buildMediawikiOAuth2AppUpdate(int $app_id): OAuth2App
+    {
+        $fresh_app = $this->buildMediawikiOAuth2App();
+        return OAuth2App::fromSiteAdministrationData(
+            (string) $app_id,
+            $fresh_app->getName(),
+            $fresh_app->getRedirectEndpoint(),
+            $fresh_app->isUsingPKCE()
         );
     }
 }

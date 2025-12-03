@@ -30,7 +30,7 @@ use Tuleap\ServerHostname;
 final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
 {
     public function __construct(
-        private MediaWikiOAuth2AppSecretGenerator $oauth2_app_generator,
+        private MediaWikiOAuth2AppUpdater $oauth2_app_generator,
         private MediaWikiSharedSecretGenerator $shared_secret_generator,
         private MediaWikiCentralDatabaseParameterGenerator $central_database_parameter,
     ) {
@@ -39,7 +39,7 @@ final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
     #[\Override]
     public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
     {
-        $oauth2_secret = $this->oauth2_app_generator->generateOAuth2AppSecret();
+        $oauth2_secret = $this->oauth2_app_generator->updateOAuth2AppInformation();
 
         return new LocalSettingsRepresentation(
             \ForgeConfig::get(DBConfig::CONF_HOST) . ':' . \ForgeConfig::getInt(DBConfig::CONF_PORT),
