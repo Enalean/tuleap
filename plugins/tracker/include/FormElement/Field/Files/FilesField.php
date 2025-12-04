@@ -873,20 +873,6 @@ class FilesField extends TrackerField
         return isset($_FILES['artifact']) ? $_FILES['artifact'] : null;
     }
 
-    protected $files_info_from_request = null;
-
-    /**
-     * Extract the file information (name, error, tmp, ...) from the request
-     *
-     * @return array Array of file info
-     */
-    protected function extractFilesFromRequest()
-    {
-        if (! $this->files_info_from_request) {
-        }
-        return $this->files_info_from_request;
-    }
-
     #[Override]
     protected function saveValue(
         $artifact,
