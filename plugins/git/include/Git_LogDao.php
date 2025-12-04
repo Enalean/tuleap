@@ -20,7 +20,7 @@
 
 use ParagonIE\EasyDB\EasyStatement;
 
-class Git_LogDao extends \Tuleap\DB\DataAccessObject
+class Git_LogDao extends \Tuleap\DB\DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function getLastPushForRepository($repositoryId)
     {
@@ -191,7 +191,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
                         log.repository_id = repo.repository_id
                         AND repo.project_id = ?
                         AND repo.repository_scope = 'P'
-                        AND repo.repository_deletion_date IS NULL
+                        AND repo.repository_deletion_date = 0
                     )
                 ORDER BY log.push_date DESC
                 LIMIT ?";
