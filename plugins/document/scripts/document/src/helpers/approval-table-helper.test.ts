@@ -19,9 +19,14 @@
 
 import { describe, expect, it } from "vitest";
 import type { ApprovalTableBadge } from "./approval-table-helper";
-import { extractApprovalTableData, hasAnApprovalTable } from "./approval-table-helper";
+import {
+    extractApprovalTableData,
+    hasAnApprovalTable,
+    rearrangeReviewersTable,
+} from "./approval-table-helper";
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants";
 import type { Folder, ItemFile } from "../type";
+import { ApprovalTableReviewerBuilder } from "../../tests/builders/ApprovalTableReviewerBuilder";
 
 describe("extractApprovalTableData", () => {
     const translated_states = new Map();
@@ -101,5 +106,108 @@ describe("hasAnApprovalTable", () => {
     it("Has an approval table", () => {
         const item = { has_approval_table: true } as ItemFile;
         expect(hasAnApprovalTable(item)).toBe(true);
+    });
+});
+
+describe("rearrangeReviewersTable", () => {
+    it("Can move reviewer down", () => {
+        const reviewer1 = new ApprovalTableReviewerBuilder(102).withRank(0).build();
+        const reviewer2 = new ApprovalTableReviewerBuilder(103).withRank(1).build();
+        const reviewer3 = new ApprovalTableReviewerBuilder(104).withRank(2).build();
+        const reviewer4 = new ApprovalTableReviewerBuilder(105).withRank(3).build();
+
+        expect(
+            rearrangeReviewersTable([reviewer1, reviewer2, reviewer3, reviewer4], reviewer2, 2),
+        ).toStrictEqual([
+            reviewer1,
+            { ...reviewer3, rank: 1 },
+            { ...reviewer2, rank: 2 },
+            reviewer4,
+        ]);
+    });
+
+    it("Can move reviewer up", () => {
+        const reviewer1 = new ApprovalTableReviewerBuilder(102).withRank(0).build();
+        const reviewer2 = new ApprovalTableReviewerBuilder(103).withRank(1).build();
+        const reviewer3 = new ApprovalTableReviewerBuilder(104).withRank(2).build();
+        const reviewer4 = new ApprovalTableReviewerBuilder(105).withRank(3).build();
+
+        expect(
+            rearrangeReviewersTable([reviewer1, reviewer2, reviewer3, reviewer4], reviewer2, 0),
+        ).toStrictEqual([
+            { ...reviewer2, rank: 0 },
+            { ...reviewer1, rank: 1 },
+            reviewer3,
+            reviewer4,
+        ]);
+    });
+
+    it("Can move reviewer at bottom", () => {
+        const reviewer1 = new ApprovalTableReviewerBuilder(102).withRank(0).build();
+        const reviewer2 = new ApprovalTableReviewerBuilder(103).withRank(1).build();
+        const reviewer3 = new ApprovalTableReviewerBuilder(104).withRank(2).build();
+        const reviewer4 = new ApprovalTableReviewerBuilder(105).withRank(3).build();
+
+        expect(
+            rearrangeReviewersTable([reviewer1, reviewer2, reviewer3, reviewer4], reviewer2, 3),
+        ).toStrictEqual([
+            reviewer1,
+            { ...reviewer3, rank: 1 },
+            { ...reviewer4, rank: 2 },
+            { ...reviewer2, rank: 3 },
+        ]);
+    });
+
+    it("Can move reviewer at top", () => {
+        const reviewer1 = new ApprovalTableReviewerBuilder(102).withRank(0).build();
+        const reviewer2 = new ApprovalTableReviewerBuilder(103).withRank(1).build();
+        const reviewer3 = new ApprovalTableReviewerBuilder(104).withRank(2).build();
+        const reviewer4 = new ApprovalTableReviewerBuilder(105).withRank(3).build();
+
+        expect(
+            rearrangeReviewersTable([reviewer1, reviewer2, reviewer3, reviewer4], reviewer4, 0),
+        ).toStrictEqual([
+            { ...reviewer4, rank: 0 },
+            { ...reviewer1, rank: 1 },
+            { ...reviewer2, rank: 2 },
+            { ...reviewer3, rank: 3 },
+        ]);
+    });
+
+    it("Do not move the reviewer", () => {
+        const reviewer1 = new ApprovalTableReviewerBuilder(102).withRank(0).build();
+        const reviewer2 = new ApprovalTableReviewerBuilder(103).withRank(1).build();
+        const reviewer3 = new ApprovalTableReviewerBuilder(104).withRank(2).build();
+        const reviewer4 = new ApprovalTableReviewerBuilder(105).withRank(3).build();
+
+        expect(
+            rearrangeReviewersTable([reviewer1, reviewer2, reviewer3, reviewer4], reviewer3, 2),
+        ).toStrictEqual([reviewer1, reviewer2, reviewer3, reviewer4]);
+    });
+
+    it("Cannot move at a negative rank", () => {
+        const reviewer1 = new ApprovalTableReviewerBuilder(102).withRank(0).build();
+        const reviewer2 = new ApprovalTableReviewerBuilder(103).withRank(1).build();
+        const reviewer3 = new ApprovalTableReviewerBuilder(104).withRank(2).build();
+        const reviewer4 = new ApprovalTableReviewerBuilder(105).withRank(3).build();
+
+        expect(
+            rearrangeReviewersTable([reviewer1, reviewer2, reviewer3, reviewer4], reviewer1, -3),
+        ).toStrictEqual([reviewer1, reviewer2, reviewer3, reviewer4]);
+    });
+
+    it("Cannot move far after the end", () => {
+        const reviewer1 = new ApprovalTableReviewerBuilder(102).withRank(0).build();
+        const reviewer2 = new ApprovalTableReviewerBuilder(103).withRank(1).build();
+        const reviewer3 = new ApprovalTableReviewerBuilder(104).withRank(2).build();
+        const reviewer4 = new ApprovalTableReviewerBuilder(105).withRank(3).build();
+
+        expect(
+            rearrangeReviewersTable(
+                [reviewer1, reviewer2, reviewer3, reviewer4],
+                reviewer4,
+                Number.MAX_VALUE,
+            ),
+        ).toStrictEqual([reviewer1, reviewer2, reviewer3, reviewer4]);
     });
 });

@@ -57,7 +57,7 @@ final class ApprovalTableRetrieverTest extends TestCase
         $table_factory = $this->createMock(Docman_ApprovalTableFileFactory::class);
         $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
 
-        $table_factory->method('getLastTableForItem')->willReturn(null);
+        $table_factory->method('getLastTableForItemWithReviewers')->willReturn(null);
 
         self::assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
@@ -74,7 +74,7 @@ final class ApprovalTableRetrieverTest extends TestCase
 
         $table = new Docman_ApprovalTableItem();
         $table->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $table_factory->method('getLastTableForItem')->willReturn($table);
+        $table_factory->method('getLastTableForItemWithReviewers')->willReturn($table);
 
         self::assertEquals($table, $this->approval_table_retriever->retrieveByItem($item));
     }

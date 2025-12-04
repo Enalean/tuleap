@@ -88,6 +88,8 @@ export function updateApprovalTable(
     status: string,
     comment: string,
     notification_type: string,
+    reviewers_to_add: Array<number>,
+    reviewers_group_to_add: Array<number>,
 ): ResultAsync<null, Fault> {
     return patchResponse(
         uri`/api/docman_items/${item_id}/approval_table`,
@@ -97,6 +99,8 @@ export function updateApprovalTable(
             status,
             comment,
             notification_type,
+            reviewers_to_add,
+            reviewers_group_to_add,
         },
     ).map(() => null);
 }
@@ -105,4 +109,15 @@ export function postApprovalTableReminder(item_id: number): ResultAsync<null, Fa
     return postResponse(uri`/api/docman_items/${item_id}/approval_table/reminder`, {}, {}).map(
         () => null,
     );
+}
+
+export function postApprovalTableReviewerReminder(
+    item_id: number,
+    reviewer_id: number,
+): ResultAsync<null, Fault> {
+    return postResponse(
+        uri`/api/docman_items/${item_id}/approval_table/reminder/${reviewer_id}`,
+        {},
+        {},
+    ).map(() => null);
 }

@@ -137,6 +137,9 @@ msgstr ""
 msgid "Append members of user groups to the table"
 msgstr ""
 
+msgid "Append users to the table"
+msgstr ""
+
 msgid "Apply"
 msgstr ""
 
@@ -595,9 +598,6 @@ msgstr ""
 msgid "None"
 msgstr "Nenhum"
 
-msgid "Not implemented yet"
-msgstr ""
-
 msgid "Not yet"
 msgstr ""
 
@@ -735,6 +735,9 @@ msgstr ""
 msgid "Quick look"
 msgstr ""
 
+msgid "Rank"
+msgstr ""
+
 msgid "Reader"
 msgstr ""
 
@@ -759,7 +762,13 @@ msgstr ""
 msgid "Reload the page"
 msgstr ""
 
+msgid "Reminder sent to %s"
+msgstr ""
+
 msgid "Reminder sent with success"
+msgstr ""
+
+msgid "Remove"
 msgstr ""
 
 msgid "Remove all values"
@@ -828,6 +837,9 @@ msgstr ""
 msgid "Send my review"
 msgstr ""
 
+msgid "Send reminder"
+msgstr ""
+
 msgid "Sequential"
 msgstr ""
 
@@ -873,6 +885,11 @@ msgid "Subscribers"
 msgstr ""
 
 msgid "Summary"
+msgstr ""
+
+msgid ""
+"Table is not saved when you change it, please click on 'Update' button to "
+"save it."
 msgstr ""
 
 msgid "Table status"

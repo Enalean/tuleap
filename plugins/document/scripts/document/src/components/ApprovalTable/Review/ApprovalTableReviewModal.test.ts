@@ -40,7 +40,7 @@ describe("ApprovalTableReviewModal", () => {
             props: {
                 item: new ItemBuilder(123).build(),
                 trigger,
-                reviewer: new ApprovalTableReviewerBuilder().build(),
+                reviewer: new ApprovalTableReviewerBuilder(102).build(),
                 table: new ApprovalTableBuilder(35).build(),
             },
             global: {

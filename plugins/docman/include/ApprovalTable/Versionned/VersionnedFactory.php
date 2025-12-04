@@ -130,10 +130,21 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
 
     /**
      * Return the last created approval table for the item
-     *
-     * @return Docman_ApprovalTable|null object
      */
-    public function getLastTableForItem()
+    public function getLastTableForItem(): ?Docman_ApprovalTable
+    {
+        return $this->buildLastTableForItem(false);
+    }
+
+    /**
+     * Return the last created approval table for the item with its reviewers
+     */
+    public function getLastTableForItemWithReviewers(): ?Docman_ApprovalTable
+    {
+        return $this->buildLastTableForItem(true);
+    }
+
+    private function buildLastTableForItem(bool $with_reviewers): ?Docman_ApprovalTable
     {
         $table = null;
         $dao   = $this->_getDao();
@@ -141,6 +152,10 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row   = $dar->current();
             $table = $this->createTableFromRow($row);
+            if ($with_reviewers) {
+                $reviewerFactory = $this->_getReviewerFactory($table, $this->item);
+                $reviewerFactory->appendReviewerList();
+            }
         }
         return $table;
     }
