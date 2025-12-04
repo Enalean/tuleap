@@ -8,8 +8,8 @@
   "dependencies": {
     "@tuleap/dom": "workspace:^",
     "@tuleap/fault": "workspace:*",
+    "@tuleap/feedback": "workspace:^",
     "@tuleap/fetch-result": "workspace:*",
-    "@tuleap/fp-feedback": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-styles": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:*",

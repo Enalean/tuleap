@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { addFeedback } from "@tuleap/fp-feedback";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
+import { addFeedback, ERROR } from "@tuleap/feedback";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_locale = document.body.dataset.userLocale;
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
             await init(git_create_branch_link, modal_mount_point, gettext_provider);
         } catch (e) {
             addFeedback(
-                "error",
+                ERROR,
                 gettext_provider.$gettext("Error while loading the Git branch creation modal."),
             );
             throw e;

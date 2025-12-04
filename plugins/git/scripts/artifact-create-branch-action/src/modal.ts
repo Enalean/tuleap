@@ -22,7 +22,7 @@ import type { App } from "vue";
 import MainComponent from "./components/MainComponent.vue";
 import { getProjectRepositories } from "../api/rest_querier";
 import { getAttributeOrThrow } from "@tuleap/dom";
-import { addFeedback } from "@tuleap/fp-feedback";
+import { addFeedback, ERROR } from "@tuleap/feedback";
 import type { createGettext } from "vue3-gettext";
 
 let app: App<Element> | null = null;
@@ -57,7 +57,7 @@ export async function init(
         },
         (fault) => {
             addFeedback(
-                "error",
+                ERROR,
                 gettext_provider.interpolate(
                     gettext_provider.$gettext(
                         "Error while retrieving the Git project repositories: %{ error }",
