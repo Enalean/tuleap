@@ -17,7 +17,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global ProtoCheck:readonly Prototype:readonly Ajax:readonly */
+/* global Prototype:readonly Ajax:readonly */
 
 var codendi = codendi || {};
 
@@ -28,11 +28,6 @@ codendi.locales = codendi.locales || {};
 codendi.getText = function (key1, key2) {
     return codendi.locales[key1][key2];
 };
-
-document.observe("dom:loaded", function () {
-    //load protocheck, if needed
-    new ProtoCheck();
-});
 
 /**
  * Ajax.Request.abort

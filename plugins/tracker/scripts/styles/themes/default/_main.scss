@@ -1673,10 +1673,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 }
 
 /* bootstrap: avoid wrapping between toggler and ['details'] in workflow */
-.pc_checkbox {
-    display: inline;
-}
-
 .workflow_action {
     padding: 1em 2em 1em 3em;
     border: 1px solid #cccccc;
@@ -1981,7 +1977,7 @@ td.first-column {
     background: #777777 url("../../../../../../src/www/themes/common/images/ic/cross_white.png")
         center center no-repeat;
 
-    &.pc_check_unchecked {
+    &:has(> input:not(:checked)) {
         background: #777777 url("../../../../../../src/www/themes/common/images/ic/cross_white.png")
             center center no-repeat;
 
@@ -1990,13 +1986,18 @@ td.first-column {
         }
     }
 
-    &.pc_check_checked {
+    &:has(> input:checked) {
         background: #f33c3c url("../../../../../../src/www/themes/common/images/ic/cross_white.png")
             center center no-repeat;
 
         &:hover {
             background-color: #fd6060;
         }
+    }
+
+    > input {
+        position: absolute;
+        clip-path: inset(50%);
     }
 }
 
