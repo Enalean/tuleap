@@ -29,6 +29,7 @@ use Http\Message\RequestMatcher\RequestMatcher;
 use Http\Mock\Client;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Http\Message\RequestInterface;
+use Tuleap\AI\Requestor\AIRequestorStub;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\NeverThrow\Err;
@@ -109,6 +110,7 @@ final class MistralConnectorLiveTest extends TestCase
         );
 
         $result = $connector->sendCompletion(
+            new AIRequestorStub(),
             new Completion(
                 Model::MEDIUM_2508,
                 new Message(
@@ -144,7 +146,7 @@ final class MistralConnectorLiveTest extends TestCase
             }
         );
 
-        $result = $connector->sendCompletion(new Completion(Model::MEDIUM_2508));
+        $result = $connector->sendCompletion(new AIRequestorStub(), new Completion(Model::MEDIUM_2508));
 
         self::assertInstanceOf(Ok::class, $result);
         self::assertInstanceOf(StringContent::class, $result->value->choices[0]->message->content);
@@ -164,7 +166,7 @@ final class MistralConnectorLiveTest extends TestCase
             }
         );
 
-        $result = $connector->sendCompletion(new Completion(Model::MEDIUM_2508));
+        $result = $connector->sendCompletion(new AIRequestorStub(), new Completion(Model::MEDIUM_2508));
 
         self::assertInstanceOf(Err::class, $result);
         self::assertStringContainsString('authentication failure', (string) $result->error);
@@ -183,7 +185,7 @@ final class MistralConnectorLiveTest extends TestCase
             }
         );
 
-        $result = $connector->sendCompletion(new Completion(Model::MEDIUM_2508));
+        $result = $connector->sendCompletion(new AIRequestorStub(), new Completion(Model::MEDIUM_2508));
 
         self::assertInstanceOf(Err::class, $result);
     }
@@ -205,7 +207,7 @@ final class MistralConnectorLiveTest extends TestCase
             }
         );
 
-        $result = $connector->sendCompletion(new Completion(Model::MEDIUM_2508));
+        $result = $connector->sendCompletion(new AIRequestorStub(), new Completion(Model::MEDIUM_2508));
 
         self::assertInstanceOf(Err::class, $result);
         self::assertInstanceOf(UnexpectedCompletionResponseFault::class, $result->error);
