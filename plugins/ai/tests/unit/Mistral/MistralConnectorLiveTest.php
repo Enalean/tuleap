@@ -98,7 +98,7 @@ final class MistralConnectorLiveTest extends TestCase
                 function (RequestInterface $request): bool {
                     return $request->getMethod() === 'POST' &&
                         $request->getUri()->getPath() === '/v1/chat/completions' &&
-                        $request->getBody()->getContents() === '{"model":"mistral-medium-2508","messages":[{"role":"system","content":[{"type":"text","text":"some def"},{"type":"text","text":"another def"}]},{"role":"user","content":"question"}]}';
+                        $request->getBody()->getContents() === '{"safe_prompt":true,"model":"mistral-medium-2508","messages":[{"role":"system","content":[{"type":"text","text":"some def"},{"type":"text","text":"another def"}]},{"role":"user","content":"question"}]}';
                 }
             ),
             function () {
