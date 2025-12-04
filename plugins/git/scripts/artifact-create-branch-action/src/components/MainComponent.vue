@@ -42,6 +42,9 @@ defineProps<{
 @use "sass:meta";
 
 .git-tracker-create-branch-modal :deep() {
+    font-weight: initial;
+    text-shadow: initial;
+
     @include meta.load-css("pkg:@tuleap/tlp-styles/components/typography");
     @include meta.load-css(
         "pkg:@tuleap/tlp-styles/components/forms",
