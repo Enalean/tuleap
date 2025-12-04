@@ -24,25 +24,26 @@
                 {{ $gettext("Create branch on a Git repository") }}
             </h1>
             <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div v-if="error_message" class="tlp-modal-feedback">
-            <div class="feedback_error">
+            <div class="tlp-alert-danger">
                 {{ error_message }}
             </div>
         </div>
         <div class="tlp-modal-body">
-            <div class="form-block">
-                <label for="artifact-create-git-branch-select-repository">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="artifact-create-git-branch-select-repository">
                     {{ $gettext("Project Git repositories") }}
-                    <span class="action-mandatory-information" aria-hidden="true">*</span>
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <select
                     id="artifact-create-git-branch-select-repository"
                     required
                     aria-required="true"
                     v-model="selected_repository"
+                    class="tlp-select"
                     data-test="repositories-select"
                 >
                     <option
@@ -54,10 +55,10 @@
                     </option>
                 </select>
             </div>
-            <div class="form-block">
-                <label for="artifact-create-git-branch-reference">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="artifact-create-git-branch-reference">
                     {{ $gettext("Git reference from where the branch should be created") }}
-                    <span class="action-mandatory-information" aria-hidden="true">*</span>
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
                     type="text"
@@ -66,21 +67,22 @@
                     required
                     aria-required="true"
                     v-model="reference"
+                    class="tlp-input"
                     data-test="branch-reference-input"
                 />
-                <p class="text-info">
+                <p class="tlp-text-info">
                     {{ $gettext("Must be an existing git commit SHA-1 or a branch name") }}
                 </p>
             </div>
-            <p>
-                <label for="artifact-create-git-branch-name">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="artifact-create-git-branch-name">
                     {{ $gettext("The following branch will be created") }}
                 </label>
                 <code id="artifact-create-git-branch-name">
                     {{ branch_name_preview }}
                 </code>
-            </p>
-            <p v-if="are_pullrequest_endpoints_available">
+            </div>
+            <div class="tlp-form-element" v-if="are_pullrequest_endpoints_available">
                 <label class="tlp-label tlp-checkbox">
                     <input
                         type="checkbox"
@@ -93,7 +95,7 @@
                         )
                     }}
                 </label>
-            </p>
+            </div>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -113,7 +115,7 @@
                 <i
                     aria-hidden="true"
                     v-if="is_creating_branch"
-                    class="fas fa-spin fa-spinner tlp-button-icon"
+                    class="fa-solid fa-spin fa-spinner tlp-button-icon"
                 ></i>
                 {{ button_label }}
             </button>
@@ -245,13 +247,3 @@ function onClickCreateBranch(): Promise<void> {
         );
 }
 </script>
-
-<style lang="scss" scoped>
-.action-mandatory-information {
-    color: var(--tlp-danger-color);
-}
-
-.form-block {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
-</style>

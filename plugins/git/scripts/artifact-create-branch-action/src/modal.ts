@@ -21,6 +21,7 @@ import { createApp } from "vue";
 import type { App } from "vue";
 import MainComponent from "./components/MainComponent.vue";
 import { getProjectRepositories } from "../api/rest_querier";
+import { getAttributeOrThrow } from "@tuleap/dom";
 import { addFeedback } from "@tuleap/fp-feedback";
 import type { createGettext } from "vue3-gettext";
 
@@ -31,17 +32,13 @@ export async function init(
     mount_point: Element,
     gettext_provider: ReturnType<typeof createGettext>,
 ): Promise<void> {
-    if (!git_create_branch_link.dataset.projectId) {
-        throw new Error("Missing project id in dataset");
-    }
-    if (!git_create_branch_link.dataset.gitBranchNamePreview) {
-        throw new Error("Missing branch name preview in dataset");
-    }
-
-    const project_id = Number(git_create_branch_link.dataset.projectId);
-    const branch_name_preview = git_create_branch_link.dataset.gitBranchNamePreview;
+    const project_id = Number(getAttributeOrThrow(git_create_branch_link, "data-project-id"));
+    const branch_name_preview = getAttributeOrThrow(
+        git_create_branch_link,
+        "data-git-branch-name-preview",
+    );
     const are_pullrequest_endpoints_available = Boolean(
-        git_create_branch_link.dataset.arePullrequestEndpointsAvailable,
+        getAttributeOrThrow(git_create_branch_link, "data-are-pullrequest-endpoints-available"),
     );
 
     if (app !== null) {
