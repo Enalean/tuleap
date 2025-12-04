@@ -33,12 +33,10 @@
 </template>
 
 <script setup lang="ts">
-import type { ApprovalTableBadge } from "../../../helpers/approval-table-helper";
 import { extractApprovalTableData } from "../../../helpers/approval-table-helper";
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../../../constants";
 import type { ApprovalTable } from "../../../type";
-import type { Ref } from "vue";
-import { computed, onMounted, ref } from "vue";
+import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
@@ -48,7 +46,6 @@ const props = defineProps<{
 }>();
 
 const { $gettext } = useGettext();
-const approval_data: Ref<ApprovalTableBadge | null> = ref(null);
 
 const has_an_approval_table = computed(() => props.approval_table !== null && props.enabled);
 
@@ -62,13 +59,14 @@ function getTranslatedApprovalStatesMap(): Map<string, string> {
     return approval_states_map;
 }
 
-onMounted(() => {
+const approval_data = computed(() => {
     if (props.approval_table) {
-        approval_data.value = extractApprovalTableData(
+        return extractApprovalTableData(
             getTranslatedApprovalStatesMap(),
             props.approval_table.approval_state,
             props.isInFolderContentRow,
         );
     }
+    return null;
 });
 </script>
