@@ -20,7 +20,6 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use Codendi_Request;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 use Tuleap\Tracker\Tracker;
@@ -39,7 +38,7 @@ final class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $time_retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Codendi_Request
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\HTTPRequest
      */
     private $request;
     private TimeController $time_controller;
@@ -65,7 +64,7 @@ final class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->time_updater    = $this->createMock(\Tuleap\Timetracking\Time\TimeUpdater::class);
         $this->time_retriever  = $this->createMock(TimeRetriever::class);
-        $this->request         = $this->createMock(Codendi_Request::class);
+        $this->request         = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->time_controller = new TimeController($this->time_updater, $this->time_retriever);
 
         $this->user = $this->createMock(\PFUser::class);

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Masschange;
 
-use Codendi_Request;
 use Feedback;
 use PFUser;
 use Project;
@@ -46,7 +45,7 @@ class AdditionalMasschangeActionProcessor
     public function processAction(
         PFUser $user,
         Tracker $tracker,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         array $masschange_aids,
     ): void {
         if (! $tracker->userIsAdmin($user)) {

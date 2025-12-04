@@ -26,7 +26,6 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
-use Codendi_Request;
 use Feedback;
 use CSRFSynchronizerToken;
 use Valid_HTTPURI;
@@ -39,7 +38,7 @@ class HookController
     private $csrf;
 
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
@@ -59,7 +58,7 @@ class HookController
     private $valid_HTTPURI;
 
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         GitRepositoryFactory $git_repository_factory,
         HookDao $dao,
         CSRFSynchronizerToken $csrf,

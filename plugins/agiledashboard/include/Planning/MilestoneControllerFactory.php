@@ -48,7 +48,7 @@ class MilestoneControllerFactory
     ) {
     }
 
-    public function getMilestoneController(\Codendi_Request $request): \Planning_MilestoneController
+    public function getMilestoneController(\Tuleap\HTTPRequest $request): \Planning_MilestoneController
     {
         return new \Planning_MilestoneController(
             $request,
@@ -62,7 +62,7 @@ class MilestoneControllerFactory
         );
     }
 
-    public function getVirtualTopMilestoneController(\Codendi_Request $request): VirtualTopMilestoneController
+    public function getVirtualTopMilestoneController(\Tuleap\HTTPRequest $request): VirtualTopMilestoneController
     {
         return new VirtualTopMilestoneController(
             $request,

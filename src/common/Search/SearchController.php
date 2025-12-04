@@ -51,7 +51,7 @@ class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         ];
     }
 
-    public function index(Codendi_Request $request)
+    public function index(\Tuleap\HTTPRequest $request)
     {
         if (! $request->get('type_of_search')) {
             $request->set('type_of_search', Search_SearchProject::NAME);
@@ -60,7 +60,7 @@ class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->results($request);
     }
 
-    public function error(Codendi_Request $request, Search_SearchQuery $query)
+    public function error(\Tuleap\HTTPRequest $request, Search_SearchQuery $query)
     {
         $empty_result = new Search_SearchResults();
 
@@ -73,7 +73,7 @@ class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());
     }
 
-    public function ajaxResults(Codendi_Request $request)
+    public function ajaxResults(\Tuleap\HTTPRequest $request)
     {
         $query = new Search_SearchQuery($request);
         $query->setNumberOfResults(Search_SearchPlugin::RESULTS_PER_QUERY);
@@ -96,7 +96,7 @@ class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         echo json_encode($output);
     }
 
-    public function results(Codendi_Request $request)
+    public function results(\Tuleap\HTTPRequest $request)
     {
         $query = new Search_SearchQuery($request);
         $query->setNumberOfResults(Search_SearchPlugin::RESULTS_PER_QUERY);

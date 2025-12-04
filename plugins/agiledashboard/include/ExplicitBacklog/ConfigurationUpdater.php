@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Codendi_Request;
 use PFUser;
 use Planning_MilestoneFactory;
 use Planning_NoPlanningsException;
@@ -49,7 +48,7 @@ readonly class ConfigurationUpdater
     ) {
     }
 
-    public function updateScrumConfiguration(Codendi_Request $request): void
+    public function updateScrumConfiguration(\Tuleap\HTTPRequest $request): void
     {
         if (! $request->exist('use-explicit-top-backlog')) {
             return;
@@ -66,7 +65,7 @@ readonly class ConfigurationUpdater
         }
     }
 
-    private function shouldUseExplicitBacklog(Codendi_Request $request): bool
+    private function shouldUseExplicitBacklog(\Tuleap\HTTPRequest $request): bool
     {
         $use_explicit_backlog = (bool) $request->get('use-explicit-top-backlog');
         if ($use_explicit_backlog) {

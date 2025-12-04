@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
-use Codendi_Request;
 use Docman_Token;
 use Docman_TokenDao;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,7 +35,7 @@ final class TokenTest extends TestCase
     {
         $dao = $this->createMock(Docman_TokenDao::class);
         $dao->method('create');
-        $http = new Codendi_Request(['bc' => false]);
+        $http = new \Tuleap\HTTPRequest(['bc' => false]);
 
         $t1 = $this->mockToken($dao, 'https://example.com/?id=1&action=show', '123', $http);
         $t2 = $this->mockToken($dao, 'https://example.com/?id=1&action=show', '123', $http);
@@ -52,7 +51,7 @@ final class TokenTest extends TestCase
     {
         $dao = $this->createMock(Docman_TokenDao::class);
         $dao->method('create');
-        $http = new Codendi_Request(['bc' => false]);
+        $http = new \Tuleap\HTTPRequest(['bc' => false]);
 
         $t1 = $this->mockToken($dao, 'https://example.com/?', '123', $http);
         self::assertNull($t1->getToken(), 'Without referer, we should have a null token');
@@ -71,7 +70,7 @@ final class TokenTest extends TestCase
 
         $dao = $this->createMock(Docman_TokenDao::class);
         $dao->expects($this->once())->method('create')->with($user_id, self::anything(), $referer);
-        $http = new Codendi_Request(['bc' => false]);
+        $http = new \Tuleap\HTTPRequest(['bc' => false]);
 
         $this->mockToken($dao, $referer, $user_id, $http);
     }
@@ -80,7 +79,7 @@ final class TokenTest extends TestCase
     {
         $dao = $this->createMock(Docman_TokenDao::class);
         $dao->method('create');
-        $http = new Codendi_Request(['bc' => false]);
+        $http = new \Tuleap\HTTPRequest(['bc' => false]);
         foreach (['aaaa', '?action=foo', '?action=details&section=notification'] as $referer) {
             $t = $this->mockToken($dao, "https://exmaple.com/$referer", '123', $http);
             self::assertNull($t->getToken(), 'Without valid referer, we should have a null token');
@@ -95,7 +94,7 @@ final class TokenTest extends TestCase
         Docman_TokenDao $dao,
         string $referer,
         ?string $user_id,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
     ): Docman_Token&MockObject {
         $token = $this->createPartialMock(Docman_Token::class, [
             '_getDao',

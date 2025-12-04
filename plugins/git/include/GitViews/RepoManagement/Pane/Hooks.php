@@ -32,7 +32,6 @@ use Tuleap\Git\Webhook\WebhookFactory;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Webhook\Webhook;
 use GitRepository;
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use TemplateRendererFactory;
@@ -68,7 +67,7 @@ class Hooks extends Pane
 
     public function __construct(
         GitRepository $repository,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         WebhookFactory $webhook_factory,
         WebhookDao $webhook_dao,
     ) {

@@ -21,7 +21,6 @@
 
 namespace Tuleap\Git\RemoteServer\Gerrit;
 
-use Codendi_Request;
 use ProjectManager;
 use CSRFSynchronizerToken;
 use Git_RemoteServer_GerritServer;
@@ -57,7 +56,7 @@ class Restrictor
         $this->project_manager             = $project_manager;
     }
 
-    public function setGerritServerRestriction(Codendi_Request $request)
+    public function setGerritServerRestriction(\Tuleap\HTTPRequest $request)
     {
         $gerrit_server = $this->getGerritServerFromRequest($request);
 
@@ -74,7 +73,7 @@ class Restrictor
         );
     }
 
-    private function restrictGerritServer(Codendi_Request $request, Git_RemoteServer_GerritServer $gerrit_server)
+    private function restrictGerritServer(\Tuleap\HTTPRequest $request, Git_RemoteServer_GerritServer $gerrit_server)
     {
         $all_allowed = $request->get('all-allowed');
 
@@ -128,7 +127,7 @@ class Restrictor
     /**
      * @return Git_RemoteServer_GerritServer
      */
-    private function getGerritServerFromRequest(Codendi_Request $request)
+    private function getGerritServerFromRequest(\Tuleap\HTTPRequest $request)
     {
         $gerrit_server_id = $request->get('gerrit_server_id');
 
@@ -141,7 +140,7 @@ class Restrictor
         return $gerrit_server;
     }
 
-    public function updateAllowedProjectList(Codendi_Request $request)
+    public function updateAllowedProjectList(\Tuleap\HTTPRequest $request)
     {
         $gerrit_server         = $this->getGerritServerFromRequest($request);
         $project_to_add        = $request->get('project-to-allow');

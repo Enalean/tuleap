@@ -20,7 +20,6 @@
 
 namespace Tuleap\TestManagement\Administration;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use DateTimeImmutable;
 use EventManager;
@@ -38,7 +37,7 @@ use Valid_UInt;
 class AdminController extends TestManagementController
 {
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Config $config,
         EventManager $event_manager,
         private readonly CSRFSynchronizerToken $csrf_token,

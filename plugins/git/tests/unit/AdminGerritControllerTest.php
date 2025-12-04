@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-use Codendi_Request;
 use Git_AdminGerritController;
 use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
@@ -42,7 +41,7 @@ final class AdminGerritControllerTest extends TestCase
 {
     use GlobalResponseMock;
 
-    private Codendi_Request $request;
+    private \Tuleap\HTTPRequest $request;
     private CSRFSynchronizerTokenStub $csrf;
     private Git_RemoteServer_GerritServerFactory&MockObject $factory;
     private Git_AdminGerritController $admin;
@@ -54,7 +53,7 @@ final class AdminGerritControllerTest extends TestCase
     {
         $this->csrf = CSRFSynchronizerTokenStub::buildSelf();
 
-        $this->request = new Codendi_Request([], $this->createMock(ProjectManager::class));
+        $this->request = new \Tuleap\HTTPRequest([], $this->createMock(ProjectManager::class));
         $this->request->set($this->csrf->getTokenName(), $this->csrf->getToken());
         $this->request->set('action', 'add-gerrit-server');
 

@@ -257,7 +257,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * @return int|false the id of the new content
      */
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $content_id = false;
         $vItem_id   = new Valid_String('item_id');
@@ -284,7 +284,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * @return bool true if something has been updated
      */
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $done       = false;
         $vContentId = new Valid_UInt('content_id');

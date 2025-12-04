@@ -36,7 +36,7 @@ final class ColumnReportAugmenterTest extends TestCase
      */
     private $column_factory;
     private ColumnReportAugmenter $builder;
-    private \Codendi_Request $request;
+    private \Tuleap\HTTPRequest $request;
 
     #[\Override]
     protected function setUp(): void
@@ -44,7 +44,7 @@ final class ColumnReportAugmenterTest extends TestCase
         $this->column_factory = $this->createMock(\Docman_ReportColumnFactory::class);
         $this->builder        = new ColumnReportAugmenter($this->column_factory, new SearchSortPropertyMapper());
 
-        $this->request = new \Codendi_Request(
+        $this->request = new \Tuleap\HTTPRequest(
             [
                 'aaaa'              => 'bbb',
                 'ccc' => '1280',

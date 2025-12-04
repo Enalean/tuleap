@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-use Codendi_Request;
 use Tracker_ArtifactFactory;
 
 class FormElementController
@@ -40,7 +39,7 @@ class FormElementController
         $this->burnup_cache_generator = $burnup_cache_generator;
     }
 
-    public function forceBurnupCacheGeneration(Codendi_Request $request): void
+    public function forceBurnupCacheGeneration(\Tuleap\HTTPRequest $request): void
     {
         $artifact_id = $request->get('aid');
         $artifact    = $this->artifact_factory->getArtifactById($artifact_id);

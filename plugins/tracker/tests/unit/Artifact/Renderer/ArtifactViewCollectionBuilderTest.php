@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Renderer;
 
-use Codendi_Request;
 use Tracker_Artifact_EditRenderer;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -57,7 +56,7 @@ final class ArtifactViewCollectionBuilderTest extends TestCase
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
         $this->event_manager->expects($this->once())->method('processEvent');
 
-        $view_collection = $this->builder->build($artifact, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
+        $view_collection = $this->builder->build($artifact, new \Tuleap\HTTPRequest([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
         self::assertCount(2, $view_collection->views);
         self::assertSame('edit', $view_collection->views['edit']->getIdentifier());
         self::assertSame('artifact-links', $view_collection->views['artifact-links']->getIdentifier());
@@ -66,7 +65,7 @@ final class ArtifactViewCollectionBuilderTest extends TestCase
     public function testEventIsProcessedWithCorrectParameters(): void
     {
         $artifact = ArtifactTestBuilder::anArtifact(1)->build();
-        $request  = new Codendi_Request([]);
+        $request  = new \Tuleap\HTTPRequest([]);
         $user     = UserTestBuilder::anActiveUser()->build();
         $renderer = $this->createMock(\Tracker_Artifact_EditRenderer::class);
 

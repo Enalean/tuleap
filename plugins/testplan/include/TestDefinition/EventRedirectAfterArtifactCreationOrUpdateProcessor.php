@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
-use Codendi_Request;
 use Tracker_Artifact_Redirect;
 use Tracker_ArtifactFactory;
 use Tuleap\TestPlan\TestPlanPaneInfo;
@@ -55,7 +54,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessor
     }
 
     public function process(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Tracker_Artifact_Redirect $redirect,
         Artifact $artifact,
     ): void {

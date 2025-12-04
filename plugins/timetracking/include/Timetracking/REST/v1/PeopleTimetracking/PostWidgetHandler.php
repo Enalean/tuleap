@@ -47,7 +47,7 @@ final readonly class PostWidgetHandler
             $dashboard_type,
             $dashboard_id,
             PeopleTimetrackingWidget::NAME,
-            new \Codendi_Request([]),
+            new \Tuleap\HTTPRequest([]),
         )->andThen(function (Widget $widget) {
             return Result::ok(new PeopleTimetrackingPostWidgetRepresentation($widget->content_id));
         });

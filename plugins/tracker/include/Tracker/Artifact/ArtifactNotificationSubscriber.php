@@ -35,7 +35,7 @@ class Tracker_ArtifactNotificationSubscriber
         $this->artifact_dao = $artifact_dao;
     }
 
-    public function unsubscribeUser(PFUser $user, Codendi_Request $request)
+    public function unsubscribeUser(PFUser $user, \Tuleap\HTTPRequest $request)
     {
         if (! $this->doesUserCanViewArtifact($user, $request)) {
             return;
@@ -52,7 +52,7 @@ class Tracker_ArtifactNotificationSubscriber
         return;
     }
 
-    public function unsubscribeUserWithoutRedirect(PFUser $user, Codendi_Request $request)
+    public function unsubscribeUserWithoutRedirect(PFUser $user, \Tuleap\HTTPRequest $request)
     {
         if (! $this->doesUserCanViewArtifact($user, $request)) {
             return;
@@ -61,7 +61,7 @@ class Tracker_ArtifactNotificationSubscriber
         $this->unsubscribe($user);
     }
 
-    public function subscribeUser(PFUser $user, Codendi_Request $request)
+    public function subscribeUser(PFUser $user, \Tuleap\HTTPRequest $request)
     {
         if (! $this->doesUserCanViewArtifact($user, $request)) {
             return;
@@ -78,7 +78,7 @@ class Tracker_ArtifactNotificationSubscriber
         return;
     }
 
-    private function doesUserCanViewArtifact(PFUser $user, Codendi_Request $request)
+    private function doesUserCanViewArtifact(PFUser $user, \Tuleap\HTTPRequest $request)
     {
         if (! $this->artifact->userCanView($user)) {
             $this->sendResponse(
@@ -103,7 +103,7 @@ class Tracker_ArtifactNotificationSubscriber
         $this->artifact_dao->createUnsubscribeNotification($this->artifact->getId(), $user->getId());
     }
 
-    private function sendResponse(Codendi_Request $request, $feedback_level, $message, $unsubscribe)
+    private function sendResponse(\Tuleap\HTTPRequest $request, $feedback_level, $message, $unsubscribe)
     {
         if ($request->isAjax()) {
             $this->sendAjaxResponse($unsubscribe, $message);

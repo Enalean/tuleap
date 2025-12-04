@@ -28,7 +28,7 @@ define('GITOLITE3_LOGS_PATH', '/var/lib/gitolite/.gitolite/logs/');
  * Allow a plugin to append his own classes to the body DOM element in git views
  *
  * Parameters:
- *   'request' => (Input)  Codendi_Request Request
+ *   'request' => (Input)  \Tuleap\HTTPRequest Request
  *   'classes' => (Output) String[]        Additional classnames
  */
 define('GIT_ADDITIONAL_BODY_CLASSES', 'git_additional_body_classes');

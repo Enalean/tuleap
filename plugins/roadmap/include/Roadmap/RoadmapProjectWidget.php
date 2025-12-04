@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap;
 
-use Codendi_Request;
 use Override;
 use Project;
 use TemplateRenderer;
@@ -258,7 +257,7 @@ final class RoadmapProjectWidget extends \Widget
      * @return false|int
      */
     #[Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $roadmap_parameters = $request->get('roadmap');
         if (! is_array($roadmap_parameters)) {
@@ -308,7 +307,7 @@ final class RoadmapProjectWidget extends \Widget
     }
 
     #[Override]
-    public function updatePreferences(Codendi_Request $request): bool
+    public function updatePreferences(\Tuleap\HTTPRequest $request): bool
     {
         $id = (int) $request->get('content_id');
         if (! $id) {

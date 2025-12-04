@@ -65,7 +65,7 @@ class ReferenceSaver
         $this->encryption_key      = $encryption_key;
     }
 
-    public function save(\Codendi_Request $request)
+    public function save(\Tuleap\HTTPRequest $request)
     {
         $keyword               = $request->get('keyword');
         $server                = trim($request->get('server'));
@@ -116,7 +116,7 @@ class ReferenceSaver
         }
     }
 
-    public function edit(\Codendi_Request $request)
+    public function edit(\Tuleap\HTTPRequest $request)
     {
         $id                    = (string) $request->get('id');
         $server                = trim($request->get('server'));

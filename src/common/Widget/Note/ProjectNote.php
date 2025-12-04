@@ -21,7 +21,6 @@
 
 namespace Tuleap\Widget\Note;
 
-use Codendi_Request;
 use Project;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Project\MappingRegistry;
@@ -43,7 +42,7 @@ class ProjectNote extends Note
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         if ($this->owner_id === null) {
             $current_project = $request->getProject();

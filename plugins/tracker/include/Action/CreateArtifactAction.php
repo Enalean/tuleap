@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use PFUser;
 use Tracker_Artifact_Redirect;
 use Tracker_ArtifactFactory;
@@ -75,7 +74,7 @@ class CreateArtifactAction
      * @throws FieldValidationException
      * @throws Tracker_Exception
      */
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
+    public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         if ($this->submission_permissions->canUserSubmitArtifact($current_user, $this->tracker)) {
             $this->processCreate($layout, $request, $current_user);
@@ -92,7 +91,7 @@ class CreateArtifactAction
      * @throws ArtifactLinkFieldDoesNotExistException
      * @throws Tracker_Exception
      */
-    private function processCreate(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
+    private function processCreate(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         $link     = (int) $request->get('link-artifact-id');
         $artifact = $this->createArtifact($request, $current_user);
@@ -113,7 +112,7 @@ class CreateArtifactAction
      * @throws Tracker_Exception
      * @throws FieldValidationException
      */
-    private function createArtifact(Codendi_Request $request, PFUser $user): ?Artifact
+    private function createArtifact(\Tuleap\HTTPRequest $request, PFUser $user): ?Artifact
     {
         $fields_data = $request->get('artifact');
         if (! isset($fields_data['request_method_called'])) {
@@ -134,7 +133,7 @@ class CreateArtifactAction
         );
     }
 
-    protected function associateImmediatelyIfNeeded(Artifact $new_artifact, Codendi_Request $request, PFUser $current_user): void
+    protected function associateImmediatelyIfNeeded(Artifact $new_artifact, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         $link_artifact_id   = (int) $request->get('link-artifact-id');
         $is_immediate       = (bool) $request->get('immediate');
@@ -158,13 +157,13 @@ class CreateArtifactAction
         );
     }
 
-    private function redirect(Codendi_Request $request, PFUser $current_user, Artifact $artifact): void
+    private function redirect(\Tuleap\HTTPRequest $request, PFUser $current_user, Artifact $artifact): void
     {
         $redirect = $this->getRedirect($request, $current_user, $artifact);
         $this->executeRedirect($request, $artifact, $redirect);
     }
 
-    private function getRedirect(Codendi_Request $request, PFUser $current_user, Artifact $artifact): Tracker_Artifact_Redirect
+    private function getRedirect(\Tuleap\HTTPRequest $request, PFUser $current_user, Artifact $artifact): Tracker_Artifact_Redirect
     {
         $redirect = $this->redirectUrlAfterArtifactSubmission($request, $this->tracker->getId(), $artifact->getId());
         $this->redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
@@ -172,7 +171,7 @@ class CreateArtifactAction
         return $redirect;
     }
 
-    private function executeRedirect(Codendi_Request $request, Artifact $artifact, Tracker_Artifact_Redirect $redirect): void
+    private function executeRedirect(\Tuleap\HTTPRequest $request, Artifact $artifact, Tracker_Artifact_Redirect $redirect): void
     {
         if ($request->isAjax()) {
             header(JSONHeader::getHeaderForPrototypeJS(['aid' => $artifact->getId()]));
@@ -188,7 +187,7 @@ class CreateArtifactAction
         }
     }
 
-    private function isFromOverlay(Codendi_Request $request): bool
+    private function isFromOverlay(\Tuleap\HTTPRequest $request): bool
     {
         if ($request->existAndNonEmpty('link-artifact-id') && ! $request->exist('immediate')) {
             return true;
@@ -200,7 +199,7 @@ class CreateArtifactAction
         Artifact $artifact,
         PFUser $current_user,
         Tracker_Artifact_Redirect $redirect,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
     ): void {
         $this->parent_retriever->getParentTracker($this->tracker)->apply(
             function (Tracker $parent_tracker) use ($artifact, $current_user, $redirect, $request) {
@@ -224,7 +223,7 @@ class CreateArtifactAction
         );
     }
 
-    private function isParentCreationRequested(Codendi_Request $request, PFUser $current_user): bool
+    private function isParentCreationRequested(\Tuleap\HTTPRequest $request, PFUser $current_user): bool
     {
         $request_data        = $request->get('artifact');
         $artifact_link_field = $this->formelement_factory->getAnArtifactLinkField($current_user, $this->tracker);
@@ -242,7 +241,7 @@ class CreateArtifactAction
         return false;
     }
 
-    protected function redirectUrlAfterArtifactSubmission(Codendi_Request $request, int $tracker_id, int $artifact_id): Tracker_Artifact_Redirect
+    protected function redirectUrlAfterArtifactSubmission(\Tuleap\HTTPRequest $request, int $tracker_id, int $artifact_id): Tracker_Artifact_Redirect
     {
         $redirect           = new Tracker_Artifact_Redirect();
         $redirect->base_url = TRACKER_BASE_URL;

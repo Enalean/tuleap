@@ -38,7 +38,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
     }
 
     #[\Override]
-    protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
+    protected function fetchFormContent(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         return $this->fetchArtifactForm(
             $this->fetchNewArtifactForm($request)
@@ -73,7 +73,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         echo $this->fetchSubmitInstructions();
     }
 
-    private function fetchNewArtifactForm(Codendi_Request $request)
+    private function fetchNewArtifactForm(\Tuleap\HTTPRequest $request)
     {
         $html = '';
 

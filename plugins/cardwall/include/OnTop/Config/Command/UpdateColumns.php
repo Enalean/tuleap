@@ -40,7 +40,7 @@ class Cardwall_OnTop_Config_Command_UpdateColumns extends Cardwall_OnTop_Config_
      * @see Cardwall_OnTop_Config_Command::execute()
      */
     #[\Override]
-    public function execute(Codendi_Request $request)
+    public function execute(\Tuleap\HTTPRequest $request)
     {
         if ($request->get('column')) {
             foreach ($request->get('column') as $id => $column_definition) {

@@ -22,7 +22,6 @@
 namespace Tuleap\GraphOnTrackersV5;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use Project;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -212,7 +211,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $content_id = false;
         $vId        = new Valid_UInt('chart_id');
@@ -228,7 +227,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $done       = false;
         $vContentId = new Valid_UInt('content_id');

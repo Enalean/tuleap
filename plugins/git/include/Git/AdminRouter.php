@@ -126,7 +126,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         $controller->display($request);
     }
 
-    private function getControllerFromRequest(Codendi_Request $request)
+    private function getControllerFromRequest(\Tuleap\HTTPRequest $request)
     {
         if ($request->get('pane') == 'gerrit_servers_admin' || $request->get('view') === 'gerrit_servers_restriction') {
             return new Git_AdminGerritController(

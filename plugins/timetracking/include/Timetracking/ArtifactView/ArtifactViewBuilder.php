@@ -20,7 +20,6 @@
 
 namespace Tuleap\Timetracking\ArtifactView;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use PFUser;
 use timetrackingPlugin;
@@ -82,7 +81,7 @@ class ArtifactViewBuilder
     /**
      * @return ArtifactView | null
      */
-    public function build(PFUser $user, Codendi_Request $request, Artifact $artifact)
+    public function build(PFUser $user, \Tuleap\HTTPRequest $request, Artifact $artifact)
     {
         $tracker = $artifact->getTracker();
         $project = $tracker->getProject();

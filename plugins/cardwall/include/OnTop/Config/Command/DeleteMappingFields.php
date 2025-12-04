@@ -63,7 +63,7 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
      * @see Cardwall_OnTop_Config_Command::execute()
      */
     #[\Override]
-    public function execute(Codendi_Request $request)
+    public function execute(\Tuleap\HTTPRequest $request)
     {
         if (is_array($request->get('custom_mapping'))) {
             foreach ($request->get('custom_mapping') as $mapping_tracker_id => $is_custom) {

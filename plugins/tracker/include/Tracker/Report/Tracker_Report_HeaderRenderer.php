@@ -50,7 +50,7 @@ class Tracker_Report_HeaderRenderer
 
     public function displayHeader(
         Tracker_IFetchTrackerSwitcher $layout,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
         Tracker_Report $report,
         $report_can_be_modified,
@@ -92,7 +92,7 @@ class Tracker_Report_HeaderRenderer
     }
 
     private function displayHeaderInReport(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
         Tracker_Report $report,
         array $reports,
@@ -241,7 +241,7 @@ class Tracker_Report_HeaderRenderer
         return array_merge($states_list, $actions_list);
     }
 
-    private function displayHeaderInArtifactLinkModal(Tracker_IFetchTrackerSwitcher $layout, Codendi_Request $request, PFUser $current_user, Tracker_Report $report, array $reports, $link_artifact_id)
+    private function displayHeaderInArtifactLinkModal(Tracker_IFetchTrackerSwitcher $layout, \Tuleap\HTTPRequest $request, PFUser $current_user, Tracker_Report $report, array $reports, $link_artifact_id)
     {
         $project  = null;
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($link_artifact_id);
@@ -260,7 +260,7 @@ class Tracker_Report_HeaderRenderer
         );
     }
 
-    private function getSelectReportUrl(Codendi_Request $request, Tracker_Report $report)
+    private function getSelectReportUrl(\Tuleap\HTTPRequest $request, Tracker_Report $report)
     {
         $params = ['tracker' => $report->tracker_id];
 

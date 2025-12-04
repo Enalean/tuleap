@@ -66,7 +66,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_checker = $this->createMock(TrackerChecker::class);
     }
 
-    private function getAdminController(\Codendi_Request $request): AdminController
+    private function getAdminController(\Tuleap\HTTPRequest $request): AdminController
     {
         $event_manager = $this->createMock(\EventManager::class);
         $event_manager->method('processEvent');

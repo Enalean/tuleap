@@ -29,7 +29,7 @@ class UpdateRequestValidator
      */
     public function getValidatedPlanning(
         \Planning $original_planning,
-        \Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         array $unavailable_planning_tracker_ids,
         ?ModificationBan $milestone_tracker_modification_ban,
     ): ?\PlanningParameters {

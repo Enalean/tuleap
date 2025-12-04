@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Masschange;
 
-use Codendi_Request;
 use PFUser;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Tracker\Tracker;
@@ -30,7 +29,7 @@ class TrackerMasschangeProcessExternalActionsEvent implements Dispatchable
     public const string NAME = 'trackerMasschangeProcessExternalActionsEvent';
 
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
@@ -52,7 +51,7 @@ class TrackerMasschangeProcessExternalActionsEvent implements Dispatchable
     public function __construct(
         PFUser $user,
         Tracker $tracker,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         array $masschange_aids,
     ) {
         $this->request         = $request;
@@ -61,7 +60,7 @@ class TrackerMasschangeProcessExternalActionsEvent implements Dispatchable
         $this->tracker         = $tracker;
     }
 
-    public function getRequest(): Codendi_Request
+    public function getRequest(): \Tuleap\HTTPRequest
     {
         return $this->request;
     }

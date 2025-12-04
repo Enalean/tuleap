@@ -20,7 +20,6 @@
 
 namespace Tuleap\Timetracking;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
 use PFUser;
@@ -73,7 +72,7 @@ class Router
         $this->time_controller  = $time_controller;
     }
 
-    public function route(Codendi_Request $request)
+    public function route(\Tuleap\HTTPRequest $request)
     {
         $user   = $request->getCurrentUser();
         $action = $request->get('action');
@@ -213,7 +212,7 @@ class Router
     /**
      * @return Tracker
      */
-    private function getTrackerFromRequest(Codendi_Request $request, PFUser $user)
+    private function getTrackerFromRequest(\Tuleap\HTTPRequest $request, PFUser $user)
     {
         $tracker_id = $request->get('tracker');
         $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
@@ -232,7 +231,7 @@ class Router
     /**
      * @return Artifact
      */
-    private function getArtifactFromRequest(Codendi_Request $request, PFUser $user)
+    private function getArtifactFromRequest(\Tuleap\HTTPRequest $request, PFUser $user)
     {
         $artifact_id = $request->get('artifact');
         $artifact    = $this->artifact_factory->getArtifactById($artifact_id);

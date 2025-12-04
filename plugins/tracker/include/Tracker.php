@@ -23,7 +23,6 @@ namespace Tuleap\Tracker;
 
 use BackendLogger;
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use Codendi_Session;
 use CSRFSynchronizerToken;
 use EventManager;
@@ -1182,7 +1181,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $this->is_project_allowed_to_use_type;
     }
 
-    private function getHierarchyController(Codendi_Request $request): HierarchyController
+    private function getHierarchyController(\Tuleap\HTTPRequest $request): HierarchyController
     {
         $dao                  = new HierarchyDAO();
         $tracker_factory      = $this->getTrackerFactory();
@@ -1223,7 +1222,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      * panels to ease the selection of artifacts to link
      *
      * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
-     * @param Codendi_Request $request The request
+     * @param \Tuleap\HTTPRequest $request The request
      * @param PFUser $current_user The user who made the request
      *
      * @return void
@@ -2897,7 +2896,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return bool true if import succeed, false otherwise
      */
-    private function importFromCSV(Codendi_Request $request, PFUser $current_user, array $header, array $lines)
+    private function importFromCSV(\Tuleap\HTTPRequest $request, PFUser $current_user, array $header, array $lines)
     {
         $is_error = false;
         if (count($lines) >= 1) {
@@ -3460,7 +3459,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         );
     }
 
-    private function getChildrenCollector(Codendi_Request $request)
+    private function getChildrenCollector(\Tuleap\HTTPRequest $request)
     {
         if ($request->get('copy_children')) {
             return new Tracker_XML_ChildrenCollector();

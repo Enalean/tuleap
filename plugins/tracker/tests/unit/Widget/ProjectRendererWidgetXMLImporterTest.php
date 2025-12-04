@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Widget;
 
-use Codendi_Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
 use SimpleXMLElement;
@@ -134,7 +133,7 @@ final class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\Te
         $this->widget
             ->expects($this->once())
             ->method('create')
-            ->willReturnCallback(static function (Codendi_Request $request) {
+            ->willReturnCallback(static function (\Tuleap\HTTPRequest $request) {
                 $renderer_request_date = $request->get('renderer');
                 return match (true) {
                     count($renderer_request_date) > 0 &&
@@ -149,7 +148,7 @@ final class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\Te
         $this->widget
             ->expects($this->once())
             ->method('create')
-            ->willReturnCallback(static function (Codendi_Request $request) use ($renderer_id, $title) {
+            ->willReturnCallback(static function (\Tuleap\HTTPRequest $request) use ($renderer_id, $title) {
                 $renderer_request_date = $request->get('renderer');
                 return match (true) {
                     count($renderer_request_date) > 0 &&

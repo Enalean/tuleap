@@ -20,7 +20,6 @@
 
 namespace Tuleap\TestManagement;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use PFUser;
@@ -49,7 +48,7 @@ class IndexController extends TestManagementController
     private $project_flags_builder;
 
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Config $config,
         EventManager $event_manager,
         TrackerFactory $tracker_factory,

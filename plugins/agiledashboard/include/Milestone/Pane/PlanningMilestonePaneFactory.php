@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
-use Codendi_Request;
 use EventManager;
 use PFUser;
 use Planning_Milestone;
@@ -50,7 +49,7 @@ class PlanningMilestonePaneFactory
 
 
     public function __construct(
-        private readonly Codendi_Request $request,
+        private readonly \Tuleap\HTTPRequest $request,
         private readonly Planning_MilestoneFactory $milestone_factory,
         private readonly PanePresenterBuilderFactory $pane_presenter_builder_factory,
         private readonly SubmilestoneFinder $submilestone_finder,

@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\Report;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
 use Response;
@@ -65,7 +64,7 @@ class TrackerReportConfigController
         );
     }
 
-    public function update(Codendi_Request $request, Response $response)
+    public function update(\Tuleap\HTTPRequest $request, Response $response)
     {
         $query_limit       = null;
         $valid_query_limit = new Valid_UInt('query_limit');

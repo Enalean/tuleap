@@ -29,7 +29,7 @@ class BuildArtifactFormActionEvent implements Dispatchable
     public const string NAME = 'buildArtifactFormActionEvent';
 
     /**
-     * @var \Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -37,13 +37,13 @@ class BuildArtifactFormActionEvent implements Dispatchable
      */
     private $redirect;
 
-    public function __construct(\Codendi_Request $request, \Tracker_Artifact_Redirect $redirect)
+    public function __construct(\Tuleap\HTTPRequest $request, \Tracker_Artifact_Redirect $redirect)
     {
         $this->request  = $request;
         $this->redirect = $redirect;
     }
 
-    public function getRequest(): \Codendi_Request
+    public function getRequest(): \Tuleap\HTTPRequest
     {
         return $this->request;
     }

@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard;
 
-use Codendi_Request;
 use EventManager;
 use Override;
 use Planning_MilestoneFactory;
@@ -62,7 +61,7 @@ class AdminController extends BaseController
     private $additional_scrum_sections;
 
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         private readonly ConfigurationManager $config_manager,
         private readonly EventManager $event_manager,
         private readonly AgileDashboardCrumbBuilder $service_crumb_builder,

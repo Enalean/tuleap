@@ -21,7 +21,7 @@
 class ForgeAccess_AdminRouter
 {
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
@@ -32,7 +32,7 @@ class ForgeAccess_AdminRouter
 
     public function __construct(
         ForgeAccess_AdminController $controller,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
     ) {
         $this->controller = $controller;
         $this->request    = $request;

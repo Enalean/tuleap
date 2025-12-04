@@ -105,7 +105,7 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
      *   - Pass $request to action methods
      *
      */
-    public function route(Codendi_Request $request)
+    public function route(\Tuleap\HTTPRequest $request)
     {
         $planning_controller            = $this->buildPlanningController($request);
         $xml_rng_validator              = new XML_RNGValidator();
@@ -238,7 +238,7 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
      *
      * @return Service
      */
-    private function getService(Codendi_Request $request)
+    private function getService(\Tuleap\HTTPRequest $request)
     {
         if ($this->service == null) {
             $project       = $request->getProject();
@@ -249,7 +249,7 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
     }
 
     private function displayHeader(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         string $title,
         BreadCrumbCollection $breadcrumbs,
         \Tuleap\Layout\HeaderConfiguration $header_configuration,
@@ -269,17 +269,17 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
         $service->displayHeader($title, $breadcrumbs, [], $header_configuration);
     }
 
-    private function userIsAdmin(Codendi_Request $request): bool
+    private function userIsAdmin(\Tuleap\HTTPRequest $request): bool
     {
         return $request->getProject()->userIsAdmin($request->getCurrentUser());
     }
 
-    private function displayFooter(Codendi_Request $request): void
+    private function displayFooter(\Tuleap\HTTPRequest $request): void
     {
         $this->getService($request)->displayFooter();
     }
 
-    protected function buildPlanningController(Codendi_Request $request): Planning_Controller
+    protected function buildPlanningController(\Tuleap\HTTPRequest $request): Planning_Controller
     {
         $layout = $GLOBALS['Response'];
         assert($layout instanceof \Tuleap\Layout\BaseLayout);
@@ -308,7 +308,7 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
         );
     }
 
-    protected function buildController(Codendi_Request $request)
+    protected function buildController(\Tuleap\HTTPRequest $request)
     {
         $layout = $GLOBALS['Response'];
         assert($layout instanceof \Tuleap\Layout\BaseLayout);
@@ -338,7 +338,7 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
     protected function renderAction(
         BaseController $controller,
         string $action_name,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
     ): void {
         $this->executeAction(
             $controller,
@@ -378,7 +378,7 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
      *   - merge into AgileDashboardRouter::route()
      *
      */
-    public function routeShowPlanning(Codendi_Request $request)
+    public function routeShowPlanning(\Tuleap\HTTPRequest $request)
     {
         $aid = $request->getValidated('aid', 'int', 0);
         switch ($aid) {
@@ -392,7 +392,7 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
         }
     }
 
-    public function routeShowTopPlanning(Codendi_Request $request)
+    public function routeShowTopPlanning(\Tuleap\HTTPRequest $request)
     {
         $service = $this->getService($request);
         if (! $service) {

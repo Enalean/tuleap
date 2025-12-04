@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Permissions;
 
-use Codendi_Request;
 use PermissionsManager;
 use PermissionsNormalizer;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -101,9 +100,9 @@ final class DefaultFineGrainedPermissionFactoryTest extends TestCase
             });
     }
 
-    private function buildRequest(array $params): Codendi_Request
+    private function buildRequest(array $params): \Tuleap\HTTPRequest
     {
-        return new Codendi_Request(
+        return new \Tuleap\HTTPRequest(
             $params,
             $this->project_manager
         );

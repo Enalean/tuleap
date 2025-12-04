@@ -32,7 +32,7 @@ class Planning_MilestoneSelectorController extends MVC2_PluginController //phpcs
 
     private $milestone_factory;
 
-    public function __construct(Codendi_Request $request, Planning_MilestoneFactory $milestone_factory)
+    public function __construct(\Tuleap\HTTPRequest $request, Planning_MilestoneFactory $milestone_factory)
     {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory = $milestone_factory;

@@ -24,7 +24,7 @@
  * Typical use:
  *
  *     class PeopleController extends Controller {
- *         public function __construct(Codendi_Request $request, ...) {
+ *         public function __construct(\Tuleap\HTTPRequest $request, ...) {
  *             parent::__construct('myplugin', $request);
  *
  *             // Assign controller-specific parameters
@@ -70,7 +70,7 @@
 abstract class MVC2_Controller
 {
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     protected $request;
 
@@ -84,7 +84,7 @@ abstract class MVC2_Controller
      */
     protected $renderer;
 
-    public function __construct($base_name, Codendi_Request $request)
+    public function __construct($base_name, \Tuleap\HTTPRequest $request)
     {
         $this->request   = $request;
         $this->base_name = $base_name;

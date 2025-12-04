@@ -82,7 +82,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testHeadNameIsFirstBranchName(): void
     {
-        $this->request->params = ['a' => 'tree'];
+        $this->request->set('a', 'tree');
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -113,7 +113,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testHeadNameIsFirstTagNameIfNoBranch(): void
     {
-        $this->request->params = ['a' => 'tree'];
+        $this->request->set('a', 'tree');
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -144,7 +144,8 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testHeadNameIsRequestedRef(): void
     {
-        $this->request->params = ['a' => 'tree', 'hb' => 'v12-1'];
+        $this->request->set('a', 'tree');
+        $this->request->set('hb', 'v12-1');
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -177,12 +178,10 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testCurrentURLParamatersExceptHashbaseAndHashbaseArePassedAsArrayToTheSelector(): void
     {
-        $this->request->params = [
-            'a'  => 'blame',
-            'hb' => 'v12-1',
-            'h'  => 'd3c5d469b37586aa924577054162c31b6bf03a9a',
-            'f'  => 'app.js',
-        ];
+        $this->request->set('a', 'blame');
+        $this->request->set('hb', 'v12-1');
+        $this->request->set('h', 'd3c5d469b37586aa924577054162c31b6bf03a9a');
+        $this->request->set('f', 'app.js');
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -220,8 +219,6 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testTreeIsDefaultViewIfRequestIsEmpty(): void
     {
-        $this->request->params = [];
-
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
             ->with($this->repository)
@@ -254,7 +251,8 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testHeadNameIsRequestedRefEvenIfFullyQualifiedTag(): void
     {
-        $this->request->params = ['a' => 'tree', 'hb' => 'refs/tags/v12-1'];
+        $this->request->set('a', 'tree');
+        $this->request->set('hb', 'refs/tags/v12-1');
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -287,7 +285,8 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testHeadNameIsRequestedRefEvenIfFullyQualifiedBranch(): void
     {
-        $this->request->params = ['a' => 'tree', 'hb' => 'refs/heads/feature'];
+        $this->request->set('a', 'tree');
+        $this->request->set('hb', 'refs/heads/feature');
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -320,7 +319,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testHeadNameIsHashIfNoBranchNorTag(): void
     {
-        $this->request->params = ['a' => 'tree'];
+        $this->request->set('a', 'tree');
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -347,7 +346,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testHeadNameIsUndefinedIfNoCommitForCurrentTreeButThereIsAnExistingRefInTheRepository(): void
     {
-        $this->request->params = ['a' => 'tree'];
+        $this->request->set('a', 'tree');
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -370,7 +369,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testSelectorIsNotDisplayedIfNoCommitForCurrentTreeAndNoRefInTheRepository(): void
     {
-        $this->request->params = ['a' => 'tree'];
+        $this->request->set('a', 'tree');
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -390,7 +389,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('provideActionsThatShouldNotDisplayTheSelector')]
     public function testSelectorIsNotDisplayedIfWeAreOnACommitView($action): void
     {
-        $this->request->params = ['a' => $action];
+        $this->request->set('a', $action);
 
         $this->repository->method('isCreated')->willReturn(true);
         $this->gitphp_project_retriever->method('getFromRepository')
@@ -422,7 +421,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
 
     public function testSelectorIsNotDisplayedIfRepositoryIsNotCreated(): void
     {
-        $this->request->params = ['a' => 'tree'];
+        $this->request->set('a', 'tree');
 
         $this->repository->method('isCreated')->willReturn(false);
 

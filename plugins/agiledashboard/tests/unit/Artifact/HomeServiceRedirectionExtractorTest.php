@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Artifact;
 
-use Codendi_Request;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
 
@@ -32,7 +31,7 @@ final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItReturnsTrueIfRequestMustRedirectToADHomepage(): void
     {
         $extractor = new HomeServiceRedirectionExtractor();
-        $request   = new Codendi_Request([
+        $request   = new \Tuleap\HTTPRequest([
             'agiledashboard' => [
                 'home' => '1',
             ],
@@ -47,26 +46,26 @@ final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $extractor = new HomeServiceRedirectionExtractor();
 
-        $request = new Codendi_Request([]);
+        $request = new \Tuleap\HTTPRequest([]);
         assertFalse(
             $extractor->mustRedirectToAgiledashboardHomepage($request)
         );
 
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'agiledashboard',
         ]);
         assertFalse(
             $extractor->mustRedirectToAgiledashboardHomepage($request)
         );
 
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'agiledashboard' => [],
         ]);
         assertFalse(
             $extractor->mustRedirectToAgiledashboardHomepage($request)
         );
 
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'agiledashboard' => [
                 'home' => 'whatever',
             ],
@@ -75,7 +74,7 @@ final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\Tes
             $extractor->mustRedirectToAgiledashboardHomepage($request)
         );
 
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'agiledashboard' => [
                 'whatever' => '1',
             ],
@@ -84,7 +83,7 @@ final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\Tes
             $extractor->mustRedirectToAgiledashboardHomepage($request)
         );
 
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'whatever' => [
                 'home' => '1',
             ],

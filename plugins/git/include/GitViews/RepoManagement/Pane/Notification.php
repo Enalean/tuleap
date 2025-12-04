@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
-use Codendi_Request;
 use EventManager;
 use GitRepository;
 use TemplateRendererFactory;
@@ -47,7 +46,7 @@ class Notification extends Pane
 
     public function __construct(
         GitRepository $repository,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
         CollectionOfUgroupToBeNotifiedPresenterBuilder $group_to_be_notified_builder,
     ) {

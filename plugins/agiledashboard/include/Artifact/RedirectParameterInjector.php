@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
-use Codendi_Request;
 use Response;
 use TemplateRenderer;
 use Tracker_Artifact_Redirect;
@@ -40,7 +39,7 @@ final readonly class RedirectParameterInjector
     }
 
     public function injectAndInformUserAboutBacklogItemWillBeLinked(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Tracker_Artifact_Redirect $redirect,
     ): void {
         $this->informUserThatTheArtifactWillBeLinkedToTheMilestone($request);
@@ -52,7 +51,7 @@ final readonly class RedirectParameterInjector
         $this->injectParameters($request, $redirect, $child_milestone_id);
     }
 
-    public function injectParameters(Codendi_Request $request, Tracker_Artifact_Redirect $redirect, ?string $child_milestone_id): void
+    public function injectParameters(\Tuleap\HTTPRequest $request, Tracker_Artifact_Redirect $redirect, ?string $child_milestone_id): void
     {
         $requested_planning = $this->params_extractor->extractParametersFromRequest($request);
         if ($requested_planning) {
@@ -70,7 +69,7 @@ final readonly class RedirectParameterInjector
         }
     }
 
-    private function informUserThatTheArtifactWillBeLinkedToTheMilestone(Codendi_Request $request): void
+    private function informUserThatTheArtifactWillBeLinkedToTheMilestone(\Tuleap\HTTPRequest $request): void
     {
         $requested_planning = $this->params_extractor->extractParametersFromRequest($request);
         if (! $requested_planning) {

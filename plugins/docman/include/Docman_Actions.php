@@ -335,7 +335,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
         return $newVersion;
     }
 
-    private function newVersionApprovalTable(Codendi_Request $request, Docman_Item $item, PFUser $user)
+    private function newVersionApprovalTable(\Tuleap\HTTPRequest $request, Docman_Item $item, PFUser $user)
     {
         $vImport = new Valid_WhiteList('app_table_import', ['copy', 'reset', 'empty']);
         $vImport->required();
@@ -764,7 +764,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
         $this->event_manager->processEvent('send_notifications', []);
     }
 
-    private function updateLink(Codendi_Request $request, Docman_Link $item, PFUser $user)
+    private function updateLink(\Tuleap\HTTPRequest $request, Docman_Link $item, PFUser $user)
     {
         $data = $request->get('item');
         $item->setUrl($data['link_url']);
@@ -792,7 +792,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
         return $updated;
     }
 
-    private function manageLockNewVersion(PFUser $user, Docman_Item $item, Codendi_Request $request)
+    private function manageLockNewVersion(PFUser $user, Docman_Item $item, \Tuleap\HTTPRequest $request)
     {
         $permission_manager = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
         if ($request->existAndNonEmpty('lock_document')) {

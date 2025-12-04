@@ -25,7 +25,7 @@ class Cardwall_CardController extends MVC2_PluginController
     private $single_card;
 
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Cardwall_SingleCard $single_card,
     ) {
         parent::__construct('cardwall', $request);

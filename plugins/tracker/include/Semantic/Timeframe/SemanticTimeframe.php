@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
 use TrackerManager;
@@ -84,7 +83,7 @@ class SemanticTimeframe extends TrackerSemantic
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ): void {
         $GLOBALS['HTML']->addJavascriptAsset(
@@ -130,7 +129,7 @@ class SemanticTimeframe extends TrackerSemantic
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ): void {
         if ($request->exist('update-semantic-timeframe')) {

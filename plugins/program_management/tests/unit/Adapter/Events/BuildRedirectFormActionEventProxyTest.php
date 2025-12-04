@@ -45,7 +45,7 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
         $this->redirect = new Tracker_Artifact_Redirect();
         $this->proxy    = BuildRedirectFormActionEventProxy::fromEvent(
             new BuildArtifactFormActionEvent(
-                new \Codendi_Request(
+                new \Tuleap\HTTPRequest(
                     [],
                     null
                 ),

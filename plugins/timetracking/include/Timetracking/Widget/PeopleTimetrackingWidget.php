@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Widget;
 
-use Codendi_Request;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
@@ -125,7 +124,7 @@ class PeopleTimetrackingWidget extends Widget
     }
 
     #[\Override]
-    public function create(Codendi_Request $request): int
+    public function create(\Tuleap\HTTPRequest $request): int
     {
         return $this->dao->create(PredefinedTimePeriod::LAST_7_DAYS);
     }

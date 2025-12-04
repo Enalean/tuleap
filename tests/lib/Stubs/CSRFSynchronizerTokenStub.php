@@ -49,7 +49,7 @@ class CSRFSynchronizerTokenStub implements CSRFSynchronizerTokenInterface
     }
 
     #[\Override]
-    public function check(?string $redirect_to = null, ?\Codendi_Request $request = null): void
+    public function check(?string $redirect_to = null, ?\Tuleap\HTTPRequest $request = null): void
     {
         $this->has_been_checked = true;
     }

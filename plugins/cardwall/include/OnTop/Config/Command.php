@@ -35,5 +35,5 @@ abstract class Cardwall_OnTop_Config_Command
     /**
      * @return void
      */
-    abstract public function execute(Codendi_Request $request);
+    abstract public function execute(\Tuleap\HTTPRequest $request);
 }

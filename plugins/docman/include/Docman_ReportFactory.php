@@ -205,7 +205,7 @@ class Docman_ReportFactory
      * develop the feature. We only provide static metadata to display on table
      * report.
      */
-    public function initColumns(Docman_Report $report, Codendi_Request $request): void
+    public function initColumns(Docman_Report $report, \Tuleap\HTTPRequest $request): void
     {
         $settingsBo      = Docman_SettingsBo::instance($this->groupId);
         $retriever       = new AlwaysThereColumnRetriever($settingsBo);

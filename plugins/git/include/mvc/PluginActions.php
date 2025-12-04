@@ -23,7 +23,7 @@ class PluginActions
 {
     protected $controller;
 
-    /** @var Codendi_Request*/
+    /** @var \Tuleap\HTTPRequest*/
     protected $request;
     /**
      * @var PFUser

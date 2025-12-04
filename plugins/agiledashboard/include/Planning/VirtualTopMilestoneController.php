@@ -46,7 +46,7 @@ final class VirtualTopMilestoneController extends BaseController
      *
      */
     public function __construct(
-        \Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         \Planning_MilestoneFactory $milestone_factory,
         \ProjectManager $project_manager,
         private readonly VirtualTopMilestonePresenterBuilder $presenter_builder,

@@ -31,7 +31,7 @@ class Admin_Homepage_Controller
     private $response;
 
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
@@ -58,7 +58,7 @@ class Admin_Homepage_Controller
     public function __construct(
         CSRFSynchronizerToken $csrf,
         Admin_Homepage_Dao $dao,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Response $response,
         AdminPageRenderer $admin_page_renderer,
         ConfigDao $config_dao,

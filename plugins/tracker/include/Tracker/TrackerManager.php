@@ -45,7 +45,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
      *
      * @return bool true if success. Otherwise the process terminates.
      */
-    public function checkServiceEnabled(Project $project, Codendi_Request $request)
+    public function checkServiceEnabled(Project $project, \Tuleap\HTTPRequest $request)
     {
         if ($project->usesService('plugin_tracker')) {
             return true;
@@ -67,7 +67,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
      *
      * @throws Tracker_CannotAccessTrackerException
      */
-    public function checkUserCanAccessTracker($tracker, $user, Codendi_Request $request)
+    public function checkUserCanAccessTracker($tracker, $user, \Tuleap\HTTPRequest $request)
     {
         $this->checkServiceEnabled($tracker->getProject(), $request);
 

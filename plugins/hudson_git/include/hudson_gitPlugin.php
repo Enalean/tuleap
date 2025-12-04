@@ -335,7 +335,7 @@ class hudson_gitPlugin extends Plugin
     /**
      * @return Hook\HookController
      */
-    private function getHookController(Codendi_Request $request)
+    private function getHookController(\Tuleap\HTTPRequest $request)
     {
         return new Hook\HookController(
             $request,

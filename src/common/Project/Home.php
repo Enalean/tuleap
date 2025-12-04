@@ -85,8 +85,8 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
         $group_id = $project->getId();
 
         //set up the group_id
-        $_REQUEST['group_id']        = $_GET['group_id'] = $group_id;
-        $request->params['group_id'] = $_REQUEST['group_id'];
+        $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
+        $request->set('group_id', $_REQUEST['group_id']);
 
         if ($request->isAjax() && ! $request->existAndNonEmpty('action')) {
             $layout->sendJSON(['id' => $group_id, 'name' => $project->getPublicName()]);

@@ -276,7 +276,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         );
     }
 
-    public function showImage(Codendi_Request $request)
+    public function showImage(\Tuleap\HTTPRequest $request)
     {
         $project = $this->getProjectFromRequest();
         $user    = $request->getCurrentUser();

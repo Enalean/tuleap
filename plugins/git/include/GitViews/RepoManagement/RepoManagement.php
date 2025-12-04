@@ -58,7 +58,7 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function __construct(
         private GitRepository $repository,
-        private Codendi_Request $request,
+        private \Tuleap\HTTPRequest $request,
         private Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         private array $gerrit_servers,
         private array $gerrit_config_templates,

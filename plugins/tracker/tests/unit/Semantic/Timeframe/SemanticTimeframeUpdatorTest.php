@@ -67,7 +67,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotUpdateIfAFieldIdIsNotNumeric(): void
     {
-        $request = new \Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'start-date-field-id' => 'start',
             'duration-field-id'   => '1234',
         ]);
@@ -92,7 +92,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotUpdateIfStartDateFieldIdIsMissing(): void
     {
-        $request = new \Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'start-date-field-id' => '',
             'duration-field-id'   => '5678',
         ]);
@@ -117,7 +117,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotUpdateIfDurationFieldIdIsMissing(): void
     {
-        $request = new \Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'start-date-field-id' => '1234',
             'duration-field-id'   => '',
         ]);
@@ -142,7 +142,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotUpdateIfAFieldCannotBeFoundInTheTracker(): void
     {
-        $request = new \Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'start-date-field-id' => '1234',
             'duration-field-id'   => '5678',
         ]);
@@ -170,7 +170,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date_field_id = 1234;
         $duration_field_id   = 5678;
-        $request             = new \Codendi_Request([
+        $request             = new \Tuleap\HTTPRequest([
             'start-date-field-id' => $start_date_field_id,
             'duration-field-id'   => $duration_field_id,
         ]);
@@ -216,7 +216,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $start_date_field_id = 1234;
         $end_date_field_id   = 5678;
-        $request             = new \Codendi_Request([
+        $request             = new \Tuleap\HTTPRequest([
             'start-date-field-id' => $start_date_field_id,
             'end-date-field-id'   => $end_date_field_id,
         ]);
@@ -263,7 +263,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesTheSemanticWhenItIsImpliedFromAnotherTracker(): void
     {
         $sprints_tracker_id = 150;
-        $request            = new \Codendi_Request(
+        $request            = new \Tuleap\HTTPRequest(
             [
                 'implied-from-tracker-id' => $sprints_tracker_id,
             ]
@@ -302,7 +302,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRejectsTheSemanticWhenItIsImpliedFromAnotherTrackerAndCalendarEventsAreUsed(): void
     {
         $sprints_tracker_id = 150;
-        $request            = new \Codendi_Request(
+        $request            = new \Tuleap\HTTPRequest(
             [
                 'implied-from-tracker-id' => $sprints_tracker_id,
             ]
@@ -338,7 +338,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field_id   = 5678;
         $duration_field_id   = 345;
 
-        $request = new \Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'start-date-field-id' => $start_date_field_id,
             'duration-field-id'   => $duration_field_id,
             'end-date-field-id'   => $end_date_field_id,

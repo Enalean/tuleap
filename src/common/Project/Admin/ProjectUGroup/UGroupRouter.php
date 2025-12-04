@@ -24,7 +24,6 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Project;
@@ -45,7 +44,7 @@ class UGroupRouter
      */
     private $ugroup_manager;
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -71,7 +70,7 @@ class UGroupRouter
 
     public function __construct(
         UGroupManager $ugroup_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         EditBindingUGroupEventLauncher $edit_event_launcher,
         BindingController $binding_controller,
         DelegationController $delegation_controller,

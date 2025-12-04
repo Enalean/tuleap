@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
 use TrackerManager;
@@ -97,7 +96,7 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ): void {
         $this->tracker->displayAdminItemHeaderBurningParrot(
@@ -135,7 +134,7 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ) {
         if ($request->exist('update-semantic-progress')) {
@@ -211,7 +210,7 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
         return $renderer;
     }
 
-    private function updateSemantic(Codendi_Request $request): void
+    private function updateSemantic(\Tuleap\HTTPRequest $request): void
     {
         $method_builder = new MethodBuilder(
             \Tracker_FormElementFactory::instance(),

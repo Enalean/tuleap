@@ -181,7 +181,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ) {
         $GLOBALS['HTML']->addCssAsset(CssViteAsset::fromFileName(
@@ -264,7 +264,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
     }
 
     #[\Override]
-    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         if ($request->get('add') && (int) $request->get('field')) {
             $this->getCSRFToken()->check();

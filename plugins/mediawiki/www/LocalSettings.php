@@ -35,17 +35,6 @@ mysqli_report(MYSQLI_REPORT_OFF);
 if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 
-// Force include of \Tuleap\HTTPRequest here instead of relying on autoload for this
-// very specific class. Problems come from mediawiki inclusion: mediawiki also
-// have an HttpRequest class (but no longer used, in a .old file) and in MW,
-// But this class is referenced in MW autoloader (loaded before Tuleap one)
-// so when tuleap stuff in pre.php instanciate \Tuleap\HTTPRequest (like logger) it instanciate
-// mediawiki HttpRequest instead of the Tuleap one.
-// This is a short term hack, in a longer term we should namespace tuleap \Tuleap\HTTPRequest
-// But wait for PHP5.3 min compat.
-
-    require_once __DIR__ . '/../../../src/common/include/Codendi_Request.php';
-    require_once __DIR__ . '/../../../src/common/include/HTTPRequest.php';
     require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 /**

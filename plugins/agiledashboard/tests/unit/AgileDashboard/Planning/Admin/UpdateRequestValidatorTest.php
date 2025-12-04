@@ -46,7 +46,7 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
     }
 
-    private function validate(\Codendi_Request $request): ?\PlanningParameters
+    private function validate(\Tuleap\HTTPRequest $request): ?\PlanningParameters
     {
         $validator = new UpdateRequestValidator();
 
@@ -172,8 +172,8 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @param array | null $planning_request
      */
-    private function buildRequest($planning_request): \Codendi_Request
+    private function buildRequest($planning_request): \Tuleap\HTTPRequest
     {
-        return new \Codendi_Request(['planning' => $planning_request]);
+        return new \Tuleap\HTTPRequest(['planning' => $planning_request]);
     }
 }

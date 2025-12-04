@@ -20,7 +20,6 @@
 
 namespace Tuleap\PullRequest\RepoManagement;
 
-use Codendi_Request;
 use GitRepository;
 use TemplateRendererFactory;
 use Tuleap\CSRFSynchronizerTokenPresenter;
@@ -38,7 +37,7 @@ class PullRequestPane extends Pane
 
     public function __construct(
         GitRepository $repository,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         MergeSettingRetriever $merge_setting_retriever,
     ) {
         parent::__construct($repository, $request);

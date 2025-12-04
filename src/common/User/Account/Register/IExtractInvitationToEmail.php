@@ -26,5 +26,5 @@ use Tuleap\InviteBuddy\InvitationToEmail;
 
 interface IExtractInvitationToEmail
 {
-    public function getInvitationToEmail(\Codendi_Request $request): ?InvitationToEmail;
+    public function getInvitationToEmail(\Tuleap\HTTPRequest $request): ?InvitationToEmail;
 }

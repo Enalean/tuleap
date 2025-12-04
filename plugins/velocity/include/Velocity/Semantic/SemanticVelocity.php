@@ -20,7 +20,6 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
 use PFUser;
@@ -120,7 +119,7 @@ class SemanticVelocity extends TrackerSemantic
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ) {
         $this->tracker->displayAdminItemHeaderBurningParrot(
@@ -154,7 +153,7 @@ class SemanticVelocity extends TrackerSemantic
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ) {
         if ($request->exist('submit')) {

@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\Semantic\Tooltip;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use PFUser;
 use TemplateRendererFactory;
 use Tracker_FormElementFactory;
@@ -91,7 +90,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @param TrackerSemanticManager $semantic_manager The semantic manager
      * @param TrackerManager          $tracker_manager  The tracker manager
-     * @param Codendi_Request         $request          The request
+     * @param \Tuleap\HTTPRequest         $request          The request
      * @param PFUser                  $current_user     The user who made the request
      *
      * @return void
@@ -100,7 +99,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ) {
         if ($request->get('add-field') && (int) $request->get('field')) {
@@ -206,7 +205,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @param TrackerSemanticManager $semantic_manager The semantic manager
      * @param TrackerManager          $tracker_manager  The tracker manager
-     * @param Codendi_Request         $request          The request
+     * @param \Tuleap\HTTPRequest         $request          The request
      * @param PFUser                  $current_user     The user who made the request
      *
      * @return void
@@ -215,7 +214,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ) {
         $this->tracker->displayAdminItemHeaderBurningParrot(

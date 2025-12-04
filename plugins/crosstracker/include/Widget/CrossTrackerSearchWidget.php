@@ -20,7 +20,6 @@
 
 namespace Tuleap\CrossTracker\Widget;
 
-use Codendi_Request;
 use LogicException;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -127,7 +126,7 @@ class CrossTrackerSearchWidget extends Widget
     }
 
     #[\Override]
-    public function create(Codendi_Request $request): int|false
+    public function create(\Tuleap\HTTPRequest $request): int|false
     {
             return $this->cross_tracker_widget_creator->createWithQueries($request)->match(
                 static fn(int $widget_id) => $widget_id,

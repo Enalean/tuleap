@@ -53,9 +53,9 @@ final class IterationRedirectionParametersProxyTest extends TestCase
         self::assertTrue($proxy->isRedirectionNeeded());
     }
 
-    private function buildCodendiRequest(string $action): \Codendi_Request
+    private function buildCodendiRequest(string $action): \Tuleap\HTTPRequest
     {
-        return new \Codendi_Request(
+        return new \Tuleap\HTTPRequest(
             [
                 IterationRedirectionParameters::FLAG               => $action,
                 IterationRedirectionParameters::PARAM_INCREMENT_ID => '1280',

@@ -371,9 +371,9 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         self::assertEquals([], $redirect->query_parameters);
     }
 
-    private function aRequest(array $params): \Codendi_Request
+    private function aRequest(array $params): \Tuleap\HTTPRequest
     {
-        $request = new \Codendi_Request($params, $this->createMock(\ProjectManager::class));
+        $request = new \Tuleap\HTTPRequest($params, $this->createMock(\ProjectManager::class));
         $request->setCurrentUser($this->user);
 
         return $request;

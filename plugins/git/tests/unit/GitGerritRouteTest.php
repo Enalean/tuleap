@@ -157,9 +157,8 @@ final class GitGerritRouteTest extends TestCase
         $gerrit_driver->method('doesTheProjectExist')->willReturn(false);
         $gerrit_driver->method('getGerritProjectName');
 
-        $http_request         = new \Tuleap\HTTPRequest();
-        $http_request->params = ['group_id' => $this->group_id];
-        $driver_factory       = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $http_request   = new \Tuleap\HTTPRequest(['group_id' => $this->group_id]);
+        $driver_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
         $driver_factory->method('getDriver')->willReturn($gerrit_driver);
         $git = $this->getMockBuilder(Git::class)
             ->setConstructorArgs([
@@ -217,8 +216,7 @@ final class GitGerritRouteTest extends TestCase
     private function assertItIsForbiddenForNonProjectAdmins(GitRepositoryFactory $factory): void
     {
         $this->user_manager->method('getCurrentUser')->willReturn($this->user);
-        $request         = new \Tuleap\HTTPRequest();
-        $request->params = ['repo_id' => $this->repo_id];
+        $request = new \Tuleap\HTTPRequest(['repo_id' => $this->repo_id]);
 
         $git = $this->getGitDisconnect($request, $factory);
 
@@ -247,10 +245,9 @@ final class GitGerritRouteTest extends TestCase
     public function testItDispatchToDisconnectFromGerritWithRepoManagementView(): void
     {
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
-        $request         = new \Tuleap\HTTPRequest();
-        $request->params = ['repo_id' => $this->repo_id];
-        $repo            = GitRepositoryTestBuilder::aProjectRepository()->build();
-        $factory         = $this->createMock(GitRepositoryFactory::class);
+        $request = new \Tuleap\HTTPRequest(['repo_id' => $this->repo_id]);
+        $repo    = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $factory = $this->createMock(GitRepositoryFactory::class);
         $factory->expects($this->once())->method('getRepositoryById')->willReturn($repo);
         $git     = $this->getGitDisconnect($request, $factory);
         $matcher = $this->exactly(2);

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
-use Codendi_Request;
 use Response;
 use TemplateRenderer;
 use Tracker_Artifact_Redirect;
@@ -58,7 +57,7 @@ class RedirectParameterInjector
     }
 
     public function injectAndInformUserAboutBacklogItemBeingCovered(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Tracker_Artifact_Redirect $redirect,
     ): void {
         $ttm_backlog_item_id = $request->get(self::TTM_BACKLOG_ITEM_ID_KEY);

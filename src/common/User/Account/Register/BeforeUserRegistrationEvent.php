@@ -28,11 +28,11 @@ final class BeforeUserRegistrationEvent implements \Tuleap\Event\Dispatchable
 
     private bool $is_password_needed = true;
 
-    public function __construct(private \Codendi_Request $request)
+    public function __construct(private \Tuleap\HTTPRequest $request)
     {
     }
 
-    public function getRequest(): \Codendi_Request
+    public function getRequest(): \Tuleap\HTTPRequest
     {
         return $this->request;
     }

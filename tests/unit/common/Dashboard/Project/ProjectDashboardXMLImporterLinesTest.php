@@ -794,7 +794,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 
         $widget = $this->createMock(\Widget::class);
         $widget->method('getId')->willReturn('projectrss');
-        $widget->expects($this->once())->method('create')->with(self::callback(function (\Codendi_Request $request) {
+        $widget->expects($this->once())->method('create')->with(self::callback(function (\Tuleap\HTTPRequest $request) {
             if (
                 $request->get('rss') &&
                 $request->getInArray('rss', 'title') === 'Da feed' &&

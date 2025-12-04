@@ -34,7 +34,7 @@ final class ColumnReportAugmenter
     {
     }
 
-    public function addColumnsFromRequest(\Codendi_Request $request, array $report_columns, \Docman_Report $report): void
+    public function addColumnsFromRequest(\Tuleap\HTTPRequest $request, array $report_columns, \Docman_Report $report): void
     {
         $keep_ref_on_update_date = null;
         $is_there_a_sort         = false;

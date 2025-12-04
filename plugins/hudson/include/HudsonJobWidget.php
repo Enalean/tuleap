@@ -35,7 +35,7 @@ abstract class HudsonJobWidget extends HudsonWidget
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $content_id = false;
         $vId        = new Valid_UInt($this->widget_id . '_job_id');
@@ -129,7 +129,7 @@ abstract class HudsonJobWidget extends HudsonWidget
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $request->valid(new Valid_String('cancel'));
         if (! $request->exist('cancel')) {

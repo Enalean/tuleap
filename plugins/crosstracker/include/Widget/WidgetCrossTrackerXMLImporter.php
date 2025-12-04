@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Widget;
 
-use Codendi_Request;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 
@@ -41,9 +40,9 @@ final class WidgetCrossTrackerXMLImporter
     /**
      * @throws ImportNotValidException
      */
-    private function getRequest(ConfigureAtXMLImport $event): Codendi_Request
+    private function getRequest(ConfigureAtXMLImport $event): \Tuleap\HTTPRequest
     {
-        return new Codendi_Request(
+        return new \Tuleap\HTTPRequest(
             $this->getParametersFromXML($event->getXML())
         );
     }

@@ -149,7 +149,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         return $rule;
     }
 
-    protected function processRequestAndExpectRedirection(Codendi_Request $request): void
+    protected function processRequestAndExpectRedirection(\Tuleap\HTTPRequest $request): void
     {
         $GLOBALS['Response']->expects($this->once())->method('redirect');
         ob_start();
@@ -158,7 +158,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         $this->assertEquals('', $content);
     }
 
-    protected function processRequestAndExpectFormOutput(Codendi_Request $request): void
+    protected function processRequestAndExpectFormOutput(\Tuleap\HTTPRequest $request): void
     {
         $GLOBALS['Response']->expects($this->never())->method('redirect');
         ob_start();
@@ -169,14 +169,14 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotDisplayErrorsIfNoActions(): void
     {
-        $request = new Codendi_Request([], $this->createMock(ProjectManager::class));
+        $request = new \Tuleap\HTTPRequest([], $this->createMock(ProjectManager::class));
         $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with(Feedback::ERROR);
         $this->processRequestAndExpectFormOutput($request);
     }
 
     public function testItDeletesARule(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [self::PARAMETER_REMOVE_RULE => '123'],
             $this->createMock(ProjectManager::class)
         );
@@ -187,7 +187,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDeletesMultipleRules(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [self::PARAMETER_REMOVE_RULE => '123'],
             $this->createMock(ProjectManager::class)
         );
@@ -201,7 +201,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotFailIfRequestContainsIrrevelantId(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [self::PARAMETER_REMOVE_RULE => 'invalid_id'],
             $this->createMock(ProjectManager::class)
         );
@@ -212,7 +212,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotFailIfRequestDoesNotContainRemoveParameter(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [self::PARAMETER_SOURCE_FIELD => '21', self::PARAMETER_TARGET_FIELD => '14'],
             $this->createMock(ProjectManager::class)
         );
@@ -222,7 +222,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItProvidesFeedbackWhenDeletingARule(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [self::PARAMETER_REMOVE_RULE => '123'],
             $this->createMock(ProjectManager::class)
         );
@@ -234,7 +234,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotPrintSuccessfullFeebackIfTheDeleteFailed(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [self::PARAMETER_REMOVE_RULE => '123'],
             $this->createMock(ProjectManager::class)
         );
@@ -245,7 +245,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     private function processIndexRequest(): string
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [],
             $this->createMock(ProjectManager::class)
         );
@@ -264,7 +264,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItAddsARuleAndCheckFeedbackIsDisplayed(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
@@ -282,7 +282,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheRequestDoesNotContainTheComparator(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
@@ -299,7 +299,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheRequestDoesNotContainTheSourceField(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_TARGET_FIELD => '22',
@@ -315,7 +315,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheSourceFieldIsNotAnInt(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '%invalid_id%',
@@ -332,7 +332,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheSourceFieldIsNotAnGreaterThanZero(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '-1',
@@ -349,7 +349,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheSourceFieldIsNotChoosen(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '0',
@@ -366,7 +366,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheRequestDoesNotContainTheTargetField(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
@@ -382,7 +382,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheTargetFieldIsNotAnInt(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
@@ -399,7 +399,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheTargetFieldIsNotAnGreaterThanZero(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
@@ -416,7 +416,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheTargetFieldIsNotChoosen(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
@@ -433,7 +433,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheRequestDoesNotContainAValidComparator(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
@@ -450,7 +450,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotCreateTheRuleIfTheTargetAndSourceFieldsAreTheSame(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
@@ -467,7 +467,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItProvidesFeedbackIfRuleSuccessfullyCreated(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
@@ -485,7 +485,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotAddDateRuleIfTheSourceFieldIsNotADateOne(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '666',
@@ -502,7 +502,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotAddDateRuleIfTheTargetFieldIsNotADateOne(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',

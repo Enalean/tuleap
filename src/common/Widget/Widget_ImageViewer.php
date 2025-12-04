@@ -166,7 +166,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $content_id = false;
         $vUrl       = new Valid_HTTPURI('url');
@@ -187,7 +187,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $done       = false;
         $vContentId = new Valid_UInt('content_id');

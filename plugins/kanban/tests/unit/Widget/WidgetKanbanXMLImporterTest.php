@@ -63,7 +63,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
               </widget>'
         );
 
-        $this->widget->expects($this->once())->method('create')->with(self::callback(function (\Codendi_Request $request): bool {
+        $this->widget->expects($this->once())->method('create')->with(self::callback(function (\Tuleap\HTTPRequest $request): bool {
             if (
                 $request->get('kanban') &&
                 $request->getInArray('kanban', 'id') === 20001 &&

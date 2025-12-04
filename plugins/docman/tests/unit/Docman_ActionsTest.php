@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
-use Codendi_Request;
 use Docman_Actions;
 use Docman_Controller;
 use Docman_File;
@@ -59,7 +58,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
             '_getEventManager',
         ]);
 
-        $ctrl->request       = new Codendi_Request(['group_id' => '102', 'id' => '344', 'version' => '1']);
+        $ctrl->request       = new \Tuleap\HTTPRequest(['group_id' => '102', 'id' => '344', 'version' => '1']);
         $actions->_controler = $ctrl;
 
         $item = new Docman_Folder();
@@ -92,7 +91,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
             '_getItemFactory',
         ]);
 
-        $ctrl->request       = new Codendi_Request(['group_id' => '102', 'id' => '344', 'version' => '1']);
+        $ctrl->request       = new \Tuleap\HTTPRequest(['group_id' => '102', 'id' => '344', 'version' => '1']);
         $actions->_controler = $ctrl;
         $ctrl->method('getUser');
 
@@ -134,7 +133,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
             '_getEventManager',
         ]);
 
-        $ctrl->request       = new Codendi_Request(['group_id' => '102', 'id' => '344', 'version' => '1']);
+        $ctrl->request       = new \Tuleap\HTTPRequest(['group_id' => '102', 'id' => '344', 'version' => '1']);
         $actions->_controler = $ctrl;
 
         $item = $this->createMock(Docman_File::class);
@@ -173,7 +172,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
             '_getEventManager',
         ]);
 
-        $ctrl->request       = new Codendi_Request(['group_id' => '102', 'id' => '344', 'version' => '1']);
+        $ctrl->request       = new \Tuleap\HTTPRequest(['group_id' => '102', 'id' => '344', 'version' => '1']);
         $actions->_controler = $ctrl;
 
         $item = new Docman_File();

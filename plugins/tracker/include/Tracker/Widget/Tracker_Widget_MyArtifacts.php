@@ -66,7 +66,7 @@ class Tracker_Widget_MyArtifacts extends Widget
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $request->valid(new Valid_String('cancel'));
         $vShow = new Valid_WhiteList('show', ['A', 'S', 'AS']);

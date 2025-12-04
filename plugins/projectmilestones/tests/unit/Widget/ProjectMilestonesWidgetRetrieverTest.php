@@ -158,7 +158,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testCreatingProjectMilestoneLikeXMLImportDoes(): void
     {
-        $request = new \Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             ProjectMilestonesWidgetRetriever::PARAM_SELECTED_PROJECT => ProjectMilestonesWidgetRetriever::VALUE_SELECTED_PROJECT_SELF,
             'project' => ProjectTestBuilder::aProject()->build(),
         ]);

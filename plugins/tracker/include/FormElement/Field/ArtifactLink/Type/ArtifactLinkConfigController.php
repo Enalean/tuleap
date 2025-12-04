@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
@@ -69,7 +68,7 @@ final readonly class ArtifactLinkConfigController
         );
     }
 
-    public function createType(Codendi_Request $request, BaseLayout $layout): void
+    public function createType(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         try {
             $this->creator->create(
@@ -101,7 +100,7 @@ final readonly class ArtifactLinkConfigController
         $layout->redirect(self::URL);
     }
 
-    public function editType(Codendi_Request $request, BaseLayout $layout): void
+    public function editType(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         try {
             $this->editor->edit(
@@ -123,7 +122,7 @@ final readonly class ArtifactLinkConfigController
         $layout->redirect(self::URL);
     }
 
-    public function deleteType(Codendi_Request $request, BaseLayout $layout): void
+    public function deleteType(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         try {
             $this->deletor->delete($request->get('shortname'));

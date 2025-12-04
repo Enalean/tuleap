@@ -194,7 +194,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $content_id = false;
         $vUrl       = new Valid_String('url');
@@ -220,7 +220,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $done       = false;
         $vContentId = new Valid_UInt('content_id');

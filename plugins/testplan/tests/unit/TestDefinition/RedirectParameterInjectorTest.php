@@ -75,7 +75,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotInjectAnythingIfThereIsNoBacklogItemIdInTheRequest(): void
     {
-        $request  = new \Codendi_Request([], $this->createMock(\ProjectManager::class));
+        $request  = new \Tuleap\HTTPRequest([], $this->createMock(\ProjectManager::class));
         $redirect = new \Tracker_Artifact_Redirect();
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
@@ -85,7 +85,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotInjectAnythingIfThereIsNoMilestoneIdInTheRequest(): void
     {
-        $request  = new \Codendi_Request(
+        $request  = new \Tuleap\HTTPRequest(
             [
                 'ttm_backlog_item_id' => '123',
             ],
@@ -100,7 +100,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotInjectAnythingIfTheBacklogItemIsNotReadableByUser(): void
     {
-        $request = new \Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 'ttm_backlog_item_id' => '123',
                 'ttm_milestone_id'    => '42',
@@ -127,7 +127,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotInjectAnythingIfTheMilestoneIsNotReadableByUser(): void
     {
-        $request = new \Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 'ttm_backlog_item_id' => '123',
                 'ttm_milestone_id'    => '42',
@@ -159,7 +159,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
     #[DataProvider('dataProviderInjectAndInformUserAboutBacklogItemBeingCovered')]
     public function testInjectAndInformUserAboutBacklogItemBeingCovered(array $request_parameters, callable $has_expected_feedback_content): void
     {
-        $request = new \Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             array_merge(
                 [
                     'ttm_backlog_item_id' => '123',

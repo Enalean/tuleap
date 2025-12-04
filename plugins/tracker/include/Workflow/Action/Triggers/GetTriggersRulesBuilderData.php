@@ -38,7 +38,7 @@ class Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData
         $this->formelement_factory = $formelement_factory;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $rules_builder_factory = new Tracker_Workflow_Trigger_RulesBuilderFactory($this->formelement_factory);
         $rules_builder_data    = $rules_builder_factory->getForTracker($this->tracker);

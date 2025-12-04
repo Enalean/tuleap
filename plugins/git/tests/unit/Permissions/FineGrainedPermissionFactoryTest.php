@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Permissions;
 
-use Codendi_Request;
 use GitRepository;
 use PermissionsManager;
 use PermissionsNormalizer;
@@ -106,9 +105,9 @@ final class FineGrainedPermissionFactoryTest extends TestCase
             });
     }
 
-    private function buildRequest(array $params): Codendi_Request
+    private function buildRequest(array $params): \Tuleap\HTTPRequest
     {
-        return new Codendi_Request($params, $this->project_manager);
+        return new \Tuleap\HTTPRequest($params, $this->project_manager);
     }
 
     public function testItRetrievesUpdatedPermissions(): void

@@ -21,7 +21,6 @@
 namespace Tuleap\Git\Permissions;
 
 use Git;
-use Codendi_Request;
 use ProjectHistoryDao;
 use Feedback;
 use PermissionsManager;
@@ -118,7 +117,7 @@ class TemplatePermissionsUpdater
         $this->regexp_disabler              = $regexp_disabler;
     }
 
-    public function updateProjectTemplatePermissions(Codendi_Request $request)
+    public function updateProjectTemplatePermissions(\Tuleap\HTTPRequest $request)
     {
         $project    = $request->getProject();
         $project_id = $project->getID();
@@ -177,7 +176,7 @@ class TemplatePermissionsUpdater
 
     private function updateTemplateFineGrainedPermissions(
         Project $project,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         array $read_ugroup_ids,
         array $write_ugroup_ids,
         array $rewind_ugroup_ids,

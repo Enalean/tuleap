@@ -20,14 +20,13 @@
 
 namespace Tuleap\FRS;
 
-use Codendi_Request;
 use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
 final readonly class ArtifactView extends TrackerArtifactView
 {
-    public function __construct(private int $release_id, Artifact $artifact, Codendi_Request $request, PFUser $user)
+    public function __construct(private int $release_id, Artifact $artifact, \Tuleap\HTTPRequest $request, PFUser $user)
     {
         parent::__construct($artifact, $request, $user);
     }

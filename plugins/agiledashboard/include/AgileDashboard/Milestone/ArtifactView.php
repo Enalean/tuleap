@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\Milestone;
 
-use Codendi_Request;
 use Override;
 use PFUser;
 use Planning_Milestone;
@@ -28,7 +27,7 @@ use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
 final readonly class ArtifactView extends TrackerArtifactView
 {
-    public function __construct(private Planning_Milestone $milestone, Codendi_Request $request, PFUser $user)
+    public function __construct(private Planning_Milestone $milestone, \Tuleap\HTTPRequest $request, PFUser $user)
     {
         parent::__construct($milestone->getArtifact(), $request, $user);
     }

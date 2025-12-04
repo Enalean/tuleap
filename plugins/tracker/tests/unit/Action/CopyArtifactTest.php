@@ -51,7 +51,7 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
 
     private Tracker_Action_CopyArtifact $action;
 
-    private Codendi_Request $request;
+    private \Tuleap\HTTPRequest $request;
 
     private ArtifactXMLExporter&MockObject $xml_exporter;
 

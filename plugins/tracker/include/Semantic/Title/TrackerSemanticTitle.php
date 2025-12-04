@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\Semantic\Title;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use Feedback;
 use PFUser;
 use SimpleXMLElement;
@@ -135,7 +134,7 @@ class TrackerSemanticTitle extends TrackerSemantic
     }
 
     #[\Override]
-    public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
+    public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         $this->tracker->displayAdminItemHeaderBurningParrot(
             $tracker_manager,
@@ -158,7 +157,7 @@ class TrackerSemanticTitle extends TrackerSemantic
     }
 
     #[\Override]
-    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
+    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();

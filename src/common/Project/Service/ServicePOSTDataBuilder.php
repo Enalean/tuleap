@@ -20,7 +20,6 @@
 
 namespace Tuleap\Project\Service;
 
-use Codendi_Request;
 use Feedback;
 use Project;
 use Service;
@@ -173,7 +172,7 @@ class ServicePOSTDataBuilder
      * @param string $short_name
      * @return bool
      */
-    private function isSystemService(Codendi_Request $request, $short_name)
+    private function isSystemService(\Tuleap\HTTPRequest $request, $short_name)
     {
         $is_system_service = false;
         if ($request->exist('short_name') && trim($short_name) != '') {

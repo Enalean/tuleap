@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Codendi_Request;
 use EventManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
@@ -43,14 +42,14 @@ final class MilestoneSelectorControllerTest extends TestCase
 
     private int $current_milestone_artifact_id;
     private Planning_MilestoneFactory&MockObject $milestone_factory;
-    private Codendi_Request $request;
+    private \Tuleap\HTTPRequest $request;
 
     #[\Override]
     protected function setUp(): void
     {
         $planning_id   = '321';
         $user          = UserTestBuilder::buildWithDefaults();
-        $this->request = new Codendi_Request(['planning_id' => $planning_id]);
+        $this->request = new \Tuleap\HTTPRequest(['planning_id' => $planning_id]);
         $this->request->setCurrentUser($user);
         $this->milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
 

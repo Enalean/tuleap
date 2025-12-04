@@ -29,7 +29,7 @@ class Search_SearchQuery //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     private $is_ajax;
     private $number_of_results;
 
-    public function __construct(Codendi_Request $request)
+    public function __construct(\Tuleap\HTTPRequest $request)
     {
         $this->project        = $request->getProject();
         $this->words          = $request->get('words');

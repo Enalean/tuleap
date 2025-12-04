@@ -55,7 +55,7 @@ class AgileDashboard_XMLFullStructureExporter
     }
 
     /**
-     * @return Codendi_Request
+     * @return \Tuleap\HTTPRequest
      */
     private function buildRequest(Project $project, SimpleXMLElement $xml_element)
     {
@@ -64,7 +64,7 @@ class AgileDashboard_XMLFullStructureExporter
         $params['group_id']   = $project->getID();
         $params['into_xml']   = $xml_element;
 
-        return new Codendi_Request($params);
+        return new \Tuleap\HTTPRequest($params);
     }
 
     private function exportOtherPlugins(Project $project, SimpleXMLElement $into_xml): void

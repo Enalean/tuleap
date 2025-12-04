@@ -120,7 +120,7 @@ class URL //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 'url'         => $req_uri,
                 'project_id'  => &$group_id,
                 'project_dao' => $this->getProjectDao(),
-                'request'     => new Codendi_Request($_REQUEST),
+                'request'     => new \Tuleap\HTTPRequest($_REQUEST),
             ]
         );
 

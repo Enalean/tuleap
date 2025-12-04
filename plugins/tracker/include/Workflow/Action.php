@@ -65,5 +65,5 @@ abstract class Tracker_Workflow_Action
     /**
      * Process the request
      */
-    abstract public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user);
+    abstract public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user);
 }

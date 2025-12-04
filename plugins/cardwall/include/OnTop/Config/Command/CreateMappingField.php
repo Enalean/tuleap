@@ -46,7 +46,7 @@ class Cardwall_OnTop_Config_Command_CreateMappingField extends Cardwall_OnTop_Co
      * @see Cardwall_OnTop_Config_Command::execute()
      */
     #[\Override]
-    public function execute(Codendi_Request $request)
+    public function execute(\Tuleap\HTTPRequest $request)
     {
         if ($request->get('add_mapping_on')) {
             $new_mapping_tracker = $this->tracker_factory->getTrackerById($request->get('add_mapping_on'));

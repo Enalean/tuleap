@@ -22,7 +22,6 @@ namespace Tuleap\ProjectMilestones\Widget;
 
 use Widget;
 use Tuleap\Layout\CssAssetCollection;
-use Codendi_Request;
 use Project;
 use Planning;
 use Tuleap\Request\NotFoundException;
@@ -182,13 +181,13 @@ class MyProjectMilestones extends Widget
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $this->project_milestones_widget_retriever->updatePreferences($request);
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         return $this->project_milestones_widget_retriever->create($request);
     }

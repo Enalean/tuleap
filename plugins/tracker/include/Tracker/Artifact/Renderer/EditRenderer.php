@@ -43,7 +43,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
      * Parameters:
      *  - artifact  Tracker_Artifact
      *  - collection    Tracker_Artifact_View_ViewCollection
-     *  - request   Codendi_Request
+     *  - request   \Tuleap\HTTPRequest
      *  - user  PFUser
      */
     public const string EVENT_ADD_VIEW_IN_COLLECTION = 'tracker_artifact_editrenderer_add_view_in_collection';
@@ -69,13 +69,13 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     /**
      * Display the artifact
      *
-     * @param Codendi_Request                $request         The data coming from the user
+     * @param \Tuleap\HTTPRequest                $request         The data coming from the user
      * @param PFUser                           $current_user    The current user
      *
      * @return void
      */
     #[\Override]
-    public function display(Codendi_Request $request, PFUser $current_user)
+    public function display(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         // the following statement needs to be called before displayHeader
         // in order to get the feedback, if any
@@ -84,7 +84,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     }
 
     #[\Override]
-    protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
+    protected function fetchFormContent(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $html = parent::fetchFormContent($request, $current_user);
 
@@ -108,7 +108,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     }
 
     #[\Override]
-    protected function enhanceRedirect(Codendi_Request $request): void
+    protected function enhanceRedirect(\Tuleap\HTTPRequest $request): void
     {
         $from_aid = $request->get('from_aid');
         if ($from_aid != null) {
@@ -183,7 +183,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         }
     }
 
-    protected function fetchView(Codendi_Request $request, PFUser $user): string
+    protected function fetchView(\Tuleap\HTTPRequest $request, PFUser $user): string
     {
         return $this->collection_builder->build($this->artifact, $request, $user, $this)->fetchRequestedView($request);
     }

@@ -21,7 +21,7 @@
 class Admin_Homepage_Router
 {
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
@@ -32,7 +32,7 @@ class Admin_Homepage_Router
 
     public function __construct(
         Admin_Homepage_Controller $controller,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
     ) {
         $this->controller = $controller;
         $this->request    = $request;

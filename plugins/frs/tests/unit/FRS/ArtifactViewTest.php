@@ -33,7 +33,7 @@ final class ArtifactViewTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetURL(): void
     {
         $artifact      = ArtifactTestBuilder::anArtifact(101)->build();
-        $request       = $this->createMock(\Codendi_Request::class);
+        $request       = $this->createMock(\Tuleap\HTTPRequest::class);
         $user          = UserTestBuilder::aUser()->build();
         $artifact_view = new ArtifactView($this->release_id, $artifact, $request, $user);
 

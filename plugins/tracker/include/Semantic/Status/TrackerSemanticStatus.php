@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\Semantic\Status;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use Feedback;
 use PFUser;
 use SimpleXMLElement;
@@ -244,7 +243,7 @@ class TrackerSemanticStatus extends TrackerSemantic
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ): void {
         $this->tracker->displayAdminItemHeaderBurningParrot(
@@ -282,7 +281,7 @@ class TrackerSemanticStatus extends TrackerSemantic
     }
 
     #[\Override]
-    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
+    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         if ($request->exist('delete')) {
             $this->getCSRFToken()->check();
@@ -299,7 +298,7 @@ class TrackerSemanticStatus extends TrackerSemantic
     /**
      * @return array
      */
-    private function getFilteredOpenValues(Codendi_Request $request)
+    private function getFilteredOpenValues(\Tuleap\HTTPRequest $request)
     {
         $filtered_values = [];
         $open_values     = $request->get('open_values');
@@ -486,7 +485,7 @@ class TrackerSemanticStatus extends TrackerSemantic
         return in_array($label, $this->getOpenLabels());
     }
 
-    private function processUpdate(Codendi_Request $request): void
+    private function processUpdate(\Tuleap\HTTPRequest $request): void
     {
         $field = Tracker_FormElementFactory::instance()->getUsedListFieldById(
             $this->tracker,

@@ -82,12 +82,12 @@ class Docman_WikiController extends Docman_Controller // phpcs:ignore PSR1.Class
         $item_dao  = $this->_getItemDao();
         if ($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
             // TODO: find another way to return a value.
-            // Codendi_Request->params should not be public
-            $this->request->params['referenced'] = true;
+            // \Tuleap\HTTPRequest->params should not be public
+            $this->request->set('referenced', true);
         } else {
             // TODO: find another way to return a value.
-            // Codendi_Request->params should not be public
-            $this->request->params['referenced'] = false;
+            // \Tuleap\HTTPRequest->params should not be public
+            $this->request->set('referenced', false);
         }
     }
 
@@ -111,8 +111,8 @@ class Docman_WikiController extends Docman_Controller // phpcs:ignore PSR1.Class
             }
         }
         // TODO: find another way to return a value.
-        // Codendi_Request->params should not be public
-        $this->request->params['canAccess'] = $can_access;
+        // \Tuleap\HTTPRequest->params should not be public
+        $this->request->set('canAccess', $can_access);
     }
 
     public function wikiPageUpdated()
@@ -159,9 +159,9 @@ class Docman_WikiController extends Docman_Controller // phpcs:ignore PSR1.Class
         $event_manager->processEvent('send_notifications', []);
     }
 
-    public function getPermsLabelForWiki()
+    public function getPermsLabelForWiki(): void
     {
-        $this->request->params['label'] = dgettext('tuleap-docman', 'Permissions controlled by documents manager');
+        $this->request->set('label', dgettext('tuleap-docman', 'Permissions controlled by documents manager'));
     }
 
     /**
@@ -205,11 +205,11 @@ class Docman_WikiController extends Docman_Controller // phpcs:ignore PSR1.Class
         }
 
         // TODO: find another way to return a value.
-        // Codendi_Request->params should not be public
+        // \Tuleap\HTTPRequest->params should not be public
         if ($canWrite) { // User can edit the wiki page.
-            $this->request->params['response'] = true;
+            $this->request->set('response', true);
         } else {
-            $this->request->params['response'] = false;
+            $this->request->set('response', false);
             if (isset($lockInfos) && $lockInfos) { // User can NOT edit the page because there is a lock on the page and user is not page locker
                 $this->feedback->log('warning', $message ?? '');
             } else { // User can NOT edit the page because he don't have write permission on it.
@@ -314,8 +314,8 @@ class Docman_WikiController extends Docman_Controller // phpcs:ignore PSR1.Class
 
         // Write documents paths on wiki view.
         // TODO: find another way to return a value.
-        // Codendi_Request->params should not be public
-        $this->request->params['html'] = $docman_references;
+        // \Tuleap\HTTPRequest->params should not be public
+        $this->request->set('html', $docman_references);
     }
 
     public function referrerIsDocument()
