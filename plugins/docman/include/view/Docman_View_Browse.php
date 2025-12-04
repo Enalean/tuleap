@@ -130,22 +130,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     #[\Override]
     public function _filter($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        $html = '';
-
-        // No filter in printer version
-        if (isset($params['pv']) && $params['pv'] > 0) {
-            return;
-        }
-
-        $html .= "<!-- Filters -->\n";
-        $html .= '<div class="docman_filters">';
-        if (isset($params['filter']) && $params['filter'] !== null) {
-            $htmlReport = new Docman_ReportHtml($params['filter'], $this, $params['default_url']);
-            $html      .= $htmlReport->toHtml($params);
-        }
-        $html .= "</div>\n";
-
-        echo $html;
+        echo '';
     }
 
     public function getActionOnIconForFolder()

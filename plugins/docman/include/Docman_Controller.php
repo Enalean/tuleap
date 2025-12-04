@@ -1422,56 +1422,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                 $this->_viewParams['user_can_manage'] = $this->userCanManage($item->getId());
                 $this->view                           = ucfirst($view);
                 break;
-            case 'report_settings':
-                $this->view = 'ReportSettings';
-                break;
-            case 'report_del':
-                if ($this->request->exist('report_id')) {
-                    $this->_actionParams['sReportId'] = (int) $this->request->get('report_id');
-                    $this->_actionParams['sGroupId']  = $this->_viewParams['group_id'];
-
-                    $this->action = $view;
-                }
-                $this->_viewParams['default_url_params'] = ['action'  => 'report_settings'];
-                $this->view                              = 'RedirectAfterCrud';
-
-                break;
-            case 'report_upd':
-                if ($this->request->exist('report_id')) {
-                    $this->_actionParams['sReportId'] = (int) $this->request->get('report_id');
-                    $this->_actionParams['sGroupId']  = $this->_viewParams['group_id'];
-                    $usScope                          = $this->request->get('scope');
-                    if ($usScope === 'I' || $usScope === 'P') {
-                        $this->_actionParams['sScope'] = $usScope;
-                    }
-                    $this->_actionParams['description'] = $this->request->get('description');
-                    $this->_actionParams['title']       = $this->request->get('title');
-                    $this->_actionParams['sImage']      = (int) $this->request->get('image');
-
-                    $this->action = $view;
-                }
-                $this->_viewParams['default_url_params'] = ['action'  => 'report_settings'];
-                $this->view                              = 'RedirectAfterCrud';
-                break;
-
-            case 'report_import':
-                if ($this->request->exist('import_search_report_from_group')) {
-                    $pm       = ProjectManager::instance();
-                    $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('import_search_report_from_group'));
-                    if ($srcGroup && ! $srcGroup->isError()) {
-                        $this->_actionParams['sGroupId']        = $this->_viewParams['group_id'];
-                        $this->_actionParams['sImportGroupId']  = $srcGroup->getGroupId();
-                        $this->_actionParams['sImportReportId'] = null;
-                        if ($this->request->exist('import_report_id') && trim($this->request->get('import_report_id')) != '') {
-                            $this->_actionParams['sImportReportId'] = (int) $this->request->get('import_report_id');
-                        }
-                        $this->action = $view;
-                    }
-                }
-
-                $this->_viewParams['default_url_params'] = ['action'  => 'report_settings'];
-                $this->view                              = 'RedirectAfterCrud';
-                break;
 
             case 'ajax_reference_tooltip':
                 $this->view = 'AjaxReferenceTooltip';

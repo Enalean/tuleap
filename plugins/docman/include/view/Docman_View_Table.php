@@ -22,13 +22,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Docman_View_Table extends Docman_View_Browse
+class Docman_View_Table extends Docman_View_Browse //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @access: protected
      */
     #[\Override]
-    public function _content($params)
+    public function _content($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $itemFactory = new Docman_ItemFactory($params['group_id']);
 
@@ -126,10 +126,6 @@ class Docman_View_Table extends Docman_View_Browse
 
         $navbar = '<table border="0" width="100%"><tr><td align="left">' . $first . ' ' . $previous . '</td><td align="center">' . $nbItemsFound . ' ' . dgettext('tuleap-docman', 'Documents found') . '</td><td align="right">' . $next . ' ' . $last . '</td></tr></table>';
 
-        if (isset($params['filter']) && $params['filter'] !== null) {
-            $htmlReport = new Docman_ReportHtml($params['filter'], $this, $params['default_url']);
-            print $htmlReport->getReportCustomization();
-        }
         print $navbar;
         print $table;
     }
