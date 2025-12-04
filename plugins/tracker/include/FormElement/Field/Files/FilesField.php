@@ -452,7 +452,7 @@ class FilesField extends TrackerField
     private function fetchDeleteCheckbox(Tracker_FileInfo $fileinfo, array $submitted_values)
     {
         $html    = '';
-        $html   .= '<label class="pc_checkbox tracker_artifact_attachment_delete">';
+        $html   .= '<label class="tracker_artifact_attachment_delete">';
         $checked = '';
         if (isset($submitted_values[$this->id]) && ! empty($submitted_values[$this->id]['delete']) && in_array($fileinfo->getId(), $submitted_values[$this->id]['delete'])) {
             $checked = 'checked="checked"';
