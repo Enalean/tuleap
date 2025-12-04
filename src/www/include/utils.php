@@ -259,69 +259,6 @@ function util_result_column_to_array($result, $col = 0)
     return $arr;
 }
 
-function result_column_to_array($result, $col = 0)
-{
-    /*
-        backwards compatibility
-    */
-    return util_result_column_to_array($result, $col);
-}
-
-function util_wrap_find_space($string, $wrap)
-{
-    //echo"\n";
-    $start = $wrap - 5;
-    $try   = 1;
-    $found = false;
-
-    while (! $found) {
-     //find the first space starting at $start
-        $pos = @strpos($string, ' ', $start);
-
-     //if that space is too far over, go back and start more to the left
-        if (($pos > ($wrap + 5)) || ! $pos) {
-            $try++;
-            $start = ($wrap - ($try * 5));
-         //if we've gotten so far left , just truncate the line
-            if ($start <= 10) {
-                return $wrap;
-            }
-            $found = false;
-        } else {
-            $found = true;
-        }
-    }
-
-    return $pos;
-}
-
-function util_line_wrap($text, $wrap = 80, $break = "\n")
-{
-    $paras = explode("\n", $text);
-
-    $result = [];
-    $i      = 0;
-    while ($i < count($paras)) {
-        if (strlen($paras[$i]) <= $wrap) {
-            $result[] = $paras[$i];
-            $i++;
-        } else {
-            $pos = util_wrap_find_space($paras[$i], $wrap);
-
-            $result[] = substr($paras[$i], 0, $pos);
-
-            $new = trim(substr($paras[$i], $pos, strlen($paras[$i]) - $pos));
-            if ($new != '') {
-                $paras[$i] = $new;
-                $pos       = util_wrap_find_space($paras[$i], $wrap);
-            } else {
-                $i++;
-            }
-        }
-    }
-    return implode($break, $result);
-}
-
 function util_make_reference_links($data, $group_id)
 {
     if (empty($data)) {
@@ -343,52 +280,6 @@ function util_user_link($username)
         return $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
     }
     return '<a href="/users/' . urlencode($username) . '">' . $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
-}
-
-function util_user_nolink($username)
-{
-    global $Language;
-    $hp = Codendi_HTMLPurifier::instance();
-    if ($username == $Language->getText('global', 'none') || empty($username)) {
-        return $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
-    }
-    return $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML);
-}
-
-function util_multi_user_link($usernames)
-{
-    $users = explode(', ', $usernames);
-    if (count($users) > 1) {
-     // Multiple users
-
-        $str = '';
-        for ($i = 0; $i < count($users) - 1; $i++) {
-            $str .= util_user_link($users[$i]) . ', ';
-        }
-        $str .= util_user_link($users[$i]);
-        return $str;
-    } else {
-     // Single user name
-        return util_user_link($usernames);
-    }
-}
-
-function util_multi_user_nolink($usernames)
-{
-    $users = explode(', ', $usernames);
-    if (count($users) > 1) {
-     // Multiple users
-
-        $str = '';
-        for ($i = 0; $i < count($users) - 1; $i++) {
-            $str .= util_user_nolink($users[$i]) . ', ';
-        }
-        $str .= util_user_nolink($users[$i]);
-        return $str;
-    } else {
-     // Single user name
-        return util_user_nolink($usernames);
-    }
 }
 
 function util_double_diff_array($arr1, $arr2)
@@ -417,67 +308,6 @@ function util_double_diff_array($arr1, $arr2)
     }
 
     return [$deleted, $added];
-}
-
-// Deprecated
-function get_priority_color($index)
-{
-    return $GLOBALS['HTML']->getPriorityColor($index);
-}
-
-function ShowResultSet($result, $title = 'Untitled', $linkify = false)
-{
-    global $group_id,$HTML;
-    /*
-        Very simple, plain way to show a generic result set
-        Accepts a result set and title
-        Makes certain items into HTML links
-    */
-
-    if ($result) {
-        $rows =  db_numrows($result);
-        $cols =  db_numfields($result);
-
-        echo '
-			<TABLE BORDER="0" WIDTH="100%">';
-
-     /*  Create the title  */
-
-        echo '
-		<TR class="boxtitle">
-		<TD COLSPAN="' . $cols . '" class="boxitem"><B>' . $title . '</B></TD></TR>';
-
-     /*  Create the rows  */
-        for ($j = 0; $j < $rows; $j++) {
-            echo '<TR class="' . html_get_alt_row_color($j + 1) . '">';
-            for ($i = 0; $i < $cols; $i++) {
-                if ($linkify && $i == 0) {
-                    $link    = '<A HREF="?';
-                    $linkend = '</A>';
-                    if ($linkify == 'bug_cat') {
-                        $link .= 'group_id=' . $group_id . '&bug_cat_mod=y&bug_cat_id=' . db_result($result, $j, 'bug_category_id') . '">';
-                    } elseif ($linkify == 'bug_group') {
-                        $link .= 'group_id=' . $group_id . '&bug_group_mod=y&bug_group_id=' . db_result($result, $j, 'bug_group_id') . '">';
-                    } elseif ($linkify == 'patch_cat') {
-                        $link .= 'group_id=' . $group_id . '&patch_cat_mod=y&patch_cat_id=' . db_result($result, $j, 'patch_category_id') . '">';
-                    } elseif ($linkify == 'support_cat') {
-                        $link .= 'group_id=' . $group_id . '&support_cat_mod=y&support_cat_id=' . db_result($result, $j, 'support_category_id') . '">';
-                    } elseif ($linkify == 'pm_project') {
-                        $link .= 'group_id=' . $group_id . '&project_cat_mod=y&project_cat_id=' . db_result($result, $j, 'group_project_id') . '">';
-                    } else {
-                        $link = $linkend = '';
-                    }
-                } else {
-                    $link = $linkend = '';
-                }
-                echo '<td>' . $link . db_result($result, $j, $i) . $linkend . '</td>';
-            }
-            echo '</tr>';
-        }
-        echo '</table>';
-    } else {
-        echo db_error();
-    }
 }
 
 // Clean up email address (remove starting and ending spaces),replace semicolon by comma and put to lower
@@ -517,17 +347,6 @@ function validate_email($address)
     return $rule->isValid($address);
 }
 
-// Verification of comma separated list of email addresses
-function validate_emails($addresses)
-{
-    $arr = util_split_emails($addresses);
-    foreach ($arr as $addr) {
-        if (! validate_email($addr)) {
-            return false;
-        }
-    }
-    return true;
-}
 /**
      * Return if the email addresses are valid
      *
@@ -603,14 +422,6 @@ function util_user_finder($ident, $strict = true)
         }
     }
     return '';
-}
-
-// this function get the css file for the theme
-// Requirement: $sys_user_theme is already
-// set (done by theme.php in pre.php)
-function util_get_css_theme()
-{
-    return '/themes/' . ForgeConfig::get('sys_user_theme') . '/css/style.css';
 }
 
 // This function get the image file for the theme.
@@ -693,87 +504,6 @@ function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto')
     }
 
     return sprintf($retstring, $size, $sys['prefix'][$i]);
-}
-
-/**
- * util_check_fileupload() - determines if a filename is appropriate for upload
- *
- * @param       string  The name of the file being uploaded
- */
-function util_check_fileupload($filename)
-{
-    /* Empty file is a valid file.
-    This is because this function should be called
-    unconditionally at the top of submit action processing
-    and many forms have optional file upload. */
-    if ($filename == 'none' || $filename == '') {
-        return true;
-    }
-
-    /* This should be enough... */
-    if (! is_uploaded_file($filename)) {
-      //echo "$filename is not uploaded file";
-        return false;
-    }
-    /* ... but we'd rather be paranoic */
-    if (strstr($filename, '..')) {
-        return false;
-    }
-    if (! is_file($filename)) {
-      //echo "$filename is not file";
-        return false;
-    }
-    if (! file_exists($filename)) {
-      //echo "$filename does not exist";
-        return false;
-    }
-    return true;
-}
-
-
-
-/**
- * Return the group name (i.e. project name) from the group_id
- */
-function util_get_group_name_from_id($group_id)
-{
-    $sql    = 'SELECT group_name FROM `groups` WHERE group_id = ' . db_ei($group_id);
-    $result = db_query($sql);
-    return db_result($result, 0, 0);
-}
-
-
-/**
- * Retrieve the artifact group_id, artifact_type_id and item name using the artifact id
- *
- * @param aid: the artifact id
- * @param group_id: the group id (OUT)
- * @param group_artifact_id: the tracker id (OUT)
- * @param art_name: the item name corresponding to this tracker (OUT) e.g. 'bug', 'defect', etc.
- *
- * @return bool
- */
-function util_get_ids_from_aid($aid, &$art_group_id, &$atid, &$art_name)
-{
-    $sql = 'SELECT group_artifact_id FROM artifact WHERE artifact_id = ' . db_ei($aid);
-
-    $result = db_query($sql);
-    if ($result && db_numrows($result) > 0) {
-        $atid = db_result($result, 0, 0);
-
-        $sql = 'SELECT group_id,item_name FROM artifact_group_list WHERE group_artifact_id = ' . db_ei($atid);
-
-        $result = db_query($sql);
-        $rows   = db_numrows($result);
-        if (! $result || $rows < 1) {
-            return false;
-        }
-        $art_group_id = db_result($result, 0, 'group_id');
-        $art_name     = db_result($result, 0, 'item_name');
-        return true;
-    } else {
-        return false;
-    }
 }
 
 /**
