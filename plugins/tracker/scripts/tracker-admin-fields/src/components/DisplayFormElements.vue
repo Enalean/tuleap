@@ -31,6 +31,8 @@
         <field-date v-else-if="isDateField(element.field)" v-bind:field="element.field" />
         <field-select v-else-if="isSelectField(element)" v-bind:field="element.field" />
         <field-multi-select v-else-if="isMultiSelectField(element)" v-bind:field="element.field" />
+        <field-checkbox v-else-if="isCheckbox(element.field)" v-bind:field="element.field" />
+        <field-radio v-else-if="isRadioButton(element.field)" v-bind:field="element.field" />
         <line-separator v-else-if="isLineSeparator(element.field)" v-bind:field="element.field" />
         <line-break v-else-if="isLineBreak(element.field)" v-bind:field="element.field" />
         <base-field v-else v-bind:field="element.field" />
@@ -50,6 +52,8 @@ import {
     SEPARATOR,
     STRING_FIELD,
     TEXT_FIELD,
+    CHECKBOX_FIELD,
+    RADIO_BUTTON_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     IntFieldStructure,
@@ -60,6 +64,7 @@ import type {
     SeparatorStructure,
     LineBreakStructure,
     EditableDateFieldStructure,
+    ListFieldStructure,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import ContainerFieldset from "./FormElements/ContainerFieldset.vue";
 import ContainerColumnWrapper from "./FormElements/ContainerColumnWrapper.vue";
@@ -73,6 +78,8 @@ import FieldFloat from "./FormElements/FieldFloat.vue";
 import LineSeparator from "./FormElements/LineSeparator.vue";
 import LineBreak from "./FormElements/LineBreak.vue";
 import FieldDate from "./FormElements/FieldDate.vue";
+import FieldCheckbox from "./FormElements/FieldCheckbox.vue";
+import FieldRadio from "./FormElements/FieldRadio.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -122,5 +129,13 @@ function isLineSeparator(field: StructureFields): field is SeparatorStructure {
 
 function isLineBreak(field: StructureFields): field is LineBreakStructure {
     return field.type === LINE_BREAK;
+}
+
+function isCheckbox(field: StructureFields): field is ListFieldStructure {
+    return field.type === CHECKBOX_FIELD;
+}
+
+function isRadioButton(field: StructureFields): field is ListFieldStructure {
+    return field.type === RADIO_BUTTON_FIELD;
 }
 </script>

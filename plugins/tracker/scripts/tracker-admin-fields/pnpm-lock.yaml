@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/core-constants':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/constants
   '@tuleap/dom':
     specifier: workspace:^
     version: link:../../../../lib/frontend/dom

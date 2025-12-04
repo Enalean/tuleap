@@ -35,6 +35,7 @@ export type StaticListItem = {
     readonly id: number;
     readonly label: string;
     readonly value_color: ColorName | "";
+    readonly is_hidden: boolean;
 };
 
 export type UserBoundListItem = {
