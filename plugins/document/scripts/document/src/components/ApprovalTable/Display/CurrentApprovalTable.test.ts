@@ -30,6 +30,7 @@ import { ApprovalTableBuilder } from "../../../../tests/builders/ApprovalTableBu
 import ApprovalTableDetails from "./ApprovalTableDetails.vue";
 import * as rest_querier from "../../../api/approval-table-rest-querier";
 import { okAsync } from "neverthrow";
+import { TYPE_FOLDER } from "../../../constants";
 
 vi.useFakeTimers();
 
@@ -104,6 +105,23 @@ describe("CurrentApprovalTable", () => {
         await vi.runOnlyPendingTimersAsync();
 
         expect(getTable).toHaveBeenCalledWith(123, 6523);
+        expect(wrapper.findComponent(ApprovalTableDetails).exists()).toBe(true);
+    });
+
+    it("Should not fetch api for table for folders (no version number)", async () => {
+        const getTable = vi.spyOn(rest_querier, "getDocumentApprovalTable");
+        const wrapper = getWrapper(
+            new ItemBuilder(123)
+                .withType(TYPE_FOLDER)
+                .withApprovalTableEnabled(true)
+                .withApprovalTable(new ApprovalTableBuilder(35).build())
+                .buildApprovableDocument(),
+            null,
+        );
+
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(getTable).not.toHaveBeenCalled();
         expect(wrapper.findComponent(ApprovalTableDetails).exists()).toBe(true);
     });
 });

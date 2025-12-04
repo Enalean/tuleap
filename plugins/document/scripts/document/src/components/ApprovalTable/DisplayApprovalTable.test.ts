@@ -25,10 +25,18 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 import { PROJECT } from "../../configuration-keys";
-import { TYPE_EMPTY } from "../../constants";
+import {
+    TYPE_EMBEDDED,
+    TYPE_EMPTY,
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_LINK,
+    TYPE_WIKI,
+} from "../../constants";
 import NoApprovalTable from "./Creation/NoApprovalTable.vue";
 import { ApprovalTableBuilder } from "../../../tests/builders/ApprovalTableBuilder";
 import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
+import ApprovalTableHistory from "./History/ApprovalTableHistory.vue";
 
 vi.useFakeTimers();
 
@@ -72,7 +80,7 @@ describe("DisplayApprovalTable", () => {
         expect(wrapper.findComponent(NoApprovalTable).exists()).toBe(true);
     });
 
-    it("Should display button with link to old ui", async () => {
+    it("Should display current table", async () => {
         load_document.mockResolvedValue(
             new ItemBuilder(123)
                 .withApprovalTable(new ApprovalTableBuilder(35).build())
@@ -83,5 +91,25 @@ describe("DisplayApprovalTable", () => {
         await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(CurrentApprovalTable).exists()).toBe(true);
+    });
+
+    it.each([
+        ["Should display history for file", TYPE_FILE, true],
+        ["Should display history for link", TYPE_LINK, true],
+        ["Should display history for embedded file", TYPE_EMBEDDED, true],
+        ["Should display history for wiki", TYPE_WIKI, true],
+        ["Should not display history for folder", TYPE_FOLDER, false],
+    ])(`%s`, async (_: string, type: string, should_display: boolean) => {
+        load_document.mockResolvedValue(
+            new ItemBuilder(123)
+                .withType(type)
+                .withApprovalTable(new ApprovalTableBuilder(35).build())
+                .buildApprovableDocument(),
+        );
+        const wrapper = getWrapper();
+
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(wrapper.findComponent(ApprovalTableHistory).exists()).toBe(should_display);
     });
 });
