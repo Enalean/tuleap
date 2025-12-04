@@ -164,17 +164,11 @@ final readonly class ConfigurationVariablesLocalIncDist
     #[ConfigKeyHelp('If a project has not categorized itself, it will result in a warning in project dashboard page.')]
     #[ConfigKeyLegacyBool(true)]
     public const string PROJECT_CATEGORIES_MANDATORY = 'sys_trove_cat_mandatory';
-
-    #[ConfigKey('Linefeed characters: \n for Linux/Unix')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString("\n")]
-    public const string LINE_FEED_CHAR = 'sys_lf';
-
     #[ConfigKey('Authentication scheme')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyHelp('Should be either \'ldap\' or \'codendi\'')]
     #[ConfigKeyString('codendi')]
-    public const string AUTH_TYPE = 'sys_auth_type';
+    public const string AUTH_TYPE                    = 'sys_auth_type';
 
     #[ConfigKey('Supported languages (comma separated)')]
     #[ConfigCannotBeModifiedYet]

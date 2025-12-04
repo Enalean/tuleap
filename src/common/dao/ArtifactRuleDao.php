@@ -22,7 +22,7 @@
 /**
  *  Data Access Object for ArtifactRule
  */
-class ArtifactRuleDao extends DataAccessObject
+class ArtifactRuleDao extends DataAccessObject //phpcs:ignore
 {
     /**
     * Gets all tables of the db
@@ -43,84 +43,6 @@ class ArtifactRuleDao extends DataAccessObject
         $sql = sprintf(
             'SELECT group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE id = %s',
             $this->da->quoteSmart($id)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches ArtifactRule by GroupArtifactId
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchByGroupArtifactId($groupArtifactId)
-    {
-        $sql = sprintf(
-            'SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE group_artifact_id = %s',
-            $this->da->quoteSmart($groupArtifactId)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches ArtifactRule by SourceFieldId
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchBySourceFieldId($sourceFieldId)
-    {
-        $sql = sprintf(
-            'SELECT id, group_artifact_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE source_field_id = %s',
-            $this->da->quoteSmart($sourceFieldId)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches ArtifactRule by SourceValueId
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchBySourceValueId($sourceValueId)
-    {
-        $sql = sprintf(
-            'SELECT id, group_artifact_id, source_field_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE source_value_id = %s',
-            $this->da->quoteSmart($sourceValueId)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches ArtifactRule by TargetFieldId
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchByTargetFieldId($targetFieldId)
-    {
-        $sql = sprintf(
-            'SELECT id, group_artifact_id, source_field_id, source_value_id, rule_type, target_value_id FROM artifact_rule WHERE target_field_id = %s',
-            $this->da->quoteSmart($targetFieldId)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches ArtifactRule by RuleType
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchByRuleType($ruleType)
-    {
-        $sql = sprintf(
-            'SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, target_value_id FROM artifact_rule WHERE rule_type = %s',
-            $this->da->quoteSmart($ruleType)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches ArtifactRule by TargetValueId
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchByTargetValueId($targetValueId)
-    {
-        $sql = sprintf(
-            'SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type FROM artifact_rule WHERE target_value_id = %s',
-            $this->da->quoteSmart($targetValueId)
         );
         return $this->retrieve($sql);
     }
@@ -179,111 +101,6 @@ class ArtifactRuleDao extends DataAccessObject
         $sql = sprintf(
             'DELETE FROM artifact_rule WHERE id = %s',
             $this->da->quoteSmart($id)
-        );
-        return $this->update($sql);
-    }
-
-    public function deleteRuleState($group_artifact_id, $source, $source_value, $target, $rule_types)
-    {
-        $quoted_types = [];
-        foreach ($rule_types as $type) {
-            $quoted_types[] = $this->da->quoteSmart($type);
-        }
-        $sql = sprintf(
-            'DELETE FROM artifact_rule ' .
-                       ' WHERE group_artifact_id = %s ' .
-                       '   AND source_field_id   = %s ' .
-                       '   AND source_value_id   = %s ' .
-                       '   AND target_field_id   = %s ' .
-                       '   AND rule_type IN (%s) ',
-            $this->da->quoteSmart($group_artifact_id),
-            $this->da->quoteSmart($source),
-            $this->da->quoteSmart($source_value),
-            $this->da->quoteSmart($target),
-            implode(', ', $quoted_types)
-        );
-        return $this->retrieve($sql);
-    }
-
-    public function deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($artifact_type, $source, $source_value, $target, $rule_type)
-    {
-        $sql = sprintf(
-            'DELETE FROM artifact_rule ' .
-                       ' WHERE group_artifact_id = %s ' .
-                       '   AND source_field_id   = %s ' .
-                       '   AND source_value_id   = %s ' .
-                       '   AND target_field_id   = %s ' .
-                       '   AND rule_type         = %s ',
-            $this->da->quoteSmart($artifact_type),
-            $this->da->quoteSmart($source),
-            $this->da->quoteSmart($source_value),
-            $this->da->quoteSmart($target),
-            $this->da->quoteSmart($rule_type)
-        );
-        return $this->update($sql);
-    }
-
-    public function deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($artifact_type, $source, $target, $target_value, $rule_type)
-    {
-        $sql = sprintf(
-            'DELETE FROM artifact_rule ' .
-                       ' WHERE group_artifact_id = %s ' .
-                       '   AND source_field_id   = %s ' .
-                       '   AND target_field_id   = %s ' .
-                       '   AND target_value_id   = %s ' .
-                       '   AND rule_type         = %s ',
-            $this->da->quoteSmart($artifact_type),
-            $this->da->quoteSmart($source),
-            $this->da->quoteSmart($target),
-            $this->da->quoteSmart($target_value),
-            $this->da->quoteSmart($rule_type)
-        );
-        return $this->update($sql);
-    }
-
-    public function deleteRulesByGroupArtifactId($artifact_type)
-    {
-        $sql = sprintf(
-            'DELETE FROM artifact_rule ' .
-                       ' WHERE group_artifact_id = %s ',
-            $this->da->quoteSmart($artifact_type)
-        );
-        return $this->update($sql);
-    }
-
-    public function deleteByField($artifact_type, $field_id)
-    {
-        $sql = sprintf(
-            'DELETE FROM artifact_rule ' .
-                       ' WHERE group_artifact_id = %s ' .
-                       '   AND (source_field_id  = %s ' .
-                       '   OR target_field_id    = %s) ',
-            $this->da->quoteSmart($artifact_type),
-            $this->da->quoteSmart($field_id),
-            $this->da->quoteSmart($field_id)
-        );
-        return $this->update($sql);
-    }
-
-    public function deleteByFieldValue($artifact_type, $field_id, $value_id)
-    {
-        $sql = sprintf(
-            'DELETE FROM artifact_rule ' .
-                       ' WHERE group_artifact_id   = %s ' .
-                       '   AND ( ' .
-                       '     ( source_field_id     = %s ' .
-                       '       AND source_value_id = %s ' .
-                       '     )  ' .
-                       '     OR ' .
-                       '     ( target_field_id     = %s ' .
-                       '       AND target_value_id = %s ' .
-                       '     ) ' .
-                       '   ) ',
-            $this->da->quoteSmart($artifact_type),
-            $this->da->quoteSmart($field_id),
-            $this->da->quoteSmart($value_id),
-            $this->da->quoteSmart($field_id),
-            $this->da->quoteSmart($value_id)
         );
         return $this->update($sql);
     }

@@ -31,53 +31,6 @@ function html_feedback_bottom($feedback)
     echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
 }
 
-function html_image($src, $args, $display = 1)
-{
-    global $img_size;
-    $return   = ('<IMG src="' . util_get_dir_image_theme() . $src . '"');
-    $purifier = Codendi_HTMLPurifier::instance();
-    foreach ($args as $k => $v) {
-        $return .= ' ' . $purifier->purify($k) . '="' . $purifier->purify($v) . '"';
-    }
-
-    // ## insert a border tag if there isn't one
-    if (! isset($args['border']) || ! $args['border']) {
-        $return .= (' border=0');
-    }
-
-    // ## if no height AND no width tag, insert em both
-    if (
-        (! isset($args['height']) || ! $args['height']) &&
-            (! isset($args['width']) || ! $args['width'])
-    ) {
-     /* Check to see if we've already fetched the image data */
-        if ($img_size) {
-            if ((! isset($img_size[$src]) || ! $img_size[$src]) && is_file(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src)) {
-                $img_size[$src] = @getimagesize(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src);
-            }
-        } else {
-            if (is_file(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src)) {
-                $img_size[$src] = @getimagesize(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src);
-            }
-        }
-        if (isset($img_size[$src][0], $img_size[$src][1])) {
-            $return .= ' width="' . $img_size[$src][0] . '" height="' . $img_size[$src][1] . '"';
-        }
-    }
-
-    // ## insert alt tag if there isn't one
-    if (! isset($args['alt']) || ! $args['alt']) {
-        $return .= ' alt="' . $purifier->purify($src) . '"';
-    }
-
-    $return .= ('>');
-    if ($display) {
-        print $return;
-    } else {
-        return $return;
-    }
-}
-
 /**
  * html_get_language_popup() - Pop up box of supported languages
  *
@@ -349,61 +302,6 @@ function html_build_select_box_from_arrays(
     $return .= '
 		</SELECT>';
     return $return;
-}
-
-function html_build_select_box(
-    $result,
-    $name,
-    $checked_val = 'xzxz',
-    $show_100 = true,
-    $text_100 = '',
-    $show_any = false,
-    $text_any = '',
-    $show_unchanged = false,
-    $text_unchanged = '',
-    $purify_level = CODENDI_PURIFIER_CONVERT_HTML,
-    $show_unknown_value = true,
-) {
-        global $Language;
-    /*
-        Takes a result set, with the first column being the "id" or value
-        and the second column being the text you want displayed
-
-        The second parameter is the name you want assigned to this form element
-
-        The third parameter is optional. Pass the value of the item that should be checked
-
-        The fourth parameter is an optional boolean - whether or not to show the '100 row'
-
-        The fifth parameter is optional - what to call the '100 row' defaults to none
-    */
-
-        // Position default values for special menu items
-    if ($text_100 == '') {
-        $text_100 = $Language->getText('global', 'none');
-    }
-    if ($text_any == '') {
-        $text_any = $Language->getText('global', 'any');
-    }
-    if ($text_unchanged == '') {
-        $text_unchanged = $Language->getText('global', 'unchanged');
-    }
-
-    /** @psalm-suppress DeprecatedFunction */
-    return html_build_select_box_from_arrays(
-        util_result_column_to_array($result, 0),
-        util_result_column_to_array($result, 1),
-        $name,
-        $checked_val,
-        $show_100,
-        $text_100,
-        $show_any,
-        $text_any,
-        $show_unchanged,
-        $text_unchanged,
-        $purify_level,
-        $show_unknown_value
-    );
 }
 
 function html_build_multiple_select_box($result, $name, $checked_array, $size = '8', $show_100 = true, $text_100 = '', $show_any = false, $text_any = '', $show_unchanged = false, $text_unchanged = '', $show_value = true, $purify_level = CODENDI_PURIFIER_CONVERT_HTML, $disabled = false)

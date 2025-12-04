@@ -142,28 +142,6 @@ class UserHelper implements BuildDisplayName
     }
 
     /**
-     * Get SQL statement for filtering according to users' names
-     *
-     * @param string $by a string containing comma-separated users' names or a pattern of user name.
-     *
-     * @return string
-     */
-    public function getUserFilter($by)
-    {
-        $filter       = '';
-        $user_manager = $this->_getUserManager();
-        $usersIds     = $user_manager->getUserIdsList($by);
-        if (count($usersIds) > 0) {
-            $user_ids_escaped = $this->_getUserDao()->getDa()->escapeIntImplode($usersIds);
-            $filter          .= ' AND user.user_id IN (' . $user_ids_escaped . ')';
-        } else {
-            $by      = $this->_getUserDao()->getDa()->quoteLikeValueSurround($by);
-            $filter .= ' AND user.user_name LIKE ' . $by;
-        }
-        return $filter;
-    }
-
-    /**
      * getDisplayNameSQLOrder
      *
      * Get SQL statement for sorting display name from the "user" table, according to the user prefs

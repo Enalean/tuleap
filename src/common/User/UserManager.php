@@ -321,26 +321,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     }
 
     /**
-     * Returns an array of user ids that match the given string
-     *
-     * @param String $search comma-separated users' names.
-     *
-     * @return Array
-     */
-    public function getUserIdsList($search)
-    {
-        $userArray = explode(',', $search);
-        $users     = [];
-        foreach ($userArray as $user) {
-            $user = $this->findUser($user);
-            if ($user) {
-                $users[] = $user->getId();
-            }
-        }
-        return $users;
-    }
-
-    /**
      * @return PaginatedUserCollection
      */
     public function getPaginatedUsersByUsernameOrRealname($words, $exact, $offset, $limit)
