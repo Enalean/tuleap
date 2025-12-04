@@ -20,6 +20,7 @@
 import * as path from "node:path";
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import Replace from "@rollup/plugin-replace";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [
@@ -35,6 +36,9 @@ export default vite.defineLibConfig({
         lib: {
             name: "TlpDatePicker",
             entry: path.resolve(__dirname, "src/main.ts"),
+        },
+        rollupOptions: {
+            external: Object.keys(pkg.dependencies),
         },
     },
 });

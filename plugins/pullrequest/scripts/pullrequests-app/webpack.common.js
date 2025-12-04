@@ -67,7 +67,6 @@ module.exports = [
                     __dirname,
                     "node_modules/@tuleap/tlp-relative-date",
                 ),
-                "@tuleap/tooltip": path.resolve(__dirname, "node_modules/@tuleap/tooltip"),
                 hybrids: path.resolve(__dirname, "node_modules/hybrids/src/index.js"),
                 neverthrow: path.resolve(__dirname, "node_modules/neverthrow"),
             },

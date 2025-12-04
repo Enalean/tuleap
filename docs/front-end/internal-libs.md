@@ -16,7 +16,7 @@
 
 ## Folder structure of an internal library
 
-Create a `lib/frontend/` folder in Tuleap Core or in the plugin where code is shared:
+Create a sub-folder in Tuleap Core or in the plugin where code is shared:
 
 ```sh
 # In core
@@ -41,7 +41,7 @@ my-plugin/
                 |-- images/                             # Images to include in the lib's CSS
                      |-- some-image.png
                 |-- dist/                               # Generated assets. Must be excluded from git
-                     |-- index.d.ts                     # Typescript declarations, it is referenced in "types" exports in package.json
+                     |-- main.d.ts                      # Typescript declarations, it is referenced in "types" exports in package.json
                      |-- my-lib-name.umd.cjs            # Javascript UMD bundle, it is referenced in "require" exports in package.json
                      |-- my-lib-name.js                 # Javascript ES module bundle, it is referenced in "import" exports in package.json
                      |-- my-lib-name.css                # CSS bundle, it is referenced in "sass" exports in package.json
@@ -51,8 +51,8 @@ my-plugin/
                      |-- main.ts                        # Entrypoint for your library
                      |-- subfolder/
                           |-- my-other-source.ts
-                |-- themes/                             # The lib styles
-                     |-- style.scss                     # Entrypoint for your library styles
+                |-- styles/                             # The lib styles
+                     |-- main.scss                      # Entrypoint for your library styles
 ```
 
 ## Build your internal library
@@ -66,8 +66,8 @@ where it needs to extract translated strings.
     "name": "my-plugin",
     "gettext-ts": {
         "my-lib-name": {
-            "src": "src/scripts/lib/my-lib-name/src",
-            "po": "src/scripts/lib/my-lib-name/po"
+            "src": "scripts/lib/my-lib-name/src",
+            "po": "scripts/lib/my-lib-name/po"
         }
     }
 }
@@ -91,12 +91,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 ```
 
-To build up your library, you will have to create a `vite.config.ts` file. This file should be located in `my-lib-name/`.
+To build your library, you will have to create a `vite.config.ts` file. This file should be located in `my-lib-name/`.
 
 ```typescript
 // tuleap/plugins/my-plugin/scripts/lib/my-lib-name/vite.config.ts
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [viteDtsPlugin()],
@@ -105,14 +106,10 @@ export default vite.defineLibConfig({
             entry: path.resolve(__dirname, "src/main.ts"),
             name: "MyLibName",
         },
-        // Exclude an external dependency from the lib's bundle
+        // Exclude external dependencies from the lib's bundle.
+        // This allows the bundler to de-duplicate shared dependencies.
         rollupOptions: {
-            external: ["dompurify"],
-            output: {
-                globals: {
-                    dompurify: "DOMPurify",
-                },
-            },
+            external: Object.keys(pkg.dependencies),
         },
     }
 });
@@ -129,11 +126,11 @@ Once you have a Vite config, you will need a `package.json` in `my-lib-name/`.
   "license": "GPL-2.0-or-later",              // or your license
   "private": true,                            // to avoid accidentally publishing on NPM registry
   "type": "module",                           // Allow import/export instead of require()
-  "types": "./dist/index.d.ts",               // Generated TypeScript declarations
+  "types": "./dist/main.d.ts",                // Generated TypeScript declarations
   "exports": {
     ".": {
       // Order matters here, declare TypeScript first, then Sass
-      "types": "./dist/index.d.ts",           // Generated TypeScript declarations
+      "types": "./dist/main.d.ts",            // Generated TypeScript declarations
       "sass": "./dist/my-lib-name.css",       // The CSS bundle of your lib.
       "import": "./dist/my-lib-name.js",      // The Javascript ES Module bundle of your lib
       "require": "./dist/my-lib-name.umd.cjs" // The Javascript UMD bundle of your lib
@@ -175,8 +172,8 @@ Once you have a `package.json` file, you will also need a `tsconfig.json` file t
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["ES2023", "DOM"], // Add values like "DOM" if your lib interacts with the DOM
-        "types": ["jest"],  // Add global types needed by your lib
+        "lib": ["ES2023", "DOM"], // Add values like "DOM" if your library interacts with the DOM
+        "types": ["jest"],  // Add global types needed by your library
     },
     "include": ["src/**/*"]
 }
@@ -189,7 +186,7 @@ Add a `.gitignore` file to remove the `dist/` folder from source control. It con
 dist/
 ```
 
-If you have gettext translations with node-gettext, you will need a `pofile-shim.d.ts` file so that TypeScript understands what is returned by `import "file.po"`.
+If you have gettext translations with `node-gettext`, you will need a `pofile-shim.d.ts` file so that TypeScript understands what is returned by `import "file.po"`.
 
 ```typescript
 // tuleap/plugins/my-plugin/scripts/lib/my-lib-name/src/pofile-shim.d.ts
@@ -214,7 +211,7 @@ Finally, your `main.ts` file (the lib entrypoint) should export types that calle
 
 ```typescript
 // tuleap/plugins/my-plugin/scripts/lib/my-lib-name/src/index.ts
-import "../themes/style.scss"; // Import the styles to bundle them in dist/my-lib-name.css
+import "../styles/main.scss"; // Import the styles to bundle them in dist/my-lib-name.css
 import type { MyType, MyOtherType } from "./types";
 
 export type { MyType, MyOtherType }; // Re-export the types, so that TypeScript callers can import them

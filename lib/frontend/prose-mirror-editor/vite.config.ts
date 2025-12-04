@@ -19,32 +19,17 @@
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import pkg from "./package.json" with { type: "json" };
+
 export default vite.defineLibConfig({
+    plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),
             name: "prose-mirror-editor",
         },
         rollupOptions: {
-            external: [
-                "@tuleap/fault",
-                "@tuleap/fetch-result",
-                "@tuleap/gettext",
-                "@tuleap/option",
-                "neverthrow",
-                "tus-js-client",
-            ],
-            output: {
-                globals: {
-                    "@tuleap/fault": "Fault",
-                    "@tuleap/fetch-result": "FetchResult",
-                    "@tuleap/gettext": "TuleapGettext",
-                    "@tuleap/option": "Option",
-                    neverthrow: "neverthrow",
-                    "tus-js-client": "tus",
-                },
-            },
+            external: Object.keys(pkg.dependencies),
         },
     },
-    plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
 });

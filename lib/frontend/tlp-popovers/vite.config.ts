@@ -18,22 +18,18 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),
             name: "TlpPopovers",
         },
         rollupOptions: {
-            external: ["@floating-ui/dom"],
-            output: {
-                globals: {
-                    "@floating-ui/dom": "FloatingUIDOM",
-                },
-            },
+            external: Object.keys(pkg.dependencies),
         },
     },
-    plugins: [viteDtsPlugin()],
 });

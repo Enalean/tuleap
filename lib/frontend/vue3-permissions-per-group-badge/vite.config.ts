@@ -19,7 +19,7 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import vue from "@vitejs/plugin-vue";
-import * as path from "path";
+import * as path from "node:path";
 
 export default vite.defineLibConfig({
     plugins: [vue()],
@@ -30,11 +30,6 @@ export default vite.defineLibConfig({
         },
         rollupOptions: {
             external: ["vue"],
-            output: {
-                globals: {
-                    vue: "Vue",
-                },
-            },
         },
     },
 });

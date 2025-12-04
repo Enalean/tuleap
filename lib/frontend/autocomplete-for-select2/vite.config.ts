@@ -18,8 +18,8 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
-import pkg from "./package.json";
+import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     build: {
@@ -29,12 +29,6 @@ export default vite.defineLibConfig({
         },
         rollupOptions: {
             external: ["tlp", ...Object.keys(pkg.dependencies)],
-            output: {
-                globals: {
-                    tlp: "tlp",
-                    "@tuleap/html-escaper": "tuleap.escaper",
-                },
-            },
         },
     },
 });

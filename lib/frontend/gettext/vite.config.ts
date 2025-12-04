@@ -19,6 +19,7 @@
 
 import * as path from "node:path";
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [viteDtsPlugin()],
@@ -28,7 +29,7 @@ export default vite.defineLibConfig({
             entry: path.resolve(__dirname, "src/main.ts"),
         },
         rollupOptions: {
-            external: ["node-gettext"],
+            external: Object.keys(pkg.dependencies),
         },
     },
 });

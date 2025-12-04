@@ -19,6 +19,7 @@
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [viteDtsPlugin()],
@@ -28,12 +29,7 @@ export default vite.defineLibConfig({
             name: "PluginTrackerEmailCopyPaste",
         },
         rollupOptions: {
-            external: ["@tuleap/copy-to-clipboard"],
-            output: {
-                globals: {
-                    "@tuleap/copy-to-clipboard": "CopyToClipboard",
-                },
-            },
+            external: Object.keys(pkg.dependencies),
         },
     },
 });

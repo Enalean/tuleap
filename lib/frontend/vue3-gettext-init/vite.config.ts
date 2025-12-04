@@ -18,7 +18,8 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [viteDtsPlugin()],
@@ -28,7 +29,7 @@ export default vite.defineLibConfig({
             name: "Vue3GettextInit",
         },
         rollupOptions: {
-            external: ["vue3-gettext"],
+            external: ["vue3-gettext", ...Object.keys(pkg.dependencies)],
         },
     },
 });

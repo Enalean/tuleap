@@ -19,30 +19,18 @@
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import vue from "@vitejs/plugin-vue";
-import * as path from "path";
+import * as path from "node:path";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
+    plugins: [vue({ customElement: true }), viteDtsPlugin()],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),
             name: "TuleapVue3BreadcrumbPrivacy",
         },
         rollupOptions: {
-            external: [
-                "vue",
-                "@vueuse/core",
-                "@tuleap/tlp-popovers",
-                "@tuleap/project-privacy-helper",
-            ],
-            output: {
-                globals: {
-                    vue: "Vue",
-                    "@vueuse/core": "VueUse",
-                    "@tuleap/tlp-popovers": "TlpPopovers",
-                    "@tuleap/project-privacy-helper": "ProjectPrivacyHelper",
-                },
-            },
+            external: ["vue", ...Object.keys(pkg.dependencies)],
         },
     },
-    plugins: [vue({ customElement: true }), viteDtsPlugin()],
 });

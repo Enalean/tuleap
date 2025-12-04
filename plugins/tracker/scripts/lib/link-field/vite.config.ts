@@ -20,7 +20,7 @@
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 import * as path from "node:path";
-import pkg from "./package.json";
+import pkg from "./package.json" with { type: "json" };
 
 export default vite.defineLibConfig({
     plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
