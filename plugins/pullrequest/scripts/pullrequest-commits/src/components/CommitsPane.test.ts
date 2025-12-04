@@ -24,7 +24,6 @@ import { createGettext } from "vue3-gettext";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 import * as router from "vue-router";
 import { okAsync, errAsync } from "neverthrow";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { Fault } from "@tuleap/fault";
 import { CommitStub } from "../../tests/stubs/CommitStub";
 import * as tuleap_api from "../api/rest-querier";
@@ -35,15 +34,6 @@ import CommitsPane from "./CommitsPane.vue";
 vi.mock("vue-router");
 
 const pull_request_id = 15;
-
-function mockPullRequestFetchSuccess(): void {
-    vi.spyOn(tuleap_api, "fetchPullRequestInfo").mockReturnValue(
-        okAsync({
-            id: pull_request_id,
-            title: "Pull-request title",
-        } as PullRequest),
-    );
-}
 
 describe("CommitsPane", () => {
     const getWrapper = (): VueWrapper =>
@@ -64,9 +54,7 @@ describe("CommitsPane", () => {
         );
     });
 
-    it("Should load the pull-request's info and commits, then display its title and its commits.", async () => {
-        mockPullRequestFetchSuccess();
-
+    it("Should load the pull-request's commits, then display them.", async () => {
         const commits = [
             CommitStub.withDefaults("f9b6ec23a9c1a1e8989a5dca335a86b435000d85"),
             CommitStub.withDefaults("d8fb8fc8e9d384402eec582fe504eae109f6fc9a"),
@@ -85,7 +73,6 @@ describe("CommitsPane", () => {
     });
 
     it("Should display a warning when the pull-request has no commit.", async () => {
-        mockPullRequestFetchSuccess();
         vi.spyOn(tuleap_api, "fetchPullRequestCommits").mockReturnValue(okAsync([]));
 
         const wrapper = getWrapper();
@@ -97,7 +84,6 @@ describe("CommitsPane", () => {
     });
 
     it("Should display an error when the loading of the data has failed.", async () => {
-        mockPullRequestFetchSuccess();
         vi.spyOn(tuleap_api, "fetchPullRequestCommits").mockReturnValue(
             errAsync(Fault.fromMessage("Nope")),
         );

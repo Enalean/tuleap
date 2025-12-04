@@ -1,0 +1,69 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fetch-result
+  '@tuleap/option':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/option
+  '@tuleap/plugin-pullrequest-constants':
+    specifier: workspace:*
+    version: link:../constants
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tlp-fetch
+  '@tuleap/tooltip':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tooltip
+  dompurify:
+    specifier: ^3.2.4
+    version: 3.3.0
+  hybrids:
+    specifier: ^9.1.6
+    version: 9.1.21
+  neverthrow:
+    specifier: 6.0.0
+    version: 6.0.0
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/plugin-pullrequest-rest-api-types':
+    specifier: workspace:*
+    version: link:../rest-api-types
+
+packages:
+
+  /@types/trusted-types@2.0.7:
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /dompurify@3.3.0:
+    resolution: {integrity: sha512-r+f6MYR1gGN1eJv0TVQbhA7if/U7P87cdPl3HN5rikqaBSBxLiCb/b9O+2eG0cxz0ghyU+mU1QkbsOwERMYlWQ==}
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
+    dev: false
+
+  /hybrids@9.1.21:
+    resolution: {integrity: sha512-UCmdUmFkQogser0LR1BpBDipXpfLmJG+XQsLMoQfJTae1/D6pxaowMDNZa5u8Axd8jVEzNAXILbE2GWTGtiYhA==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dev: false
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false

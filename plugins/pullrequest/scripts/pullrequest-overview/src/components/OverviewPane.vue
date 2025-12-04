@@ -21,7 +21,10 @@
     <div class="tlp-framed pull-request-overview-pane">
         <div class="tlp-pane pullrequest-overview-header">
             <div class="tlp-pane-container">
-                <pull-request-title v-bind:pull_request="pull_request_info" />
+                <tuleap-pull-request-title
+                    v-bind:pull_request_id="pull_request_id"
+                    v-bind:key="nb_title_refresh"
+                />
                 <overview-tabs v-bind:pull_request="pull_request_info" />
             </div>
         </div>
@@ -78,7 +81,6 @@ import {
     POST_PULL_REQUEST_UPDATE_CALLBACK,
 } from "../constants";
 
-import PullRequestTitle from "./Title/PullRequestTitle.vue";
 import OverviewTabs from "./OverviewTabs.vue";
 import OverviewThreads from "./Threads/OverviewThreads.vue";
 import PullRequestAuthor from "./ReadOnlyInfo/PullRequestAuthor.vue";
@@ -94,10 +96,13 @@ import PullRequestReviewerList from "./Reviewers/PullRequestReviewerList.vue";
 import PullRequestChangeStateActions from "./Actions/PullRequestChangeStateActions.vue";
 import PullRequestLabels from "./Labels/PullRequestLabels.vue";
 
+import "@tuleap/plugin-pullrequest-title";
+
 const route = useRoute();
 const pull_request_id = extractPullRequestIdFromRouteParams(route.params);
 const pull_request_info = ref<PullRequest | null>(null);
 const pull_request_author = ref<User | null>(null);
+const nb_title_refresh = ref(0);
 const error = ref<Fault | null>(null);
 const is_git_reference_broken = computed(
     () => pull_request_info.value && isPullRequestBroken(pull_request_info.value),
@@ -106,6 +111,9 @@ const is_git_reference_broken = computed(
 provide(PULL_REQUEST_ID_KEY, pull_request_id);
 provide(DISPLAY_TULEAP_API_ERROR, (fault: Fault) => handleAPIFault(fault));
 provide(POST_PULL_REQUEST_UPDATE_CALLBACK, (pull_request: PullRequest) => {
+    if (pull_request_info.value?.title !== pull_request.title) {
+        nb_title_refresh.value++;
+    }
     pull_request_info.value = pull_request;
 });
 
