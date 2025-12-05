@@ -47,6 +47,9 @@
                 {{ $gettext("This modal is not functional yet, you can retrieve old ui") }}
                 <a v-bind:href="getLinkToTableAdmin()">{{ $gettext("here.") }}</a>
             </div>
+            <div v-if="success_message !== ''" class="tlp-alert-success">
+                {{ success_message }}
+            </div>
         </div>
         <div class="tlp-modal-body">
             <administration-modal-global-settings
@@ -55,14 +58,15 @@
                 v-model:table_comment_value="table_comment_value"
                 v-model:table_owner_value="table_owner_value"
             />
-        </div>
-        <div class="tlp-modal-body">
-            <h2 class="tlp-modal-subtitle">{{ $gettext("Notifications") }}</h2>
-            <div class="tlp-alert-info">
-                {{ $gettext("Not implemented yet") }}
-            </div>
-        </div>
-        <div class="tlp-modal-body">
+            <administration-modal-notifications
+                v-bind:item="item"
+                v-bind:table="table"
+                v-bind:is_doing_something="is_doing_something"
+                v-model:table_notification_value="table_notification_value"
+                v-model:is_sending_notification="is_sending_notification"
+                v-on:error-message="(message) => (error_message = message)"
+                v-on:success-message="(message) => (success_message = message)"
+            />
             <h2 class="tlp-modal-subtitle">{{ $gettext("Reviewers") }}</h2>
             <div class="tlp-alert-info">
                 {{ $gettext("Not implemented yet") }}
@@ -120,6 +124,7 @@ import { PROJECT } from "../../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { deleteApprovalTable, updateApprovalTable } from "../../../api/approval-table-rest-querier";
 import AdministrationModalGlobalSettings from "./AdministrationModalGlobalSettings.vue";
+import AdministrationModalNotifications from "./AdministrationModalNotifications.vue";
 
 const props = defineProps<{
     trigger: HTMLButtonElement;
@@ -134,13 +139,18 @@ const emit = defineEmits<{
 const modal_div = ref<HTMLDivElement>();
 const modal = ref<Modal | null>(null);
 const error_message = ref<string>("");
+const success_message = ref<string>("");
 const is_deleting = ref<boolean>(false);
 const is_updating = ref<boolean>(false);
+const is_sending_notification = ref<boolean>(false);
 const table_owner_value = ref<User | null>(props.table.table_owner);
 const table_status_value = ref<string>(props.table.state);
 const table_comment_value = ref<string>(props.table.description);
+const table_notification_value = ref<string>(props.table.notification_type);
 
-const is_doing_something = computed(() => is_deleting.value || is_updating.value);
+const is_doing_something = computed(
+    () => is_deleting.value || is_updating.value || is_sending_notification.value,
+);
 
 const project = strictInject(PROJECT);
 
@@ -186,6 +196,7 @@ function onUpdate(): void {
         table_owner_value.value.id,
         table_status_value.value,
         table_comment_value.value,
+        table_notification_value.value,
     ).match(
         () => {
             emit("refresh-data");

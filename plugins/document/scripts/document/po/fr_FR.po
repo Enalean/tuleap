@@ -79,6 +79,17 @@ msgstr ""
 msgid ": Status quo. You can add comment but nobody will be notified."
 msgstr " : Status quo. Vous pouvez commenter mais personne ne sera notifié."
 
+msgid ": notify all reviewers who did not commit themselves yet."
+msgstr ""
+" : notifie tout les approbateurs qui n'ont pas encore approuvé/réprouvé."
+
+msgid ""
+": notify reviewers (who did not commit themselves) one after another. If "
+"someone reject the document, the sequence stops"
+msgstr ""
+" : notifie les approbateurs (qui n'ont pas encore approuvé/réprouvé) l'un "
+"après l'autre. Si quelqu'un réprouve le document, la séquence s'arrête."
+
 msgid "A document already exists with the same title."
 msgstr "Un document existe déjà avec le même titre."
 
@@ -113,6 +124,16 @@ msgstr "Avancé"
 
 msgid "After"
 msgstr "Après"
+
+msgid ""
+"After an approver is notified by the approval table, it is informed of any "
+"later modification done on the document."
+msgstr ""
+"Dès qu'un approbateur est notifié par la table d'approbation, il est informé "
+"de tout changement ultérieur sur le document."
+
+msgid "All at once"
+msgstr "Tous d'un coup"
 
 msgid ""
 "All the properties values that you define here will be proposed as default "
@@ -789,6 +810,9 @@ msgstr "Rejeté"
 msgid "Reload the page"
 msgstr "Recharger la page"
 
+msgid "Reminder sent with success"
+msgstr "Notification envoyée avec succès"
+
 msgid "Remove all values"
 msgstr "Supprimer toutes les valeurs"
 
@@ -843,6 +867,9 @@ msgstr "Sélectionner l'élément précédent"
 msgid "Select top item"
 msgstr "Sélectionner le premier élément"
 
+msgid "Send a mail reminder to approver(s)"
+msgstr "Envoyer un mail au(x) approbateur(s)"
+
 msgid "Send mail"
 msgstr "Envoyer un Email"
 
@@ -851,6 +878,9 @@ msgstr "Envoyez-moi un email dès que cet élément est modifié."
 
 msgid "Send my review"
 msgstr "Envoyer mon approbation"
+
+msgid "Sequential"
+msgstr "Sequentiellement"
 
 msgid ""
 "Shortcuts will apply to the selected document or folder. If there is no "
@@ -1038,6 +1068,9 @@ msgstr "Aujourd'hui"
 
 msgid "Toggle selected folder open and closed"
 msgstr "Ouvrir ou fermer le dossier sélectionné"
+
+msgid "Tuleap can notify approval members in two ways:"
+msgstr "Tuleap peut notifier les approbateurs de deux manières :"
 
 msgid "URL"
 msgstr "URL"

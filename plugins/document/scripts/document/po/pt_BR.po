@@ -63,6 +63,14 @@ msgstr ""
 msgid ": Status quo. You can add comment but nobody will be notified."
 msgstr ""
 
+msgid ": notify all reviewers who did not commit themselves yet."
+msgstr ""
+
+msgid ""
+": notify reviewers (who did not commit themselves) one after another. If "
+"someone reject the document, the sequence stops"
+msgstr ""
+
 msgid "A document already exists with the same title."
 msgstr ""
 
@@ -93,6 +101,14 @@ msgid "Advanced"
 msgstr ""
 
 msgid "After"
+msgstr ""
+
+msgid ""
+"After an approver is notified by the approval table, it is informed of any "
+"later modification done on the document."
+msgstr ""
+
+msgid "All at once"
 msgstr ""
 
 msgid ""
@@ -743,6 +759,9 @@ msgstr ""
 msgid "Reload the page"
 msgstr ""
 
+msgid "Reminder sent with success"
+msgstr ""
+
 msgid "Remove all values"
 msgstr ""
 
@@ -797,6 +816,9 @@ msgstr ""
 msgid "Select top item"
 msgstr ""
 
+msgid "Send a mail reminder to approver(s)"
+msgstr ""
+
 msgid "Send mail"
 msgstr ""
 
@@ -804,6 +826,9 @@ msgid "Send me an email whenever this item is updated."
 msgstr ""
 
 msgid "Send my review"
+msgstr ""
+
+msgid "Sequential"
 msgstr ""
 
 msgid ""
@@ -965,6 +990,9 @@ msgid "Today"
 msgstr "Hoje"
 
 msgid "Toggle selected folder open and closed"
+msgstr ""
+
+msgid "Tuleap can notify approval members in two ways:"
 msgstr ""
 
 msgid "URL"

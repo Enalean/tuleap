@@ -41,6 +41,7 @@ use PermissionsManager;
 use Project;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
+use Tuleap\Docman\ApprovalTable\ApprovalTableNotificationMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Log\LogEntry;
@@ -344,9 +345,8 @@ final class DocmanItemsResource extends AuthenticatedResource
         $item          = $items_request->getItem();
         $project       = $items_request->getProject();
 
-        $factories_factory        = new Docman_ApprovalTableFactoriesFactory();
         $version_factory          = new Docman_VersionFactory();
-        $approval_table_retriever = new ApprovalTableRetriever($factories_factory, $version_factory);
+        $approval_table_retriever = new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory(), $version_factory);
         $user_manager             = UserManager::instance();
         $provide_user_avatar_url  = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
 
@@ -354,7 +354,7 @@ final class DocmanItemsResource extends AuthenticatedResource
 
         Header::sendPaginationHeaders($limit, $offset, $approval_table_retriever->getCountOfApprovalTable($item), self::MAX_LIMIT);
         return array_map(
-            function (Docman_ApprovalTable $table) use ($item, $user_manager, $factories_factory, $provide_user_avatar_url, $version_factory, $project): ItemApprovalTableRepresentation {
+            function (Docman_ApprovalTable $table) use ($item, $user_manager, $provide_user_avatar_url, $version_factory, $project): ItemApprovalTableRepresentation {
                 $owner = $user_manager->getUserById((int) $table->getOwner());
                 if ($owner === null) {
                     $this->logger->error('An approval table has a non-existing user as owner', [
@@ -372,7 +372,7 @@ final class DocmanItemsResource extends AuthenticatedResource
                         $provide_user_avatar_url,
                     ),
                     new ApprovalTableStateMapper(),
-                    $factories_factory,
+                    new ApprovalTableNotificationMapper(),
                     $user_manager,
                     $provide_user_avatar_url,
                     $version_factory,
@@ -441,7 +441,7 @@ final class DocmanItemsResource extends AuthenticatedResource
                 $provide_user_avatar_url,
             ),
             new ApprovalTableStateMapper(),
-            $factories_factory,
+            new ApprovalTableNotificationMapper(),
             $user_manager,
             $provide_user_avatar_url,
             $version_factory,
@@ -629,7 +629,6 @@ final class DocmanItemsResource extends AuthenticatedResource
         $html_purifier = Codendi_HTMLPurifier::instance();
 
         $permissions_manager = $this->getDocmanPermissionManager($project);
-        $factories_factory   = new \Docman_ApprovalTableFactoriesFactory();
         $version_factory     = new Docman_VersionFactory();
 
         return new ItemRepresentationBuilder(
@@ -644,7 +643,7 @@ final class DocmanItemsResource extends AuthenticatedResource
                 $html_purifier,
                 UserHelper::instance()
             ),
-            new ApprovalTableRetriever($factories_factory, $version_factory),
+            new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory(), $version_factory),
             new DocmanItemPermissionsForGroupsBuilder(
                 $permissions_manager,
                 ProjectManager::instance(),
@@ -653,7 +652,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             ),
             $html_purifier,
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
-            $factories_factory,
+            new ApprovalTableNotificationMapper(),
             $version_factory,
             new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
         );

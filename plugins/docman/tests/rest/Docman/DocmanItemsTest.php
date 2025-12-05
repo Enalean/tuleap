@@ -331,11 +331,11 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertCount(2, $get_body);
         self::assertSame(2, $get_body[0]['version_number']);
         self::assertSame('Not yet', $get_body[0]['approval_state']);
-        self::assertSame('Disabled', $get_body[0]['notification_type']);
+        self::assertSame('disabled', $get_body[0]['notification_type']);
         self::assertCount(0, $get_body[0]['reviewers']);
         self::assertSame(1, $get_body[1]['version_number']);
         self::assertSame('Not yet', $get_body[1]['approval_state']);
-        self::assertSame('Disabled', $get_body[1]['notification_type']);
+        self::assertSame('disabled', $get_body[1]['notification_type']);
         self::assertCount(0, $get_body[1]['reviewers']);
 
         // Cleanup (delete file)
@@ -396,7 +396,7 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
         $table = json_decode($get_response->getBody()->getContents());
         self::assertSame('Not yet', $table['approval_state']);
         self::assertSame(1, $table['version_number']);
-        self::assertSame('Disabled', $table['notification_type']);
+        self::assertSame('disabled', $table['notification_type']);
         self::assertSame(false, $table['is_closed']);
         self::assertCount(1, $table['reviewers']);
         self::assertSame(BaseTestDataBuilder::TEST_USER_1_NAME, $table['reviewers'][0]['user']['username']);

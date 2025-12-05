@@ -35,6 +35,7 @@ use Docman_PermissionsManager;
 use Docman_Version;
 use Docman_VersionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Docman\ApprovalTable\ApprovalTableNotificationMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
@@ -90,7 +91,7 @@ final class ItemRepresentationBuilderTest extends TestCase
             $this->item_permissions_for_groups_builder,
             $this->html_purifier,
             ProvideUserAvatarUrlStub::build(),
-            $this->factories_factory,
+            new ApprovalTableNotificationMapper(),
             $this->version_factory,
             $this->createStub(Docman_NotificationsManager::class),
         );
@@ -201,7 +202,7 @@ final class ItemRepresentationBuilderTest extends TestCase
         self::assertFalse($representation->approval_table->has_been_approved);
         self::assertSame('', $representation->approval_table?->description);
         self::assertFalse($representation->approval_table?->is_closed);
-        self::assertSame('Disabled', $representation->approval_table?->notification_type);
+        self::assertSame('disabled', $representation->approval_table?->notification_type);
         self::assertSame(2, $representation->approval_table?->version_number);
         self::assertSame([], $representation->approval_table?->reviewers);
         self::assertSame('1.0.0-rc3', $representation->approval_table?->version_label);
