@@ -1116,7 +1116,8 @@ class ArtifactLinkField extends TrackerField
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
     ) {
-        return $this->fetchArtifactValue($artifact, $value, $submitted_values);
+        return $this->fetchArtifactValue($artifact, $value, $submitted_values) .
+               "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . '></div>';
     }
 
     private function fetchLinksReadOnly(Artifact $artifact, ArtifactLinksToRender $artifact_links_to_render)
