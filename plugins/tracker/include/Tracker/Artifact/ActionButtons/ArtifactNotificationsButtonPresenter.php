@@ -22,23 +22,7 @@ namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 class ArtifactNotificationsButtonPresenter
 {
-    /**
-     * @var string
-     */
-    public $label;
-    /**
-     * @var string
-     */
-    public $title;
-    /**
-     * @var string
-     */
-    public $icon;
-
-    public function __construct(string $label, string $title, string $icon)
+    public function __construct(public string $label, public string $title, public string $icon, public string $url)
     {
-        $this->label = $label;
-        $this->title = $title;
-        $this->icon  = $icon;
     }
 }
