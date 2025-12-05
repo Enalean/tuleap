@@ -41,6 +41,7 @@ final class PullRequestAppsLoader
             PullRequestApp::OVERVIEW_APP => self::includeOverviewAppAssets($base_layout),
             PullRequestApp::HOMEPAGE_APP => self::includeHomepageAppAssets($base_layout),
             PullRequestApp::COMMITS_APP => self::includeCommitsAppAssets($base_layout),
+            PullRequestApp::CHANGES_APP => self::includeChangesAppAssets($base_layout),
         };
     }
 
@@ -96,6 +97,19 @@ final class PullRequestAppsLoader
                 new IncludeViteAssets(
                     __DIR__ . '/../../../scripts/pullrequest-commits/frontend-assets',
                     '/assets/pullrequest/pullrequest-commits'
+                ),
+                'src/index.ts'
+            )
+        );
+    }
+
+    private static function includeChangesAppAssets(BaseLayout $base_layout): void
+    {
+        $base_layout->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/pullrequest-changes/frontend-assets',
+                    '/assets/pullrequest/pullrequest-changes'
                 ),
                 'src/index.ts'
             )

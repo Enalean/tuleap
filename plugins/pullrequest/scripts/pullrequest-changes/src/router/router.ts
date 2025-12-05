@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,26 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import type { Router } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
+import ChangesPane from "../components/ChangesPane.vue";
+import { VIEW_CHANGES_NAME } from "../constants";
+import { buildChangesTabUrl } from "./base-url-builders";
 
-namespace Tuleap\PullRequest\FrontendApps;
-
-enum PullRequestApp: string
-{
-    case LEGACY_ANGULAR_APP = '';
-    case OVERVIEW_APP       = 'overview';
-    case HOMEPAGE_APP       = 'homepage';
-    case COMMITS_APP        = 'commits';
-    case CHANGES_APP        = 'changes';
-
-    public static function fromRequest(\Tuleap\HTTPRequest $request): self
-    {
-        return match ($request->get('tab')) {
-            'overview' => self::OVERVIEW_APP,
-            'homepage' => self::HOMEPAGE_APP,
-            'commits'  => self::COMMITS_APP,
-            'changes'  => self::CHANGES_APP,
-            default    => self::LEGACY_ANGULAR_APP,
-        };
-    }
+export function createChangesRouter(base_url: URL): Router {
+    return createRouter({
+        history: createWebHashHistory(buildChangesTabUrl(base_url).toString()),
+        routes: [
+            {
+                path: "/pull-requests/:id/files/:file_path?",
+                name: VIEW_CHANGES_NAME,
+                component: ChangesPane,
+            },
+        ],
+    });
 }
