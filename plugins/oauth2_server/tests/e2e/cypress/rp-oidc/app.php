@@ -57,9 +57,9 @@ EventLoop::defer(
         $logger_back_channel = new Logger('rp-oidc-backchannel');
         $logger_back_channel->pushHandler($log_handler);
 
-        $private_key = openssl_pkey_new();
-        $cert        = openssl_csr_new(['commonName' => 'oauth2-server-rp-oidc'], $private_key);
-        $cert        = openssl_csr_sign($cert, null, $private_key, 3650, null, random_int(0, PHP_INT_MAX));
+        $private_key = openssl_pkey_new(['private_key_type' => OPENSSL_KEYTYPE_EC, 'curve_name' => 'prime256v1']);
+        $cert        = openssl_csr_new(['commonName' => 'oauth2-server-rp-oidc'], $private_key, ['digest_alg' => 'sha256']);
+        $cert        = openssl_csr_sign($cert, null, $private_key, 3650, ['digest_alg' => 'sha256'], random_int(0, PHP_INT_MAX));
         openssl_x509_export($cert, $out);
         $public_part = (string) $out;
         openssl_pkey_export($private_key, $out);
