@@ -27,18 +27,15 @@ use Docman_LinkVersion;
  */
 class LinkPropertiesRepresentation
 {
-    /**
-     * @var string
-     */
-    public $link_url;
-
-    private function __construct(string $link_url)
+    private function __construct(public string $link_url, public ?int $version_number)
     {
-        $this->link_url = $link_url;
     }
 
     public static function build(?Docman_LinkVersion $link): self
     {
-        return new self(($link) ? $link->getLink() : '');
+        return new self(
+            ($link !== null) ? $link->getLink() : '',
+            ($link !== null) ? (int) $link->getNumber() : null,
+        );
     }
 }

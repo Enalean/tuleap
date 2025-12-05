@@ -22,10 +22,24 @@ import type { ApprovalTableBadge } from "./approval-table-helper";
 import {
     extractApprovalTableData,
     hasAnApprovalTable,
+    isItemVersionable,
+    isTableLinkedToLastItemVersion,
     rearrangeReviewersTable,
 } from "./approval-table-helper";
-import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants";
-import type { Folder, ItemFile } from "../type";
+import {
+    APPROVAL_APPROVED,
+    APPROVAL_NOT_YET,
+    APPROVAL_REJECTED,
+    TYPE_EMBEDDED,
+    TYPE_EMPTY,
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_LINK,
+    TYPE_WIKI,
+} from "../constants";
+import type { ApprovableDocument, Folder, Item, ItemFile } from "../type";
+import { ItemBuilder } from "../../tests/builders/ItemBuilder";
+import { ApprovalTableBuilder } from "../../tests/builders/ApprovalTableBuilder";
 import { ApprovalTableReviewerBuilder } from "../../tests/builders/ApprovalTableReviewerBuilder";
 
 describe("extractApprovalTableData", () => {
@@ -209,5 +223,69 @@ describe("rearrangeReviewersTable", () => {
                 Number.MAX_VALUE,
             ),
         ).toStrictEqual([reviewer1, reviewer2, reviewer3, reviewer4]);
+    });
+});
+
+describe("isItemVersionable", () => {
+    it.each([
+        [TYPE_FOLDER, false],
+        [TYPE_FILE, true],
+        [TYPE_LINK, true],
+        [TYPE_EMBEDDED, true],
+        [TYPE_WIKI, true],
+        [TYPE_EMPTY, false],
+    ])(`Item of type %s is versionable: %s`, (type: string, is_versionable: boolean) => {
+        const item = new ItemBuilder(123).withType(type).build();
+
+        expect(isItemVersionable(item)).toBe(is_versionable);
+    });
+});
+
+describe("isTableLinkedToLastItemVersion", () => {
+    it("Folders are always on last version", () => {
+        const item = new ItemBuilder(123).withType(TYPE_FOLDER).buildApprovableDocument();
+        const table = new ApprovalTableBuilder(35).build();
+
+        expect(isTableLinkedToLastItemVersion(item, table)).toBe(true);
+    });
+
+    it.each([
+        [
+            {
+                ...new ItemBuilder(123).withType(TYPE_FILE).buildApprovableDocument(),
+                file_properties: { version_number: 15 },
+            },
+        ],
+        [
+            {
+                ...new ItemBuilder(123).withType(TYPE_LINK).buildApprovableDocument(),
+                link_properties: { version_number: 15 },
+            },
+        ],
+        [
+            {
+                ...new ItemBuilder(123).withType(TYPE_EMBEDDED).buildApprovableDocument(),
+                embedded_file_properties: { version_number: 15 },
+            },
+        ],
+        [
+            {
+                ...new ItemBuilder(123).withType(TYPE_WIKI).buildApprovableDocument(),
+                wiki_properties: { version_number: 15 },
+            },
+        ],
+    ])("Table is linked to last version", (item: Item & ApprovableDocument) => {
+        expect(
+            isTableLinkedToLastItemVersion(
+                item,
+                new ApprovalTableBuilder(35).withVersionNumber(15).build(),
+            ),
+        ).toBe(true);
+        expect(
+            isTableLinkedToLastItemVersion(
+                item,
+                new ApprovalTableBuilder(35).withVersionNumber(45).build(),
+            ),
+        ).toBe(false);
     });
 });

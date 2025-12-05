@@ -104,6 +104,13 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr "Un dossier existe déjà avec le même titre."
 
+msgid ""
+"A new approval table will be created from the previous one. Keeps reviewers, "
+"comments and commitments."
+msgstr ""
+"Une nouvelle table d'approbation sera créée à partir de l'actuelle. Les "
+"approbateurs, commentaires et engagements sont conservés."
+
 msgid "Actions in Documents service"
 msgstr "Actions dans le service Documents"
 
@@ -290,6 +297,9 @@ msgstr "Convertir en…"
 msgid "Copy"
 msgstr "Copier"
 
+msgid "Copy the previous approval table (e.g. for small / typo updates)."
+msgstr "Copier la table précédente (ex. corrections, mise à jour mineure)."
+
 msgid "Copy the previous approval table."
 msgstr "Copier la table d'approbation précédente."
 
@@ -307,6 +317,9 @@ msgstr "Créer un nouveau document"
 
 msgid "Create a new empty approval table."
 msgstr "Créer une nouvelle table d'approbation vide."
+
+msgid "Create a new empty table."
+msgstr "Créer une nouvelle table vide."
 
 msgid "Create a new file"
 msgstr "Créer un nouveau fichier"
@@ -506,6 +519,10 @@ msgstr "Attendez une seconde !"
 msgid "Id"
 msgstr "Id"
 
+msgid "In all cases, there is no automatic notification of the reviewers."
+msgstr ""
+"Dans tout les cas, les approbateurs ne sont pas notifiés automatiquement."
+
 msgid "It seems an action you tried to perform can't be done."
 msgstr ""
 "Il semble que l'action que vous venez de tenter ne peut pas être réalisée."
@@ -680,6 +697,16 @@ msgid "Only the last 5 versions are displayed."
 msgstr "Seules les 5 dernières versions sont affichées."
 
 msgid ""
+"Only the table structure will be kept (description, notification type, "
+"reviewer list). Actually, the new table will be identical to the previous "
+"one, but without reviewer comments and commitments."
+msgstr ""
+"Similaire à l'option précédente mais seule la structure de la table est "
+"conservée (description, type de notification, list des approbateurs). En "
+"fait, la nouvelle table sera identique à l'ancienne à ceci près que les "
+"commentaires et engagements des approbateurs seront remis à zéro."
+
+msgid ""
 "Only the table structure will be kept. Reviewer comments and commitments "
 "will be discarded."
 msgstr ""
@@ -828,6 +855,9 @@ msgstr "Supprimer toutes les valeurs"
 msgid "Requester comment"
 msgstr "Commentaire du demandeur"
 
+msgid "Reset the approval cycle (e.g. for major rewrite)."
+msgstr "Réinitialiser le cycle d'approbation (ex. mise à jour majeure)."
+
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
 
@@ -926,6 +956,9 @@ msgstr "Date de début"
 
 msgid "Start over with a completely new approval table."
 msgstr "Commencer avec une nouvelle table d'approbation."
+
+msgid "Start over with a completly new approval table."
+msgstr "Recommencer le cycle avec une table totalement nouvelle."
 
 msgid "Statistics"
 msgstr "Statistiques"
@@ -1064,6 +1097,13 @@ msgstr ""
 "Cette page vous demande de confirmer que vous souhaitez partir - les données "
 "que vous avez entrées ne seront pas sauvegardées. Voulez-vous quitter cette "
 "page ?"
+
+msgid ""
+"This table is linked to an old version of the document (%d). The last "
+"document version is %d."
+msgstr ""
+"Cette table est associée à version précédente du document (%d). La dernière "
+"version en date est la version %d."
 
 msgid "This table shows the number of elements of each type."
 msgstr "Ce tableau présente le nombre d'éléments de chaque type."
@@ -1255,6 +1295,9 @@ msgstr "Vous n'êtes pas autorisé à écrire dans ce dossier"
 msgid "You are viewing an old version (%{ version_number }) of this document."
 msgstr ""
 "Vous visualisez une ancienne version (%{ version_number }) de ce document."
+
+msgid "You can either:"
+msgstr "Vous pouvez, au choix :"
 
 msgid ""
 "You cannot delete because a parent folder is monitored with its sub-"

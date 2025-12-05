@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_ApprovalTableWikiFactory;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_File;
@@ -48,6 +49,7 @@ final class ItemRepresentationVisitorTest extends TestCase
     private Docman_ItemFactory&MockObject $item_factory;
     private ItemRepresentationBuilder&MockObject $item_representation_builder;
     private ItemRepresentationVisitor $item_visitor;
+    private Docman_ApprovalTableWikiFactory&MockObject $wiki_approval_table_factory;
 
     #[\Override]
     protected function setUp(): void
@@ -56,6 +58,7 @@ final class ItemRepresentationVisitorTest extends TestCase
         $this->item_factory                = $this->createMock(Docman_ItemFactory::class);
         $this->link_version_factory        = $this->createMock(Docman_LinkVersionFactory::class);
         $this->docman_version_factory      = $this->createMock(Docman_VersionFactory::class);
+        $this->wiki_approval_table_factory = $this->createMock(Docman_ApprovalTableWikiFactory::class);
         $this->event_manager               = $this->createMock(EventManager::class);
         $event_adder                       = $this->createMock(DocmanItemsEventAdder::class);
         $event_adder->expects($this->once())->method('addLogEvents');
@@ -64,6 +67,7 @@ final class ItemRepresentationVisitorTest extends TestCase
             $this->docman_version_factory,
             $this->link_version_factory,
             $this->item_factory,
+            $this->wiki_approval_table_factory,
             $this->event_manager,
             $event_adder
         );
@@ -114,6 +118,7 @@ final class ItemRepresentationVisitorTest extends TestCase
         $item = new Docman_Wiki(['wiki_page' => 'A wiki page', 'group_id' => 102]);
 
         $this->item_factory->expects($this->once())->method('getIdInWikiOfWikiPageItem')->with('A wiki page', 102)->willReturn(10);
+        $this->wiki_approval_table_factory->expects($this->once())->method('getLastDocumentVersionNumber')->willReturn(12);
 
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 

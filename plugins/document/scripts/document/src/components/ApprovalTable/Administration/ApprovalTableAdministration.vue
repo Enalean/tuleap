@@ -38,13 +38,13 @@
 </template>
 
 <script setup lang="ts">
-import type { ApprovalTable, Item } from "../../../type";
+import type { ApprovableDocument, ApprovalTable, Item } from "../../../type";
 import { ref } from "vue";
 import ApprovalTableAdministrationModal from "./ApprovalTableAdministrationModal.vue";
 
 defineProps<{
     table: ApprovalTable;
-    item: Item;
+    item: Item & ApprovableDocument;
 }>();
 
 defineEmits<{

@@ -82,6 +82,11 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr ""
 
+msgid ""
+"A new approval table will be created from the previous one. Keeps reviewers, "
+"comments and commitments."
+msgstr ""
+
 msgid "Actions in Documents service"
 msgstr ""
 
@@ -261,6 +266,9 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
+msgid "Copy the previous approval table (e.g. for small / typo updates)."
+msgstr ""
+
 msgid "Copy the previous approval table."
 msgstr ""
 
@@ -277,6 +285,9 @@ msgid "Create a new document"
 msgstr ""
 
 msgid "Create a new empty approval table."
+msgstr ""
+
+msgid "Create a new empty table."
 msgstr ""
 
 msgid "Create a new file"
@@ -467,6 +478,9 @@ msgstr ""
 msgid "Id"
 msgstr ""
 
+msgid "In all cases, there is no automatic notification of the reviewers."
+msgstr ""
+
 msgid "It seems an action you tried to perform can't be done."
 msgstr ""
 
@@ -638,6 +652,12 @@ msgid "Only the last 5 versions are displayed."
 msgstr ""
 
 msgid ""
+"Only the table structure will be kept (description, notification type, "
+"reviewer list). Actually, the new table will be identical to the previous "
+"one, but without reviewer comments and commitments."
+msgstr ""
+
+msgid ""
 "Only the table structure will be kept. Reviewer comments and commitments "
 "will be discarded."
 msgstr ""
@@ -777,6 +797,9 @@ msgstr ""
 msgid "Requester comment"
 msgstr ""
 
+msgid "Reset the approval cycle (e.g. for major rewrite)."
+msgstr ""
+
 msgid "Reset the approval cycle."
 msgstr ""
 
@@ -870,6 +893,9 @@ msgid "Start date"
 msgstr ""
 
 msgid "Start over with a completely new approval table."
+msgstr ""
+
+msgid "Start over with a completly new approval table."
 msgstr ""
 
 msgid "Statistics"
@@ -987,6 +1013,11 @@ msgstr ""
 msgid ""
 "This page is asking you to confirm that you want to leave - data you have "
 "entered may not be saved. Do you want to leave this page?"
+msgstr ""
+
+msgid ""
+"This table is linked to an old version of the document (%d). The last "
+"document version is %d."
 msgstr ""
 
 msgid "This table shows the number of elements of each type."
@@ -1149,6 +1180,9 @@ msgid "You are not allowed to write in this folder"
 msgstr ""
 
 msgid "You are viewing an old version (%{ version_number }) of this document."
+msgstr ""
+
+msgid "You can either:"
 msgstr ""
 
 msgid ""

@@ -33,16 +33,22 @@ import AdministrationModalGlobalSettings from "./AdministrationModalGlobalSettin
 import AdministrationModalNotifications from "./AdministrationModalNotifications.vue";
 import AdministrationModalReviewers from "./AdministrationModalReviewers.vue";
 import { UserBuilder } from "../../../../tests/builders/UserBuilder";
+import type { ApprovableDocument, ApprovalTable, Embedded, Item } from "../../../type";
+import { TYPE_EMBEDDED } from "../../../constants";
+import AdministrationModalMissingTable from "./AdministrationModalMissingTable.vue";
 
 describe("ApprovalTableAdministrationModal", () => {
     let trigger: HTMLButtonElement;
 
-    function getWrapper(): VueWrapper<InstanceType<typeof ApprovalTableAdministrationModal>> {
+    function getWrapper(
+        table: ApprovalTable | null = null,
+        item: (Item & ApprovableDocument) | null = null,
+    ): VueWrapper<InstanceType<typeof ApprovalTableAdministrationModal>> {
         return shallowMount(ApprovalTableAdministrationModal, {
             props: {
                 trigger,
-                table: new ApprovalTableBuilder(35).build(),
-                item: new ItemBuilder(123).build(),
+                table: table ?? new ApprovalTableBuilder(35).build(),
+                item: item ?? new ItemBuilder(123).buildApprovableDocument(),
             },
             global: {
                 ...getGlobalTestOptions({}),
@@ -135,5 +141,25 @@ describe("ApprovalTableAdministrationModal", () => {
 
         expect(updateApprovalTable).toHaveBeenCalledWith(123, 102, "disabled", "", "", [], []);
         expect(wrapper.find("[data-test=admin-modal-error]").text()).toContain("Oh no!");
+    });
+
+    it("Should display new table form when table not linked to last item version", async () => {
+        const putApprovalTable = vi
+            .spyOn(rest_querier, "putApprovalTable")
+            .mockReturnValue(okAsync(null));
+        const wrapper = getWrapper(new ApprovalTableBuilder(35).withVersionNumber(45).build(), {
+            ...new ItemBuilder(123).withType(TYPE_EMBEDDED).buildApprovableDocument(),
+            embedded_file_properties: { version_number: 15 },
+        } as Embedded);
+
+        expect(wrapper.findComponent(AdministrationModalMissingTable).exists()).toBe(true);
+
+        await wrapper
+            .findComponent(AdministrationModalMissingTable)
+            .setValue("reset", "table_action_value");
+
+        await wrapper.find("[data-test=update-table-button]").trigger("click");
+
+        expect(putApprovalTable).toHaveBeenCalledWith(123, "reset");
     });
 });

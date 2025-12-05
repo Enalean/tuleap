@@ -25,24 +25,15 @@ namespace Tuleap\Docman\REST\v1\Wiki;
  */
 class WikiPropertiesRepresentation
 {
-    /**
-     * @var string
-     */
-    public $page_name;
-
-    /**
-     * @var int | null
-     */
-    public $page_id;
-
-    private function __construct(string $page_name, ?int $page_id)
-    {
-        $this->page_name = $page_name;
-        $this->page_id   = $page_id;
+    private function __construct(
+        public string $page_name,
+        public ?int $page_id,
+        public int $version_number,
+    ) {
     }
 
-    public static function build(\Docman_Wiki $docman_wiki, ?int $wiki_page_id): self
+    public static function build(\Docman_Wiki $docman_wiki, ?int $wiki_page_id, int $version_number): self
     {
-        return new self($docman_wiki->getPagename(), $wiki_page_id);
+        return new self($docman_wiki->getPagename(), $wiki_page_id, $version_number);
     }
 }

@@ -79,6 +79,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
                 $this->item_version_factory,
                 $this->createMock(Docman_LinkVersionFactory::class),
                 $this->item_factory,
+                $this->createStub(\Docman_ApprovalTableWikiFactory::class),
                 $this->event_manager,
                 $event_adder
             ),

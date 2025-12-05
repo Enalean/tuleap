@@ -31,6 +31,7 @@ class FilePropertiesRepresentation
         public ?string $open_href,
         public int $file_size,
         public string $file_name,
+        public int $version_number,
     ) {
     }
 
@@ -42,6 +43,7 @@ class FilePropertiesRepresentation
             $open_href,
             $docman_version->getFilesize(),
             $docman_version->getFilename(),
+            (int) $docman_version->getNumber(),
         );
     }
 }

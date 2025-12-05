@@ -21,6 +21,7 @@ import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../const
 import type {
     ApprovableDocument,
     ApprovalTableReviewer,
+    ApprovalTable,
     DefaultFileItem,
     Embedded,
     Empty,
@@ -30,7 +31,7 @@ import type {
     Link,
     Wiki,
 } from "../type";
-import { isEmpty, isOtherType } from "./type-check-helper";
+import { isEmbedded, isEmpty, isFile, isLink, isOtherType, isWiki } from "./type-check-helper";
 
 export interface ApprovalTableBadge {
     icon_badge: string;
@@ -147,4 +148,35 @@ export function rearrangeReviewersTable(
     }
 
     return result;
+}
+
+export function isItemVersionable(item: Item): boolean {
+    return isEmbedded(item) || isFile(item) || isWiki(item) || isLink(item);
+}
+
+export function isTableLinkedToLastItemVersion(
+    item: ApprovableDocument,
+    table: ApprovalTable,
+): boolean {
+    if (!isItemVersionable(item)) {
+        return true;
+    }
+
+    if (isEmbedded(item)) {
+        return item.embedded_file_properties?.version_number === table.version_number;
+    }
+
+    if (isFile(item)) {
+        return item.file_properties?.version_number === table.version_number;
+    }
+
+    if (isWiki(item)) {
+        return item.wiki_properties.version_number === table.version_number;
+    }
+
+    if (isLink(item)) {
+        return item.link_properties.version_number === table.version_number;
+    }
+
+    throw Error(`Item type ${item.type} is not versionable nor approvable`);
 }

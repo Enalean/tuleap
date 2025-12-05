@@ -365,6 +365,7 @@ export interface FileProperties {
     download_href: string;
     open_href: string | null;
     level?: number;
+    readonly version_number: number;
 }
 
 export interface CreatedItem extends CreatedItemResponse {
@@ -378,6 +379,7 @@ export interface CreatedItemFileProperties {
 
 export interface LinkProperties {
     link_url: string;
+    readonly version_number: number | null;
 }
 
 export interface EmbeddedProperties {
@@ -393,6 +395,7 @@ export interface OtherTypeProperties {
 export interface WikiProperties {
     page_name: string;
     page_id: number | null;
+    version_number: number;
 }
 
 export interface ItemReferencingWikiPageRepresentation {
