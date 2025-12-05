@@ -47,19 +47,6 @@ tracker_edit_comment	upd_followup	Editer le commentaire
 tracker_edit_comment	upd_followup_details	Commentaire soumit $1 par $2
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/import_admin.php
-#
-tracker_import_admin	not_get_atf	Impossible d'obtenir un ArtifactTypeFactory
-tracker_import_admin	art_import	Importation d'artifacts dans un tracker
-tracker_import_admin	welcome	<h3>Importation des artifacts</h3><P>Vous pouvez importer des artifacts dans un tracker un partir d'un fichier texte (au format CSV). Cliquez sur les liens ci-dessous soit pour importer de nouveaux artifacts soit pour mettre à jour des artifacts existants.<P>
-tracker_import_admin	art_data_import	Importation des artifacts
-tracker_import_admin	import_format	Format d'importation
-tracker_import_admin	import	Importer
-tracker_import_admin	show_format	Voir le format
-tracker_import_admin	tracker	Tracker
-tracker_import_admin	disabled	Les trackers ont été désactivés par ce projet.
-#
-#-----------------------------------------------
 # Script: SF/www/tracker/import.php
 #
 tracker_import	art_import	Importation dans le tracker&nbsp;:

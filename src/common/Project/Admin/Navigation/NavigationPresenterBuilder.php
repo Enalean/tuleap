@@ -22,7 +22,6 @@ namespace Tuleap\Project\Admin\Navigation;
 
 use EventManager;
 use Project;
-use Service;
 use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Project\Service\IndexController;
 
@@ -68,34 +67,10 @@ class NavigationPresenterBuilder
         $this->presenter = new NavigationPresenter($entries, $project);
 
         if ($user->isAdmin($project_id)) {
-            $this->addTrackerImportEntry($project);
-
             $this->event_manager->processEvent($this->presenter);
         }
 
         return $this->presenter;
-    }
-
-    private function addTrackerImportEntry(Project $project)
-    {
-        $service = $project->getService(Service::TRACKERV3);
-
-        if (! $service) {
-            return;
-        }
-
-        $this->presenter->addDropdownItem(
-            self::DATA_ENTRY_SHORTNAME,
-            new NavigationDropdownItemPresenter(
-                _('Trackers v3 import'),
-                '/tracker/import_admin.php?' . http_build_query(
-                    [
-                        'group_id' => $project->getID(),
-                        'mode' => 'admin',
-                    ]
-                )
-            )
-        );
     }
 
     /**
