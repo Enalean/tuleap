@@ -298,9 +298,7 @@ tracker_include_artifact	check_already_submitted	Avez-vous vérifié que cet art
 tracker_include_artifact	latest_modif	DERNIERES MODIFICATIONS
 tracker_include_artifact	full_snapshot	COPIE COMPLETE
 tracker_include_artifact	follow_link	Pour des informations détaillées, suivez ce lien :
-tracker_include_artifact	changes_by	Modifié par :
 tracker_include_artifact	anon_user	Utilisateur anonyme
-tracker_include_artifact	add_flup_comment	Commentaire additionnel
 tracker_include_artifact	rem_followup	Commentaire supprimé
 tracker_include_artifact	add_followup	Commentaire ajouté
 tracker_include_artifact	upd_followup_nochange	Le commentaire n'a pas changé
@@ -587,26 +585,11 @@ tracker_common_artifact	field_err	 Artifact créé, mais l'insertion de la valeu
 tracker_common_artifact	def_err	  Artifact créé, mais l'insertion de la valeur du champ par défaut - $1 : $2
 tracker_common_artifact	enter_email	 Vous devez fournir une adresse e-mail !
 tracker_common_artifact	add_comment	 Commentaire ajouté à l'artifact
-tracker_common_artifact	comment_removed	Commentaire supprimé
-tracker_common_artifact	err_del_comment	Erreur lors de la suppression du commentaire $1: $2
-tracker_common_artifact	err_upd_comment	Erreur lors de la modification du commentaire $1: $2
-tracker_common_artifact	field_upd_fail	La mise à jour de la valeur de champ $1 a échoué
-tracker_common_artifact	canned_used	 Réponse type utilisée
-tracker_common_artifact	unable_canned	 Impossibilité d'utiliser la réponse type
-tracker_common_artifact	upd_fail	LA MISE A JOUR A ECHOUÉ
-tracker_common_artifact	cc_add_fail	L'ajout de CC a échoué
-tracker_common_artifact	prob_cc_list	erreur en détruisant une ancienne liste de CC (aid=$1).
-tracker_common_artifact	err_cc_id	Erreur CC ID $1 n'appartient pas à cet ID d'artifact
-tracker_common_artifact	err_del_cc	Erreur à la destruction du CC ID $1 : $2
-tracker_common_artifact	cc_remove	CC enlevé
 tracker_common_artifact	invalid_art	 Artifact invalide no. $1
 tracker_common_artifact	depend_add_fail	L'ajout de dépendances sur l'artifact no. $1 a échoué
 tracker_common_artifact	depend_removed	Dépendances enlevées
 tracker_common_artifact	bad_field_permission_submission	Vous n'êtes pas autorisé à soumettre le champ $1.
-tracker_common_artifact	bad_field_permission_update	Vous n'êtes pas autorisé à modifier le champ $1.
 tracker_common_artifact	bad_field_value	La valeur $2 n'est pas autorisée pour le champ $1.
-tracker_common_artifact	followup_upd_succ	Commentaire mise à jour.
-tracker_common_artifact	followup_upd_fail	La mise à jour du commentaire a échoué.
 tracker_common_artifact	mandatory_not_set	La soumission de l'artifact a échoué: Un ou plusieurs champs obligatoires qui ne sont pas affichés sont mis à "None", veuillez le signaler au tracker admin.
 #
 #-----------------------------------------------

@@ -44,51 +44,9 @@ class ArtifactRulesManager
         return $this->rules_by_tracker_id[$artifact_type_id];
     }
 
-    public function saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value)
-    {
-        $fact = $this->_getArtifactRuleFactory();
-        return $fact->saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value);
-    }
-
-    public function deleteRule($rule_id)
-    {
-        $fact = $this->_getArtifactRuleFactory();
-        return $fact->deleteRule($rule_id);
-    }
-
-    public function deleteRuleValueBySource($artifact_type_id, $source, $source_value, $target)
-    {
-        $fact = $this->_getArtifactRuleFactory();
-        return $fact->deleteRuleValueBySource($artifact_type_id, $source, $source_value, $target);
-    }
-
-    public function deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value)
-    {
-        $fact = $this->_getArtifactRuleFactory();
-        return $fact->deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value);
-    }
-
     public function _getArtifactRuleFactory() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return ArtifactRuleFactory::instance();
-    }
-
-    public function deleteRulesByArtifactType($artifact_type_id)
-    {
-        $fact = $this->_getArtifactRuleFactory();
-        return $fact->deleteRulesByArtifactType($artifact_type_id);
-    }
-
-    public function deleteRulesByFieldId($artifact_type_id, $field_id)
-    {
-        $fact = $this->_getArtifactRuleFactory();
-        return $fact->deleteRulesByFieldId($artifact_type_id, $field_id);
-    }
-
-    public function deleteRulesByValueId($artifact_type_id, $field_id, $value_id)
-    {
-        $fact = $this->_getArtifactRuleFactory();
-        return $fact->deleteRulesByValueId($artifact_type_id, $field_id, $value_id);
     }
 
     public function copyRules($from_artifact_type_id, $to_artifact_type_id)

@@ -79,9 +79,6 @@ $sys_http_user  = "codendiadm"; // Unix user running the HTTP server
 // it will result in a warning in project summary page.
 $sys_trove_cat_mandatory = 1;
 
-// Linefeed characters: \r\n for Windows, \n for Linux/Unix
-$sys_lf = "\n";
-
 // Disable sub-domains (like aaa.proj.example.com)
 // Should be disabled if no DNS delegation
 $sys_disable_subdomains = 0;

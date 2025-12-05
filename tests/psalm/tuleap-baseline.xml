@@ -70489,47 +70489,6 @@
       <code><![CDATA[updateItemName]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/dao/ArtifactReportFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct($da)]]></code>
-      <code><![CDATA[prepareRanking]]></code>
-      <code><![CDATA[prepareRanking]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$da]]></code>
-      <code><![CDATA[$field_name]]></code>
-      <code><![CDATA[$field_name]]></code>
-      <code><![CDATA[$field_name]]></code>
-      <code><![CDATA[$field_name]]></code>
-      <code><![CDATA[$new_sizes]]></code>
-      <code><![CDATA[$rank]]></code>
-      <code><![CDATA[$rank]]></code>
-      <code><![CDATA[$rank]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-      <code><![CDATA[$report_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[prepareQueryRanking]]></code>
-      <code><![CDATA[prepareResultRanking]]></code>
-      <code><![CDATA[resizeColumns]]></code>
-      <code><![CDATA[searchByReportIdAndFieldName]]></code>
-      <code><![CDATA[updateResultRanking]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/dao/ArtifactRuleDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>

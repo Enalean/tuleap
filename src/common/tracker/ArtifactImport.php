@@ -598,17 +598,6 @@ class ArtifactImport // phpcs:ignore
         return true;
     }
 
-    public function mandatoryFields()
-    {
-        $fields =  $this->art_field_fact->getAllUsedFields();
-        foreach ($fields as $field) {
-            if ($field->getName() != 'comment_type_id' && ! $field->isEmptyOk()) {
-                $mand_fields[$field->getName()] = true;
-            }
-        }
-        return $mand_fields;
-    }
-
     public function getImportUser(&$sub_user_id, &$sub_user_name)
     {
         $sub_user_id = $GLOBALS['user_id'];
@@ -661,8 +650,6 @@ class ArtifactImport // phpcs:ignore
    * Check if the given string can be converted using htmlspecialchar
    *
    * Warning: this method aims to workaround a bug on CSV follow-up comments storage.
-   * The bug is now fixed (htmlspecialchars on comments in Artifact::addFollowUpComments)
-   * but we still need if for legacy purpose.
    *
    * This method address one legacy bug with CSV import. CSV import use to store
    * in the database the follow-up comments without using 'htmlspecialchar' like
@@ -769,7 +756,6 @@ class ArtifactImport // phpcs:ignore
 
   /** assume that the
    * @param followup_comments (IN): comments have the form that we get when exporting follow-up comments in csv format
-   *                      (see ArtifactHtml->showFollowUpComments($output == OUTPUT_EXPORT))
    * @param parsed_comments (OUT): an array (#detail => array2), where array2 is of the form
    *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
    * @param for_parse_report (IN): if we parse the follow-up comments to show them in the parse report then we keep the labels
@@ -1030,120 +1016,6 @@ class ArtifactImport // phpcs:ignore
         }
 
         return true;
-    }
-
-  /**
-   * prepare our $data record so that we can use standard artifact methods to create, update, ...
-   * the imported artifact
-   */
-    public function prepareVfl($data, &$artifact_depend_id, &$add_cc, &$cc_comment, &$comments)
-    {
-        global $Language;
-        for ($c = 0; $c < count($data); $c++) {
-            $label = $this->parsed_labels[$c];
-            $field = $this->used_fields[$label];
-            if ($field) {
-                $field_name = $field->getName();
-            }
-            $imported_value = $data[$label];
-
-            // FOLLOW-UP COMMENTS
-            if ($label == $this->lbl_list['follow_ups']) {
-              //$field_name = "details";
-                if ($data[$label] != '' && trim($data[$label]) != $Language->getText('tracker_import_utils', 'no_followups')) {
-                    $comments = $data[$label];
-                }
-                continue;
-
-            // DEPEND ON
-            } elseif ($label == $this->lbl_list['is_dependent_on']) {
-                $depends = $data[$label];
-                if ($depends != $Language->getText('global', 'none') && $depends != '') {
-                    $artifact_depend_id = $depends;
-                } else {
-      //we have to delete artifact_depend_ids if nothing has been specified
-                    $artifact_depend_id = $Language->getText('global', 'none');
-                }
-                continue;
-
-        // CC LIST
-            } elseif ($label == $this->lbl_list['add_cc']) {
-                if ($data[$label] != '' && $data[$label] != $Language->getText('global', 'none')) {
-                    $add_cc = $data[$label];
-                } else {
-                    $add_cc = '';
-                }
-                continue;
-
-            // CC COMMENT
-            } elseif ($label == $this->lbl_list['cc_comment']) {
-                $cc_comment = $data[$label];
-                continue;
-
-            // ORIGINAL SUBMISSION
-              //special treatment for "Original Submission" alias "details"
-              //in the import. To avoid confusion, the details field is renamed
-              //original_submission in the import
-              //} else if (isset($field_name) && $field_name == "details") {
-              //$vfl["original_submission"] = $data[$label];
-              //continue;
-
-            // SUBMITTED BY
-            } elseif ($field_name == 'submitted_by') {
-                $sub_user_name = $data[$label];
-                if ($sub_user_name && $sub_user_name != '') {
-                    $res            = user_get_result_set_from_unix($sub_user_name);
-                    $imported_value = db_result($res, 0, 'user_id');
-                }
-                $vfl[$field_name] = $imported_value;
-                continue;
-            }
-
-            // transform imported_value into format that can be inserted into db
-            unset($value);
-            unset($predef_vals);
-            if (isset($this->predefined_values[$c])) {
-                $predef_vals = $this->predefined_values[$c];
-            }
-            if (isset($predef_vals)) {
-                if ($field && $field->getDisplayType() == 'MB') {
-                    $val_arr = explode(',', $imported_value);
-                    foreach ($val_arr as $name) {
-                        if ($name == $Language->getText('global', 'none')) {
-                            $value[] = 100;
-                        } else {
-                            $value[] = $predef_vals[$name];
-                        }
-                    }
-                } else {
-                    if ($imported_value == $Language->getText('global', 'none')) {
-                        $value = 100;
-                    } else {
-                        $value = $predef_vals[$imported_value];
-                    }
-
-      //special case for severity where we allow to specify
-      // 1 instead of "1 - Ordinary"
-      // 5 instead of "5 - Major"
-      // 9 intead of "9 - Critical"
-                    if (
-                        $field_name == 'severity' &&
-                        (strcasecmp($imported_value, '1') == 0 ||
-                        strcasecmp($imported_value, '5') == 0 ||
-                        strcasecmp($imported_value, '9') == 0)
-                    ) {
-                        $value = $imported_value;
-                    }
-                }
-                $vfl[$field_name] = $value;
-
-        // IT COULD BE SO SIMPLE !!!
-            } else {
-                $vfl[$field_name] = $imported_value;
-            }
-        }
-
-        return $vfl;
     }
 
     /**

@@ -307,9 +307,7 @@ tracker_include_artifact	check_already_submitted	Did you check if this artifact 
 tracker_include_artifact	latest_modif	LATEST MODIFICATIONS
 tracker_include_artifact	full_snapshot	FULL $1 SNAPSHOT
 tracker_include_artifact	follow_link	For detailed info, follow this link:
-tracker_include_artifact	changes_by	Changes by:
 tracker_include_artifact	anon_user	Anonymous user
-tracker_include_artifact	add_flup_comment	Additional Follow-up Comments
 tracker_include_artifact	rem_followup	Removed Follow-up Comment
 tracker_include_artifact	add_followup	Added Follow-up Comment
 tracker_include_artifact	upd_followup_nochange	Follow-up Comment did not change
@@ -596,26 +594,11 @@ tracker_common_artifact	field_err	 Artifact created, but failed to insert the fi
 tracker_common_artifact	def_err	 Artifact created, but failed to insert the default field value - $1 : $2
 tracker_common_artifact	enter_email	 You need to enter an email!
 tracker_common_artifact	add_comment	 Comment added to artifact
-tracker_common_artifact	comment_removed	Follow-up Comment removed
-tracker_common_artifact	err_del_comment	Error deleting Follow-up Comment ID $1: $2
-tracker_common_artifact	err_upd_comment	Error editing Follow-up Comment ID $1: $2
-tracker_common_artifact	field_upd_fail	Failed to update the field value $1
-tracker_common_artifact	canned_used	 Canned Response Used
-tracker_common_artifact	unable_canned	 Unable to use Canned Response
-tracker_common_artifact	upd_fail	UPDATE FAILED
-tracker_common_artifact	cc_add_fail	CC addition failed
-tracker_common_artifact	prob_cc_list	problem deleting old CC List (aid=$1).
-tracker_common_artifact	err_cc_id	Error CC ID $1 doesn't belong to artifact ID
-tracker_common_artifact	err_del_cc	Error deleting CC ID $1: $2
-tracker_common_artifact	cc_remove	CC Removed
 tracker_common_artifact	invalid_art	 Invalid artifact #$1
 tracker_common_artifact	depend_add_fail	Dependencies addition for artifact #$1 failed
 tracker_common_artifact	depend_removed	Dependency Removed
 tracker_common_artifact	bad_field_permission_submission	You are not allowed to submit the field $1.
-tracker_common_artifact	bad_field_permission_update	You are not allowed to update the field $1.
 tracker_common_artifact	bad_field_value	The value $2 is not a valid value for the field $1.
-tracker_common_artifact	followup_upd_succ	Follow-up Comment Update Successful.
-tracker_common_artifact	followup_upd_fail	Follow-up Comment Update Failed.
 tracker_common_artifact	mandatory_not_set	Failed to submit the artifact: Some mandatory fields which are hidden have been set to 'None' value, please contact the tracker admin.
 #
 #-----------------------------------------------

@@ -22,7 +22,7 @@
 /**
  *  Data Access Object for ArtifactGlobalNotification
  */
-class ArtifactGlobalNotificationDao extends DataAccessObject
+class ArtifactGlobalNotificationDao extends DataAccessObject //phpcs:ignore
 {
     /**
     * Gets all tables of the db
@@ -56,45 +56,6 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
         $sql = sprintf(
             'SELECT id, addresses, all_updates, check_permissions FROM artifact_global_notification WHERE tracker_id = %s ORDER BY id',
             $this->da->quoteSmart($trackerId)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches ArtifactGlobalNotification by Addresses
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchByAddresses($addresses)
-    {
-        $sql = sprintf(
-            'SELECT id, tracker_id, all_updates, check_permissions FROM artifact_global_notification WHERE addresses = %s',
-            $this->da->quoteSmart($addresses)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches ArtifactGlobalNotification by AllUpdates
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchByAllUpdates($allUpdates)
-    {
-        $sql = sprintf(
-            'SELECT id, tracker_id, addresses, check_permissions FROM artifact_global_notification WHERE all_updates = %s',
-            $this->da->quoteSmart($allUpdates)
-        );
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches ArtifactGlobalNotification by CheckPermissions
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchByCheckPermissions($checkPermissions)
-    {
-        $sql = sprintf(
-            'SELECT id, tracker_id, addresses, all_updates FROM artifact_global_notification WHERE check_permissions = %s',
-            $this->da->quoteSmart($checkPermissions)
         );
         return $this->retrieve($sql);
     }

@@ -272,44 +272,6 @@ function util_make_reference_links($data, $group_id)
     return $data;
 }
 
-function util_user_link($username)
-{
-    global $Language;
-    $hp = Codendi_HTMLPurifier::instance();
-    if ($username == $Language->getText('global', 'none') || empty($username)) {
-        return $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
-    }
-    return '<a href="/users/' . urlencode($username) . '">' . $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
-}
-
-function util_double_diff_array($arr1, $arr2)
-{
-    // first transform both arrays in hashes
-    $h1 = [];
-    $h2 = [];
-    foreach ($arr1 as $v) {
-        $h1[$v] = $v;
-    }
-    foreach ($arr2 as $v) {
-        $h2[$v] = $v;
-    }
-
-    $deleted = [];
-    foreach ($h1 as $k => $v) {
-        if (! isset($h2[$k])) {
-            $deleted[] = $k;
-        }
-    }
-    $added = [];
-    foreach ($h2 as $k => $v) {
-        if (! isset($h1[$k])) {
-            $added[] = $k;
-        }
-    }
-
-    return [$deleted, $added];
-}
-
 // Clean up email address (remove starting and ending spaces),replace semicolon by comma and put to lower
 // case
 function util_cleanup_emails($addresses)
@@ -318,26 +280,6 @@ function util_cleanup_emails($addresses)
     $addresses = preg_replace('/[,;]\s+/', ',', $addresses);
     $addresses = str_replace(';', ',', $addresses);
     return strtolower(rtrim(trim($addresses)));
-}
-
-// Clean up email address (remove spaces...) and add @... if it is a simple
-// login name
-function util_normalize_email($address)
-{
-    $host    = \Tuleap\ServerHostname::rawHostname();
-    $address = util_cleanup_emails($address);
-    if (validate_email($address)) {
-        return $address;
-    } else {
-        return $address . "@$host";
-    }
-}
-
-// Clean up email address (remove spaces...) and split comma or semi-colon separated emails
-function util_split_emails($addresses)
-{
-    $addresses = util_cleanup_emails($addresses);
-    return preg_split('/,/D', $addresses);
 }
 
 // One Email Verification
@@ -453,57 +395,6 @@ function util_get_dir_image_theme($the_theme = false)
 function formatByteToMb($size_byte)
 {
     return intval($size_byte / (1024 * 1024));
-}
-
-/**
- * Return human readable sizes
- *
- * @link        http://aidanlister.com/repos/v/function.size_readable.php
- * @param       int     $size        size in bytes
- * @param       string  $max         maximum unit
- * @param       string  $system      'si' for SI, 'bi' for binary prefixes
- * @param       string  $retstring   return string format
- */
-function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto')
-{
-    // Pick units
-    $systems['si']['prefix'] = ['B', 'K', 'MB', 'GB', 'TB', 'PB'];
-    $systems['si']['size']   = 1000;
-    $systems['bi']['prefix'] = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
-    $systems['bi']['size']   = 1024;
-    $sys                     = isset($systems[$system]) ? $systems[$system] : $systems['si'];
-
-    // Max unit to display
-    $depth = count($sys['prefix']) - 1;
-    if ($max && false !== $d = array_search($max, $sys['prefix'])) {
-        $depth = $d;
-    }
-
-    // Loop
-    $i = 0;
-    while (abs($size) >= $sys['size'] && $i < $depth) {
-        $size /= $sys['size'];
-        $i++;
-    }
-
-    // Adapt the decimal places to the number of digit:
-    // 1.24 / 12.3 / 123
-    if ($retstring == 'auto') {
-        $nbDigit = (int) (log(abs($size)) / log(10)) + 1;
-        switch ($nbDigit) {
-            case 1:
-                $retstring = '%.2f %s';
-                break;
-            case 2:
-                $retstring = '%.1f %s';
-                break;
-            default:
-                $retstring = '%d %s';
-                break;
-        }
-    }
-
-    return sprintf($retstring, $size, $sys['prefix'][$i]);
 }
 
 /**

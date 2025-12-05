@@ -25,7 +25,7 @@
 *
 * Base class to create, retrieve, update or delete rules
 */
-class ArtifactRuleFactory
+class ArtifactRuleFactory //phpcs:ignore
 {
     public ArtifactRuleDao $rules_dao;
     public array $rules;
@@ -90,7 +90,7 @@ class ArtifactRuleFactory
     /**
     * @return ArtifactRule
     */
-    public function _buildRuleInstance($data)
+    public function _buildRuleInstance($data) //phpcs:ignore
     {
         //We create Rule
         switch ($data['rule_type']) {
@@ -108,77 +108,6 @@ class ArtifactRuleFactory
                 break;
         }
         return $rule;
-    }
-
-    public function saveRuleValue($group_artifact_id, $source, $source_value, $target, $target_value)
-    {
-        $this->rules_dao->create($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_VALUE, $target_value);
-    }
-
-    public function _saveRuleState($group_artifact_id, $source, $source_value, $target, $rule_type)
-    {
-        $this->rules_dao->deleteRuleState($group_artifact_id, $source, $source_value, $target, [$this->RULETYPE_HIDDEN, $this->RULETYPE_DISABLED, $this->RULETYPE_MANDATORY]);
-        $this->rules_dao->create($group_artifact_id, $source, $source_value, $target, $rule_type);
-    }
-
-    public function saveRuleHidden($group_artifact_id, $source, $source_value, $target)
-    {
-        $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_HIDDEN);
-    }
-
-    public function saveRuleDisabled($group_artifact_id, $source, $source_value, $target)
-    {
-        $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_DISABLED);
-    }
-
-    public function saveRuleMandatory($group_artifact_id, $source, $source_value, $target)
-    {
-        $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_MANDATORY);
-    }
-
-    public function deleteRule($rule_id)
-    {
-        $deleted = $this->rules_dao->deleteByRuleId($rule_id);
-        return $deleted;
-    }
-
-    public function deleteRuleValueBySource($artifact_type, $source, $source_value, $target)
-    {
-        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($artifact_type, $source, $source_value, $target, $this->RULETYPE_VALUE);
-        return $deleted;
-    }
-
-    public function deleteRuleValueByTarget($artifact_type, $source, $target, $target_value)
-    {
-        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($artifact_type, $source, $target, $target_value, $this->RULETYPE_VALUE);
-        return $deleted;
-    }
-
-    /**
-    * Delete all rules for a tracker
-    */
-    public function deleteRulesByArtifactType($artifact_type)
-    {
-        $deleted = $this->rules_dao->deleteRulesByGroupArtifactId($artifact_type);
-        return $deleted;
-    }
-
-    /**
-    * Delete all rules related to a field
-    */
-    public function deleteRulesByFieldId($artifact_type, $field_id)
-    {
-        $deleted = $this->rules_dao->deleteByField($artifact_type, $field_id);
-        return $deleted;
-    }
-
-    /**
-    * Delete all rules related to a field value
-    */
-    public function deleteRulesByValueId($artifact_type, $field_id, $value_id)
-    {
-        $deleted = $this->rules_dao->deleteByFieldValue($artifact_type, $field_id, $value_id);
-        return $deleted;
     }
 
     /**
