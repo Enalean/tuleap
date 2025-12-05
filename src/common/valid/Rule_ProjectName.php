@@ -26,7 +26,7 @@
  *
  * This extends the user name validation
  */
-class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string PATTERN_PROJECT_NAME = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
     /**
@@ -73,8 +73,7 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
      */
     public function getPendingProjectRename($val)
     {
-        $sm = $this->_getSystemEventManager();
-        if (! $sm->isProjectNameAvailable($val)) {
+        if (! $this->system_event_manager->isProjectNameAvailable($val)) {
             $this->error = sprintf(_('%s is already reserved for another rename operation. Please check System Event Monitor'), $val);
             return \false;
         }

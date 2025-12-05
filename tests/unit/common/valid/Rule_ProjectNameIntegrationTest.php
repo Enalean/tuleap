@@ -19,9 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Rule_ProjectNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Rule_ProjectNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function testValidNamesAreValid(): void
     {
@@ -35,19 +34,7 @@ final class Rule_ProjectNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCas
         $sm->method('isUserNameAvailable')->willReturn(true);
         $sm->method('isProjectNameAvailable')->willReturn(true);
 
-        $r = $this->getMockBuilder(\Rule_ProjectName::class)
-            ->onlyMethods(['_getUserManager', '_getProjectManager', '_getSystemEventManager', 'isNameAvailable'])
-            ->getMock();
-
-        $r->method('_getUserManager')->willReturn($um);
-        $r->method('_getProjectManager')->willReturn($pm);
-        $r->method('_getSystemEventManager')->willReturn($sm);
-
-        $r->method('isNameAvailable')->willReturnMap([
-            ['group-test', true],
-            ['test', true],
-            ['test1', true],
-        ]);
+        $r = new Rule_ProjectName($um, $pm, $sm);
 
         self::assertTrue($r->isValid('group-test'));
         self::assertTrue($r->isValid('test'));

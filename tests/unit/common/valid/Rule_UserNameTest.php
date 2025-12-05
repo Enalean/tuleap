@@ -18,14 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\GlobalLanguageMock;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    use GlobalLanguageMock;
-
     public function testReservedNames(): void
     {
         $r = new Rule_UserName();
@@ -184,10 +180,9 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $um = $this->createMock(\UserManager::class);
         $um->method('getUserByUserName')->willReturn(null);
 
-        $r = $this->createPartialMock(\Rule_UserName::class, ['_getUserManager']);
-        $r->method('_getUserManager')->willReturn($um);
+        $rule = new Rule_UserName($um);
 
-        $this->assertFalse($r->isAlreadyUserName('usertest'));
+        $this->assertFalse($rule->isAlreadyUserName('usertest'));
     }
 
     public function testUserNameExists(): void
@@ -197,10 +192,9 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $um = $this->createMock(\UserManager::class);
         $um->method('getUserByUserName')->with('usertest')->willReturn($u);
 
-        $r = $this->createPartialMock(\Rule_UserName::class, ['_getUserManager']);
-        $r->method('_getUserManager')->willReturn($um);
+        $rule = new Rule_UserName($um);
 
-        $this->assertTrue($r->isAlreadyUserName('usertest'));
+        $this->assertTrue($rule->isAlreadyUserName('usertest'));
     }
 
     public function testProjectNameNotExists(): void
@@ -208,10 +202,9 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $pm = $this->createMock(\ProjectManager::class);
         $pm->method('getProjectByUnixName')->willReturn(null);
 
-        $r = $this->createPartialMock(\Rule_UserName::class, ['_getProjectManager']);
-        $r->method('_getProjectManager')->willReturn($pm);
+        $rule = new Rule_UserName(null, $pm);
 
-        $this->assertFalse($r->isAlreadyProjectName('usertest'));
+        $this->assertFalse($rule->isAlreadyProjectName('usertest'));
     }
 
     public function testProjectNameExists(): void
@@ -221,10 +214,9 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $pm = $this->createMock(\ProjectManager::class);
         $pm->method('getProjectByUnixName')->with('usertest')->willReturn($p);
 
-        $r = $this->createPartialMock(\Rule_UserName::class, ['_getProjectManager']);
-        $r->method('_getProjectManager')->willReturn($pm);
+        $rule = new Rule_UserName(null, $pm);
 
-        $this->assertTrue($r->isAlreadyProjectName('usertest'));
+        $this->assertTrue($rule->isAlreadyProjectName('usertest'));
     }
 
     public static function dataForUnixTestProvider(): array
