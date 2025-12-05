@@ -163,6 +163,7 @@ use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\REST\StructureRepresentationBuilder;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\Move\BeforeMoveChecker;
@@ -302,7 +303,7 @@ class ArtifactsResource extends AuthenticatedResource
         $ugroup_manager                = new \UGroupManager();
         $permissions_functions_wrapper = new PermissionsFunctionsWrapper();
         $this->tracker_rest_builder    = new \Tracker_REST_TrackerRestBuilder(
-            $this->formelement_factory,
+            new StructureRepresentationBuilder($this->formelement_factory),
             new FormElementRepresentationsBuilder(
                 $this->formelement_factory,
                 new PermissionsExporter($frozen_fields_detector),

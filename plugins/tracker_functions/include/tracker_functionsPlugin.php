@@ -88,6 +88,7 @@ use Tuleap\Tracker\REST\Artifact\PUTHandler;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\REST\StructureRepresentationBuilder;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
@@ -140,7 +141,7 @@ use Tuleap\WebAssembly\WasmtimeCacheConfigurationBuilder;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/vendor/autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class tracker_functionsPlugin extends Plugin
 {
     public function __construct(?int $id)
@@ -199,7 +200,7 @@ final class tracker_functionsPlugin extends Plugin
                     new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 ),
                 new Tracker_REST_TrackerRestBuilder(
-                    $form_element_factory,
+                    new StructureRepresentationBuilder($form_element_factory),
                     new FormElementRepresentationsBuilder(
                         $form_element_factory,
                         new PermissionsExporter($frozen_fields_detector),

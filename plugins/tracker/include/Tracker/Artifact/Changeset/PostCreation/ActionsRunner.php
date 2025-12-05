@@ -72,6 +72,7 @@ use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\REST\StructureRepresentationBuilder;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
@@ -216,7 +217,7 @@ class ActionsRunner
                         new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                     ),
                     new Tracker_REST_TrackerRestBuilder(
-                        $form_element_factory,
+                        new StructureRepresentationBuilder($form_element_factory),
                         new FormElementRepresentationsBuilder(
                             $form_element_factory,
                             new PermissionsExporter($frozen_fields_detector),

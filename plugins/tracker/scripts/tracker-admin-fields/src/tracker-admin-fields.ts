@@ -32,6 +32,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     createApp(FieldsUsage, {
         tracker_id: parseInt(getAttributeOrThrow(mount_point, "data-tracker-id"), 10),
+        fields: JSON.parse(getAttributeOrThrow(mount_point, "data-fields")),
+        structure: JSON.parse(getAttributeOrThrow(mount_point, "data-structure")),
     })
         .use(
             /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */

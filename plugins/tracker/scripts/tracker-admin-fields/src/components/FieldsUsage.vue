@@ -21,50 +21,28 @@
     <div class="tlp-framed">
         <h2>{{ $gettext("Fields usage") }}</h2>
 
-        <loading-state v-if="is_loading" />
+        <tracker-structure v-bind:root="root" v-if="root.children.length > 0" />
 
-        <tracker-structure
-            v-bind:root="root"
-            v-if="!is_error && !is_loading && root.children.length > 0"
-        />
-
-        <empty-state v-if="!is_loading && !is_error && root.children.length === 0" />
-
-        <error-state v-if="is_error" />
+        <empty-state v-if="root.children.length === 0" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import { getJSON, uri } from "@tuleap/fetch-result";
-import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
+import type { StructureFields, StructureFormat } from "@tuleap/plugin-tracker-rest-api-types";
 import EmptyState from "./EmptyState.vue";
-import LoadingState from "./LoadingState.vue";
-import ErrorState from "./ErrorState.vue";
 import TrackerStructure from "./TrackerStructure.vue";
 import { mapContentStructureToFields } from "../helpers/map-content-structure-to-fields";
 import type { ElementWithChildren } from "../type";
 
 const { $gettext } = useGettext();
 
-const props = defineProps<{ tracker_id: number }>();
-const is_error = ref(false);
-const is_loading = ref(true);
-const root = ref<ElementWithChildren>({ children: [] });
+const props = defineProps<{
+    tracker_id: number;
+    fields: ReadonlyArray<StructureFields>;
+    structure: ReadonlyArray<StructureFormat>;
+}>();
 
-onMounted(() => {
-    getJSON<Pick<TrackerResponseNoInstance, "fields" | "structure">>(
-        uri`/api/v1/trackers/${props.tracker_id}`,
-    ).match(
-        (tracker) => {
-            root.value = mapContentStructureToFields(tracker.structure, tracker.fields);
-            is_loading.value = false;
-        },
-        () => {
-            is_loading.value = false;
-            is_error.value = true;
-        },
-    );
-});
+const root = ref<ElementWithChildren>(mapContentStructureToFields(props.structure, props.fields));
 </script>

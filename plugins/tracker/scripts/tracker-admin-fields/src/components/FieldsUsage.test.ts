@@ -17,66 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import FieldsUsage from "./FieldsUsage.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
-import LoadingState from "./LoadingState.vue";
-import ErrorState from "./ErrorState.vue";
 import EmptyState from "./EmptyState.vue";
 import TrackerStructure from "./TrackerStructure.vue";
-import * as fetch_result from "@tuleap/fetch-result";
-import { okAsync, errAsync } from "neverthrow";
-import { Fault } from "@tuleap/fault";
-import process from "node:process";
+import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
 
 describe("FieldsUsage", () => {
-    it("should display a loading state", () => {
-        const wrapper = shallowMount(FieldsUsage, {
-            props: {
-                tracker_id: 123,
-            },
-            global: {
-                ...getGlobalTestOptions(),
-            },
-        });
-
-        expect(wrapper.findComponent(LoadingState).exists()).toBe(true);
-        expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
-        expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
-        expect(wrapper.findComponent(TrackerStructure).exists()).toBe(false);
-    });
-
-    it("should display an error state", async () => {
-        const getJSON = vi.spyOn(fetch_result, "getJSON");
-
-        getJSON.mockReturnValue(errAsync(Fault.fromMessage("Oh no!")));
-
-        const wrapper = shallowMount(FieldsUsage, {
-            props: {
-                tracker_id: 123,
-            },
-            global: {
-                ...getGlobalTestOptions(),
-            },
-        });
-
-        await new Promise(process.nextTick);
-
-        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
-        expect(wrapper.findComponent(ErrorState).exists()).toBe(true);
-        expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
-        expect(wrapper.findComponent(TrackerStructure).exists()).toBe(false);
-    });
-
     it("should display an empty state", async () => {
-        const getJSON = vi.spyOn(fetch_result, "getJSON");
-
-        getJSON.mockReturnValue(okAsync({ fields: [], structure: [] }));
-
         const wrapper = shallowMount(FieldsUsage, {
             props: {
                 tracker_id: 123,
+                fields: [],
+                structure: [],
             },
             global: {
                 ...getGlobalTestOptions(),
@@ -85,22 +40,24 @@ describe("FieldsUsage", () => {
 
         await new Promise(process.nextTick);
 
-        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
-        expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(TrackerStructure).exists()).toBe(false);
     });
 
     it("should display fields", async () => {
-        const getJSON = vi.spyOn(fetch_result, "getJSON");
-
-        getJSON.mockReturnValue(
-            okAsync({ fields: [{ field_id: 123 }], structure: [{ id: 123, content: null }] }),
-        );
-
         const wrapper = shallowMount(FieldsUsage, {
             props: {
                 tracker_id: 123,
+                fields: [
+                    {
+                        field_id: 123,
+                        name: "details",
+                        label: "Details",
+                        type: CONTAINER_FIELDSET,
+                        required: false,
+                    },
+                ],
+                structure: [{ id: 123, content: null }],
             },
             global: {
                 ...getGlobalTestOptions(),
@@ -109,8 +66,6 @@ describe("FieldsUsage", () => {
 
         await new Promise(process.nextTick);
 
-        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
-        expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(TrackerStructure).exists()).toBe(true);
     });

@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Admin;
 
+use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
+use Tuleap\Tracker\REST\StructureRepresentationBuilder;
 use Tuleap\Tracker\Tracker;
+use function Psl\Json\encode;
 
 /**
  * @psalm-immutable
@@ -31,11 +34,21 @@ final readonly class FieldsUsageDisplayPresenter
 {
     private function __construct(
         public int $id,
+        public string $json_encoded_fields,
+        public string $json_encoded_structure,
     ) {
     }
 
-    public static function build(Tracker $tracker): self
-    {
-        return new self($tracker->getId());
+    public static function build(
+        Tracker $tracker,
+        \PFUser $user,
+        FormElementRepresentationsBuilder $form_element_representations_builder,
+        StructureRepresentationBuilder $structure_representation_builder,
+    ): self {
+        return new self(
+            $tracker->getId(),
+            encode($form_element_representations_builder->buildRepresentationsInTrackerContextIgnoringReadPermission($tracker, $user)),
+            encode($structure_representation_builder->getStructureRepresentation($tracker)),
+        );
     }
 }
