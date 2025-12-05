@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\UUID;
 
 class JenkinsServer implements \JsonSerializable
@@ -42,8 +43,7 @@ class JenkinsServer implements \JsonSerializable
     public function __construct(
         public readonly UUID $id,
         string $jenkins_server_url,
-        /** @psalm-readonly */
-        private ?string $encrypted_token,
+        private readonly ?ConcealedString $token,
         Project $project,
     ) {
         $this->jenkins_server_url = $jenkins_server_url;
@@ -61,9 +61,9 @@ class JenkinsServer implements \JsonSerializable
     /**
      * @psalm-mutation-free
      */
-    public function getEncryptedToken(): ?string
+    public function getToken(): ?ConcealedString
     {
-        return $this->encrypted_token;
+        return $this->token;
     }
 
     /**

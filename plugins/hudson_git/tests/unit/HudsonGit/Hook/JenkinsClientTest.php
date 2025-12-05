@@ -27,8 +27,6 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
@@ -36,14 +34,6 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private EncryptionKey $encryption_key;
-
-    #[\Override]
-    protected function setUp(): void
-    {
-        $this->encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-    }
-
     public function testJenkinsIsNotified(): void
     {
         $http_client          = new Client();
@@ -56,7 +46,6 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $csrf_crumb_retriever,
             $this->createMock(JenkinsTuleapPluginHookPayload::class),
             $this->createMock(StreamFactoryInterface::class),
-            $this->encryption_key,
         );
 
         $expected_parameters = [
@@ -85,7 +74,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $polling_response = $jenkins_client->pushGitNotifications(
             'https://jenkins.example.com',
             'https://myinstance.example.com/plugins/git/project/myrepo.git',
-            SymmetricCrypto::encrypt(new ConcealedString('my_secret_token'), $this->encryption_key),
+            new ConcealedString('my_secret_token'),
             '8b2f3943e997d2faf4a55ed78e695bda64fad421'
         );
 
@@ -105,7 +94,6 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $csrf_crumb_retriever,
             $this->createMock(JenkinsTuleapPluginHookPayload::class),
             $this->createMock(StreamFactoryInterface::class),
-            $this->encryption_key
         );
 
         $expected_parameters = [
@@ -164,7 +152,6 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $csrf_crumb_retriever,
             $payload,
             $stream_factory,
-            $this->encryption_key,
         );
 
         $csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
@@ -204,7 +191,6 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $csrf_crumb_retriever,
             $payload,
             $stream_factory,
-            $this->encryption_key,
         );
 
         $csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');

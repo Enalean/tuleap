@@ -22,17 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\UUID;
 
 class JenkinsServerDao extends DataAccessObject
 {
-    public function addJenkinsServer(int $project_id, string $jenkins_server_url, ?string $encrypted_token): void
+    public function addJenkinsServer(int $project_id, string $jenkins_server_url, ?ConcealedString $token): void
     {
+        $uuid = $this->uuid_factory->buildUUIDBytes();
+
+        $encrypted_token = null;
+        if ($token !== null) {
+            $encrypted_token = $this->encryptDataToStoreInATableRow(
+                $token,
+                $this->getTokenEncryptionAdditionalData($uuid),
+            );
+        }
         $this->getDB()->insert(
             'plugin_hudson_git_project_server',
             [
-                'id' => $this->uuid_factory->buildUUIDBytes(),
+                'id' => $uuid,
                 'project_id' => $project_id,
                 'jenkins_server_url' => $jenkins_server_url,
                 'encrypted_token' => $encrypted_token,
@@ -41,7 +52,7 @@ class JenkinsServerDao extends DataAccessObject
     }
 
     /**
-     * @return array{id: UUID, jenkins_server_url: string, encrypted_token: string|null}[]
+     * @return array{id: UUID, jenkins_server_url: string, token: ConcealedString|null}[]
      */
     public function getJenkinsServerOfProject(int $project_id): array
     {
@@ -53,8 +64,18 @@ class JenkinsServerDao extends DataAccessObject
         $rows   = [];
 
         foreach ($result as $row) {
-            $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
-            $rows[]    = $row;
+            $uuid         = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+            $row['id']    = $uuid;
+            $row['token'] = null;
+            if ($row['encrypted_token'] !== null) {
+                $row['token'] = $this->decryptDataStoredInATableRow(
+                    $row['encrypted_token'],
+                    $this->getTokenEncryptionAdditionalData($uuid->getBytes())
+                );
+            }
+            unset($row['encrypted_token']);
+
+            $rows[] = $row;
         }
 
         return $rows;
@@ -117,6 +138,18 @@ class JenkinsServerDao extends DataAccessObject
                     'id' => $uuid->getBytes(),
                 ]
             ),
+        );
+    }
+
+    /**
+     * @param non-empty-string $uuid
+     */
+    private function getTokenEncryptionAdditionalData(string $uuid): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData(
+            'plugin_hudson_git_project_server',
+            'encrypted_token',
+            $uuid
         );
     }
 }

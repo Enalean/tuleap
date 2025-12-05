@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Hook;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
 
 class HookDao extends DataAccessObject
@@ -33,16 +35,18 @@ class HookDao extends DataAccessObject
         $this->getDB()->run($sql, $repository_id);
     }
 
-    public function save(int $id, string $jenkins_server, ?string $encrypted_token, bool $is_commit_reference_needed): void
+    public function save(int $id, string $jenkins_server, ConcealedString $token, bool $is_commit_reference_needed): void
     {
         $sql = 'REPLACE INTO plugin_hudson_git_server(repository_id, jenkins_server_url, encrypted_token, is_commit_reference_needed)
                 VALUES(?, ?, ?, ?)';
+
+        $encrypted_token = $this->encryptDataToStoreInATableRow($token, $this->getTokenEncryptionAdditionalData($id));
 
         $this->getDB()->run($sql, $id, $jenkins_server, $encrypted_token, $is_commit_reference_needed ? 1 : 0);
     }
 
     /**
-     * @psalm-return array{jenkins_server_url: string, is_commit_reference_needed:0|1, encrypted_token:string|null}|null
+     * @psalm-return array{jenkins_server_url: string, is_commit_reference_needed:0|1, token:ConcealedString|null}|null
      */
     public function searchById(int $id): ?array
     {
@@ -50,6 +54,20 @@ class HookDao extends DataAccessObject
                 FROM plugin_hudson_git_server
                 WHERE repository_id = ?';
 
-        return $this->getDB()->row($sql, $id);
+        $row = $this->getDB()->row($sql, $id);
+        if ($row === null) {
+            return null;
+        }
+        $row['token'] = null;
+        if ($row['encrypted_token'] !== null) {
+            $row['token'] = $this->decryptDataStoredInATableRow($row['encrypted_token'], $this->getTokenEncryptionAdditionalData($id));
+        }
+        unset($row['encrypted_token']);
+        return $row;
+    }
+
+    private function getTokenEncryptionAdditionalData(int $id): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData('plugin_hudson_git_server', 'encrypted_token', (string) $id);
     }
 }

@@ -55,7 +55,7 @@ class JenkinsServerFactory
             $servers[] = new JenkinsServer(
                 $jenkins_server['id'],
                 $jenkins_server['jenkins_server_url'],
-                $jenkins_server['encrypted_token'],
+                $jenkins_server['token'],
                 $project
             );
         }

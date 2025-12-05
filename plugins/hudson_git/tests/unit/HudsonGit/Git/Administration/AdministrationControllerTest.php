@@ -30,6 +30,7 @@ use Project;
 use ProjectManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\HudsonGit\Log\Log;
@@ -226,7 +227,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn(true);
 
-        $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'url', 'encrypted_token', $this->project);
+        $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'url', new ConcealedString('token'), $this->project);
         $this->jenkins_server_factory->expects($this->once())
             ->method('getJenkinsServerOfProject')
             ->with($this->project)

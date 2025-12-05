@@ -26,6 +26,7 @@ use DateTimeImmutable;
 use GitRepository;
 use Project;
 use Psr\Log\LoggerInterface;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookResponse;
@@ -104,8 +105,9 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersRepositoryHooks(): void
     {
+        $token = new ConcealedString('token');
         $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => 'token', 'is_commit_reference_needed' => true],
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'token' => $token, 'is_commit_reference_needed' => true],
         );
 
         $polling_response = $this->createMock(PollingResponse::class);
@@ -115,7 +117,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $polling_response->method('getBody')->willReturn('Response body');
         $this->jenkins_client->expects($this->exactly(2))
             ->method('pushGitNotifications')
-            ->with('https://example.com/jenkins', self::anything(), 'token', 'da39a3ee5e6b4b0d3255bfef95601890afd80709')
+            ->with('https://example.com/jenkins', self::anything(), $token, 'da39a3ee5e6b4b0d3255bfef95601890afd80709')
             ->willReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
@@ -144,8 +146,9 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersRepositoryHooksWithoutCommitReference(): void
     {
+        $token = new ConcealedString('token');
         $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => 'token', 'is_commit_reference_needed' => false],
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'token' => $token, 'is_commit_reference_needed' => false],
         );
 
         $polling_response = $this->createMock(PollingResponse::class);
@@ -155,7 +158,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $polling_response->method('getBody')->willReturn('Response body');
         $this->jenkins_client->expects($this->exactly(2))
             ->method('pushGitNotifications')
-            ->with('https://example.com/jenkins', self::anything(), 'token', null)
+            ->with('https://example.com/jenkins', self::anything(), $token, null)
             ->willReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
@@ -184,7 +187,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTriggersEachTransportsInRepositoryHooks(): void
     {
         $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => null, 'is_commit_reference_needed' => true],
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'token' => null, 'is_commit_reference_needed' => true],
         );
 
         $polling_response = $this->createMock(PollingResponse::class);
@@ -285,7 +288,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->jenkins_client
             ->method('pushGitNotifications')
             ->willReturnCallback(
-                function (string $server_url, string $repository_url, ?string $encrypted_token, ?string $commit_reference) use ($polling_response): PollingResponse {
+                function (string $server_url, string $repository_url, ?ConcealedString $token, ?string $commit_reference) use ($polling_response): PollingResponse {
                     if ($repository_url === 'https://example.com/repo01') {
                         throw new UnableToLaunchBuildException();
                     } elseif ($repository_url === 'example.com/repo01') {
@@ -320,7 +323,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotTriggerTheProjectHookIfItHasAlreadyBeenTriggeredByRepository(): void
     {
         $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => null, 'is_commit_reference_needed' => false],
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'token' => null, 'is_commit_reference_needed' => false],
         );
 
         $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'https://example.com/jenkins', null, $this->project);

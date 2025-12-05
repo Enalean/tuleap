@@ -23,7 +23,12 @@ namespace Tuleap\ForgeUpgrade\Bucket;
 
 use PDO;
 use Psr\Log\LoggerInterface;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactoryFromFileSystem;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\DB\DatabaseUUIDFactory;
+use Tuleap\ForgeUpgrade\LegacyCryptography2025\EncryptionKey;
 
 /**
  * Wrap access to the DB and provide a set of convenient tools to write
@@ -254,5 +259,77 @@ class BucketDb
         $this->dbh->commit();
 
         $this->dbh->exec('ALTER TABLE ' . $table_name . ' MODIFY COLUMN ' . $uuid_column_name . ' BINARY(16) NOT NULL');
+    }
+
+    /**
+     * @param literal-string $table_name
+     * @param literal-string $uuid_column_name
+     * @param literal-string $encrypted_data_column_name
+     */
+    public function reencrypt2025ContentWithTheCurrentCryptographyAPI(
+        string $table_name,
+        string $uuid_column_name,
+        string $encrypted_data_column_name,
+    ): void {
+        if ($table_name === '' || $uuid_column_name === '' || $encrypted_data_column_name === '') {
+            throw new \RuntimeException('table_name, uuid_column_name and encrypted_data_column_name must not be empty');
+        }
+        $this->dbh->beginTransaction();
+        $rows = $this->dbh->query(
+            sprintf(
+                'SELECT %s, %s FROM %s WHERE %s IS NOT NULL FOR UPDATE',
+                $uuid_column_name,
+                $encrypted_data_column_name,
+                $table_name,
+                $encrypted_data_column_name
+            )
+        )->fetchAll();
+
+        if (count($rows) === 0) {
+            $this->dbh->commit();
+            return;
+        }
+
+        $legacy_encryption_key = EncryptionKey::build();
+        if ($legacy_encryption_key === null) {
+            $this->log->warning('Not able to find the encryption key, not re-encrypting values of ' . $table_name . '. Please investigate, it will cause issues later on.');
+            $this->dbh->commit();
+            return;
+        }
+
+        $update_statement = $this->dbh->prepare('UPDATE ' . $table_name . ' SET ' . $encrypted_data_column_name . ' = ? WHERE ' . $uuid_column_name . ' = ?');
+
+        $current_encryption_key = (new KeyFactoryFromFileSystem())->getEncryptionKey();
+
+        foreach ($rows as $row) {
+            $uuid = $row[$uuid_column_name];
+
+            try {
+                $decrypted_data = $legacy_encryption_key->decrypt($row[$encrypted_data_column_name]);
+            } catch (\RuntimeException $exception) {
+                $this->log->warning(
+                    sprintf(
+                        'Could not decrypt row %s of %s, skipping. Please investigate, it will cause issues later on.',
+                        $this->uuid_factory->buildUUIDFromBytesData($uuid)->toString(),
+                        $table_name
+                    ),
+                    ['exception' => $exception]
+                );
+                continue;
+            }
+
+            $update_statement->execute([
+                SymmetricCrypto::encrypt(
+                    new ConcealedString(''),
+                    new EncryptionAdditionalData($table_name, $encrypted_data_column_name, $uuid),
+                    $current_encryption_key
+                ),
+                $uuid,
+            ]);
+
+            \sodium_memzero($decrypted_data);
+        }
+
+        $this->dbh->commit();
     }
 }
