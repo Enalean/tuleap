@@ -1073,6 +1073,9 @@ msgid "Insufficient permissions for user(s) \"%s\""
 msgstr ""
 "Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) \"%s\""
 
+msgid "Invalid approval table status"
+msgstr "Status de la table d'approbation invalide"
+
 msgid ""
 "Invalid pattern, filename pattern must contains at least '${TITLE}' or '$"
 "{ID} variable"

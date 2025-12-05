@@ -70,6 +70,7 @@ export class ApprovalTableBuilder {
             is_closed: false,
             description: this.description,
             reviewers: [],
+            state: "disabled",
         };
     }
 }

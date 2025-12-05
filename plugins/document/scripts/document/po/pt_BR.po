@@ -148,7 +148,13 @@ msgstr ""
 msgid "Approval table"
 msgstr ""
 
+msgid "Approval table administration"
+msgstr ""
+
 msgid "Approval table details"
+msgstr ""
+
+msgid "Approval table global settings"
 msgstr ""
 
 msgid "Approval table history"
@@ -173,6 +179,9 @@ msgid "Attached to document version"
 msgstr ""
 
 msgid "Author"
+msgstr ""
+
+msgid "Available"
 msgstr ""
 
 msgid "Before"
@@ -311,6 +320,9 @@ msgstr "Descrição"
 msgid "Details"
 msgstr ""
 
+msgid "Disabled"
+msgstr ""
+
 msgid "Document locked by %{username}."
 msgstr ""
 
@@ -376,6 +388,9 @@ msgid "Error while creating approval table"
 msgstr ""
 
 msgid "Error while saving your review"
+msgstr ""
+
+msgid "Error while updating table"
 msgstr ""
 
 msgid "File"
@@ -564,6 +579,9 @@ msgstr ""
 msgid "None"
 msgstr "Nenhum"
 
+msgid "Not implemented yet"
+msgstr ""
+
 msgid "Not yet"
 msgstr ""
 
@@ -743,6 +761,9 @@ msgstr ""
 msgid "Review:"
 msgstr ""
 
+msgid "Reviewers"
+msgstr ""
+
 msgid "Search"
 msgstr "Pesquisar"
 
@@ -918,6 +939,9 @@ msgstr ""
 msgid "This item is not versionable"
 msgstr ""
 
+msgid "This modal is not functional yet, you can retrieve old ui"
+msgstr ""
+
 msgid ""
 "This page is asking you to confirm that you want to leave - data you have "
 "entered may not be saved. Do you want to leave this page?"
@@ -947,6 +971,9 @@ msgid "URL"
 msgstr ""
 
 msgid "Unlock"
+msgstr ""
+
+msgid "Update"
 msgstr ""
 
 msgid "Update permissions"
@@ -1097,6 +1124,9 @@ msgid ""
 msgstr ""
 
 msgid "diff"
+msgstr ""
+
+msgid "here."
 msgstr ""
 
 msgid "lorem => exactly \"lorem\""

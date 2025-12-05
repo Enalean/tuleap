@@ -1,0 +1,205 @@
+<!--
+  - Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<template>
+    <div
+        id="admin-modal"
+        role="dialog"
+        aria-labelledby="admin-modal-label"
+        class="tlp-modal tlp-modal-medium-sized"
+        ref="modal_div"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="admin-modal-label">
+                {{ $gettext("Approval table administration") }}
+            </h1>
+            <button
+                class="tlp-modal-close"
+                type="button"
+                data-dismiss="modal"
+                v-bind:aria-label="$gettext('Close')"
+            >
+                <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-feedback">
+            <div v-if="error_message !== ''" class="tlp-alert-danger" data-test="admin-modal-error">
+                <p class="tlp-alert-title">{{ $gettext("Error while updating table") }}</p>
+                {{ error_message }}
+            </div>
+            <div class="tlp-alert-warning">
+                {{ $gettext("This modal is not functional yet, you can retrieve old ui") }}
+                <a v-bind:href="getLinkToTableAdmin()">{{ $gettext("here.") }}</a>
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <administration-modal-global-settings
+                v-bind:table="table"
+                v-model:table_status_value="table_status_value"
+                v-model:table_comment_value="table_comment_value"
+                v-model:table_owner_value="table_owner_value"
+            />
+        </div>
+        <div class="tlp-modal-body">
+            <h2 class="tlp-modal-subtitle">{{ $gettext("Notifications") }}</h2>
+            <div class="tlp-alert-info">
+                {{ $gettext("Not implemented yet") }}
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <h2 class="tlp-modal-subtitle">{{ $gettext("Reviewers") }}</h2>
+            <div class="tlp-alert-info">
+                {{ $gettext("Not implemented yet") }}
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button
+                type="button"
+                data-dismiss="modal"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+            >
+                {{ $gettext("Cancel") }}
+            </button>
+            <button
+                type="button"
+                class="tlp-button-danger tlp-button-outline tlp-modal-action"
+                v-bind:disabled="is_doing_something"
+                v-on:click="onDelete"
+                data-test="delete-table-button"
+            >
+                <i
+                    v-if="is_deleting"
+                    class="tlp-button-icon fa-solid fa-spin fa-circle-notch"
+                    aria-hidden="true"
+                ></i>
+                <i v-else class="fa-solid fa-trash tlp-button-icon" aria-hidden="true"></i>
+                {{ $gettext("Delete") }}
+            </button>
+            <button
+                type="button"
+                class="tlp-button-primary tlp-modal-action"
+                v-bind:disabled="is_doing_something || table_owner_value === null"
+                v-on:click="onUpdate"
+                data-test="update-table-button"
+            >
+                <i
+                    v-if="is_updating"
+                    class="tlp-button-icon fa-solid fa-spin fa-circle-notch"
+                    aria-hidden="true"
+                ></i>
+                <i v-else class="fa-solid fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
+                {{ $gettext("Update") }}
+            </button>
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
+import type { ApprovalTable, Item } from "../../../type";
+import type { User } from "@tuleap/core-rest-api-types";
+import { PROJECT } from "../../../configuration-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { deleteApprovalTable, updateApprovalTable } from "../../../api/approval-table-rest-querier";
+import AdministrationModalGlobalSettings from "./AdministrationModalGlobalSettings.vue";
+
+const props = defineProps<{
+    trigger: HTMLButtonElement;
+    table: ApprovalTable;
+    item: Item;
+}>();
+
+const emit = defineEmits<{
+    (e: "refresh-data"): void;
+}>();
+
+const modal_div = ref<HTMLDivElement>();
+const modal = ref<Modal | null>(null);
+const error_message = ref<string>("");
+const is_deleting = ref<boolean>(false);
+const is_updating = ref<boolean>(false);
+const table_owner_value = ref<User | null>(props.table.table_owner);
+const table_status_value = ref<string>(props.table.state);
+const table_comment_value = ref<string>(props.table.description);
+
+const is_doing_something = computed(() => is_deleting.value || is_updating.value);
+
+const project = strictInject(PROJECT);
+
+onMounted(() => {
+    if (modal_div.value === undefined) {
+        throw Error("Failed to create administration modal");
+    }
+
+    modal.value = createModal(modal_div.value, {
+        destroy_on_hide: false,
+        keyboard: true,
+        dismiss_on_backdrop_click: true,
+    });
+    props.trigger.addEventListener("click", () => modal.value?.show());
+});
+
+onUnmounted(() => {
+    modal.value?.destroy();
+});
+
+function onDelete(): void {
+    is_deleting.value = true;
+    deleteApprovalTable(props.item.id).match(
+        () => {
+            emit("refresh-data");
+            is_deleting.value = false;
+            modal.value?.hide();
+        },
+        (fault) => {
+            is_deleting.value = false;
+            error_message.value = fault.toString();
+        },
+    );
+}
+
+function onUpdate(): void {
+    if (table_owner_value.value === null) {
+        throw Error("This should not happen");
+    }
+    is_updating.value = true;
+    updateApprovalTable(
+        props.item.id,
+        table_owner_value.value.id,
+        table_status_value.value,
+        table_comment_value.value,
+    ).match(
+        () => {
+            emit("refresh-data");
+            is_updating.value = false;
+            modal.value?.hide();
+        },
+        (fault) => {
+            is_updating.value = false;
+            error_message.value = fault.toString();
+        },
+    );
+}
+
+function getLinkToTableAdmin(): string {
+    return `/plugins/docman/?group_id=${project.id}&action=approval_create&id=${props.item.id}`;
+}
+</script>

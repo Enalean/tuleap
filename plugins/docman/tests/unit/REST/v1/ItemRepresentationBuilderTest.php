@@ -147,6 +147,7 @@ final class ItemRepresentationBuilderTest extends TestCase
         $item_approval_table->method('getNotification')->willReturn(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
         $item_approval_table->method('getDescription')->willReturn('');
         $item_approval_table->method('getReviewerArray')->willReturn([]);
+        $item_approval_table->method('getStatus')->willReturn('enabled');
 
         $approval_table_factory = $this->createMock(Docman_ApprovalTableFileFactory::class);
         $approval_table_factory->method('getNotificationTypeName')->with(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED)->willReturn('Disabled');

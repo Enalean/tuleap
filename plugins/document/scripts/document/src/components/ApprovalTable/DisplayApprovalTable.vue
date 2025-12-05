@@ -24,11 +24,23 @@
         <div class="tlp-framed-horizontally">
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
-                    <div class="tlp-pane-header">
+                    <div class="tlp-pane-header approval-table-header">
                         <h1 class="tlp-pane-title">
                             <i class="fa-regular fa-fw fa-square-check" aria-hidden="true"></i>
                             {{ $gettext("Approval table details") }}
                         </h1>
+
+                        <approval-table-administration
+                            v-if="
+                                isAnApprovableDocument(item) &&
+                                item.has_approval_table &&
+                                item.user_can_write &&
+                                item.approval_table !== null
+                            "
+                            v-bind:table="item.approval_table"
+                            v-bind:item="item"
+                            v-on:refresh-data="refreshData()"
+                        />
                     </div>
 
                     <section class="tlp-pane-section">
@@ -95,6 +107,7 @@ import NoApprovalTable from "./Creation/NoApprovalTable.vue";
 import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
 import ApprovalTableHistory from "./History/ApprovalTableHistory.vue";
 import { isEmbedded, isFile, isLink, isWiki } from "../../helpers/type-check-helper";
+import ApprovalTableAdministration from "./Administration/ApprovalTableAdministration.vue";
 
 const props = defineProps<{
     item_id: number;
@@ -120,3 +133,10 @@ async function refreshData(): Promise<void> {
     item.value = await loadDocumentWithAscendentHierarchy(props.item_id);
 }
 </script>
+
+<style scoped lang="scss">
+.approval-table-header {
+    display: flex;
+    justify-content: space-between;
+}
+</style>

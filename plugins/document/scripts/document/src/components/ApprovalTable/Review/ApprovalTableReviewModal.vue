@@ -163,6 +163,7 @@
                 class="tlp-button-primary tlp-modal-action"
                 v-on:click="onReview"
                 data-test="send-review-button"
+                v-bind:disabled="is_reviewing"
             >
                 <i
                     v-if="is_reviewing"

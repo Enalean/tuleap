@@ -37,6 +37,7 @@ import NoApprovalTable from "./Creation/NoApprovalTable.vue";
 import { ApprovalTableBuilder } from "../../../tests/builders/ApprovalTableBuilder";
 import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
 import ApprovalTableHistory from "./History/ApprovalTableHistory.vue";
+import ApprovalTableAdministration from "./Administration/ApprovalTableAdministration.vue";
 
 vi.useFakeTimers();
 
@@ -107,9 +108,21 @@ describe("DisplayApprovalTable", () => {
                 .buildApprovableDocument(),
         );
         const wrapper = getWrapper();
-
         await vi.runOnlyPendingTimersAsync();
-
         expect(wrapper.findComponent(ApprovalTableHistory).exists()).toBe(should_display);
+    });
+
+    it.each([
+        ["It should display admin button if user can write", true],
+        ["It should not display admin button if user cannot write", false],
+    ])(`%s`, async (_: string, can_write: boolean) => {
+        const item = new ItemBuilder(123)
+            .withUserCanWrite(can_write)
+            .withApprovalTable(new ApprovalTableBuilder(35).build())
+            .buildApprovableDocument();
+        load_document.mockResolvedValue(item);
+        const wrapper = getWrapper();
+        await vi.runOnlyPendingTimersAsync();
+        expect(wrapper.findComponent(ApprovalTableAdministration).exists()).toBe(can_write);
     });
 });

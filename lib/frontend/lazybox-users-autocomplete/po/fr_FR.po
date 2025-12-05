@@ -17,6 +17,9 @@ msgstr "Utilisateurs correspondant"
 msgid "No matching users found"
 msgstr "Aucun utilisateur correspondant trouvé"
 
+msgid "Search user by its name"
+msgstr "Rechercher un utilisateur par son nom"
+
 msgid "Search users by their names"
 msgstr "Rechercher des utilisateurs par leurs noms"
 

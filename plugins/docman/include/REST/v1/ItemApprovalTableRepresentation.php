@@ -30,6 +30,7 @@ use Docman_Item;
 use Docman_NotificationsManager;
 use Docman_VersionFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -50,6 +51,7 @@ final readonly class ItemApprovalTableRepresentation
         public ?int $version_number,
         public string $version_label,
         public string $notification_type,
+        public string $state,
         public bool $is_closed,
         public string $description,
         public array $reviewers,
@@ -87,6 +89,13 @@ final readonly class ItemApprovalTableRepresentation
             $version_number,
             $version_label,
             $factory->getFromItem($item)?->getNotificationTypeName($approval_table->getNotification()) ?? '',
+            match ((int) $approval_table->getStatus()) {
+                PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED => 'disabled',
+                PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED  => 'enabled',
+                PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED   => 'closed',
+                PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED  => 'deleted',
+                default                               => throw new I18NRestException(400, dgettext('tuleap-docman', 'Invalid approval table status')),
+            },
             $approval_table->isClosed(),
             $approval_table->getDescription() ?? '',
             array_values(array_map(

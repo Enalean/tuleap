@@ -50,18 +50,6 @@ describe("CurrentApprovalTable", () => {
         });
     }
 
-    it.each([
-        ["It should display admin button if user can write", true],
-        ["It should not display admin button if user cannot write", false],
-    ])(`%s`, (_: string, can_write: boolean) => {
-        const wrapper = getWrapper(
-            new ItemBuilder(123).withUserCanWrite(can_write).buildApprovableDocument(),
-            null,
-        );
-
-        expect(wrapper.find("[data-test=table-admin-button]").exists()).toBe(can_write);
-    });
-
     it("Should tell table is not yet available", () => {
         const wrapper = getWrapper(
             new ItemBuilder(123).withApprovalTableEnabled(false).buildApprovableDocument(),
