@@ -18,15 +18,13 @@
   -->
 
 <template>
-    <Teleport to="#main-content">
-        <div class="git-tracker-create-branch-modal">
-            <modal-content
-                v-bind:repositories="repositories"
-                v-bind:branch_name_preview="branch_name_preview"
-                v-bind:are_pullrequest_endpoints_available="are_pullrequest_endpoints_available"
-            />
-        </div>
-    </Teleport>
+    <div class="git-tracker-create-branch-modal">
+        <modal-content
+            v-bind:repositories="repositories"
+            v-bind:branch_name_preview="branch_name_preview"
+            v-bind:are_pullrequest_endpoints_available="are_pullrequest_endpoints_available"
+        />
+    </div>
 </template>
 
 <script setup lang="ts">
