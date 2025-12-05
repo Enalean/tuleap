@@ -75,7 +75,7 @@ final class CreateBranchButtonFetcher
         }
 
         $link_label = dgettext('tuleap-gitlab', 'Create GitLab branch and merge request');
-        $icon       = 'fab fa-gitlab';
+        $icon       = 'fa-brands fa-gitlab';
         $link       = new AdditionalButtonLinkPresenter(
             $link_label,
             '',

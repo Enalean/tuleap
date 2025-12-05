@@ -56,6 +56,7 @@ export default vite.defineAppConfig(
                         "src/legacy-modal-v1/legacy-modal-v1.ts",
                     ),
                     "mass-change": path.resolve(__dirname, "src/mass-change/mass-change-view.ts"),
+                    "actions-button": path.resolve(__dirname, "src/header/actions-button.ts"),
                 },
             },
         },

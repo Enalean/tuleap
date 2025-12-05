@@ -1,7 +1,5 @@
 {{# artifact_copy_button_presenter }}
-    <li>
-        <a class="tracker-action-button" title="{{ title }}" href="{{ url }}" data-test="artifact-copy-button">
-            <i class="fa fa-fw fa-clone"></i> {{ label }}
-        </a>
-    </li>
+    <a role="menuitem" class="tlp-dropdown-menu-item" title="{{ title }}" href="{{ url }}" data-test="artifact-copy-button">
+        <i class="tlp-dropdown-menu-item-icon fa-regular fa-fw fa-clone" aria-hidden="true"></i> {{ label }}
+    </a>
 {{/ artifact_copy_button_presenter }}

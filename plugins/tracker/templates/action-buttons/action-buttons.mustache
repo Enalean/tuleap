@@ -1,18 +1,18 @@
 {{# has_at_least_one_action }}
-    <div class="tracker-artifact-actions btn-group">
-        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-test="tracker-artifact-actions">
-            <i class="fa fa-bars"
+    <div class="tlp-dropdown artifact-header-action-dropdown">
+        <button type="button" class="tlp-button-primary" id="dropdown-tracker-artifact-actions" data-test="tracker-artifact-actions">
+            <i class="fa-solid fa-bars" aria-hidden="true"
                id="tracker-artifact-action-icon"
             ></i> {{# dgettext }} tuleap-tracker | Actions {{/ dgettext }}
-            <span class="caret" id="tracker-action-icon"></span>
-        </a>
-        <ul class="dropdown-menu pull-right" id="tracker-action-button-section">
+            <i class="fa-solid fa-caret-down tlp-button-icon" aria-hidden="true"></i>
+        </button>
+        <div role="menu" class="tlp-dropdown-menu artifact-header-action-dropdown-menu" id="dropdown-menu-tracker-artifact-actions">
             {{> action-buttons/original-email }}
             {{> action-buttons/copy-artifact }}
             {{> action-buttons/move-artifact-button }}
 
             {{# has_at_least_one_additional_action }}
-                <li class="divider"></li>
+                <span class="tlp-dropdown-menu-separator" role="separator"></span>
             {{/ has_at_least_one_additional_action }}
 
             {{# additional_buttons }}
@@ -20,12 +20,12 @@
             {{/ additional_buttons }}
 
             {{# divider }}
-                <li class="divider"></li>
+                <span class="tlp-dropdown-menu-separator" role="separator"></span>
             {{/ divider }}
             {{> action-buttons/mail-notifications }}
-        </ul>
+        </div>
     </div>
-    <div id="tracker-modal-actions"></div>
+     <div id="tracker-modal-actions"></div>
 
     {{# should_load_modal }}
         {{> action-buttons/move-artifact-modal }}

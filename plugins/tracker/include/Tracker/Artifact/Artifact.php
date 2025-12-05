@@ -568,6 +568,13 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
     public function fetchActionButtons()
     {
+        $include_assets = new Tuleap\Layout\IncludeViteAssets(
+            __DIR__ . '/../../../scripts/artifact/frontend-assets',
+            '/assets/trackers/artifact'
+        );
+
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'src/header/actions-button.ts'));
+
         $renderer = TemplateRendererFactory::build()->getRenderer(
             TRACKER_TEMPLATE_DIR
         );
