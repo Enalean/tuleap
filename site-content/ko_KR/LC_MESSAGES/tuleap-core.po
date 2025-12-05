@@ -3738,9 +3738,6 @@ msgstr ""
 msgid "Trace and Track all types of activities."
 msgstr "모든 유형의 활동을 추적하고 감시합니다."
 
-msgid "Trackers v3 import"
-msgstr "트래커 v3 불러오기"
-
 msgid "Trove categories"
 msgstr "Trove 카테고리"
 

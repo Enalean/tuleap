@@ -3821,9 +3821,6 @@ msgstr ""
 msgid "Trace and Track all types of activities."
 msgstr "Rastreie e acompanhe todos os tipos de atividades."
 
-msgid "Trackers v3 import"
-msgstr "Importação de Tracker v3"
-
 msgid "Trove categories"
 msgstr "Categorias de baú de projetos"
 
