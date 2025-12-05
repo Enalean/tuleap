@@ -96,18 +96,20 @@ class ServiceTracker extends Service //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return true;
     }
 
-    public static function getDefaultServiceData($project_id)
+    public static function getDefaultServiceData($project_id): array
     {
         return [
-            'label'        => 'plugin_tracker:service_lbl_key',
-            'description'  => 'plugin_tracker:service_desc_key',
-            'link'         => "/plugins/tracker/?group_id=$project_id",
-            'short_name'   => trackerPlugin::SERVICE_SHORTNAME,
-            'scope'        => 'system',
-            'rank'         => 151,
-            'location'     => 'master',
-            'is_in_iframe' => 0,
-            'server_id'    => 0,
+            'label'          => 'plugin_tracker:service_lbl_key',
+            'description'    => 'plugin_tracker:service_desc_key',
+            'link'           => "/plugins/tracker/?group_id=$project_id",
+            'short_name'     => trackerPlugin::SERVICE_SHORTNAME,
+            'scope'          => 'system',
+            'rank'           => 151,
+            'location'       => 'master',
+            'is_in_iframe'   => 0,
+            'server_id'      => 0,
+            'is_in_new_tab' => false,
+            'icon'          => '',
         ];
     }
 

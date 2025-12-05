@@ -332,8 +332,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $template_group = ($data->getBuiltFromTemplateProject()) ? $data->getBuiltFromTemplateProject()->getProject() : null;
 
         $legacy = [
-            Service::SVN       => true,
-            Service::TRACKERV3 => true,
+            Service::SVN => true,
         ];
 
         $this->event_manager->processEvent(self::PROJECT_CREATION_REMOVE_LEGACY_SERVICES, [
@@ -387,7 +386,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                     $template_group,
                     $mapping_registry,
                     $admin_user,
-                    $legacy,
                     $data->projectShouldInheritFromTemplate(),
                 )
             );
