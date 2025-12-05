@@ -1,0 +1,38 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-pullrequest-title",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "sass": "./dist/plugin-pullrequest-title.css",
+      "import": "./dist/plugin-pullrequest-title.js",
+      "require": "./dist/plugin-pullrequest-title.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "@tuleap/dom": "workspace:*",
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/option": "workspace:*",
+    "@tuleap/plugin-pullrequest-constants": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tooltip": "workspace:*",
+    "dompurify": "^3.2.4",
+    "hybrids": "^9.1.6",
+    "neverthrow": "6.0.0"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

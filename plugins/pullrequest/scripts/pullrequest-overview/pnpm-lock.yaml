@@ -38,6 +38,9 @@ dependencies:
   '@tuleap/plugin-pullrequest-stub':
     specifier: workspace:*
     version: link:../lib/pull-request-stub
+  '@tuleap/plugin-pullrequest-title':
+    specifier: workspace:*
+    version: link:../lib/pullrequest-title
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-dropdown

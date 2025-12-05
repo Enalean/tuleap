@@ -35,7 +35,8 @@ export default vite.defineAppConfig(
                 template: {
                     compilerOptions: {
                         isCustomElement: (tag) =>
-                            tag.startsWith("tuleap-pullrequest-") && tag.includes("-comment"),
+                            (tag.startsWith("tuleap-pullrequest-") && tag.includes("-comment")) ||
+                            tag === "tuleap-pull-request-title",
                     },
                 },
             }),

@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/plugin-pullrequest-constants':
     specifier: workspace:*
     version: link:../lib/constants
+  '@tuleap/plugin-pullrequest-title':
+    specifier: workspace:*
+    version: link:../lib/pullrequest-title
   '@tuleap/tlp-relative-date':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-relative-date

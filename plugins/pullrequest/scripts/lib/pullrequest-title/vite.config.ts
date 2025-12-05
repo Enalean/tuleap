@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-import { uri, getAllJSON } from "@tuleap/fetch-result";
-import type { PullRequestCommit } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-export const fetchPullRequestCommits = (
-    pull_request_id: number,
-): ResultAsync<readonly PullRequestCommit[], Fault> => {
-    return getAllJSON<PullRequestCommit, PullRequestCommit[]>(
-        uri`/api/v1/pull_requests/${pull_request_id}/commits`,
-        {
-            params: { limit: 50 },
+export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/main.ts"),
+            name: "PullrequestTitle",
         },
-    );
-};
+    },
+});

@@ -21,7 +21,7 @@
     <div class="tlp-framed">
         <div class="tlp-pane">
             <div class="tlp-pane-container">
-                <pull-request-title v-bind:pull_request="pull_request_info" />
+                <tuleap-pull-request-title v-bind:pull_request_id="pull_request_id" />
                 <commits-tabs v-bind:pull_request="pull_request_info" />
                 <section
                     class="tlp-pane-section"
@@ -67,13 +67,14 @@ import { okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { useGettext } from "vue3-gettext";
 import type { PullRequest, PullRequestCommit } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { fetchPullRequestCommits, fetchPullRequestInfo } from "../api/rest-querier";
+import { fetchPullRequestCommits } from "../api/rest-querier";
 import { extractPullRequestIdFromRouteParams } from "../router/pull-request-id-extractor";
 import { PULL_REQUEST_ID_KEY } from "../constants";
-import PullRequestTitle from "./PullRequestTitle.vue";
 import CommitsTabs from "./CommitsTabs.vue";
 import CommitCard from "./commits/CommitCard.vue";
 import CommitsCardsSkeletons from "./commits/CommitsCardsSkeletons.vue";
+
+import "@tuleap/plugin-pullrequest-title";
 
 const { $gettext, interpolate } = useGettext();
 const route = useRoute();
@@ -107,22 +108,18 @@ const error_message = computed((): string => {
     return interpolate($gettext("An error occurred: %{fault}"), { fault: loading_error.value });
 });
 
-const handleFault = (fault: Fault): void => {
-    loading_error.value = fault;
-};
-
-Promise.all([
-    fetchPullRequestInfo(pull_request_id).match((pull_request): ResultAsync<null, never> => {
-        pull_request_info.value = pull_request;
-        return okAsync(null);
-    }, handleFault),
-    fetchPullRequestCommits(pull_request_id).match((commits): ResultAsync<null, never> => {
+fetchPullRequestCommits(pull_request_id).match(
+    (commits): ResultAsync<null, never> => {
         pull_request_commits.value = commits;
+        is_loading.value = false;
+
         return okAsync(null);
-    }, handleFault),
-]).finally(() => {
-    is_loading.value = false;
-});
+    },
+    (fault: Fault): void => {
+        loading_error.value = fault;
+        is_loading.value = false;
+    },
+);
 </script>
 
 <style lang="scss">

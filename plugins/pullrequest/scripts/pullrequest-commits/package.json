@@ -11,6 +11,7 @@
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
+    "@tuleap/plugin-pullrequest-title": "workspace:*",
     "@tuleap/locale": "workspace:^",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",

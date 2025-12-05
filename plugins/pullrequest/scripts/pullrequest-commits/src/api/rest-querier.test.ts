@@ -21,7 +21,7 @@ import { describe, it, expect, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import { uri } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
-import { fetchPullRequestCommits, fetchPullRequestInfo } from "./rest-querier";
+import { fetchPullRequestCommits } from "./rest-querier";
 import { CommitStub } from "../../tests/stubs/CommitStub";
 
 vi.mock("@tuleap/fetch-result");
@@ -29,26 +29,6 @@ vi.mock("@tuleap/fetch-result");
 const pull_request_id = 50;
 
 describe("rest-querier", () => {
-    describe("fetchPullRequestInfo()", () => {
-        it("Given the current pull request id, then it should fetch its info", async () => {
-            const pull_request_info = {
-                title: "My pull request title",
-            };
-
-            vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(pull_request_info));
-            const result = await fetchPullRequestInfo(pull_request_id);
-
-            if (!result.isOk()) {
-                throw new Error("Expected an Ok");
-            }
-
-            expect(fetch_result.getJSON).toHaveBeenCalledWith(
-                uri`/api/v1/pull_requests/${pull_request_id}`,
-            );
-            expect(result.value).toStrictEqual(pull_request_info);
-        });
-    });
-
     describe("fetchPullRequestCommits", () => {
         it("Given the current pull request id, then it should fetch its commits", async () => {
             const commits = [

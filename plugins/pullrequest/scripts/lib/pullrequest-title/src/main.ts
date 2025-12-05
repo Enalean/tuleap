@@ -17,18 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-import { uri, getAllJSON } from "@tuleap/fetch-result";
-import type { PullRequestCommit } from "@tuleap/plugin-pullrequest-rest-api-types";
-
-export const fetchPullRequestCommits = (
-    pull_request_id: number,
-): ResultAsync<readonly PullRequestCommit[], Fault> => {
-    return getAllJSON<PullRequestCommit, PullRequestCommit[]>(
-        uri`/api/v1/pull_requests/${pull_request_id}/commits`,
-        {
-            params: { limit: 50 },
-        },
-    );
-};
+export * from "./PullRequestTitle";
