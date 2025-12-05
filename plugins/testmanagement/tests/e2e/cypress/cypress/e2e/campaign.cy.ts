@@ -25,11 +25,18 @@ function createCampaign(label: string): void {
     cy.get("[data-test=create-new-campaign-button]").click();
 }
 
+function assertFilterTestWithStatus(status: string): void {
+    cy.log(`And display only ${status} tests`);
+    cy.get("[data-test=tests-toggle-filters]").click();
+    cy.get(`[data-test=status-filter-${status}]`).click();
+}
+
 describe("TTM campaign", () => {
     let ttm_project_name: string,
         comment_project_name: string,
         file_project_name: string,
         status_project_name: string,
+        bot_project_name: string,
         now: number;
 
     before(() => {
@@ -38,6 +45,7 @@ describe("TTM campaign", () => {
         comment_project_name = "com-ttm-" + now;
         status_project_name = "status-ttm-" + now;
         file_project_name = "file-ttm-" + now;
+        bot_project_name = "bot-ttm-" + now;
     });
 
     it("As project administrator", () => {
@@ -104,6 +112,7 @@ describe("TTM campaign", () => {
             cy.get("[data-test=edit-campaign-label-save-button]").click();
 
             addTestInCampaign("My first test");
+            addTestInCampaign("My other test");
 
             cy.log("On the test");
             cy.log("Displays the test as notrun");
@@ -111,9 +120,23 @@ describe("TTM campaign", () => {
             cy.get("[data-test=current-test").should("have.class", "notrun");
 
             changeTestStatus("passed");
+            assertFilterTestWithStatus("passed");
+            cy.get("[data-test=test-title]")
+                .should("have.length", 1)
+                .and("contain", "My other test");
             changeTestStatus("failed");
+            assertFilterTestWithStatus("failed");
+            cy.get("[data-test=test-title]")
+                .should("have.length", 1)
+                .and("contain", "My other test");
             changeTestStatus("blocked");
+            assertFilterTestWithStatus("blocked");
+            cy.get("[data-test=test-title]")
+                .should("have.length", 1)
+                .and("contain", "My other test");
             changeTestStatus("notrun");
+            assertFilterTestWithStatus("not-run");
+            cy.get("[data-test=test-title]").should("have.length", 0);
         });
         it("TTM tests comments", () => {
             cy.projectMemberSession();
@@ -183,8 +206,32 @@ describe("TTM campaign", () => {
         });
 
         it("TTM file upload", () => {
-            cy.projectMemberSession();
+            cy.projectAdministratorSession();
             cy.createNewPublicProject(file_project_name, "agile_alm");
+            cy.addProjectMember(file_project_name, "ProjectMember");
+            cy.projectAdministratorSession();
+
+            cy.log("Cahneg permissions of attachment field");
+            cy.visitProjectService(file_project_name, "Tracker");
+            cy.getContains("[data-test=tracker-link]", "Test Execution").click();
+            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+            cy.get("[data-test=admin-permissions]").click();
+            cy.get("[data-test=field-permissions]").click();
+            cy.get("[data-test=select-field-permissions]").select("Attachments");
+            cy.log("all user no longer have permissions");
+            cy.get("[data-test=field-permissions]").eq(1).select("100");
+
+            cy.log("register user can no longer submit attachment field");
+            cy.get("[data-test=permissions-per-field-submit-checkbox]").eq(1).uncheck();
+
+            cy.log("Project members can read only attachment field");
+            cy.get("[data-test=field-permissions]").eq(2).select("Read only");
+
+            cy.log("project administrators can submit and update attachment field");
+            cy.get("[data-test=permissions-per-field-submit-checkbox]").eq(3).check();
+            cy.get("[data-test=field-permissions]").eq(3).select("Update");
+            cy.get("[data-test=submit-permissions]").click();
+
             cy.visitProjectService(file_project_name, "Test Management");
 
             createCampaign("My first campaign");
@@ -238,11 +285,101 @@ describe("TTM campaign", () => {
             cy.get("[data-test=save-comment-button]").click();
             cy.get("[data-test=comment-file-attachment]").should("not.exist");
 
+            cy.log("ProjectMember can attach two files to the comment");
+            cy.get("[data-test=edit-comment-button]").click();
+            cy.get("[data-test=test-files-upload-button]").selectFile(
+                "cypress/fixtures/attachment1.json",
+                { force: true },
+            );
+            cy.get("[data-test=test-files-upload-button]").selectFile(
+                "cypress/fixtures/attachment2.json",
+                { force: true },
+            );
+
+            cy.log("And remove one before saving the comment");
+            cy.get("[data-test=remove-attachment-file-button]").first().click();
+
+            cy.log("Project member can save the comment, the file is attached to the test");
+            cy.get("[data-test=save-comment-button]").click();
+            cy.get("[data-test=comment-file-attachment]")
+                .should("have.length", 1)
+                .contains("attachment");
+
+            cy.log("ProjectMember can not add files bigger than sys_max_size_upload");
+            cy.get("[data-test=edit-comment-button]").click();
+
+            cy.generateLargeFile(64 + 1, "large_file.txt").then(({ data_transfer }) => {
+                cy.get("[data-test=test-files-upload-button]").then((input) => {
+                    const input_element = input[0];
+
+                    // @ts-expect-error - check on instancetypeof HTMLInputElement does not works it always throws an error, whereas the test works
+                    if (input_element.files) {
+                        Object.defineProperty(input_element, "files", {
+                            value: data_transfer.files,
+                            writable: false,
+                        });
+
+                        cy.wrap(input).trigger("change", { force: true });
+                    }
+                    //
+                });
+
+                cy.get("[data-test=file-upload-error]").should("contain", "maximum allowed size");
+            });
+
+            cy.log(
+                "RegularUser can only see the files attached to the comment, he can't edit them",
+            );
+
+            cy.log("Project members have only a read only access to attachment in TTM service");
+            cy.projectMemberSession();
+            cy.visitProjectService(file_project_name, "Test Management");
+            cy.contains("My first campaign").click();
+            cy.get("[data-test=test-title]").click();
+            cy.get("[data-test=edit-comment-button]").click();
+            cy.get("[data-test=comment-file-attachment]")
+                .should("have.length", 1)
+                .contains("attachment");
+            cy.get("[data-test=test-files-upload-button]").should("not.exist");
+
             cy.log("should allow the user to log a bug for the test");
             cy.get("[data-shortcut-new-bug]").click({ force: true });
             getStringFieldWithLabel("Summary").type("A bug for the test");
             cy.get("[data-test=artifact-modal-save-button]").click();
             cy.get("[data-test=current-test-bug]").contains("A bug for the test");
+        });
+
+        it("Tests can be considered as run and executed by CI", () => {
+            cy.intercept(
+                "PATCh",
+                "/api/v1/testmanagement_campaigns/*/testmanagement_executions*",
+            ).as("updateCampaign");
+            cy.log("Creates a project with TTM with users");
+            cy.projectAdministratorSession();
+            cy.createNewPublicProject(bot_project_name, "agile_alm");
+
+            cy.log("Create a campaign");
+            cy.visitProjectService(bot_project_name, "Test Management");
+            createCampaign("My first campaign");
+            cy.contains("My first campaign").click();
+            addTestInCampaign("My CI test");
+            cy.wait("@updateCampaign", { timeout: 5000 });
+            cy.get("[data-test=test-title]").click();
+            cy.get("[data-test=current-test-edit]").click();
+            cy.getContains(
+                "[data-test=string-field]",
+                "JUnit test name mapping (to be filled in case of automatic tests)",
+            ).within(() => {
+                cy.get("[data-test=string-field-input]").type(`Automated test exec description`);
+            });
+            cy.get("[data-test=artifact-modal-save-button]").click();
+
+            cy.log("Test is no longer displayed by default in campaign");
+            cy.get("[data-test=test-title]").should("have.length", 0);
+
+            cy.get("[data-test=tests-toggle-filters]").click();
+            cy.get("[data-test=status-filter-automated]").click();
+            cy.get("[data-test=test-title]").should("have.length", 1).contains("My CI test");
         });
     });
 });

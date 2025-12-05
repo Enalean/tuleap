@@ -68,6 +68,7 @@
                     title="{{ 'Remove file' | translate }}"
                     aria-label="{{ 'Remove file' | translate }}"
                     ng-click="$ctrl.removeFileUploadedThroughAttachmentArea(file)"
+                    data-test="remove-attachment-file-button"
                 >
                     <i class="far fa-fw fa-trash-alt tlp-button-icon current-test-comment-attachment-button-icon" aria-hidden="true"></i>
                 </button>
@@ -116,6 +117,7 @@
         >
             <input
                 id="test-files-upload-button"
+                data-test="test-files-upload-button"
                 type="file"
                 multiple
             >

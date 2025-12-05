@@ -22,6 +22,7 @@
                         <div class="tlp-dropdown tests-filters-dropdown">
                             <button id="toggle-filters-dropdown"
                                     class="tests-toggle-filters"
+                                    data-test="tests-toggle-filters"
                                     title="{{ 'Toggle filters dropdown' | translate }}"
                                     aria-label="{{ 'Toggle filters dropdown' | translate }}"
                                     aria-haspopup="menu"
@@ -45,7 +46,7 @@
                                                ng-model="status.passed"
                                                data-shortcut-filter-passed
                                         >
-                                        <label for="status-filter-passed" class="tlp-switch-button" aria-hidden="true"></label>
+                                        <label for="status-filter-passed" class="tlp-switch-button" aria-hidden="true" data-test="status-filter-passed"></label>
                                     </div>
                                 </div>
                                 <div class="tests-filter-option">
@@ -60,7 +61,7 @@
                                                ng-model="status.failed"
                                                data-shortcut-filter-non-passed
                                         >
-                                        <label for="status-filter-failed" class="tlp-switch-button" aria-hidden="true"></label>
+                                        <label for="status-filter-failed" class="tlp-switch-button" aria-hidden="true" data-test="status-filter-failed"></label>
                                     </div>
                                 </div>
                                 <div class="tests-filter-option">
@@ -75,7 +76,7 @@
                                                ng-model="status.blocked"
                                                data-shortcut-filter-non-passed
                                         >
-                                        <label for="status-filter-blocked" class="tlp-switch-button" aria-hidden="true"></label>
+                                        <label for="status-filter-blocked" class="tlp-switch-button" aria-hidden="true" data-test="status-filter-blocked"></label>
                                     </div>
                                 </div>
                                 <div class="tests-filter-option">
@@ -90,7 +91,7 @@
                                                ng-model="status.notrun"
                                                data-shortcut-filter-non-passed
                                         >
-                                        <label for="status-filter-notrun" class="tlp-switch-button" aria-hidden="true"></label>
+                                        <label for="status-filter-notrun" class="tlp-switch-button" aria-hidden="true" data-test="status-filter-not-run"></label>
                                     </div>
                                 </div>
                                 <div class="tests-filter-option">
@@ -105,7 +106,7 @@
                                                ng-model="are_automated_tests_shown"
                                                data-shortcut-filter-automated
                                         >
-                                        <label for="status-filter-automated" class="tlp-switch-button" aria-hidden="true"></label>
+                                        <label for="status-filter-automated" class="tlp-switch-button" aria-hidden="true" data-test="status-filter-automated"></label>
                                     </div>
                                 </div>
                             </div>
@@ -146,6 +147,8 @@
                                     | unique:'definition.id'
                                     track by execution.definition.id"
                                     data-navigation-test
+                                    data-test="current-test-exec-id"
+                                    data-artifact-id="{{ execution.id }}"
                                 >
                                     <a class="tests-list-test {{ execution.status }}"
                                        ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"

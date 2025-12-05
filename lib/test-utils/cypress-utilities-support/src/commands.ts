@@ -276,4 +276,25 @@ Cypress.Commands.add("searchItemInListPickerDropdown", (dropdown_item_label) => 
     });
 });
 
+Cypress.Commands.add("generateLargeFile", (file_size_in_mb: number, file_name: string) => {
+    return cy.window().then(() => {
+        const bytes_per_MB = 1024 * 1024;
+        const size = file_size_in_mb * bytes_per_MB;
+        const buffer = new ArrayBuffer(size);
+        const view = new Uint8Array(buffer);
+
+        for (let i = 0; i < size; i += 4096) {
+            view[i] = Math.floor(Math.random() * 256);
+        }
+
+        const blob = new Blob([buffer], { type: "text/plain" });
+        const file = new File([blob], file_name, { type: "text/plain" });
+
+        const data_transfer = new DataTransfer();
+        data_transfer.items.add(file);
+
+        return { file, data_transfer };
+    });
+});
+
 export {};
