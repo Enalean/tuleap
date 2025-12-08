@@ -61,10 +61,38 @@ export function postApprovalTable(
     ).map(() => null);
 }
 
-export function putApprovalTable(item_id: number, action: string): ResultAsync<null, Fault> {
-    return putResponse(uri`/api/docman_items/${item_id}/approval_table`, {}, { action }).map(
+export function updateApprovalTable(
+    item_id: number,
+    owner: number,
+    status: string,
+    comment: string,
+    notification_type: string,
+    reviewers: Array<number>,
+    reviewers_to_add: Array<number>,
+    reviewers_group_to_add: Array<number>,
+): ResultAsync<null, Fault> {
+    return putResponse(
+        uri`/api/docman_items/${item_id}/approval_table`,
+        {},
+        {
+            owner,
+            status,
+            comment,
+            notification_type,
+            reviewers: [...reviewers, ...reviewers_to_add],
+            reviewers_group_to_add,
+        },
+    ).map(() => null);
+}
+
+export function patchApprovalTable(item_id: number, action: string): ResultAsync<null, Fault> {
+    return patchResponse(uri`/api/docman_items/${item_id}/approval_table`, {}, { action }).map(
         () => null,
     );
+}
+
+export function deleteApprovalTable(item_id: number): ResultAsync<null, Fault> {
+    return del(uri`/api/docman_items/${item_id}/approval_table`).map(() => null);
 }
 
 export function putReview(
@@ -80,33 +108,6 @@ export function putReview(
             review,
             comment,
             notification,
-        },
-    ).map(() => null);
-}
-
-export function deleteApprovalTable(item_id: number): ResultAsync<null, Fault> {
-    return del(uri`/api/docman_items/${item_id}/approval_table`).map(() => null);
-}
-
-export function updateApprovalTable(
-    item_id: number,
-    owner: number,
-    status: string,
-    comment: string,
-    notification_type: string,
-    reviewers_to_add: Array<number>,
-    reviewers_group_to_add: Array<number>,
-): ResultAsync<null, Fault> {
-    return patchResponse(
-        uri`/api/docman_items/${item_id}/approval_table`,
-        {},
-        {
-            owner,
-            status,
-            comment,
-            notification_type,
-            reviewers_to_add,
-            reviewers_group_to_add,
         },
     ).map(() => null);
 }

@@ -373,6 +373,20 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
         );
         self::assertSame(201, $post_table_response->getStatusCode());
+        // ...enabled...
+        $put_response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', "docman_items/$item_id/approval_table")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'owner'                  => $this->user_ids[DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME],
+                    'status'                 => 'enabled',
+                    'comment'                => '',
+                    'notification_type'      => 'disabled',
+                    'reviewers'              => [$this->user_ids[BaseTestDataBuilder::TEST_USER_1_NAME]],
+                    'reviewers_group_to_add' => [],
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $put_response->getStatusCode());
         // ...and reviewed
         $put_response = $this->getResponse(
             $this->request_factory->createRequest('PUT', "docman_items/$item_id/approval_table/review")
@@ -383,9 +397,7 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
                 ]))),
             BaseTestDataBuilder::TEST_USER_1_NAME,
         );
-        // Expected, the table is disabled (it can not be enabled by REST yet)
-        self::assertSame('You cannot review this approval table', json_decode($put_response->getBody()->getContents())['error']['i18n_error_message']);
-        self::assertSame(400, $put_response->getStatusCode());
+        self::assertSame(200, $put_response->getStatusCode());
 
         // Get approval table
         $get_response = $this->getResponse(

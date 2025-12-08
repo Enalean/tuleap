@@ -34,7 +34,6 @@ use Luracast\Restler\RestException;
 use PermissionsManager;
 use Project;
 use ProjectManager;
-use Tuleap\Docman\ApprovalTable\ApprovalTableNotificationMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
@@ -293,7 +292,6 @@ final class SearchResource extends AuthenticatedResource
             ),
             $html_purifier,
             $provide_user_avatar_url,
-            new ApprovalTableNotificationMapper(),
             $version_factory,
             new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
         );

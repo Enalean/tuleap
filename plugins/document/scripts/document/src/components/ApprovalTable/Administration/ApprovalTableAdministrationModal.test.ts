@@ -36,6 +36,7 @@ import { UserBuilder } from "../../../../tests/builders/UserBuilder";
 import type { ApprovableDocument, ApprovalTable, Embedded, Item } from "../../../type";
 import { TYPE_EMBEDDED } from "../../../constants";
 import AdministrationModalMissingTable from "./AdministrationModalMissingTable.vue";
+import { ApprovalTableReviewerBuilder } from "../../../../tests/builders/ApprovalTableReviewerBuilder";
 
 describe("ApprovalTableAdministrationModal", () => {
     let trigger: HTMLButtonElement;
@@ -106,6 +107,9 @@ describe("ApprovalTableAdministrationModal", () => {
             .setValue("all_at_once", "table_notification_value");
         await wrapper
             .findComponent(AdministrationModalReviewers)
+            .setValue([new ApprovalTableReviewerBuilder(101).build()], "table_reviewers_value");
+        await wrapper
+            .findComponent(AdministrationModalReviewers)
             .setValue(
                 [new UserBuilder(102).build(), new UserBuilder(103).build()],
                 "table_reviewers_to_add_value",
@@ -125,6 +129,7 @@ describe("ApprovalTableAdministrationModal", () => {
             "enabled",
             "My comment",
             "all_at_once",
+            [101],
             [102, 103],
             [3],
         );
@@ -139,13 +144,13 @@ describe("ApprovalTableAdministrationModal", () => {
 
         await wrapper.find("[data-test=update-table-button]").trigger("click");
 
-        expect(updateApprovalTable).toHaveBeenCalledWith(123, 102, "disabled", "", "", [], []);
+        expect(updateApprovalTable).toHaveBeenCalledWith(123, 102, "disabled", "", "", [], [], []);
         expect(wrapper.find("[data-test=admin-modal-error]").text()).toContain("Oh no!");
     });
 
     it("Should display new table form when table not linked to last item version", async () => {
         const putApprovalTable = vi
-            .spyOn(rest_querier, "putApprovalTable")
+            .spyOn(rest_querier, "patchApprovalTable")
             .mockReturnValue(okAsync(null));
         const wrapper = getWrapper(new ApprovalTableBuilder(35).withVersionNumber(45).build(), {
             ...new ItemBuilder(123).withType(TYPE_EMBEDDED).buildApprovableDocument(),

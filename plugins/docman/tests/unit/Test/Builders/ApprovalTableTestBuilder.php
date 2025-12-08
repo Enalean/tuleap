@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\Builders;
 
+use Docman_ApprovalReviewer;
 use Docman_ApprovalTable;
 use Docman_ApprovalTableFile;
 use Docman_ApprovalTableItem;
@@ -30,6 +31,8 @@ final class ApprovalTableTestBuilder
 {
     private int $status         = PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED;
     private int $version_number = 1;
+    /** @var list<Docman_ApprovalReviewer>  */
+    private array $reviewers = [];
 
     private function __construct()
     {
@@ -52,12 +55,24 @@ final class ApprovalTableTestBuilder
         return $this;
     }
 
+    /**
+     * @param list<Docman_ApprovalReviewer> $reviewers
+     */
+    public function withReviewers(array $reviewers): self
+    {
+        $this->reviewers = $reviewers;
+        return $this;
+    }
+
     public function build(): Docman_ApprovalTable
     {
         $table = new Docman_ApprovalTableItem();
         $table->initFromRow([
             'status' => $this->status,
         ]);
+        foreach ($this->reviewers as $reviewer) {
+            $table->addReviewer($reviewer);
+        }
 
         return $table;
     }

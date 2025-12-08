@@ -151,7 +151,7 @@ import { PROJECT } from "../../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     deleteApprovalTable,
-    putApprovalTable,
+    patchApprovalTable,
     updateApprovalTable,
 } from "../../../api/approval-table-rest-querier";
 import AdministrationModalGlobalSettings from "./AdministrationModalGlobalSettings.vue";
@@ -240,6 +240,7 @@ function onUpdate(): void {
         table_status_value.value,
         table_comment_value.value,
         table_notification_value.value,
+        table_reviewers_value.value.map((reviewer) => reviewer.user.id),
         table_reviewers_to_add_value.value.map((user) => user.id),
         table_reviewers_group_to_add_value.value.map((user_group) => {
             if (user_group.id.includes("_")) {
@@ -263,7 +264,7 @@ function onUpdate(): void {
 
 function onUpdateTableVersion(): void {
     is_updating.value = true;
-    putApprovalTable(props.item.id, table_action_value.value).match(
+    patchApprovalTable(props.item.id, table_action_value.value).match(
         () => {
             emit("refresh-data");
             is_updating.value = false;
