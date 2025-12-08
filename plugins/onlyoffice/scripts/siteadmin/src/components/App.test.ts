@@ -115,7 +115,6 @@ describe("App", () => {
         };
 
         // To keep the test readable we keep those fake components internal to the test
-        // eslint-disable-next-line vue/one-component-per-file
         const FakeListOfServers = defineComponent({
             setup() {
                 const navigation: Navigation = strictInject(NAVIGATION);
@@ -126,7 +125,6 @@ describe("App", () => {
             template: '<span id="server-list"></span>',
         });
 
-        // eslint-disable-next-line vue/one-component-per-file
         const FakeRestrictServer = defineComponent({
             setup() {
                 const navigation: Navigation = strictInject(NAVIGATION);

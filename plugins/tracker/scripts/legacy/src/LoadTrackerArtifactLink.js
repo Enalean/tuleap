@@ -641,7 +641,6 @@ document.observe("dom:loaded", function () {
                                 });
 
                             //Check/Uncheck values in recent and search panels linked to manual panel changes
-                            // eslint-disable-next-line no-inner-declarations
                             function observe_input_field() {
                                 var manual_value = input_to_link.value;
                                 var links_array = manual_value.split(",");
