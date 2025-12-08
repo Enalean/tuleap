@@ -401,12 +401,27 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertCount(1, $table['reviewers']);
         self::assertSame(BaseTestDataBuilder::TEST_USER_1_NAME, $table['reviewers'][0]['user']['username']);
 
+        // Delete table
+        $delete_table_response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', "docman_items/$item_id/approval_table"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $delete_table_response->getStatusCode());
+        $get_all_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', "docman_items/$item_id/approval_tables"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $get_all_response->getStatusCode());
+        $get_all_body = json_decode($get_all_response->getBody()->getContents());
+        self::assertIsArray($get_all_body);
+        self::assertCount(0, $get_all_body);
+
         // Cleanup (delete file)
-        $delete_response = $this->getResponse(
+        $delete_item_response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', "docman_embedded_files/$item_id"),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
         );
-        self::assertSame(200, $delete_response->getStatusCode());
+        self::assertSame(200, $delete_item_response->getStatusCode());
     }
 
     private function assertGetDocumentItems(

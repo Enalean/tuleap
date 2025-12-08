@@ -892,6 +892,9 @@ msgstr "Chaque"
 msgid "Failed to create approval table"
 msgstr "Erreur lors de la création de la table d'approbation"
 
+msgid "Failed to delete approval table"
+msgstr "Erreur lors de la suppression de la table d'approbation"
+
 msgid "File"
 msgstr "Fichier"
 
@@ -1852,6 +1855,9 @@ msgstr ""
 
 msgid "There is an error in parameters. Back to previous screen."
 msgstr "Il y a une erreur dans les paramètres. Retour vers l'écran précédent."
+
+msgid "There is no approval table to delete"
+msgstr "Il n'y a pas de table d'approbation à supprimer"
 
 msgid "There is no data attached to this item."
 msgstr "Il n'y a pas de donnée pour cet élément."

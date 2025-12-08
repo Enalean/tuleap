@@ -454,7 +454,7 @@ final class DocmanItemsResource extends AuthenticatedResource
      */
     public function optionsPostApprovalTable(int $id): void
     {
-        Header::allowOptionsPost();
+        Header::allowOptionsPostDelete();
     }
 
     /**
@@ -474,7 +474,7 @@ final class DocmanItemsResource extends AuthenticatedResource
     public function postApprovalTable(int $id, ApprovalTablePostRepresentation $representation): void
     {
         $this->checkAccess();
-        Header::allowOptionsPost();
+        Header::allowOptionsPostDelete();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $item          = $items_request->getItem();
@@ -504,6 +504,53 @@ final class DocmanItemsResource extends AuthenticatedResource
         $reviewer_factory->addUsers($representation->users);
         foreach ($representation->user_groups as $user_group) {
             $reviewer_factory->addUgroup($user_group);
+        }
+    }
+
+    /**
+     * Delete the last approval table for item
+     *
+     * @url    DELETE {id}/approval_table
+     * @access hybrid
+     *
+     * @param int $id ID of the item {@from path}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function deleteApprovalTable(int $id): void
+    {
+        $this->checkAccess();
+        Header::allowOptionsPostDelete();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
+        $user          = $items_request->getUser();
+
+        $docman_permissions_manager = Docman_PermissionsManager::instance($project->getGroupId());
+        $user_can_delete            = $docman_permissions_manager->userCanDelete($user, $item);
+
+        if (! $user_can_delete) {
+            throw new RestException(404);
+        }
+
+        $factories_factory = new Docman_ApprovalTableFactoriesFactory();
+        $factory           = $factories_factory->getFromItem($item);
+        if ($factory === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to delete'));
+        }
+
+        $table = $factory->getLastTableForItem();
+        if ($table === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to delete'));
+        }
+
+        if (! $factory->deleteTable()) {
+            throw new I18NRestException(500, dgettext('tuleap-docman', 'Failed to delete approval table'));
         }
     }
 
