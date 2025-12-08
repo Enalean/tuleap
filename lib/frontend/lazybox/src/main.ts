@@ -21,6 +21,7 @@ import "../themes/style.scss";
 import "./LazyboxElement";
 
 export type { html as HTMLTemplateStringProcessor } from "hybrids";
+export { html } from "hybrids";
 export type {
     LazyboxSelectionCallback,
     LazyboxSearchInputCallback,
