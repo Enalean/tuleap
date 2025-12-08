@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+declare(strict_types=1);
 
-export default vite.defineAppConfig(
-    {
-        plugin_name: path.basename(path.resolve(__dirname, "../..")),
-        sub_app_name: path.basename(__dirname),
-    },
-    {
-        build: {
-            rollupOptions: {
-                input: {
-                    webhooks: path.resolve(__dirname, "./src/index.ts"),
-                },
-            },
-        },
-    },
-);
+namespace Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit;
+
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class MigrationToGerritFailedFault extends Fault
+{
+    public function __construct(
+        public \DateTimeImmutable $date,
+        public string $logs,
+    ) {
+        parent::__construct('Migration to Gerrit server failed');
+    }
+}

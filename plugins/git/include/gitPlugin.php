@@ -31,7 +31,6 @@ use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Config\ConfigClassProvider;
@@ -190,13 +189,11 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Plugin\ListeningToEventClass;
-use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -288,8 +285,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook('javascript_file', 'jsFile');
-        $this->addHook(Event::JAVASCRIPT, 'javascript');
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, 'getReferenceKeywords');
         $this->addHook(NatureCollection::NAME);
@@ -525,29 +520,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $event->addConfigClass(GitRepositoryBrowserController::class);
     }
 
-    #[ListeningToEventName('cssfile')]
-    public function cssFile($params): void
-    {
-        // Only show the stylesheet if we're actually in the Git pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (
-            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
-        ) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getLegacyAssets()->getFileURL('default.css') . '" />';
-        }
-    }
-
-    public function jsFile($params)
-    {
-        // Only show the javascript if we're actually in the Git pages.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $layout = $params['layout'];
-            assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getLegacyAssets(), 'git.js'));
-        }
-    }
-
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
         $event->addJavascript(
@@ -559,11 +531,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 'src/index.ts'
             )
         );
-    }
-
-    public function javascript($params)
-    {
-        include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
 
     public function system_event_get_types_for_default_queue(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -2762,14 +2729,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return $header_displayed_builder->build($selected_tab);
     }
 
-    public function getLegacyAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../scripts/legacy/frontend-assets',
-            '/assets/git/legacy'
-        );
-    }
-
     /**
      * @return \Tuleap\Git\Repository\RepositoryCreator
      */
@@ -2822,21 +2781,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $option_builder      = new AccessRightsPresenterOptionsBuilder($user_group_factory, $permissions_manager);
 
         return $option_builder;
-    }
-
-    /**
-     * @return ThemeManager
-     */
-    protected function getThemeManager()
-    {
-        return new ThemeManager(
-            new BurningParrotCompatiblePageDetector(
-                new Tuleap\Request\CurrentPage(),
-                new \User_ForgeUserGroupPermissionsManager(
-                    new \User_ForgeUserGroupPermissionsDao()
-                )
-            )
-        );
     }
 
     #[ListeningToEventClass]

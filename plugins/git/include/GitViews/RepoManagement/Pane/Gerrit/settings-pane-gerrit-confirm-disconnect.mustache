@@ -1,0 +1,34 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <section class="tlp-pane-section">
+            <div class="tlp-pane-header">
+                <h2 class="tlp-pane-title">{{# dgettext }}tuleap-git | Disconnect from Gerrit{{/ dgettext }}</h2>
+            </div>
+            <section class="tlp-pane-section">
+                <form method="post" action="/plugins/git/">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+                    <input type="hidden" name="repo_id" value="{{ repository_id }}"/>
+                    <input type="hidden" name="group_id" value="{{ project_id }}"/>
+                    <input type="hidden" name="pane" value="{{ gerrit_pane }}"/>
+                    <input type="hidden" name="action" value="{{ disconnect_gerrit_action }}"/>
+                    <input type="hidden" name="{{ delete_gerrit_project }}" value="{{ delete_gerrit_project_choice }}"/>
+                    <div class="tlp-alert-warning">
+                        <p>{{# dgettext }}tuleap-git | Warning!{{/ dgettext }}</p>
+                        <p>{{# dgettext }}tuleap-git | This operation <strong>cannot</strong> be undone. This repository will never again be managed by a gerrit server. Do you confirm the disconnection?{{/ dgettext }}</p>
+                    </div>
+                    <div class="tlp-pane-section-submit">
+                        <button
+                            type="submit"
+                            class="tlp-button-danger"
+                            name="disconnect"
+                            value="1"
+                        >{{# dgettext }}tuleap-git | Yes, I want to disconnect from Gerrit{{/ dgettext }}</button>
+                        <a href="{{ pane_url }}" class="tlp-button-secondary">{{# dgettext }}tuleap-git | No{{/ dgettext }}</a>
+                    </div>
+                </form>
+            </section>
+        </section>
+    </div>
+</section>

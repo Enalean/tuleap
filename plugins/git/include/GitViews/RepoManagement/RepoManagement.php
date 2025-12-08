@@ -49,6 +49,7 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         'perms',
         'mail',
         'hooks',
+        Pane\Gerrit::ID,
     ];
 
     /**
@@ -100,7 +101,11 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     $this->gerrit_can_migrate_checker,
                     $this->gerrit_servers,
                     $this->gerrit_config_templates,
-                    $this->project_manager
+                    $this->project_manager,
+                    TemplateRendererFactory::build()->getRenderer(__DIR__ . '/Pane/Gerrit/'),
+                    new Git_Driver_Gerrit_ProjectCreatorStatus(
+                        new Git_Driver_Gerrit_ProjectCreatorStatusDao()
+                    ),
                 )
             );
         }

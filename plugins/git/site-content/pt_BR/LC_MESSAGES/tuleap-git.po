@@ -27,6 +27,9 @@ msgid_plural "%s commits pushed on %s"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "-- Please choose"
+msgstr ""
+
 msgid "A Gerrit project with that name already exists on that server"
 msgstr ""
 
@@ -34,6 +37,12 @@ msgid "A comma-separated list of email addresses."
 msgstr ""
 
 msgid "A file already exists with this name under gitroot"
+msgstr ""
+
+msgid "A project %1$s has been created on the server %2$s."
+msgstr ""
+
+msgid "A project %s will be created on the chosen server."
 msgstr ""
 
 #, php-format
@@ -83,6 +92,9 @@ msgid "Add server"
 msgstr ""
 
 msgid "Add the notification"
+msgstr ""
+
+msgid "Additional actions"
 msgstr ""
 
 msgid "All projects can now use this Gerrit server."
@@ -165,12 +177,9 @@ msgstr ""
 msgid "Artifact closure is now allowed for repository"
 msgstr ""
 
-#, php-format
 msgid ""
-"As a reminder, the management of the repository (permissions, ...) has been "
-"delegated to Gerrit: <ul><li>A project <em>%1$s</em> has been created on the "
-"server <a href=\"%2$s\">%2$s</a>.</li><li>The current repository is now a "
-"mirror of the Gerrit reference.</li></ul>"
+"As a reminder, the management of the repository (permissions, …) has been "
+"delegated to Gerrit:"
 msgstr ""
 
 msgid "Authorize"
@@ -318,7 +327,7 @@ msgstr "Excluir"
 msgid "Delete %1$s"
 msgstr ""
 
-msgid "Delete gerrit project"
+msgid "Delete Gerrit project"
 msgstr ""
 
 msgid "Delete this repository"
@@ -451,6 +460,9 @@ msgid "Gerrit Templates"
 msgstr ""
 
 msgid "Gerrit permission configuration templates"
+msgstr ""
+
+msgid "Gerrit repository"
 msgstr ""
 
 msgid "Gerrit template"
@@ -632,7 +644,7 @@ msgstr ""
 msgid "Maximum number of push by repository"
 msgstr ""
 
-msgid "Migrate repo to Gerrit"
+msgid "Migrate the repository to Gerrit"
 msgstr ""
 
 #, php-format
@@ -755,11 +767,11 @@ msgid "Please choose"
 msgstr ""
 
 msgid ""
-"Please choose a permission's configuration template for the migration,<br /"
-">they will be applied to the migrated repository on Gerrit:"
+"Please choose a permissions configuration template for the migration, they "
+"will be applied to the migrated repository on Gerrit"
 msgstr ""
 
-msgid "Please choose the Gerrit server:"
+msgid "Please choose the Gerrit server"
 msgstr ""
 
 msgid "Please confirm your action."
@@ -1008,6 +1020,12 @@ msgstr ""
 msgid "The branch name %s is not a valid branch name"
 msgstr ""
 
+msgid "The current repository is now a mirror of the Gerrit reference."
+msgstr ""
+
+msgid "The current repository will become a mirror of the Gerrit reference."
+msgstr ""
+
 msgid ""
 "The deletion of the project under Gerrit is on going, please wait for a few "
 "minutes."
@@ -1019,12 +1037,9 @@ msgid ""
 "Gerrit server: %1$s"
 msgstr ""
 
-#, php-format
 msgid ""
-"The management of the repository (permissions, ...) will be delegated to "
-"Gerrit: <ul><li>A project <em>%1$s</em> will be created on the chosen server."
-"</li><li>The current repository will become a mirror of the Gerrit reference."
-"</li></ul>"
+"The management of the repository (permissions, …) will be delegated to "
+"Gerrit:"
 msgstr ""
 
 msgid ""
@@ -1032,7 +1047,6 @@ msgid ""
 "platform: %s"
 msgstr ""
 
-#, php-format
 msgid ""
 "The migration failed %1$s, the gerrit repository is probably "
 "<strong>corrupted or partially migrated</strong>, do not use it and contact "
@@ -1069,10 +1083,8 @@ msgstr ""
 msgid "The regular expressions option has been disabled at plateform level."
 msgstr ""
 
-#, php-format
 msgid ""
-"The repository <em>%1$s</em> has already been migrated to the Gerrit "
-"project: <a href=\"%3$s\">%2$s</a>."
+"The repository %1$s has already been migrated to the Gerrit project: %2$s."
 msgstr ""
 
 msgid "The repository cannot be deleted until it is disconnected from Gerrit"
@@ -1084,6 +1096,11 @@ msgstr ""
 msgid ""
 "The repository is in queue for creation. Please check back here in a few "
 "minutes"
+msgstr ""
+
+msgid ""
+"The repository is in queue for creation. Please check back here in a few "
+"minutes."
 msgstr ""
 
 msgid "The request is not valid."
@@ -1165,7 +1182,7 @@ msgstr ""
 
 msgid ""
 "This repository was migrated to the server in the past. You cannot migrate "
-"again without deleting the project on the Gerrit server"
+"again without deleting the project on the Gerrit server."
 msgstr ""
 
 msgid ""
@@ -1310,6 +1327,9 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
+msgid "Warning!"
+msgstr ""
+
 msgid "Webhook added"
 msgstr ""
 
@@ -1340,8 +1360,7 @@ msgstr ""
 msgid "Yes, revoke access"
 msgstr ""
 
-#, php-format
-msgid "You are about to migrate your repository <em>%1$s</em> to Gerrit."
+msgid "You are about to migrate your repository %s to Gerrit."
 msgstr ""
 
 #, php-format

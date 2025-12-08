@@ -1,0 +1,87 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h2 class="tlp-pane-title">{{# dgettext }}tuleap-git | Gerrit repository{{/ dgettext }}</h2>
+        </div>
+        <section class="tlp-pane-section">
+            {{# migration_failure }}
+            <div class="tlp-alert-danger">
+                {{# dgettext }}
+                    tuleap-git
+                    | The migration failed %1$s, the gerrit repository is probably <strong>corrupted or partially migrated</strong>, do not use it and contact your site administration
+                    | {{# migration_date }}{{> tlp_relative_date }}{{/ migration_date }}
+                {{/ dgettext }}
+                <pre>{{ migration_logs }}</pre>
+            </div>
+            {{/ migration_failure }}
+            {{# gerrit_repository }}
+            <h3>{{# dgettext }}tuleap-git | Disconnect from Gerrit{{/ dgettext }}</h3>
+            <p>
+                {{# dgettext }}
+                    tuleap-git
+                    | The repository %1$s has already been migrated to the Gerrit project: %2$s.
+                    | <em>{{ repository_name }}</em>
+                    | <a href="{{ gerrit_project_admin_url }}">{{ gerrit_project_name }}</a>
+                {{/ dgettext }}
+            </p>
+            <div class="tlp-alert-info">
+                {{# dgettext }}tuleap-git | As a reminder, the management of the repository (permissions, …) has been delegated to Gerrit:{{/ dgettext }}
+                <ul>
+                    <li>{{# dgettext }}tuleap-git
+                        | A project %1$s has been created on the server %2$s.
+                        | <em>{{ gerrit_project_name }}</em>
+                        | <a href="{{ gerrit_server_url }}">{{ gerrit_server_url }}</a>
+                    {{/ dgettext }}</li>
+                    <li>{{# dgettext }}tuleap-git | The current repository is now a mirror of the Gerrit reference.{{/ dgettext }}</li>
+                </ul>
+            </div>
+            {{/ gerrit_repository }}
+            <form method="post" action="/plugins/git/">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+                <input type="hidden" name="repo_id" value="{{ repository_id }}"/>
+                <input type="hidden" name="group_id" value="{{ project_id }}"/>
+                <input type="hidden" name="pane" value="{{ gerrit_pane }}"/>
+                <input type="hidden" name="action" value="{{ settings_action }}"/>
+
+                <div class="tlp-form-element">
+                    <p class="tlp-label">{{# dgettext }}tuleap-git | Additional actions{{/ dgettext }}<i class="fa-solid fa-asterisk" aria-hidden="true"></i></p>
+                    {{# gerrit_repository }}
+                        {{# is_delete_plugin_enabled }}
+                            <label class="tlp-label tlp-radio">
+                                <input
+                                    type="radio"
+                                    name="{{ disconnect_gerrit_project_option_name }}"
+                                    value="{{ delete_gerrit_project_value }}"
+                                    required
+                                > {{# dgettext }}tuleap-git | Also Delete project on Gerrit{{/ dgettext }}
+                            </label>
+                        {{/ is_delete_plugin_enabled }}
+                    {{/ gerrit_repository }}
+                    <label class="tlp-label tlp-radio">
+                        <input
+                            type="radio"
+                            name="{{ disconnect_gerrit_project_option_name }}"
+                            value="{{ readonly_gerrit_project_value }}"
+                            required
+                        > {{# dgettext }}tuleap-git | Make project on Gerrit Read-Only{{/ dgettext }}
+                    </label>
+                    <label class="tlp-label tlp-radio">
+                        <input
+                            type="radio"
+                            name="{{ disconnect_gerrit_project_option_name }}"
+                            value=""
+                            required
+                        > {{# dgettext }}tuleap-git | Leave project on Gerrit{{/ dgettext }}
+                    </label>
+                </div>
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-danger" name="{{ submit_button_name }}" value="1">
+                        <i class="fa-solid fa-power-off tlp-button-icon" aria-hidden="true"></i>{{# dgettext }}tuleap-git | Disconnect{{/ dgettext }}
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</section>

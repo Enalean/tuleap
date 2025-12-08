@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import common from "./webpack.common.mjs";
-import { webpack_configurator } from "@tuleap/build-system-configurator";
+declare(strict_types=1);
 
-export default webpack_configurator.extendDevConfiguration(common);
+namespace Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit;
+
+use Git_RemoteServer_GerritServer;
+
+final readonly class GerritServerPresenter
+{
+    public int $server_id;
+    public string $base_url;
+
+    public function __construct(
+        Git_RemoteServer_GerritServer $server,
+        public int $is_delete_plugin_enabled,
+        public int $should_delete,
+    ) {
+        $this->server_id = (int) $server->getId();
+        $this->base_url  = $server->getBaseUrl();
+    }
+}

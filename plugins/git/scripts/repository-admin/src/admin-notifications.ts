@@ -64,6 +64,9 @@ function listenToClickOnDeleteToAdjustDeletionModalInputParameters(): void {
         }
 
         button.addEventListener("click", () => {
+            if (!(deletion_parameter_input instanceof HTMLInputElement)) {
+                return;
+            }
             deletion_parameter_input.setAttribute(
                 "name",
                 getAttributeOrThrow(button, "data-deletion-parameter-name"),
