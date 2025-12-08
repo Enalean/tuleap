@@ -24,16 +24,18 @@ import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue
 import CommitChangesApp from "./components/App.vue";
 import { buildBaseUrl, buildChangesTabUrl } from "./router/base-url-builders";
 import { createChangesRouter } from "./router/router";
-import { CHANGES_APP_BASE_URL_KEY } from "./constants";
+import { CHANGES_APP_BASE_URL_KEY, CURRENT_USER_ID_KEY } from "./constants";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = selectOrThrow(document, ".vue-changes-mount-point");
     const project_id = getAttributeOrThrow(mount_point, "data-project-id");
     const current_repository_id = getAttributeOrThrow(mount_point, "data-repository-id");
+    const user_id = Number.parseInt(getAttributeOrThrow(document.body, "data-user-id"), 10);
     const base_url = buildBaseUrl(window.location, current_repository_id, project_id);
 
     createApp(CommitChangesApp)
         .provide(CHANGES_APP_BASE_URL_KEY, base_url)
+        .provide(CURRENT_USER_ID_KEY, user_id)
         .use(createChangesRouter(buildChangesTabUrl(base_url)))
         .use(
             await initVueGettext(

@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+export type PullRequestDiffMode = "side_by_side" | "unified";
 
-export const VIEW_CHANGES_NAME = "changes";
-export const CHANGES_APP_BASE_URL_KEY: StrictInjectionKey<URL> = Symbol("changes_app_base_url");
-export const CURRENT_USER_ID_KEY: StrictInjectionKey<number> = Symbol("current_user_id");
-export const PULL_REQUEST_ID_KEY: StrictInjectionKey<number> = Symbol("pull_request_id");
+export const SIDE_BY_SIDE_DIFF: PullRequestDiffMode = "side_by_side";
+export const UNIFIED_DIFF: PullRequestDiffMode = "unified";
+
+export const USER_DIFF_DISPLAY_MODE_PREFERENCE = "pull_requests_diff_display_mode";

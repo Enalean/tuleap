@@ -35,3 +35,9 @@ msgstr "Résumé"
 
 msgid "Search files by their name."
 msgstr "Rechercher les fichiers par leur nom."
+
+msgid "Side by side diff"
+msgstr "Diff côte à côte"
+
+msgid "Unified diff"
+msgstr "Diff unifié"

@@ -31,7 +31,10 @@ import ChangesPane from "./ChangesPane.vue";
 import type { PullRequestFile } from "../api/rest-querier";
 import { FILE_STATUS_ADDED, FILE_STATUS_MODIFIED } from "../api/rest-querier";
 import FilesSelector from "./files-selector/FilesSelector.vue";
-import AppSkeleton from "./AppSkeleton.vue";
+import SelectorsSkeletons from "./SelectorsSkeletons.vue";
+import { SIDE_BY_SIDE_DIFF } from "./file-diffs/diff-modes";
+import FileDiffTypeSelector from "./file-diffs/FileDiffTypeSelector.vue";
+import { CURRENT_USER_ID_KEY } from "../constants";
 
 vi.mock("vue-router");
 
@@ -63,10 +66,16 @@ describe("ChangesPane", () => {
         shallowMount(ChangesPane, {
             global: {
                 plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CURRENT_USER_ID_KEY.valueOf()]: 102,
+                },
             },
         });
 
     beforeEach(() => {
+        vi.spyOn(tuleap_api, "getUserPreferenceForDiffDisplayMode").mockReturnValue(
+            okAsync(SIDE_BY_SIDE_DIFF),
+        );
         vi.spyOn(router, "useRoute").mockImplementationOnce(
             () =>
                 ({
@@ -78,16 +87,17 @@ describe("ChangesPane", () => {
         );
     });
 
-    it("should load the pull-request's changes", async () => {
+    it("should load the pull-request's changes and the user's preferred diff mode", async () => {
         vi.spyOn(tuleap_api, "getFiles").mockReturnValue(okAsync(changes));
 
         const wrapper = getWrapper();
 
-        expect(wrapper.findComponent(AppSkeleton).exists()).toBe(true);
+        expect(wrapper.findComponent(SelectorsSkeletons).exists()).toBe(true);
 
         await flushPromises();
 
         expect(wrapper.findComponent(FilesSelector).exists()).toBe(true);
+        expect(wrapper.findComponent(FileDiffTypeSelector).exists()).toBe(true);
         expect(wrapper.find("[data-test=no-changes-warning]").exists()).toBe(false);
         expect(wrapper.find("[data-test=error-message]").exists()).toBe(false);
     });
@@ -99,6 +109,7 @@ describe("ChangesPane", () => {
         await flushPromises();
 
         expect(wrapper.findComponent(FilesSelector).exists()).toBe(false);
+        expect(wrapper.findComponent(FileDiffTypeSelector).exists()).toBe(false);
         expect(wrapper.find("[data-test=no-changes-warning]").exists()).toBe(true);
         expect(wrapper.find("[data-test=error-message]").exists()).toBe(false);
     });
@@ -110,6 +121,7 @@ describe("ChangesPane", () => {
         await flushPromises();
 
         expect(wrapper.findComponent(FilesSelector).exists()).toBe(false);
+        expect(wrapper.findComponent(FileDiffTypeSelector).exists()).toBe(false);
         expect(wrapper.find("[data-test=no-changes-warning]").exists()).toBe(false);
         expect(wrapper.find("[data-test=error-message]").exists()).toBe(true);
     });
