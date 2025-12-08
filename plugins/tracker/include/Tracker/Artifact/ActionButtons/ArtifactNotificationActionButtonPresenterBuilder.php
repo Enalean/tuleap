@@ -57,7 +57,8 @@ class ArtifactNotificationActionButtonPresenterBuilder
         return new ArtifactNotificationsButtonPresenter(
             $this->getUnsubscribeButtonLabel($user, $artifact),
             $this->getUnsubscribeButtonAlternateText($user, $artifact),
-            $this->getUnsubscribeButtonIcon($user, $artifact)
+            $this->getUnsubscribeButtonIcon($user, $artifact),
+            $this->getUnsubscribeButtonUrl($artifact->getId())
         );
     }
 
@@ -94,5 +95,10 @@ class ArtifactNotificationActionButtonPresenterBuilder
         }
 
         return 'fa-bell-slash-o';
+    }
+
+    private function getUnsubscribeButtonUrl(int $artifact_id): string
+    {
+        return TRACKER_BASE_URL . '/?aid=' . $artifact_id . '&func=manage-subscription&artifact=' . $artifact_id;
     }
 }
