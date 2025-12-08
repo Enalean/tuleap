@@ -14,6 +14,7 @@ buildToolsShell.overrideAttrs {
   name = "dev-tools";
   buildInputs = buildToolsShell.buildInputs ++ [
     pkgs.osv-scanner
+    pkgs.gcc # Used by OSV Scanner to perform call analysis
     pkgs.cdxgen
     pkgs.go_latest
     pkgs.cyclonedx-gomod
