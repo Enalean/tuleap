@@ -33,30 +33,26 @@
                 {{ $gettext("Create branch on a GitLab repository") }}
             </h1>
             <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div v-if="error_message" class="tlp-modal-feedback">
-            <div class="feedback_error">
+            <div class="tlp-alert-danger">
                 {{ error_message }}
             </div>
         </div>
         <div class="tlp-modal-body">
-            <div class="artifact-create-gitlab-branch-form-block">
-                <label for="artifact-create-gitlab-branch-select-integration">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="artifact-create-gitlab-branch-select-integration">
                     {{ $gettext("GitLab repositories integrations") }}
-                    <span
-                        class="artifact-create-branch-action-mandatory-information"
-                        aria-hidden="true"
-                    >
-                        *
-                    </span>
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <select
                     id="artifact-create-gitlab-branch-select-integration"
                     required
                     aria-required="true"
                     v-model="selected_integration"
+                    class="tlp-select"
                     data-test="integrations-select"
                 >
                     <option
@@ -68,15 +64,10 @@
                     </option>
                 </select>
             </div>
-            <div class="artifact-create-gitlab-branch-form-block">
-                <label for="artifact-create-gitlab-branch-reference">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="artifact-create-gitlab-branch-reference">
                     {{ $gettext("Git reference from where the branch should be created") }}
-                    <span
-                        class="artifact-create-branch-action-mandatory-information"
-                        aria-hidden="true"
-                    >
-                        *
-                    </span>
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
                     type="text"
@@ -85,21 +76,22 @@
                     required
                     aria-required="true"
                     v-model="reference"
+                    class="tlp-input"
                     data-test="branch-reference-input"
                 />
-                <p class="text-info">
+                <p class="tlp-text-info">
                     {{ $gettext("Must be an existing git commit SHA-1 or a branch name") }}
                 </p>
             </div>
-            <div>
-                <label for="artifact-create-gitlab-branch-name">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="artifact-create-gitlab-branch-name">
                     {{ $gettext("The following branch will be created") }}
                 </label>
                 <code id="artifact-create-gitlab-branch-name">
                     {{ branch_name_placeholder }}
                 </code>
             </div>
-            <div class="artifact-create-gitlab-merge-request">
+            <div class="tlp-form-element">
                 <label class="tlp-label tlp-checkbox">
                     <input
                         type="checkbox"
@@ -132,7 +124,7 @@
                 <i
                     aria-hidden="true"
                     v-if="is_creating_branch"
-                    class="fas fa-spin fa-spinner tlp-button-icon"
+                    class="fa-solid fa-spin fa-spinner tlp-button-icon"
                 ></i>
                 {{ update_button_label }}
             </button>
@@ -283,17 +275,3 @@ function onClickCreateBranch(): Promise<void> {
         );
 }
 </script>
-
-<style scoped lang="scss">
-.artifact-create-branch-action-mandatory-information {
-    color: var(--tlp-danger-color);
-}
-
-.artifact-create-gitlab-branch-form-block {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
-
-.artifact-create-gitlab-merge-request {
-    margin: var(--tlp-medium-spacing) 0 0;
-}
-</style>
