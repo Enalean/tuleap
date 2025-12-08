@@ -217,6 +217,7 @@ Cypress.Commands.add(
                     return Promise.resolve();
                 }
 
+                // eslint-disable-next-line cypress/no-unnecessary-waiting -- We must wait for this command to work
                 cy.wait(500);
                 reloadCallback();
                 return cy.reloadUntilCondition(
@@ -242,7 +243,7 @@ const LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
 Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {
     cy.get("[data-test=lazybox]").click();
     cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
-    // Lazybox waits a delay before loading items
+    // eslint-disable-next-line cypress/no-unnecessary-waiting -- Lazybox waits a delay before loading items
     cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
     cy.get("[data-test=lazybox]")
         .find("[data-test=lazybox-loading-group-spinner]")
@@ -253,7 +254,7 @@ Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label)
 Cypress.Commands.add("addItemInLazyboxDropdown", (query: string) => {
     cy.get("[data-test=lazybox]").click();
     cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
-    // Lazybox waits a delay before loading items
+    // eslint-disable-next-line cypress/no-unnecessary-waiting -- Lazybox waits a delay before loading items
     cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
     cy.get("[data-test=lazybox]")
         .find("[data-test=lazybox-loading-group-spinner]")

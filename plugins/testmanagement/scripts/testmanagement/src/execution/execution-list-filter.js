@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// eslint-disable-next-line you-dont-need-lodash-underscore/map
+// lodash usage is deprecated, replace by native JavaScript API
 import { compact, map, intersection } from "lodash-es";
 
 export default ExecutionListFilter;

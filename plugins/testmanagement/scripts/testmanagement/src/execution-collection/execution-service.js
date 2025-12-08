@@ -24,7 +24,7 @@ import {
     UploadError,
 } from "@tuleap/ckeditor-image-upload";
 import CKEDITOR from "ckeditor4";
-// eslint-disable-next-line you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/filter, you-dont-need-lodash-underscore/some
+// lodash usage is deprecated, replace by native JavaScript API
 import { extend, filter, forEach, has, remove, some } from "lodash-es";
 import prettyKibibytes from "pretty-kibibytes";
 

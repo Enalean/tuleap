@@ -19,7 +19,7 @@
 
 import cumulativeFlowChart from "./cumulative-chart.js";
 import moment from "moment";
-/* eslint-disable-next-line you-dont-need-lodash-underscore/map, you-dont-need-lodash-underscore/find, you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/reduce */
+// lodash usage is deprecated, replace by native JavaScript API
 import { map, find, forEach, reduce } from "lodash-es";
 import { pointer, select, selectAll } from "d3-selection";
 import { bisector, extent, max } from "d3-array";

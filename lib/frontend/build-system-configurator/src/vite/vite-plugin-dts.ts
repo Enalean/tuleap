@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import dts from "vite-plugin-dts";
 import type { Plugin } from "vite";
 

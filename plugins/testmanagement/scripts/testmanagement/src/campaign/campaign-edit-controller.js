@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// eslint-disable-next-line you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/filter, you-dont-need-lodash-underscore/size
+// lodash usage is deprecated, replace by native JavaScript API
 import _, { filter, forEach, size, has } from "lodash-es";
 
 import { UNCATEGORIZED } from "../definition/definition-constants.js";
@@ -161,7 +161,7 @@ function CampaignEditCtrl(
     }
 
     function addedTests() {
-        // eslint-disable-next-line you-dont-need-lodash-underscore/map
+        // lodash usage is deprecated, replace by native JavaScript API
         return _($scope.tests_list)
             .map(function (category) {
                 return Object.values(category.tests).filter(
@@ -173,7 +173,7 @@ function CampaignEditCtrl(
     }
 
     function removedTests() {
-        // eslint-disable-next-line you-dont-need-lodash-underscore/map
+        // lodash usage is deprecated, replace by native JavaScript API
         return _($scope.tests_list)
             .map(function (category) {
                 return _(category.tests)

@@ -93,7 +93,7 @@ const ALLOWED_LICENCES_SPECIFIC_USE_CASES = [
         'github.com/hashicorp/vault/api', // Tuleap Vault Plugin, not delivered with the rest of Tuleap
         'github.com/hashicorp/vault/sdk', // Tuleap Vault Plugin, not delivered with the rest of Tuleap
         'github.com/hashicorp/yamux', // Tuleap Vault Plugin, not delivered with the rest of Tuleap
-        'github.com/go-sql-driver/mysql', // Transitive Mercure dep
+        'eslint-plugin-no-unsanitized', // Dev tool, not shipped in production builds
     ],
     'CC-BY-4.0' => [ // Compatible, not for code license https://www.gnu.org/licenses/license-list.en.html#ccby
         '@fortawesome/free-regular-svg-icons', // Font, dual licenced under OFL-1.1
