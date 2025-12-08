@@ -163,6 +163,9 @@ msgstr "Tous"
 msgid "Append members of user groups to the table"
 msgstr "Ajouter les membres des groupes d'utilisateurs à la table"
 
+msgid "Append users to the table"
+msgstr "Ajouter des utilisateurs à la table"
+
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -637,9 +640,6 @@ msgstr "Pas d'historique de version"
 msgid "None"
 msgstr "Aucun"
 
-msgid "Not implemented yet"
-msgstr "Pas encore implémenté"
-
 msgid "Not yet"
 msgstr "Pas encore"
 
@@ -786,6 +786,9 @@ msgstr "Propager la suppression au service wiki"
 msgid "Quick look"
 msgstr "Aperçu"
 
+msgid "Rank"
+msgstr "Rang"
+
 msgid "Reader"
 msgstr "Lecteur"
 
@@ -810,8 +813,14 @@ msgstr "Rejeté"
 msgid "Reload the page"
 msgstr "Recharger la page"
 
+msgid "Reminder sent to %s"
+msgstr "Notification envoyée à %s"
+
 msgid "Reminder sent with success"
 msgstr "Notification envoyée avec succès"
+
+msgid "Remove"
+msgstr "Enlever"
 
 msgid "Remove all values"
 msgstr "Supprimer toutes les valeurs"
@@ -879,6 +888,9 @@ msgstr "Envoyez-moi un email dès que cet élément est modifié."
 msgid "Send my review"
 msgstr "Envoyer mon approbation"
 
+msgid "Send reminder"
+msgstr "Envoyer un rappel"
+
 msgid "Sequential"
 msgstr "Sequentiellement"
 
@@ -929,6 +941,13 @@ msgstr "Abonnés"
 
 msgid "Summary"
 msgstr "Résumé"
+
+msgid ""
+"Table is not saved when you change it, please click on 'Update' button to "
+"save it."
+msgstr ""
+"La table n'est pas sauvegardée quand vous effectuez des changements, pensez "
+"à clicker sur le bouton 'Mettre à jour' pour sauvegarder."
 
 msgid "Table status"
 msgstr "Status de la table"

@@ -74,7 +74,7 @@ class ApprovalTableRetriever
         $item_factory = $this->approval_table_factory->getFromItem($item, $version_id);
 
         if ($item_factory instanceof Docman_ApprovalTableVersionnedFactory) {
-            return $item_factory->getLastTableForItem();
+            return $item_factory->getLastTableForItemWithReviewers();
         }
 
         $table_factory = $this->approval_table_factory->getSpecificFactoryFromItem($item);

@@ -31,6 +31,8 @@ import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import AdministrationModalGlobalSettings from "./AdministrationModalGlobalSettings.vue";
 import AdministrationModalNotifications from "./AdministrationModalNotifications.vue";
+import AdministrationModalReviewers from "./AdministrationModalReviewers.vue";
+import { UserBuilder } from "../../../../tests/builders/UserBuilder";
 
 describe("ApprovalTableAdministrationModal", () => {
     let trigger: HTMLButtonElement;
@@ -96,6 +98,18 @@ describe("ApprovalTableAdministrationModal", () => {
         await wrapper
             .findComponent(AdministrationModalNotifications)
             .setValue("all_at_once", "table_notification_value");
+        await wrapper
+            .findComponent(AdministrationModalReviewers)
+            .setValue(
+                [new UserBuilder(102).build(), new UserBuilder(103).build()],
+                "table_reviewers_to_add_value",
+            );
+        await wrapper
+            .findComponent(AdministrationModalReviewers)
+            .setValue(
+                [{ id: "101_3", label: "Project members", short_name: "project_members" }],
+                "table_reviewers_group_to_add_value",
+            );
 
         await wrapper.find("[data-test=update-table-button]").trigger("click");
 
@@ -105,6 +119,8 @@ describe("ApprovalTableAdministrationModal", () => {
             "enabled",
             "My comment",
             "all_at_once",
+            [102, 103],
+            [3],
         );
         expect(wrapper.emitted("refresh-data")).not.toBe(undefined);
     });
@@ -117,7 +133,7 @@ describe("ApprovalTableAdministrationModal", () => {
 
         await wrapper.find("[data-test=update-table-button]").trigger("click");
 
-        expect(updateApprovalTable).toHaveBeenCalledWith(123, 102, "disabled", "", "");
+        expect(updateApprovalTable).toHaveBeenCalledWith(123, 102, "disabled", "", "", [], []);
         expect(wrapper.find("[data-test=admin-modal-error]").text()).toContain("Oh no!");
     });
 });

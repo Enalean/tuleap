@@ -44,7 +44,7 @@
     </div>
     <button
         role="button"
-        class="tlp-button-info tlp-button-outline tlp-button-mini"
+        class="tlp-button-info tlp-button-outline tlp-button-mini send-notification-button"
         v-bind:disabled="is_doing_something"
         v-on:click="onSendNotification"
         data-test="send-notification-button"
@@ -100,3 +100,9 @@ function onSendNotification(): void {
     );
 }
 </script>
+
+<style scoped lang="scss">
+.send-notification-button {
+    margin-bottom: var(--tlp-medium-spacing);
+}
+</style>

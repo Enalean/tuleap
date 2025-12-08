@@ -48,7 +48,7 @@
                 </td>
                 <td data-test="reviewer-state">
                     <template v-if="is_readonly || reviewer.user.id !== user_id">
-                        {{ translateStatus(reviewer.state) }}
+                        {{ translateStatus(reviewer.state, $gettext) }}
                     </template>
                     <button
                         v-else
@@ -56,7 +56,7 @@
                         type="button"
                         class="tlp-button-secondary tlp-button-mini"
                     >
-                        {{ translateStatus(reviewer.state) }}
+                        {{ translateStatus(reviewer.state, $gettext) }}
                     </button>
                 </td>
                 <td>{{ reviewer.comment }}</td>
@@ -106,6 +106,7 @@ import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
 import ApprovalTableReviewModal from "../Review/ApprovalTableReviewModal.vue";
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import { translateStatus } from "../../../helpers/approval-table-helper";
 
 const { $gettext } = useGettext();
 
@@ -125,23 +126,6 @@ const modal_trigger = ref<Array<HTMLButtonElement>>();
 const current_reviewer = computed(() =>
     props.reviewers.find((reviewer) => reviewer.user.id === user_id),
 );
-
-function translateStatus(status: string): string {
-    switch (status) {
-        case "not_yet":
-            return $gettext("Not yet");
-        case "approved":
-            return $gettext("Approved");
-        case "rejected":
-            return $gettext("Rejected");
-        case "comment_only":
-            return $gettext("Commented");
-        case "will_not_review":
-            return $gettext("Declined");
-        default:
-            throw Error("Unknown status " + status);
-    }
-}
 </script>
 
 <style scoped lang="scss">

@@ -20,6 +20,7 @@
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants";
 import type {
     ApprovableDocument,
+    ApprovalTableReviewer,
     DefaultFileItem,
     Embedded,
     Empty,
@@ -87,4 +88,63 @@ export function extractApprovalTableData(
                 badge_class: `tlp-badge-secondary ${additional_class}`,
             };
     }
+}
+
+export function translateStatus(status: string, $gettext: (msg: string) => string): string {
+    switch (status) {
+        case "not_yet":
+            return $gettext("Not yet");
+        case "approved":
+            return $gettext("Approved");
+        case "rejected":
+            return $gettext("Rejected");
+        case "comment_only":
+            return $gettext("Commented");
+        case "will_not_review":
+            return $gettext("Declined");
+        default:
+            throw Error("Unknown status " + status);
+    }
+}
+
+export function rearrangeReviewersTable(
+    current_value: ReadonlyArray<ApprovalTableReviewer>,
+    updated_reviewer: ApprovalTableReviewer,
+    new_rank: number,
+): Array<ApprovalTableReviewer> {
+    const result: Array<ApprovalTableReviewer> = [];
+
+    // min/max on [0;current_value.length[
+    const used_new_rank =
+        new_rank < 0 ? 0 : new_rank >= current_value.length ? current_value.length - 1 : new_rank;
+
+    let index = 0;
+    current_value.forEach((reviewer) => {
+        if (reviewer.user.id === updated_reviewer.user.id) {
+            return;
+        }
+        if (index === used_new_rank) {
+            result.push({
+                ...updated_reviewer,
+                rank: index,
+            });
+            index++;
+        }
+        result.push({
+            ...reviewer,
+            rank: index,
+        });
+        index++;
+    });
+
+    if (result.length === current_value.length - 1 && used_new_rank === current_value.length - 1) {
+        // Edge case of above loop:
+        // When reviewer is moved at the end, `index === used_new_rank` is never satisfied as we skipped updated_reviewer iteration
+        result.push({
+            ...updated_reviewer,
+            rank: used_new_rank,
+        });
+    }
+
+    return result;
 }

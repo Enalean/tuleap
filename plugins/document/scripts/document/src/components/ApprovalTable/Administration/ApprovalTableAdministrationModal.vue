@@ -67,10 +67,17 @@
                 v-on:error-message="(message) => (error_message = message)"
                 v-on:success-message="(message) => (success_message = message)"
             />
-            <h2 class="tlp-modal-subtitle">{{ $gettext("Reviewers") }}</h2>
-            <div class="tlp-alert-info">
-                {{ $gettext("Not implemented yet") }}
-            </div>
+            <administration-modal-reviewers
+                v-bind:item="item"
+                v-bind:table="table"
+                v-bind:is_doing_something="is_doing_something"
+                v-model:table_reviewers_value="table_reviewers_value"
+                v-model:table_reviewers_to_add_value="table_reviewers_to_add_value"
+                v-model:table_reviewers_group_to_add_value="table_reviewers_group_to_add_value"
+                v-model:is_sending_reminder="is_sending_reminder"
+                v-on:error-message="(message) => (error_message = message)"
+                v-on:success-message="(message) => (success_message = message)"
+            />
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -118,13 +125,14 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import type { ApprovalTable, Item } from "../../../type";
+import type { ApprovalTable, ApprovalTableReviewer, Item, UserGroup } from "../../../type";
 import type { User } from "@tuleap/core-rest-api-types";
 import { PROJECT } from "../../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { deleteApprovalTable, updateApprovalTable } from "../../../api/approval-table-rest-querier";
 import AdministrationModalGlobalSettings from "./AdministrationModalGlobalSettings.vue";
 import AdministrationModalNotifications from "./AdministrationModalNotifications.vue";
+import AdministrationModalReviewers from "./AdministrationModalReviewers.vue";
 
 const props = defineProps<{
     trigger: HTMLButtonElement;
@@ -143,13 +151,21 @@ const success_message = ref<string>("");
 const is_deleting = ref<boolean>(false);
 const is_updating = ref<boolean>(false);
 const is_sending_notification = ref<boolean>(false);
+const is_sending_reminder = ref<boolean>(false);
 const table_owner_value = ref<User | null>(props.table.table_owner);
 const table_status_value = ref<string>(props.table.state);
 const table_comment_value = ref<string>(props.table.description);
 const table_notification_value = ref<string>(props.table.notification_type);
+const table_reviewers_value = ref<Array<ApprovalTableReviewer>>([...props.table.reviewers]);
+const table_reviewers_to_add_value = ref<Array<User>>([]);
+const table_reviewers_group_to_add_value = ref<Array<UserGroup>>([]);
 
 const is_doing_something = computed(
-    () => is_deleting.value || is_updating.value || is_sending_notification.value,
+    () =>
+        is_deleting.value ||
+        is_updating.value ||
+        is_sending_notification.value ||
+        is_sending_reminder.value,
 );
 
 const project = strictInject(PROJECT);
@@ -197,6 +213,14 @@ function onUpdate(): void {
         table_status_value.value,
         table_comment_value.value,
         table_notification_value.value,
+        table_reviewers_to_add_value.value.map((user) => user.id),
+        table_reviewers_group_to_add_value.value.map((user_group) => {
+            if (user_group.id.includes("_")) {
+                // We assume that user group id is something like 102_3, we just need 3
+                return Number.parseInt(user_group.id.split("_")[1], 10);
+            }
+            return Number.parseInt(user_group.id, 10);
+        }),
     ).match(
         () => {
             emit("refresh-data");

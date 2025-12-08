@@ -20,12 +20,22 @@ import type { ApprovalTableReviewer } from "../../src/type";
 import { UserBuilder } from "./UserBuilder";
 
 export class ApprovalTableReviewerBuilder {
-    constructor() {}
+    private readonly id: number;
+    private rank: number = 0;
+
+    constructor(id: number) {
+        this.id = id;
+    }
+
+    public withRank(rank: number): this {
+        this.rank = rank;
+        return this;
+    }
 
     public build(): ApprovalTableReviewer {
         return {
-            user: new UserBuilder(102).build(),
-            rank: 0,
+            user: new UserBuilder(this.id).build(),
+            rank: this.rank,
             review_date: null,
             state: "not_yet",
             comment: "",
