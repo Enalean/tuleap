@@ -19,6 +19,7 @@
 
 import eslint_js from "@eslint/js"; // eslint-disable-line import/no-extraneous-dependencies -- It is indirectly imported by eslint
 import { FlatCompat } from "@eslint/eslintrc"; // eslint-disable-line import/no-extraneous-dependencies -- It is indirectly imported by eslint
+import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 import eslint_plugin_prettier_recommended from "eslint-plugin-prettier/recommended";
 import eslint_config_prettier from "eslint-config-prettier";
@@ -185,6 +186,7 @@ const config_for_typescript = {
 
 const config_for_vue = {
     files: ["**/*.vue"],
+    extends: [plugin_vue.configs["flat/recommended"]],
     rules: {
         // Priority B: Strongly Recommended (Improving Readability)
         "vue/html-self-closing": [
@@ -275,24 +277,19 @@ const jest_rules = {
     "jest/prefer-to-have-length": "error",
 };
 
-const jest_recommended_config = plugin_jest.configs["flat/recommended"];
 const config_for_javascript_tests = {
     files: [
         "**/*.test.js",
         "lib/frontend/build-system-configurator/src/jest/fail-console-error-warning.js",
     ],
-    ...jest_recommended_config,
-    rules: {
-        ...jest_recommended_config.rules,
-        ...jest_rules,
-    },
+    extends: [plugin_jest.configs["flat/recommended"]],
+    rules: jest_rules,
 };
 
 const config_for_typescript_tests = {
     files: ["**/*.test.ts"],
-    ...jest_recommended_config,
+    extends: [plugin_jest.configs["flat/recommended"]],
     rules: {
-        ...jest_recommended_config.rules,
         ...jest_rules,
         "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "as" }],
         // Allow innerHTML in tests
@@ -308,7 +305,7 @@ const config_for_cypress_globals = {
         "tests/e2e/**/*.ts",
         "plugins/**/tests/e2e/**/**/*.ts",
     ],
-    ...plugin_cypress.configs.recommended,
+    extends: [plugin_cypress.configs.recommended],
 };
 
 const config_for_cypress = {
@@ -407,36 +404,34 @@ const config_for_hexagonal_architecture_in_link_field = {
     },
 };
 
-export default typescript_eslint.config([
-    {
-        ignores: [
-            "**/additional-packages/",
-            "**/assets/",
-            "**/backend-assets/",
-            "**/bin/",
-            "**/build/",
-            "**/coverage/",
-            "**/dist/",
-            "**/frontend-assets/",
-            "**/js-test-results/",
-            "**/vendor/",
-            "src/scripts/tlp-doc/storybook-static/",
-            // Old legacy ignored files
-            "plugins/mediawiki/www/**/*.js",
-            "src/common/wiki/phpwiki/**/*.js",
-            "src/www/scripts/bootstrap/**/*.js",
-            "src/www/scripts/datepicker/**/*.js",
-            "src/www/scripts/jquery/**/*.js",
-            "src/www/scripts/lightwindow/**/*.js",
-            "src/www/scripts/prototype/**/*.js",
-            "src/www/scripts/scriptaculous/**/*.js",
-            "src/www/scripts/select2/**/*.js",
-            "src/www/scripts/tablekit/**/*.js",
-            "src/www/scripts/textboxlist/**/*.js",
-            // select2 type files
-            "src/scripts/tlp/src/types/**/*.d.ts",
-        ],
-    },
+export default defineConfig([
+    globalIgnores([
+        "**/additional-packages/",
+        "**/assets/",
+        "**/backend-assets/",
+        "**/bin/",
+        "**/build/",
+        "**/coverage/",
+        "**/dist/",
+        "**/frontend-assets/",
+        "**/js-test-results/",
+        "**/vendor/",
+        "src/scripts/tlp-doc/storybook-static/",
+        // Old legacy ignored files
+        "plugins/mediawiki/www/**/*.js",
+        "src/common/wiki/phpwiki/**/*.js",
+        "src/www/scripts/bootstrap/**/*.js",
+        "src/www/scripts/datepicker/**/*.js",
+        "src/www/scripts/jquery/**/*.js",
+        "src/www/scripts/lightwindow/**/*.js",
+        "src/www/scripts/prototype/**/*.js",
+        "src/www/scripts/scriptaculous/**/*.js",
+        "src/www/scripts/select2/**/*.js",
+        "src/www/scripts/tablekit/**/*.js",
+        "src/www/scripts/textboxlist/**/*.js",
+        // select2 type files
+        "src/scripts/tlp/src/types/**/*.d.ts",
+    ]),
     { linterOptions: { reportUnusedDisableDirectives: "error" } },
     {
         files: ["**/*.vue"],
@@ -453,7 +448,6 @@ export default typescript_eslint.config([
     ...typescript_eslint.configs.recommended,
     eslint_plugin_prettier_recommended,
     eslint_config_prettier,
-    ...plugin_vue.configs["flat/recommended"],
     plugin_import.flatConfigs.typescript,
     config_for_browser_globals,
     config_for_monorepo,
