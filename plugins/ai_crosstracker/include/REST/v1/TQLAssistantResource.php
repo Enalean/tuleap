@@ -39,6 +39,9 @@ use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -91,12 +94,19 @@ final class TQLAssistantResource extends AuthenticatedResource
 
                     $user_messages = array_map(static fn (MessageRepresentation $message): Message => $message->toMistralMessage(), $messages);
 
-                    $mistral_connector = new MistralConnectorLive(HttpClientFactory::createClientWithCustomTimeout(60));
+                    $mistral_connector = new MistralConnectorLive(
+                        HttpClientFactory::createClientWithCustomTimeout(60),
+                        HTTPFactoryBuilder::requestFactory(),
+                        HTTPFactoryBuilder::streamFactory(),
+                        ValinorMapperBuilderFactory::mapperBuilder(),
+                        Prometheus::instance(),
+                    );
                     return EndUserAIRequestor::fromCurrentUser($current_user_with_logged_in_information)
                         ->andThen(
                             fn (AIRequestorEntity $requestor) => $mistral_connector->sendCompletion(
                                 $requestor,
-                                $assistant->getCompletion($current_user_with_logged_in_information->user, $user_messages)
+                                $assistant->getCompletion($current_user_with_logged_in_information->user, $user_messages),
+                                'crosstracker'
                             )
                         )
                         ->match(
