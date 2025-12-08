@@ -61,6 +61,12 @@ export function postApprovalTable(
     ).map(() => null);
 }
 
+export function putApprovalTable(item_id: number, action: string): ResultAsync<null, Fault> {
+    return putResponse(uri`/api/docman_items/${item_id}/approval_table`, {}, { action }).map(
+        () => null,
+    );
+}
+
 export function putReview(
     item_id: number,
     review: string,

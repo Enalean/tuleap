@@ -38,6 +38,7 @@
                 <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
+
         <div class="tlp-modal-feedback">
             <div v-if="error_message !== ''" class="tlp-alert-danger" data-test="admin-modal-error">
                 <p class="tlp-alert-title">{{ $gettext("Error while updating table") }}</p>
@@ -51,7 +52,8 @@
                 {{ success_message }}
             </div>
         </div>
-        <div class="tlp-modal-body">
+
+        <div v-if="isTableLinkedToLastItemVersion(item, table)" class="tlp-modal-body">
             <administration-modal-global-settings
                 v-bind:table="table"
                 v-model:table_status_value="table_status_value"
@@ -79,6 +81,14 @@
                 v-on:success-message="(message) => (success_message = message)"
             />
         </div>
+        <div v-else class="tlp-modal-body">
+            <administration-modal-missing-table
+                v-bind:item="item"
+                v-bind:table="table"
+                v-model:table_action_value="table_action_value"
+            />
+        </div>
+
         <div class="tlp-modal-footer">
             <button
                 type="button"
@@ -106,7 +116,11 @@
                 type="button"
                 class="tlp-button-primary tlp-modal-action"
                 v-bind:disabled="is_doing_something || table_owner_value === null"
-                v-on:click="onUpdate"
+                v-on:click="
+                    isTableLinkedToLastItemVersion(item, table)
+                        ? onUpdate()
+                        : onUpdateTableVersion()
+                "
                 data-test="update-table-button"
             >
                 <i
@@ -125,19 +139,31 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import type { ApprovalTable, ApprovalTableReviewer, Item, UserGroup } from "../../../type";
+import type {
+    ApprovableDocument,
+    ApprovalTable,
+    ApprovalTableReviewer,
+    Item,
+    UserGroup,
+} from "../../../type";
 import type { User } from "@tuleap/core-rest-api-types";
 import { PROJECT } from "../../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { deleteApprovalTable, updateApprovalTable } from "../../../api/approval-table-rest-querier";
+import {
+    deleteApprovalTable,
+    putApprovalTable,
+    updateApprovalTable,
+} from "../../../api/approval-table-rest-querier";
 import AdministrationModalGlobalSettings from "./AdministrationModalGlobalSettings.vue";
 import AdministrationModalNotifications from "./AdministrationModalNotifications.vue";
 import AdministrationModalReviewers from "./AdministrationModalReviewers.vue";
+import { isTableLinkedToLastItemVersion } from "../../../helpers/approval-table-helper";
+import AdministrationModalMissingTable from "./AdministrationModalMissingTable.vue";
 
 const props = defineProps<{
     trigger: HTMLButtonElement;
     table: ApprovalTable;
-    item: Item;
+    item: Item & ApprovableDocument;
 }>();
 
 const emit = defineEmits<{
@@ -159,6 +185,7 @@ const table_notification_value = ref<string>(props.table.notification_type);
 const table_reviewers_value = ref<Array<ApprovalTableReviewer>>([...props.table.reviewers]);
 const table_reviewers_to_add_value = ref<Array<User>>([]);
 const table_reviewers_group_to_add_value = ref<Array<UserGroup>>([]);
+const table_action_value = ref<string>("copy");
 
 const is_doing_something = computed(
     () =>
@@ -222,6 +249,21 @@ function onUpdate(): void {
             return Number.parseInt(user_group.id, 10);
         }),
     ).match(
+        () => {
+            emit("refresh-data");
+            is_updating.value = false;
+            modal.value?.hide();
+        },
+        (fault) => {
+            is_updating.value = false;
+            error_message.value = fault.toString();
+        },
+    );
+}
+
+function onUpdateTableVersion(): void {
+    is_updating.value = true;
+    putApprovalTable(props.item.id, table_action_value.value).match(
         () => {
             emit("refresh-data");
             is_updating.value = false;

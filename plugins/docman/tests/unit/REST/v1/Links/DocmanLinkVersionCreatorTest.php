@@ -79,6 +79,7 @@ final class DocmanLinkVersionCreatorTest extends TestCase
         $representation->should_lock_file = false;
         $docman_link                      = $this->createMock(Docman_LinkVersion::class);
         $docman_link->method('getLink')->willReturn('https://example.com');
+        $docman_link->method('getNumber')->willReturn(2);
         $representation->link_properties       = LinkPropertiesRepresentation::build($docman_link);
         $representation->approval_table_action = 'copy';
         $representation->status                = 'rejected';

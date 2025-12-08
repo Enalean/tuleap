@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_ApprovalTableWikiFactory;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_File;
@@ -45,6 +46,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         private \Docman_VersionFactory $docman_version_factory,
         private \Docman_LinkVersionFactory $docman_link_version_factory,
         private \Docman_ItemFactory $item_factory,
+        private Docman_ApprovalTableWikiFactory $wiki_approval_table_factory,
         private \EventManager $event_manager,
         DocmanItemsEventAdder $event_adder,
     ) {
@@ -76,7 +78,9 @@ class ItemRepresentationVisitor implements ItemVisitor
                 $item->getGroupId()
             );
 
-            $wiki_representation = WikiPropertiesRepresentation::build($item, $wiki_page_id);
+            $version_number = (int) $this->wiki_approval_table_factory->getLastDocumentVersionNumber();
+
+            $wiki_representation = WikiPropertiesRepresentation::build($item, $wiki_page_id, $version_number);
         }
 
         return $this->item_representation_builder->buildItemRepresentation(

@@ -619,6 +619,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             new \Docman_VersionFactory(),
             new \Docman_LinkVersionFactory(),
             Docman_ItemFactory::instance($items_request->getProject()->getGroupId()),
+            new \Docman_ApprovalTableWikiFactory($items_request->getItem()),
             $this->event_manager,
             $event_adder
         );

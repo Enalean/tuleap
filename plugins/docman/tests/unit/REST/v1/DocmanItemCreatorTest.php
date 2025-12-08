@@ -513,6 +513,7 @@ final class DocmanItemCreatorTest extends TestCase
         $post_representation->title = 'Mie faboulouse linke';
         $docman_link                = $this->createMock(Docman_LinkVersion::class);
         $docman_link->method('getLink')->willReturn('https://my.example.test');
+        $docman_link->method('getNumber')->willReturn(2);
         $post_representation->link_properties        = LinkPropertiesRepresentation::build($docman_link);
         $post_representation->permissions_for_groups = $permissions_for_groups_set;
 
@@ -938,6 +939,7 @@ final class DocmanItemCreatorTest extends TestCase
         $post_representation->title = 'Link with status and Obsolescence date';
         $docman_link                = $this->createMock(Docman_LinkVersion::class);
         $docman_link->method('getLink')->willReturn('https://my.example.test');
+        $docman_link->method('getNumber')->willReturn(2);
         $post_representation->link_properties   = LinkPropertiesRepresentation::build($docman_link);
         $post_representation->status            = 'approved';
         $post_representation->obsolescence_date = '2019-10-11';

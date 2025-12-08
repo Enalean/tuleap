@@ -102,11 +102,10 @@ import type { Item } from "../../type";
 import { useActions } from "vuex-composition-helpers";
 import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
 import { ApprovalTableTab } from "../../helpers/details-tabs";
-import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
+import { isAnApprovableDocument, isItemVersionable } from "../../helpers/approval-table-helper";
 import NoApprovalTable from "./Creation/NoApprovalTable.vue";
 import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
 import ApprovalTableHistory from "./History/ApprovalTableHistory.vue";
-import { isEmbedded, isFile, isLink, isWiki } from "../../helpers/type-check-helper";
 import ApprovalTableAdministration from "./Administration/ApprovalTableAdministration.vue";
 
 const props = defineProps<{
@@ -117,11 +116,7 @@ const props = defineProps<{
 const item = ref<Item | null>(null);
 const error_message = ref("");
 
-const is_item_versionable = computed(
-    () =>
-        item.value &&
-        (isEmbedded(item.value) || isFile(item.value) || isWiki(item.value) || isLink(item.value)),
-);
+const is_item_versionable = computed(() => item.value && isItemVersionable(item.value));
 
 const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
 

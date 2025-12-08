@@ -304,6 +304,7 @@ final class SearchResource extends AuthenticatedResource
             $version_factory,
             new \Docman_LinkVersionFactory(),
             $item_factory,
+            new \Docman_ApprovalTableWikiFactory($item_request->getItem()),
             $event_manager,
             $event_adder
         );
