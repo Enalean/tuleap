@@ -190,6 +190,7 @@ use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\FormElement\DateFormatter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactLinkConfigController;
@@ -2522,6 +2523,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(TrackersPermissionsRetriever::class);
         $event->addConfigClass(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Query::class);
         $event->addConfigClass(ArtifactViewCollectionBuilder::class);
+        $event->addConfigClass(DateFormatter::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder
