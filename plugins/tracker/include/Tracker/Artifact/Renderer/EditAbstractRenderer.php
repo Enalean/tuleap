@@ -49,14 +49,14 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
     }
 
     #[\Override]
-    public function display(Codendi_Request $request, PFUser $current_user)
+    public function display(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $this->visit_recorder->record($current_user, $this->artifact);
         parent::display($request, $current_user);
     }
 
     #[\Override]
-    protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
+    protected function fetchFormContent(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         return $this->fetchArtifactInformations($this->artifact);
     }

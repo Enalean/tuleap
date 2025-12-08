@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Artifact;
 
-use Codendi_Request;
-
 class HomeServiceRedirectionExtractor
 {
-    public function mustRedirectToAgiledashboardHomepage(Codendi_Request $request): bool
+    public function mustRedirectToAgiledashboardHomepage(\Tuleap\HTTPRequest $request): bool
     {
         $agiledashboard = $request->get('agiledashboard');
         if (! is_array($agiledashboard) || ! count($agiledashboard)) {

@@ -74,7 +74,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         $this->asset                       = $asset;
     }
 
-    public function process(Codendi_Request $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         if ($request->get('action') == 'edit-gerrit-server') {
             $this->updateGerritServer($request);
@@ -89,7 +89,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         }
     }
 
-    private function addGerritServer(Codendi_Request $request)
+    private function addGerritServer(\Tuleap\HTTPRequest $request)
     {
         $request_gerrit_server = $request->params;
         $this->csrf->check();
@@ -105,7 +105,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=gerrit_servers_admin');
     }
 
-    private function updateGerritServer(Codendi_Request $request)
+    private function updateGerritServer(\Tuleap\HTTPRequest $request)
     {
         $request_gerrit_server = $request->params;
         $this->csrf->check();
@@ -113,7 +113,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=gerrit_servers_admin');
     }
 
-    public function display(Codendi_Request $request)
+    public function display(\Tuleap\HTTPRequest $request)
     {
         $title = dgettext('tuleap-git', 'Git');
 
@@ -172,7 +172,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         );
     }
 
-    private function getManageAllowedProjectsPresenter(Codendi_Request $request)
+    private function getManageAllowedProjectsPresenter(\Tuleap\HTTPRequest $request)
     {
         $gerrit_server_id = $request->get('gerrit_server_id');
         $gerrit_server    = $this->gerrit_server_factory->getServerById($gerrit_server_id);

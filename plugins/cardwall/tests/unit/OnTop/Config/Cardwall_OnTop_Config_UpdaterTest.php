@@ -24,7 +24,6 @@ namespace Tuleap\Cardwall\OnTop\Config;
 
 use Cardwall_OnTop_Config_Command;
 use Cardwall_OnTop_Config_Updater;
-use Codendi_Request;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -32,7 +31,7 @@ final class Cardwall_OnTop_Config_UpdaterTest extends TestCase // phpcs:ignore S
 {
     public function testItScheduleExecuteOnCommands(): void
     {
-        $request = new Codendi_Request([]);
+        $request = new \Tuleap\HTTPRequest([]);
         $c1      = $this->createMock(Cardwall_OnTop_Config_Command::class);
         $c2      = $this->createMock(Cardwall_OnTop_Config_Command::class);
         $updater = new Cardwall_OnTop_Config_Updater();

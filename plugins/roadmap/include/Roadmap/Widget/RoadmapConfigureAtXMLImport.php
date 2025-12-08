@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\Widget;
 
-use Codendi_Request;
 use Tuleap\Roadmap\RoadmapProjectWidget;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\XML\MappingsRegistry;
@@ -40,9 +39,9 @@ final class RoadmapConfigureAtXMLImport
         $event->setWidgetIsConfigured();
     }
 
-    private function getRequest(ConfigureAtXMLImport $event): Codendi_Request
+    private function getRequest(ConfigureAtXMLImport $event): \Tuleap\HTTPRequest
     {
-        return new Codendi_Request(
+        return new \Tuleap\HTTPRequest(
             $this->getParametersFromXML($event->getXML(), $event->getMappingsRegistry())
         );
     }

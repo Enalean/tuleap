@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Artifact\Renderer;
 
-use Codendi_Request;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
@@ -39,7 +38,7 @@ final class FieldsDataFromRequestRetriever
     /**
      * @throws NoPossibleValueException
      */
-    public function getAugmentedDataFromRequest(Artifact $artifact, Codendi_Request $request, \PFUser $user): array
+    public function getAugmentedDataFromRequest(Artifact $artifact, \Tuleap\HTTPRequest $request, \PFUser $user): array
     {
         $fields_data = $request->get('artifact');
         if (isset($fields_data['possible_values'], $fields_data['field_id'])) {

@@ -23,7 +23,6 @@ namespace Tuleap\Git\Permissions;
 
 use Project;
 use UGroupManager;
-use Codendi_Request;
 use ProjectUGroup;
 use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
@@ -84,7 +83,7 @@ class DefaultFineGrainedPermissionFactory
         $this->sorter              = $sorter;
     }
 
-    public function getUpdatedPermissionsFromRequest(Codendi_Request $request, Project $project)
+    public function getUpdatedPermissionsFromRequest(\Tuleap\HTTPRequest $request, Project $project)
     {
         $updated_permissions = [];
 
@@ -94,7 +93,7 @@ class DefaultFineGrainedPermissionFactory
         return $updated_permissions;
     }
 
-    private function getAllWriters(Codendi_Request $request)
+    private function getAllWriters(\Tuleap\HTTPRequest $request)
     {
         $branches = $request->get(self::EDIT_BRANCH_PREFIX . '-write');
         if (! is_array($branches)) {
@@ -109,7 +108,7 @@ class DefaultFineGrainedPermissionFactory
         return $branches + $tags;
     }
 
-    private function updateWriters(Codendi_Request $request, Project $project, array &$updated_permissions)
+    private function updateWriters(\Tuleap\HTTPRequest $request, Project $project, array &$updated_permissions)
     {
         $all_writers     = $this->getAllWriters($request);
         $all_permissions = $this->getBranchesFineGrainedPermissionsForProject($project) +
@@ -131,7 +130,7 @@ class DefaultFineGrainedPermissionFactory
     }
 
     private function setWritersForPermissionsInRequest(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         array $all_permissions,
         array $all_writers,
         array &$updated_permissions,
@@ -157,7 +156,7 @@ class DefaultFineGrainedPermissionFactory
     }
 
     private function setEmptyWritersForPermissionsNotInRequest(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         array $remaining_permissions,
         array $all_writers,
         array &$updated_permissions,
@@ -177,7 +176,7 @@ class DefaultFineGrainedPermissionFactory
         }
     }
 
-    private function getAllRewinders(Codendi_Request $request)
+    private function getAllRewinders(\Tuleap\HTTPRequest $request)
     {
         $branches = $request->get(self::EDIT_BRANCH_PREFIX . '-rewind');
         if (! is_array($branches)) {
@@ -192,7 +191,7 @@ class DefaultFineGrainedPermissionFactory
         return $branches + $tags;
     }
 
-    private function updateRewinders(Codendi_Request $request, Project $project, array &$updated_permissions)
+    private function updateRewinders(\Tuleap\HTTPRequest $request, Project $project, array &$updated_permissions)
     {
         $all_rewinders   = $this->getAllRewinders($request);
         $all_permissions = $this->getBranchesFineGrainedPermissionsForProject($project) +
@@ -214,7 +213,7 @@ class DefaultFineGrainedPermissionFactory
     }
 
     private function setRewindersForPermissionsInRequest(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         array $all_permissions,
         array $all_rewinders,
         array &$updated_permissions,
@@ -240,7 +239,7 @@ class DefaultFineGrainedPermissionFactory
     }
 
     private function setEmptyRewindersForPermissionsNotInRequest(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         array $remaining_permissions,
         array $all_rewinders,
         array &$updated_permissions,
@@ -286,17 +285,17 @@ class DefaultFineGrainedPermissionFactory
                array_diff($ugroup_ids, $current_ugroup_ids);
     }
 
-    public function getBranchesFineGrainedPermissionsFromRequest(Codendi_Request $request, Project $project)
+    public function getBranchesFineGrainedPermissionsFromRequest(\Tuleap\HTTPRequest $request, Project $project)
     {
         return $this->buildRepresentationFromRequest($request, $project, self::ADD_BRANCH_PREFIX);
     }
 
-    public function getTagsFineGrainedPermissionsFromRequest(Codendi_Request $request, Project $project)
+    public function getTagsFineGrainedPermissionsFromRequest(\Tuleap\HTTPRequest $request, Project $project)
     {
         return $this->buildRepresentationFromRequest($request, $project, self::ADD_TAG_PREFIX);
     }
 
-    private function buildRepresentationFromRequest(Codendi_Request $request, Project $project, $prefix)
+    private function buildRepresentationFromRequest(\Tuleap\HTTPRequest $request, Project $project, $prefix)
     {
         $permissions              = [];
         $patterns                 = $request->get("$prefix-name");
@@ -329,14 +328,14 @@ class DefaultFineGrainedPermissionFactory
         return $permissions;
     }
 
-    private function getWritersFromRequest(Codendi_Request $request, $index, $prefix)
+    private function getWritersFromRequest(\Tuleap\HTTPRequest $request, $index, $prefix)
     {
         $all_ugroup_ids = $request->get("$prefix-write") ? $request->get("$prefix-write") : [];
 
         return $this->buildUgroups($request->getProject(), $all_ugroup_ids, $index);
     }
 
-    private function getRewindersFromRequest(Codendi_Request $request, $index, $prefix)
+    private function getRewindersFromRequest(\Tuleap\HTTPRequest $request, $index, $prefix)
     {
         $all_ugroup_ids = $request->get("$prefix-rewind") ? $request->get("$prefix-rewind") : [];
 

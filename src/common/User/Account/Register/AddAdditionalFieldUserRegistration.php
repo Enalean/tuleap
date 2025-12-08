@@ -31,7 +31,7 @@ final class AddAdditionalFieldUserRegistration implements \Tuleap\Event\Dispatch
 
     public function __construct(
         private BaseLayout $layout,
-        private \Codendi_Request $request,
+        private \Tuleap\HTTPRequest $request,
         public readonly ?RegisterFormValidationIssue $validation_issue,
     ) {
     }
@@ -41,7 +41,7 @@ final class AddAdditionalFieldUserRegistration implements \Tuleap\Event\Dispatch
         return $this->layout;
     }
 
-    public function getRequest(): \Codendi_Request
+    public function getRequest(): \Tuleap\HTTPRequest
     {
         return $this->request;
     }

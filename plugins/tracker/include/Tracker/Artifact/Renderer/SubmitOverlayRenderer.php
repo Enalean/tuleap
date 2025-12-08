@@ -50,7 +50,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
     }
 
     #[\Override]
-    public function display(Codendi_Request $request, PFUser $current_user)
+    public function display(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $this->current_user = $current_user;
 
@@ -58,7 +58,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
     }
 
     #[\Override]
-    protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
+    protected function fetchFormContent(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         return $this->fetchArtifactForm(
             $this->fetchNewArtifactForm($request, $current_user)
@@ -95,7 +95,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
         $GLOBALS['Response']->displayFeedback();
     }
 
-    private function fetchNewArtifactForm(Codendi_Request $request, PFUser $current_user)
+    private function fetchNewArtifactForm(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $html = '';
 

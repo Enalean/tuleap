@@ -26,7 +26,7 @@ class Search_SearchRouter
         $this->controller = new Search_SearchController(EventManager::instance());
     }
 
-    public function route(Codendi_Request $request)
+    public function route(\Tuleap\HTTPRequest $request)
     {
         if ($request->existAndNonEmpty('type_of_search')) {
             if ($request->isAjax()) {

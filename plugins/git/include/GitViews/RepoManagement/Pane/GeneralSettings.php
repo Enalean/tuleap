@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
-use Codendi_Request;
 use GitRepository;
 use TemplateRendererFactory;
 use Tuleap\Git\DefaultBranch\RepositoryBranchSelectorOptionPresenter;
@@ -42,7 +41,7 @@ class GeneralSettings extends Pane
      */
     public bool $allow_artifact_closure;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request, VerifyArtifactClosureIsAllowed $closure_verifier)
+    public function __construct(GitRepository $repository, \Tuleap\HTTPRequest $request, VerifyArtifactClosureIsAllowed $closure_verifier)
     {
         parent::__construct($repository, $request);
 

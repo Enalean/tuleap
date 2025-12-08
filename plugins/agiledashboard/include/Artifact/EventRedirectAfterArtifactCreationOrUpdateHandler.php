@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
-use Codendi_Request;
 use PFUser;
 use Planning;
 use Planning_ArtifactLinker;
@@ -50,7 +49,7 @@ final readonly class EventRedirectAfterArtifactCreationOrUpdateHandler
     }
 
     public function process(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Tracker_Artifact_Redirect $redirect,
         Artifact $artifact,
     ): void {
@@ -196,7 +195,7 @@ final readonly class EventRedirectAfterArtifactCreationOrUpdateHandler
         ?Planning $planning,
         ?Artifact $last_milestone_artifact,
         Tracker_Artifact_Redirect $redirect,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
     ): void {
         $child_milestone_id = null;
         // Pass the right parameters so parent can be created in the right milestone

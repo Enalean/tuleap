@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Widget;
 
-use Codendi_Request;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\CrossTracker\Query\QueryCreator;
 use Tuleap\CrossTracker\Tests\Stub\Query\InsertNewQueryStub;
@@ -61,7 +60,7 @@ final class CrossTrackerWidgetCreatorTest extends TestCase
 
     public function testItCreatesTheWidgetFromTheUI(): void
     {
-        $request = new Codendi_Request([]);
+        $request = new \Tuleap\HTTPRequest([]);
         $result  = $this->cross_tracker_widget_creator->createWithQueries($request);
 
         self::assertTrue(Result::isOk($result));
@@ -71,7 +70,7 @@ final class CrossTrackerWidgetCreatorTest extends TestCase
 
     public function testItCreatesFromXMLTemplate(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 'queries' => [
                     [
@@ -99,7 +98,7 @@ final class CrossTrackerWidgetCreatorTest extends TestCase
 
     public function testItReturnsFaultWhenOneOfTheQueryFromTheRequestIsMalformed(): void
     {
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 'queries' => [
                     [

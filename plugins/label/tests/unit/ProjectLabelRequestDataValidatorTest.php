@@ -25,7 +25,7 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectLabelRequestDataValidator $validator;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Codendi_Request
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\HTTPRequest
      */
     private $request;
 
@@ -34,7 +34,7 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
         $this->validator = new ProjectLabelRequestDataValidator();
-        $this->request   = $this->createMock(\Codendi_Request::class);
+        $this->request   = $this->createMock(\Tuleap\HTTPRequest::class);
     }
 
     public function testItThrowsAnExceptionWhenLabelDoesNotBelongToProject(): void

@@ -62,8 +62,7 @@ final class GitTest extends TestCase
         $usermanager = $this->createMock(UserManager::class);
         $usermanager->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $request                   = new \Tuleap\HTTPRequest();
-        $request->params           = ['repo_id' => 1];
+        $request                   = new \Tuleap\HTTPRequest(['repo_id' => 1]);
 
         $git = $this->createPartialMock(Git::class, ['addAction', 'definePermittedActions', 'addView']);
         $git->setRequest($request);

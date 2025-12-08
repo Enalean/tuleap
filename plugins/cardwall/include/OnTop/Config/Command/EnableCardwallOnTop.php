@@ -40,7 +40,7 @@ class Cardwall_OnTop_Config_Command_EnableCardwallOnTop extends Cardwall_OnTop_C
      * @see Cardwall_OnTop_Config_Command::execute()
      */
     #[\Override]
-    public function execute(Codendi_Request $request)
+    public function execute(\Tuleap\HTTPRequest $request)
     {
         $please_enable = $request->get('cardwall_on_top');
         $tracker_id    = $this->tracker->getId();

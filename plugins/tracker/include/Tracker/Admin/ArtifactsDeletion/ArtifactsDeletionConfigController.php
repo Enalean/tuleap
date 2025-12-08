@@ -24,7 +24,6 @@
 
 namespace Tuleap\Tracker\Admin\ArtifactDeletion;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
 use http\Exception;
@@ -64,7 +63,7 @@ class ArtifactsDeletionConfigController
         );
     }
 
-    public function update(Codendi_Request $request, BaseLayout $response)
+    public function update(\Tuleap\HTTPRequest $request, BaseLayout $response)
     {
         $new_artifacts_limit = intval($request->get('artifacts_limit'));
 

@@ -22,7 +22,7 @@
 
 class Docman_ValidateUpload extends Docman_Validator
 {
-    public function __construct(Codendi_Request $request)
+    public function __construct(\Tuleap\HTTPRequest $request)
     {
         if (! $request->exist('upload_content')) {
             $ok = false;

@@ -33,7 +33,7 @@ class AgileDashboard_PaneRedirectionExtractor //phpcs:ignore PSR1.Classes.ClassD
      * Get the parameters to redirect to proper pane on the AgileDashboard
      * @return array || null
      */
-    public function getRedirectToParameters(Codendi_Request $request, Project $project)
+    public function getRedirectToParameters(\Tuleap\HTTPRequest $request, Project $project)
     {
         $request_parameters = $this->extractParametersFromRequest($request);
 
@@ -48,7 +48,7 @@ class AgileDashboard_PaneRedirectionExtractor //phpcs:ignore PSR1.Classes.ClassD
      * Extract the redirection parameters contained in the request
      * @return array || null containing pane, planning_id, artifact_id and action
      */
-    public function extractParametersFromRequest(Codendi_Request $request)
+    public function extractParametersFromRequest(\Tuleap\HTTPRequest $request)
     {
         $planning = $request->get('planning');
         if (! is_array($planning) || ! count($planning)) {

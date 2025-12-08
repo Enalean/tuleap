@@ -19,6 +19,16 @@
  *
  */
 
+declare(strict_types=1);
+
+namespace Tuleap;
+
+use ForgeConfig;
+use Rule_GreaterOrEqual;
+use Rule_Int;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -137,7 +147,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
     public function testValidKeyScalar(): void
     {
         $v = $this->createMock(\Rule::class);
-        $v->expects($this->once())->method('isValid')->with('testvalue');
+        $v->expects($this->once())->method('isValid')->with('testvalue')->willReturn(true);
         $r = new \Tuleap\HTTPRequest();
         $r->validKey('testkey', $v);
     }
@@ -185,7 +195,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'validate',
         ]);
         $v->expects($this->once())->method('getKey')->willReturn('testkey');
-        $v->expects($this->once())->method('validate')->with('testvalue');
+        $v->expects($this->once())->method('validate')->with('testvalue')->willReturn(true);
         $r = new \Tuleap\HTTPRequest();
         $r->valid($v);
     }
@@ -345,16 +355,9 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'validate',
         ]);
         $v->expects($this->once())->method('getKey')->willReturn('key1');
-        $v->expects($this->once())->method('validate')->with('valuekey1');
+        $v->expects($this->once())->method('validate')->with('valuekey1')->willReturn(true);
         $r = new \Tuleap\HTTPRequest();
         $r->validInArray('testarray', $v);
-    }
-
-    public function testValidFileNoFileValidator(): void
-    {
-        $v = $this->createPartialMock(\Valid::class, []);
-        $r = new \Tuleap\HTTPRequest();
-        self::assertFalse($r->validFile($v));
     }
 
     public function testValidFileOk(): void
@@ -364,7 +367,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'validate',
         ]);
         $v->expects($this->once())->method('getKey')->willReturn('file1');
-        $v->expects($this->once())->method('validate')->with(['file1' => ['name' => 'Test file 1']], 'file1');
+        $v->expects($this->once())->method('validate')->with(['file1' => ['name' => 'Test file 1']], 'file1')->willReturn(true);
         $r = new \Tuleap\HTTPRequest();
         $r->validFile($v);
     }
@@ -423,5 +426,46 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         ForgeConfig::set('sys_default_domain', 'example.com');
         $request = new \Tuleap\HTTPRequest();
         self::assertEquals('https://example.com', $request->getServerUrl());
+    }
+
+    public function testItReturnsTheProject(): void
+    {
+        $project = ProjectTestBuilder::aProject()
+            ->withId(123)
+            ->build();
+
+        $project_manager = ProjectByIDFactoryStub::buildWith($project);
+
+        $request = new \Tuleap\HTTPRequest(['group_id' => '123'], $project_manager);
+
+        self::assertEquals($project, $request->getProject());
+    }
+
+    public function testItReturnsTheRightProjectWhenGroupIdInParamsIsChanged(): void
+    {
+        $not_a_valid_project = ProjectTestBuilder::aProject()
+            ->withId(0)
+            ->build();
+
+        $project = ProjectTestBuilder::aProject()
+            ->withId(123)
+            ->build();
+
+        $project_manager = ProjectByIDFactoryStub::buildWith($not_a_valid_project, $project);
+
+        // Given we use urls like /projects/acme
+        // When we get the project from the request (for exemple a plugin in pre.php)
+        // Then request return a not valid project
+        // Because there is no group_id parameter
+        $request = new \Tuleap\HTTPRequest([], $project_manager);
+        self::assertEquals($not_a_valid_project, $request->getProject());
+
+        // Somewhere in the stack, for example in the home of the project,
+        // we can assume that /projects/acme is linked to a valid project acme
+        // and might want to manually set the group_id parameter so that
+        // subsequent queries to request return the right project
+        // and not the project in error
+        $request->set('group_id', '123');
+        self::assertEquals($project, $request->getProject());
     }
 }

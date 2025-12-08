@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\Masschange;
 
-use Codendi_Request;
 use DateTimeImmutable;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -58,7 +57,7 @@ final readonly class MasschangeUpdater
     ) {
     }
 
-    public function updateArtifacts(PFUser $user, Codendi_Request $request): void
+    public function updateArtifacts(PFUser $user, \Tuleap\HTTPRequest $request): void
     {
         if ($this->tracker->userIsAdmin($user)) {
             $masschange_aids = array_map('intval', $request->get('masschange_aids'));
@@ -267,7 +266,7 @@ final readonly class MasschangeUpdater
 
     private function unsubscribeUserFromEachArtifactNotification(
         PFUser $user,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         array $masschange_aids,
     ): void {
         foreach ($masschange_aids as $artifact_id) {
@@ -299,7 +298,7 @@ final readonly class MasschangeUpdater
         );
     }
 
-    private function getSendNotificationsFromRequest(Codendi_Request $request): bool
+    private function getSendNotificationsFromRequest(\Tuleap\HTTPRequest $request): bool
     {
         $send_notifications = false;
         if ($request->exist('notify')) {

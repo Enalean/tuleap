@@ -22,7 +22,6 @@ namespace Tuleap\Dashboard\Project;
 
 use PFUser;
 use Project;
-use Codendi_Request;
 use Psr\Log\LoggerInterface;
 use Tuleap\Dashboard\Dashboard;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
@@ -270,6 +269,6 @@ class ProjectDashboardXMLImporter
                 }
             }
         }
-        return $widget->create(new Codendi_Request($params));
+        return $widget->create(new \Tuleap\HTTPRequest($params));
     }
 }

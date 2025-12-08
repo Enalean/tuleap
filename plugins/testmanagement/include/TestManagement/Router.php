@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement;
 
 use BackendLogger;
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use PFUser;
@@ -72,7 +71,7 @@ class Router
     ) {
     }
 
-    public function route(Codendi_Request $request): void
+    public function route(\Tuleap\HTTPRequest $request): void
     {
         $csrf_token = new \CSRFSynchronizerToken(
             TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(['group_id' => $request->get('group_id')])
@@ -129,7 +128,7 @@ class Router
         }
     }
 
-    private function renderStartTestManagement(Codendi_Request $request, CSRFSynchronizerToken $csrf_token): void
+    private function renderStartTestManagement(\Tuleap\HTTPRequest $request, CSRFSynchronizerToken $csrf_token): void
     {
         $controller = $this->getTestManagementController($csrf_token);
 
@@ -142,7 +141,7 @@ class Router
         );
     }
 
-    public function renderIndex(Codendi_Request $request): void
+    public function renderIndex(\Tuleap\HTTPRequest $request): void
     {
         $controller = new IndexController(
             $request,
@@ -162,7 +161,7 @@ class Router
      *
      * @param mixed           $controller  The controller instance.
      * @param string          $action_name The controller action name (e.g. index, show...).
-     * @param Codendi_Request $request     The request
+     * @param \Tuleap\HTTPRequest $request     The request
      * @param array           $args        Arguments to pass to the controller action method.
      * @param array           $extra_classes      Extra body classes
      *
@@ -170,7 +169,7 @@ class Router
     private function renderAction(
         $controller,
         $action_name,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         bool $without_project_in_breadcrumb,
         array $args = [],
         array $extra_classes = [],
@@ -224,7 +223,7 @@ class Router
         return $header_title[$action_name];
     }
 
-    private function getService(Codendi_Request $request): \Service
+    private function getService(\Tuleap\HTTPRequest $request): \Service
     {
         if ($this->service === null) {
             $project       = $request->getProject();
@@ -241,13 +240,13 @@ class Router
      * Renders the top banner + navigation for all pages.
      *
      * @param mixed           $controller The controller instance
-     * @param Codendi_Request $request    The request
+     * @param \Tuleap\HTTPRequest $request    The request
      * @param string          $title      The page title
      * @param array           $extra_classes      Extra body classes
      */
     private function displayHeader(
         $controller,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         $title,
         bool $without_project_in_breadcrumb,
         array $extra_classes = [],
@@ -277,7 +276,7 @@ class Router
      * Renders the bottom footer for all Agile Dashboard pages.
      *
      */
-    private function displayFooter(Codendi_Request $request): void
+    private function displayFooter(\Tuleap\HTTPRequest $request): void
     {
         $this->getService($request)->displayFooter();
     }

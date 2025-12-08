@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-use Codendi_Request;
 use Git;
 use Git_Driver_Gerrit;
 use Git_Driver_Gerrit_Exception;
@@ -109,7 +108,7 @@ final class GitActionsFetchConfigTest extends TestCase
         $this->project_creator         = $this->createMock(Git_Driver_Gerrit_ProjectCreator::class);
         $this->git_permissions_manager = $this->createMock(GitPermissionsManager::class);
 
-        $controller->method('getRequest')->willReturn(new Codendi_Request([]));
+        $controller->method('getRequest')->willReturn(new \Tuleap\HTTPRequest([]));
         $controller->method('getUser')->willReturn($this->user);
 
         $git_plugin = $this->createMock(GitPlugin::class);

@@ -44,7 +44,7 @@ class ForgeAccess_AdminController
     private $response;
 
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
@@ -63,7 +63,7 @@ class ForgeAccess_AdminController
         ForgeAccess_ForgePropertiesManager $manager,
         Config_LocalIncFinder $localincfinder,
         UserDao $user_dao,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Response $response,
     ) {
         $this->csrf           = $csrf;

@@ -91,7 +91,7 @@ use Tuleap\Project\MappingRegistry;
         return '';
     }
 
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         return true;
     }
@@ -168,7 +168,7 @@ use Tuleap\Project\MappingRegistry;
      *
      * @return null|false|int
      */
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         return null;
     }

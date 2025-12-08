@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use PFUser;
 use Planning;
@@ -153,7 +152,7 @@ class ProjectMilestonesWidgetRetriever
         }
     }
 
-    public function updatePreferences(Codendi_Request $request): void
+    public function updatePreferences(\Tuleap\HTTPRequest $request): void
     {
         $widget_id = (int) $request->getValidated('content_id', 'uint', 0);
 
@@ -175,7 +174,7 @@ class ProjectMilestonesWidgetRetriever
         );
     }
 
-    public function create(Codendi_Request $request): ?int
+    public function create(\Tuleap\HTTPRequest $request): ?int
     {
         $project_name = $request->getValidated(self::PARAM_SELECTED_PROJECT, 'string');
         if ($project_name === self::VALUE_SELECTED_PROJECT_SELF) {

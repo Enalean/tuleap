@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Action;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use DateTimeImmutable;
 use EventManager;
 use Feedback;
@@ -70,7 +69,7 @@ final readonly class UpdateArtifactAction
     ) {
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
+    public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         $base_layout = $GLOBALS['Response'];
         assert($base_layout instanceof BaseLayout);
@@ -168,7 +167,7 @@ final readonly class UpdateArtifactAction
         BaseLayout $base_layout,
         Tracker_IDisplayTrackerLayout $layout,
         Tracker_Artifact_Redirect $redirect,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ): void {
         if ($fault instanceof NoChangeFault) {
@@ -197,7 +196,7 @@ final readonly class UpdateArtifactAction
         $base_layout->redirect($redirect->toUrl());
     }
 
-    public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request): Tracker_Artifact_Redirect
+    public function getRedirectUrlAfterArtifactUpdate(\Tuleap\HTTPRequest $request): Tracker_Artifact_Redirect
     {
         $stay                 = $request->get('submit_and_stay');
         $from_aid             = $request->get('from_aid');

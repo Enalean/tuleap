@@ -44,7 +44,7 @@ abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_
         }
     }
 
-    protected function fetchFormElements(Codendi_Request $request)
+    protected function fetchFormElements(\Tuleap\HTTPRequest $request)
     {
         $html  = '';
         $html .= '<div class="tracker_artifact">';

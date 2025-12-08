@@ -20,7 +20,6 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use ProjectUGroup;
 use Tuleap\Event\Dispatchable;
@@ -34,7 +33,7 @@ class UGroupEditProcessAction implements Dispatchable
      */
     private $has_been_handled;
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -51,7 +50,7 @@ class UGroupEditProcessAction implements Dispatchable
     private $edit_event_launcher;
 
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         ProjectUGroup $ugroup,
         CSRFSynchronizerToken $csrf,
         EditBindingUGroupEventLauncher $edit_event_launcher,
@@ -64,7 +63,7 @@ class UGroupEditProcessAction implements Dispatchable
     }
 
     /**
-     * @return Codendi_Request
+     * @return \Tuleap\HTTPRequest
      */
     public function getRequest()
     {

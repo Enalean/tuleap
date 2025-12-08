@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\Artifact\Renderer;
 
-use Codendi_Request;
 use EventManager;
 use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
@@ -39,7 +38,7 @@ final class ViewCollection
         $this->views[$view->getIdentifier()] = $view;
     }
 
-    public function fetchRequestedView(Codendi_Request $request): string
+    public function fetchRequestedView(\Tuleap\HTTPRequest $request): string
     {
         $requested_view = $this->getRequestedView($request);
 
@@ -61,7 +60,7 @@ final class ViewCollection
     /**
      * @return TrackerArtifactView
      */
-    private function getRequestedView(Codendi_Request $request)
+    private function getRequestedView(\Tuleap\HTTPRequest $request)
     {
         if (isset($this->views[$request->get('view')])) {
             return $this->views[$request->get('view')];

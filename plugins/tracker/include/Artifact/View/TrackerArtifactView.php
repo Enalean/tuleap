@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\Artifact\View;
 
-use Codendi_Request;
 use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -30,7 +29,7 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 abstract readonly class TrackerArtifactView
 {
-    public function __construct(protected Artifact $artifact, protected Codendi_Request $request, protected PFUser $user)
+    public function __construct(protected Artifact $artifact, protected \Tuleap\HTTPRequest $request, protected PFUser $user)
     {
     }
 

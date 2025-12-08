@@ -63,7 +63,7 @@ class Planning_MilestoneController extends BaseController //phpcs:ignore PSR1.Cl
     private $header_options_provider;
 
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
         PlanningMilestonePaneFactory $pane_factory,

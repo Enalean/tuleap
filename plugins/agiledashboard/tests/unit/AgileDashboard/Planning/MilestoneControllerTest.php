@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Codendi_Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
@@ -95,7 +94,7 @@ final class MilestoneControllerTest extends TestCase
 
         $this->nomilestone = new Planning_VirtualTopMilestone($project, $planning);
 
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'group_id'    => 102,
             'planning_id' => 102,
         ]);

@@ -57,29 +57,25 @@ final class ForkRepositoriesFormInputsBuilderTest extends TestCase
 
     public function testItBuildsFromRequest(): void
     {
-        $this->request->params = [
-            'repos'              => ['1', '2', '3'],
-            'to_project'         => '101',
-            'path'               => '/my-forks',
-            'choose_destination' => ForkType::PERSONAL->value,
-        ];
+        $this->request->set('repos', ['1', '2', '3']);
+        $this->request->set('to_project', '101');
+        $this->request->set('path', '/my-forks');
+        $this->request->set('choose_destination', ForkType::PERSONAL->value);
 
         $result = $this->build();
 
         self::assertTrue(Result::isOk($result));
-        self::assertSame($this->request->params['repos'], $result->value->repositories_ids);
-        self::assertSame($this->request->params['to_project'], $result->value->destination_project_id);
-        self::assertSame($this->request->params['path'], $result->value->path);
-        self::assertSame($this->request->params['choose_destination'], $result->value->fork_type->value);
+        self::assertSame($this->request->get('repos'), $result->value->repositories_ids);
+        self::assertSame($this->request->get('to_project'), $result->value->destination_project_id);
+        self::assertSame($this->request->get('path'), $result->value->path);
+        self::assertSame($this->request->get('choose_destination'), $result->value->fork_type->value);
     }
 
     public function testItBuildsWithEmptyDestinationProject(): void
     {
-        $this->request->params = [
-            'repos'              => ['1', '2', '3'],
-            'path'               => '/my-forks',
-            'choose_destination' => ForkType::PERSONAL->value,
-        ];
+        $this->request->set('repos', ['1', '2', '3']);
+        $this->request->set('path', '/my-forks');
+        $this->request->set('choose_destination', ForkType::PERSONAL->value);
 
         $result = $this->build();
 
@@ -89,10 +85,8 @@ final class ForkRepositoriesFormInputsBuilderTest extends TestCase
 
     public function testItBuildsWithEmptyPath(): void
     {
-        $this->request->params = [
-            'repos'              => ['1', '2', '3'],
-            'choose_destination' => ForkType::PERSONAL->value,
-        ];
+        $this->request->set('repos', ['1', '2', '3']);
+        $this->request->set('choose_destination', ForkType::PERSONAL->value);
 
         $result = $this->build();
 
@@ -102,10 +96,8 @@ final class ForkRepositoriesFormInputsBuilderTest extends TestCase
 
     public function testItReturnsAMissingRequiredParametersFaultWhenRepositoriesIdsAreMissing(): void
     {
-        $this->request->params = [
-            'repos'              => [],
-            'choose_destination' => ForkType::PERSONAL->value,
-        ];
+        $this->request->set('repos', []);
+        $this->request->set('choose_destination', ForkType::PERSONAL->value);
 
         $result = $this->build();
 
@@ -115,9 +107,7 @@ final class ForkRepositoriesFormInputsBuilderTest extends TestCase
 
     public function testItReturnsAMissingRequiredParametersFaultWhenRepositoriesIdsAreEmpty(): void
     {
-        $this->request->params = [
-            'choose_destination' => ForkType::PERSONAL->value,
-        ];
+        $this->request->set('choose_destination', ForkType::PERSONAL->value);
 
         $result = $this->build();
 
@@ -127,9 +117,7 @@ final class ForkRepositoriesFormInputsBuilderTest extends TestCase
 
     public function testItReturnsAMissingRequiredParametersFaultWhenForkTypeIsMissing(): void
     {
-        $this->request->params = [
-            'repos' => ['1', '2', '3'],
-        ];
+        $this->request->set('repos', ['1', '2', '3']);
 
         $result = $this->build();
 
@@ -139,11 +127,9 @@ final class ForkRepositoriesFormInputsBuilderTest extends TestCase
 
     public function testItReturnsAForkPathContainsDoubleDotsFault(): void
     {
-        $this->request->params = [
-            'path'               => '../my-forks',
-            'repos'              => ['1', '2', '3'],
-            'choose_destination' => ForkType::PERSONAL->value,
-        ];
+        $this->request->set('path', '../my-forks');
+        $this->request->set('repos', ['1', '2', '3']);
+        $this->request->set('choose_destination', ForkType::PERSONAL->value);
 
         $result = $this->build();
 

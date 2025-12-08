@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Semantic\Description;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use Feedback;
 use PFUser;
 use SimpleXMLElement;
@@ -150,7 +149,7 @@ class TrackerSemanticDescription extends TrackerSemantic
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ): void {
         $this->tracker->displayAdminItemHeaderBurningParrot(
@@ -174,7 +173,7 @@ class TrackerSemanticDescription extends TrackerSemantic
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ): void {
         if ($request->exist('update')) {

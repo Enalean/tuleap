@@ -44,7 +44,7 @@ final class IExtractInvitationToEmailStub implements IExtractInvitationToEmail
     }
 
     #[\Override]
-    public function getInvitationToEmail(\Codendi_Request $request): ?InvitationToEmail
+    public function getInvitationToEmail(\Tuleap\HTTPRequest $request): ?InvitationToEmail
     {
         return $this->invitation;
     }

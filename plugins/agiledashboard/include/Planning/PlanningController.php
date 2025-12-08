@@ -79,7 +79,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private Project $project;
 
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         private readonly PlanningFactory $planning_factory,
         private readonly ProjectManager $project_manager,
         private readonly AgileDashboard_XMLFullStructureExporter $xml_exporter,

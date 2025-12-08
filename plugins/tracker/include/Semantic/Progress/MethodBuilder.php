@@ -123,7 +123,7 @@ class MethodBuilder
         );
     }
 
-    public function buildMethodFromRequest(\Tuleap\Tracker\Tracker $tracker, \Codendi_Request $request): IComputeProgression
+    public function buildMethodFromRequest(\Tuleap\Tracker\Tracker $tracker, \Tuleap\HTTPRequest $request): IComputeProgression
     {
         $method = $request->get('computation-method');
 

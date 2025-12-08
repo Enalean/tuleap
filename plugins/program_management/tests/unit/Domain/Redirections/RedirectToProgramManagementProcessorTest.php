@@ -55,7 +55,7 @@ final class RedirectToProgramManagementProcessorTest extends \Tuleap\Test\PHPUni
         );
         $this->event                          = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent(
             new RedirectAfterArtifactCreationOrUpdateEvent(
-                new \Codendi_Request(
+                new \Tuleap\HTTPRequest(
                     [
                         ProgramRedirectionParameters::FLAG => ProgramRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
                     ],

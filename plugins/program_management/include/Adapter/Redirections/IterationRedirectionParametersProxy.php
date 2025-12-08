@@ -34,7 +34,7 @@ final class IterationRedirectionParametersProxy implements IterationRedirectionP
     {
     }
 
-    public static function buildFromCodendiRequest(\Codendi_Request $request): self
+    public static function buildFromCodendiRequest(\Tuleap\HTTPRequest $request): self
     {
         $redirect_value = $request->get(IterationRedirectionParameters::FLAG) ?: '';
         $increment_id   = $request->get(IterationRedirectionParameters::PARAM_INCREMENT_ID) ?: '';

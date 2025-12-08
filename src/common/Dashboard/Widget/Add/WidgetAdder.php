@@ -57,7 +57,7 @@ final readonly class WidgetAdder
         string $dashboard_type,
         int $dashboard_id,
         string $name,
-        \Codendi_Request $request_to_configure_widget,
+        \Tuleap\HTTPRequest $request_to_configure_widget,
     ): Ok|Err {
         try {
             $this->checkThatDashboardBelongsToTheOwner($owner_id, $dashboard_type, $dashboard_id);

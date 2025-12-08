@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
-use Codendi_Request;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport as ConfigureAtXMLImportEvent;
 use Tuleap\XML\MappingsRegistry;
@@ -43,7 +42,7 @@ final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             }
 
             #[\Override]
-            public function create(Codendi_Request $request)
+            public function create(\Tuleap\HTTPRequest $request)
             {
                 throw new \Exception('Should not be called because it\'s not project milestone plugin');
             }
@@ -74,7 +73,7 @@ final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             }
 
             #[\Override]
-            public function create(Codendi_Request $request)
+            public function create(\Tuleap\HTTPRequest $request)
             {
                 $this->param   = $request->get(ProjectMilestonesWidgetRetriever::PARAM_SELECTED_PROJECT);
                 $this->project = $request->get('project');

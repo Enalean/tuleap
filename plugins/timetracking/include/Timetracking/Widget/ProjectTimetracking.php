@@ -20,7 +20,6 @@
 
 namespace Tuleap\Timetracking\Widget;
 
-use Codendi_Request;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Layout\CssAssetCollection;
@@ -122,7 +121,7 @@ class ProjectTimetracking extends Widget
      * @throws ProjectTimetrackingWidgetNoTitle
      */
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $content_id = $request->getValidated('content_id', 'uint', 0);
 
@@ -169,7 +168,7 @@ class ProjectTimetracking extends Widget
      * @throws ProjectTimetrackingWidgetNoTitle
      */
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $title = $request->params['project-timetracking-title'];
         $this->checkTitleValidity($title);

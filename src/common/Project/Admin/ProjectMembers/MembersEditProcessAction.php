@@ -24,7 +24,6 @@
 
 namespace Tuleap\Project\Admin\ProjectMembers;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use Project;
 use Tuleap\Event\Dispatchable;
@@ -38,7 +37,7 @@ class MembersEditProcessAction implements Dispatchable
      */
     private $has_been_handled;
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -51,7 +50,7 @@ class MembersEditProcessAction implements Dispatchable
     private $csrf;
 
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Project $project,
         CSRFSynchronizerToken $csrf,
     ) {
@@ -62,7 +61,7 @@ class MembersEditProcessAction implements Dispatchable
     }
 
     /**
-     * @return Codendi_Request
+     * @return \Tuleap\HTTPRequest
      */
     public function getRequest()
     {

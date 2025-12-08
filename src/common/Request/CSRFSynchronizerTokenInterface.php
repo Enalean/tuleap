@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use Codendi_Request;
-
 interface CSRFSynchronizerTokenInterface
 {
     public function getToken(): string;
@@ -43,8 +41,7 @@ interface CSRFSynchronizerTokenInterface
     /**
      * Redirect to somewhere else if the token in request is not valid
      *
-     * @param Codendi_Request $request     The request object, if null then use \Tuleap\HTTPRequest
      * @param string          $redirect_to Url to be redirected to in case of error.
      */
-    public function check(?string $redirect_to = null, ?Codendi_Request $request = null): void;
+    public function check(?string $redirect_to = null, ?\Tuleap\HTTPRequest $request = null): void;
 }

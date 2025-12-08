@@ -172,7 +172,7 @@ class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDecl
      * @return bool
      */
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $request->valid(new Valid_String('cancel'));
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');

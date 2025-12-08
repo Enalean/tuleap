@@ -20,7 +20,6 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-use Codendi_Request;
 use Widget;
 
 class WidgetCreator
@@ -35,7 +34,7 @@ class WidgetCreator
         $this->dao = $dao;
     }
 
-    public function create($owner_id, $owner_type, $dashboard_id, Widget $widget, Codendi_Request $request): int
+    public function create($owner_id, $owner_type, $dashboard_id, Widget $widget, \Tuleap\HTTPRequest $request): int
     {
         $content_id = (int) $widget->create($request);
 

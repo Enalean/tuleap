@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Masschange;
 
-use Codendi_Request;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -73,7 +72,7 @@ final class AdditionalMasschangeActionProcessorTest extends TestCase
             ->willReturn($project);
     }
 
-    private function processAction(Codendi_Request $request): void
+    private function processAction(\Tuleap\HTTPRequest $request): void
     {
         $this->processor = new AdditionalMasschangeActionProcessor(
             $this->artifacts_in_explicit_backlog_dao,
@@ -87,7 +86,7 @@ final class AdditionalMasschangeActionProcessorTest extends TestCase
 
     public function testItDoesNothingIfUserIsNotTrackerAdmin(): void
     {
-        $request = new Codendi_Request([]);
+        $request = new \Tuleap\HTTPRequest([]);
 
         $this->tracker
             ->expects($this->once())
@@ -105,7 +104,7 @@ final class AdditionalMasschangeActionProcessorTest extends TestCase
 
     public function testItDoesNothingWhenScrumAccessIsBlocked(): void
     {
-        $request = new Codendi_Request([]);
+        $request = new \Tuleap\HTTPRequest([]);
 
         $this->tracker
             ->expects($this->once())
@@ -130,7 +129,7 @@ final class AdditionalMasschangeActionProcessorTest extends TestCase
 
     public function testItDoesNothingIfMasschangeActionIsNotInRequest(): void
     {
-        $request = new Codendi_Request([]);
+        $request = new \Tuleap\HTTPRequest([]);
 
         $this->tracker
             ->expects($this->once())
@@ -148,7 +147,7 @@ final class AdditionalMasschangeActionProcessorTest extends TestCase
 
     public function testItDoesNothingIfMasschangeActionIsUnchanged(): void
     {
-        $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'unchanged']);
+        $request = new \Tuleap\HTTPRequest(['masschange-action-explicit-backlog' => 'unchanged']);
 
         $this->tracker
             ->expects($this->once())
@@ -166,7 +165,7 @@ final class AdditionalMasschangeActionProcessorTest extends TestCase
 
     public function testItRemovesArtifactsFromBacklogIfMasschangeActionIsRemove(): void
     {
-        $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'remove']);
+        $request = new \Tuleap\HTTPRequest(['masschange-action-explicit-backlog' => 'remove']);
 
         $this->tracker
             ->expects($this->once())
@@ -185,7 +184,7 @@ final class AdditionalMasschangeActionProcessorTest extends TestCase
 
     public function testItAsksForRemovalFromBacklogEvenIfArtifactAreAlreadyPlanned(): void
     {
-        $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'remove']);
+        $request = new \Tuleap\HTTPRequest(['masschange-action-explicit-backlog' => 'remove']);
 
         $this->tracker
             ->expects($this->once())
@@ -204,7 +203,7 @@ final class AdditionalMasschangeActionProcessorTest extends TestCase
 
     public function testItAddsArtifactsFromBacklogIfMasschangeActionIsAdd(): void
     {
-        $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'add']);
+        $request = new \Tuleap\HTTPRequest(['masschange-action-explicit-backlog' => 'add']);
 
         $this->tracker
             ->expects($this->once())
@@ -243,7 +242,7 @@ final class AdditionalMasschangeActionProcessorTest extends TestCase
 
     public function testItDoesNothingIfMasschangeActionIsNotKnown(): void
     {
-        $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'whatever']);
+        $request = new \Tuleap\HTTPRequest(['masschange-action-explicit-backlog' => 'whatever']);
 
         $this->tracker
             ->expects($this->once())

@@ -95,7 +95,7 @@ class Tracker_Action_CopyArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function process(
         Tracker_IDisplayTrackerLayout $layout,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ) {
         if (! $this->tracker->userCanSubmitArtifact($current_user)) {

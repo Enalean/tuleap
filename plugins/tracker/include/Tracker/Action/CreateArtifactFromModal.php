@@ -29,7 +29,7 @@ use Tuleap\Tracker\Tracker;
 class Tracker_Action_CreateArtifactFromModal // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
-        private readonly Codendi_Request $request,
+        private readonly \Tuleap\HTTPRequest $request,
         private readonly Tracker $tracker,
         private readonly TrackerArtifactCreator $artifact_creator,
         private readonly Tracker_ArtifactFactory $tracker_artifact_factory,

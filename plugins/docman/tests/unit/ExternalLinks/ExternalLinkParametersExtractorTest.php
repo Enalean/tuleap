@@ -29,36 +29,32 @@ final class ExternalLinkParametersExtractorTest extends TestCase
 {
     public function testItReturnZeroWhenFolderIdIsNotProvided(): void
     {
-        $request         = new \Tuleap\HTTPRequest();
-        $request->params = [];
-        $extractor       = new ExternalLinkParametersExtractor();
+        $request   = new \Tuleap\HTTPRequest([]);
+        $extractor = new ExternalLinkParametersExtractor();
         self::assertEquals(0, $extractor->extractFolderIdFromParams($request));
     }
 
     public function testItExtractFolderIdFromParameters(): void
     {
-        $request         = new \Tuleap\HTTPRequest();
-        $request->params = [
+        $request   = new \Tuleap\HTTPRequest([
             'action' => 'show',
             'id'     => 100,
-        ];
-        $extractor       = new ExternalLinkParametersExtractor();
+        ]);
+        $extractor = new ExternalLinkParametersExtractor();
         self::assertEquals(100, $extractor->extractFolderIdFromParams($request));
     }
 
     public function testItShouldReturnTrueAndProcessEventIfSwitchOldUIParameterIsNotPresent(): void
     {
-        $request         = new \Tuleap\HTTPRequest();
-        $request->params = [];
-        $extractor       = new ExternalLinkParametersExtractor();
+        $request   = new \Tuleap\HTTPRequest([]);
+        $extractor = new ExternalLinkParametersExtractor();
         self::assertTrue($extractor->extractRequestIsForOldUIParams($request));
     }
 
     public function testItShouldReturnFalseAndNotRaiseEventWhenSwitchToOldUIIsPresent(): void
     {
-        $request         = new \Tuleap\HTTPRequest();
-        $request->params = ['switcholdui' => true];
-        $extractor       = new ExternalLinkParametersExtractor();
+        $request   = new \Tuleap\HTTPRequest(['switcholdui' => true]);
+        $extractor = new ExternalLinkParametersExtractor();
         self::assertTrue($extractor->extractRequestIsForOldUIParams($request));
     }
 }

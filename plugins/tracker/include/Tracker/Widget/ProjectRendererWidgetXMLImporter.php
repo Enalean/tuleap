@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Widget;
 
-use Codendi_Request;
 use RuntimeException;
 use Tracker_Report_Renderer;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
@@ -68,7 +67,7 @@ class ProjectRendererWidgetXMLImporter
             }
         }
 
-        $content_id = $event->getWidget()->create(new Codendi_Request($request_params));
+        $content_id = $event->getWidget()->create(new \Tuleap\HTTPRequest($request_params));
         $event->setContentId($content_id);
         $event->setWidgetIsConfigured();
     }

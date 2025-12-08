@@ -26,12 +26,12 @@ class Tracker_URL extends URL
     /**
      * Return the Tracker object that correspond to the given request
      *
-     * @param Codendi_Request $request The request
+     * @param \Tuleap\HTTPRequest $request The request
      * @param PFUser            $user    Who access the request
      *
      * @return Tracker_Dispatchable_Interface
      */
-    public function getDispatchableFromRequest(Codendi_Request $request, PFUser $user)
+    public function getDispatchableFromRequest(\Tuleap\HTTPRequest $request, PFUser $user)
     {
         if ((int) $request->get('aid')) {
             if ($artifact = $this->getArtifactFactory()->getArtifactByid($request->get('aid'))) {

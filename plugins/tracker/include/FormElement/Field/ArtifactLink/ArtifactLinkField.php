@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use EventManager;
 use PFUser;
 use ReferenceManager;
@@ -1842,7 +1841,7 @@ class ArtifactLinkField extends TrackerField
         return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
     }
 
-    private function appendTypeTable(PFUser $current_user, Codendi_Request $request, array &$result, bool $is_reverse_artifact_links): void
+    private function appendTypeTable(PFUser $current_user, \Tuleap\HTTPRequest $request, array &$result, bool $is_reverse_artifact_links): void
     {
         if (! $this->getTracker()->isProjectAllowedToUseType()) {
             return;

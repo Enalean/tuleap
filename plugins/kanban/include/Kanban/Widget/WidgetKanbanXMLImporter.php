@@ -39,9 +39,9 @@ final class WidgetKanbanXMLImporter
     /**
      * @throws \RuntimeException
      */
-    private function getRequest(ConfigureAtXMLImport $event): \Codendi_Request
+    private function getRequest(ConfigureAtXMLImport $event): \Tuleap\HTTPRequest
     {
-        return new \Codendi_Request(
+        return new \Tuleap\HTTPRequest(
             $this->getParametersFromXML($event->getXML(), $event->getMappingsRegistry())
         );
     }

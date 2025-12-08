@@ -42,7 +42,7 @@ final class RedirectUserAfterArtifactCreationOrUpdateEventProxyTest extends Test
         $this->redirect = new Tracker_Artifact_Redirect();
         $this->event    =
             new RedirectAfterArtifactCreationOrUpdateEvent(
-                new \Codendi_Request(
+                new \Tuleap\HTTPRequest(
                     [
                         IterationRedirectionParameters::FLAG               => IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
                         IterationRedirectionParameters::PARAM_INCREMENT_ID => '1280',

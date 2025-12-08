@@ -42,7 +42,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
 
     private const int PROJECT_ID = 123;
-    private \Codendi_Request&Stub $request;
+    private \Tuleap\HTTPRequest&Stub $request;
     private ConfigurationDao&MockObject $configuration_dao;
     private \EventManager&Stub $event_manager;
     private CountElementsModeChecker&Stub $count_element_mode_checker;
@@ -51,7 +51,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->request                    = $this->createStub(\Codendi_Request::class);
+        $this->request                    = $this->createStub(\Tuleap\HTTPRequest::class);
         $this->configuration_dao          = $this->createMock(ConfigurationDao::class);
         $this->event_manager              = $this->createStub(\EventManager::class);
         $this->count_element_mode_checker = $this->createStub(CountElementsModeChecker::class);

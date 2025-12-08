@@ -20,12 +20,11 @@
 
 namespace Tuleap\Label\Widget;
 
-use Codendi_Request;
 use Valid_UInt;
 
 class ProjectLabelRequestDataValidator
 {
-    public function validateDataFromRequest(Codendi_Request $request, array $project_labels)
+    public function validateDataFromRequest(\Tuleap\HTTPRequest $request, array $project_labels)
     {
         $selected_labels = $request->get('project-labels');
         if (! $selected_labels) {

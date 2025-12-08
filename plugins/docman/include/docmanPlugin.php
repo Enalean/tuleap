@@ -617,7 +617,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
     public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event): void
     {
         if ($event->getReference()->getServiceShortName() === 'docman') {
-            $request    = new Codendi_Request([
+            $request    = new \Tuleap\HTTPRequest([
                 'id'       => $event->getValue(),
                 'group_id' => $event->getProject()->getID(),
                 'action'   => 'ajax_reference_tooltip',

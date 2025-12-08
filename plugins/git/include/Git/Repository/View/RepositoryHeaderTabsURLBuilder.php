@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Repository\View;
 
-use Codendi_Request;
 use Git_GitRepositoryUrlManager;
 use GitRepository;
 
@@ -33,7 +32,7 @@ final class RepositoryHeaderTabsURLBuilder
     {
     }
 
-    public function buildFilesTabURL(GitRepository $repository, Codendi_Request $request): string
+    public function buildFilesTabURL(GitRepository $repository, \Tuleap\HTTPRequest $request): string
     {
         $query_parameters = [];
         $selected_branch  = $request->get(self::BRANCH_NAME_QUERY_PARAMETER);
@@ -58,7 +57,7 @@ final class RepositoryHeaderTabsURLBuilder
         return $url;
     }
 
-    public function buildCommitsTabURL(GitRepository $repository, Codendi_Request $request): string
+    public function buildCommitsTabURL(GitRepository $repository, \Tuleap\HTTPRequest $request): string
     {
         $query_parameters = [
             'a' => 'shortlog',

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Timetracking\Admin;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
 use PermissionsNormalizer;
@@ -166,7 +165,7 @@ class AdminController
         return $write_ugroups;
     }
 
-    public function editTimetrackingAdminSettings(Tracker $tracker, Codendi_Request $request)
+    public function editTimetrackingAdminSettings(Tracker $tracker, \Tuleap\HTTPRequest $request)
     {
         $csrf = $this->getCSRFSynchronizerToken($tracker);
         $csrf->check();
@@ -212,12 +211,12 @@ class AdminController
         );
     }
 
-    private function isTimetrackingAlreadyEnabled(Tracker $tracker, Codendi_Request $request)
+    private function isTimetrackingAlreadyEnabled(Tracker $tracker, \Tuleap\HTTPRequest $request)
     {
         return $request->get('enable_timetracking') && $this->enabler->isTimetrackingEnabledForTracker($tracker);
     }
 
-    private function saveUgroups(Tracker $tracker, Codendi_Request $request)
+    private function saveUgroups(Tracker $tracker, \Tuleap\HTTPRequest $request)
     {
         $selected_write_ugroups = $request->get('write_ugroups');
         if ($selected_write_ugroups) {

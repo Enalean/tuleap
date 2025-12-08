@@ -34,7 +34,7 @@ final class ProgramRedirectionParametersProxy implements ProgramRedirectionParam
     {
     }
 
-    public static function buildFromCodendiRequest(\Codendi_Request $request): self
+    public static function buildFromCodendiRequest(\Tuleap\HTTPRequest $request): self
     {
         $redirect_value = $request->get(ProgramRedirectionParameters::FLAG) ?: '';
 

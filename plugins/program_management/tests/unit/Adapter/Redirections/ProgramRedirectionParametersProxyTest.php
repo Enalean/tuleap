@@ -39,9 +39,9 @@ final class ProgramRedirectionParametersProxyTest extends TestCase
         self::assertFalse($proxy->needsRedirectionAfterUpdate());
     }
 
-    private function buildCodendiRequest(): \Codendi_Request
+    private function buildCodendiRequest(): \Tuleap\HTTPRequest
     {
-        return new \Codendi_Request(
+        return new \Tuleap\HTTPRequest(
             [
                 ProgramRedirectionParameters::FLAG => ProgramRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
             ],

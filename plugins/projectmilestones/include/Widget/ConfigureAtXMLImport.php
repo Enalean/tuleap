@@ -32,7 +32,7 @@ final class ConfigureAtXMLImport
         if ($event->getWidget()->getId() !== DashboardProjectMilestones::NAME) {
             return;
         }
-        $content_id = $event->getWidget()->create(new \Codendi_Request([
+        $content_id = $event->getWidget()->create(new \Tuleap\HTTPRequest([
             ProjectMilestonesWidgetRetriever::PARAM_SELECTED_PROJECT => ProjectMilestonesWidgetRetriever::VALUE_SELECTED_PROJECT_SELF,
             'project' => $event->getProject(),
         ]));

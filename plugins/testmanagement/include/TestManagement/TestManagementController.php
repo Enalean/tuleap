@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement;
 
 use MVC2_PluginController;
-use Codendi_Request;
 use Planning_Milestone;
 use EventManager;
 use Project;
@@ -53,7 +52,7 @@ abstract class TestManagementController extends MVC2_PluginController
     protected $event_manager;
 
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Config $config,
         EventManager $event_manager,
     ) {

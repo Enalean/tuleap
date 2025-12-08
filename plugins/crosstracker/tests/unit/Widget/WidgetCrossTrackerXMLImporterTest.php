@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Widget;
 
-use Codendi_Request;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
 use Tuleap\CrossTracker\Tests\Stub\Widget\CrossTrackerSearchWidgetStub;
@@ -62,7 +61,7 @@ final class WidgetCrossTrackerXMLImporterTest extends TestCase
     {
         $this->widget = CrossTrackerSearchWidgetStub::withIdAndCallback(
             10,
-            function (Codendi_Request $request) {
+            function (\Tuleap\HTTPRequest $request) {
                 $queries = $request->get('queries');
                 self::assertNotNull($queries);
                 self::assertIsArray($queries);

@@ -40,7 +40,7 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumns extends Cardwall_OnTo
      * @see Cardwall_OnTop_Config_Command::execute()
      */
     #[\Override]
-    public function execute(Codendi_Request $request)
+    public function execute(\Tuleap\HTTPRequest $request)
     {
         $please_enable = $request->get('use_freestyle_columns');
         $tracker_id    = $this->tracker->getId();

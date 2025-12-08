@@ -20,6 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_WikiRequest extends Codendi_Request
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Docman_WikiRequest extends \Tuleap\HTTPRequest
 {
 }

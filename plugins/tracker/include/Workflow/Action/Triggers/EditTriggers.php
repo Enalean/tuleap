@@ -41,7 +41,7 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
     }
 
     #[\Override]
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $this->displayPane($layout);
     }

@@ -37,7 +37,7 @@ final class MassChangeTopBacklogSourceInformationTest extends \Tuleap\Test\PHPUn
         $event   = new TrackerMasschangeProcessExternalActionsEvent(
             $user,
             $tracker,
-            new \Codendi_Request(['masschange-action-program-management-top-backlog' => 'add']),
+            new \Tuleap\HTTPRequest(['masschange-action-program-management-top-backlog' => 'add']),
             [888, 999]
         );
 
@@ -53,7 +53,7 @@ final class MassChangeTopBacklogSourceInformationTest extends \Tuleap\Test\PHPUn
         $event   = new TrackerMasschangeProcessExternalActionsEvent(
             $user,
             $tracker,
-            new \Codendi_Request([]),
+            new \Tuleap\HTTPRequest([]),
             [888, 999]
         );
 

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use Codendi_Request;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -227,7 +226,7 @@ final class BurndownFieldTest extends TestCase
     {
         $artifact_id = 999;
 
-        $request = new Codendi_Request(
+        $request = new \Tuleap\HTTPRequest(
             [
                 'formElement' => 1234,
                 'func'        => BurndownField::FUNC_SHOW_BURNDOWN,
@@ -248,7 +247,7 @@ final class BurndownFieldTest extends TestCase
 
     public function testProcessMustNotBuildBurndownWhenSrcAidIsNotValid(): void
     {
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'formElement' => 1234,
             'func'        => BurndownField::FUNC_SHOW_BURNDOWN,
             'src_aid'     => '; DROP DATABASE mouuahahahaha!',
@@ -268,7 +267,7 @@ final class BurndownFieldTest extends TestCase
     public function testProcessMustNotBuildBurndownWhenArtifactDoesNotExist(): void
     {
         $this->expectNotToPerformAssertions();
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'formElement' => 1234,
             'func'        => BurndownField::FUNC_SHOW_BURNDOWN,
             'src_aid'     => 999,

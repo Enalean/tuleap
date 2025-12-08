@@ -22,20 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
-use Codendi_Request;
 use PFUser;
 use Planning_MilestoneFactory;
 
 readonly class ActivePaneContext
 {
     public function __construct(
-        private Codendi_Request $request,
+        private \Tuleap\HTTPRequest $request,
         private PFUser $user,
         private Planning_MilestoneFactory $milestone_factory,
     ) {
     }
 
-    public function getRequest(): Codendi_Request
+    public function getRequest(): \Tuleap\HTTPRequest
     {
         return $this->request;
     }

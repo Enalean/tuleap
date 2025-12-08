@@ -1479,7 +1479,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return false;
     }
 
-    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, $type, Tracker $tracker, ?CSRFSynchronizerToken $csrf_token = null): void
+    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, $type, Tracker $tracker, ?CSRFSynchronizerToken $csrf_token = null): void
     {
         $row = [
             'formElement_type'  => $type,

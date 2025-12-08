@@ -51,7 +51,7 @@ final class RedirectToIterationsProcessorTest extends TestCase
         $this->project                       = ProjectReferenceStub::withValues(1, 'Project', self::PROJECT_SHORTNAME, '');
         $this->event                         = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent(
             new RedirectAfterArtifactCreationOrUpdateEvent(
-                new \Codendi_Request(
+                new \Tuleap\HTTPRequest(
                     [
                         IterationRedirectionParameters::FLAG               => IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
                         IterationRedirectionParameters::PARAM_INCREMENT_ID => self::PROGRAM_INCREMENT_ID,

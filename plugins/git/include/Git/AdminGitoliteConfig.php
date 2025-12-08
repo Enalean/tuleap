@@ -68,7 +68,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         $this->asset                            = $asset;
     }
 
-    public function process(Codendi_Request $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         $action = $request->get('action');
 
@@ -95,7 +95,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         return true;
     }
 
-    private function regenerateGitoliteConfigForAProject(Codendi_Request $request)
+    private function regenerateGitoliteConfigForAProject(\Tuleap\HTTPRequest $request)
     {
         $project = $this->getProject($request->get('gitolite_config_project'));
 
@@ -123,7 +123,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         return $this->project_manager->getProjectFromAutocompleter($project_name_from_autocomplete);
     }
 
-    private function updateBigObjectAllowedProjects(Codendi_Request $request)
+    private function updateBigObjectAllowedProjects(\Tuleap\HTTPRequest $request)
     {
         if ($request->get('revoke-project')) {
             $this->revokeProjects($request);
@@ -134,7 +134,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         }
     }
 
-    private function revokeProjects(Codendi_Request $request)
+    private function revokeProjects(\Tuleap\HTTPRequest $request)
     {
         $project_ids = $request->get('project-ids-to-revoke');
 
@@ -156,7 +156,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         );
     }
 
-    private function allowProject(Codendi_Request $request)
+    private function allowProject(\Tuleap\HTTPRequest $request)
     {
         $project = $this->getProject($request->get('project-to-allow'));
 
@@ -177,7 +177,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         );
     }
 
-    public function display(Codendi_Request $request)
+    public function display(\Tuleap\HTTPRequest $request)
     {
         $title         = dgettext('tuleap-git', 'Git');
         $template_path = dirname(GIT_BASE_DIR) . '/templates';

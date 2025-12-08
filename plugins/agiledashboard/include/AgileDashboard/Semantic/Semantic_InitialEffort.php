@@ -135,7 +135,7 @@ class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ign
     }
 
     #[Override]
-    public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
+    public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         $this->tracker->displayAdminItemHeaderBurningParrot(
             $tracker_manager,
@@ -159,13 +159,13 @@ class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ign
      *
      * @param TrackerSemanticManager $semantic_manager The semantic manager
      * @param TrackerManager          $tracker_manager  The tracker manager
-     * @param Codendi_Request         $request          The request
+     * @param \Tuleap\HTTPRequest         $request          The request
      * @param PFUser                  $current_user     The user who made the request
      *
      * @return void
      */
     #[Override]
-    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();

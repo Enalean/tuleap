@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Masschange;
 
-use Codendi_Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_ArtifactDao;
 use Tracker_Report;
@@ -76,7 +75,7 @@ final class MasschangeUpdaterTest extends TestCase
         bool $unsubscribe_from_notifications,
         array $rules,
     ): void {
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'masschange_aids' => $masschange_artifact_ids,
             'masschange-unsubscribe-option' => $unsubscribe_from_notifications,
             'artifact' => $new_values,

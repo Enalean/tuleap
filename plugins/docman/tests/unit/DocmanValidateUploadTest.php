@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
-use Codendi_Request;
 use Docman_ValidateUpload;
 use DocmanPlugin;
 use ForgeConfig;
@@ -42,7 +41,7 @@ final class DocmanValidateUploadTest extends TestCase
 
     public function testValidFileIsAccepted(): void
     {
-        $request = new Codendi_Request([]);
+        $request = new \Tuleap\HTTPRequest([]);
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10000');
 
@@ -55,7 +54,7 @@ final class DocmanValidateUploadTest extends TestCase
 
     public function testTooLargeFileIsRejected(): void
     {
-        $request = new Codendi_Request([]);
+        $request = new \Tuleap\HTTPRequest([]);
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10');
 

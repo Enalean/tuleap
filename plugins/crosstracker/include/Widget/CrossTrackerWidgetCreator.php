@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Widget;
 
-use Codendi_Request;
 use Tuleap\CrossTracker\Query\CrossTrackerQueryFactory;
 use Tuleap\CrossTracker\Query\QueryCreator;
 use Tuleap\DB\DBTransactionExecutor;
@@ -43,7 +42,7 @@ final readonly class CrossTrackerWidgetCreator
     /**
      * @return Ok<int>|Err<Fault>
      */
-    public function createWithQueries(Codendi_Request $request): Ok|Err
+    public function createWithQueries(\Tuleap\HTTPRequest $request): Ok|Err
     {
         $cross_tracker_search_parameter = $request->get('queries');
 

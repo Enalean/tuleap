@@ -1261,7 +1261,7 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    private function getSynchro(Codendi_Request $request)
+    private function getSynchro(\Tuleap\HTTPRequest $request)
     {
         $synchro = LDAP_GroupManager::NO_SYNCHRONIZATION;
         if ($request->get('synchronize')) {
@@ -1271,7 +1271,7 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
         return $synchro;
     }
 
-    private function getBindOption(Codendi_Request $request)
+    private function getBindOption(\Tuleap\HTTPRequest $request)
     {
         $bind_option = LDAP_GroupManager::BIND_OPTION;
         if ($request->get('preserve_members')) {

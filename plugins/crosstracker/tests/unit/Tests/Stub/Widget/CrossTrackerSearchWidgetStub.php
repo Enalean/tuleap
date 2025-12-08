@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Stub\Widget;
 
-use Codendi_Request;
 use Widget;
 
 final class CrossTrackerSearchWidgetStub extends Widget
@@ -37,7 +36,7 @@ final class CrossTrackerSearchWidgetStub extends Widget
      * @return null|false|int
      */
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         if ($this->callback !== null) {
             ($this->callback)($request);

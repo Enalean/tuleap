@@ -262,7 +262,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnInvalidMethodFromRequestWhenABadMethodNameIsProvided(): void
     {
-        $request = $this->createMock(\Codendi_Request::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('get')->with('computation-method')->willReturn('random-float');
 
         $method = $this->method_builder->buildMethodFromRequest(

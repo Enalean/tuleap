@@ -49,7 +49,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
     }
 
     #[\Override]
-    public function fetchFormContent(Codendi_Request $request, PFUser $current_user)
+    public function fetchFormContent(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $html  = '';
         $html .= $this->fetchLastChangesetId();
@@ -80,7 +80,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
     }
 
     #[\Override]
-    public function display(Codendi_Request $request, PFUser $current_user)
+    public function display(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         parent::display($request, $current_user);
     }
@@ -124,7 +124,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
     }
 
     #[\Override]
-    protected function fetchView(Codendi_Request $request, PFUser $user): string
+    protected function fetchView(\Tuleap\HTTPRequest $request, PFUser $user): string
     {
         $view_collection = new ViewCollection($this->event_manager);
         $view_collection->add(new ArtifactViewCopy($this->artifact, $request, $user, $this));

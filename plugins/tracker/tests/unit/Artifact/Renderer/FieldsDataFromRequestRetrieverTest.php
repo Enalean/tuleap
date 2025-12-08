@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Artifact\Renderer;
 
-use Codendi_Request;
 use PHPUnit\Framework\MockObject\Stub;
 use ProjectManager;
 use Tracker_FormElementFactory;
@@ -69,7 +68,7 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
     public function testItGetTheFirstPossibleValueWhenPossibleValuesAreInRequestParameters(): void
     {
         $expected_result = [123 => 2];
-        $request         = new Codendi_Request(
+        $request         = new \Tuleap\HTTPRequest(
             [
                 'artifact' => [
                     'field_id'        => '123',
@@ -99,7 +98,7 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
     public function testItGetAugmentDataFromRequestWhenNoPossibleValuesInParameters(): void
     {
         $expected_result = [123 => 12];
-        $request         = new Codendi_Request(
+        $request         = new \Tuleap\HTTPRequest(
             [
                 'artifact' => [
                     '123' => '12',

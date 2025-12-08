@@ -25,7 +25,6 @@ use Config_LocalIncFinder;
 use EventManager;
 use CSRFSynchronizerToken;
 use Response;
-use Codendi_Request;
 use Feedback;
 use Event;
 use Tuleap\Admin\AdminPageRenderer;
@@ -75,14 +74,14 @@ class MailGatewayConfigController
         );
     }
 
-    public function update(Codendi_Request $request, Response $response)
+    public function update(\Tuleap\HTTPRequest $request, Response $response)
     {
         $this->updateEmailGatewayMode($request, $response);
 
         $response->redirect($_SERVER['REQUEST_URI']);
     }
 
-    private function updateEmailGatewayMode(Codendi_Request $request, Response $response)
+    private function updateEmailGatewayMode(\Tuleap\HTTPRequest $request, Response $response)
     {
         $emailgateway_mode = $request->get('emailgateway_mode');
         if ($emailgateway_mode) {

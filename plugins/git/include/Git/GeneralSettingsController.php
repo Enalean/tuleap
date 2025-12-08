@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
@@ -68,7 +67,7 @@ class GeneralSettingsController
         $this->regexp_disabler  = $regexp_disabler;
     }
 
-    public function process(Codendi_Request $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         if ($request->get('action') === 'enable-regexp-usage') {
             if ($request->get('activate-regexp')) {

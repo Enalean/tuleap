@@ -33,7 +33,7 @@ class Cardwall_OnTop_Config_Updater
         $this->commands[] = $command;
     }
 
-    public function process(Codendi_Request $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         foreach ($this->commands as $command) {
             $command->execute($request);

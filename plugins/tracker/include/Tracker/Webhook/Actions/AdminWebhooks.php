@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\Webhook\Actions;
 
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use PFUser;
 use TemplateRendererFactory;
@@ -60,7 +59,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
      * Process the request
      */
     #[\Override]
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $assets = new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
         $GLOBALS['Response']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'webhooks-style'));

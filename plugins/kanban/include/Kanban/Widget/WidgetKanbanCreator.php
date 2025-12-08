@@ -20,15 +20,13 @@
 
 namespace Tuleap\Kanban\Widget;
 
-use Codendi_Request;
-
 class WidgetKanbanCreator
 {
     public function __construct(private readonly WidgetKanbanDao $widget_kanban_dao)
     {
     }
 
-    public function create(Codendi_Request $request, int $owner_id, string $owner_type): int
+    public function create(\Tuleap\HTTPRequest $request, int $owner_id, string $owner_type): int
     {
         $kanban            = $request->get('kanban');
         $kanban_id         = (int) $kanban['id'];

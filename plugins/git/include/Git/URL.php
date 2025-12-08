@@ -223,7 +223,7 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
     /**
      * @return bool
      */
-    public function isADownload(Codendi_Request $request)
+    public function isADownload(\Tuleap\HTTPRequest $request)
     {
         $action_type = $request->get('a');
         return $request->get('noheader') == 1 ||

@@ -40,7 +40,7 @@ final class InvitationToEmailRequestExtractor implements IExtractInvitationToEma
     }
 
     #[\Override]
-    public function getInvitationToEmail(\Codendi_Request $request): ?InvitationToEmail
+    public function getInvitationToEmail(\Tuleap\HTTPRequest $request): ?InvitationToEmail
     {
         $token = $request->get('invitation-token');
         if (! \is_string($token)) {

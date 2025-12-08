@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_XMLFullStructureExporter;
-use Codendi_Request;
 use EventManager;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -91,7 +90,7 @@ final class PlanningControllerTest extends TestCase
         $this->tracker_factory                 = $this->createMock(\TrackerFactory::class);
     }
 
-    private function getPlanningController(Codendi_Request $request): Planning_Controller
+    private function getPlanningController(\Tuleap\HTTPRequest $request): Planning_Controller
     {
         $planning_controller              = new class (
             $request,

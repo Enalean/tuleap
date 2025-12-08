@@ -59,7 +59,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget //phpcs:ignore 
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $request->valid(new Valid_String('cancel'));
         if (! $request->exist('cancel')) {

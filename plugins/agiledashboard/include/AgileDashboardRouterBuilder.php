@@ -94,7 +94,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->current_user_provider                  = $current_user_provider;
     }
 
-    public function build(Codendi_Request $request): AgileDashboardRouter
+    public function build(\Tuleap\HTTPRequest $request): AgileDashboardRouter
     {
         $project_explicit_backlog_dao = new ExplicitBacklogDao();
         $tracker_dao                  = new TrackerDao();

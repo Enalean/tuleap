@@ -56,14 +56,14 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         );
     }
 
-    private function shouldAddOrDeleteRules(Codendi_Request $request): bool
+    private function shouldAddOrDeleteRules(\Tuleap\HTTPRequest $request): bool
     {
         $should_delete_rule = is_numeric($request->get(self::PARAMETER_REMOVE_RULE));
 
         return $should_delete_rule || $this->shouldAddRule($request);
     }
 
-    private function shouldAddRule(Codendi_Request $request): bool
+    private function shouldAddRule(\Tuleap\HTTPRequest $request): bool
     {
         $source_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_SOURCE_FIELD);
         $target_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_TARGET_FIELD);
@@ -94,7 +94,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         return $fields_are_different;
     }
 
-    private function getFieldIdFromAddRequest(Codendi_Request $request, $source_or_target): ?int
+    private function getFieldIdFromAddRequest(\Tuleap\HTTPRequest $request, $source_or_target): ?int
     {
         $add = $request->get(self::PARAMETER_ADD_RULE);
         if (is_array($add) && isset($add[$source_or_target])) {
@@ -104,7 +104,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         return null;
     }
 
-    private function getComparatorFromAddRequest(Codendi_Request $request)
+    private function getComparatorFromAddRequest(\Tuleap\HTTPRequest $request)
     {
         $add = $request->get(self::PARAMETER_ADD_RULE);
         if (is_array($add)) {
@@ -129,7 +129,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
     }
 
     #[\Override]
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
+    public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         if ($this->shouldAddOrDeleteRules($request)) {
             // Verify CSRF Protection
@@ -141,7 +141,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         }
     }
 
-    private function addOrDeleteRules(Codendi_Request $request, PFUser $user): void
+    private function addOrDeleteRules(\Tuleap\HTTPRequest $request, PFUser $user): void
     {
         $this->removeRules($request, $user);
         $this->addRule($request, $user);
@@ -162,7 +162,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         return [$source_field, $target_field, $comparator];
     }
 
-    private function removeRules(Codendi_Request $request, PFUser $user): void
+    private function removeRules(\Tuleap\HTTPRequest $request, PFUser $user): void
     {
         $remove_rule_id = $request->get(self::PARAMETER_REMOVE_RULE);
         if (! is_numeric($remove_rule_id)) {
@@ -187,7 +187,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         }
     }
 
-    private function addRule(Codendi_Request $request, PFUser $user): void
+    private function addRule(\Tuleap\HTTPRequest $request, PFUser $user): void
     {
         if (! $this->shouldAddRule($request)) {
             return;

@@ -39,7 +39,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer // phpcs:ignore PSR1.Classes
     ) {
     }
 
-    public function display(CurrentUserWithLoggedInInformation $current_user, Codendi_Request $request)
+    public function display(CurrentUserWithLoggedInInformation $current_user, \Tuleap\HTTPRequest $request)
     {
         $submitted_values = $this->getSubmittedValues($request);
 
@@ -122,7 +122,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer // phpcs:ignore PSR1.Classes
         return PriorityManager::build();
     }
 
-    public function updateArtifact(Codendi_Request $request, PFUser $current_user)
+    public function updateArtifact(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
 

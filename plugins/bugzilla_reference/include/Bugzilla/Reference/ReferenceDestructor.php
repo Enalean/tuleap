@@ -32,7 +32,7 @@ class ReferenceDestructor
         $this->dao = $dao;
     }
 
-    public function delete(\Codendi_Request $request): void
+    public function delete(\Tuleap\HTTPRequest $request): void
     {
         $id = $request->get('id');
 

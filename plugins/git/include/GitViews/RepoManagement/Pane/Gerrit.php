@@ -21,7 +21,6 @@
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use Git_Driver_Gerrit_Exception;
 use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
@@ -66,7 +65,7 @@ class Gerrit extends Pane
 
     public function __construct(
         GitRepository $repository,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         array $gerrit_servers,

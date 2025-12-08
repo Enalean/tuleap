@@ -55,7 +55,7 @@ class Planning_RequestValidator
      * Existing planning update validation is not implemented yet.
      */
     public function isValid(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         VerifyTrackerAccessDuringImportStrategy $tracker_access_during_import_strategy,
     ): bool {
         $group_id            = (int) $request->get('group_id');

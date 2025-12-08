@@ -104,7 +104,7 @@ final class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // php
             new CSRFSessionKeyStorageStub(),
         );
 
-        $request = $this->createMock(\Codendi_Request::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->willReturn($csrf_token->getToken());
 
         $csrf_token->check('/path/to/url', $request);
@@ -122,7 +122,7 @@ final class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // php
             new CSRFSessionKeyStorageStub(),
         );
 
-        $request = $this->createMock(\Codendi_Request::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->willReturn('invalid_token');
 
         $csrf_token->check($uri, $request);
@@ -140,7 +140,7 @@ final class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // php
             new CSRFSessionKeyStorageStub(),
         );
 
-        $request = $this->createMock(\Codendi_Request::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->willReturn(false);
 
         $csrf_token->check($uri, $request);

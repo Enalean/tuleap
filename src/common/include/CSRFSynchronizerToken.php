@@ -104,12 +104,12 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
     /**
      * Redirect to somewhere else if the token in request is not valid
      *
-     * @param Codendi_Request $request     The request object, if null then use \Tuleap\HTTPRequest
+     * @param \Tuleap\HTTPRequest $request     The request object, if null then use \Tuleap\HTTPRequest
      * @param string          $redirect_to Url to be redirected to in case of error. if null then use $url instead. Default is null
      *
      */
     #[\Override]
-    public function check(?string $redirect_to = null, ?Codendi_Request $request = null): void
+    public function check(?string $redirect_to = null, ?\Tuleap\HTTPRequest $request = null): void
     {
         if (! $request) {
             $request = \Tuleap\HTTPRequest::instance();

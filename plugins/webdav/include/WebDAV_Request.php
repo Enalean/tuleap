@@ -19,10 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- * Standard request object for WebDav requests
- *
- */
-class WebDAV_Request extends Codendi_Request
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class WebDAV_Request extends \Tuleap\HTTPRequest
 {
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Codendi_Request;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
@@ -49,7 +48,7 @@ class ConfigurationUpdaterTest extends TestCase
     private MilestoneReportCriterionDao&MockObject $milestone_report_criterion_dao;
     private BacklogItemDao&MockObject $backlog_item_dao;
     private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
-    private Codendi_Request&MockObject $request;
+    private \Tuleap\HTTPRequest&MockObject $request;
     private UnplannedArtifactsAdder&MockObject $unplanned_artifacts_adder;
     private AddToTopBacklogPostActionDao&MockObject $add_to_top_backlog_post_action_dao;
     private EventDispatcherInterface $event_dispatcher;
@@ -95,7 +94,7 @@ class ConfigurationUpdaterTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
         $user    = UserTestBuilder::buildWithDefaults();
 
-        $this->request = $this->createMock(Codendi_Request::class);
+        $this->request = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->request->method('getProject')->willReturn($project);
         $this->request->method('getCurrentUser')->willReturn($user);
         $this->request->method('exist')->with('use-explicit-top-backlog')->willReturn(true);
@@ -109,7 +108,7 @@ class ConfigurationUpdaterTest extends TestCase
 
     public function testItDoesNothingIfOptionNotProvidedInRequest(): void
     {
-        $request = new Codendi_Request([
+        $request = new \Tuleap\HTTPRequest([
             'group_id' => '101',
         ]);
 

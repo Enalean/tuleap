@@ -20,7 +20,6 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use Codendi_Request;
 use PFUser;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
@@ -57,7 +56,7 @@ class TimeController
      * @throws \Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException
      */
     public function addTimeForUser(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $user,
         Artifact $artifact,
         CSRFSynchronizerTokenInterface $csrf,
@@ -77,7 +76,7 @@ class TimeController
      * @throws TimeTrackingNotBelongToUserException
      */
     public function deleteTimeForUser(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $user,
         Artifact $artifact,
         CSRFSynchronizerTokenInterface $csrf,
@@ -97,7 +96,7 @@ class TimeController
      * @throws \Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException
      */
     public function editTimeForUser(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $user,
         Artifact $artifact,
         CSRFSynchronizerTokenInterface $csrf,
@@ -117,7 +116,7 @@ class TimeController
      * @return Time
      * @throws TimeTrackingNoTimeException
      */
-    private function getTimeFromRequest(Codendi_Request $request, PFUser $user)
+    private function getTimeFromRequest(\Tuleap\HTTPRequest $request, PFUser $user)
     {
         $time_id = $request->get('time-id');
         $time    = $this->time_retriever->getTimeByIdForUser($user, $time_id);

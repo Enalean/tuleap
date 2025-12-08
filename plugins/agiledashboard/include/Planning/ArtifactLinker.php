@@ -51,7 +51,7 @@ class Planning_ArtifactLinker // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      * @psalm-param array{planning_id: string, pane: string, aid: string}|null $requested_planning
      */
     public function linkBacklogWithPlanningItems(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Artifact $artifact,
         ?array $requested_planning,
     ): ?Artifact {
@@ -66,7 +66,7 @@ class Planning_ArtifactLinker // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     private function getMilestoneArtifact(
         PFUser $user,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         Artifact $artifact,
         ?array $requested_planning,
     ): ?Artifact {
@@ -107,7 +107,7 @@ class Planning_ArtifactLinker // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function getMilestoneThatHasJustBeenLinkedToTheArtifact(
         Artifact $artifact,
         PFUser $user,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
     ): ?Artifact {
         $ancestors = $artifact->getAllAncestors($user);
         if (count($ancestors) !== 0) {
@@ -137,7 +137,7 @@ class Planning_ArtifactLinker // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $source_artifact;
     }
 
-    private function getChildMilestone(Codendi_Request $request): ?Artifact
+    private function getChildMilestone(\Tuleap\HTTPRequest $request): ?Artifact
     {
         return $this->artifact_factory->getArtifactById(
             (int) $request->getValidated('child_milestone', 'uint', 0)

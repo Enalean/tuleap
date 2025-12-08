@@ -33,11 +33,11 @@ class AgileDashboardChartsConfigurationUpdater
     private $count_elements_mode_updater;
 
     /**
-     * @var \Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
-    public function __construct(\Codendi_Request $request, CountElementsModeUpdater $count_elements_mode_updater)
+    public function __construct(\Tuleap\HTTPRequest $request, CountElementsModeUpdater $count_elements_mode_updater)
     {
         $this->count_elements_mode_updater = $count_elements_mode_updater;
         $this->request                     = $request;

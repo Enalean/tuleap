@@ -174,7 +174,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $content_id = false;
         $vId        = new Valid_UInt('renderer_id');
@@ -190,7 +190,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $done       = false;
         $vContentId = new Valid_UInt('content_id');

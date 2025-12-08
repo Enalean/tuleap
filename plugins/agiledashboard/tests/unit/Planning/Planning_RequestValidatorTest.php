@@ -140,7 +140,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
         ?int $planning_tracker_id,
         ?int $backlog_tracker_id,
         ?int $planning_id,
-    ): Codendi_Request {
+    ): \Tuleap\HTTPRequest {
         $planning = [
             'name'                                  => 'My Planning',
             'planning_tracker_id'                   => '1',
@@ -151,7 +151,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
         $planning[PlanningParameters::BACKLOG_TRACKER_IDS][] = $backlog_tracker_id;
         $planning['name']                                    = $planning_name;
 
-        return new Codendi_Request(
+        return new \Tuleap\HTTPRequest(
             [
                 'group_id'    => 12,
                 'planning_id' => $planning_id,

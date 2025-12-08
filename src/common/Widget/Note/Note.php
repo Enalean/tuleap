@@ -21,7 +21,6 @@
 
 namespace Tuleap\Widget\Note;
 
-use Codendi_Request;
 use TemplateRenderer;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
@@ -108,7 +107,7 @@ abstract class Note extends \Widget
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request): bool
+    public function updatePreferences(\Tuleap\HTTPRequest $request): bool
     {
         $content_id = $request->getValidated('content_id', 'uint', 0);
 
@@ -117,7 +116,7 @@ abstract class Note extends \Widget
         return $this->dao->update($content_id, $note['title'], $note['content']);
     }
 
-    protected function createNote(Codendi_Request $request, int $owner_id, string $owner_type): int
+    protected function createNote(\Tuleap\HTTPRequest $request, int $owner_id, string $owner_type): int
     {
         $note = $request->get('note');
 

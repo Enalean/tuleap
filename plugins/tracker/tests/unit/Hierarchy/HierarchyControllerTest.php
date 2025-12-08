@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Hierarchy;
 
-use Codendi_Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
 use Tracker_Hierarchy_HierarchicalTracker;
@@ -76,7 +75,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->layout_inspector         = new LayoutInspector();
     }
 
-    private function buildController(Codendi_Request $request): HierarchyController
+    private function buildController(\Tuleap\HTTPRequest $request): HierarchyController
     {
         return new HierarchyController(
             $request,
@@ -92,7 +91,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function buildPresenter(Codendi_Request $request): HierarchyPresenter
+    private function buildPresenter(\Tuleap\HTTPRequest $request): HierarchyPresenter
     {
         $this->trigger_rules_dao->method('searchTriggeringTrackersByTargetTrackerID')->willReturn([]);
         return $this->buildController($request)->buildPresenter();
@@ -172,7 +171,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame('Stories', $sprint_child->getData()['name']);
     }
 
-    private function updateWithNoTrigger(Codendi_Request $request): void
+    private function updateWithNoTrigger(\Tuleap\HTTPRequest $request): void
     {
         $this->trigger_rules_dao->method('searchTriggeringTrackersByTargetTrackerID')->willReturn([]);
         $this->buildController($request)->update();
@@ -240,7 +239,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         // $request = HTTPRequestBuilder::get()
         //     ->withParam('children', $children_ids)
         //     ->build();
-        $request = $this->createMock(Codendi_Request::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $request->method('get')->with('children')->willReturn($children_ids);
         $request->method('validArray')->willReturn(true);

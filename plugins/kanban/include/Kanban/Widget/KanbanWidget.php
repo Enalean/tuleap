@@ -25,7 +25,6 @@ use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanPermissionsManager;
-use Codendi_Request;
 use Tuleap\Kanban\KanbanPresenter;
 use Project;
 use TemplateRendererFactory;
@@ -73,7 +72,7 @@ abstract class KanbanWidget extends Widget
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         return $this->widget_kanban_creator->create($request, $this->owner_id, $this->owner_type);
     }
@@ -270,7 +269,7 @@ abstract class KanbanWidget extends Widget
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request): void
+    public function updatePreferences(\Tuleap\HTTPRequest $request): void
     {
         $this->widget_kanban_config_updater->updateConfiguration(
             $this->content_id,

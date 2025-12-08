@@ -25,7 +25,7 @@
 class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstractRenderer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
-    protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
+    protected function fetchFormContent(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $html             = parent::fetchFormContent($request, $current_user);
         $submitted_values = $request->get('artifact');
@@ -57,7 +57,7 @@ class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstract
     }
 
     #[\Override]
-    protected function enhanceRedirect(Codendi_Request $request): void
+    protected function enhanceRedirect(\Tuleap\HTTPRequest $request): void
     {
         // does nothing (there is no redirect, it's meant to be inline)
     }

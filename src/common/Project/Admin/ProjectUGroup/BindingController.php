@@ -21,7 +21,6 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-use Codendi_Request;
 use Feedback;
 use ProjectHistoryDao;
 use ProjectManager;
@@ -40,7 +39,7 @@ class BindingController
      */
     private $ugroup_binding;
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -61,7 +60,7 @@ class BindingController
         ProjectManager $project_manager,
         UGroupManager $ugroup_manager,
         UGroupBinding $ugroup_binding,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         EditBindingUGroupEventLauncher $edit_event_launcher,
     ) {
         $this->history_dao         = $history_dao;

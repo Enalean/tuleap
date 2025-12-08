@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard;
 
 use AgileDashboard_XMLExporterUnableToGetValueException;
-use Codendi_Request;
 use Exception;
 use MVC2_PluginController;
 use Planning_RequestValidator;
@@ -55,7 +54,7 @@ use XML_RNGValidator;
 final class AgileDashboard_XMLController extends MVC2_PluginController //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         private readonly PlanningFactory $planning_factory,
         private readonly XML_RNGValidator $xml_rng_validator,
         private readonly AgileDashboardXMLExporter $agiledashboard_xml_exporter,
@@ -163,7 +162,7 @@ final class AgileDashboard_XMLController extends MVC2_PluginController //phpcs:i
                 'planning_id' => '',
             ];
 
-            $request = new Codendi_Request($request_params);
+            $request = new \Tuleap\HTTPRequest($request_params);
 
             if ($this->planning_request_validator->isValid($request, $tracker_access_during_import_strategy)) {
                 $this->planning_factory->createPlanning(

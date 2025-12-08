@@ -103,7 +103,7 @@ class Controller
         return $presenters;
     }
 
-    public function addReference(\Codendi_Request $request)
+    public function addReference(\Tuleap\HTTPRequest $request)
     {
         $this->csrf_token->check();
 
@@ -151,7 +151,7 @@ class Controller
         $GLOBALS['Response']->redirect(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
     }
 
-    public function editReference(\Codendi_Request $request)
+    public function editReference(\Tuleap\HTTPRequest $request)
     {
         $this->csrf_token->check();
 
@@ -181,7 +181,7 @@ class Controller
         $GLOBALS['Response']->redirect(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
     }
 
-    public function deleteReference(\Codendi_Request $request): void
+    public function deleteReference(\Tuleap\HTTPRequest $request): void
     {
         $this->csrf_token->check();
         $this->reference_destructor->delete($request);

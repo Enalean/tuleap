@@ -21,7 +21,6 @@
 
 namespace Tuleap\Widget\Note;
 
-use Codendi_Request;
 use Tuleap\Dashboard\User\UserDashboardController;
 
 class UserNote extends Note
@@ -41,7 +40,7 @@ class UserNote extends Note
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         if ($this->owner_id === null) {
             $current_user = $request->getCurrentUser();

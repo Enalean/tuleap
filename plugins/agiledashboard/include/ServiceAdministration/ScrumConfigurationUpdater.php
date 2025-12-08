@@ -30,7 +30,7 @@ class ScrumConfigurationUpdater
     private readonly int $project_id;
 
     public function __construct(
-        private readonly \Codendi_Request $request,
+        private readonly \Tuleap\HTTPRequest $request,
         private readonly ConfigurationManager $config_manager,
         private readonly ConfigurationUpdater $configuration_updater,
         private readonly EventDispatcherInterface $event_dispatcher,

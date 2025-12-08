@@ -20,17 +20,16 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-use Codendi_Request;
 use ProjectUGroup;
 
 class DetailsController
 {
     /**
-     * @var Codendi_Request
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
-    public function __construct(Codendi_Request $request)
+    public function __construct(\Tuleap\HTTPRequest $request)
     {
         $this->request = $request;
     }

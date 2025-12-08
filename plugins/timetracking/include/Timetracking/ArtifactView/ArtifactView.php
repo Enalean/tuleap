@@ -20,7 +20,6 @@
 
 namespace Tuleap\Timetracking\ArtifactView;
 
-use Codendi_Request;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -32,7 +31,7 @@ final readonly class ArtifactView extends TrackerArtifactView
 
     public function __construct(
         Artifact $artifact,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $user,
         private ArtifactViewPresenter $presenter,
     ) {

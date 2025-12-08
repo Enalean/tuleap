@@ -58,7 +58,7 @@ abstract class Tracker_Artifact_ArtifactRenderer // phpcs:ignore PSR1.Classes.Cl
      * Render artifact form
      *
      */
-    public function display(Codendi_Request $request, PFUser $current_user)
+    public function display(\Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $this->enhanceRedirect($request);
 
@@ -84,7 +84,7 @@ abstract class Tracker_Artifact_ArtifactRenderer // phpcs:ignore PSR1.Classes.Cl
      * Render artifact form content
      *
      */
-    abstract protected function fetchFormContent(Codendi_Request $request, PFUser $current_user);
+    abstract protected function fetchFormContent(\Tuleap\HTTPRequest $request, PFUser $current_user);
 
     /**
      * @return string The HTML code for artifact fields
@@ -166,7 +166,7 @@ abstract class Tracker_Artifact_ArtifactRenderer // phpcs:ignore PSR1.Classes.Cl
         return $this->tracker->displayRulesAsJavascript();
     }
 
-    protected function enhanceRedirect(Codendi_Request $request): void
+    protected function enhanceRedirect(\Tuleap\HTTPRequest $request): void
     {
         if ($request->get('my-dashboard-id')) {
             $this->redirect->query_parameters['my-dashboard-id'] = $request->get('my-dashboard-id');

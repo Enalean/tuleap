@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
-use Codendi_Request;
 use EventManager;
 use Feedback;
 use PFUser;
@@ -82,7 +81,7 @@ final class UpdateArtifactActionTest extends TestCase
     private ComputedField&MockObject $computed_field;
     private ComputedField&MockObject $us_computed_field;
     private ?string $old_request_with = null;
-    private Codendi_Request $request;
+    private \Tuleap\HTTPRequest $request;
     private PFUser $user;
     private Tracker_FormElementFactory&MockObject $formelement_factory;
     private Tracker_HierarchyFactory&MockObject $hierarchy_factory;

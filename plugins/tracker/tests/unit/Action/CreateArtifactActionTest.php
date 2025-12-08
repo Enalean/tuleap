@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
-use Codendi_Request;
 use EventManager;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
@@ -60,7 +59,7 @@ final class CreateArtifactActionTest extends TestCase
     private Tracker&MockObject $tracker;
     private Tracker_FormElementFactory&MockObject $formelement_factory;
     private CreateArtifactAction $action;
-    private Codendi_Request&MockObject $request;
+    private \Tuleap\HTTPRequest&MockObject $request;
     private PFUser $current_user;
     private Artifact&MockObject $new_artifact;
     private Tracker $parent_tracker;
@@ -80,7 +79,7 @@ final class CreateArtifactActionTest extends TestCase
         $this->tracker             = $this->createMock(Tracker::class);
         $artifact_factory          = $this->createMock(Tracker_ArtifactFactory::class);
         $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
-        $this->request             = $this->createMock(Codendi_Request::class);
+        $this->request             = $this->createMock(\Tuleap\HTTPRequest::class);
 
         $tracker_id         = 999;
         $this->current_user = new PFUser(['language_id' => 'en']);
@@ -112,13 +111,13 @@ final class CreateArtifactActionTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project)
         ) extends CreateArtifactAction {
             #[\Override]
-            public function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request): void
+            public function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, \Tuleap\HTTPRequest $request): void
             {
                 parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
             }
 
             #[\Override]
-            public function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id): Tracker_Artifact_Redirect
+            public function redirectUrlAfterArtifactSubmission(\Tuleap\HTTPRequest $request, $tracker_id, $artifact_id): Tracker_Artifact_Redirect
             {
                 return parent::redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id);
             }
@@ -203,7 +202,7 @@ final class CreateArtifactActionTest extends TestCase
 
     private function getRedirectUrlFor(array $request_data, ?int $tracker_id, ?int $artifact_id): Tracker_Artifact_Redirect
     {
-        $request = new Codendi_Request($request_data);
+        $request = new \Tuleap\HTTPRequest($request_data);
         return $this->action->redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id);
     }
 
@@ -255,7 +254,7 @@ final class CreateArtifactActionTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project)
         ) extends CreateArtifactAction {
             #[\Override]
-            public function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request): void
+            public function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, \Tuleap\HTTPRequest $request): void
             {
                 parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
             }
@@ -303,7 +302,7 @@ final class CreateArtifactActionTest extends TestCase
             ProjectByIDFactoryStub::buildWith($this->project)
         ) extends CreateArtifactAction {
             #[\Override]
-            public function associateImmediatelyIfNeeded(Artifact $new_artifact, Codendi_Request $request, PFUser $current_user): void
+            public function associateImmediatelyIfNeeded(Artifact $new_artifact, \Tuleap\HTTPRequest $request, PFUser $current_user): void
             {
                 parent::associateImmediatelyIfNeeded($new_artifact, $request, $current_user);
             }
@@ -311,7 +310,7 @@ final class CreateArtifactActionTest extends TestCase
 
         $action->associateImmediatelyIfNeeded(
             $new_artifact,
-            new Codendi_Request(
+            new \Tuleap\HTTPRequest(
                 [
                     'link-artifact-id' => (string) $target_artifact_id,
                     'link-type'        => ArtifactLinkField::TYPE_IS_CHILD,

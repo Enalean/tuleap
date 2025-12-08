@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Artifact\View;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use PFUser;
 use TemplateRendererFactory;
 use Tracker_Artifact_ArtifactRenderer;
@@ -52,7 +51,7 @@ readonly class ArtifactViewEdit extends TrackerArtifactView
 
     public function __construct(
         Artifact $artifact,
-        Codendi_Request $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $user,
         protected Tracker_Artifact_ArtifactRenderer $renderer,
     ) {

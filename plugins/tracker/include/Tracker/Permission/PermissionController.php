@@ -67,7 +67,7 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
         $this->tracker->displayFooter($layout);
     }
 
-    private function save(Codendi_Request $request)
+    private function save(\Tuleap\HTTPRequest $request)
     {
         $permission_setter  = $this->getPermissionSetter();
         $permission_request = new Tracker_Permission_PermissionRequest([]);

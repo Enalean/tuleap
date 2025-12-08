@@ -21,7 +21,6 @@
 namespace Tuleap\Label\Widget;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use DataAccessException;
 use Feedback;
 use Project;
@@ -169,7 +168,7 @@ class ProjectLabeledItems extends Widget
     }
 
     #[\Override]
-    public function create(Codendi_Request $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $this->storeContentId();
 
@@ -185,13 +184,13 @@ class ProjectLabeledItems extends Widget
     }
 
     #[\Override]
-    public function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(\Tuleap\HTTPRequest $request)
     {
         $project_labels = $this->getProjectAllLabelsPresenter();
         $this->storeLabelsConfiguration($request, $project_labels);
     }
 
-    private function storeLabelsConfiguration(Codendi_Request $request, $project_labels)
+    private function storeLabelsConfiguration(\Tuleap\HTTPRequest $request, $project_labels)
     {
         try {
             $this->project_data_validator->validateDataFromRequest($request, $project_labels);

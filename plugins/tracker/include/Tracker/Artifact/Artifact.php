@@ -26,7 +26,6 @@
 namespace Tuleap\Tracker\Artifact;
 
 use Codendi_HTMLPurifier;
-use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
@@ -841,9 +840,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Returns HTML code to display the artifact history
      *
-     * @param Codendi_Request $request The data from the user
+     * @param \Tuleap\HTTPRequest $request The data from the user
      */
-    public function validateCommentFormat(Codendi_Request $request, string $comment_format_field_name): CommentFormatIdentifier
+    public function validateCommentFormat(\Tuleap\HTTPRequest $request, string $comment_format_field_name): CommentFormatIdentifier
     {
         $comment_format = (string) $request->get($comment_format_field_name);
 
@@ -2129,9 +2128,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * nothing is done. Else the client is redirected and
      * the script will die in agony!
      *
-     * @param Codendi_Request $request The request
+     * @param \Tuleap\HTTPRequest $request The request
      */
-    public function summonArtifactRedirectors(Codendi_Request $request, Tracker_Artifact_Redirect $redirect)
+    public function summonArtifactRedirectors(\Tuleap\HTTPRequest $request, Tracker_Artifact_Redirect $redirect)
     {
         $this->getEventManager()->processEvent(
             new RedirectAfterArtifactCreationOrUpdateEvent($request, $redirect, $this)

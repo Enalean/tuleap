@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Hierarchy;
 
-use Codendi_Request;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
@@ -43,7 +42,7 @@ final readonly class HierarchyController
     private TemplateRenderer $renderer;
 
     public function __construct(
-        private Codendi_Request $request,
+        private \Tuleap\HTTPRequest $request,
         private Tracker_Hierarchy_HierarchicalTracker $tracker,
         private Tracker_Hierarchy_HierarchicalTrackerFactory $factory,
         private HierarchyDAO $dao,

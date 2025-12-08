@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Codendi_Request;
 use Exception;
 use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 use Tuleap\Tracker\Tracker;
@@ -37,7 +36,7 @@ class SemanticTimeframeUpdator
     ) {
     }
 
-    public function update(Tracker $tracker, Codendi_Request $request): void
+    public function update(Tracker $tracker, \Tuleap\HTTPRequest $request): void
     {
         try {
             $start_date_field_id     = $this->getNumericFieldIdFromRequest($request, 'start-date-field-id');
@@ -90,7 +89,7 @@ class SemanticTimeframeUpdator
         );
     }
 
-    private function getNumericFieldIdFromRequest(Codendi_Request $request, string $field_name): ?int
+    private function getNumericFieldIdFromRequest(\Tuleap\HTTPRequest $request, string $field_name): ?int
     {
         $field_id = $request->get($field_name);
 
