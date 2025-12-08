@@ -763,6 +763,9 @@ msgstr "Cada"
 msgid "Failed to create approval table"
 msgstr ""
 
+msgid "Failed to delete approval table"
+msgstr ""
+
 msgid "File"
 msgstr "Arquivo"
 
@@ -1636,6 +1639,9 @@ msgid ""
 msgstr ""
 
 msgid "There is an error in parameters. Back to previous screen."
+msgstr ""
+
+msgid "There is no approval table to delete"
 msgstr ""
 
 msgid "There is no data attached to this item."

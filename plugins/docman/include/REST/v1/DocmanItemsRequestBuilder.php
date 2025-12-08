@@ -34,7 +34,6 @@ use ProjectManager;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\User\Password\PasswordExpiredException;
 use URLVerification;
 use UserManager;
 
@@ -61,14 +60,7 @@ class DocmanItemsRequestBuilder
      *
      * @return DocmanItemsRequest
      *
-     * @throws I18NRestException
      * @throws RestException
-     * @throws \Rest_Exception_InvalidTokenException
-     * @throws PasswordExpiredException
-     * @throws \User_StatusDeletedException
-     * @throws \User_StatusInvalidException
-     * @throws \User_StatusPendingException
-     * @throws \User_StatusSuspendedException
      */
     public function buildFromItemId($id)
     {
