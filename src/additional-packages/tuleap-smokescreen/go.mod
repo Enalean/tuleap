@@ -3,7 +3,7 @@ module tuleap-smokescreen
 go 1.25.3
 
 require (
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.3
 	github.com/stripe/smokescreen v0.0.5-0.20240423131719-eb1ac09e96e9
 )
 
