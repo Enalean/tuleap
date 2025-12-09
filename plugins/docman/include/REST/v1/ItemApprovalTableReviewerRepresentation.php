@@ -73,7 +73,9 @@ final readonly class ItemApprovalTableReviewerRepresentation
                 $version_name = $version->getLabel() . ' - ';
             }
         }
-        $version_name .= dgettext('tuleap-document', 'version') . ' ' . $reviewer->getVersion();
+        if ($reviewer->getVersion() !== null) {
+            $version_name .= dgettext('tuleap-document', 'version') . ' ' . $reviewer->getVersion();
+        }
 
         return new self(
             MinimalUserRepresentation::build($user, $provide_user_avatar_url),
