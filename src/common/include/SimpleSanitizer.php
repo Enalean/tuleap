@@ -19,20 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SimpleSanitizer
+class SimpleSanitizer // phpcs:ignore
 {
-    /**
-     * sanitize the string
-     * @param $html the string which may contain invalid
-     * @deprecated See Codendi_HTMLPurifier
-     */
-    public static function sanitize($html)
-    {
-        $pattern     = ['@<@', '@>@'];
-        $replacement = ['&lt;', '&gt;'];
-        return preg_replace($pattern, $replacement, $html ?? '');
-    }
-
     /**
      * @deprecated
      */

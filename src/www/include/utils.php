@@ -52,76 +52,6 @@ function util_get_user_preferences_export_datefmt()
     return $fmt;
 }
 
-// Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
-// into a Unix time. if string is empty return 0 (Epoch time)
-// Returns a list with two values: the unix time and a boolean saying whether the conversion
-// went well (true) or bad (false)
-function util_importdatefmt_to_unixtime($date)
-{
-    $time = 0;
-    if (! $date || $date == '') {
-        return [$time, false];
-    }
-
-    if (strstr($date, '/') !== false) {
-        [$year, $month, $day, $hour, $minute] = util_xlsdatefmt_explode($date);
-        $time                                 = mktime($hour, $minute, 0, $month, $day, $year);
-
-        return [$time, true];
-    }
-
-    if (strstr($date, '-') !== false) {
-        [$year, $month, $day, $hour, $minute] = util_sysdatefmt_explode($date);
-        $time                                 = mktime($hour, $minute, 0, $month, $day, $year);
-        return [$time, true];
-    }
-
-    return [$time, false];
-}
-
-// Explode a date in the form of (m/d/Y H:i or d/m/Y H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
-// if DD and MM are not defined then default them to 1
-function util_xlsdatefmt_explode($date)
-{
-    if ($u_pref = user_get_preference('user_csv_dateformat')) {
-    } else {
-        $u_pref = PFUser::DEFAULT_CSV_DATEFORMAT;
-    }
-
-    $res = preg_match('/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/', $date, $match);
-    if ($res == 0) {
-      //if it doesn't work try (n/j/Y) only
-        $res = preg_match('/\s*(\d+)\/(\d+)\/(\d+)/', $date, $match);
-        if ($res == 0) {
-          // nothing is valid return Epoch time
-            $year   = '1970';
-            $month  = '1';
-            $day    = '1';
-            $hour   = '0';
-            $minute = '0';
-        } else {
-            if ($u_pref == 'day_month_year') {
-                [, $day, $month, $year] = $match;
-                $hour                   = '0';
-                $minute                 = '0';
-            } else {
-                [, $month, $day, $year] = $match;
-                $hour                   = '0';
-                $minute                 = '0';
-            }
-        }
-    } else {
-        if ($u_pref == 'day_month_year') {
-            [, $day, $month, $year, $hour, $minute] = $match;
-        } else {
-            [, $month, $day, $year, $hour, $minute] = $match;
-        }
-    }
-
-    return [$year, $month, $day, $hour, $minute];
-}
-
-
 // Convert a date as used in the bug tracking system and other services (YYYY-MM-DD)
 // into a Unix time. if string is empty return 0 (Epoch time)
 // Returns a list with two values: the unix time and a boolean saying whether the conversion
@@ -158,54 +88,6 @@ function util_date_explode($date)
         [, $year, $month, $day] = $match;
     }
     return [$year, $month, $day];
-}
-
-// Explode a date in the form of (Y-M-d H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
-// if DD and MM are not defined then default them to 1
-function util_sysdatefmt_explode($date)
-{
-    $months = ['Jan' => 1, 'Feb' => 2, 'Mar' => 3, 'Apr' => 4, 'May' => 5, 'Jun' => 6, 'Jul' => 7, 'Aug' => 8, 'Sep' => 9, 'Oct' => 10, 'Nov' => 11, 'Dec' => 12];
-
-    $res = preg_match('/\s*(\d+)-(.+)-(\d+) (\d+):(\d+)/', $date, $match);
-    if ($res == 0) {
-      //if it doesn't work try (Y-M-d) only
-        $res = preg_match('/\s*(\d+)-(.+)-(\d+)/', $date, $match);
-        if ($res == 0) {
-          // if it doesn't work try Y-M only
-            $res = preg_match('/\s*(\d+)-(.+)/', $date, $match);
-            if ($res == 0) {
-         // if it doesn't work try YYYY only
-                $res = preg_match('/\s*(\d+)/', $date, $match);
-                if ($res == 0) {
-                       // nothing is valid return Epoch time
-                       $year = '1970';
-                    $month   = '1';
-                    $day     = '1';
-                    $hour    = '0';
-                    $minute  = '0';
-                } else {
-                          [, $year] = $match;
-                    $month          = '1';
-                    $day            = '1';
-                    $hour           = '0';
-                    $minute         = '0';
-                }
-            } else {
-                [, $year, $month] = $match;
-                $day              = '1';
-                $hour             = '0';
-                $minute           = '0';
-            }
-        } else {
-            [, $year, $month, $day] = $match;
-            $hour                   = '0';
-            $minute                 = '0';
-        }
-    } else {
-        [, $year, $month, $day, $hour, $minute] = $match;
-    }
-
-    return [$year, getMonth($month, $ok), $day, $hour, $minute];
 }
 
 //accept now month either in format Jan-Dec or 1-12

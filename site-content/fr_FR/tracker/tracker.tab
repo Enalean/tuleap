@@ -115,31 +115,6 @@ tracker_masschange_detail	no_items_selected	Aucun artifact sélectionné
 tracker_masschange	mass_change_report	Rapport de mise à jour massive
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/tracker_import_utils.php
-#
-tracker_import_utils	field_not_known	"$1" est un champ inconnu dans ce tracker $2
-tracker_import_utils	field_mandatory	"$1" est un champ obligatoire dans le tracker $2. Veuillez le spécifier dans votre fichier CSV.
-tracker_import_utils	not_a_predefined_value	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>la valeur "$3" ne figure pas parmi les valeurs prédéfinies du champ "$4" ($5).
-tracker_import_utils	field_mandatory_and_current	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>"$3" est un champ obligatoire pour ce tracker $4. Veuillez le spécifier dans votre fichier CSV (la valeur courante est "$5").
-tracker_import_utils	incorrect_date	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>La date "$3" a un format incorrect (AAAA-MM-JJ).
-tracker_import_utils	field_mandatory_and_line	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>"$3" est un champ obligatoire dans le tracker $4. Veuillez le spécifier dans votre fichier CSV.
-tracker_import_utils	already_submitted	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>L'utilisateur $3 a déjà soumis un artifact avec le même résumé ("$4"). Veuillez ne pas essayer de l'importer à nouveau.
-tracker_import_utils	art_not_exists	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>l'artifact spécifié (id=$3) n'existe pas dans le tracker $4
-tracker_import_utils	date	Date
-tracker_import_utils	type	Type
-tracker_import_utils	comment	Commentaire
-tracker_import_utils	comment_parse_error	$1 n'insérera aucun commentaire pour cet artifact.
-tracker_import_utils	new	NOUVEAU
-tracker_import_utils	column_mismatch	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>le nombre de valeurs ($3) ne correspond pas au nombre de champs ($4).<br>
-tracker_import_utils	no_followups	Aucun commentaire posté
-tracker_import_utils	not_a_user	"$1", l'auteur du commentaire no. $2 n'est ni un nom d'utilisateur ni une adresse e-mail valide.
-tracker_import_utils	specify_originator	Vous devez spécifier l'auteur du commentaire no. $1 ($2).
-tracker_import_utils	specify_valid_user	"Aucun" n'est pas un nom d'auteur valide pour un commentaire. Veuillez spécifier un nom d'utilisateur ou une adresse e-mail valide pour le commentaire #$1.
-tracker_import_utils	problem_insert_dependent	Erreur à l'insertion les dépendances d'artifacts (ID artifact = $1).<br>
-tracker_import_utils	problem_add_cc	Erreur à l'ajout de la liste CC (ID artifact = $1).<br>
-tracker_import_utils	problem_insert_followup	Erreur  l'insertion du commentaire (ID artifact = $1).<br>
-#
-#-----------------------------------------------
 # Script: SF/www/tracker/tracker_selection.php
 #
 tracker_selection	no_tracker_available	Aucun tracker disponible pour ce projet !
