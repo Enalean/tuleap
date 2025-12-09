@@ -80,6 +80,7 @@ class FormElementRepresentationsBuilder
         return $this->buildRepresentations(
             $this->removeUnreadableElements(
                 $this->getFormElementsList($tracker),
+                $user,
             ),
             $tracker,
             null,
@@ -108,6 +109,7 @@ class FormElementRepresentationsBuilder
         return $this->buildRepresentations(
             $this->removeUnreadableElements(
                 $this->getFormElementsList($artifact->getTracker()),
+                $user,
             ),
             $artifact->getTracker(),
             $artifact,
@@ -127,9 +129,9 @@ class FormElementRepresentationsBuilder
      * @param TrackerFormElement[] $form_elements_list
      * @return TrackerFormElement[]
      */
-    private function removeUnreadableElements(array $form_elements_list): array
+    private function removeUnreadableElements(array $form_elements_list, PFUser $user): array
     {
-        return array_filter($form_elements_list, fn (TrackerFormElement $form_element) => $form_element->userCanRead());
+        return array_filter($form_elements_list, fn (TrackerFormElement $form_element) => $form_element->userCanRead($user));
     }
 
     /**

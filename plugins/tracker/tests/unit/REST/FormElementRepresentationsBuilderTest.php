@@ -48,7 +48,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         $field1->method('isCollapsed')->willReturn(false);
         $field1->method('getDefaultRESTValue')->willReturn(null);
         $field1->method('getRESTAvailableValues')->willReturn(null);
-        $field1->method('userCanRead')->willReturn(true);
+        $field1->method('userCanRead')->with($user)->willReturn(true);
         $field1->method('getRESTBindingProperties')->willReturn([
             'bind_type' => null,
             'bind_list' => [],
@@ -63,7 +63,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         $field2->method('isCollapsed')->willReturn(false);
         $field2->method('getDefaultRESTValue')->willReturn(null);
         $field2->method('getRESTAvailableValues')->willReturn(null);
-        $field2->method('userCanRead')->willReturn(false);
+        $field2->method('userCanRead')->with($user)->willReturn(false);
         $field2->method('getRESTBindingProperties')->willReturn([
             'bind_type' => null,
             'bind_list' => [],
@@ -78,7 +78,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         $field3->method('isCollapsed')->willReturn(false);
         $field3->method('getDefaultRESTValue')->willReturn(null);
         $field3->method('getRESTAvailableValues')->willReturn(null);
-        $field3->method('userCanRead')->willReturn(true);
+        $field3->method('userCanRead')->with($user)->willReturn(true);
         $field3->method('getRESTBindingProperties')->willReturn([
             'bind_type' => null,
             'bind_list' => [],
