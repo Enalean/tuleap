@@ -31,19 +31,19 @@ use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
 
-final class MediaWikiOAuth2AppSecretGeneratorDBStore implements MediaWikiOAuth2AppSecretGenerator
+final readonly class MediaWikiOAuth2AppUpdaterDBStore implements MediaWikiOAuth2AppUpdater
 {
     public function __construct(
         private DBTransactionExecutor $transaction_executor,
         private AppDao $oauth2_app_dao,
-        private MediaWikiNewOAuth2AppBuilder $oauth2_app_builder,
+        private MediaWikiOAuth2AppBuilder $oauth2_app_builder,
         private SplitTokenVerificationStringHasher $hasher,
         private SplitTokenFormatter $split_token_formatter,
     ) {
     }
 
     #[\Override]
-    public function generateOAuth2AppSecret(): LastGeneratedClientSecret
+    public function updateOAuth2AppInformation(): LastGeneratedClientSecret
     {
         return $this->transaction_executor->execute(
             function (): LastGeneratedClientSecret {
@@ -55,6 +55,9 @@ final class MediaWikiOAuth2AppSecretGeneratorDBStore implements MediaWikiOAuth2A
                     $app_id = $this->oauth2_app_dao->create($app);
                     $secret = $app->getSecret();
                 } else {
+                    $this->oauth2_app_dao->updateApp(
+                        $this->oauth2_app_builder->buildMediawikiOAuth2AppUpdate($app_id)
+                    );
                     $this->oauth2_app_dao->updateSecret($app_id, $this->hasher->computeHash($secret));
                 }
 

@@ -24,7 +24,7 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 
 use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
 
-interface MediaWikiOAuth2AppSecretGenerator
+interface MediaWikiOAuth2AppUpdater
 {
-    public function generateOAuth2AppSecret(): LastGeneratedClientSecret;
+    public function updateOAuth2AppInformation(): LastGeneratedClientSecret;
 }

@@ -27,7 +27,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class MediaWikiNewOAuth2AppBuilderTest extends TestCase
+final class MediaWikiOAuth2AppBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
@@ -36,12 +36,30 @@ final class MediaWikiNewOAuth2AppBuilderTest extends TestCase
         \ForgeConfig::set('sys_default_domain', 'example.com');
         \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'MyTuleapInstance');
 
-        $builder = new MediaWikiNewOAuth2AppBuilder(new SplitTokenVerificationStringHasher());
+        $builder = new MediaWikiOAuth2AppBuilder(new SplitTokenVerificationStringHasher());
 
         $app = $builder->buildMediawikiOAuth2App();
 
         self::assertStringContainsString('MyTuleapInstance', $app->getName());
         self::assertEquals('plugin_mediawiki_standalone', $app->getAppType());
         self::assertEquals('https://example.com/mediawiki/_oauth/Special:TuleapLogin/callback', $app->getRedirectEndpoint());
+        self::assertEquals(null, $app->getProject());
+        self::assertTrue($app->isUsingPKCE());
+    }
+
+    public function testBuildsMediawikiOAuth2AppForUpdate(): void
+    {
+        \ForgeConfig::set('sys_default_domain', 'example.com');
+        \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'MyTuleapInstance');
+
+        $builder = new MediaWikiOAuth2AppBuilder(new SplitTokenVerificationStringHasher());
+
+        $app = $builder->buildMediawikiOAuth2AppUpdate(123);
+
+        self::assertEquals(123, $app->getId());
+        self::assertStringContainsString('MyTuleapInstance', $app->getName());
+        self::assertEquals('https://example.com/mediawiki/_oauth/Special:TuleapLogin/callback', $app->getRedirectEndpoint());
+        self::assertEquals(null, $app->getProject());
+        self::assertTrue($app->isUsingPKCE());
     }
 }

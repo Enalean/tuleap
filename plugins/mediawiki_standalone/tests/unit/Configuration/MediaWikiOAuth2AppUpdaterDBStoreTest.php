@@ -31,22 +31,19 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class MediaWikiOAuth2AppSecretGeneratorDBStoreTest extends TestCase
+final class MediaWikiOAuth2AppUpdaterDBStoreTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&AppDao
-     */
-    private $dao;
-    private MediaWikiOAuth2AppSecretGeneratorDBStore $secret_generator;
+    private \PHPUnit\Framework\MockObject\Stub&AppDao $dao;
+    private MediaWikiOAuth2AppUpdaterDBStore $secret_generator;
 
     #[\Override]
     protected function setUp(): void
     {
         $this->dao              = $this->createStub(AppDao::class);
-        $this->secret_generator = new MediaWikiOAuth2AppSecretGeneratorDBStore(
+        $this->secret_generator = new MediaWikiOAuth2AppUpdaterDBStore(
             new DBTransactionExecutorPassthrough(),
             $this->dao,
-            new MediaWikiNewOAuth2AppBuilder(new SplitTokenVerificationStringHasher()),
+            new MediaWikiOAuth2AppBuilder(new SplitTokenVerificationStringHasher()),
             new SplitTokenVerificationStringHasher(),
             new class implements SplitTokenFormatter
             {
@@ -64,18 +61,19 @@ final class MediaWikiOAuth2AppSecretGeneratorDBStoreTest extends TestCase
         $this->dao->method('searchSiteLevelApps')->willReturn([]);
         $this->dao->method('create')->willReturn(789);
 
-        $secret = $this->secret_generator->generateOAuth2AppSecret();
+        $secret = $this->secret_generator->updateOAuth2AppInformation();
 
         self::assertEquals(789, $secret->getAppID());
         self::assertEquals('test_value', $secret->getSecret()->getString());
     }
 
-    public function testReplacesOAuth2AppSecret(): void
+    public function testUpdatesOAuth2AppInfo(): void
     {
         $this->dao->method('searchSiteLevelApps')->willReturn([['id' => 123]]);
+        $this->dao->method('updateApp');
         $this->dao->method('updateSecret');
 
-        $secret = $this->secret_generator->generateOAuth2AppSecret();
+        $secret = $this->secret_generator->updateOAuth2AppInformation();
 
         self::assertEquals(123, $secret->getAppID());
         self::assertEquals('test_value', $secret->getSecret()->getString());

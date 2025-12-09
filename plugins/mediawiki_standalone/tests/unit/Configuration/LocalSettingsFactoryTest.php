@@ -41,9 +41,9 @@ final class LocalSettingsFactoryTest extends TestCase
         \ForgeConfig::set('sys_dbpasswd', 'dbpass');
 
         $factory = new LocalSettingsFactory(
-            new class implements MediaWikiOAuth2AppSecretGenerator {
+            new class implements MediaWikiOAuth2AppUpdater {
                 #[\Override]
-                public function generateOAuth2AppSecret(): LastGeneratedClientSecret
+                public function updateOAuth2AppInformation(): LastGeneratedClientSecret
                 {
                     return new LastGeneratedClientSecret(789, new ConcealedString('random_oauth2_secret'));
                 }

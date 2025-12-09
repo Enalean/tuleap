@@ -61,8 +61,8 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameter;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiInstallAndUpdateScriptCaller;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandProcessFactory;
-use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
-use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppBuilder;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppUpdaterDBStore;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiSharedSecretGeneratorForgeConfigStore;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 use Tuleap\MediawikiStandalone\Configuration\ProjectMediaWikiServiceDAO;
@@ -781,10 +781,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
         return new LocalSettingsInstantiator(
             new LocalSettingsFactory(
-                new MediaWikiOAuth2AppSecretGeneratorDBStore(
+                new MediaWikiOAuth2AppUpdaterDBStore(
                     $transaction_executor,
                     new AppDao(),
-                    new MediaWikiNewOAuth2AppBuilder($hasher),
+                    new MediaWikiOAuth2AppBuilder($hasher),
                     $hasher,
                     new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret())
                 ),
