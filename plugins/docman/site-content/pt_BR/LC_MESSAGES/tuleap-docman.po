@@ -1112,6 +1112,9 @@ msgstr ""
 msgid "No email sent to reviewers."
 msgstr ""
 
+msgid "No notification sent"
+msgstr ""
+
 msgid "No review requested."
 msgstr ""
 
@@ -1501,6 +1504,9 @@ msgid ""
 msgstr ""
 
 msgid "The date format is incorrect. The format must be \"YYYY-MM-DD\""
+msgstr ""
+
+msgid "The document has no approval table"
 msgstr ""
 
 msgid "The document internal id"

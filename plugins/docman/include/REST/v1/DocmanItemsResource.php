@@ -669,6 +669,63 @@ final class DocmanItemsResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/approval_table/reminder
+     */
+    public function optionsPostApprovalTableReminder(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Send a reminder to all approvers according to table notification type
+     *
+     * @url    POST {id}/approval_table/reminder
+     * @access hybrid
+     *
+     * @param int $id ID of the item {@from path}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function postApprovalTableReminder(int $id): void
+    {
+        $this->checkAccess();
+        Header::allowOptionsPost();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
+        $user          = $items_request->getUser();
+
+        $docman_permissions_manager = Docman_PermissionsManager::instance($project->getGroupId());
+        $user_can_write             = $docman_permissions_manager->userCanWrite($user, $item->getId());
+
+        if (! $user_can_write) {
+            throw new RestException(404);
+        }
+
+        $factories_factory = new Docman_ApprovalTableFactoriesFactory();
+        $factory           = $factories_factory->getFromItem($item);
+        if ($factory === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'The document has no approval table'));
+        }
+
+        $table = $factory->getLastTableForItemWithReviewers();
+        if ($table === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'The document has no approval table'));
+        }
+
+        $reviewer_factory = new Docman_ApprovalTableReviewerFactory($table, $item);
+        $reviewer_factory->setNotificationManager(new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager());
+        if (! $reviewer_factory->notifyReviewers()) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'No notification sent'));
+        }
+    }
+
+    /**
      * @throws I18NRestException
      */
     private function checkItemCanHaveSubitems(\Docman_Item $item)
