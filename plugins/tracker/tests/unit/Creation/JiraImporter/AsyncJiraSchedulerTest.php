@@ -141,7 +141,7 @@ final class AsyncJiraSchedulerTest extends TestCase
     public function testItThrowsExceptionIfTokenCannotBeEncrypted(): void
     {
         $key_factory = $this->createMock(KeyFactory::class);
-        $key_factory->method('getLegacy2025EncryptionKey')->willThrowException(new CannotPerformIOOperationException('Cannot read encryption key'));
+        $key_factory->method('getLegacy2025EncryptionKey')->willThrowException(new CannotPerformIOOperationException('Cannot read encryption key', new \RuntimeException('Test')));
 
         $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
         $pending_jira_import_dao->expects($this->never())->method('create');

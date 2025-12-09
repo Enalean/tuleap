@@ -24,8 +24,8 @@ namespace Tuleap\Cryptography\Exception;
 
 class CannotPerformIOOperationException extends \Exception
 {
-    public function __construct(string $message)
+    public function __construct(string $message, \Exception $previous)
     {
-        parent::__construct($message);
+        parent::__construct($message, 0, $previous);
     }
 }

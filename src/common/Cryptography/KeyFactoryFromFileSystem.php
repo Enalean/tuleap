@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey as Legacy2025EncryptionKey;
+use Tuleap\File\FileWriter;
 
 final readonly class KeyFactoryFromFileSystem implements KeyFactory
 {
@@ -60,9 +61,10 @@ final readonly class KeyFactoryFromFileSystem implements KeyFactory
     private function getKeyMaterial(): ConcealedString
     {
         $encryption_key_file_path = $this->initAndGetEncryptionKeyPath();
-        $file_data                = \file_get_contents($encryption_key_file_path);
-        if ($file_data === false) {
-            throw new CannotPerformIOOperationException("Cannot read the encryption key $encryption_key_file_path");
+        try {
+            $file_data = \Psl\File\read($encryption_key_file_path);
+        } catch (\RuntimeException $exception) {
+            throw new CannotPerformIOOperationException("Cannot read the encryption key $encryption_key_file_path", $exception);
         }
 
         $file_data_hex = sodium_hex2bin($file_data);
@@ -75,9 +77,13 @@ final readonly class KeyFactoryFromFileSystem implements KeyFactory
         return $key_material;
     }
 
+    /**
+     * @return non-empty-string
+     */
     private function initAndGetEncryptionKeyPath(): string
     {
-        $encryption_key_file_path = $this->getKeyPath();
+        /** @var non-empty-string $encryption_key_file_path */
+        $encryption_key_file_path = \ForgeConfig::get('sys_custom_dir') . '/conf/encryption_secret.key';
         if (! \file_exists($encryption_key_file_path)) {
             $encryption_key = $this->generateEncryptionKey();
             $this->saveKeyFile($encryption_key, $encryption_key_file_path);
@@ -85,67 +91,48 @@ final readonly class KeyFactoryFromFileSystem implements KeyFactory
         return $encryption_key_file_path;
     }
 
-    private function getKeyPath(): string
-    {
-        return \ForgeConfig::get('sys_custom_dir') . '/conf/encryption_secret.key';
-    }
-
     /**
      * @throws Exception\InvalidKeyException
      * @throws \SodiumException
      */
-    private function generateEncryptionKey(): \Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey
+    private function generateEncryptionKey(): EncryptionKey
     {
         $raw_encryption_key = \sodium_crypto_aead_xchacha20poly1305_ietf_keygen();
         $key_data           = new ConcealedString($raw_encryption_key);
         \sodium_memzero($raw_encryption_key);
 
-        return new Legacy2025EncryptionKey($key_data);
+        return new EncryptionKey($key_data);
     }
 
+    /**
+     * @param non-empty-string $file_path
+     */
     private function saveKeyFile(Key $key, string $file_path): void
     {
-        $is_success = \touch($file_path);
-        if (! $is_success) {
-            throw new CannotPerformIOOperationException("Cannot create the key file $file_path");
-        }
-        $is_success = \chmod($file_path, 0600);
-        if (! $is_success) {
-            \unlink($file_path);
-            throw new CannotPerformIOOperationException("Cannot restrict rights of the key file $file_path to u:rw");
-        }
-
         $raw_key_material     = $key->getRawKeyMaterial();
         $raw_key_material_hex = \sodium_bin2hex($raw_key_material);
         \sodium_memzero($raw_key_material);
 
-        $written_size = \file_put_contents(
-            $file_path,
-            $raw_key_material_hex
-        );
-
-        \sodium_memzero($raw_key_material_hex);
-
-        if ($written_size === false) {
-            \unlink($file_path);
-            throw new CannotPerformIOOperationException("Cannot write to the key file $file_path");
-        }
-        $is_success = \chmod($file_path, 0400);
-        if (! $is_success) {
-            \unlink($file_path);
-            throw new CannotPerformIOOperationException("Cannot restrict rights of the key file $file_path to u:r");
+        try {
+            FileWriter::writeFile($file_path, $raw_key_material_hex, 0400);
+        } catch (\RuntimeException $exception) {
+            throw new CannotPerformIOOperationException($exception->getMessage(), $exception);
+        } finally {
+            \sodium_memzero($raw_key_material_hex);
         }
     }
 
     #[\Override]
     public function restoreOwnership(LoggerInterface $logger): void
     {
-        $logger->debug(sprintf('Restore ownership on %s', $this->getKeyPath()));
-        if (! chown($this->getKeyPath(), \ForgeConfig::getApplicationUserLogin())) {
-            $logger->warning(sprintf('Impossible to chown %s to %s', $this->getKeyPath(), \ForgeConfig::getApplicationUserLogin()));
+        $key_path               = $this->initAndGetEncryptionKeyPath();
+        $application_user_login = \ForgeConfig::getApplicationUserLogin();
+        $logger->debug(sprintf('Restore ownership on %s', $key_path));
+        if (! chown($key_path, $application_user_login)) {
+            $logger->warning(sprintf('Impossible to chown %s to %s', $key_path, $application_user_login));
         }
-        if (! chgrp($this->getKeyPath(), \ForgeConfig::getApplicationUserLogin())) {
-            $logger->warning(sprintf('Impossible to chgrp %s to %s', $this->getKeyPath(), \ForgeConfig::getApplicationUserLogin()));
+        if (! chgrp($key_path, $application_user_login)) {
+            $logger->warning(sprintf('Impossible to chgrp %s to %s', $key_path, $application_user_login));
         }
     }
 }

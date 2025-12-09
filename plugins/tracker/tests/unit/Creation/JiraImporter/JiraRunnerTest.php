@@ -194,7 +194,7 @@ final class JiraRunnerTest extends TestCase
         $this->user_manager->method('forceLogin')->with('Whalter White')->willReturn($user);
 
         $this->key_factory->expects($this->once())->method('getLegacy2025EncryptionKey')
-            ->willThrowException(new CannotPerformIOOperationException(''));
+            ->willThrowException(new CannotPerformIOOperationException('', new \RuntimeException('Test')));
 
         $this->error_notifier->expects($this->once())->method('warnUserAboutError')
             ->with($import, 'Unable to access to the token to do the import.');
