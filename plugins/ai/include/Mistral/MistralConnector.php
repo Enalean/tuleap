@@ -46,5 +46,5 @@ interface MistralConnector
     /**
      * @return Ok<CompletionResponse>|Err<Fault>
      */
-    public function sendCompletion(AIRequestorEntity $requestor, Completion $completion): Ok|Err;
+    public function sendCompletion(AIRequestorEntity $requestor, Completion $completion, string $service): Ok|Err;
 }

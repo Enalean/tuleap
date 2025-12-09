@@ -25,12 +25,14 @@ namespace Tuleap\AI\Mistral;
 
 use CuyZ\Valinor\Mapper\MappingError;
 use CuyZ\Valinor\Mapper\Source\JsonSource;
+use CuyZ\Valinor\MapperBuilder;
 use ForgeConfig;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\AI\Requestor\AIRequestorEntity;
-use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Mapper\ValinorMapperBuilderFactory;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -38,8 +40,13 @@ use Tuleap\NeverThrow\Result;
 
 final readonly class MistralConnectorLive implements MistralConnector
 {
-    public function __construct(private ClientInterface $client)
-    {
+    public function __construct(
+        private ClientInterface $client,
+        private RequestFactoryInterface $request_factory,
+        private StreamFactoryInterface $stream_factory,
+        private MapperBuilder $mapper_builder,
+        private Prometheus $prometheus,
+    ) {
     }
 
     /**
@@ -53,7 +60,7 @@ final readonly class MistralConnectorLive implements MistralConnector
                 return Result::err(NoKeyFault::build());
             }
 
-            $request  = HTTPFactoryBuilder::requestFactory()
+            $request  = $this->request_factory
                 ->createRequest('GET', 'https://api.mistral.ai/v1/models')
                 ->withHeader('Authorization', sprintf('Bearer %s', (string) ForgeConfig::getSecretAsClearText(self::CONFIG_API_KEY)))
                 ->withHeader('Accept', 'application/json');
@@ -73,19 +80,26 @@ final readonly class MistralConnectorLive implements MistralConnector
     }
 
     #[\Override]
-    public function sendCompletion(AIRequestorEntity $requestor, Completion $completion): Ok|Err
+    public function sendCompletion(AIRequestorEntity $requestor, Completion $completion, string $service): Ok|Err
     {
         try {
             if (ForgeConfig::get(self::CONFIG_API_KEY) === '') {
                 return Result::err(NoKeyFault::build());
             }
 
-            $request  = HTTPFactoryBuilder::requestFactory()
+            $metric_labels = $this->buildMetricLabels($requestor, $service);
+
+            $this->prometheus->increment(
+                'ai_completion_requests_total',
+                'Total number of AI completion requests',
+                $metric_labels,
+            );
+            $request  = $this->request_factory
                 ->createRequest('POST', 'https://api.mistral.ai/v1/chat/completions')
                 ->withHeader('Authorization', sprintf('Bearer %s', (string) ForgeConfig::getSecretAsClearText(self::CONFIG_API_KEY)))
                 ->withHeader('Content-Type', 'application/json')
                 ->withHeader('Accept', 'application/json')
-                ->withBody(HTTPFactoryBuilder::streamFactory()->createStream(\json_encode(
+                ->withBody($this->stream_factory->createStream(\json_encode(
                     $completion,
                     JSON_THROW_ON_ERROR,
                 )));
@@ -96,8 +110,21 @@ final readonly class MistralConnectorLive implements MistralConnector
             if ($response->getStatusCode() !== 200) {
                 return Result::err(Fault::fromMessage(sprintf('%s (%d)', $response->getReasonPhrase(), $response->getStatusCode())));
             }
-            $mapper = ValinorMapperBuilderFactory::mapperBuilder()->allowSuperfluousKeys()->allowUndefinedValues()->mapper();
-            return Result::ok($mapper->map(CompletionResponse::class, new JsonSource($response->getBody()->getContents())));
+            $mapper              = $this->mapper_builder->allowSuperfluousKeys()->allowUndefinedValues()->mapper();
+            $completion_response = $mapper->map(CompletionResponse::class, new JsonSource($response->getBody()->getContents()));
+            $this->prometheus->incrementBy(
+                'ai_completion_prompt_tokens_total',
+                'Total number of tokens used by prompts for AI requests',
+                $completion_response->usage->prompt_tokens,
+                $metric_labels,
+            );
+            $this->prometheus->incrementBy(
+                'ai_completion_completion_tokens_total',
+                'Total number of tokens used by completions for AI requests',
+                $completion_response->usage->completion_tokens,
+                $metric_labels,
+            );
+            return Result::ok($completion_response);
         } catch (ClientExceptionInterface $client_exception) {
             return Result::err(Fault::fromThrowable($client_exception));
         } catch (MappingError $error) {
@@ -105,5 +132,18 @@ final readonly class MistralConnectorLive implements MistralConnector
         } catch (\Exception) {
             return Result::err(Fault::fromMessage(dgettext('tuleap-ai', 'An error occurred while trying to access to API key in configuration.')));
         }
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private function buildMetricLabels(AIRequestorEntity $requestor, string $service): array
+    {
+        return [
+            'provider' => 'mistral',
+            'service' => $service,
+            'requestor_type' => $requestor->getType(),
+            'requestor_identifier' => $requestor->getIdentifier(),
+        ];
     }
 }

@@ -31,7 +31,10 @@ use Tuleap\AI\Mistral\MistralConnectorLive;
 use Tuleap\AI\Mistral\NoKeyFault;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -58,7 +61,13 @@ final readonly class AISiteAdminController implements DispatchableWithRequest, D
 
         $csrf_token = CSRFSynchronizerTokenPresenter::fromToken(self::getCSRFToken());
 
-        $mistral_connector = new MistralConnectorLive(HttpClientFactory::createClientWithCustomTimeout(30));
+        $mistral_connector = new MistralConnectorLive(
+            HttpClientFactory::createClientWithCustomTimeout(30),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            ValinorMapperBuilderFactory::mapperBuilder(),
+            Prometheus::instance(),
+        );
         $presenter         = $mistral_connector->testConnection()->match(
             fn (): AISiteAdminPresenter => AISiteAdminPresenter::buildSuccess($csrf_token),
             function (Fault $fault) use ($csrf_token): AISiteAdminPresenter {
