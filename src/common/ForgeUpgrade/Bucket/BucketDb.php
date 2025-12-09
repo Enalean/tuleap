@@ -320,7 +320,7 @@ class BucketDb
 
             $update_statement->execute([
                 SymmetricCrypto::encrypt(
-                    new ConcealedString(''),
+                    new ConcealedString($decrypted_data),
                     new EncryptionAdditionalData($table_name, $encrypted_data_column_name, $uuid),
                     $current_encryption_key
                 ),
