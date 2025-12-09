@@ -28,7 +28,9 @@
     </div>
     <div class="tlp-property">
         <label class="tlp-label">{{ $gettext("Notification type") }}</label>
-        <p data-test="table-notification">{{ table.notification_type }}</p>
+        <p data-test="table-notification">
+            {{ translateNotificationType(table.notification_type, $gettext) }}
+        </p>
     </div>
     <div class="tlp-property">
         <label class="tlp-label">{{ $gettext("Approval cycle start date") }}</label>
@@ -61,6 +63,7 @@ import type { ApprovalTable, Item } from "../../../type";
 import UserBadge from "../../User/UserBadge.vue";
 import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
 import ApprovalTableReviewers from "./ApprovalTableReviewers.vue";
+import { translateNotificationType } from "../../../helpers/approval-table-helper";
 
 defineProps<{
     item: Item;

@@ -48,7 +48,7 @@
                 </td>
                 <td data-test="reviewer-state">
                     <template v-if="is_readonly || reviewer.user.id !== user_id">
-                        {{ translateStatus(reviewer.state, $gettext) }}
+                        {{ translateReviewStatus(reviewer.state, $gettext) }}
                     </template>
                     <button
                         v-else
@@ -56,7 +56,7 @@
                         type="button"
                         class="tlp-button-secondary tlp-button-mini"
                     >
-                        {{ translateStatus(reviewer.state, $gettext) }}
+                        {{ translateReviewStatus(reviewer.state, $gettext) }}
                     </button>
                 </td>
                 <td>{{ reviewer.comment }}</td>
@@ -106,7 +106,7 @@ import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
 import ApprovalTableReviewModal from "../Review/ApprovalTableReviewModal.vue";
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import { translateStatus } from "../../../helpers/approval-table-helper";
+import { translateReviewStatus } from "../../../helpers/approval-table-helper";
 
 const { $gettext } = useGettext();
 

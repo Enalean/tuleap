@@ -44,7 +44,7 @@ describe("ApprovalTableDetails", () => {
         const wrapper = getWrapper(
             new ApprovalTableBuilder(35)
                 .withVersionNumber(3)
-                .withNotificationType("Disabled")
+                .withNotificationType("disabled")
                 .withDescription("Lorem ipsum...")
                 .build(),
         );
