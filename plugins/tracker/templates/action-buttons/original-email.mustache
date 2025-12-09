@@ -1,7 +1,5 @@
 {{# artifact_original_email_button_presenter }}
-    <li>
-        <a class="tracker-action-button artifact-incoming-mail-button" data-raw-email="{{ raw_email }}">
-            <i class="fa-fw far fa-envelope"></i> {{ label }}
-        </a>
-    </li>
+    <a role="menuitem" class="tlp-dropdown-menu-item" data-raw-email="{{ raw_email }}">
+        <i class="tlp-dropdown-menu-item-icon fa-fw fa-regular fa-envelope" aria-hidden="true"></i> {{ label }}
+    </a>
 {{/ artifact_original_email_button_presenter }}

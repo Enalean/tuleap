@@ -60,7 +60,7 @@ final class CreateBranchButtonFetcher
             $link_label,
             '',
             'create-git-branch-button',
-            'fas fa-code-branch',
+            'fa-solid fa-code-branch',
             'artifact-create-git-branches',
             [
                 [

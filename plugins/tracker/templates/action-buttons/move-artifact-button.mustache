@@ -1,12 +1,11 @@
 {{# artifact_move_button_presenter }}
-    <li class="{{# hasError }}disabled{{/ hasError}}">
-        <a class="tracker-action-button"
-            id="tracker-action-button-move"
-            data-test="tracker-action-button-move"
-            {{# hasError }}title="{{ errors_content }}"{{/ hasError }}
-        >
-            <i class="fas fa-fw fa-long-arrow-alt-right"></i>
-            {{ label }}
-        </a>
-    </li>
+    <a class="tlp-dropdown-menu-item {{# hasError }}tlp-dropdown-menu-item-disabled{{/ hasError}}"
+       role="menuitem"
+       id="tracker-action-button-move"
+       data-test="tracker-action-button-move"
+       {{# hasError }}title="{{ errors_content }}"{{/ hasError }}
+    >
+        <i class="tlp-dropdown-menu-item-icon fa-solid fa-fw fa-long-arrow-alt-right" aria-hidden="true"></i>
+        {{ label }}
+    </a>
 {{/ artifact_move_button_presenter }}

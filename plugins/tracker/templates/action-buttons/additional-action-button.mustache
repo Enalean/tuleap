@@ -1,16 +1,15 @@
-    <li  {{# is_disabled }} class="disabled" {{/is_disabled}}>
-        <a class="tracker-action-button"
-           {{# url }} href="{{ url }}"{{/ url }}
-           {{# id }} id="{{ id }}"{{/ id }}
-           {{# data }}
-               data-{{ name }}="{{ value }}"
-           {{/ data }}
-           data-test="{{ data_test }}"
-           {{# is_disabled }}
-               title="{{ disabled_messages }}"
-           {{/is_disabled}}
-        >
-            <i class="fa fa-fw {{ icon }}"></i>
-            <span class="additional-artifact-action-title">{{ link_label }}</span>
-        </a>
-    </li>
+<a class="tlp-dropdown-menu-item {{# is_disabled }}tlp-dropdown-menu-item-disabled{{/is_disabled}}"
+   role="menuitem"
+    {{# url }} href="{{ url }}"{{/ url }}
+    {{# id }} id="{{ id }}"{{/ id }}
+    {{# data }}
+   data-{{ name }}="{{ value }}"
+    {{/ data }}
+   data-test="{{ data_test }}"
+    {{# is_disabled }}
+   title="{{ disabled_messages }}"
+    {{/is_disabled}}
+>
+    <i class="tlp-dropdown-menu-item-icon fa-fw {{ icon }}" aria-hidden="true"></i>
+    <span class="additional-artifact-action-title">{{ link_label }}</span>
+</a>

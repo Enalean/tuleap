@@ -44,6 +44,9 @@ dependencies:
   '@tuleap/plugin-tracker-rte-creator':
     specifier: workspace:*
     version: link:../lib/rte-creator
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch

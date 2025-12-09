@@ -1,11 +1,10 @@
 {{# artifact_notifications_button_presenter }}
-    <li>
-        <a class="tracker-action-button tracker-artifact-notification"
-           title="{{ title }}"
-           href="{{ url }}"
-           data-test="notifications-button"
-        >
-            <i class="fa fa-fw {{ icon }}"></i> {{ label }}
-        </a>
-    </li>
+    <a class="tlp-dropdown-menu-item"
+       role="menuitem"
+       title="{{ title }}"
+       href="{{ url }}"
+       data-test="notifications-button"
+    >
+        <i class="tlp-dropdown-menu-item-icon fa-regular fa-fw {{ icon }}" aria-hidden="true"></i> {{ label }}
+    </a>
 {{/ artifact_notifications_button_presenter }}
