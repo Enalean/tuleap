@@ -23,6 +23,8 @@ use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Reference\ExtractAndSaveCrossReferences;
 use Tuleap\Reference\ExtractReferences;
+use Tuleap\Reference\GetProjectIdForSystemReference;
+use Tuleap\Reference\ProjectIdForSystemReferenceGetter;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
@@ -68,10 +70,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
      */
     protected static $instance;
 
-    public const string KEYWORD_ARTIFACT_SHORT = 'art';
-    public const string KEYWORD_ARTIFACT_LONG  = 'artifact';
-
-    public const string REFERENCE_NATURE_ARTIFACT    = 'artifact';
     public const string REFERENCE_NATURE_DOCUMENT    = 'document';
     public const string REFERENCE_NATURE_SVNREVISION = 'svn_revision';
     public const string REFERENCE_NATURE_FILE        = 'file';
@@ -85,8 +83,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
      */
     public $tmpGroupIdForCallbackFunction = null;
 
-
-    public function __construct()
+    private function __construct(private readonly GetProjectIdForSystemReference $get_project_id_for_system_reference)
     {
         $this->event_manager = EventManager::instance();
     }
@@ -97,7 +94,14 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            self::$instance = new self();
+            self::$instance = new self(
+                new ProjectIdForSystemReferenceGetter(
+                    new ReferenceDao(),
+                    new FRSReleaseFactory(),
+                    new FRSFileFactory(),
+                    EventManager::instance(),
+                ),
+            );
         }
         return self::$instance;
     }
@@ -106,16 +110,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
     {
         $natures_collection = $this->event_manager->dispatch(new NatureCollection());
         assert($natures_collection instanceof NatureCollection);
-
-        $natures_collection->addNature(
-            self::REFERENCE_NATURE_ARTIFACT,
-            new Nature(
-                'art',
-                Nature::NO_ICON,
-                $GLOBALS['Language']->getText('project_reference', 'reference_artifact_nature_key'),
-                true
-            )
-        );
 
         $natures_collection->addNature(
             self::REFERENCE_NATURE_DOCUMENT,
@@ -505,19 +499,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         );
     }
 
-    /**
-     * Return true if keyword is valid to reference artifacts
-     *
-     * @param String $keyword
-     *
-     * @return bool
-     */
-    private function isAnArtifactKeyword($keyword)
-    {
-        return $keyword == self::KEYWORD_ARTIFACT_LONG
-               || $keyword == self::KEYWORD_ARTIFACT_SHORT;
-    }
-
     public function buildReference($row, $val = null): Reference
     {
         if (isset($row['reference_id'])) {
@@ -553,26 +534,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
             );
         }
 
-        if ($this->isAnArtifactKeyword($row['keyword'])) {
-            if (! $this->getGroupIdFromArtifactId($val)) {
-                $this->event_manager->processEvent(
-                    Event::BUILD_REFERENCE,
-                    ['row' => $row, 'ref_id' => $refid, 'ref' => &$reference]
-                );
-            } else {
-                $this->ensureArtifactDataIsCorrect($reference, $val);
-            }
-        }
-
         return $reference;
-    }
-
-    private function ensureArtifactDataIsCorrect(Reference $ref, $val)
-    {
-        $group_id = $this->getGroupIdFromArtifactId($val);
-
-        $ref->setGroupId($this->getGroupIdFromArtifactId($group_id));
-        $ref->setLink("/tracker/?func=detail&aid=$val&group_id=$group_id");
     }
 
     /**
@@ -593,20 +555,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
             (?P<value>(?:(?:(?&extended_value_sequence)+/)*)?(?&final_value_sequence)+?) # Sequence of multiple '<extended_value_sequence>/' ending with <final_value_sequence>
             (?P<after_reference>&(?:\#(?:\d+|[xX][[:xdigit:]]+)|quot);|(?=[^\w&/])|$) # Exclude HTML dec, hex and some (quot) named entities from the end of the reference
         `x";
-    }
-
-    /*
-     * Callback function that returns a link in place of a custom reference
-     * Must be public because it is called from an anonymous function
-     */
-    public function insertCustomRefCallback($match, $group_id, $reftypecb)
-    {
-        $ref = call_user_func($reftypecb, $match, $group_id);
-        if (empty($ref)) {
-            return $match[0];
-        }
-
-        return $this->buildLinkForReference($ref);
     }
 
     /**
@@ -743,31 +691,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         return $referencesInstances;
     }
 
-    /**
-     * TODO : adapt it to the new tracker structure when ready
-     */
-    public function getArtifactKeyword($artifact_id, $group_id)
-    {
-        $sql    = 'SELECT group_artifact_id FROM artifact WHERE artifact_id= ' . db_ei($artifact_id);
-        $result = db_query($sql);
-        if (db_numrows($result) > 0) {
-            $row                = db_fetch_array($result);
-            $tracker_id         = $row['group_artifact_id'];
-            $project            = new Project($group_id);
-            $tracker            = new ArtifactType($project, $tracker_id);
-            $tracker_short_name = $tracker->getItemName();
-            $reference_dao      = $this->_getReferenceDao();
-            $dar                = $reference_dao->searchByKeywordAndGroupId($tracker_short_name, $group_id);
-            if ($dar && $dar->rowCount() >= 1) {
-                return $tracker_short_name;
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
     #[\Override]
     public function extractCrossRef(
         mixed $html,
@@ -783,19 +706,9 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
 
         if ($source_key == null) {
             $available_natures = $this->getAvailableNatures();
-            if ($source_type == self::REFERENCE_NATURE_ARTIFACT) {
-                $source_key = $this->getArtifactKeyword($source_id, $source_gid);
-                if (! $source_key) {
-                    $nature = $available_natures->getNatureFromIdentifier($source_type);
-                    if ($nature) {
-                        $source_key = $nature->keyword;
-                    }
-                }
-            } else {
-                $nature = $available_natures->getNatureFromIdentifier($source_type);
-                if ($nature) {
-                    $source_key = $nature->keyword;
-                }
+            $nature            = $available_natures->getNatureFromIdentifier($source_type);
+            if ($nature) {
+                $source_key = $nature->keyword;
             }
         }
 
@@ -889,54 +802,13 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         return $groupedReferencesInstances;
     }
 
-    /**
-     * Returns the group id of an artifact id
-     *
-     * @param int $artifact_id
-     *
-     * @return mixed False if no match, the group id otherwise
-     */
-    protected function getGroupIdFromArtifactId($artifact_id)
-    {
-        if (! TrackerV3::instance()->available()) {
-            return false;
-        }
-        $dao    = $this->getArtifactDao();
-        $result = $dao->searchArtifactId($artifact_id);
-        if ($result && count($result)) {
-            $row = $result->getRow();
-            return $row['group_id'];
-        }
-        return false;
-    }
-
-    /**
-     * Return the group_id of an artifact_id
-     *
-     * @param int $artifact_id
-     *
-     * @return int
-     */
-    protected function getGroupIdFromArtifactIdForCallbackFunction($artifact_id)
-    {
-        $group_id = $this->getGroupIdFromArtifactId($artifact_id);
-        if ($group_id === false) {
-            $this->event_manager->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, ['artifact_id' => $artifact_id, 'group_id' => &$group_id]);
-        }
-        return $group_id;
-    }
-
     private function getReferenceFromMatch($match)
     {
         // Analyse match
         $keyword = strtolower($match['key']);
         $value   = $match['value'];
 
-        if ($this->isAnArtifactKeyword($keyword)) {
-            $ref_gid = $this->getGroupIdFromArtifactIdForCallbackFunction($value);
-        } else {
-            $ref_gid = $this->getProjectIdForReference($match, $keyword, $value);
-        }
+        $ref_gid = $this->getProjectIdForReference($match, $keyword, $value);
 
         return $this->getReference($keyword, $value, $ref_gid);
     }
@@ -946,10 +818,10 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         $ref_gid = $this->getProjectIdFromMatch($match);
 
         if (! $ref_gid) {
-            $ref_gid = $this->getProjectIdForSystemReference($keyword, $value);
+            $ref_gid = $this->get_project_id_for_system_reference->getProjectIdForSystemReference($keyword, $value);
         }
 
-        if (! $ref_gid) {
+        if ($ref_gid === null) {
             $ref_gid = $this->getCurrentProjectId();
         }
 
@@ -977,50 +849,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         }
 
         return $ref_gid;
-    }
-
-    private function getProjectIdForSystemReference($keyword, $value)
-    {
-        $ref_gid = null;
-        $nature  = $this->getSystemReferenceNatureByKeyword($keyword);
-
-        switch ($nature) {
-            case self::REFERENCE_NATURE_RELEASE:
-                $release_factory = new FRSReleaseFactory();
-                $release         = $release_factory->getFRSReleaseFromDb($value);
-
-                if ($release) {
-                    $ref_gid = $release->getProject()->getID();
-                }
-
-                break;
-            case self::REFERENCE_NATURE_FILE:
-                $file_factory = new FRSFileFactory();
-                $file         = $file_factory->getFRSFileFromDb($value);
-
-                if ($file) {
-                    $ref_gid = $file->getGroup()->getID();
-                }
-
-                break;
-        }
-
-        return $ref_gid;
-    }
-
-    /**
-     * @return string
-     */
-    private function getSystemReferenceNatureByKeyword($keyword)
-    {
-        $dao                         = $this->_getReferenceDao();
-        $system_reference_nature_row = $dao->getSystemReferenceNatureByKeyword($keyword);
-
-        if (! $system_reference_nature_row) {
-            return null;
-        }
-
-        return $system_reference_nature_row['nature'];
     }
 
     private function getCurrentProjectId()
@@ -1206,16 +1034,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
             $this->cross_reference_dao = new CrossReferencesDao();
         }
         return $this->cross_reference_dao;
-    }
-
-    /**
-     * Wrapper
-     *
-     * @return ArtifactDao
-     */
-    private function getArtifactDao()
-    {
-        return new ArtifactDao();
     }
 
     private function getReferenceValidator()

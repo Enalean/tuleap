@@ -19,18 +19,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Reference\GetSystemReferenceNatureByKeyword;
 
-class ReferenceDao extends DataAccessObject
+class ReferenceDao extends DataAccessObject implements GetSystemReferenceNatureByKeyword // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    private const array NOT_ANYMORE_SUPPORTED_NATURES = [
+        'artifact', // Tracker v3
+        'news',
+        'forum',
+        'forum_message',
+        'cvs_commit',
+    ];
+
     /**
     * Gets all references for the given project ID, sorted for presentation
     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByGroupID($group_id)
     {
-        $sql = sprintf(
-            'SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id ORDER BY reference.scope DESC, reference.service_short_name, reference.keyword',
-            $this->da->quoteSmart($group_id)
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
+        $sql       = sprintf(
+            'SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id AND reference.nature NOT IN (%s) ORDER BY reference.scope DESC, reference.service_short_name, reference.keyword',
+            $this->da->quoteSmart($group_id),
+            $exclusion,
         );
         return $this->retrieve($sql);
     }
@@ -41,10 +52,12 @@ class ReferenceDao extends DataAccessObject
     */
     public function searchByIdAndGroupID($ref_id, $group_id)
     {
-        $sql = sprintf(
-            'SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference.id=%s AND reference_group.reference_id=reference.id',
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
+        $sql       = sprintf(
+            'SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference.id=%s AND reference_group.reference_id=reference.id AND reference.nature NOT IN (%s)',
             $this->da->quoteSmart($group_id),
-            $this->da->quoteSmart($ref_id)
+            $this->da->quoteSmart($ref_id),
+            $exclusion,
         );
         return $this->retrieve($sql);
     }
@@ -55,9 +68,11 @@ class ReferenceDao extends DataAccessObject
     */
     public function searchActiveByGroupID($group_id)
     {
-        $sql = sprintf(
-            'SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id AND reference_group.is_active=1',
-            $this->da->quoteSmart($group_id)
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
+        $sql       = sprintf(
+            'SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id AND reference_group.is_active=1 AND reference.nature NOT IN (%s)',
+            $this->da->quoteSmart($group_id),
+            $exclusion,
         );
         return $this->retrieve($sql);
     }
@@ -90,13 +105,14 @@ class ReferenceDao extends DataAccessObject
      */
     public function searchByKeyword($keyword)
     {
-        $keyword = $this->da->quoteSmart($keyword);
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
+        $keyword   = $this->da->quoteSmart($keyword);
 
         $sql = "SELECT *
                 FROM reference
                 JOIN reference_group
                     ON reference_group.reference_id = reference.id
-                WHERE reference.keyword = $keyword";
+                WHERE reference.keyword = $keyword AND reference.nature NOT IN ($exclusion)";
 
         return $this->retrieveFirstRow($sql);
     }
@@ -107,9 +123,11 @@ class ReferenceDao extends DataAccessObject
     */
     public function searchByScope($scope)
     {
-        $sql = sprintf(
-            'SELECT * FROM reference WHERE scope = %s',
-            $this->da->quoteSmart($scope)
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
+        $sql       = sprintf(
+            'SELECT * FROM reference WHERE scope = %s AND reference.nature NOT IN (%s)',
+            $this->da->quoteSmart($scope),
+            $exclusion,
         );
         return $this->retrieve($sql);
     }
@@ -131,34 +149,17 @@ class ReferenceDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    /**
-     * @return array|false
-     */
-    public function getSystemReferenceByNatureAndKeyword($keyword, $nature)
+    #[Override]
+    public function getSystemReferenceNatureByKeyword($keyword): false|array
     {
-        $keyword = $this->da->quoteSmart($keyword);
-        $nature  = $this->da->quoteSmart($nature);
-
-        $sql = "SELECT *
-                FROM reference
-                WHERE keyword = $keyword
-                  AND nature = $nature
-                  AND scope = 'S'";
-
-        return $this->retrieveFirstRow($sql);
-    }
-
-    /**
-     * @return array|false
-     */
-    public function getSystemReferenceNatureByKeyword($keyword)
-    {
-        $keyword = $this->da->quoteSmart($keyword);
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
+        $keyword   = $this->da->quoteSmart($keyword);
 
         $sql = "SELECT nature
                 FROM reference
                 WHERE keyword = $keyword
-                  AND scope = 'S'";
+                  AND scope = 'S'
+                  AND reference.nature NOT IN ($exclusion)";
 
         return $this->retrieveFirstRow($sql);
     }
@@ -170,14 +171,18 @@ class ReferenceDao extends DataAccessObject
      */
     public function searchByServiceShortName(int $project_id, string $service)
     {
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
+
         $sql = sprintf(
             'SELECT reference.*
              FROM reference
                 JOIN reference_group rg ON (reference.id = rg.reference_id)
              WHERE service_short_name = %s
-               AND rg.group_id = %d',
+               AND rg.group_id = %d
+               AND reference.nature NOT IN (%s)',
             $this->da->quoteSmart($service),
             $this->da->escapeInt($project_id),
+            $exclusion,
         );
         return $this->retrieve($sql);
     }
@@ -189,10 +194,13 @@ class ReferenceDao extends DataAccessObject
     */
     public function searchByScopeAndServiceShortName($scope, $service)
     {
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
+
         $sql = sprintf(
-            'SELECT * FROM reference WHERE scope = %s AND service_short_name = %s AND id != 100',
+            'SELECT * FROM reference WHERE scope = %s AND service_short_name = %s AND id != 100 AND reference.nature NOT IN (%s)',
             $this->da->quoteSmart($scope),
-            $this->da->quoteSmart($service)
+            $this->da->quoteSmart($service),
+            $exclusion,
         );
         return $this->retrieve($sql);
     }
@@ -204,11 +212,14 @@ class ReferenceDao extends DataAccessObject
     */
     public function searchByScopeAndServiceShortNameAndGroupId($scope, $service, $group_id)
     {
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
+
         $sql = sprintf(
-            'SELECT * FROM reference,reference_group WHERE scope = %s AND reference.id=reference_group.reference_id AND service_short_name = %s AND group_id = %s AND reference.id != 100',
+            'SELECT * FROM reference,reference_group WHERE scope = %s AND reference.id=reference_group.reference_id AND service_short_name = %s AND group_id = %s AND reference.id != 100 AND reference.nature NOT IN (%s)',
             $this->da->quoteSmart($scope),
             $this->da->quoteSmart($service),
-            $this->da->quoteSmart($group_id)
+            $this->da->quoteSmart($group_id),
+            $exclusion,
         );
         return $this->retrieve($sql);
     }
@@ -219,13 +230,15 @@ class ReferenceDao extends DataAccessObject
     */
     public function searchByKeywordAndGroupId($keyword, $group_id)
     {
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
         // Order by scope to return 'P'roject references before 'S'ystem references
         // This may happen for old tracker created before Reference management.
         // Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf(
-            'SELECT * FROM reference,reference_group WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s ORDER BY reference.scope',
+            'SELECT * FROM reference,reference_group WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s ORDER BY reference.scope AND reference.nature NOT IN (%s)',
             $this->da->quoteSmart($keyword),
-            $this->da->quoteSmart($group_id)
+            $this->da->quoteSmart($group_id),
+            $exclusion,
         );
         return $this->retrieve($sql);
     }
@@ -236,6 +249,7 @@ class ReferenceDao extends DataAccessObject
     */
     public function searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($keyword, $group_id, $description, $link, $scope)
     {
+        $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
         // Order by scope to return 'P'roject references before 'S'ystem references
         // This may happen for old tracker created before Reference management.
         // Otherwise, there should not be both S and P reference with the same keyword...
@@ -247,12 +261,13 @@ class ReferenceDao extends DataAccessObject
                'rg.group_id=%s AND ' .
                'r.description = %s AND ' .
                'r.link = %s AND ' .
-               'r.scope = %s',
+               'r.scope = %s AND r.nature NOT IN (%s)',
             $this->da->quoteSmart($keyword),
             $this->da->quoteSmart($group_id),
             $this->da->quoteSmart($description),
             $this->da->quoteSmart($link),
-            $this->da->quoteSmart($scope)
+            $this->da->quoteSmart($scope),
+            $exclusion,
         );
         return $this->retrieve($sql);
     }
@@ -275,7 +290,7 @@ class ReferenceDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
-    public function create_ref_group($refid, $is_active, $group_id)
+    public function create_ref_group($refid, $is_active, $group_id) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $sql = sprintf(
             'INSERT INTO reference_group (reference_id,is_active,group_id) VALUES (%s, %s, %s);',
@@ -290,7 +305,7 @@ class ReferenceDao extends DataAccessObject
     * update a row in the table reference
     * @return true or id(auto_increment) if there is no error
     */
-    public function update_ref($id, $keyword, $desc, $link, $scope, $service_short_name, $nature)
+    public function update_ref($id, $keyword, $desc, $link, $scope, $service_short_name, $nature) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $sql = sprintf(
             'UPDATE reference SET keyword=%s, description=%s, link=%s, scope=%s, service_short_name=%s, nature=%s WHERE id=%s;',
@@ -305,7 +320,7 @@ class ReferenceDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function update_ref_group($refid, $is_active, $group_id)
+    public function update_ref_group($refid, $is_active, $group_id) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $sql = sprintf(
             'UPDATE reference_group SET is_active=%s WHERE reference_id=%s AND group_id=%s;',
@@ -329,7 +344,7 @@ class ReferenceDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function update_keyword($old_keyword, $keyword, $group_id)
+    public function update_keyword($old_keyword, $keyword, $group_id) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $sql = sprintf(
             'UPDATE reference, reference_group SET keyword=%s WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s',

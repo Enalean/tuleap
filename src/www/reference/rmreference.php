@@ -54,6 +54,6 @@ if ($project_admin) {
         $target_key,
         (int) $user->getId()
     );
-    $reference_manager = new ReferenceManager();
+    $reference_manager = ReferenceManager::instance();
     $reference_manager->removeCrossReference($cross_reference);
 }

@@ -28,20 +28,11 @@ use Tuleap\Tracker\Artifact\Artifact;
 /**
  * I'm responsible of managing Tracker related cross references
  */
-class Tracker_ReferenceManager
+class Tracker_ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    /** @var ReferenceManager */
-    private $reference_manager;
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
     public function __construct(
-        ReferenceManager $reference_manager,
-        Tracker_ArtifactFactory $artifact_factory,
+        private ReferenceManager $reference_manager,
     ) {
-        $this->reference_manager = $reference_manager;
-        $this->artifact_factory  = $artifact_factory;
     }
 
     public function getCrossReferenceBetweenTwoArtifacts(Artifact $source_artifact, Artifact $target_artifact, PFUser $user): CrossReference
@@ -83,28 +74,5 @@ class Tracker_ReferenceManager
         return $this->reference_manager->removeCrossReference(
             $this->getCrossReferenceBetweenTwoArtifacts($source_artifact, $target_artifact, $user)
         );
-    }
-
-    public function getReference($keyword, $artifact_id): ?Tracker_Reference
-    {
-        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
-
-        if (! $artifact) {
-            return null;
-        }
-
-        return $this->getTrackerReference($artifact, $keyword);
-    }
-
-    private function getTrackerReference(Artifact $artifact, $keyword): Tracker_Reference
-    {
-        $reference = new Tracker_Reference(
-            $artifact->getTracker(),
-            $keyword
-        );
-
-        $reference->replaceLink([$artifact->getId()]);
-
-        return $reference;
     }
 }

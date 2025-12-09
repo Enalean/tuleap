@@ -153,14 +153,12 @@ project_admin_permissions	override	Ignore $1 permission set to $2 because it was
 #-----------------------------------------------
 # Script: SF/www/project/admin/reference.php
 #
-project_reference	create_for_tracker_fail	Reference pattern not created: the shortname is not valid (reserved, or already exists). You may still reference tracker artifacts with the 'art' or 'artifact' keyword.
 project_reference	t_r_deleted	Corresponding Reference Pattern Deleted
 project_reference	extract_syntax	Parameters:\n  group_id : project where reference patterns are defined\n  text     : input text
 project_reference	insert_syntax	<p>Parameters:<br>- group_id or group_name : project where reference patterns are defined<br>- text : input text
 ## Description value here for each reference pattern (system or project wide) that should be localized
 ## Naming rule for the key:
 ## reference_<reference keyword>_desc_key for the reference pattern description
-project_reference	reference_art_desc_key	Tracker Artifact
 project_reference	reference_svn_desc_key	Subversion revision details
 project_reference	reference_wiki_desc_key	Wiki page
 project_reference	reference_wikiversion_desc_key	Wiki version
@@ -172,7 +170,6 @@ project_reference	reference_sr_desc_key	Support Request
 project_reference	reference_patch_desc_key	Patch
 project_reference	reference_release_desc_key	Release
 
-project_reference	reference_artifact_nature_key	Artifact
 project_reference	reference_document_nature_key	Document
 project_reference	reference_svn_revision_nature_key	Subversion Revision
 project_reference	reference_file_nature_key	File
@@ -381,7 +378,6 @@ project_admin_userperms	upd_user_perm	Update User Permissions
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_export.php
 #
-project_export_artifact_export	ath_not_created	ArtifactTypeHtml could not be created
 project_export_artifact_export	follow_up_comments	Follow-up Comments
 project_export_artifact_export	depend_on	Depend on
 project_export_artifact_export	all_followup_comments	All follow-up comments in one chunk of text

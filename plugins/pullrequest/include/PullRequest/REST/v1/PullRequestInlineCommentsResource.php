@@ -112,7 +112,7 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
             ),
             $inline_comment_dao,
             $git_repository_factory,
-            new \ReferenceManager(),
+            \ReferenceManager::instance(),
             new SingleRepresentationBuilder($purifier, $markdown_interpreter),
             PullRequestNotificationSupport::buildDispatcher(new BackendLogger()),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),

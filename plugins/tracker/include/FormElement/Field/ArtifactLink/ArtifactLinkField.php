@@ -1721,7 +1721,6 @@ class ArtifactLinkField extends TrackerField
             $this->getValueDao(),
             new Tracker_ReferenceManager(
                 ReferenceManager::instance(),
-                Tracker_ArtifactFactory::instance()
             ),
             EventManager::instance(),
             new ArtifactLinksUsageDao(),

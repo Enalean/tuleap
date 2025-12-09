@@ -99,19 +99,7 @@ $event_manager->dispatch($event);
 
 $ref = $event->getReference();
 if ($ref === null) {
-    if ($keyword == ReferenceManager::KEYWORD_ARTIFACT_LONG || $keyword == ReferenceManager::KEYWORD_ARTIFACT_SHORT) {
-        $ref = $reference_manager->loadReferenceFromKeyword($keyword, $value);
-
-        $event_manager->processEvent(
-            Event::SET_ARTIFACT_REFERENCE_GROUP_ID,
-            [
-                'artifact_id' => $value,
-                'reference'   => &$ref,
-            ]
-        );
-    } else {
-        $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $group_id, count($args), $request->get('val'));
-    }
+    $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $group_id, count($args), $request->get('val'));
 }
 
 if ($ref) {
@@ -149,7 +137,7 @@ if ($request->isAjax()) {
                     $rf         = new FRSReleaseFactory();
                     $release_id = $request->get('val');
                     $release    = $rf->getFRSReleaseFromDb($release_id);
-                    if ($rf->userCanRead($release)) {
+                    if ($release && $rf->userCanRead($release)) {
                         echo $release->getReferenceTooltip();
                     }
                     break;
@@ -160,7 +148,7 @@ if ($request->isAjax()) {
                     $rf         = new FRSReleaseFactory();
                     $release_id = $file->getReleaseID();
                     $release    = $rf->getFRSReleaseFromDb($release_id);
-                    if ($rf->userCanRead($release)) {
+                    if ($file && $release && $rf->userCanRead($release)) {
                         echo $file->getReferenceTooltip();
                     }
                     break;

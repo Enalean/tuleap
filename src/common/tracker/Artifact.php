@@ -558,11 +558,6 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 } // while
             }
 
-            //Add Cross Reference
-            for ($i = 0; $i < sizeof($text_value_list); $i++) {
-                $reference_manager->extractCrossRef($text_value_list[$i], $artifact_id, ReferenceManager::REFERENCE_NATURE_ARTIFACT, $ath->getGroupID());
-            }
-
             // artifact permissions
             $request                         = \Tuleap\HTTPRequest::instance();
             $this->data_array['artifact_id'] = $artifact_id; // cheat

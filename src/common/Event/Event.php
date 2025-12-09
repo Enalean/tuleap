@@ -107,18 +107,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
       */
     public const string GET_ARTIFACT_REFERENCE_GROUP_ID = 'get_artifact_reference_group_id';
 
-     /**
-      * Build a reference for given entry in database
-      *
-      * Parameters:
-      *     'row'    => array, a row of "reference" database table
-      *     'ref_id' => ??? reference id ?
-      *
-      * Expected result IN/OUT:
-      *     'ref' => a Reference object
-      */
-    public const string BUILD_REFERENCE = 'build_reference';
-
     /**
      * Project unix name changed
      *
@@ -553,15 +541,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *   'old_ugroup_name' => string
      */
     public const string UGROUP_RENAME = 'ugroup_rename';
-
-    /**
-     * Retrieve project_id for an artifact reference
-     *
-     * Parameters:
-     *   artifact_id => int
-     *   reference   => Reference
-     */
-    public const string SET_ARTIFACT_REFERENCE_GROUP_ID = 'set_artifact_reference_group_id';
 
     /**
      * Toggle usage of a service
