@@ -91,7 +91,7 @@ export function extractApprovalTableData(
     }
 }
 
-export function translateStatus(status: string, $gettext: (msg: string) => string): string {
+export function translateReviewStatus(status: string, $gettext: (msg: string) => string): string {
     switch (status) {
         case "not_yet":
             return $gettext("Not yet");
@@ -104,7 +104,20 @@ export function translateStatus(status: string, $gettext: (msg: string) => strin
         case "will_not_review":
             return $gettext("Declined");
         default:
-            throw Error("Unknown status " + status);
+            throw Error("Unknown review status " + status);
+    }
+}
+
+export function translateNotificationType(type: string, $gettext: (msg: string) => string): string {
+    switch (type) {
+        case "disabled":
+            return $gettext("Disabled");
+        case "all_at_once":
+            return $gettext("All at once");
+        case "sequential":
+            return $gettext("Sequential");
+        default:
+            throw Error("Unknown notification type " + type);
     }
 }
 

@@ -50,7 +50,7 @@
                 <td>
                     <user-badge v-bind:user="reviewer.user" />
                 </td>
-                <td>{{ translateStatus(reviewer.state, $gettext) }}</td>
+                <td>{{ translateReviewStatus(reviewer.state, $gettext) }}</td>
                 <td>
                     <button
                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
@@ -150,7 +150,10 @@
 <script setup lang="ts">
 import type { ApprovalTableReviewer, Item, UserGroup } from "../../../type";
 import UserBadge from "../../User/UserBadge.vue";
-import { rearrangeReviewersTable, translateStatus } from "../../../helpers/approval-table-helper";
+import {
+    rearrangeReviewersTable,
+    translateReviewStatus,
+} from "../../../helpers/approval-table-helper";
 import { onMounted, ref } from "vue";
 import { postApprovalTableReviewerReminder } from "../../../api/approval-table-rest-querier";
 import { useGettext } from "vue3-gettext";
