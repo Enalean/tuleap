@@ -129,7 +129,7 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import type { GitRepository } from "../types";
 import { postGitBranch, postPullRequestOnDefaultBranch } from "../../api/rest_querier";
-import { addFeedback } from "@tuleap/fp-feedback";
+import { addFeedback, SUCCESS } from "@tuleap/feedback";
 import { useGettext } from "vue3-gettext";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
@@ -190,7 +190,7 @@ const createPullRequest = (
 ): ResultAsync<void, Fault> =>
     postPullRequestOnDefaultBranch(repository, branch_name)
         .map(() => {
-            addFeedback("info", $gettext("The associated pull request has been created."));
+            addFeedback(SUCCESS, $gettext("The associated pull request has been created."));
         })
         .mapErr(PullRequestCreationFault.fromFault);
 
@@ -214,7 +214,7 @@ function onClickCreateBranch(): Promise<void> {
                 },
             );
 
-            addFeedback("info", success_message);
+            addFeedback(SUCCESS, success_message);
 
             if (!must_create_pr.value) {
                 return okAsync("branch created");

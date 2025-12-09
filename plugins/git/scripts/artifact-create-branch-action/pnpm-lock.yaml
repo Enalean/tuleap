@@ -11,12 +11,12 @@ dependencies:
   '@tuleap/fault':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fault
+  '@tuleap/feedback':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/feedback
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
-  '@tuleap/fp-feedback':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/fp-feedback
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal
