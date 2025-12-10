@@ -56,7 +56,7 @@
             }}
         </p>
         <label class="tlp-label tlp-radio">
-            <input type="radio" name="action" value="create" v-model="table_action_value" />
+            <input type="radio" name="action" value="empty" v-model="table_action_value" />
             {{ $gettext("Create a new empty table.") }}
         </label>
         <p class="tlp-text-info">

@@ -1088,11 +1088,6 @@ msgstr "Cet élément ne peut pas avoir de table d'approbation"
 msgid "This item is not versionable"
 msgstr "Cet élément n'est pas versionnable"
 
-msgid "This modal is not functional yet, you can retrieve old ui"
-msgstr ""
-"Cette modale n'est pas encore fonctionnelle, vous pouvez retrouver "
-"l'ancienne interface"
-
 msgid ""
 "This page is asking you to confirm that you want to leave - data you have "
 "entered may not be saved. Do you want to leave this page?"
@@ -1329,9 +1324,6 @@ msgstr ""
 
 msgid "diff"
 msgstr "diff"
-
-msgid "here."
-msgstr "ici."
 
 msgid "lorem => exactly \"lorem\""
 msgstr "lorem => exactement \"lorem\""

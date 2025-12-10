@@ -450,6 +450,104 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertSame(200, $delete_item_response->getStatusCode());
     }
 
+    #[Depends('testGetRootId')]
+    public function testPatchApprovalTable(int $root_id): void
+    {
+        // Create embedded file...
+        $post_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_folders/$root_id/embedded_files")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'title'               => 'Test one approval table',
+                    'embedded_properties' => [
+                        'content' => 'Hello World!',
+                    ],
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(201, $post_response->getStatusCode());
+        $post_body = json_decode($post_response->getBody()->getContents());
+        $item_id   = $post_body['id'];
+        // ...with an approval table
+        $reviewer_id         = $this->user_ids[BaseTestDataBuilder::TEST_USER_1_NAME];
+        $post_table_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_items/$item_id/approval_table")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'users'       => [$reviewer_id],
+                    'user_groups' => [],
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(201, $post_table_response->getStatusCode());
+
+        // Create new version of file
+        $new_version_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_embedded_files/$item_id/versions")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'embedded_properties'   => [
+                        'content' => 'No longer "Hello World!"',
+                    ],
+                    'should_lock_file'      => false,
+                    'approval_table_action' => 'reset',
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $new_version_response->getStatusCode());
+
+        // Get all approval tables
+        $get_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', "docman_items/$item_id/approval_tables"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $get_response->getStatusCode());
+        $get_body = json_decode($get_response->getBody()->getContents());
+        self::assertIsArray($get_body);
+        self::assertCount(2, $get_body);
+
+        // Delete approval table
+        $delete_table_response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', "docman_items/$item_id/approval_table"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $delete_table_response->getStatusCode());
+
+        // Get remaining table
+        $get_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', "docman_items/$item_id/approval_tables"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $get_response->getStatusCode());
+        $get_body = json_decode($get_response->getBody()->getContents());
+        self::assertIsArray($get_body);
+        self::assertCount(1, $get_body);
+
+        // Recreate a table
+        $patch_response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', "docman_items/$item_id/approval_table")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'action' => 'copy',
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $patch_response->getStatusCode());
+
+        // Get all approval tables
+        $get_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', "docman_items/$item_id/approval_tables"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $get_response->getStatusCode());
+        $get_body = json_decode($get_response->getBody()->getContents());
+        self::assertIsArray($get_body);
+        self::assertCount(2, $get_body);
+
+        // Cleanup (delete file)
+        $delete_item_response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', "docman_embedded_files/$item_id"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $delete_item_response->getStatusCode());
+    }
+
     private function assertGetDocumentItems(
         array $items,
         ?array $folder,

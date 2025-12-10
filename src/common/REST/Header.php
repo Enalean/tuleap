@@ -157,9 +157,9 @@ class Header
         self::sendAllowHeaders([self::OPTIONS, self::POST, self::PUT]);
     }
 
-    public static function allowOptionsPostPutDelete(): void
+    public static function allowOptionsPostPutPatchDelete(): void
     {
-        self::sendAllowHeaders([self::OPTIONS, self::POST, self::PUT, self::DELETE]);
+        self::sendAllowHeaders([self::OPTIONS, self::POST, self::PUT, self::PATCH, self::DELETE]);
     }
 
     public static function allowOptionsGetPost()

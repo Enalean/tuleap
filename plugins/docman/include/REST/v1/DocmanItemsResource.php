@@ -49,6 +49,8 @@ use Tuleap\Docman\Log\LogEntry;
 use Tuleap\Docman\Log\LogRetriever;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\ResponseFeedbackWrapper;
+use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTableAction;
+use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTablePatchRepresentation;
 use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTablePostRepresentation;
 use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTablePutRepresentation;
 use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTableReviewPutRepresentation;
@@ -453,9 +455,9 @@ final class DocmanItemsResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}/approval_table
      */
-    public function optionsPostPutDeleteApprovalTable(int $id): void
+    public function optionsPostPutPatchDeleteApprovalTable(int $id): void
     {
-        Header::allowOptionsPostPutDelete();
+        Header::allowOptionsPostPutPatchDelete();
     }
 
     /**
@@ -475,7 +477,7 @@ final class DocmanItemsResource extends AuthenticatedResource
     public function postApprovalTable(int $id, ApprovalTablePostRepresentation $representation): void
     {
         $this->checkAccess();
-        Header::allowOptionsPostPutDelete();
+        Header::allowOptionsPostPutPatchDelete();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $item          = $items_request->getItem();
@@ -526,7 +528,7 @@ final class DocmanItemsResource extends AuthenticatedResource
     public function putApprovalTable(int $id, ApprovalTablePutRepresentation $representation): void
     {
         $this->checkAccess();
-        Header::allowOptionsPostPutDelete();
+        Header::allowOptionsPostPutPatchDelete();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $item          = $items_request->getItem();
@@ -560,6 +562,54 @@ final class DocmanItemsResource extends AuthenticatedResource
     }
 
     /**
+     * Perform asked action on approval table
+     *
+     * @url    PATCH {id}/approval_table
+     * @access hybrid
+     *
+     * @param int $id ID of the item {@from path}
+     * @param ApprovalTablePatchRepresentation $representation Action to perform {@from body}
+     *
+     * @status 200
+     * @throws RestException 400
+     */
+    public function patchApprovalTable(int $id, ApprovalTablePatchRepresentation $representation): void
+    {
+        $this->checkAccess();
+        Header::allowOptionsPostPutPatchDelete();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
+        $user          = $items_request->getUser();
+
+        $docman_permissions_manager = Docman_PermissionsManager::instance($project->getGroupId());
+        $user_can_write             = $docman_permissions_manager->userCanWrite($user, $item->getId());
+
+        if (! $user_can_write) {
+            throw new RestException(404);
+        }
+
+        $factories_factory = new Docman_ApprovalTableFactoriesFactory();
+        $factory           = $factories_factory->getFromItem($item);
+        if ($factory === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to perform an action on'));
+        }
+
+        if ($factory->getLastTableForItem() === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to perform an action on'));
+        }
+
+        $action = ApprovalTableAction::fromString($representation->action);
+        if (! $factory->createTable((int) $user->getId(), $action->value)) {
+            throw new I18NRestException(500, sprintf(
+                dgettext('tuleap-docman', 'Failed to perform action "%s" on approval table'),
+                $action->value,
+            ));
+        }
+    }
+
+    /**
      * Delete the last approval table for item
      *
      * @url    DELETE {id}/approval_table
@@ -576,7 +626,7 @@ final class DocmanItemsResource extends AuthenticatedResource
     public function deleteApprovalTable(int $id): void
     {
         $this->checkAccess();
-        Header::allowOptionsPostPutDelete();
+        Header::allowOptionsPostPutPatchDelete();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $item          = $items_request->getItem();
