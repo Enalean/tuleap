@@ -76,7 +76,7 @@ $inactive-tab-right-margin: calc(
     margin: calc(var(--tlp-medium-spacing) / 2) 0 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) / 2);
     border-top: 1px solid var(--tlp-border-light-color);
-    color: light-dark(var(--tlp-dimmed-color), var(--tlp-dimmed-color-lighter-30));
+    color: var(--tlp-dimmed-color);
     font-size: 0.625rem;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -150,7 +150,7 @@ button:where(.tlp-tab) {
         color $tlp-tabs-transition,
         border-bottom-color $tlp-tabs-transition;
     border-bottom: $active-tab-border-width solid transparent;
-    color: light-dark(var(--tlp-dimmed-color), var(--tlp-dimmed-color-lighter-30));
+    color: var(--tlp-dimmed-color);
     font-size: 0.85rem;
     font-weight: 500;
     text-decoration: none;
@@ -201,8 +201,7 @@ button:where(.tlp-tab) {
         color $tlp-tabs-transition,
         border-right-color $tlp-tabs-transition;
     border: 0;
-    border-right: $inactive-tab-right-border-width solid
-        var(--tlp-neutral-dark-color-transparent-50);
+    border-right: $inactive-tab-right-border-width solid var(--tlp-border-color-transparent-50);
     line-height: 0.875rem;
     white-space: nowrap;
 
@@ -219,8 +218,7 @@ button:where(.tlp-tab) {
     &[disabled]:hover {
         padding: var(--tlp-medium-spacing) $inactive-tab-right-margin var(--tlp-medium-spacing)
             var(--tlp-medium-spacing);
-        border-right: $inactive-tab-right-border-width solid
-            var(--tlp-neutral-dark-color-transparent-50);
+        border-right: $inactive-tab-right-border-width solid var(--tlp-border-color-transparent-50);
         color: light-dark(var(--tlp-dimmed-color-lighter-50), var(--tlp-dimmed-color-darker-10));
 
         > .tlp-tab-badge-append {
@@ -238,8 +236,7 @@ button:where(.tlp-tab) {
     width: 100%;
     margin: 0;
     padding-bottom: var(--tlp-medium-spacing);
-    border-right: $inactive-tab-right-border-width solid
-        var(--tlp-neutral-dark-color-transparent-50);
+    border-right: $inactive-tab-right-border-width solid var(--tlp-border-color-transparent-50);
     border-radius: 0;
 
     > .tlp-tab {
@@ -251,7 +248,7 @@ button:where(.tlp-tab) {
     width: 100%;
     margin: 0;
     padding: 0 $inactive-tab-right-margin 0 var(--tlp-medium-spacing);
-    color: var(--tlp-dimmed-color-lighter-30);
+    color: light-dark(var(--tlp-dimmed-color-lighter-30), var(--tlp-dimmed-color-darker-10));
     font-size: 0.85rem;
     font-weight: 800;
     text-align: end;

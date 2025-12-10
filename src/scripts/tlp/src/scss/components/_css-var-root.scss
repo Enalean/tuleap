@@ -75,7 +75,10 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-warning-dark-color: #{$tlp-warning-dark-color};
     --tlp-danger-color: #{$tlp-danger-color};
     --tlp-danger-dark-color: #{$tlp-danger-dark-color};
-    --tlp-dimmed-color: #{$tlp-dimmed-color};
+    --tlp-dimmed-color: light-dark(
+        #{$tlp-dimmed-color},
+        var(--tlp-dimmed-color-on-dark-background)
+    );
     --tlp-white-color: #{common.$tlp-white-color};
     --tlp-main-color: #{$tlp-main-color};
     --tlp-dark-color: #{$tlp-dark-color};
@@ -300,7 +303,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
         #{color.mix($tlp-warning-color, $tlp-dark-color, 15%)}
     );
 
-    // Backgrounds
+    // Structures
     --tlp-structure-background-color: light-dark(var(--tlp-white-color), var(--tlp-dark-color));
 
     // Dark
@@ -343,6 +346,10 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-border-light-color: light-dark(
         var(--tlp-neutral-light-color),
         var(--tlp-dark-color-lighter-05)
+    );
+    --tlp-border-color-transparent-50: light-dark(
+        var(--tlp-neutral-dark-color-transparent-50),
+        var(--tlp-dimmed-color-transparent-50)
     );
     --tlp-neutral-light-color: #{$tlp-neutral-light-color};
     --tlp-neutral-normal-color: #{$tlp-neutral-normal-color};
