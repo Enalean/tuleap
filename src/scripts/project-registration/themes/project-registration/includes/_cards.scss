@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 $card-border-margin: 150px;
 
 .project-registration-default-templates-section {
@@ -54,11 +53,11 @@ $card-border-margin: 150px;
 }
 
 .project-registration-template-card-svg {
-    fill: var(--tlp-neutral-dark-color);
+    fill: var(--tlp-illustration-grey);
 }
 
 .project-registration-template-card-svg-stroke {
-    stroke: var(--tlp-neutral-dark-color);
+    stroke: var(--tlp-illustration-grey);
 }
 
 .project-registration-selected-template {

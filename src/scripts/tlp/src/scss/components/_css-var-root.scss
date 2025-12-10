@@ -414,6 +414,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
         #{$tlp-illustration-grey-on-white},
         #{color.mix($tlp-dark-color, common.$tlp-black-color, 50%)}
     );
+    --tlp-illustration-grey: light-dark(var(--tlp-neutral-dark-color), var(--tlp-dimmed-color));
     --tlp-illustration-yellow: #fbe484;
     --tlp-illustration-red: #faaaa5;
     --tlp-illustration-green: #b8daaf;
