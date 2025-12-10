@@ -22,15 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
 
 class OpenIDConnectSigningKeyDAO extends DataAccessObject
 {
-    public function save(string $public_key, string $encrypted_private_key, int $expiration_date, int $cleanup_keys_date): void
+    /**
+     * @param non-empty-string $public_key
+     */
+    public function save(string $public_key, ConcealedString $private_key, int $expiration_date, int $cleanup_keys_date): void
     {
         $this->getDB()->insert(
             'oauth2_server_oidc_signing_key',
-            ['public_key' => $public_key, 'private_key' => $encrypted_private_key, 'expiration_date' => $expiration_date]
+            [
+                'public_key' => $public_key,
+                'private_key' => $this->encryptDataToStoreInATableRow($private_key, $this->getPrivateKeyEncryptionAdditionalData($public_key)),
+                'expiration_date' => $expiration_date,
+            ]
         );
         $this->getDB()->run('DELETE FROM oauth2_server_oidc_signing_key WHERE ? > expiration_date', $cleanup_keys_date);
     }
@@ -45,12 +54,12 @@ class OpenIDConnectSigningKeyDAO extends DataAccessObject
 
     /**
      * @return string[]|null
-     * @psalm-return array{public_key:string,private_key:string}|null
+     * @psalm-return array{public_key:non-empty-string,private_key:ConcealedString}|null
      */
-    public function searchMostRecentNonExpiredEncryptedPrivateKey(int $current_time): ?array
+    public function searchMostRecentNonExpiredPrivateKey(int $current_time): ?array
     {
         $row = $this->getDB()->row(
-            'SELECT public_key, private_key
+            'SELECT public_key, private_key, expiration_date
                        FROM oauth2_server_oidc_signing_key
                        WHERE expiration_date >= ?
                        ORDER BY expiration_date DESC
@@ -62,6 +71,24 @@ class OpenIDConnectSigningKeyDAO extends DataAccessObject
             return null;
         }
 
-        return $row;
+        return [
+            'public_key' => $row['public_key'],
+            'private_key' => $this->decryptDataStoredInATableRow(
+                $row['private_key'],
+                $this->getPrivateKeyEncryptionAdditionalData($row['public_key']),
+            ),
+        ];
+    }
+
+    /**
+     * @param non-empty-string $public_key
+     */
+    private function getPrivateKeyEncryptionAdditionalData(string $public_key): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData(
+            'oauth2_server_oidc_signing_key',
+            'private_key',
+            $public_key,
+        );
     }
 }
