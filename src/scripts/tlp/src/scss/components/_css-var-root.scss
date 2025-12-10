@@ -300,6 +300,9 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
         #{color.mix($tlp-warning-color, $tlp-dark-color, 15%)}
     );
 
+    // Backgrounds
+    --tlp-pane-background-color: light-dark(var(--tlp-white-color), var(--tlp-dark-color));
+
     // Dark
     --tlp-danger-color-on-dark-background: #{color.mix(
             $tlp-danger-color,
@@ -333,6 +336,10 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-typo-default-text-color-on-dark-background: #{$tlp-neutral-normal-color};
 
     // borders
+    --tlp-border-color: light-dark(
+        var(--tlp-neutral-normal-color),
+        var(--tlp-dark-color-lighter-10)
+    );
     --tlp-neutral-light-color: #{$tlp-neutral-light-color};
     --tlp-neutral-normal-color: #{$tlp-neutral-normal-color};
     --tlp-neutral-dark-color: #{$tlp-neutral-dark-color};

@@ -20,9 +20,12 @@
 .tlp-pane {
     display: flex;
     margin: 0 0 var(--tlp-medium-spacing);
-    border: 1px solid var(--tlp-neutral-normal-color);
+    border: light-dark(
+        1px solid var(--tlp-neutral-normal-color),
+        1px solid var(--tlp-dark-color-lighter-10)
+    );
     border-radius: var(--tlp-large-radius);
-    background: var(--tlp-white-color);
+    background: var(--tlp-pane-background-color);
     box-shadow: var(--tlp-pane-shadow);
 
     &.tlp-pane-collapsable > .tlp-pane-container > .tlp-pane-header {
@@ -46,7 +49,7 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    border-right: 1px solid var(--tlp-neutral-light-color);
+    border-right: 1px solid var(--tlp-border-color);
 
     &:first-child {
         width: 100%;
@@ -72,7 +75,7 @@
     @extend %-tlp-pane-title;
 
     margin: 0;
-    color: var(--tlp-dimmed-color);
+    color: light-dark(var(--tlp-dimmed-color), var(--tlp-neutral-dark-color));
 }
 
 .tlp-pane-subtitle {
@@ -90,7 +93,7 @@
 
 .tlp-pane-section {
     padding: var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
+    border-bottom: 1px solid var(--tlp-border-color);
 
     &:last-child {
         border-bottom: 0;
