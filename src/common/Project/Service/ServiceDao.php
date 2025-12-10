@@ -168,25 +168,11 @@ class ServiceDao extends DataAccessObject
         return $this->getDB()->run($sql, $id);
     }
 
-    public function getServiceInfoQueryForNewProject(array $legacy, int $template_id): array
+    public function getServiceInfoQueryForNewProject(int $template_id): array
     {
-        $forbidden_shortname = [];
+        $sql = 'SELECT * FROM service WHERE group_id = ? AND is_active=1';
 
-        foreach ($legacy as $service_shortname => $legacy_service_usage) {
-            if (! $legacy_service_usage) {
-                $forbidden_shortname[] = $service_shortname;
-            }
-        }
-
-        if (count($forbidden_shortname) === 0) {
-            $sql = 'SELECT * FROM service WHERE group_id=? AND is_active=1';
-            return $this->getDB()->run($sql, $template_id);
-        }
-
-        $shortnames = EasyStatement::open()->in('?*', $forbidden_shortname);
-        $sql        = 'SELECT * FROM service WHERE group_id=? AND is_active=1 AND short_name NOT IN (?)';
-
-        return $this->getDB()->run($sql, $template_id, ...$shortnames->values());
+        return $this->getDB()->run($sql, $template_id);
     }
 
     private function isProjectActive(int $project_id, string $name): bool

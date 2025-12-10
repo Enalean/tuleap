@@ -59,7 +59,6 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\Event\GetUriFromCrossReference;
-use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Event\ProjectServiceBeforeDeactivation;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
@@ -74,7 +73,6 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceClassnamesCollector;
-use Tuleap\Project\Service\ServiceDao;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
@@ -97,7 +95,6 @@ use Tuleap\REST\UserManager as RESTUserManager;
 use Tuleap\Search\IndexAllPendingItemsEvent;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
 use Tuleap\Search\ItemToIndexQueueEventBased;
-use Tuleap\Service\ServiceCreator;
 use Tuleap\StatisticsCore\StatisticsServiceUsage;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
@@ -279,7 +276,6 @@ use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
-use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao;
 use Tuleap\Tracker\TrackerDeletion\DeleteTrackerPresenterBuilder;
@@ -400,8 +396,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(HistoryEntryCollection::NAME);
         $this->addHook(Event::USER_HISTORY_CLEAR, 'clearRecentlyVisitedArtifacts');
         $this->addHook(IndexedItemFoundToSearchResult::NAME);
-
-        $this->addHook(ProjectRegistrationActivateService::NAME);
 
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
@@ -1038,19 +1032,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     {
         $injector = new Tracker_REST_ResourcesInjector();
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
-    }
-
-    public function project_registration_activate_service(ProjectRegistrationActivateService $event)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate());
-    }
-
-    /**
-     * @return ServiceActivator
-     */
-    private function getServiceActivator()
-    {
-        return new ServiceActivator(ServiceManager::instance(), new ServiceCreator(new ServiceDao()));
     }
 
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
