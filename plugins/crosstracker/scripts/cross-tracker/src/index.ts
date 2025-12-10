@@ -42,7 +42,6 @@ import {
     DASHBOARD_ID,
     TABLE_DATA_STORE,
     TABLE_DATA_ORCHESTRATOR,
-    MOUNT_POINT,
     EXTERNAL_PLUGINS,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
@@ -139,7 +138,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(WIDGET_TITLE_UPDATER, widget_title_updater)
             .provide(ARROW_REDRAW_TRIGGERER, arrow_redraw_triggerer)
             .provide(WIDGET_CONTAINER, widget_element)
-            .provide(MOUNT_POINT, vue_mount_point)
             .provide(EXTERNAL_PLUGINS, widget_data.external_plugins)
             .mount(vue_mount_point);
     }

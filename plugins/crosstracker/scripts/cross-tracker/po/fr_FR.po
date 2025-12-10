@@ -19,7 +19,7 @@ msgstr "Aperçu de la requête \"%{title}\""
 msgid "%{from} – %{to} of %{total}"
 msgstr "%{from} – %{to} sur %{total}"
 
-msgid "Ai query assistant"
+msgid "AI query assistant"
 msgstr "Assistant de requête IA"
 
 msgid "All artifacts created in the last 10 days"
@@ -30,6 +30,9 @@ msgstr "Tous les artifacts ouverts"
 
 msgid "An error occurred: %{error}"
 msgstr "Une erreur s'est produite : %{error}"
+
+msgid "Apply"
+msgstr "Appliquer"
 
 msgid "Are you sure you want to continue ?"
 msgstr "Êtes-vous sûr de vouloir continuer ?"
@@ -216,8 +219,14 @@ msgstr "Suggestions de sémantiques"
 msgid "Show artifact links"
 msgstr "Afficher les liens de l’artifact"
 
+msgid "Something unexpected occurred"
+msgstr "Quelque chose d'inattendu s'est produit"
+
 msgid "Status"
 msgstr "État"
+
+msgid "Submit"
+msgstr "Envoyer"
 
 msgid "Submitted by"
 msgstr "Auteur"

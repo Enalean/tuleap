@@ -18,7 +18,7 @@ msgstr ""
 msgid "%{from} – %{to} of %{total}"
 msgstr ""
 
-msgid "Ai query assistant"
+msgid "AI query assistant"
 msgstr ""
 
 msgid "All artifacts created in the last 10 days"
@@ -28,6 +28,9 @@ msgid "All open artifacts"
 msgstr ""
 
 msgid "An error occurred: %{error}"
+msgstr ""
+
+msgid "Apply"
 msgstr ""
 
 msgid "Are you sure you want to continue ?"
@@ -205,8 +208,14 @@ msgstr ""
 msgid "Show artifact links"
 msgstr ""
 
+msgid "Something unexpected occurred"
+msgstr ""
+
 msgid "Status"
 msgstr "Estado"
+
+msgid "Submit"
+msgstr ""
 
 msgid "Submitted by"
 msgstr "Enviado por"

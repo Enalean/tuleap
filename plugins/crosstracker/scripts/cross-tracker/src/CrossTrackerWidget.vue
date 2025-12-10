@@ -19,23 +19,28 @@
 
 <template>
     <feedback-message />
-    <read-query
-        v-if="widget_pane === 'query-active'"
-        v-on:switch-to-create-query-pane="handleCreateNewQuery"
-        v-bind:selected_query="selected_query"
-    />
-    <create-new-query
-        v-else-if="widget_pane === 'query-creation' && is_user_admin"
-        v-on:return-to-active-query-pane="displayActiveQuery"
-    />
-    <edit-query
-        v-else-if="widget_pane === 'query-edition'"
-        v-bind:query="query_to_edit"
-        v-on:return-to-active-query-pane="displayActiveQuery"
-    />
+    <div class="query">
+        <div class="query-manipulation">
+            <read-query
+                v-if="widget_pane === 'query-active'"
+                v-on:switch-to-create-query-pane="handleCreateNewQuery"
+                v-bind:selected_query="selected_query"
+            />
+            <create-new-query
+                v-else-if="widget_pane === 'query-creation' && is_user_admin"
+                v-on:return-to-active-query-pane="displayActiveQuery"
+            />
+            <edit-query
+                v-else-if="widget_pane === 'query-edition'"
+                v-bind:query="query_to_edit"
+                v-on:return-to-active-query-pane="displayActiveQuery"
+            />
+        </div>
+        <a-i-assistant v-if="should_show_ai_assistant_panel" class="query-ai-assistant" />
+    </div>
 </template>
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER, IS_USER_ADMIN, WIDGET_TITLE_UPDATER } from "./injection-symbols";
 import type {
@@ -46,6 +51,7 @@ import type {
     SwitchQueryEvent,
 } from "./helpers/widget-events";
 import {
+    TOGGLE_AI_ASSISTANT_EVENT,
     NEW_QUERY_CREATED_EVENT,
     QUERY_EDITED_EVENT,
     INITIALIZED_WITH_QUERY_EVENT,
@@ -64,6 +70,7 @@ import FeedbackMessage from "./components/feedback/FeedbackMessage.vue";
 import EditQuery from "./components/query/edition/EditQuery.vue";
 import type { Query } from "./type";
 import type { WidgetTitleUpdater } from "./WidgetTitleUpdater";
+import AIAssistant from "./components/AIAssistant.vue";
 
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
@@ -79,6 +86,15 @@ const query_to_edit = ref<Query>({
     tql_query: "",
 });
 
+const show_ai_assistant = ref<boolean>(false);
+
+const should_show_ai_assistant_panel = computed((): boolean => {
+    if (widget_pane.value !== QUERY_CREATION_PANE && widget_pane.value !== QUERY_EDITION_PANE) {
+        return false;
+    }
+    return show_ai_assistant.value;
+});
+
 function displayActiveQuery(): void {
     widget_pane.value = QUERY_ACTIVE_PANE;
 }
@@ -90,6 +106,7 @@ onMounted(() => {
     emitter.on(INITIALIZED_WITH_QUERY_EVENT, setCurrentlySelectedQuery);
     emitter.on(NEW_QUERY_CREATED_EVENT, setCurrentlySelectedQuery);
     emitter.on(QUERY_EDITED_EVENT, setCurrentlySelectedQuery);
+    emitter.on(TOGGLE_AI_ASSISTANT_EVENT, toggleAIAssistant);
     widget_title_updater.listenToUpdateTitle();
 });
 
@@ -100,6 +117,7 @@ onBeforeUnmount(() => {
     emitter.off(INITIALIZED_WITH_QUERY_EVENT, setCurrentlySelectedQuery);
     emitter.off(NEW_QUERY_CREATED_EVENT, setCurrentlySelectedQuery);
     emitter.off(QUERY_EDITED_EVENT, setCurrentlySelectedQuery);
+    emitter.off(TOGGLE_AI_ASSISTANT_EVENT, toggleAIAssistant);
     emitter.all.clear();
     widget_title_updater.removeListener();
 });
@@ -118,4 +136,22 @@ function handleEditQuery(query_to_edit_event: EditQueryEvent): void {
     query_to_edit.value = query_to_edit_event.query;
     widget_pane.value = QUERY_EDITION_PANE;
 }
+
+function toggleAIAssistant(): void {
+    show_ai_assistant.value = !show_ai_assistant.value;
+}
 </script>
+<style scoped lang="scss">
+.query {
+    display: flex;
+}
+
+.query-manipulation {
+    flex-grow: 1;
+    min-width: 50%;
+}
+
+.query-ai-assistant {
+    flex-grow: 1;
+}
+</style>
