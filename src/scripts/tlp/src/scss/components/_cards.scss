@@ -20,9 +20,9 @@
 .tlp-card {
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing);
-    border: 1px solid var(--tlp-neutral-normal-color);
+    border: 1px solid var(--tlp-border-color);
     border-radius: var(--tlp-large-radius);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     box-shadow: var(--tlp-pane-shadow);
 
     &:last-child {
@@ -31,7 +31,10 @@
 }
 
 .tlp-card-inactive {
-    background: var(--tlp-fade-background-color-darker-01);
+    background: light-dark(
+        var(--tlp-fade-background-color-darker-01),
+        var(--tlp-fade-background-color-darker-10)
+    );
 }
 
 .tlp-card-selectable {
@@ -55,7 +58,7 @@
 
 .tlp-pane-section-for-cards,
 .tlp-pane-section-for-cards-under-tabs {
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
 
     > .tlp-pane-subtitle {
         margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
@@ -94,7 +97,8 @@
     > .tlp-card {
         margin: 0;
         border: 0;
-        border-bottom: 1px solid var(--tlp-neutral-light-color);
+        border-bottom: 1px solid
+            light-dark(var(--tlp-neutral-light-color), var(--tlp-dark-color-lighter-10));
         border-radius: 0;
         box-shadow: none;
 
@@ -132,9 +136,9 @@
 
         &:hover,
         &:focus {
-            border-color: var(--tlp-neutral-normal-color);
+            border-color: var(--tlp-border-color);
             background: var(--tlp-fade-background-color-hover-border);
-            box-shadow: 0 -1px 0 var(--tlp-neutral-normal-color);
+            box-shadow: 0 -1px 0 var(--tlp-border-color);
         }
     }
 }

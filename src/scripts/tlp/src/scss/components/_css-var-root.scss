@@ -301,7 +301,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     );
 
     // Backgrounds
-    --tlp-pane-background-color: light-dark(var(--tlp-white-color), var(--tlp-dark-color));
+    --tlp-structure-background-color: light-dark(var(--tlp-white-color), var(--tlp-dark-color));
 
     // Dark
     --tlp-danger-color-on-dark-background: #{color.mix(
