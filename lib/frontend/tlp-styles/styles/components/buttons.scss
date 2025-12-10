@@ -128,8 +128,8 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     $outline-background-color-hover,
     $outline-background-color-active
 ) {
-    border: 1px solid var(--tlp-white-color);
-    background: var(--tlp-white-color);
+    border: 1px solid var(--tlp-structure-background-color);
+    background: var(--tlp-structure-background-color);
     color: $outline-color;
 
     &:hover,
@@ -146,7 +146,7 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
         color: $outline-color-disabled;
 
         &:hover {
-            background: var(--tlp-white-color);
+            background: var(--tlp-structure-background-color);
         }
     }
 }
@@ -197,7 +197,7 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
         --tlp-button-ellipsis-text-shadow-on-dark-value: 0 1px 2px rgb(0 0 0 / 30%);
         --tlp-button-ellipsis-hover-color: #{$outline-background-color-hover};
         --tlp-button-ellipsis-hover-color-on-dark-value: rgb(0 0 0 / 30%);
-        --tlp-button-ellipsis-focus-border-color: var(--tlp-white-color);
+        --tlp-button-ellipsis-focus-border-color: var(--tlp-structure-background-color);
         --tlp-button-ellipsis-focus-border-color-on-dark-value: transparent;
         --tlp-button-ellipsis-disabled-color: #{$outline-color-disabled};
         --tlp-button-ellipsis-disabled-color-on-dark-value: var(--tlp-white-color);
@@ -245,13 +245,13 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     @extend %-tlp-button;
     @include -tlp-button-type(
         var(--tlp-main-color),
-        var(--tlp-main-color-darker-05),
-        var(--tlp-main-color-darker-10),
-        var(--tlp-main-color-lighter-30),
+        light-dark(var(--tlp-main-color-darker-05), var(--tlp-main-color-lighter-40)),
+        light-dark(var(--tlp-main-color-darker-10), var(--tlp-main-color-lighter-30)),
+        light-dark(var(--tlp-main-color-lighter-30), var(--tlp-main-color-darker-15)),
         var(--tlp-white-color-transparent-40),
-        var(--tlp-main-color),
-        var(--tlp-main-color-lighter-90),
-        var(--tlp-main-color-lighter-80),
+        light-dark(var(--tlp-main-color), var(--tlp-main-color-on-dark-background)),
+        light-dark(var(--tlp-main-color-lighter-90), var(--tlp-dark-color-lighter-10)),
+        light-dark(var(--tlp-main-color-lighter-80), var(--tlp-dark-color-lighter-05)),
         var(--tlp-main-color-transparent-50)
     );
 }
@@ -261,33 +261,39 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
 
     border-color: var(--tlp-border-light-color);
     background: var(--tlp-border-light-color);
-    color: var(--tlp-dark-color);
+    color: var(--tlp-typo-default-text-color);
 
     &:hover,
     &:focus {
-        border-color: var(--tlp-neutral-light-color-darker-05);
-        background: var(--tlp-neutral-light-color-darker-05);
+        border-color: light-dark(
+            var(--tlp-neutral-light-color-darker-05),
+            var(--tlp-dark-color-lighter-10)
+        );
+        background: light-dark(
+            var(--tlp-neutral-light-color-darker-05),
+            var(--tlp-dark-color-lighter-10)
+        );
     }
 
     &:active {
-        border-color: var(--tlp-neutral-light-color-darker-10);
-        background: var(--tlp-neutral-light-color-darker-10);
+        border-color: light-dark(var(--tlp-neutral-light-color-darker-10), var(--tlp-dark-color));
+        background: light-dark(var(--tlp-neutral-light-color-darker-10), var(--tlp-dark-color));
     }
 
     &:disabled,
     &.disabled {
         @include -tlp-button-disabled(
-            var(--tlp-neutral-light-color-lighter-30),
-            var(--tlp-dark-color-transparent-50)
+            light-dark(var(--tlp-neutral-light-color-lighter-30), var(--tlp-dark-color-darker-10)),
+            var(--tlp-typo-disabled-text-color)
         );
     }
 
     &.tlp-button-outline {
         @include -tlp-button-outline(
-            var(--tlp-dark-color),
-            var(--tlp-neutral-light-color-lighter-30),
-            var(--tlp-neutral-light-color-lighter-40),
-            var(--tlp-dark-color-lighter-90)
+            var(--tlp-typo-default-text-color),
+            var(--tlp-typo-disabled-text-color),
+            light-dark(var(--tlp-neutral-light-color-lighter-40), var(--tlp-dark-color-lighter-10)),
+            light-dark(var(--tlp-dark-color-lighter-90), var(--tlp-dark-color-lighter-05))
         );
     }
 }
@@ -296,13 +302,13 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     @extend %-tlp-button;
     @include -tlp-button-type(
         var(--tlp-info-color),
-        var(--tlp-info-color-darker-05),
-        var(--tlp-info-color-darker-10),
-        var(--tlp-info-color-lighter-30),
+        light-dark(var(--tlp-info-color-darker-05), var(--tlp-info-color-lighter-30)),
+        light-dark(var(--tlp-info-color-darker-10), var(--tlp-info-color-lighter-20)),
+        light-dark(var(--tlp-info-color-lighter-30), var(--tlp-info-color-darker-30)),
         var(--tlp-white-color-transparent-40),
-        var(--tlp-info-dark-color),
-        var(--tlp-info-color-lighter-90),
-        var(--tlp-info-color-lighter-80),
+        light-dark(var(--tlp-info-dark-color), var(--tlp-info-color-on-dark-background)),
+        light-dark(var(--tlp-info-color-lighter-90), var(--tlp-info-color-darker-70)),
+        light-dark(var(--tlp-info-color-lighter-80), var(--tlp-info-color-darker-50)),
         var(--tlp-info-color-transparent-50)
     );
 }
@@ -311,13 +317,13 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     @extend %-tlp-button;
     @include -tlp-button-type(
         var(--tlp-success-color),
-        var(--tlp-success-color-darker-05),
-        var(--tlp-success-color-darker-10),
-        var(--tlp-success-color-lighter-30),
+        light-dark(var(--tlp-success-color-darker-05), var(--tlp-success-color-lighter-30)),
+        light-dark(var(--tlp-success-color-darker-10), var(--tlp-success-color-lighter-20)),
+        light-dark(var(--tlp-success-color-lighter-30), var(--tlp-success-color-darker-30)),
         var(--tlp-white-color-transparent-40),
-        var(--tlp-success-dark-color),
-        var(--tlp-success-color-lighter-90),
-        var(--tlp-success-color-lighter-80),
+        light-dark(var(--tlp-success-dark-color), var(--tlp-success-color-on-dark-background)),
+        light-dark(var(--tlp-success-color-lighter-90), var(--tlp-success-color-darker-70)),
+        light-dark(var(--tlp-success-color-lighter-80), var(--tlp-success-color-darker-50)),
         var(--tlp-success-color-transparent-50)
     );
 }
@@ -326,13 +332,13 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     @extend %-tlp-button;
     @include -tlp-button-type(
         var(--tlp-warning-color),
-        var(--tlp-warning-color-darker-05),
-        var(--tlp-warning-color-darker-10),
-        var(--tlp-warning-color-lighter-30),
+        light-dark(var(--tlp-warning-color-darker-05), var(--tlp-warning-color-lighter-30)),
+        light-dark(var(--tlp-warning-color-darker-10), var(--tlp-warning-color-lighter-20)),
+        light-dark(var(--tlp-warning-color-lighter-30), var(--tlp-warning-color-darker-30)),
         var(--tlp-white-color-transparent-40),
-        var(--tlp-warning-dark-color),
-        var(--tlp-warning-color-lighter-90),
-        var(--tlp-warning-color-lighter-80),
+        light-dark(var(--tlp-warning-dark-color), var(--tlp-warning-color-on-dark-background)),
+        light-dark(var(--tlp-warning-color-lighter-90), var(--tlp-warning-color-darker-70)),
+        light-dark(var(--tlp-warning-color-lighter-80), var(--tlp-warning-color-darker-50)),
         var(--tlp-warning-color-transparent-50)
     );
 }
@@ -341,13 +347,13 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     @extend %-tlp-button;
     @include -tlp-button-type(
         var(--tlp-danger-color),
-        var(--tlp-danger-color-darker-05),
-        var(--tlp-danger-color-darker-10),
-        var(--tlp-danger-color-lighter-30),
+        light-dark(var(--tlp-danger-color-darker-05), var(--tlp-danger-color-lighter-30)),
+        light-dark(var(--tlp-danger-color-darker-10), var(--tlp-danger-color-lighter-20)),
+        light-dark(var(--tlp-danger-color-lighter-30), var(--tlp-danger-color-darker-30)),
         var(--tlp-white-color-transparent-40),
-        var(--tlp-danger-dark-color),
-        var(--tlp-danger-color-lighter-90),
-        var(--tlp-danger-color-lighter-80),
+        light-dark(var(--tlp-danger-dark-color), var(--tlp-danger-color-on-dark-background)),
+        light-dark(var(--tlp-danger-color-lighter-90), var(--tlp-danger-color-darker-70)),
+        light-dark(var(--tlp-danger-color-lighter-80), var(--tlp-danger-color-darker-50)),
         var(--tlp-danger-color-transparent-50)
     );
 }
