@@ -146,7 +146,6 @@
         </div>
     </div>
 </template>
-
 <script setup lang="ts">
 import type { ApprovalTableReviewer, Item, UserGroup } from "../../../type";
 import UserBadge from "../../User/UserBadge.vue";
@@ -154,12 +153,13 @@ import {
     rearrangeReviewersTable,
     translateReviewStatus,
 } from "../../../helpers/approval-table-helper";
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { postApprovalTableReviewerReminder } from "../../../api/approval-table-rest-querier";
 import { useGettext } from "vue3-gettext";
 import { sprintf } from "sprintf-js";
 import "@tuleap/lazybox";
 import type { Lazybox } from "@tuleap/lazybox";
+import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
 import type { User } from "@tuleap/core-rest-api-types";
 import { loadProjectUserGroups } from "../../../helpers/permissions/ugroups";
@@ -196,6 +196,7 @@ const is_sending_reminder = defineModel<boolean>("is_sending_reminder");
 const is_sending_to = ref<number | null>(null);
 const user_group_picker = ref<HTMLSelectElement>();
 const user_lazybox = ref<Lazybox>();
+const list_picker = ref<ListPicker>();
 const user_groups = ref<ReadonlyArray<UserGroup>>([]);
 
 const user_locale = strictInject(USER_LOCALE);
@@ -218,7 +219,7 @@ onMounted(() => {
         },
     );
 
-    createListPicker(user_group_picker.value, {
+    list_picker.value = createListPicker(user_group_picker.value, {
         locale: user_locale,
         placeholder: $gettext("Choose zero, one or multiple user group"),
     });
@@ -247,6 +248,10 @@ onMounted(() => {
         },
         user_locale,
     );
+});
+
+onUnmounted(() => {
+    list_picker.value?.destroy();
 });
 
 function updateRank(updated_reviewer: ApprovalTableReviewer, new_rank: number): void {

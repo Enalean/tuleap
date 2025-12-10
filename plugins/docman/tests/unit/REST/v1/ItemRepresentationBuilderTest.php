@@ -35,7 +35,6 @@ use Docman_PermissionsManager;
 use Docman_Version;
 use Docman_VersionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Docman\ApprovalTable\ApprovalTableNotificationMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
@@ -91,7 +90,6 @@ final class ItemRepresentationBuilderTest extends TestCase
             $this->item_permissions_for_groups_builder,
             $this->html_purifier,
             ProvideUserAvatarUrlStub::build(),
-            new ApprovalTableNotificationMapper(),
             $this->version_factory,
             $this->createStub(Docman_NotificationsManager::class),
         );

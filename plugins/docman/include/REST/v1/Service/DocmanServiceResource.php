@@ -27,7 +27,6 @@ use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use PermissionsManager;
 use ProjectManager;
-use Tuleap\Docman\ApprovalTable\ApprovalTableNotificationMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Notifications\NotificationBuilders;
@@ -96,7 +95,6 @@ final class DocmanServiceResource extends AuthenticatedResource
                 ),
                 $html_purifier,
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
-                new ApprovalTableNotificationMapper(),
                 $version_factory,
                 new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
             ),

@@ -23,33 +23,49 @@
         class="tlp-button-primary tlp-button-mini"
         data-test="table-admin-button"
         ref="modal_trigger"
+        v-bind:disabled="!show_modal"
     >
         <i class="fa-solid fa-gear tlp-button-icon" aria-hidden="true"></i>
         {{ $gettext("Administration") }}
     </button>
 
     <approval-table-administration-modal
-        v-if="modal_trigger"
+        v-if="modal_trigger && show_modal"
+        ref="modal_element"
         v-bind:trigger="modal_trigger"
         v-bind:table="table"
         v-bind:item="item"
-        v-on:refresh-data="$emit('refresh-data')"
+        v-on:refresh-data="onRefreshData"
     />
 </template>
 
 <script setup lang="ts">
 import type { ApprovableDocument, ApprovalTable, Item } from "../../../type";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import ApprovalTableAdministrationModal from "./ApprovalTableAdministrationModal.vue";
 
-defineProps<{
+const props = defineProps<{
     table: ApprovalTable;
     item: Item & ApprovableDocument;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
     (e: "refresh-data"): void;
 }>();
 
 const modal_trigger = ref<HTMLButtonElement>();
+const show_modal = ref<boolean>(true);
+const modal_element = ref<typeof ApprovalTableAdministrationModal>();
+
+function onRefreshData(): void {
+    emit("refresh-data");
+    show_modal.value = false;
+}
+
+watch(
+    () => props.item,
+    () => {
+        show_modal.value = true;
+    },
+);
 </script>

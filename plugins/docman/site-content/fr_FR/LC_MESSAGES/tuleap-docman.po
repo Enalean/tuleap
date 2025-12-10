@@ -353,6 +353,12 @@ msgid "Approval table history"
 msgstr "Historique des tables d'approbation"
 
 #, php-format
+msgid "Approval table notification type \"%s\" does not match a valid type."
+msgstr ""
+"Le type de notification \"%s\" de la table d'approbation ne correspond pas à "
+"un état valide."
+
+#, php-format
 msgid "Approval table state string %s does not match a valid state."
 msgstr ""
 "L'état %s de la table d'approbation ne correspond pas à un état valide."
@@ -894,6 +900,9 @@ msgstr "Erreur lors de la création de la table d'approbation"
 
 msgid "Failed to delete approval table"
 msgstr "Erreur lors de la suppression de la table d'approbation"
+
+msgid "Failed to update approval table"
+msgstr "Erreur lors de la mise à jour de la table d'approbation"
 
 msgid "File"
 msgstr "Fichier"
@@ -1859,6 +1868,9 @@ msgstr "Il y a une erreur dans les paramètres. Retour vers l'écran précédent
 msgid "There is no approval table to delete"
 msgstr "Il n'y a pas de table d'approbation à supprimer"
 
+msgid "There is no approval table to update"
+msgstr "Il n'y a pas de table d'approbation à mettre à jour"
+
 msgid "There is no data attached to this item."
 msgstr "Il n'y a pas de donnée pour cet élément."
 
@@ -1951,6 +1963,10 @@ msgstr "Type d'item inconnu"
 msgid "Unknown property label '%1$s'."
 msgstr "Nom de propriété '%1$s' inconnu."
 
+#, php-format
+msgid "Unknown table status \"%s\""
+msgstr "Status de la table inconnu \"%s\""
+
 msgid "Unused"
 msgstr "Inutilisée"
 
@@ -1979,6 +1995,10 @@ msgstr "Utiliser cette propriété"
 
 msgid "Used"
 msgstr "Utilisée"
+
+#, php-format
+msgid "User %d not found"
+msgstr "Utilisateur %d non trouvé"
 
 msgid "User groups"
 msgstr "Groupes d'utilisateurs"

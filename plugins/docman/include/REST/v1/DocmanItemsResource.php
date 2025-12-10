@@ -41,7 +41,8 @@ use PermissionsManager;
 use Project;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
-use Tuleap\Docman\ApprovalTable\ApprovalTableNotificationMapper;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Log\LogEntry;
@@ -49,8 +50,10 @@ use Tuleap\Docman\Log\LogRetriever;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\ResponseFeedbackWrapper;
 use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTablePostRepresentation;
+use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTablePutRepresentation;
 use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTableReviewPutRepresentation;
 use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTableReviewUpdater;
+use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Log\LogEntryRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
@@ -372,7 +375,6 @@ final class DocmanItemsResource extends AuthenticatedResource
                         $provide_user_avatar_url,
                     ),
                     new ApprovalTableStateMapper(),
-                    new ApprovalTableNotificationMapper(),
                     $user_manager,
                     $provide_user_avatar_url,
                     $version_factory,
@@ -441,7 +443,6 @@ final class DocmanItemsResource extends AuthenticatedResource
                 $provide_user_avatar_url,
             ),
             new ApprovalTableStateMapper(),
-            new ApprovalTableNotificationMapper(),
             $user_manager,
             $provide_user_avatar_url,
             $version_factory,
@@ -452,9 +453,9 @@ final class DocmanItemsResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}/approval_table
      */
-    public function optionsPostApprovalTable(int $id): void
+    public function optionsPostPutDeleteApprovalTable(int $id): void
     {
-        Header::allowOptionsPostDelete();
+        Header::allowOptionsPostPutDelete();
     }
 
     /**
@@ -474,7 +475,7 @@ final class DocmanItemsResource extends AuthenticatedResource
     public function postApprovalTable(int $id, ApprovalTablePostRepresentation $representation): void
     {
         $this->checkAccess();
-        Header::allowOptionsPostDelete();
+        Header::allowOptionsPostPutDelete();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $item          = $items_request->getItem();
@@ -508,6 +509,57 @@ final class DocmanItemsResource extends AuthenticatedResource
     }
 
     /**
+     * Update the current approval table of the document
+     *
+     * @url    PUT {id}/approval_table
+     * @access hybrid
+     *
+     * @param int $id ID of the item {@from path}
+     * @param ApprovalTablePutRepresentation $representation New settings of the approval table {@from body}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function putApprovalTable(int $id, ApprovalTablePutRepresentation $representation): void
+    {
+        $this->checkAccess();
+        Header::allowOptionsPostPutDelete();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
+        $user          = $items_request->getUser();
+
+        $docman_permissions_manager = Docman_PermissionsManager::instance($project->getGroupId());
+        $user_can_write             = $docman_permissions_manager->userCanWrite($user, $item->getId());
+
+        if (! $user_can_write) {
+            throw new RestException(404);
+        }
+
+        $factories_factory = new Docman_ApprovalTableFactoriesFactory();
+        $factory           = $factories_factory->getFromItem($item);
+        if ($factory === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to update'));
+        }
+
+        $table = $factory->getLastTableForItemWithReviewers();
+        if ($table === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to update'));
+        }
+
+        new ApprovalTableUpdater(
+            UserManager::instance(),
+            $factory,
+            new Docman_ApprovalTableReviewerFactory($table, $item),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+        )->update($table, $representation);
+    }
+
+    /**
      * Delete the last approval table for item
      *
      * @url    DELETE {id}/approval_table
@@ -524,7 +576,7 @@ final class DocmanItemsResource extends AuthenticatedResource
     public function deleteApprovalTable(int $id): void
     {
         $this->checkAccess();
-        Header::allowOptionsPostDelete();
+        Header::allowOptionsPostPutDelete();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $item          = $items_request->getItem();
@@ -700,7 +752,6 @@ final class DocmanItemsResource extends AuthenticatedResource
             ),
             $html_purifier,
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
-            new ApprovalTableNotificationMapper(),
             $version_factory,
             new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
         );

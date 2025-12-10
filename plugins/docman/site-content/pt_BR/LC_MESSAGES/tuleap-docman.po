@@ -282,6 +282,10 @@ msgid "Approval table history"
 msgstr ""
 
 #, php-format
+msgid "Approval table notification type \"%s\" does not match a valid type."
+msgstr ""
+
+#, php-format
 msgid "Approval table state string %s does not match a valid state."
 msgstr ""
 
@@ -764,6 +768,9 @@ msgid "Failed to create approval table"
 msgstr ""
 
 msgid "Failed to delete approval table"
+msgstr ""
+
+msgid "Failed to update approval table"
 msgstr ""
 
 msgid "File"
@@ -1644,6 +1651,9 @@ msgstr ""
 msgid "There is no approval table to delete"
 msgstr ""
 
+msgid "There is no approval table to update"
+msgstr ""
+
 msgid "There is no data attached to this item."
 msgstr ""
 
@@ -1726,6 +1736,10 @@ msgstr ""
 msgid "Unknown property label '%1$s'."
 msgstr ""
 
+#, php-format
+msgid "Unknown table status \"%s\""
+msgstr ""
+
 msgid "Unused"
 msgstr ""
 
@@ -1753,6 +1767,10 @@ msgid "Use this property"
 msgstr ""
 
 msgid "Used"
+msgstr ""
+
+#, php-format
+msgid "User %d not found"
 msgstr ""
 
 msgid "User groups"
