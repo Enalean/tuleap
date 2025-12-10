@@ -40,6 +40,7 @@ use Tuleap\Tracker\Notifications\Settings\NotificationSettingsDuplicator;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
 use Tuleap\Tracker\PromotedTrackerDao;
+use Tuleap\Tracker\RetrieveMultipleTrackers;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanAdministrate;
 use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanView;
@@ -57,7 +58,7 @@ use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUserCanView, RetrieveTrackersByProjectIdUserCanAdministrate // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUserCanView, RetrieveTrackersByProjectIdUserCanAdministrate, RetrieveMultipleTrackers // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * Get the trackers required by agile dashboard
@@ -157,16 +158,13 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
     }
 
     /**
-
-    /**
-     * @param int $group_id the project id the trackers to retrieve belong to
-     *
-     * @return Tracker[]
+     * @return array<int, Tracker>
      */
-    public function getTrackersByGroupId($group_id)
+    #[Override]
+    public function getTrackersByGroupId(int|string $project_id): array
     {
         $trackers = [];
-        foreach ($this->getDao()->searchByGroupId($group_id) as $row) {
+        foreach ($this->getDao()->searchByGroupId($project_id) as $row) {
             $tracker_id            = $row['id'];
             $trackers[$tracker_id] = $this->getCachedInstanceFromRow($row);
         }
