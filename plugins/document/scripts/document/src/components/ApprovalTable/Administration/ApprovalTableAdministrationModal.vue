@@ -98,6 +98,18 @@
                 {{ $gettext("Cancel") }}
             </button>
             <button
+                v-if="delete_confirmation"
+                type="button"
+                class="tlp-button-danger tlp-modal-action"
+                v-bind:disabled="!delete_confirmation_enabled"
+                v-on:click="onDeleteConfirmation"
+                data-test="delete-confirmation-table-button"
+            >
+                <i class="fa-solid fa-trash tlp-button-icon" aria-hidden="true"></i>
+                {{ $gettext("Confirm deletion?") }}
+            </button>
+            <button
+                v-else
                 type="button"
                 class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 v-bind:disabled="is_doing_something"
@@ -138,7 +150,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
-import { createModal } from "@tuleap/tlp-modal";
+import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type {
     ApprovableDocument,
     ApprovalTable,
@@ -175,6 +187,8 @@ const modal = ref<Modal | null>(null);
 const error_message = ref<string>("");
 const success_message = ref<string>("");
 const is_deleting = ref<boolean>(false);
+const delete_confirmation = ref<boolean>(false);
+const delete_confirmation_enabled = ref<boolean>(false);
 const is_updating = ref<boolean>(false);
 const is_sending_notification = ref<boolean>(false);
 const is_sending_reminder = ref<boolean>(false);
@@ -208,6 +222,10 @@ onMounted(() => {
         dismiss_on_backdrop_click: true,
     });
     props.trigger.addEventListener("click", () => modal.value?.show());
+    modal.value?.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
+        delete_confirmation.value = false;
+        delete_confirmation_enabled.value = false;
+    });
 });
 
 onUnmounted(() => {
@@ -215,6 +233,15 @@ onUnmounted(() => {
 });
 
 function onDelete(): void {
+    delete_confirmation.value = true;
+    setTimeout(() => {
+        delete_confirmation_enabled.value = true;
+    }, 1000);
+}
+
+function onDeleteConfirmation(): void {
+    delete_confirmation.value = false;
+    delete_confirmation_enabled.value = false;
     is_deleting.value = true;
     deleteApprovalTable(props.item.id).match(
         () => {
