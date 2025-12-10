@@ -25,6 +25,7 @@ namespace Tuleap\AI\Mistral;
 
 enum Model: string
 {
-    case MEDIUM_2508  = 'mistral-medium-2508';
-    case SMALL_LATEST = 'mistral-small-latest';
+    case DEVSTRALL_2512 = 'devstral-2512';
+    case MEDIUM_2508    = 'mistral-medium-2508';
+    case SMALL_LATEST   = 'mistral-small-latest';
 }

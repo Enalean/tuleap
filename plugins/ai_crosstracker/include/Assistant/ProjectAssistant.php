@@ -89,7 +89,7 @@ final readonly class ProjectAssistant implements Assistant
         }
 
         return new Completion(
-            Model::MEDIUM_2508,
+            Model::DEVSTRALL_2512,
             new Message(
                 Role::SYSTEM,
                 new ChunkContent(
