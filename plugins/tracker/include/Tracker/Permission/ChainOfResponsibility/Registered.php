@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
  * the permissions (except admin) for other groups (except anonymous) as they are included into
  * registered
  */
-class Tracker_Permission_ChainOfResponsibility_PermissionsOfRegistered extends Tracker_Permission_Command
+class Tracker_Permission_ChainOfResponsibility_PermissionsOfRegistered extends Tracker_Permission_Command //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter)
@@ -59,14 +59,11 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfRegistered extends T
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::WARN,
-            $GLOBALS['Language']->getText(
-                'tracker_admin_permissions',
-                'tracker_ignore_g_regis_full',
-                [
-                    $permission_setter->getUGroupName($ugroup_id),
-                    $permission_setter->getUGroupName(ProjectUGroup::REGISTERED),
-                ]
-            )
+            sprintf(
+                dgettext('tuleap-tracker', "Ignoring group '%1\$s' because '%2\$s' have access to all artifacts."),
+                $permission_setter->getUGroupName($ugroup_id),
+                $permission_setter->getUGroupName(ProjectUGroup::REGISTERED),
+            ),
         );
     }
 }

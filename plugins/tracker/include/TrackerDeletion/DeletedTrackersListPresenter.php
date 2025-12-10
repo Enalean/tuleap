@@ -46,10 +46,10 @@ final class DeletedTrackersListPresenter
         $this->title                       = dgettext('tuleap-tracker', 'Trackers Pending for Deletion');
         $this->deleted_trackers_list       = $table_content;
         $this->tracker_ids_warning         = $tracker_ids_warning;
-        $this->id_column_header            = $GLOBALS['Language']->getText('tracker_include_report', 'id');
+        $this->id_column_header            = dgettext('tuleap-tracker', 'ID');
         $this->tracker_column_header       = dgettext('tuleap-tracker', 'Tracker');
         $this->project_column_header       = $GLOBALS['Language']->getText('global', 'Project');
-        $this->deletion_date_column_header = $GLOBALS['Language']->getText('tracker_include_type', 'deletion_date');
+        $this->deletion_date_column_header = dgettext('tuleap-tracker', 'Deletion date');
         $this->restore_action              = dgettext('tuleap-tracker', 'Restore');
         $this->no_trackers_label           = dgettext('tuleap-tracker', 'No Tracker pending for Deletion');
         $this->has_trackers                = $has_trackers;

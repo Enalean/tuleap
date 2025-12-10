@@ -73,9 +73,6 @@ final class EmailNotificationTaskTest extends TestCase
 
         $this->custom_email_sender->method('getCustomSender')->willReturn(['format' => '', 'enabled' => 0]);
 
-        $language = $this->createStub(BaseLanguage::class);
-        $language->method('getText')->willReturn('');
-
         $this->tracker = $this->createMock(Tracker::class);
         $this->tracker->method('getItemName')->willReturn('story');
         $this->artifact = $this->createMock(Artifact::class);
@@ -94,7 +91,7 @@ final class EmailNotificationTaskTest extends TestCase
         $this->changeset->method('diffToPrevious')->willReturn('');
         $this->changeset->method('getComment')->willReturn(null);
         $this->changeset->method('getSubmitter')->willReturn(
-            UserTestBuilder::anActiveUser()->withTimezone('Europe/Paris')->withLanguage($language)->build()
+            UserTestBuilder::anActiveUser()->withTimezone('Europe/Paris')->build()
         );
     }
 

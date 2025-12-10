@@ -101,19 +101,6 @@ class URL //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $group_id = $group_id['group_id'];
         }
 
-        // Artifact attachment download...
-        if (strpos($req_uri, '/tracker/download.php') === 0) {
-            if (isset($_REQUEST['artifact_id'])) {
-                $dao      = $this->getArtifactDao();
-                $result   = $dao->searchArtifactId($_REQUEST['artifact_id']);
-                $group_id = $result->getRow();
-                if ($group_id === false) {
-                    return false;
-                }
-                $group_id = $group_id['group_id'];
-            }
-        }
-
         EventManager::instance()->processEvent(
             Event::GET_PROJECTID_FROM_URL,
             [
@@ -136,10 +123,5 @@ class URL //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function getProjectDao()
     {
         return new ProjectDao(CodendiDataAccess::instance());
-    }
-
-    public function getArtifactDao()
-    {
-        return new ArtifactDao(CodendiDataAccess::instance());
     }
 }

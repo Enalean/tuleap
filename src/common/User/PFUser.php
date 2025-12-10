@@ -388,24 +388,23 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      *
      * @param int $ugroup_id  the id of the ugroup
      * @param int $group_id   the id of the project (is necessary for automatic project groups like project member, release admin, etc.)
-     * @param int $tracker_id the id of the tracker (is necessary for trackers since the tracker admin role is different for each tracker.)
      *
      * @return bool true if user is member of the ugroup, false otherwise.
      */
-    public function isMemberOfUGroup($ugroup_id, $group_id, $tracker_id = 0)
+    public function isMemberOfUGroup($ugroup_id, $group_id)
     {
-        if (! isset($this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id])) {
-            $is_member = ugroup_user_is_member($this->getId(), $ugroup_id, $group_id, $tracker_id);
+        if (! isset($this->cache_ugroup_membership[$ugroup_id][$group_id])) {
+            $is_member = ugroup_user_is_member($this->getId(), $ugroup_id, $group_id);
 
-            $this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id] = $is_member;
+            $this->cache_ugroup_membership[$ugroup_id][$group_id] = $is_member;
         }
 
-        return $this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id];
+        return $this->cache_ugroup_membership[$ugroup_id][$group_id];
     }
 
     public function setCacheUgroupMembership(int $ugroup_id, int $group_id, bool $is_member): void
     {
-        $this->cache_ugroup_membership[$ugroup_id][$group_id][0] = $is_member;
+        $this->cache_ugroup_membership[$ugroup_id][$group_id] = $is_member;
     }
 
     public function isNone(): bool

@@ -1021,14 +1021,12 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
      */
     public function renameUser($user, $newName)
     {
-        $dao = $this->getDao();
-        if ($dao->renameUser($user, $newName)) {
-            $wiki = new WikiDao(CodendiDataAccess::instance());
-            if ($wiki->updatePageName($user, $newName)) {
-                $user->setUserName($newName);
-                return ($this->updateDb($user));
-            }
+        $wiki = new WikiDao(CodendiDataAccess::instance());
+        if ($wiki->updatePageName($user, $newName)) {
+            $user->setUserName($newName);
+            return ($this->updateDb($user));
         }
+
         return false;
     }
 

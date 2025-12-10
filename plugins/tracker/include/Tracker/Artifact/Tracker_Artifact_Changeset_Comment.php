@@ -330,7 +330,7 @@ class Tracker_Artifact_Changeset_Comment
         } else {
             $user = UserManager::instance()->getUserAnonymous();
             $user->setEmail($this->changeset->getEmail());
-            $user_info = $GLOBALS['Language']->getText('tracker_include_artifact', 'anon_user');
+            $user_info = _('Anonymous user');
         }
 
         return $user_info;
