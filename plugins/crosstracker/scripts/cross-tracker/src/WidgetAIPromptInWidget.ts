@@ -72,7 +72,7 @@ export const WidgetAIPromptInWidget = (
             content,
         });
 
-        const response = await postJSON<{ response: string }>(
+        const response = await postJSON<{ tql_query: string; explanations: string }>(
             uri`/api/crosstracker_assistant/${widget_id}/helper`,
             {
                 messages,
@@ -80,16 +80,21 @@ export const WidgetAIPromptInWidget = (
         );
         response.match(
             (resp) => {
+                let formatted_response = "";
+                if (resp.tql_query !== "") {
+                    formatted_response = `\`\`\`tql\n${resp.tql_query}\n\`\`\`\n`;
+                    messages.push({
+                        role: ASSISTANT_ROLE,
+                        content: resp.tql_query,
+                    });
+                }
+                formatted_response = formatted_response + resp.explanations;
                 const ai_response_fragment: DocumentFragment = DOMPurify.sanitize(
-                    `${parse(resp.response)} <br/>`,
+                    parse(formatted_response),
                     {
                         RETURN_DOM_FRAGMENT: true,
                     },
                 );
-                messages.push({
-                    role: ASSISTANT_ROLE,
-                    content: resp.response,
-                });
 
                 ai_response_element.append(ai_response_fragment);
 

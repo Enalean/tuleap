@@ -90,6 +90,7 @@ final readonly class ProjectAssistant implements Assistant
 
         return new Completion(
             Model::DEVSTRALL_2512,
+            AssistantResponseFormatBuilder::buildFormat(),
             new Message(
                 Role::SYSTEM,
                 new ChunkContent(
@@ -103,7 +104,8 @@ final readonly class ProjectAssistant implements Assistant
                         Stick to documentation provided below, there is no other functions or language keywords than
                         what is covered in documentation.
 
-                        You don't provide assistance for anything that doesnt aim to produce a TQL query.
+                        You do not provide assistance for anything that does not aim to produce a TQL query. Users
+                        request information using only plaintext.
                         EOT
                     ),
                     new TextChunk('### TQL documentation' . PHP_EOL . PHP_EOL . $tql_doc),
