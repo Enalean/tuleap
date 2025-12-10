@@ -250,6 +250,9 @@ msgstr ""
 msgid "Confirm deletion"
 msgstr ""
 
+msgid "Confirm deletion?"
+msgstr ""
+
 msgid ""
 "Contact your administrator or try to reorganize this folder, then try again."
 msgstr ""

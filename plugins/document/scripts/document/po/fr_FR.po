@@ -279,6 +279,9 @@ msgstr "Commenté"
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+msgid "Confirm deletion?"
+msgstr "Confirmer la suppression ?"
+
 msgid ""
 "Contact your administrator or try to reorganize this folder, then try again."
 msgstr ""

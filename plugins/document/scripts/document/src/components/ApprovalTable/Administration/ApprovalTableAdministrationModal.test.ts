@@ -73,6 +73,13 @@ describe("ApprovalTableAdministrationModal", () => {
         const wrapper = getWrapper();
 
         await wrapper.find("[data-test=delete-table-button]").trigger("click");
+        await vi.waitUntil(
+            () =>
+                wrapper.find("[data-test=delete-confirmation-table-button]").attributes()
+                    .disabled === undefined,
+            { interval: 500, timeout: 2000 },
+        );
+        await wrapper.find("[data-test=delete-confirmation-table-button]").trigger("click");
 
         expect(deleteApprovalTable).toHaveBeenCalledWith(123);
         expect(wrapper.emitted("refresh-data")).not.toBe(undefined);
@@ -85,6 +92,13 @@ describe("ApprovalTableAdministrationModal", () => {
         const wrapper = getWrapper();
 
         await wrapper.find("[data-test=delete-table-button]").trigger("click");
+        await vi.waitUntil(
+            () =>
+                wrapper.find("[data-test=delete-confirmation-table-button]").attributes()
+                    .disabled === undefined,
+            { interval: 500, timeout: 2000 },
+        );
+        await wrapper.find("[data-test=delete-confirmation-table-button]").trigger("click");
 
         expect(deleteApprovalTable).toHaveBeenCalledWith(123);
         expect(wrapper.find("[data-test=admin-modal-error]").text()).toContain("Oh no!");
