@@ -25,6 +25,8 @@ namespace Tuleap\AICrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use ProjectManager;
+use Tracker_FormElementFactory;
+use TrackerFactory;
 use Tuleap\AI\Mistral\CompletionResponse;
 use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\MistralConnectorLive;
@@ -88,7 +90,12 @@ final class TQLAssistantResource extends AuthenticatedResource
             return $cross_tracker_retriever->retrieveWidgetById($id)->match(
                 function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($current_user_with_logged_in_information, $messages): HelperRepresentation {
                     $assistant = match ($widget::class) {
-                        ProjectCrossTrackerWidget::class => new ProjectAssistant($widget),
+                        ProjectCrossTrackerWidget::class => new ProjectAssistant(
+                            ProjectManager::instance(),
+                            TrackerFactory::instance(),
+                            Tracker_FormElementFactory::instance(),
+                            $widget
+                        ),
                         UserCrossTrackerWidget::class => new UserAssistant(),
                     };
 
