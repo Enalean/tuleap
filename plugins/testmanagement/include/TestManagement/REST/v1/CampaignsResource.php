@@ -328,9 +328,8 @@ class CampaignsResource
         );
 
         $campaign_dao = new CampaignDao();
-        $key_factory  = new \Tuleap\Cryptography\KeyFactoryFromFileSystem();
 
-        $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao, $key_factory);
+        $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao);
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
             $tracker_factory,
@@ -461,7 +460,7 @@ class CampaignsResource
 
         $this->campaign_updater = new CampaignUpdater(
             $this->artifact_updater,
-            new CampaignSaver($campaign_dao, $key_factory),
+            new CampaignSaver($campaign_dao),
             new CampaignArtifactUpdateFieldValuesBuilder(
                 $this->formelement_factory,
                 new StatusValueRetriever(
