@@ -84,7 +84,7 @@ class Docman_ApprovalTableReviewerFactory // phpcs:ignore PSR1.Classes.ClassDecl
             && $this->table->isEnabled()
             && $this->table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED
         ) {
-            $atsm = $this->_getApprovalTableNotificationCycle();
+            $atsm = $this->getApprovalTableNotificationCycle();
             switch ($this->table->getNotification()) {
                 case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
                     $res = $atsm->notifyAllAtOnce();
@@ -315,7 +315,7 @@ class Docman_ApprovalTableReviewerFactory // phpcs:ignore PSR1.Classes.ClassDecl
         );
         $this->table->addReviewer($review);
         if ($updated) {
-            $atsm = $this->_getApprovalTableNotificationCycle();
+            $atsm = $this->getApprovalTableNotificationCycle();
             $atsm->reviewUpdated($review);
             return true;
         }
@@ -441,7 +441,7 @@ class Docman_ApprovalTableReviewerFactory // phpcs:ignore PSR1.Classes.ClassDecl
         return $um;
     }
 
-    public function _getApprovalTableNotificationCycle() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    public function getApprovalTableNotificationCycle(): Docman_ApprovalTableNotificationCycle
     {
         $atsm = new Docman_ApprovalTableNotificationCycle(
             new MailNotificationBuilder(

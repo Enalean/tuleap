@@ -364,10 +364,11 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
         $post_body = json_decode($post_response->getBody()->getContents());
         $item_id   = $post_body['id'];
         // ...with an approval table...
+        $reviewer_id         = $this->user_ids[BaseTestDataBuilder::TEST_USER_1_NAME];
         $post_table_response = $this->getResponse(
             $this->request_factory->createRequest('POST', "docman_items/$item_id/approval_table")
                 ->withBody($this->stream_factory->createStream(json_encode([
-                    'users'       => [$this->user_ids[BaseTestDataBuilder::TEST_USER_1_NAME]],
+                    'users'       => [$reviewer_id],
                     'user_groups' => [],
                 ]))),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -381,18 +382,18 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
                     'status'                 => 'enabled',
                     'comment'                => '',
                     'notification_type'      => 'all_at_once',
-                    'reviewers'              => [$this->user_ids[BaseTestDataBuilder::TEST_USER_1_NAME]],
+                    'reviewers'              => [$reviewer_id],
                     'reviewers_group_to_add' => [],
                 ]))),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
         );
         self::assertSame(200, $put_response->getStatusCode());
         // (send reminder)
-        $send_reponse = $this->getResponse(
+        $send_response = $this->getResponse(
             $this->request_factory->createRequest('POST', "docman_items/$item_id/approval_table/reminder"),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
         );
-        self::assertSame(200, $send_reponse->getStatusCode());
+        self::assertSame(200, $send_response->getStatusCode());
         // ...and reviewed
         $put_response = $this->getResponse(
             $this->request_factory->createRequest('PUT', "docman_items/$item_id/approval_table/review")
@@ -404,6 +405,13 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
             BaseTestDataBuilder::TEST_USER_1_NAME,
         );
         self::assertSame(200, $put_response->getStatusCode());
+
+        // Send reminder to BaseTestDataBuilder::TEST_USER_1_NAME
+        $send_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_items/$item_id/approval_table/reminder/$reviewer_id"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $send_response->getStatusCode());
 
         // Get approval table
         $get_response = $this->getResponse(
