@@ -1283,6 +1283,9 @@ msgstr "Aucun élément séléctionné"
 msgid "No email sent to reviewers."
 msgstr "Pas d'email envoyé aux approbateurs."
 
+msgid "No notification sent"
+msgstr "Aucune notification envoyée"
+
 msgid "No review requested."
 msgstr "Pas d'approbation demandée."
 
@@ -1697,6 +1700,9 @@ msgstr ""
 msgid "The date format is incorrect. The format must be \"YYYY-MM-DD\""
 msgstr ""
 "Le format de la date est incorrecte. Le format doit être \"YYYY-MM-DD\""
+
+msgid "The document has no approval table"
+msgstr "Le document n'a pas de table d'approbation"
 
 msgid "The document internal id"
 msgstr "L'id interne du document"

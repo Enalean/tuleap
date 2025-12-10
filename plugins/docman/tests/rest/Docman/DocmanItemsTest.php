@@ -380,13 +380,19 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
                     'owner'                  => $this->user_ids[DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME],
                     'status'                 => 'enabled',
                     'comment'                => '',
-                    'notification_type'      => 'disabled',
+                    'notification_type'      => 'all_at_once',
                     'reviewers'              => [$this->user_ids[BaseTestDataBuilder::TEST_USER_1_NAME]],
                     'reviewers_group_to_add' => [],
                 ]))),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
         );
         self::assertSame(200, $put_response->getStatusCode());
+        // (send reminder)
+        $send_reponse = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_items/$item_id/approval_table/reminder"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $send_reponse->getStatusCode());
         // ...and reviewed
         $put_response = $this->getResponse(
             $this->request_factory->createRequest('PUT', "docman_items/$item_id/approval_table/review")
@@ -408,7 +414,7 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
         $table = json_decode($get_response->getBody()->getContents());
         self::assertSame('Not yet', $table['approval_state']);
         self::assertSame(1, $table['version_number']);
-        self::assertSame('disabled', $table['notification_type']);
+        self::assertSame('all_at_once', $table['notification_type']);
         self::assertSame(false, $table['is_closed']);
         self::assertCount(1, $table['reviewers']);
         self::assertSame(BaseTestDataBuilder::TEST_USER_1_NAME, $table['reviewers'][0]['user']['username']);
