@@ -75,7 +75,10 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-warning-dark-color: #{$tlp-warning-dark-color};
     --tlp-danger-color: #{$tlp-danger-color};
     --tlp-danger-dark-color: #{$tlp-danger-dark-color};
-    --tlp-dimmed-color: #{$tlp-dimmed-color};
+    --tlp-dimmed-color: light-dark(
+        #{$tlp-dimmed-color},
+        var(--tlp-dimmed-color-on-dark-background)
+    );
     --tlp-white-color: #{common.$tlp-white-color};
     --tlp-main-color: #{$tlp-main-color};
     --tlp-dark-color: #{$tlp-dark-color};
@@ -94,7 +97,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     );
     --tlp-typo-default-text-color: light-dark(
         #{$tlp-typo-default-text-color},
-        var(--tlp-neutral-light-color)
+        var(--tlp-typo-default-text-color-on-dark-background)
     );
     --tlp-table-row-background-odd: light-dark(#{common.$tlp-white-color}, var(--tlp-dark-color));
     --tlp-table-row-background-even: light-dark(
@@ -320,7 +323,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
             common.$tlp-white-color,
             85%
         )};
-    --tlp-dimmed-color-on-dark-background: #{$tlp-neutral-dark-color};
+    --tlp-dimmed-color-on-dark-background: var(--tlp-dimmed-color-lighter-30);
     --tlp-main-color-on-dark-background: #{color.adjust($tlp-main-color, $lightness: 20%)};
     --tlp-dark-color-transparent-30: #{color.adjust($tlp-dark-color, $alpha: - 0.3)};
     --tlp-dark-color-transparent-50: #{color.adjust($tlp-dark-color, $alpha: - 0.5)};
