@@ -374,24 +374,6 @@ project_admin_userperms	admin	Admin
 project_admin_userperms	tech&admin	Tech & Admin
 project_admin_userperms	upd_user_perm	Update User Permissions
 
-#
-#-----------------------------------------------
-# Script: SF/www/project/export/artifact_export.php
-#
-project_export_artifact_export	follow_up_comments	Follow-up Comments
-project_export_artifact_export	depend_on	Depend on
-project_export_artifact_export	all_followup_comments	All follow-up comments in one chunk of text
-project_export_artifact_export	depend_on_list	List of artifacts this artifact depends on
-project_export_artifact_export	art_export	Artifact Export
-project_export_artifact_export	no_art_found	No artifact found. Could not generate an export.
-project_export_artifact_export	db_access_err	Error while accessing your artifact database. Please report the error to the $1 Administrator
-project_export_artifact_export	art_exp_format	Artifact Export Format
-project_export_artifact_export	art_exp_format_msg	The artifact export provides you with the following artifact fields. The sample values indicate what the field data types are.
-project_export_artifact_export	add_cc_lbl	CC List
-project_export_artifact_export	add_cc_dsc	List of persons to receive a carbon-copy (CC) of the email notifications (in addition to submitter, assignees, and commenters)
-project_export_artifact_export	cc_comment_lbl	CC Comment
-project_export_artifact_export	cc_comment_dsc	Explain why these CC names were added and/or who they are
-#
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_history_export.php
 #

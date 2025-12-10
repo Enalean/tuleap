@@ -374,24 +374,6 @@ project_admin_userperms	admin	Administrateur
 project_admin_userperms	tech&admin	Administrateur et Technicien
 project_admin_userperms	upd_user_perm	Mettre à jour les permissions
 
-#
-#-----------------------------------------------
-# Script: SF/www/project/export/artifact_export.php
-#
-project_export_artifact_export	follow_up_comments	Fil de commentaires
-project_export_artifact_export	depend_on	Dépend de
-project_export_artifact_export	all_followup_comments	Tout le fil de commentaires en un seul bloc de texte
-project_export_artifact_export	depend_on_list	Liste des artifacts dont celui-ci dépend
-project_export_artifact_export	art_export	Exportation des artifacts
-project_export_artifact_export	no_art_found	Aucun artifact pour ce tracker. Impossible d'exporter des données.
-project_export_artifact_export	db_access_err	Erreur lors de l'accès à la base de données des trackers. Veuillez informer l'administrateur $1 de cette erreur.
-project_export_artifact_export	art_exp_format	Format d'exportation des artifacts
-project_export_artifact_export	art_exp_format_msg	Le format d'exportation des artifacts de ce tracker comporte les champs suivants. Les valeurs données en exemple indiquent le type des données.
-project_export_artifact_export	add_cc_lbl	Liste CC
-project_export_artifact_export	add_cc_dsc	Liste des personnes recevant une copie carbone (CC) des notifications e-mail (en plus de la personne qui l'a soumis, a qui on l'a confie ou qui a poste un commentaire)
-project_export_artifact_export	cc_comment_lbl	Commentaire CC
-project_export_artifact_export	cc_comment_dsc	Explique pourquoi ces personnes sont en CC ou qui elles sont
-#
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_history_export.php
 #

@@ -124,31 +124,6 @@ tracker_masschange_detail	no_items_selected	No artifacts have been selected
 tracker_masschange	mass_change_report	Mass Change Report
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/tracker_import_utils.php
-#
-tracker_import_utils	field_not_known	"$1" is not a known field in tracker $2
-tracker_import_utils	field_mandatory	"$1" is a mandatory field in tracker $2. Please specify it in your CSV file.
-tracker_import_utils	not_a_predefined_value	<b>Line $1 [</b>$2<b>]</b>:<br>value "$3" is not one of the predefined values of field "$4" ($5).
-tracker_import_utils	field_mandatory_and_current	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file (current value is "$5").
-tracker_import_utils	incorrect_date	<b>Line $1 [</b>$2<b>]</b>:<br>Date "$3" is not in correct format (YYYY-MM-DD).
-tracker_import_utils	field_mandatory_and_line	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file.
-tracker_import_utils	already_submitted	<b>Line $1 [</b>$2<b>]</b>:<br>User $3 has already submitted an artifact with the same summary ("$4"). Please don't try to import it again.
-tracker_import_utils	art_not_exists	<b>Line $1 [</b>$2<b>]</b>:<br>the specified artifact (id=$3) does not exist in tracker $4
-tracker_import_utils	date	Date
-tracker_import_utils	type	type
-tracker_import_utils	comment	Comment
-tracker_import_utils	comment_parse_error	$1 Won't insert any follow-up comments for this artifact.
-tracker_import_utils	new	NEW
-tracker_import_utils	column_mismatch	<b>Line $1 [</b>$2<b>]</b>:<br>the number of values ($3) does not match the number of fields ($4).<br>
-tracker_import_utils	no_followups	No Followups Have Been Posted
-tracker_import_utils	not_a_user	"$1" specified as originator of follow-up comment #$2 is neither a user name nor a valid email address.
-tracker_import_utils	specify_originator	You must specify an originator for follow-up comment #$1 ($2).
-tracker_import_utils	specify_valid_user	"None" is not a valid originator of a follow-up comment. Please specify a user name or a valid email address for comment #$1.
-tracker_import_utils	problem_insert_dependent	Error while inserting dependent artifacts (artifact id =$1).<br>
-tracker_import_utils	problem_add_cc	Error while adding CC List (artifact id=$1).<br>
-tracker_import_utils	problem_insert_followup	Error while inserting follow_up comments (artifact id=$1).<br>
-#
-#-----------------------------------------------
 # Script: SF/www/tracker/tracker_selection.php
 #
 tracker_selection	no_tracker_available	No tracker available for this project!
