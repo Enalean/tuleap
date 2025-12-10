@@ -98,11 +98,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->service_collection->getServices();
     }
 
-    public function usesTracker(): bool
-    {
-        return $this->usesService(Service::TRACKERV3);
-    }
-
     public function usesSVN(): bool
     {
         return $this->usesService(Service::SVN);

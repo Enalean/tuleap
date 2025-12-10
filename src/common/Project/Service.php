@@ -25,13 +25,12 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const int FAKE_ID_FOR_CREATION = -1;
 
-    public const string SUMMARY   = 'summary';
-    public const string ADMIN     = 'admin';
-    public const string HOMEPAGE  = 'homepage';
-    public const string FILE      = 'file';
-    public const string SVN       = 'svn';
-    public const string WIKI      = 'wiki';
-    public const string TRACKERV3 = 'tracker';
+    public const string SUMMARY  = 'summary';
+    public const string ADMIN    = 'admin';
+    public const string HOMEPAGE = 'homepage';
+    public const string FILE     = 'file';
+    public const string SVN      = 'svn';
+    public const string WIKI     = 'wiki';
 
     public const string SCOPE_SYSTEM  = 'system';
     public const string SCOPE_PROJECT = 'project';
@@ -40,7 +39,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         self::ADMIN     => 'fas fa-cogs',
         self::HOMEPAGE  => 'fas fa-home',
         self::WIKI      => 'fas fa-tlp-wiki',
-        self::TRACKERV3 => 'fas fa-list-ol',
     ];
 
     /**

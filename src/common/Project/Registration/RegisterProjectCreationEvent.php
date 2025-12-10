@@ -47,10 +47,6 @@ class RegisterProjectCreationEvent implements Dispatchable
      */
     private $project_administrator;
     /**
-     * @var array
-     */
-    private $legacy_service_usage;
-    /**
      * @var bool
      */
     private $should_project_inherit_from_template;
@@ -60,14 +56,12 @@ class RegisterProjectCreationEvent implements Dispatchable
         Project $template_project,
         MappingRegistry $mapping_registry,
         \PFUser $project_administrator,
-        array $legacy_service_usage,
         bool $should_project_inherit_from_template,
     ) {
         $this->just_created_project                 = $just_created_project;
         $this->template_project                     = $template_project;
         $this->mapping_registry                     = $mapping_registry;
         $this->project_administrator                = $project_administrator;
-        $this->legacy_service_usage                 = $legacy_service_usage;
         $this->should_project_inherit_from_template = $should_project_inherit_from_template;
     }
 
@@ -89,11 +83,6 @@ class RegisterProjectCreationEvent implements Dispatchable
     public function getProjectAdministrator(): \PFUser
     {
         return $this->project_administrator;
-    }
-
-    public function getLegacyServiceUsage(): array
-    {
-        return $this->legacy_service_usage;
     }
 
     public function shouldProjectInheritFromTemplate(): bool

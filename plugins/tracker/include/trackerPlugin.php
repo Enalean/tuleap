@@ -401,7 +401,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(Event::USER_HISTORY_CLEAR, 'clearRecentlyVisitedArtifacts');
         $this->addHook(IndexedItemFoundToSearchResult::NAME);
 
-        $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(ProjectRegistrationActivateService::NAME);
 
         $this->addHook(WorkerEvent::NAME);
@@ -1041,16 +1040,9 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
     }
 
-    public function project_creation_remove_legacy_services($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (! $this->isRestricted()) {
-            $this->getServiceActivator()->unuseLegacyService($params);
-        }
-    }
-
     public function project_registration_activate_service(ProjectRegistrationActivateService $event)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate(), $event->getLegacy());
+        $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate());
     }
 
     /**
@@ -1058,7 +1050,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
      */
     private function getServiceActivator()
     {
-        return new ServiceActivator(ServiceManager::instance(), TrackerV3::instance(), new ServiceCreator(new ServiceDao()));
+        return new ServiceActivator(ServiceManager::instance(), new ServiceCreator(new ServiceDao()));
     }
 
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
