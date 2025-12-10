@@ -21,6 +21,7 @@
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\User\Account\Appearance\DarkModeValue;
+use Tuleap\User\Account\DarkMode;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class FlamingParrot_BodyPresenter
@@ -72,7 +73,7 @@ class FlamingParrot_BodyPresenter
      * @psalm-readonly
      */
     public $platform_banner_importance;
-    public string $user_dark_mode;
+    public ?string $user_dark_mode = null;
 
     public function __construct(
         PFUser $user,
@@ -102,6 +103,8 @@ class FlamingParrot_BodyPresenter
             );
         }
 
-        $this->user_dark_mode = DarkModeValue::fromUser($user)->value;
+        if (DarkMode::isFeatureFlagActive()) {
+            $this->user_dark_mode = DarkModeValue::fromUser($user)->value;
+        }
     }
 }
