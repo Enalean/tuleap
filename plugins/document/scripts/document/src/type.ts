@@ -340,6 +340,7 @@ export interface ApprovalTable {
     is_closed: boolean;
     description: string;
     reviewers: ReadonlyArray<ApprovalTableReviewer>;
+    reminder_occurence: number;
 }
 
 export interface ApprovalTableReviewer {

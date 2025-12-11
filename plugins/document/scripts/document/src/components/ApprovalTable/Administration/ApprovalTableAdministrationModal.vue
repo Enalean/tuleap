@@ -62,6 +62,9 @@
                 v-bind:is_doing_something="is_doing_something"
                 v-model:table_notification_value="table_notification_value"
                 v-model:is_sending_notification="is_sending_notification"
+                v-model:table_do_reminder_value="table_do_reminder_value"
+                v-model:table_reminder_occurence_value="table_reminder_occurence_value"
+                v-model:table_reminder_occurence_unit_value="table_reminder_occurence_unit_value"
                 v-on:error-message="(message) => (error_message = message)"
                 v-on:success-message="(message) => (success_message = message)"
             />
@@ -190,6 +193,9 @@ const table_owner_value = ref<User | null>(props.table.table_owner);
 const table_status_value = ref<string>(props.table.state);
 const table_comment_value = ref<string>(props.table.description);
 const table_notification_value = ref<string>(props.table.notification_type);
+const table_do_reminder_value = ref<boolean>(props.table.reminder_occurence !== 0);
+const table_reminder_occurence_value = ref<number>(props.table.reminder_occurence);
+const table_reminder_occurence_unit_value = ref<string>("day");
 const table_reviewers_value = ref<Array<ApprovalTableReviewer>>([...props.table.reviewers]);
 const table_reviewers_to_add_value = ref<Array<User>>([]);
 const table_reviewers_group_to_add_value = ref<Array<UserGroup>>([]);
@@ -268,6 +274,10 @@ function onUpdate(): void {
             }
             return Number.parseInt(user_group.id, 10);
         }),
+        table_do_reminder_value.value
+            ? table_reminder_occurence_value.value *
+                  (table_reminder_occurence_unit_value.value === "day" ? 1 : 7)
+            : 0,
     ).match(
         () => {
             emit("refresh-data");

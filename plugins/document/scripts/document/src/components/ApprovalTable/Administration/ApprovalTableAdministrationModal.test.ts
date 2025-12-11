@@ -120,6 +120,15 @@ describe("ApprovalTableAdministrationModal", () => {
             .findComponent(AdministrationModalNotifications)
             .setValue("all_at_once", "table_notification_value");
         await wrapper
+            .findComponent(AdministrationModalNotifications)
+            .setValue(true, "table_do_reminder_value");
+        await wrapper
+            .findComponent(AdministrationModalNotifications)
+            .setValue(2, "table_reminder_occurence_value");
+        await wrapper
+            .findComponent(AdministrationModalNotifications)
+            .setValue("week", "table_reminder_occurence_unit_value");
+        await wrapper
             .findComponent(AdministrationModalReviewers)
             .setValue([new ApprovalTableReviewerBuilder(101).build()], "table_reviewers_value");
         await wrapper
@@ -146,6 +155,7 @@ describe("ApprovalTableAdministrationModal", () => {
             [101],
             [102, 103],
             [3],
+            14,
         );
         expect(wrapper.emitted("refresh-data")).not.toBe(undefined);
     });
@@ -158,7 +168,17 @@ describe("ApprovalTableAdministrationModal", () => {
 
         await wrapper.find("[data-test=update-table-button]").trigger("click");
 
-        expect(updateApprovalTable).toHaveBeenCalledWith(123, 102, "disabled", "", "", [], [], []);
+        expect(updateApprovalTable).toHaveBeenCalledWith(
+            123,
+            102,
+            "disabled",
+            "",
+            "",
+            [],
+            [],
+            [],
+            0,
+        );
         expect(wrapper.find("[data-test=admin-modal-error]").text()).toContain("Oh no!");
     });
 

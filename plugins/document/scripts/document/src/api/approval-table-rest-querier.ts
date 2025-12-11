@@ -70,6 +70,7 @@ export function updateApprovalTable(
     reviewers: Array<number>,
     reviewers_to_add: Array<number>,
     reviewers_group_to_add: Array<number>,
+    reminder_occurence: number,
 ): ResultAsync<null, Fault> {
     return putResponse(
         uri`/api/docman_items/${item_id}/approval_table`,
@@ -81,6 +82,7 @@ export function updateApprovalTable(
             notification_type,
             reviewers: [...reviewers, ...reviewers_to_add],
             reviewers_group_to_add,
+            reminder_occurence: Math.max(reminder_occurence, 0),
         },
     ).map(() => null);
 }

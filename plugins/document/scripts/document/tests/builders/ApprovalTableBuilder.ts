@@ -71,6 +71,7 @@ export class ApprovalTableBuilder {
             description: this.description,
             reviewers: [],
             state: "disabled",
+            reminder_occurence: 0,
         };
     }
 }
