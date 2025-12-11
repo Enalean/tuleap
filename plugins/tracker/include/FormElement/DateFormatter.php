@@ -21,21 +21,33 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use ForgeConfig;
 use Rule_Date;
 use Tracker_Artifact_ChangesetValue;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyHidden;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Date\TimezoneWrapper;
+use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\User\ProvideCurrentUser;
 
+#[ConfigKeyCategory('Tracker')]
 class DateFormatter
 {
+    #[FeatureFlagConfigKey('Display date field with submitter timezone in artifact view')]
+    #[ConfigKeyInt(0)]
+    #[ConfigKeyHidden]
+    public const string DISPLAY_DATE_WITH_SUBMITTER_TIMEZONE = 'display_date_with_submitter_timezone';
+
     public const string DATE_FORMAT = 'Y-m-d';
 
-    /** @var DateField */
-    protected $field;
-
-    public function __construct(DateField $field)
-    {
-        $this->field = $field;
+    public function __construct(
+        protected DateField $field,
+        private readonly ProvideCurrentUser $current_user_provider,
+    ) {
     }
 
     public function getFormat()
@@ -57,8 +69,12 @@ class DateFormatter
             $formatted_value = $submitted_values[$this->field->getId()];
         } else {
             if ($value != null) {
-                $timestamp       = $value->getTimestamp();
-                $formatted_value = $timestamp ? $this->formatDate($timestamp) : '';
+                $timestamp = $value->getTimestamp();
+                $timezone  = $value->getChangeset()->getSubmitter()->getTimezone();
+                if ($timezone === '') {
+                    $timezone = TimezoneRetriever::getUserTimezone($this->current_user_provider->getCurrentUser());
+                }
+                $formatted_value = $timestamp ? $this->formatDate($timestamp, $timezone) : '';
             }
         }
 
@@ -74,7 +90,11 @@ class DateFormatter
         }
 
         $value_timestamp = $value->getTimestamp();
-        $formatted_value = $value_timestamp ? $this->formatDateForDisplay($value_timestamp) : '';
+        $timezone        = $value->getChangeset()->getSubmitter()->getTimezone();
+        if ($timezone === '') {
+            $timezone = TimezoneRetriever::getUserTimezone($this->current_user_provider->getCurrentUser());
+        }
+        $formatted_value = $value_timestamp ? $this->formatDateForDisplay($value_timestamp, $timezone) : '';
 
         return $formatted_value;
     }
@@ -118,15 +138,34 @@ class DateFormatter
 
     /**
      * Format a timestamp into Y-m-d format
+     *
+     * @param ?non-empty-string $timezone
      */
-    public function formatDate($timestamp): string
+    public function formatDate($timestamp, ?string $timezone): string
     {
-        return format_date(self::DATE_FORMAT, (float) $timestamp, '');
+        if ((int) ForgeConfig::getFeatureFlag(self::DISPLAY_DATE_WITH_SUBMITTER_TIMEZONE) === 0) {
+            return format_date(self::DATE_FORMAT, (float) $timestamp, '');
+        }
+
+        return TimezoneWrapper::wrapTimezone(
+            $timezone ?? TimezoneRetriever::getUserTimezone($this->current_user_provider->getCurrentUser()),
+            fn() => format_date(self::DATE_FORMAT, (float) $timestamp, ''),
+        );
     }
 
-    public function formatDateForDisplay($timestamp): string
+    /**
+     * @param ?non-empty-string $timezone
+     */
+    public function formatDateForDisplay($timestamp, ?string $timezone): string
     {
-        return format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (float) $timestamp, '');
+        if ((int) ForgeConfig::getFeatureFlag(self::DISPLAY_DATE_WITH_SUBMITTER_TIMEZONE) === 0) {
+            return format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (float) $timestamp, '');
+        }
+
+        return TimezoneWrapper::wrapTimezone(
+            $timezone ?? TimezoneRetriever::getUserTimezone($this->current_user_provider->getCurrentUser()),
+            fn() => format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (float) $timestamp, ''),
+        );
     }
 
     protected function getDatePicker($value, array $errors): string

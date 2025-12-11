@@ -22,17 +22,11 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Rule_Date_Time;
-use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use UserManager;
 
 class DateTimeFormatter extends DateFormatter
 {
     public const string DATE_TIME_FORMAT = 'Y-m-d H:i';
-
-    public function __construct(DateField $field)
-    {
-        parent::__construct($field);
-    }
 
     #[\Override]
     public function validate($value)
@@ -80,13 +74,13 @@ class DateTimeFormatter extends DateFormatter
     }
 
     #[\Override]
-    public function formatDate($timestamp): string
+    public function formatDate($timestamp, ?string $timezone): string
     {
         return format_date(self::DATE_TIME_FORMAT, (float) $timestamp, '');
     }
 
     #[\Override]
-    public function formatDateForDisplay($timestamp): string
+    public function formatDateForDisplay($timestamp, ?string $timezone): string
     {
         return self::format($timestamp);
     }

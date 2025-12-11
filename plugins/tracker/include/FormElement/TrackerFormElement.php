@@ -1447,7 +1447,7 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
      */
     public function formatDate($date)
     {
-        return format_date(Tracker_FormElement_DateFormatter::DATE_FORMAT, (float) $date, '');
+        return format_date(DateFormatter::DATE_FORMAT, (float) $date, '');
     }
 
     public function exportCurrentUserPermissionsToREST(PFUser $user)
