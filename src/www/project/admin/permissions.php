@@ -66,13 +66,8 @@ function permission_get_name($permission_type)
     } elseif ($permission_type == 'TRACKER_FIELD_UPDATE') {
         return $Language->getText('project_admin_permissions', 'tracker_field_update');
     } elseif ($permission_type == 'TRACKER_ACCESS_SUBMITTER') {
-        return $Language->getText('project_admin_permissions', 'tracker_submitter_access');
     } elseif ($permission_type == 'TRACKER_ACCESS_ASSIGNEE') {
-        return $Language->getText('project_admin_permissions', 'tracker_assignee_access');
     } elseif ($permission_type == 'TRACKER_ACCESS_FULL') {
-        return $Language->getText('project_admin_permissions', 'tracker_full_access');
-    } elseif ($permission_type == 'TRACKER_ARTIFACT_ACCESS') {
-        return $Language->getText('project_admin_permissions', 'tracker_artifact_access');
     } else {
         $em   = EventManager::instance();
         $name = false;
@@ -197,22 +192,6 @@ function permission_user_allowed_to_change($project_id, $permission_type, $objec
         return (user_ismember($project_id, 'W2'));
     } elseif ($permission_type == 'WIKIATTACHMENT_READ') {
         return (user_ismember($project_id, 'W2'));
-    } elseif (strpos($permission_type, 'TRACKER') === 0) { // Starts with 'TRACKER'
-        //The object_id stored in the permission table when permission_type ='TRACKER_ARTIFACT_ACCESS'
-        //corresponds to the artifact_id
-        if ($permission_type == 'TRACKER_ARTIFACT_ACCESS') {
-            $sql = 'SELECT group_artifact_id from artifact WHERE artifact_id = ' . db_ei($object_id);
-            $res = db_query($sql);
-            if ($res && db_numrows($res) == 1) {
-                $row       = db_fetch_array($res);
-                $object_id = $row['group_artifact_id'];
-            } else {
-                return false;
-            }
-        }
-
-        $at = new ArtifactType($project, (int) $object_id);
-        return $at->userIsAdmin();
     } elseif ($permission_type == 'PACKAGE_READ') {
         $permission_manager = FRSPermissionManager::build();
 
@@ -310,98 +289,6 @@ function permission_is_authorized($permission_type, $object_id, $user_id, $group
         }
     }
     return false;
-}
-
-function permission_build_field_id($object_id, $field_id)
-{
-    return $object_id . '#' . $field_id;
-}
-
-/**
- * @returns array the permissions for the ugroups
- */
-function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields)
-{
-    $tracker_permissions = permission_get_tracker_ugroups_permissions($group_id, $atid);
-    //Anonymous can access ?
-    if (
-        isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']])
-        && isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['permissions'])
-        && count($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['permissions']) > 0
-    ) {
-        //Do nothing
-    } else {
-        //We remove the id
-        if (isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']])) {
-            unset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']]);
-        }
-
-        //Registered can access ?
-        if (
-            isset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']])
-            && isset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']]['permissions'])
-            && count($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']]['permissions']) > 0
-        ) {
-            //Do nothing
-        } else {
-            //We remove the id
-            if (isset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']])) {
-                unset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']]);
-            }
-
-            //Each group can access ?
-            foreach ($tracker_permissions as $key => $value) {
-                if (! isset($value['permissions']) || count($value['permissions']) < 1) {
-                    unset($tracker_permissions[$key]);
-                }
-            }
-        }
-    }
-    $ugroups_that_can_access_to_tracker = $tracker_permissions;
-
-    $ugroups_permissions = [];
-    foreach ($fields as $field) {
-        $fake_id = permission_build_field_id($atid, $field->getID());
-        $ugroups = permission_get_ugroups_permissions($group_id, $fake_id, ['TRACKER_FIELD_READ', 'TRACKER_FIELD_UPDATE', 'TRACKER_FIELD_SUBMIT'], false);
-
-        //{{{ We remove the ugroups which can't access to tracker and don't have permissions
-        /*foreach($ugroups as $key => $value) {
-            if (!isset($ugroups_that_can_access_to_tracker[$key]) && count($ugroups[$key]['permissions']) == 0) {
-                unset($ugroups[$key]);
-            }
-        }*/
-        //}}}
-
-        //We store permission for the current field
-        $ugroups_permissions[$field->getID()] = [
-            'field' => [
-                'shortname'  => $field->getName(),
-                'name'       => $field->getLabel(),
-                'id'         => $field->getID(),
-                'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID(),
-            ],
-            'ugroups' => $ugroups,
-        ];
-
-        //{{{ We store tracker permissions
-        foreach ($ugroups_permissions[$field->getID()]['ugroups'] as $key => $ugroup) {
-            if (isset($tracker_permissions[$key])) {
-                $ugroups_permissions[$field->getID()]['ugroups'][$key]['tracker_permissions'] = $tracker_permissions[$key]['permissions'];
-            } else {
-                $ugroups_permissions[$field->getID()]['ugroups'][$key]['tracker_permissions'] = [];
-            }
-        }
-        //}}}
-    }
-    return $ugroups_permissions;
-}
-
-/**
- * @returns array the permissions for the ugroups
- */
-function permission_get_tracker_ugroups_permissions($group_id, $object_id)
-{
-    return permission_get_ugroups_permissions($group_id, $object_id, ['TRACKER_ACCESS_FULL', 'TRACKER_ACCESS_ASSIGNEE', 'TRACKER_ACCESS_SUBMITTER'], false);
 }
 
 /**
@@ -696,87 +583,6 @@ function permission_clear_all($group_id, $permission_type, $object_id, $log_perm
         }
         return true;
     }
-}
-
-function permission_copy_tracker_and_field_permissions($from, $to, $group_id_from, $group_id_to, $ugroup_mapping = false)
-{
-    $result = true;
-
-    //We remove ugroups if 'from' and 'to' are not part of the same project
-    $and_remove_ugroups = '';
-    if ($group_id_from != $group_id_to) {
-        $and_remove_ugroups = " AND ugroup_id <= '100' ";
-    }
-
-    $to   = db_es($to);
-    $from = db_es($from);
-
-    //Copy of tracker permissions
-    $sql = <<<EOS
-INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`)
-    SELECT `permission_type`, '$to', `ugroup_id`
-    FROM `permissions`
-    WHERE `object_id` = '$from' $and_remove_ugroups
-EOS;
-
-    $res = db_query($sql);
-    if (! $res) {
-        $result = false;
-    }
-
-   //Copy of field permissions
-    $sql = <<<EOS
-INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`)
-    SELECT `permission_type`, CONCAT('$to#',RIGHT(`object_id`, LENGTH(`object_id`)-LENGTH('$from#'))), `ugroup_id`
-    FROM `permissions`
-    WHERE `object_id` LIKE '$from#%' $and_remove_ugroups
-EOS;
-
-    $res = db_query($sql);
-    if (! $res) {
-        $result = false;
-    }
-
-    //look after special groups in $ugroup_mapping
-    if (($group_id_from != $group_id_to) && ($ugroup_mapping !== false)) {
-        foreach ($ugroup_mapping as $key => $val) {
-            $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id) ' .
-            "SELECT permission_type, $to, " . db_ei($val) . ' ' .
-            'FROM permissions ' .
-            "WHERE object_id = '$from' AND ugroup_id = '" . db_ei($key) . "'";
-            $res = db_query($sql);
-            if (! $res) {
-                     $result = false;
-            }
-
-            $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id) ' .
-            "SELECT permission_type, CONCAT('$to#',RIGHT(`object_id`, LENGTH(`object_id`)-LENGTH('$from#'))), " . db_ei($val) . ' ' .
-            'FROM permissions ' .
-            "WHERE object_id LIKE '$from#%' AND ugroup_id = '" . db_ei($key) . "'";
-            $res = db_query($sql);
-            if (! $res) {
-                     $result = false;
-            }
-        }
-    }
-
-    //look for missing ugroups
-    $sql            = "SELECT count(ugroup_id) FROM `permissions` WHERE permission_type LIKE 'TRACKER_%' AND ( `object_id` = '$from' OR `object_id` LIKE '$from#%')";
-    $res            = db_query($sql);
-    $row            = db_fetch_array($res);
-    $nb_ugroup_from = $row[0];
-    $sql            = "SELECT count(ugroup_id) FROM `permissions` WHERE permission_type LIKE 'TRACKER_%' AND ( `object_id` = '$to' OR `object_id` LIKE '$to#%')";
-    $res            = db_query($sql);
-    $row            = db_fetch_array($res);
-    $nb_ugroup_to   = $row[0];
-    if (($nb_ugroup_from - $nb_ugroup_to) != 0) {
-        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_ug_during_copy'));
-    }
-
-    if (! $result) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error'));
-    }
-    return $result;
 }
 
 /**

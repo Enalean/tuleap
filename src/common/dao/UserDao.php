@@ -25,7 +25,7 @@ use Tuleap\DB\DBConnection;
 /**
  *  Data Access Object for User
  */
-class UserDao extends \Tuleap\DB\DataAccessObject
+class UserDao extends \Tuleap\DB\DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var PasswordHandler */
     private $password_handler;
@@ -373,33 +373,6 @@ class UserDao extends \Tuleap\DB\DataAccessObject
             $tokens[$k] = preg_replace('%^(\s*)' . preg_quote($search, '%') . '(\s*)$%', '$1' . $replace . '$2', $str);
         }
         return implode(',', $tokens);
-    }
-
-    /* Update user name in fields may be involved when renaming user
-     *
-     * @param User   $user
-     * @param String $newName
-     * @return Boolean
-     */
-    public function renameUser($user, $newName): bool
-    {
-        if (! TrackerV3::instance()->available()) {
-            return true;
-        }
-
-        $sqlArtcc = ' UPDATE artifact_cc SET email = ? WHERE email = ?';
-        $this->getDB()->run($sqlArtcc, $newName, $user->getUserName());
-
-        $sqlSel = 'SELECT addresses, id FROM artifact_global_notification
-                       WHERE addresses LIKE ?';
-
-        foreach ($this->getDB()->run($sqlSel, '%' . $this->getDB()->escapeLikeValue($user->getUserName()) . '%') as $row) {
-            $row['addresses'] = $this->replaceStringInList($row['addresses'], $user->getUserName(), $newName);
-            $sqlArtgn         = 'UPDATE artifact_global_notification SET addresses = ? WHERE id = ?';
-            $this->getDB()->run($sqlArtgn, $row['addresses'], $row['id']);
-        }
-
-        return true;
     }
 
     /**

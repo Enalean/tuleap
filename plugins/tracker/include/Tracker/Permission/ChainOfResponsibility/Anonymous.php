@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
  * all permissions (except admin) to other groups (if anonymous has access it
  * makes no sense to remove permissions to some other authenticated users...)
  */
-class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tracker_Permission_Command
+class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tracker_Permission_Command //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter)
@@ -55,14 +55,11 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tr
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::WARN,
-            $GLOBALS['Language']->getText(
-                'tracker_admin_permissions',
-                'tracker_ignore_g_anon_full',
-                [
-                    $permission_setter->getUGroupName($ugroup_id),
-                    $permission_setter->getUGroupName(ProjectUGroup::ANONYMOUS),
-                ]
-            )
+            sprintf(
+                dgettext('tuleap-tracker', "Ignoring group '%1\$s' because '%2\$s' have access to all artifacts."),
+                $permission_setter->getUGroupName($ugroup_id),
+                $permission_setter->getUGroupName(ProjectUGroup::ANONYMOUS),
+            ),
         );
     }
 }

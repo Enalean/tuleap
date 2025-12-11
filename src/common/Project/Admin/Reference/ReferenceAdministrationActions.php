@@ -22,8 +22,6 @@
 namespace Tuleap\Project\Admin\Reference;
 
 use Actions;
-use ArtifactGroupListDao;
-use CodendiDataAccess;
 use Reference;
 use ReferenceManager;
 use Tuleap\Reference\CrossReferencesDao;
@@ -199,14 +197,6 @@ class ReferenceAdministrationActions extends Actions
                         $request->get('keyword'),
                         $request->get('group_id')
                     );
-
-                    //Update table 'artifact_group_list'
-                    $reference_dao = $this->getArtifactGroupListDao();
-                    $result        = $reference_dao->updateItemName(
-                        $request->get('group_id'),
-                        $old_keyword,
-                        $request->get('keyword')
-                    );
                 }
             }
         }
@@ -277,10 +267,5 @@ class ReferenceAdministrationActions extends Actions
     private function getCrossReferenceDao(): CrossReferencesDao
     {
         return new CrossReferencesDao();
-    }
-
-    private function getArtifactGroupListDao()
-    {
-        return new ArtifactGroupListDao(CodendiDataAccess::instance());
     }
 }

@@ -537,6 +537,9 @@ msgstr ""
 msgid "An invisible Line Break"
 msgstr "Un saut de ligne (non visible)"
 
+msgid "Answer now"
+msgstr "Répondre"
+
 msgid ""
 "Archive deleted items plugin is enabled. Each deleted artifact will be "
 "archived in the folder defined in the plugin configuration."
@@ -1291,6 +1294,9 @@ msgstr "Supprimer le tracker"
 msgid "Delete type"
 msgstr "Supprimer une nature"
 
+msgid "Deletion date"
+msgstr "Date de destruction"
+
 msgid "Deletion of artifacts is not allowed"
 msgstr "La suppression d'artifact n'est pas autorisée"
 
@@ -1772,6 +1778,9 @@ msgstr "Hiérarchie mise à jour"
 msgid "Hint"
 msgstr "Indication"
 
+msgid "ID"
+msgstr "ID"
+
 msgid "Id of the artifact"
 msgstr "Identifiant de l'artifact"
 
@@ -1784,6 +1793,24 @@ msgid ""
 msgstr ""
 "Si vous connaissez l'id de l'artifact, entrez-le manuellement dans le champ "
 "texte ci-dessous. Le champ attends une liste d'ids séparés par des virgules."
+
+#, php-format
+msgid "Ignoring group '%1$s' because '%2$s' are allowed to read"
+msgstr "Le groupe '%1$s' est ignoré car le groupe '%2$s' peut lire"
+
+#, php-format
+msgid "Ignoring group '%1$s' because '%2$s' are allowed to submit"
+msgstr "Le groupe '%1$s' est ignoré car le groupe '%2$s' peut soumettre"
+
+#, php-format
+msgid "Ignoring group '%1$s' because '%2$s' are allowed to update"
+msgstr "Le groupe '%1$s' est ignoré car le groupe '%2$s' peut mettre à jour"
+
+#, php-format
+msgid "Ignoring group '%1$s' because '%2$s' have access to all artifacts."
+msgstr ""
+"Le groupe '%1$s' est ignoré car le groupe '%2$s' a accès à tous les "
+"artifacts."
 
 msgid "Import / Export"
 msgstr "Import / Export"
@@ -1826,11 +1853,11 @@ msgid_plural ""
 msgstr[0] ""
 "Dans le cas où vous auriez détruit ce tracker par inadvertance et que vous "
 "souhaitiez le restaurer, veuillez contacter l'<a href=\"mailto:"
-"%1$s\">administrateur du site</A> dans les %2$d jours qui viennent."
+"%1$s\">administrateur du site</a> dans les %2$d jours qui viennent."
 msgstr[1] ""
 "Dans le cas où vous auriez détruit ce tracker par inadvertance et que vous "
 "souhaitiez le restaurer, veuillez contacter l'<a href=\"mailto:"
-"%1$s\">administrateur du site</A> demain."
+"%1$s\">administrateur du site</a> dans les %2$d jours qui viennent."
 
 #, php-format
 msgid ""

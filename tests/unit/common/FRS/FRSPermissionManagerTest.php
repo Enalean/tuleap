@@ -89,8 +89,8 @@ class FRSPermissionManagerTest extends TestCase
         $this->user->method('isSuperUser')->willReturn(false);
         $this->user->method('isAdmin')->willReturn(false);
         $this->user->method('isMemberOfUGroup')->willReturnMap([
-            ['5', 101, 0, false],
-            ['4', 101, 0, true],
+            ['5', 101, false],
+            ['4', 101, true],
         ]);
 
         self::assertTrue($this->permission_manager->isAdmin($this->project, $this->user));

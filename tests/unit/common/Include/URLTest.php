@@ -64,11 +64,9 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
     public function testProjectsExist(): void
     {
         $url = $this->createPartialMock(\URL::class, [
-            'getArtifactDao',
             'getProjectNameRule',
             'getProjectDao',
         ]);
-        $url->method('getArtifactDao');
 
         $exists = $this->createMock(\DataAccessResult::class);
         $exists->method('rowCount')->willReturn(1);
@@ -158,38 +156,5 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 
         $url->method('getProjectDao')->willReturn($dao);
         self::assertEquals(1, $url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=test.svn'));
-    }
-
-    public function testArtifactDontExist(): void
-    {
-        $url    = $this->createPartialMock(\URL::class, [
-            'getArtifactDao',
-        ]);
-        $dao    = $this->createMock(\ArtifactDao::class);
-        $exists = $this->createMock(\DataAccessResult::class);
-        $exists->method('getRow')->willReturn(false);
-        $dao->method('searchArtifactId')->willReturn($exists);
-
-        $url->method('getArtifactDao')->willReturn($dao);
-        self::assertNull($url->getGroupIdFromURL('/tracker/download.php?artifact_id=dontexist'));
-    }
-
-    public function testArtifactExist(): void
-    {
-        $url    = $this->createPartialMock(\URL::class, [
-            'getArtifactDao',
-        ]);
-        $dao    = $this->createMock(\ArtifactDao::class);
-        $exists = $this->createMock(\DataAccessResult::class);
-        $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
-
-        $exists1 = $this->createMock(\DataAccessResult::class);
-        $exists1->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
-
-        $dao->method('searchArtifactId')->willReturnOnConsecutiveCalls($exists, $exists1);
-        $_REQUEST['artifact_id'] = 1;
-        $url->method('getArtifactDao')->willReturn($dao);
-        self::assertEquals(1, $url->getGroupIdFromURL('/tracker/download.php?artifact_id=exist'));
-        self::assertNotEquals(1, $url->getGroupIdFromURL('/toto/tracker/download.php?artifact_id=exist'));
     }
 }

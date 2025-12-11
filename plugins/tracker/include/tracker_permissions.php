@@ -104,7 +104,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                                     || ! isset($ugroups_permissions[$stored_ugroup_id]['submit'])
                                     || $ugroups_permissions[$stored_ugroup_id]['submit'] !== 'on')
                             ) {
-                                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_submit', [$stored_ugroup_permissions['ugroup']['name'], $anonymous_name]));
+                                $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to submit'), $stored_ugroup_permissions['ugroup']['name'], $anonymous_name));
                                 permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $stored_ugroup_id, $fake_object_id);
                                 $add_submit_to_history = true;
                             }
@@ -132,12 +132,12 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                                 || $ugroups_permissions[$stored_ugroup_id]['others'] !== '100'
                             ) {
                                 if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_UPDATE'])) {
-                                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', [$stored_ugroup_permissions['ugroup']['name'], $anonymous_name]));
+                                    $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to update'), $stored_ugroup_permissions['ugroup']['name'], $anonymous_name));
                                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $stored_ugroup_id, $fake_object_id);
                                     $add_update_to_history = true;
                                 }
                                 if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_READ'])) {
-                                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', [$stored_ugroup_permissions['ugroup']['name'], $anonymous_name]));
+                                    $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to update'), $stored_ugroup_permissions['ugroup']['name'], $anonymous_name));
                                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
                                     $add_read_to_history = true;
                                 }
@@ -166,7 +166,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                                 || $ugroups_permissions[$stored_ugroup_id]['others'] !== '100'
                             ) {
                                 if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_READ'])) {
-                                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_read', [$stored_ugroup_permissions['ugroup']['name'], $anonymous_name]));
+                                    $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to read'), $stored_ugroup_permissions['ugroup']['name'], $anonymous_name));
                                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
                                     $add_read_to_history = true;
                                 }
@@ -192,7 +192,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     //if the ugroup is registered, we have to:
                     // 1. check consistency with current permissions for anonymous users
                     if ($user_set_anonymous_to_submit || $anonymous_is_already_set_to_submit) {
-                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_submit', [$stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name'], $anonymous_name]));
+                        $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to submit'), $stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name'], $anonymous_name));
                     } else {
                         // 2. erase submit permissions for other ugroups
                         foreach ($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
@@ -207,7 +207,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                                         || ! isset($ugroups_permissions[$stored_ugroup_id]['submit'])
                                         || $ugroups_permissions[$stored_ugroup_id]['submit'] !== 'on')
                                 ) {
-                                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_submit', [$stored_ugroup_permissions['ugroup']['name'], $registered_name]));
+                                    $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to submit'), $stored_ugroup_permissions['ugroup']['name'], $registered_name));
                                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $stored_ugroup_id, $fake_object_id);
                                     $add_submit_to_history = true;
                                 }
@@ -226,7 +226,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     //if the ugroup is registered, we have to:
                     // 1. check consistency with current permissions for anonymous users
                     if ($user_set_anonymous_to_update || $anonymous_is_already_set_to_update) {
-                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', [$stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name'], $anonymous_name]));
+                        $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to update'), $stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name'], $anonymous_name));
                     } else {
                         // 2. erase update permissions for other ugroups
                         foreach ($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
@@ -241,12 +241,12 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                                     || $ugroups_permissions[$stored_ugroup_id]['others'] !== '100'
                                 ) {
                                     if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_UPDATE'])) {
-                                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', [$stored_ugroup_permissions['ugroup']['name'], $registered_name]));
+                                        $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to update'), $stored_ugroup_permissions['ugroup']['name'], $registered_name));
                                         permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $stored_ugroup_id, $fake_object_id);
                                         $add_update_to_history = true;
                                     }
                                     if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_READ'])) {
-                                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', [$stored_ugroup_permissions['ugroup']['name'], $registered_name]));
+                                        $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to update'), $stored_ugroup_permissions['ugroup']['name'], $registered_name));
                                         permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
                                         $add_read_to_history = true;
                                     }
@@ -266,7 +266,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     //if the ugroup is registered, we have to:
                     // 1. check consistency with current permissions for anonymous users
                     if ($user_set_anonymous_to_read || $anonymous_is_already_set_to_read || $anonymous_is_already_set_to_update) {
-                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_read', [$stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name'], $anonymous_name]));
+                        $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to read'), $stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name'], $anonymous_name));
                     } else {
                         // 2. erase read permissions for other ugroups
                         foreach ($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
@@ -281,7 +281,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                                     || $ugroups_permissions[$stored_ugroup_id]['others'] !== '100'
                                 ) {
                                     if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_READ'])) {
-                                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_read', [$stored_ugroup_permissions['ugroup']['name'], $registered_name]));
+                                        $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to read'), $stored_ugroup_permissions['ugroup']['name'], $registered_name));
                                         permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
                                         $add_read_to_history = true;
                                     }
@@ -318,9 +318,9 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                         // check consistency with current permissions for anonymous users
                         // and current permissions for registered users
                         if ($user_set_anonymous_to_submit || $anonymous_is_already_set_to_submit) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_submit', [$name_of_ugroup, $anonymous_name]));
+                            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to submit'), $name_of_ugroup, $anonymous_name));
                         } elseif ($user_set_registered_to_submit || $registered_is_already_set_to_submit) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_submit', [$name_of_ugroup, $registered_name]));
+                            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to submit'), $name_of_ugroup, $registered_name));
                         } else {
                             permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $fake_object_id, $ugroup_id);
                             $add_submit_to_history = true;
@@ -348,9 +348,9 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                         // check consistency with current permissions for anonymous users
                         // and current permissions for registered users
                         if ($user_set_anonymous_to_update || $anonymous_is_already_set_to_update) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', [$name_of_ugroup, $anonymous_name]));
+                            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to update'), $name_of_ugroup, $anonymous_name));
                         } elseif ($user_set_registered_to_update || $registered_is_already_set_to_update) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', [$name_of_ugroup, $registered_name]));
+                            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to update'), $name_of_ugroup, $registered_name));
                         } else {
                             permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $fake_object_id, $ugroup_id);
                             $add_update_to_history = true;
@@ -378,13 +378,13 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                         // check consistency with current permissions for anonymous users
                         // and current permissions for registered users
                         if ($user_set_anonymous_to_read || $anonymous_is_already_set_to_read) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_read', [$name_of_ugroup, $anonymous_name]));
+                            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to read'), $name_of_ugroup, $anonymous_name));
                         } elseif ($user_set_registered_to_read || $registered_is_already_set_to_read) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_read', [$name_of_ugroup, $registered_name]));
+                            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to read'), $name_of_ugroup, $registered_name));
                         } elseif ($user_set_anonymous_to_update || $anonymous_is_already_set_to_update) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', [$name_of_ugroup, $anonymous_name]));
+                            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to update'), $name_of_ugroup, $anonymous_name));
                         } elseif ($user_set_registered_to_update || $registered_is_already_set_to_update) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', [$name_of_ugroup, $registered_name]));
+                            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Ignoring group \'%1$s\' because \'%2$s\' are allowed to update'), $name_of_ugroup, $registered_name));
                         } else {
                             permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_READ', $fake_object_id, $ugroup_id);
                             $add_read_to_history = true;

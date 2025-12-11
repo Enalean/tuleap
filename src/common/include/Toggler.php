@@ -67,7 +67,7 @@
  * user preferences. In that case, it is up to the service to handle
  * the save.
  */
-class Toggler
+class Toggler // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      *
@@ -104,16 +104,7 @@ class Toggler
             $done = false;
             EventManager::instance()->processEvent(Event::TOGGLE, ['id' => $id, 'user' => $current_user->user, 'done' => &$done]);
             if (! $done) {
-                if (strpos($id, 'tracker_report_query_') === 0) {
-                    $report_id      = (int) substr($id, strlen('tracker_report_query_'));
-                    $report_factory = ArtifactReportFactory::instance();
-                    if (($report = $report_factory->getReportById($report_id, $current_user->user->getId())) && $report->userCanUpdate($current_user->user)) {
-                        $report->toggleQueryDisplay();
-                        $report_factory->save($report);
-                    }
-                } else {
-                    self::togglePreference($current_user->user, $id);
-                }
+                self::togglePreference($current_user->user, $id);
             }
         }
     }

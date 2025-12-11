@@ -459,6 +459,9 @@ msgstr ""
 msgid "An invisible Line Break"
 msgstr ""
 
+msgid "Answer now"
+msgstr ""
+
 msgid ""
 "Archive deleted items plugin is enabled. Each deleted artifact will be "
 "archived in the folder defined in the plugin configuration."
@@ -1133,6 +1136,9 @@ msgstr ""
 msgid "Delete type"
 msgstr ""
 
+msgid "Deletion date"
+msgstr ""
+
 msgid "Deletion of artifacts is not allowed"
 msgstr ""
 
@@ -1573,6 +1579,9 @@ msgstr ""
 msgid "Hint"
 msgstr ""
 
+msgid "ID"
+msgstr ""
+
 msgid "Id of the artifact"
 msgstr ""
 
@@ -1582,6 +1591,22 @@ msgstr ""
 msgid ""
 "If you know the artifact id, feel free to enter it manually in the text "
 "field below. Use a comma to separate each ids if you have more than one."
+msgstr ""
+
+#, php-format
+msgid "Ignoring group '%1$s' because '%2$s' are allowed to read"
+msgstr ""
+
+#, php-format
+msgid "Ignoring group '%1$s' because '%2$s' are allowed to submit"
+msgstr ""
+
+#, php-format
+msgid "Ignoring group '%1$s' because '%2$s' are allowed to update"
+msgstr ""
+
+#, php-format
+msgid "Ignoring group '%1$s' because '%2$s' have access to all artifacts."
 msgstr ""
 
 msgid "Import / Export"

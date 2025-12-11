@@ -472,7 +472,7 @@ final class EmailNotificationTask implements PostCreationTask
     {
         return '<span class="cta">
             <a href="' . $artifact_link . '" target="_blank" rel="noreferrer">' .
-            $language->getText('tracker_include_artifact', 'mail_answer_now') .
+            dgettext('tuleap-tracker', 'Answer now') .
             '</a>
         </span>';
     }

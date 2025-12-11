@@ -246,7 +246,7 @@ function ugroup_get_name_from_id($ugroup_id)
  * $atid is necessary for trackers since the tracker admin role is different for each tracker.
  * @return bool true if user is member of the ugroup, false otherwise.
  */
-function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid = 0)
+function ugroup_user_is_member($user_id, $ugroup_id, $group_id)
 {
     $user = UserManager::instance()->getUserById($user_id);
     // Special Cases
@@ -288,12 +288,6 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid = 0)
         if ($user->isMember($group_id, 'A')) {
             return true;
         }
-    } elseif ($ugroup_id == $GLOBALS['UGROUP_TRACKER_ADMIN']) {
-        // Tracker admins
-        $pm    = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        $at    = new ArtifactType($group, $atid);
-        return $at->userIsAdmin($user_id);
     } else {
         // Normal ugroup
         $sql = "SELECT * from ugroup_user where ugroup_id='" . db_ei($ugroup_id) . "' and user_id='" . db_ei($user_id) . "'";
