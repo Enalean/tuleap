@@ -39,14 +39,22 @@ class PaneNotificationListPresenter
     public $remove_notif_confirm;
     public $project_id;
     public $additional_information_for_autocompleter;
+    public string $delete;
+    /**
+     * @var list<array{id: int, name: string, selected: bool}>
+     */
+    public array $all_user_groups;
 
-    public function __construct($project_id, $tracker_id, array $notifications)
+    /**
+     * @param list<array{id: int, name: string, selected: bool}> $all_user_groups
+     */
+    public function __construct($project_id, $tracker_id, array $notifications, array $all_user_groups)
     {
         $this->project_id                               = $project_id;
         $this->additional_information_for_autocompleter = json_encode(['tracker_id' => $tracker_id]);
         $this->notifications                            = $notifications;
         $this->empty_notification                       = dgettext('tuleap-tracker', 'No notification set');
-        $this->has_notifications                        = (bool) (count($notifications) > 0);
+        $this->has_notifications                        = (count($notifications) > 0);
 
         $this->admin_note      = dgettext(
             'tuleap-tracker',
@@ -65,5 +73,7 @@ class PaneNotificationListPresenter
         $this->remove_notif_confirm         = dgettext('tuleap-tracker', 'Confirm deletion');
         $this->add_notification             = dgettext('tuleap-tracker', 'Add notification');
         $this->new_notification_placeholder = dgettext('tuleap-tracker', 'User, group, email');
+
+        $this->all_user_groups = $all_user_groups;
     }
 }

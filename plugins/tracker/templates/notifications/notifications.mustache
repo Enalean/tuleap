@@ -1,161 +1,107 @@
-<div class="tracker-global-notifications">
-    <p>{{ admin_note }}</p>
-    <table class="table tracker-admin-notification-table">
-        <thead>
-            <tr>
-                <th class="plugin-tracker-global-notifs-people"> {{ notified_people }}</th>
-                <th class="plugin-tracker-global-notifs-updates"> {{ send_all }}</th>
-                <th class="plugin-tracker-global-notifs-permissions">{{ check_perms }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {{# has_notifications }}
-                {{# notifications }}
-                    {{# has_notified }}
-                        <tr data-target-input-id="edit_email_{{ notification_id }}">
-                            <td>
-                                <div class="tracker-global-notifications-checkbox-cell-read">
-                                    <div class="tracker-notification-email-list">
-                                        {{# ugroups_to_be_notified }}
-                                            <span class="tracker-notification-email-list-entry">
-                                                <i class="fa-solid fa-users tracker-notification-email-list-group-icon"></i>
-                                                {{ label }}<span class="tracker-notification-email-list-separator">, </span>
-                                            </span>
-                                        {{/ ugroups_to_be_notified }}
-                                        {{# users_to_be_notified }}
-                                            <span class="tracker-notification-email-list-entry">
-                                                <div class="avatar tracker-notification-user-avatar">
-                                                    <img src="{{ avatar_url }}" loading="lazy" />
-                                                </div>
-                                                {{ label }}<span class="tracker-notification-email-list-separator">, </span>
-                                            </span>
-                                        {{/ users_to_be_notified }}
-                                        {{# emails_to_be_notified }}
-                                            <span class="tracker-notification-email-list-entry">
-                                                {{ . }}<span class="tracker-notification-email-list-separator">, </span>
-                                            </span>
-                                        {{/ emails_to_be_notified }}
-                                    </div>
-                                </div>
-                                <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
-                                    <input type="hidden"
-                                           id="edit_email_{{ notification_id }}"
-                                           name="global_notification[{{ notification_id }}][addresses]"
-                                           class="edit_email tracker-global-notification-email tracker-global-notification-email autocompleter-users-and-ugroups-input"
-                                           placeholder="{{ new_notification_placeholder }}"
-                                           data-project-id="{{ project_id }}"
-                                           data-additional-info="{{ additional_information_for_autocompleter }}"
-                                           data-emails="{{ emails_to_be_notified_json }}"
-                                           data-users="{{ users_to_be_notified_json }}"
-                                           data-ugroups="{{ ugroups_to_be_notified_json }}"
-                                           multiple
-                                           disabled
-                                    />
-                                </div>
-                            </td>
-                            <td class="tracker-global-notifications-checkbox-cell">
-                                <div class="tracker-global-notifications-checkbox-cell-read">
-                                    {{# all_updates }}<i class="fa fa-check"></i>{{/ all_updates }}
-                                </div>
-                                <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
-                                    <input type="hidden" name="global_notification[{{ notification_id }}][all_updates]" value="0" disabled />
-                                    <input type="checkbox"
-                                           name="global_notification[{{ notification_id }}][all_updates]"
-                                           data-test="global-notification-all-update-checkbox"
-                                           value="1"
-                                           disabled
-                                           {{# all_updates }}checked{{/ all_updates }} />
-                                </div>
-                            </td>
-                            <td class="tracker-global-notifications-checkbox-cell">
-                                <div class="tracker-global-notifications-checkbox-cell-read">
-                                    {{# check_permissions }}<i class="fa fa-check"></i>{{/ check_permissions }}
-                                </div>
-                                <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
-                                    <input type="hidden" name="global_notification[{{ notification_id }}][check_permissions]" value="0" disabled />
-                                    <input type="checkbox"
-                                           name="global_notification[{{ notification_id }}][check_permissions]"
-                                           value="1"
-                                           disabled
-                                           {{# check_permissions }}checked{{/ check_permissions }} />
-                                </div>
-                            </td>
-                            <td class="tracker-notification-edit">
-                                <div class="tracker-global-notifications-checkbox-cell-read">
-                                    <a href="#" class="tracker-notification-edit-show tracker-notification-edit" data-test="edit-notification">
-                                        <i class="fas fa-pencil-alt"></i>
-                                        {{ edit }}
-                                    </a>
-                                    <a href="#"
-                                       class="tracker-notification-delete"
-                                       data-toggle="popover"
-                                       data-trigger="click"
-                                       data-placement="left"
-                                       data-html="true"
-                                       data-popover-id="tracker-notification-delete-{{ notification_id }}-popover"
-                                    >
-                                        <i class="far fa-trash-alt"></i>
-                                        {{ delete }}
-                                    </a>
-                                    <div id="tracker-notification-delete-{{ notification_id }}-popover"
-                                         data-title="{{ remove_notif_title }}"
-                                         class="tracker-notification-delete-popover">
-                                        <p>{{ remove_notif_desc }}</p>
-
-                                        <div class="tracker-notification-delete-popover-actions">
-                                            <button type="button" class="btn btn-small btn-default dismiss-popover">{{ cancel }}</button>
-                                            <button type="submit"
-                                                    name="remove_global[{{ notification_id }}]"
-                                                    value="1"
-                                                    class="btn btn-small btn-danger">{{ remove_notif_confirm }}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
-                                    <button type="submit" name="submit_notification_edit" data-test="edit-notification-button" value="{{ notification_id }}" class="btn btn-primary">{{ save }}</button>
-                                    <button type="button" name="submit" class="btn tracker-notification-edit-hide">{{ cancel }}</button>
-                                </div>
+<div class="tlp-framed-horizontally">
+    <div class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }}tuleap-tracker | Global Email Notification{{/ dgettext }}</h1>
+            </div>
+            <div class="tlp-pane-section">
+                <p>{{ admin_note }}</p>
+                <div class="tlp-table-actions">
+                    <button type="button" class="tlp-button-primary" id="tracker-global-notifications-add"
+                            data-test="add-notification" data-target-modal-id="tracker-global-notifications-add-modal">
+                        <i class="fa-solid fa-plus"></i>
+                        {{ add_notification }}
+                    </button>
+                </div>
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th> {{ notified_people }}</th>
+                        <th class="tracker-global-notifications-checkbox-cell"> {{ send_all }}</th>
+                        <th class="tracker-global-notifications-checkbox-cell">{{ check_perms }}</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# has_notifications }}
+                        {{# notifications }}
+                            {{# has_notified }}
+                                <tr data-target-input-id="edit_email_{{ notification_id }}">
+                                    <td>
+                                        <div class="tracker-global-notifications-checkbox-cell-read">
+                                                {{# ugroups_to_be_notified }}
+                                                    <span class="tracker-notification-email-list-entry">
+                                                            <i class="fa-solid fa-users"></i>
+                                                        {{ label }}<span
+                                                        class="tracker-notification-email-list-separator">, </span>
+                                                        </span>
+                                                {{/ ugroups_to_be_notified }}
+                                                {{# users_to_be_notified }}
+                                                    <span class="tracker-notification-email-list-entry">
+                                                            <div
+                                                                class="tlp-avatar-mini">
+                                                                <img src="{{ avatar_url }}" loading="lazy" aria-hidden="true"/>
+                                                            </div>
+                                                        {{ display_name }}<span
+                                                        class="tracker-notification-email-list-separator">, </span>
+                                                    </span>
+                                                {{/ users_to_be_notified }}
+                                                {{# emails_to_be_notified }}
+                                                    <span class="tracker-notification-email-list-entry">
+                                                            {{ . }}<span
+                                                        class="tracker-notification-email-list-separator">, </span>
+                                                        </span>
+                                                {{/ emails_to_be_notified }}
+                                            </div>
+                                    </td>
+                                    <td class="tracker-global-notifications-checkbox-cell">
+                                        {{# all_updates }}<i class="fa-solid fa-check"></i>{{/ all_updates }}
+                                    </td>
+                                    <td class="tracker-global-notifications-checkbox-cell">
+                                        {{# check_permissions }}
+                                            <i class="fa-solid fa-check"></i>{{/ check_permissions }}
+                                    </td>
+                                    <td class="tlp-table-cell-actions">
+                                        <a href="#"
+                                           class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline tracker-notification-modal-button-trigger"
+                                           data-test="edit-notification"
+                                           data-target-modal-id="tracker-notification-edit-{{ notification_id }}-modal"
+                                        >
+                                            <i class="fa-solid fa-pencil-alt" aria-hidden="true"></i>
+                                            {{ edit }}
+                                        </a>
+                                        <a
+                                            href="#"
+                                           class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline tracker-notification-modal-button-trigger"
+                                           data-target-modal-id="tracker-notification-delete-{{ notification_id }}-modal"
+                                        >
+                                            <i class="far fa-trash-alt" aria-hidden="true"></i>
+                                            {{ delete }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {{/ has_notified }}
+                        {{/ notifications }}
+                    {{/ has_notifications }}
+                    {{^ has_notifications }}
+                        <tr>
+                            <td class="tlp-table-cell-empty" colspan="4">
+                                {{ empty_notification }}
                             </td>
                         </tr>
-                    {{/ has_notified }}
-                {{/ notifications }}
-            {{/ has_notifications }}
-            {{^ has_notifications }}
-                <tr>
-                    <td class="table-cell-empty" colspan="4">
-                        {{ empty_notification }}
-                    </td>
-                </tr>
-            {{/ has_notifications }}
-            <tr id="tracker-global-notifications-row-add" class="tracker-global-notifications-row-add-hidden">
-                <td>
-                    <input type="hidden"
-                           id="add_email"
-                           name="new_global_notification[addresses]"
-                           class="tracker-global-notification-email autocompleter-users-and-ugroups-input"
-                           placeholder="{{ new_notification_placeholder }}"
-                           data-project-id="{{ project_id }}"
-                           data-additional-info="{{ additional_information_for_autocompleter }}"
-                           multiple
-                </td>
-                <td class="tracker-global-notifications-checkbox-cell">
-                    <input type="hidden" name="new_global_notification[all_updates]" value="0" />
-                    <input type="checkbox" name="new_global_notification[all_updates]" data-test="all-updates" value="1"/>
-                </td>
-                <td class="tracker-global-notifications-checkbox-cell">
-                    <input type="hidden" name="new_global_notification[check_permissions]" value="0" />
-                    <input type="checkbox" name="new_global_notification[check_permissions]" value="1"/>
-                </td>
-                <td class="tracker-notification-edit">
-                    <button type="submit" class="btn btn-primary" data-test="save-notification-button">{{ save }}</button>
-                    <button type="button" name="submit" class="btn tracker-notification-edit-hide">{{ cancel }}</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <button type="button" class="btn" id="tracker-global-notifications-add" data-test="add-notification">
-        <i class="fa-solid fa-plus"></i>
-        {{ add_notification }}
-    </button>
+                    {{/ has_notifications }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+{{> notifications-add-modal}}
+
+{{# notifications }}
+    {{# has_notified }}
+        {{> notifications-edit-modal}}
+        {{> notifications-delete-modal}}
+    {{/has_notified}}
+{{/ notifications }}

@@ -37,7 +37,16 @@ class PaneNotificationPresenter
     public $emails_to_be_notified_json;
 
     public $has_notified;
+    /**
+     * @var list<array{id: int, name: string, selected: bool}>
+     */
+    public array $all_user_groups;
 
+    public string $emails_separated_with_comma;
+
+    /**
+     * @param list<array{id: int, name: string, selected: bool}> $all_user_groups
+     */
     public function __construct(
         Tracker_GlobalNotification $notification,
         array $emails_to_be_notified,
@@ -46,6 +55,7 @@ class PaneNotificationPresenter
         $emails_to_be_notified_json,
         $users_to_be_notified_json,
         $ugroups_to_be_notified_json,
+        array $all_user_groups,
     ) {
         $this->notification_id   = $notification->getId();
         $this->all_updates       = $notification->isAllUpdates();
@@ -62,5 +72,8 @@ class PaneNotificationPresenter
         $this->has_notified = count($this->emails_to_be_notified) > 0
             || count($this->users_to_be_notified) > 0
             || count($this->ugroups_to_be_notified) > 0;
+
+        $this->all_user_groups             = $all_user_groups;
+        $this->emails_separated_with_comma = implode(', ', $this->emails_to_be_notified);
     }
 }

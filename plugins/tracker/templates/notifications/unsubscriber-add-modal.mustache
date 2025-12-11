@@ -1,0 +1,26 @@
+<div id="tracker-unsubscribe-add-modal" role="dialog" aria-labelledby="tracker-unsubscribe-add-modal" class="tlp-modal">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-label">{{# dgettext }} tuleap-tracker | Unsubscribe a user {{/ dgettext }}</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }} tuleap-tracker | Close {{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <div
+            class="tlp-form-element tracker-global-notifications-autocomplete"
+            data-id="tracker-global-notifications-user-add"
+            data-name="new_unsubscriber"
+            data-existing="[]"
+        >
+            <label class="tlp-label" for="tracker-global-notifications-user-add">
+                {{# dgettext }}tuleap-tracker| Users who not will receive the notification {{/dgettext}}
+            </label>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
+            Cancel
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">{{# dgettext }} tuleap-tracker | Save {{/ dgettext }}</button>
+    </div>
+</div>

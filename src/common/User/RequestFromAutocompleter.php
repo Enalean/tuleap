@@ -202,7 +202,7 @@ class RequestFromAutocompleter
         if ($ugroup && $this->userCanSeeUgroup($this->current_user, $ugroup, $this->project)) {
             $this->ugroups[] = $ugroup;
         } else {
-            $this->invalid_entries->add($ugroup_id);
+            $this->invalid_entries->add($ugroup?->getName());
         }
     }
 

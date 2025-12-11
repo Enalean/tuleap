@@ -20,15 +20,22 @@
 
 namespace Tuleap\Tracker\Notifications;
 
+use Override;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
+use Tuleap\Tracker\Tracker;
+use UserHelper;
 use UserManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends TestCase
 {
-    #[\Override]
+    #[Override]
     protected function tearDown(): void
     {
-        \UserHelper::clearInstance();
+        UserHelper::clearInstance();
     }
 
     public function testPresentersAreRetrievedSortedAlphabetically(): void
@@ -43,10 +50,12 @@ final class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \
             'searchUsersUnsubcribedFromNotificationByTrackerID'
         )->willReturn($user_rows);
 
-        $user1 = $this->createMock(\PFUser::class);
-        $user1->method('getAvatarUrl');
-        $user2 = $this->createMock(\PFUser::class);
-        $user2->method('getAvatarUrl');
+        $user1        = UserTestBuilder::anActiveUser()->withId(102)->withUserName('username1')->withRealName(
+            'Realname1'
+        )->withAvatarUrl('https://example.com/users/username2/avatar-51fgsg.png')->build();
+        $user2        = UserTestBuilder::anActiveUser()->withId(200)->withUserName('username2')->withRealName(
+            'Realname2'
+        )->withAvatarUrl('https://example.com/users/username2/avatar-154dfgdg5gbdb.png')->build();
         $user_manager = $this->createMock(UserManager::class);
         $user_manager
             ->expects($this->exactly(2))
@@ -56,25 +65,27 @@ final class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \
                 102 => $user2,
             });
 
-        $builder = new CollectionOfUserInvolvedInNotificationPresenterBuilder(
-            $users_to_notify_dao,
-            $unsubscribers_notification_dao,
-            $user_manager
-        );
-
-        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
+        $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(101);
 
-        $user_helper = $this->createMock(\UserHelper::class);
-        \UserHelper::setInstance($user_helper);
+        $user_helper = $this->createMock(UserHelper::class);
+        UserHelper::setInstance($user_helper);
         $user1_display_name = 'username1 (Realname1)';
         $user2_display_name = 'username2 (Realname2)';
         $user_helper->method('getDisplayName')->willReturn($user2_display_name, $user1_display_name);
+        $user_helper->method('getUserUrl')->willReturn('/users/' . urlencode($user1->getUserName()), '/users/' . urlencode($user2->getUserName()));
 
+        $builder    = new CollectionOfUserInvolvedInNotificationPresenterBuilder(
+            $users_to_notify_dao,
+            $unsubscribers_notification_dao,
+            $user_manager,
+            $user_helper,
+            ProvideUserAvatarUrlStub::build()
+        );
         $presenters = $builder->getCollectionOfNotificationUnsubscribersPresenter($tracker);
 
         $this->assertCount(2, $presenters);
-        $this->assertEquals($user1_display_name, $presenters[0]->label);
-        $this->assertEquals($user2_display_name, $presenters[1]->label);
+        $this->assertEquals($user1_display_name, $presenters[0]->display_name);
+        $this->assertEquals($user2_display_name, $presenters[1]->display_name);
     }
 }

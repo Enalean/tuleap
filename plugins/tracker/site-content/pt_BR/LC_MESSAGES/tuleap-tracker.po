@@ -159,12 +159,6 @@ msgstr ""
 
 #, php-format
 msgid ""
-"<h3>Confirm deletion of date reminder</h3><p>You are going to delete this "
-"date reminder:</p><p>%1$s</p><p>Are you sure that you want to continue?</p>"
-msgstr ""
-
-#, php-format
-msgid ""
 "<h3>You are about to delete permanently the artifact \"%1$s\".</"
 "h3><p><strong>There is no way to restore the artifact.</strong></p>"
 msgstr ""
@@ -199,6 +193,12 @@ msgstr ""
 
 msgid ""
 "<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<p>You are going to delete this date reminder:</p><p>%1$s</p><p>Are you sure "
+"that you want to continue?</p>"
 msgstr ""
 
 #, php-format
@@ -902,6 +902,9 @@ msgstr ""
 msgid "Confirm deletion"
 msgstr ""
 
+msgid "Confirm deletion of date reminder"
+msgstr ""
+
 msgid "Congratulations!"
 msgstr ""
 
@@ -1258,7 +1261,13 @@ msgstr ""
 msgid "Edit field"
 msgstr ""
 
+msgid "Edit notification"
+msgstr ""
+
 msgid "Edit permissions of this field"
+msgstr ""
+
+msgid "Edit reminder"
 msgstr ""
 
 #, php-format
@@ -1290,6 +1299,9 @@ msgid "Email Notifications Settings"
 msgstr ""
 
 msgid "Email subject customisation"
+msgstr ""
+
+msgid "Emails who will receive the notification"
 msgstr ""
 
 msgid "Empty"
@@ -1988,6 +2000,9 @@ msgstr ""
 msgid "New artifact links interface"
 msgstr ""
 
+msgid "New date reminder"
+msgstr ""
+
 msgid "New tracker"
 msgstr ""
 
@@ -2017,6 +2032,9 @@ msgid "No comment"
 msgstr ""
 
 msgid "No data to import"
+msgstr ""
+
+msgid "No date reminder defined for this tracker"
 msgstr ""
 
 msgid "No element selected."
@@ -4030,9 +4048,6 @@ msgstr "Atualizar"
 msgid "Update Field '%1$s'"
 msgstr ""
 
-msgid "Update reminder"
-msgstr ""
-
 msgid "Update semantic"
 msgstr ""
 
@@ -4078,10 +4093,10 @@ msgstr ""
 msgid "User groups"
 msgstr ""
 
-msgid "User, group, email"
+msgid "User groups that will receive the notification"
 msgstr ""
 
-msgid "User..."
+msgid "User, group, email"
 msgstr ""
 
 msgid ""
@@ -4104,6 +4119,12 @@ msgid "Users having unsubscribed from the notifications"
 msgstr ""
 
 msgid "Users mapping"
+msgstr ""
+
+msgid "Users who not will receive the notification"
+msgstr ""
+
+msgid "Users who will receive the notification"
 msgstr ""
 
 #, php-format
@@ -4302,8 +4323,8 @@ msgstr ""
 msgid ""
 "You can use variables to customize the sender field. The available variables "
 "are %%realname and %%username.\n"
-"    These will be replaced by the full name and username of the user who "
-"updated the artifact."
+"                                These will be replaced by the full name and "
+"username of the user who updated the artifact."
 msgstr ""
 
 #, php-format

@@ -20,49 +20,56 @@
 
 namespace Tuleap\Tracker\Notifications\Settings;
 
+use Feedback;
+use Override;
 use TrackerFactory;
 use TrackerManager;
+use Tuleap\HTTPRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use UserManager;
 
-class NotificationsAdminSettingsDisplayController implements DispatchableWithRequest
+class NotificationsAdminSettingsDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     use NotificationsAdminSettingsControllerCommon;
 
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var TrackerManager
-     */
-    private $tracker_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
     public function __construct(
-        TrackerFactory $tracker_factory,
-        TrackerManager $tracker_manager,
-        UserManager $user_manager,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly TrackerManager $tracker_manager,
+        private readonly UserManager $user_manager,
     ) {
-        $this->tracker_factory = $tracker_factory;
-        $this->tracker_manager = $tracker_manager;
-        $this->user_manager    = $user_manager;
     }
 
-    #[\Override]
-    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
+    #[Override]
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->getTrackerFromTrackerID($this->tracker_factory, $variables['id']);
 
         $current_user = $request->getCurrentUser();
         if (! $tracker->userIsAdmin($current_user)) {
-            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
+            $layout->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-tracker',
+                    'Access denied. You don\'t have permissions to perform this action.'
+                )
+            );
             $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
         }
+        $include_assets =  new IncludeAssets(
+            __DIR__ . '/../../../../../scripts/tracker-admin/frontend-assets',
+            '/assets/trackers/tracker-admin'
+        );
+
+        $layout->addCssAsset(
+            new CssAssetWithoutVariantDeclinaisons(
+                $include_assets,
+                'notifications-style'
+            )
+        );
 
         $csrf_token = $this->getCSRFToken($tracker);
 
@@ -71,7 +78,13 @@ class NotificationsAdminSettingsDisplayController implements DispatchableWithReq
             return;
         }
 
-        $tracker->displayAdminItemHeader($this->tracker_manager, 'editnotifications', dgettext('tuleap-tracker', 'Email Notification Settings'));
+        $tracker->displayAdminHeaderBurningParrot(
+            $this->tracker_manager,
+            'editnotifications',
+            dgettext('tuleap-tracker', 'Email Notification Settings'),
+            []
+        );
+
         $this->getNotificationsManager($this->user_manager, $tracker)->displayTrackerAdministratorSettings($request, $csrf_token);
         $tracker->displayFooter($this->tracker_manager);
     }

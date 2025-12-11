@@ -1,0 +1,20 @@
+<div id="tracker-notification-delete-{{ notification_id }}-modal" role="dialog" aria-labelledby="tracker-notification-delete-{{ notification_id }}-title" class="tlp-modal tlp-modal-danger">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-notification-delete-{{ notification_id }}-title">{{ remove_notif_title }}</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <p>{{ remove_notif_desc }}</p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" data-dismiss="modal" class="tlp-button-danger tlp-button-outline tlp-modal-action">
+            {{ cancel }}
+        </button>
+        <button type="submit"
+                name="remove_global[{{ notification_id }}]"
+                value="1"
+                class="tlp-button-danger tlp-modal-action">{{ remove_notif_confirm }}</button>
+    </div>
+</div>

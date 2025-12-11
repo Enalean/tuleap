@@ -1,10 +1,5 @@
-<?php
-/**
- * Copyright Enalean (c) 2011, 2012, 2013 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/*
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,13 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'HTML_Table.php';
+import { createModal } from "@tuleap/tlp-modal";
 
-class HTML_Table_Bootstrap extends HTML_Table
-{
-    public function __construct()
-    {
-        parent::__construct();
-        $this->setTableClasses(['table']);
+const url = new URL(window.location.href);
+url.searchParams.delete("action");
+url.searchParams.delete("reminder_id");
+
+window.history.replaceState("", "", url.pathname + url.search + window.location.hash);
+
+document.addEventListener("DOMContentLoaded", () => {
+    const modal_mount = document.getElementById("notification-date-reminder-delete");
+    if (!modal_mount) {
+        return;
     }
-}
+    createModal(modal_mount).show();
+});

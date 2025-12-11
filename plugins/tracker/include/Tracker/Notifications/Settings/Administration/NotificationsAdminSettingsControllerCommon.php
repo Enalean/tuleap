@@ -25,6 +25,7 @@ use Tracker_NotificationsManager;
 use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\CollectionOfUserGroupPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
@@ -38,10 +39,16 @@ use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\Tracker\dao\TrackerGlobalNotificationDao;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupDao;
 use UGroupManager;
+use User_ForgeUserGroupFactory;
+use UserGroupDao;
 use UserManager;
 use UserPreferencesDao;
 
@@ -83,9 +90,15 @@ trait NotificationsAdminSettingsControllerCommon
             new CollectionOfUserInvolvedInNotificationPresenterBuilder(
                 $user_to_notify_dao,
                 $unsubscribers_notification_dao,
-                $user_manager
+                $user_manager,
+                \UserHelper::instance(),
+                new UserAvatarUrlProvider(
+                    new AvatarHashDao(),
+                    new ComputeAvatarHash()
+                )
             ),
-            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
+            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),
+            new CollectionOfUserGroupPresenterBuilder()
         );
         return new Tracker_NotificationsManager(
             $tracker,
@@ -117,7 +130,10 @@ trait NotificationsAdminSettingsControllerCommon
                     new MentionedUserInTextRetriever($user_manager),
                 ),
                 new UserNotificationSettingsDAO()
-            )
+            ),
+            new User_ForgeUserGroupFactory(new UserGroupDao()),
+            new CollectionOfUserGroupPresenterBuilder(),
+            new TrackerGlobalNotificationDao()
         );
     }
 

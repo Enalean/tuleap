@@ -181,15 +181,6 @@ msgstr "-- Veuillez choisir"
 
 #, php-format
 msgid ""
-"<h3>Confirm deletion of date reminder</h3><p>You are going to delete this "
-"date reminder:</p><p>%1$s</p><p>Are you sure that you want to continue?</p>"
-msgstr ""
-"<h3>Confirmez la suppression du rappel sur une date du tracker</h3><p>Vous "
-"êtes sur le point de supprimer sur une date du tracker:</p><p>%1$s</"
-"p><p>Êtes vous sûr de vouloir continuer ?</p>"
-
-#, php-format
-msgid ""
 "<h3>You are about to delete permanently the artifact \"%1$s\".</"
 "h3><p><strong>There is no way to restore the artifact.</strong></p>"
 msgstr ""
@@ -250,6 +241,14 @@ msgid ""
 msgstr ""
 "<p>Les artifacts de ce tracker n'ont pas de sémantique <em>état</em> défini."
 "</p>"
+
+#, php-format
+msgid ""
+"<p>You are going to delete this date reminder:</p><p>%1$s</p><p>Are you sure "
+"that you want to continue?</p>"
+msgstr ""
+"<p>Vous êtes sur le point de supprimer sur une date du tracker:</p><p>%1$s</"
+"p><p>Êtes vous sûr de vouloir continuer ?</p>"
 
 #, php-format
 msgid ""
@@ -1040,6 +1039,9 @@ msgstr "Confirmer"
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+msgid "Confirm deletion of date reminder"
+msgstr "Confirmer la suppression du rappel sur date"
+
 msgid "Congratulations!"
 msgstr "Félicitations !"
 
@@ -1430,8 +1432,14 @@ msgstr "Modifier les enfants de %1$s"
 msgid "Edit field"
 msgstr "Éditer le champ"
 
+msgid "Edit notification"
+msgstr "Éditer la notification"
+
 msgid "Edit permissions of this field"
 msgstr "Editer les permissions du champ"
+
+msgid "Edit reminder"
+msgstr "Editer le rappel"
 
 #, php-format
 msgid "Edit the field \"%1$s\""
@@ -1463,6 +1471,9 @@ msgstr "Options de notification"
 
 msgid "Email subject customisation"
 msgstr "Personnalisation du sujet de l'email"
+
+msgid "Emails who will receive the notification"
+msgstr "E-mails qui recevront la notification"
 
 msgid "Empty"
 msgstr "Aucun(e)"
@@ -2232,6 +2243,9 @@ msgstr "Ajouter un(e) %s"
 msgid "New artifact links interface"
 msgstr "Nouvelle interface de liens entre artifacts"
 
+msgid "New date reminder"
+msgstr "Nouveau rappel sur date"
+
 msgid "New tracker"
 msgstr "Nouveau tracker"
 
@@ -2262,6 +2276,9 @@ msgstr "Aucun commentaire"
 
 msgid "No data to import"
 msgstr "Aucune donnée à importer"
+
+msgid "No date reminder defined for this tracker"
+msgstr "Pas de rappel de date définit pour ce tracker"
 
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
@@ -4577,9 +4594,6 @@ msgstr "Mettre à jour"
 msgid "Update Field '%1$s'"
 msgstr "Modifier le champ '%1$s'"
 
-msgid "Update reminder"
-msgstr "Modifier le rappel"
-
 msgid "Update semantic"
 msgstr "Mettre à jour la sémantique"
 
@@ -4627,11 +4641,11 @@ msgstr "Groupes d'utilisateurs"
 msgid "User groups"
 msgstr "Groupes d'utilisateurs"
 
+msgid "User groups that will receive the notification"
+msgstr "Groupes d'utilisateurs qui recevront la notification"
+
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, email"
-
-msgid "User..."
-msgstr "Utilisateur..."
 
 msgid ""
 "Users can interact with trackers by email. Authentication is done through "
@@ -4667,6 +4681,12 @@ msgstr "Utilisateurs s'étant désabonnés des notifications"
 
 msgid "Users mapping"
 msgstr "Mappage des utilisateurs"
+
+msgid "Users who not will receive the notification"
+msgstr "Utilisateurs qui ne recevront pas la notification"
+
+msgid "Users who will receive the notification"
+msgstr "Utilisateurs qui recevront la notification"
 
 #, php-format
 msgid "Value %s deleted"
@@ -4912,8 +4932,8 @@ msgstr ""
 msgid ""
 "You can use variables to customize the sender field. The available variables "
 "are %%realname and %%username.\n"
-"    These will be replaced by the full name and username of the user who "
-"updated the artifact."
+"                                These will be replaced by the full name and "
+"username of the user who updated the artifact."
 msgstr ""
 "Vous pouvez utiliser des variables pour personnaliser le champ expéditeur. "
 "Les variables disponibles sont %%realname et %%username.\n"

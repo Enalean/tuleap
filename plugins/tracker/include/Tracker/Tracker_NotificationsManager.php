@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Notifications\CollectionOfUserGroupPresenterBuilder;
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
@@ -39,92 +40,31 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\Tracker\dao\TrackerGlobalNotificationDao;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_NotificationsManager
 {
-    /** @var Tracker */
-    private $tracker;
-
-    /**
-     * @var UsersToNotifyDao
-     */
-    private $user_to_notify_dao;
-    /**
-     * @var UgroupsToNotifyDao
-     */
-    private $ugroup_to_notify_dao;
-    /**
-     * @var GlobalNotificationsAddressesBuilder
-     */
-    private $addresses_builder;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var NotificationListBuilder
-     */
-    private $notification_list_builder;
-    /**
-     * @var UserNotificationSettingsDAO
-     */
-    private $user_notification_settings_dao;
-    /**
-     * @var GlobalNotificationSubscribersFilter
-     */
-    private $subscribers_filter;
-    /**
-     * @var NotificationLevelExtractor
-     */
-    private $notification_level_extractor;
-    /**
-     * @var TrackerDao
-     */
-    private $tracker_dao;
-    /**
-     * @var ProjectHistoryDao
-     */
-    private $project_history_dao;
-    /**
-     * @var NotificationsForceUsageUpdater
-     */
-    private $force_usage_updater;
-
     public function __construct(
-        $tracker,
-        NotificationListBuilder $notification_list_builder,
-        UsersToNotifyDao $user_to_notify_dao,
-        UgroupsToNotifyDao $ugroup_to_notify_dao,
-        UserNotificationSettingsDAO $user_notification_settings_dao,
-        GlobalNotificationsAddressesBuilder $addresses_builder,
-        UserManager $user_manager,
-        UGroupManager $ugroup_manager,
-        GlobalNotificationSubscribersFilter $subscribers_filter,
-        NotificationLevelExtractor $notification_level_extractor,
-        TrackerDao $tracker_dao,
-        ProjectHistoryDao $project_history_dao,
-        NotificationsForceUsageUpdater $force_usage_updater,
+        private $tracker,
+        private readonly NotificationListBuilder $notification_list_builder,
+        private readonly UsersToNotifyDao $user_to_notify_dao,
+        private readonly UgroupsToNotifyDao $ugroup_to_notify_dao,
+        private readonly UserNotificationSettingsDAO $user_notification_settings_dao,
+        private readonly GlobalNotificationsAddressesBuilder $addresses_builder,
+        private readonly UserManager $user_manager,
+        private readonly UGroupManager $ugroup_manager,
+        private readonly GlobalNotificationSubscribersFilter $subscribers_filter,
+        private readonly NotificationLevelExtractor $notification_level_extractor,
+        private readonly TrackerDao $tracker_dao,
+        private readonly ProjectHistoryDao $project_history_dao,
+        private readonly NotificationsForceUsageUpdater $force_usage_updater,
+        private readonly User_ForgeUserGroupFactory $ugroup_factory,
+        private readonly CollectionOfUserGroupPresenterBuilder $user_group_presenter_builder,
+        private readonly TrackerGlobalNotificationDao $tracker_global_notification_dao,
     ) {
-        $this->tracker                        = $tracker;
-        $this->user_to_notify_dao             = $user_to_notify_dao;
-        $this->ugroup_to_notify_dao           = $ugroup_to_notify_dao;
-        $this->user_notification_settings_dao = $user_notification_settings_dao;
-        $this->addresses_builder              = $addresses_builder;
-        $this->user_manager                   = $user_manager;
-        $this->ugroup_manager                 = $ugroup_manager;
-        $this->notification_list_builder      = $notification_list_builder;
-        $this->subscribers_filter             = $subscribers_filter;
-        $this->notification_level_extractor   = $notification_level_extractor;
-        $this->tracker_dao                    = $tracker_dao;
-        $this->project_history_dao            = $project_history_dao;
-        $this->force_usage_updater            = $force_usage_updater;
     }
 
     public function displayTrackerAdministratorSettings(\Tuleap\HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
@@ -195,7 +135,7 @@ class Tracker_NotificationsManager
 
         if ($remove_global) {
             $this->deleteGlobalNotification($remove_global);
-        } elseif ($new_global_notification && $new_global_notification['addresses']) {
+        } elseif ($new_global_notification && ($new_global_notification['users'] !== '' || $new_global_notification['emails'] !== '' || isset($new_global_notification['ugroup_ids']))) {
             $this->createNewGlobalNotification($new_global_notification);
         } elseif ($global_notification && $notification_id) {
             $this->updateGlobalNotification($notification_id, $global_notification[$notification_id]);
@@ -214,7 +154,7 @@ class Tracker_NotificationsManager
     private function createNewGlobalNotification($global_notification_data)
     {
         $invalid_entries = new InvalidEntryInAutocompleterCollection();
-        $autocompleter   = $this->getAutocompleter($global_notification_data['addresses'], $invalid_entries);
+        $autocompleter   = $this->getAutocompleter($global_notification_data, $invalid_entries);
         $invalid_entries->generateWarningMessageForInvalidEntries();
 
         if ($this->isNotificationEmpty($autocompleter)) {
@@ -238,14 +178,19 @@ class Tracker_NotificationsManager
     {
         $global_notifications = $this->getGlobalNotifications();
         if (array_key_exists($notification_id, $global_notifications)) {
-            $invalid_entries           = new InvalidEntryInAutocompleterCollection();
-            $autocompleter             = $this->getAutocompleter($notification['addresses'], $invalid_entries);
-            $emails                    = $autocompleter->getEmails();
-            $notification['addresses'] = $this->addresses_builder->transformNotificationAddressesArrayAsString($emails);
+            $invalid_entries = new InvalidEntryInAutocompleterCollection();
+            $autocompleter   = $this->getAutocompleter($notification, $invalid_entries);
 
             $invalid_entries->generateWarningMessageForInvalidEntries();
 
-            if (! $this->getGlobalDao()->modify($notification_id, $notification)) {
+            if (
+                ! $this->tracker_global_notification_dao->modify(
+                    $notification_id,
+                    $autocompleter->getEmails(),
+                    $notification['all_updates'] ?? 0,
+                    $notification['check_permissions'] ?? 0
+                )
+            ) {
                 $this->addFeedbackNotSaved();
                 return;
             }
@@ -373,17 +318,21 @@ class Tracker_NotificationsManager
 
     private function displayAdminNotifications_Global() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        echo '<h3><a name="GlobalEmailNotification"></a>' . dgettext('tuleap-tracker', 'Global Email Notification') . ' ' .
-        help_button('trackers/administration/configuration/notifications.html#global-email-notification') . '</h3>';
-
-        $notifs   = $this->getGlobalNotifications();
-        $renderer = $this->getNotificationsRenderer();
+        $all_user_groups           = $this->ugroup_factory->getAllForProject($this->tracker->getProject());
+        $all_user_groups_presenter = $this->user_group_presenter_builder->getAllUserGroupsPresenter($all_user_groups, []);
+        $notifs                    = $this->getGlobalNotifications();
+        $renderer                  = $this->getNotificationsRenderer();
         $renderer->renderToPage(
             'notifications',
             new PaneNotificationListPresenter(
                 $this->tracker->getGroupId(),
                 $this->tracker->getId(),
-                $this->notification_list_builder->getNotificationsPresenter($notifs, $this->addresses_builder)
+                $this->notification_list_builder->getNotificationsPresenter(
+                    $notifs,
+                    $this->addresses_builder,
+                    $all_user_groups
+                ),
+                $all_user_groups_presenter
             )
         );
         $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset(
@@ -442,8 +391,8 @@ class Tracker_NotificationsManager
         $emails          = $autocompleter->getEmails();
         $notification_id = $this->addGlobalNotification(
             $this->addresses_builder->transformNotificationAddressesArrayAsString($emails),
-            $global_notification_data['all_updates'],
-            $global_notification_data['check_permissions']
+            $global_notification_data['all_updates'] ?? 0,
+            $global_notification_data['check_permissions'] ?? 0
         );
 
         return $notification_id;

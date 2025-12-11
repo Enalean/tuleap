@@ -20,21 +20,17 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use Tuleap\Notification\UserInvolvedInNotificationPresenter;
 use Tuleap\Tracker\Tracker;
 
 class UnsubscriberListPresenter
 {
     /**
-     * @var UserInvolvedInNotificationPresenter[]
+     * @var UserInvolvedInTrackerNotificationPresenter[]
      */
-    public $unsubscribers;
-    /**
-     * @var string
-     */
-    public $additional_information_for_autocompleter;
+    public array $unsubscribers;
+    public string $additional_information_for_autocompleter;
 
-    public function __construct(Tracker $tracker, UserInvolvedInNotificationPresenter ...$unsubscriber_presenters)
+    public function __construct(Tracker $tracker, UserInvolvedInTrackerNotificationPresenter ...$unsubscriber_presenters)
     {
         $this->unsubscribers                            = $unsubscriber_presenters;
         $this->additional_information_for_autocompleter = json_encode(['tracker_id' => $tracker->getId()]);

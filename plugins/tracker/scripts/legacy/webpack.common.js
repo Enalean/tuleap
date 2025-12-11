@@ -47,7 +47,6 @@ const config_for_legacy_scripts = {
                 "./src/LoadTrackerArtifactLink.js",
                 "./src/TrackerCreate.js",
                 "./src/TrackerFormElementFieldPermissions.js",
-                "./src/TrackerDateReminderForms.js",
                 "./src/SubmissionKeeper.js",
                 "./src/TrackerFieldDependencies.js",
                 "./src/artifactChildren.js",

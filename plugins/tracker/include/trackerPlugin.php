@@ -224,6 +224,7 @@ use Tuleap\Tracker\Hierarchy\HierarchyHistoryEntry;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
+use Tuleap\Tracker\Notifications\CollectionOfUserGroupPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
@@ -278,6 +279,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\Tracker\dao\TrackerGlobalNotificationDao;
 use Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao;
 use Tuleap\Tracker\TrackerDeletion\DeleteTrackerPresenterBuilder;
 use Tuleap\Tracker\TrackerDeletion\TrackerDeletionRetriever;
@@ -316,6 +318,9 @@ use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 use Tuleap\User\Account\NotificationsSectionsCollector;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
@@ -1597,9 +1602,15 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new CollectionOfUserInvolvedInNotificationPresenterBuilder(
                 $user_to_notify_dao,
                 $unsubscribers_notification_dao,
-                $user_manager
+                $user_manager,
+                \UserHelper::instance(),
+                new UserAvatarUrlProvider(
+                    new AvatarHashDao(),
+                    new ComputeAvatarHash()
+                )
             ),
-            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
+            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),
+            new \Tuleap\Tracker\Notifications\CollectionOfUserGroupPresenterBuilder()
         );
 
         return new Tracker_NotificationsManager(
@@ -1615,7 +1626,10 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new NotificationLevelExtractor(),
             new \TrackerDao(),
             new \ProjectHistoryDao(),
-            $this->getForceUsageUpdater()
+            $this->getForceUsageUpdater(),
+            new User_ForgeUserGroupFactory(new UserGroupDao()),
+            new CollectionOfUserGroupPresenterBuilder(),
+            new TrackerGlobalNotificationDao()
         );
     }
 
