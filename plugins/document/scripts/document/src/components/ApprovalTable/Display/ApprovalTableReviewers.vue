@@ -55,6 +55,7 @@
                         ref="modal_trigger"
                         type="button"
                         class="tlp-button-secondary tlp-button-mini"
+                        data-test="review-modal-trigger-button"
                     >
                         {{ translateReviewStatus(reviewer.state, $gettext) }}
                     </button>

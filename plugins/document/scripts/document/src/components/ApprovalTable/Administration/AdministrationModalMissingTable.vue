@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-alert-warning">
+    <div class="tlp-alert-warning" data-test="missing-table-warning">
         {{
             sprintf(
                 $gettext(
@@ -34,7 +34,13 @@
             {{ $gettext("You can either:") }}
         </label>
         <label class="tlp-label tlp-radio">
-            <input type="radio" name="action" value="copy" v-model="table_action_value" />
+            <input
+                type="radio"
+                name="action"
+                value="copy"
+                v-model="table_action_value"
+                data-test="missing-table-action-checkbox"
+            />
             {{ $gettext("Copy the previous approval table (e.g. for small / typo updates).") }}
         </label>
         <p class="tlp-text-info">
@@ -45,7 +51,13 @@
             }}
         </p>
         <label class="tlp-label tlp-radio">
-            <input type="radio" name="action" value="reset" v-model="table_action_value" />
+            <input
+                type="radio"
+                name="action"
+                value="reset"
+                v-model="table_action_value"
+                data-test="missing-table-action-checkbox"
+            />
             {{ $gettext("Reset the approval cycle (e.g. for major rewrite).") }}
         </label>
         <p class="tlp-text-info">
@@ -56,7 +68,13 @@
             }}
         </p>
         <label class="tlp-label tlp-radio">
-            <input type="radio" name="action" value="empty" v-model="table_action_value" />
+            <input
+                type="radio"
+                name="action"
+                value="empty"
+                v-model="table_action_value"
+                data-test="missing-table-action-checkbox"
+            />
             {{ $gettext("Create a new empty table.") }}
         </label>
         <p class="tlp-text-info">
