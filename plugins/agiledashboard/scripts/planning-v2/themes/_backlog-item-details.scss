@@ -76,7 +76,7 @@ $accessibility-pattern-right-margin: 6px;
         background-color 150ms ease-in-out;
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
-    background: var(--secondary-color, var(--tlp-white-color));
+    background: var(--secondary-color, var(--tlp-structure-background-color));
     box-shadow: var(--box-shadow, var(--tlp-card-shadow));
     cursor: move;
 
@@ -129,7 +129,7 @@ $accessibility-pattern-right-margin: 6px;
     @keyframes blink-backlog-item-card {
         0% {
             border-color: var(--border-color, transparent);
-            background: var(--secondary-color, var(--tlp-white-color));
+            background: var(--secondary-color, var(--tlp-structure-background-color));
         }
 
         50% {
@@ -139,7 +139,7 @@ $accessibility-pattern-right-margin: 6px;
 
         100% {
             border-color: var(--border-color, transparent);
-            background: var(--secondary-color, var(--tlp-white-color));
+            background: var(--secondary-color, var(--tlp-structure-background-color));
         }
     }
 
@@ -192,7 +192,7 @@ $accessibility-pattern-right-margin: 6px;
         width: 4px;
         height: calc(100% + 2px);
         border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
-        background: var(--item-type-color, var(--tlp-white-color));
+        background: var(--item-type-color, var(--tlp-structure-background-color));
     }
 
     &.accessibility-displayed {

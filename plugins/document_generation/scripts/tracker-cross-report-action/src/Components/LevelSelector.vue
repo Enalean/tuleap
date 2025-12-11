@@ -26,6 +26,6 @@
 <style lang="scss" scoped>
 .level-selector {
     padding: var(--tlp-medium-spacing);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
 }
 </style>

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 .project-admin-project-name-container {
     display: flex;
     gap: var(--tlp-large-spacing);
@@ -28,8 +27,8 @@
 
 #icon-input {
     width: 60px;
-    background: var(--tlp-white-color) url("./includes/images/tlp-icon-picker-background.png")
-        no-repeat;
+    background: var(--tlp-structure-background-color)
+        url("./includes/images/tlp-icon-picker-background.png") no-repeat;
     background-position: right var(--tlp-medium-spacing) center;
     cursor: pointer;
 

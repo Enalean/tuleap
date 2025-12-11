@@ -50,7 +50,7 @@ select.tracker-report-expert-allowed-fields {
         box-shadow linear 0.2s;
     border: 1px solid #cccccc;
     border-radius: var(--tlp-medium-radius);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
 
     &.cm-focused {
         border-color: rgb(82 168 236 / 80%);

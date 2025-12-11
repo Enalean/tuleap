@@ -464,7 +464,7 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     transition: border-color ease-out 150ms;
     border: 1px solid var(--tlp-border-color);
     border-radius: var(--tlp-medium-radius);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
 
     // stylelint-disable selector-class-pattern
     &:focus,

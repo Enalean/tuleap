@@ -32,7 +32,7 @@ $accessibility-pattern-right-margin: 1px;
         --card-colored-text-color: #{map.get($colors, "text")};
         --card-initial-effort-background: #{map.get($colors, "secondary")};
         --card-initial-effort-text-color: #{map.get($colors, "text")};
-        --card-edit-button-background: var(--tlp-white-color);
+        --card-edit-button-background: var(--tlp-structure-background-color);
         --card-edit-button-hover-background: #{map.get($colors, "secondary")};
         --card-edit-button-text-color: #{map.get($colors, "text")};
     }
@@ -67,7 +67,7 @@ $accessibility-pattern-right-margin: 1px;
         calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--card-border-color, transparent);
     border-radius: var(--tlp-medium-radius);
-    background: var(--card-background, var(--tlp-white-color));
+    background: var(--card-background, var(--tlp-structure-background-color));
     box-shadow: var(--card-shadow);
 
     &.taskboard-card-with-accessibility {

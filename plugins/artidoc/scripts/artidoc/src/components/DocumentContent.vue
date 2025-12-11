@@ -195,7 +195,7 @@ li {
     margin: var(--tlp-medium-spacing) 0 var(--tlp-x-large-spacing);
     padding: 0;
     border: 0;
-    background-color: var(--tlp-white-color);
+    background-color: var(--tlp-structure-background-color);
     box-shadow: var(--tlp-flyover-shadow);
 }
 </style>

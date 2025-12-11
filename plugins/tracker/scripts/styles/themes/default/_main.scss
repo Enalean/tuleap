@@ -884,7 +884,7 @@ button[name="tracker_query_submit"] {
     margin-bottom: 20px;
     padding: 0 0 1px;
     border-radius: var(--tlp-large-radius);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     box-shadow:
         inset 1px 0 var(--tlp-neutral-normal-color),
         inset 0 -1px var(--tlp-neutral-normal-color),
@@ -901,7 +901,7 @@ button[name="tracker_query_submit"] {
     border-top: 1px solid var(--tlp-border-color);
     border-right: 1px solid var(--tlp-border-color);
     border-left: 1px solid var(--tlp-border-color);
-    background-color: var(--tlp-white-color);
+    background-color: var(--tlp-structure-background-color);
     background-position: 13px center;
     font-size: 1.2em;
     white-space: nowrap;
@@ -1060,7 +1060,7 @@ button[name="tracker_query_submit"] {
     padding: var(--tlp-medium-spacing);
     overflow: hidden;
     border-radius: var(--tlp-medium-radius);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
 }
 
 .tracker-artifact-preview-attachment-magnifier-image {

@@ -53,7 +53,7 @@ header {
     }
 
     &.pinned {
-        background: var(--tlp-white-color);
+        background: var(--tlp-structure-background-color);
         box-shadow: var(--tlp-sticky-header-shadow);
 
         > .header-container {
@@ -121,7 +121,7 @@ body.has-sidebar {
             padding 75ms ease-in-out;
         border-radius: 30px;
         border-color: var(--tlp-white-color) !important;
-        background: var(--tlp-white-color) !important;
+        background: var(--tlp-structure-background-color) !important;
         box-shadow: var(--tlp-button-shadow) !important;
         color: var(--tlp-dark-color);
         font-family: var(--tlp-font-family);

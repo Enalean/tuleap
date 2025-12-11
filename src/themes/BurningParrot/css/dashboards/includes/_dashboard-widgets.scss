@@ -39,7 +39,8 @@
 .tlp-table > tbody > tr:nth-child(odd) > td.dashboard-add-widget-content-loading,
 .edit-widget-modal-content-loading {
     height: 200px;
-    background: var(--tlp-white-color) url("../../images/spinner.gif") center center no-repeat;
+    background: var(--tlp-structure-background-color) url("../../images/spinner.gif") center center
+        no-repeat;
 }
 /* stylelint-enable */
 
