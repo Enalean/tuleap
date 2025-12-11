@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 @use "tooltips-mixins";
 
 .tlp-tooltip {
@@ -46,7 +45,7 @@
         padding: calc(var(--tlp-medium-spacing) / 2);
         border-radius: tooltips-mixins.$tlp-tooltip-border-radius;
         background: tooltips-mixins.$tlp-tooltip-background;
-        color: #ffffff;
+        color: var(--tlp-white-color);
         font-size: 14px;
         font-weight: 400;
         line-height: 18px;
