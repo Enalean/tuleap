@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 $tlp-dropdown-radius: var(--tlp-large-radius);
 $tlp-dropdown-arrow-size: 10px;
 $tlp-dropdown-transition: 75ms ease-out;
@@ -35,7 +34,7 @@ $tlp-dropdown-transition: 75ms ease-out;
     transition: box-shadow $tlp-dropdown-transition;
     border-bottom: 0;
     border-radius: $tlp-dropdown-radius;
-    background: var(--tlp-white-color);
+    background: var(--tlp-floating-element-background);
     box-shadow: none;
     pointer-events: none;
 
@@ -61,7 +60,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
         &::after {
             bottom: 100%;
-            border-bottom-color: var(--tlp-white-color);
+            border-bottom-color: var(--tlp-floating-element-background);
         }
 
         &[data-placement^="top"] {
@@ -73,7 +72,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
             &::after {
                 top: 100%;
-                border-top-color: var(--tlp-white-color);
+                border-top-color: var(--tlp-floating-element-background);
                 border-bottom-color: transparent;
             }
         }
@@ -156,8 +155,8 @@ $tlp-dropdown-transition: 75ms ease-out;
 .tlp-dropdown-menu-item {
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 0;
-    background: var(--tlp-white-color);
-    color: var(--tlp-dark-color);
+    background: var(--tlp-floating-element-background);
+    color: var(--tlp-typo-default-text-color);
     font-family: var(--tlp-font-family);
     font-size: 0.8125rem;
     font-weight: 500;
@@ -231,12 +230,12 @@ $tlp-dropdown-transition: 75ms ease-out;
 }
 
 .tlp-dropdown-menu-item-danger {
-    color: var(--tlp-danger-dark-color);
+    color: var(--tlp-danger-text-color);
 
     &:focus,
     &:hover {
         background: var(--tlp-danger-color-transparent-90);
-        color: var(--tlp-danger-dark-color);
+        color: var(--tlp-danger-text-color);
     }
 }
 
