@@ -901,6 +901,11 @@ msgstr "Erreur lors de la création de la table d'approbation"
 msgid "Failed to delete approval table"
 msgstr "Erreur lors de la suppression de la table d'approbation"
 
+#, php-format
+msgid "Failed to perform action \"%s\" on approval table"
+msgstr ""
+"Erreur lors de l'application de l'action \"%s\" sur la table d'approbation"
+
 msgid "Failed to update approval table"
 msgstr "Erreur lors de la mise à jour de la table d'approbation"
 
@@ -1874,6 +1879,9 @@ msgstr "Il y a une erreur dans les paramètres. Retour vers l'écran précédent
 msgid "There is no approval table to delete"
 msgstr "Il n'y a pas de table d'approbation à supprimer"
 
+msgid "There is no approval table to perform an action on"
+msgstr "Il n'y a pas de table d'approbation sur laquelle appliquer une action"
+
 msgid "There is no approval table to update"
 msgstr "Il n'y a pas de table d'approbation à mettre à jour"
 
@@ -1961,6 +1969,10 @@ msgstr "Impossible de récupérer l'élément. Il a peut-être été supprimé."
 
 msgid "Unable to update element."
 msgstr "L'élément n'a pas été mis à jour."
+
+#, php-format
+msgid "Unknown approval table action \"%s\""
+msgstr "Action \"%s\" de table d'approbation inconnue"
 
 msgid "Unknown item type"
 msgstr "Type d'item inconnu"

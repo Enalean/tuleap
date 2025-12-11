@@ -770,6 +770,10 @@ msgstr ""
 msgid "Failed to delete approval table"
 msgstr ""
 
+#, php-format
+msgid "Failed to perform action \"%s\" on approval table"
+msgstr ""
+
 msgid "Failed to update approval table"
 msgstr ""
 
@@ -1657,6 +1661,9 @@ msgstr ""
 msgid "There is no approval table to delete"
 msgstr ""
 
+msgid "There is no approval table to perform an action on"
+msgstr ""
+
 msgid "There is no approval table to update"
 msgstr ""
 
@@ -1733,6 +1740,10 @@ msgid "Unable to retrieve item. Perhaps it was removed."
 msgstr ""
 
 msgid "Unable to update element."
+msgstr ""
+
+#, php-format
+msgid "Unknown approval table action \"%s\""
 msgstr ""
 
 msgid "Unknown item type"

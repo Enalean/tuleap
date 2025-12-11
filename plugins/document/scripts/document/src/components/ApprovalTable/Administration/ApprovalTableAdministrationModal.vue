@@ -44,10 +44,6 @@
                 <p class="tlp-alert-title">{{ $gettext("Error while updating table") }}</p>
                 {{ error_message }}
             </div>
-            <div class="tlp-alert-warning">
-                {{ $gettext("This modal is not functional yet, you can retrieve old ui") }}
-                <a v-bind:href="getLinkToTableAdmin()">{{ $gettext("here.") }}</a>
-            </div>
             <div v-if="success_message !== ''" class="tlp-alert-success">
                 {{ success_message }}
             </div>
@@ -159,8 +155,6 @@ import type {
     UserGroup,
 } from "../../../type";
 import type { User } from "@tuleap/core-rest-api-types";
-import { PROJECT } from "../../../configuration-keys";
-import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     deleteApprovalTable,
     patchApprovalTable,
@@ -208,8 +202,6 @@ const is_doing_something = computed(
         is_sending_notification.value ||
         is_sending_reminder.value,
 );
-
-const project = strictInject(PROJECT);
 
 onMounted(() => {
     if (modal_div.value === undefined) {
@@ -302,9 +294,5 @@ function onUpdateTableVersion(): void {
             error_message.value = fault.toString();
         },
     );
-}
-
-function getLinkToTableAdmin(): string {
-    return `/plugins/docman/?group_id=${project.id}&action=approval_create&id=${props.item.id}`;
 }
 </script>
