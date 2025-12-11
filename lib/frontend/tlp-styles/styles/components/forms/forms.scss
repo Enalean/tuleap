@@ -66,14 +66,14 @@ $assets-base-path: "../../../" !default;
 
     &.tlp-form-element-error {
         > .tlp-label {
-            color: var(--tlp-danger-dark-color);
+            color: var(--tlp-danger-text-color);
         }
 
         > .tlp-input,
         > .tlp-textarea,
         > .tlp-select {
             border-color: var(--tlp-danger-color);
-            color: var(--tlp-danger-dark-color);
+            color: var(--tlp-danger-text-color);
 
             &:focus {
                 box-shadow: var(--tlp-shadow-focus-error);
