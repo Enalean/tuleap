@@ -30,6 +30,7 @@ use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
 use Tuleap\Docman\REST\v1\DocmanEmptyDocumentsResource;
 use Tuleap\Docman\REST\v1\DocmanFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFoldersResource;
+use Tuleap\Docman\REST\v1\DocmanItemsApprovalTableResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
 use Tuleap\Docman\REST\v1\DocmanLinksResource;
 use Tuleap\Docman\REST\v1\DocmanOtherTypeDocumentsResource;
@@ -54,12 +55,10 @@ class ResourcesInjector
     public const string OTHER_TYPE_NAME     = 'docman_other_type_documents';
     public const string SEARCH_NAME         = 'docman_search';
 
-    public function populate(Restler $restler)
+    public function populate(Restler $restler): void
     {
-        $restler->addAPIClass(
-            DocmanItemsResource::class,
-            self::NAME
-        );
+        $restler->addAPIClass(DocmanItemsResource::class, self::NAME);
+        $restler->addAPIClass(DocmanItemsApprovalTableResource::class, self::NAME);
 
         $restler->addAPIClass(
             DocmanFilesResource::class,
