@@ -46,7 +46,7 @@ $application->addCommand(new \TuleapCfg\Command\SetupMysqlInitCommand(
     ),
 ));
 $application->addCommand(new \TuleapCfg\Command\SetupTuleapCommand(
-    new ProcessFactory(),
+    $process_factory,
     new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
     static fn (\Psr\Log\LoggerInterface $logger) => new ForgeUpgrade(
         DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
@@ -58,7 +58,7 @@ $application->addCommand(new \TuleapCfg\Command\SetupForgeUpgradeCommand());
 $application->addCommand(new \TuleapCfg\Command\SiteDeploy\SiteDeployCommand());
 $application->addCommand(new \TuleapCfg\Command\SiteDeploy\Images\SiteDeployImagesCommand());
 $application->addCommand(new \TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPMCommand());
-$application->addCommand(new \TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3Command());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3Command($process_factory));
 $application->addCommand(new \TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3HooksCommand());
 $application->addCommand(new \TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginxCommand());
 $application->addCommand(new \TuleapCfg\Command\SiteDeploy\Apache\SiteDeployApacheCommand());

@@ -31,8 +31,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SystemControlCommand extends Command
 {
-    private const string ENV_SYSTEMCTL         = 'TLP_SYSTEMCTL';
-    private const string ENV_SYSTEMCTL_DOCKER  = 'docker';
+    public const string ENV_SYSTEMCTL          = 'TLP_SYSTEMCTL';
+    public const string ENV_SYSTEMCTL_DOCKER   = 'docker';
     private const string ENV_SYSTEMCTL_SYSTEMD = 'systemd';
 
     private const array ALLOWED_ACTIONS = [
