@@ -207,6 +207,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-danger-color-darker-05: #{color.adjust($tlp-danger-color, $lightness: - 5%)};
     --tlp-danger-color-darker-10: #{color.adjust($tlp-danger-color, $lightness: - 10%)};
     --tlp-danger-color-darker-30: #{color.adjust($tlp-danger-color, $lightness: - 30%)};
+    --tlp-danger-color-darker-40: #{color.adjust($tlp-danger-color, $lightness: - 40%)};
     --tlp-danger-color-darker-50: #{color.adjust($tlp-danger-color, $lightness: - 50%)};
     --tlp-danger-color-darker-70: #{color.adjust($tlp-danger-color, $lightness: - 70%)};
     --tlp-danger-color-lighter-20: #{color.mix($tlp-danger-color, common.$tlp-white-color, 80%)};
@@ -223,6 +224,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-danger-color-transparent-90: #{color.adjust($tlp-danger-color, $alpha: - 0.9)};
     --tlp-success-color-darker-05: #{color.adjust($tlp-success-color, $lightness: - 5%)};
     --tlp-success-color-darker-10: #{color.adjust($tlp-success-color, $lightness: - 10%)};
+    --tlp-success-color-darker-20: #{color.adjust($tlp-success-color, $lightness: - 20%)};
     --tlp-success-color-darker-30: #{color.adjust($tlp-success-color, $lightness: - 30%)};
     --tlp-success-color-darker-50: #{color.adjust($tlp-success-color, $lightness: - 50%)};
     --tlp-success-color-darker-70: #{color.adjust($tlp-success-color, $lightness: - 70%)};
