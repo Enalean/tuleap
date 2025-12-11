@@ -21,40 +21,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AICrossTracker\REST\v1;
+namespace Tuleap\AICrossTracker\Stub;
 
+use Override;
+use Tuleap\AI\Mistral\ChunkContent;
+use Tuleap\AI\Mistral\Completion;
 use Tuleap\AI\Mistral\Message;
+use Tuleap\AI\Mistral\Model;
 use Tuleap\AI\Mistral\Role;
-use Tuleap\AI\Mistral\StringContent;
+use Tuleap\AI\Mistral\TextChunk;
+use Tuleap\AICrossTracker\Assistant\Assistant;
+use Tuleap\AICrossTracker\Assistant\AssistantResponseFormatBuilder;
 
-/**
- * @psalm-immutable
- */
-final class MessageRepresentation
+final class AssistantStub implements Assistant
 {
-    /**
-     * @var string Role of the message {@required true}{@choice user,assistant}
-     * @psalm-var 'user'|'assistant'
-     */
-    public string $role;
-    /**
-     * @var string Content of the message {@required true}
-     */
-    public string $content;
-
-    public function toMistralMessage(): Message
+    #[Override]
+    public function getCompletion(\PFUser $user, array $messages): Completion
     {
-        return new Message(Role::from($this->role), new StringContent($this->content));
-    }
-
-    /**
-     * @psalm-param 'user'|'assistant' $role
-     */
-    public static function fromRoleAndContent(string $role, string $content): self
-    {
-        $self          = new self();
-        $self->role    = $role;
-        $self->content = $content;
-        return $self;
+        return new Completion(
+            Model::DEVSTRALL_2512,
+            AssistantResponseFormatBuilder::buildFormat(),
+            new Message(
+                Role::SYSTEM,
+                new ChunkContent(
+                    new TextChunk('AssistantStub'),
+                ),
+            ),
+            ... $messages
+        );
     }
 }

@@ -29,4 +29,11 @@ namespace Tuleap\AI\Mistral;
 final readonly class CompletionResponseChoice
 {
     public AssistantMessage $message;
+
+    public static function fromAssistantMessage(AssistantMessage $message): self
+    {
+        $self          = new self();
+        $self->message = $message;
+        return $self;
+    }
 }

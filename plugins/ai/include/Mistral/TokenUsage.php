@@ -31,4 +31,13 @@ final readonly class TokenUsage
     public int $prompt_tokens;
     public int $total_tokens;
     public int $completion_tokens;
+
+    public static function fromFakeValues(): self
+    {
+        $self                    = new self();
+        $self->prompt_tokens     = 0;
+        $self->total_tokens      = 0;
+        $self->completion_tokens = 0;
+        return $self;
+    }
 }
