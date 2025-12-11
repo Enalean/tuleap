@@ -1,36 +1,42 @@
-<div id="timetracking-delete-{{ id }}"
-    class="modal hide fade modal-danger"
-    tabindex="-1"
+<form
+    method="POST"
+    action="{{ base_delete_url }}"
+    class="tlp-modal tlp-modal-danger"
     role="dialog"
-    aria-labelledby="timetracking-delete-title"
-    aria-hidden="true"
+    id="artifact-timetracking-delete-time-{{ id }}"
+    aria-labelledby="timetracking-add-time-modal-title-{{ id }}"
 >
-
-    <div class="modal-header modal-header-error">
-        <a role="button" class="close" data-dismiss="modal">
-            <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
-        </a>
-        <h3>{{# dgettext }} tuleap-timetracking | Delete the time {{/ dgettext }}</h3>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="timetracking-add-time-modal-title-{{ id }}">
+            {{# dgettext }} tuleap-timetracking | Delete the time {{/ dgettext }}
+        </h1>
+        <button type="button" class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
     </div>
 
-    <div class="modal-body">
+    <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <input type="hidden" name="time-id" value="{{ id }}">
+
         <p>{{# dgettext }} tuleap-timetracking | You are about to delete this time. Please confirm your action. {{/ dgettext }}</p>
     </div>
 
-    <div class="modal-footer">
-        <form method="POST" action="{{ base_delete_url }}">
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
-
-            <input type="hidden" name="time-id" value="{{ id }}">
-
-            <button class="btn" data-dismiss="modal" aria-hidden="true">
+    <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{# dgettext }} tuleap-timetracking | Close {{/ dgettext }}
             </button>
-            <button type="submit" class="btn btn-danger" data-test="timetracking-delete-confirm">
-                <i class="far fa-trash-alt"></i> {{# dgettext }} tuleap-timetracking | Delete {{/ dgettext }}
+            <button
+                type="submit"
+                class="tlp-button-danger tlp-modal-action"
+                data-test="timetracking-delete-confirm"
+            >
+                <i class="fa-regular fa-trash-alt" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-timetracking | Delete {{/ dgettext }}
             </button>
-        </form>
+
     </div>
-</div>
+</form>

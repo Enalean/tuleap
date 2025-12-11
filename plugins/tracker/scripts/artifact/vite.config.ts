@@ -57,6 +57,7 @@ export default vite.defineAppConfig(
                     ),
                     "mass-change": path.resolve(__dirname, "src/mass-change/mass-change-view.ts"),
                     "actions-button": path.resolve(__dirname, "src/header/actions-button.ts"),
+                    title: path.resolve(__dirname, "src/header/title.ts"),
                 },
             },
         },

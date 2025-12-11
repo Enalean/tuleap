@@ -1781,7 +1781,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $token    = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
         $content  = '<div class="tracker_confirm_delete">';
-        $content .= sprintf(dgettext('tuleap-tracker', '<h3>You are about to delete permanently the artifact "%1$s".</h3><p><strong>There is no way to restore the artifact.</strong></p>'), $artifact->getXRefAndTitle());
+        $content .= sprintf(dgettext('tuleap-tracker', '<h3>You are about to delete permanently the artifact "%1$s".</h3><p><strong>There is no way to restore the artifact.</strong></p>'), $artifact->getXRefAndTitleFlamingParrot());
         $content .= '<div class="tracker_confirm_delete_preview">';
         $content .= $this->fetchFormElementsReadOnly($artifact, []);
         $content .= '</div>';

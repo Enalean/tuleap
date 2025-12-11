@@ -47,6 +47,9 @@ msgstr ""
 msgid "Displays your time tracking of the whole platform."
 msgstr ""
 
+msgid "Edit"
+msgstr ""
+
 msgid "Edit time"
 msgstr ""
 
@@ -136,9 +139,6 @@ msgstr ""
 
 msgid "Time tracking is enabled for tracker."
 msgstr ""
-
-msgid "Update"
-msgstr "Atualizar"
 
 msgid "User"
 msgstr ""

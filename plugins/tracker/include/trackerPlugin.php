@@ -142,6 +142,7 @@ use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\Artifact\Closure\ArtifactClosingReferencesHandler;
 use Tuleap\Tracker\Artifact\Closure\ArtifactWasClosedCache;
 use Tuleap\Tracker\Artifact\CrossReference\CrossReferenceArtifactOrganizer;
+use Tuleap\Tracker\Artifact\Event\IsArtifactViewInBurningParrotEvent;
 use Tuleap\Tracker\Artifact\InvertCommentsController;
 use Tuleap\Tracker\Artifact\InvertDisplayChangesController;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
@@ -512,7 +513,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $this->isInTrackersHomepage() ||
             $this->isInDashboard() ||
             $this->isAConvertedSemanticPage() ||
-            $this->isInTrackerAdmin()
+            $this->isInTrackerAdmin() ||
+            $this->isInArtifactViews()
         ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
@@ -565,6 +567,25 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             ],
             true,
         );
+    }
+
+    private function isInArtifactViews(): bool
+    {
+        if (! isset($_SERVER['REQUEST_URI'])) {
+            return false;
+        }
+
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) !== 0) {
+            return false;
+        }
+
+        if (\Tuleap\HTTPRequest::instance()->get('aid') === false) {
+            return false;
+        }
+
+        return EventManager::instance()
+            ->dispatch(new IsArtifactViewInBurningParrotEvent(\Tuleap\HTTPRequest::instance()))
+            ->isBurningParrot();
     }
 
     #[ListeningToEventName('cssfile')]

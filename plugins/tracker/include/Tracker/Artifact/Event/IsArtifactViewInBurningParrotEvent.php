@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+declare(strict_types=1);
 
-export default vite.defineAppConfig(
+namespace Tuleap\Tracker\Artifact\Event;
+
+use Tuleap\Event\Dispatchable;
+use Tuleap\HTTPRequest;
+
+final class IsArtifactViewInBurningParrotEvent implements Dispatchable
+{
+    private bool $is_burning_parrot = false;
+
+    public function __construct(public readonly HTTPRequest $request)
     {
-        plugin_name: path.basename(path.resolve(__dirname, "../..")),
-        sub_app_name: path.basename(__dirname),
-    },
+    }
+
+    public function isBurningParrot(): bool
     {
-        build: {
-            rollupOptions: {
-                input: {
-                    "timetracking-tab-styles": path.resolve(__dirname, "themes/style.scss"),
-                },
-            },
-        },
-    },
-);
+        return $this->is_burning_parrot;
+    }
+
+    public function enableBurningParrot(): void
+    {
+        $this->is_burning_parrot = true;
+    }
+}

@@ -19,8 +19,9 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Timetracking\Admin\AdminController;
@@ -29,7 +30,6 @@ use Tuleap\Timetracking\Admin\TimetrackingEnabler;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
-use Tuleap\Timetracking\ArtifactView\ArtifactView;
 use Tuleap\Timetracking\ArtifactView\ArtifactViewBuilder;
 use Tuleap\Timetracking\JiraImporter\Configuration\JiraTimetrackingConfigurationRetriever;
 use Tuleap\Timetracking\JiraImporter\JiraXMLExport;
@@ -52,7 +52,8 @@ use Tuleap\Timetracking\Widget\ProjectTimetracking;
 use Tuleap\Timetracking\Widget\UserWidget;
 use Tuleap\Timetracking\XML\XMLExport;
 use Tuleap\Timetracking\XML\XMLImport;
-use Tuleap\Tracker\Artifact\Renderer\GetAdditionalCssAssetsForArtifactDisplay;
+use Tuleap\Tracker\Artifact\Event\IsArtifactViewInBurningParrotEvent;
+use Tuleap\Tracker\Artifact\Renderer\GetAdditionalAssetsForArtifactDisplay;
 use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationForExternalPluginsEvent;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
@@ -93,15 +94,12 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // phpcs:ignore
 
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function getAdditionalCssAssetsForArtifactDisplay(
-        GetAdditionalCssAssetsForArtifactDisplay $event,
+        GetAdditionalAssetsForArtifactDisplay $event,
     ): void {
-        if ($event->getViewIdentifier() !== ArtifactView::IDENTIFIER) {
-            return;
-        }
-        $event->addCssAsset(
-            CssViteAsset::fromFileName(
-                new IncludeViteAssets(__DIR__ . '/../scripts/timetracking-tab-styles/frontend-assets', '/assets/timetracking/timetracking-tab-styles'),
-                'themes/style.scss'
+        $event->add(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../scripts/timetracking-tab/frontend-assets', '/assets/timetracking/timetracking-tab'),
+                'src/timetracking-tab.ts'
             ),
         );
     }
@@ -213,6 +211,14 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // phpcs:ignore
         if ($view) {
             $collection = $params['collection'];
             $collection->add($view);
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function isArtifactViewInBurningParrotEvent(IsArtifactViewInBurningParrotEvent $event): void
+    {
+        if ($event->request->get('view') === 'timetracking') {
+            $event->enableBurningParrot();
         }
     }
 
