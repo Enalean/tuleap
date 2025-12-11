@@ -19,18 +19,18 @@
 
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { TemplateResult } from "lit";
-import { html } from "lit";
+import { html, nothing } from "lit";
 
 type CheckboxProps = {
-    checkbox_label?: string;
-    mandatory?: boolean;
-    disabled?: boolean;
-    with_helper_text?: boolean;
-    with_error?: boolean;
-    with_form_label?: boolean;
-    form_label?: string;
-    checked?: boolean;
-    story?: "one_form_element" | "many_form_elements";
+    checkbox_label: string;
+    mandatory: boolean;
+    disabled: boolean;
+    with_helper_text: boolean;
+    with_error: boolean;
+    with_form_label: boolean;
+    form_label: string;
+    checked: boolean;
+    story: "one_form_element" | "many_form_elements";
 };
 
 // prettier-ignore
@@ -93,8 +93,8 @@ function getCheckboxes(args: CheckboxProps): TemplateResult {
     return html`
     <label class="tlp-label tlp-checkbox">
         <input type="checkbox" name="subscribe" value="1" ?disabled=${args.disabled} ?checked=${args.checked} ?required=${args.mandatory}>
-        ${args.checkbox_label} ${args.mandatory ? asterisk : ``}
-    </label>${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}`
+        ${args.checkbox_label}${args.mandatory ? asterisk : nothing}
+    </label>${args.with_helper_text ? helper_text : nothing}${args.with_error ? error : nothing}`
 }
 
 function getTemplate(args: CheckboxProps): TemplateResult {

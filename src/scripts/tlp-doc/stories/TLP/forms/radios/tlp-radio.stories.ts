@@ -19,7 +19,7 @@
 
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { TemplateResult } from "lit";
-import { html } from "lit";
+import { html, nothing } from "lit";
 
 type RadioProps = {
     first_label: string;
@@ -46,13 +46,16 @@ const error: TemplateResult = html`
         <i class="fa-regular fa-face-frown" aria-hidden="true"></i>
     </p>`;
 
+// prettier-ignore
+const asterisk = html`<i class="fa-solid fa-asterisk" aria-hidden="true"></i>`;
+
 function getFormLabel(args: RadioProps): TemplateResult {
     if (!args.with_form_label) {
         return html``;
     }
     //prettier-ignore
     return html`
-    <label class="tlp-label">${args.form_label}</label>`;
+    <label class="tlp-label">${args.form_label}${args.mandatory ? asterisk : nothing}</label>`;
 }
 
 function getFormClasses(args: RadioProps): string {
@@ -71,11 +74,11 @@ function getTemplate(args: RadioProps): TemplateResult {
     return html`
 <div class=${getFormClasses(args)}>${getFormLabel(args)}
     <label class="tlp-label tlp-radio">
-        <input type="radio" name="shape" value="square" ?disabled=${args.disabled}> ${args.first_label}
+        <input type="radio" name="shape" value="square" ?disabled=${args.disabled} ?required=${args.mandatory}>${args.first_label}
     </label>
     <label class="tlp-label tlp-radio">
-        <input type="radio" name="shape" value="triangle" ?disabled=${args.disabled}> ${args.second_label}
-    </label>${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
+        <input type="radio" name="shape" value="triangle" ?disabled=${args.disabled} ?required=${args.mandatory}>${args.second_label}
+    </label>${args.with_helper_text ? helper_text : nothing}${args.with_error ? error : nothing}
 </div>`;
 }
 
@@ -92,6 +95,7 @@ const meta: Meta<RadioProps> = {
         with_error: false,
         with_form_label: false,
         form_label: "Shape",
+        mandatory: false,
     },
     argTypes: {
         first_label: {
@@ -130,6 +134,14 @@ const meta: Meta<RadioProps> = {
         },
         form_label: {
             name: "Form label",
+            if: { arg: "with_form_label" },
+        },
+        mandatory: {
+            name: "Mandatory",
+            description: "Add required attribute and icon",
+            table: {
+                type: { summary: undefined },
+            },
             if: { arg: "with_form_label" },
         },
     },

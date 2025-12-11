@@ -19,7 +19,7 @@
 
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { TemplateResult } from "lit";
-import { html } from "lit";
+import { html, nothing } from "lit";
 
 type InputProps = {
     label: string;
@@ -86,7 +86,7 @@ function getTemplate(args: InputProps): TemplateResult {
     //prettier-ignore
     return html`
 <div class=${getFormClasses(args)}>
-    <label class="tlp-label" for="input-example">${args.label} ${args.mandatory ? asterisk : ``}</label>${getInput(args)}${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
+    <label class="tlp-label" for="input-example">${args.label}${args.mandatory ? asterisk : nothing}</label>${getInput(args)}${args.with_helper_text ? helper_text : nothing}${args.with_error ? error : nothing}
 </div>`;
 }
 
