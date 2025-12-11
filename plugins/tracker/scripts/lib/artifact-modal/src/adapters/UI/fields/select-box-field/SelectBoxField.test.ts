@@ -43,8 +43,8 @@ describe("SelectBoxField", () => {
                     required: false,
                     default_value: [],
                     values: [
-                        { id: 205, label: "submeter", value_color: "" },
-                        { id: 462, label: "severalize", value_color: "" },
+                        { id: 205, label: "submeter", value_color: "", is_hidden: false },
+                        { id: 462, label: "severalize", value_color: "", is_hidden: false },
                     ],
                 },
                 [205, 462],

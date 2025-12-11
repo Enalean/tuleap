@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { StaticBoundListField, StaticListItem } from "@tuleap/plugin-tracker-rest-api-types";
+import { LIST_BIND_STATIC, CHECKBOX_FIELD } from "@tuleap/plugin-tracker-constants";
+
+export class StaticBoundListFieldTestBuilder {
+    private field_id = 18;
+    private readonly label = "Two doors";
+    private readonly name = "two_doors";
+    private readonly required = false;
+    private readonly type = CHECKBOX_FIELD;
+    private default_value: ReadonlyArray<StaticListItem> = [];
+    private readonly bindings = {
+        type: LIST_BIND_STATIC,
+    };
+    private values: ReadonlyArray<StaticListItem> = [];
+    private constructor() {}
+
+    public static aStaticBoundListField(): StaticBoundListFieldTestBuilder {
+        return new StaticBoundListFieldTestBuilder();
+    }
+
+    public withValues(...values: ReadonlyArray<StaticListItem>): StaticBoundListFieldTestBuilder {
+        this.values = values;
+        return this;
+    }
+
+    public withDefaultValues(
+        ...values: ReadonlyArray<StaticListItem>
+    ): StaticBoundListFieldTestBuilder {
+        this.default_value = values;
+        return this;
+    }
+
+    public build(): StaticBoundListField {
+        return {
+            field_id: this.field_id,
+            label: this.label,
+            name: this.name,
+            required: this.required,
+            type: this.type,
+            default_value: this.default_value,
+            bindings: this.bindings,
+            values: this.values,
+        };
+    }
+}
