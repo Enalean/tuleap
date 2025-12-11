@@ -27,7 +27,7 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetailsSectionApproval
+class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetailsSectionApproval // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($item, $url, $themePath)
     {
@@ -70,7 +70,8 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                         new MailLogger()
                     )
                 )
-            )
+            ),
+            Codendi_HTMLPurifier::instance(),
         );
         $atsm->setItem($this->item);
 
@@ -89,7 +90,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         if (ProjectManager::instance()->getProject($this->item->getGroupId())->getTruncatedEmailsUsage()) {
             $html .= dgettext('tuleap-docman', 'truncated email');
         } else {
-            $html .= htmlentities(quoted_printable_decode($atsm->getNotificationBodyText()), ENT_COMPAT, 'UTF-8');
+            $html .= htmlentities(quoted_printable_decode($atsm->getNotificationBodyHTML()), ENT_COMPAT, 'UTF-8');
         }
         $html   .= '</p>';
         $backurl = $this->url . '&action=approval_create&id=' . $this->item->getId();
@@ -97,7 +98,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    public function _getNewTable()
+    public function _getNewTable() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html = '';
         if ($this->table instanceof \Docman_ApprovalTableVersionned) {
@@ -111,7 +112,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    public function _getGlobalSettings()
+    public function _getGlobalSettings() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html = '';
 
@@ -171,7 +172,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    public function _getNotificationSettings()
+    public function _getNotificationSettings() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html = '';
 
@@ -239,7 +240,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    public function _displayNotificationOccurence()
+    public function _displayNotificationOccurence() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html      = '<tr>';
         $html     .= '<td>';
@@ -270,7 +271,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    public function _getReviewerTable()
+    public function _getReviewerTable() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html  = '';
         $uh    = UserHelper::instance();
@@ -372,7 +373,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    public function _getAddReviewers()
+    public function _getAddReviewers() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html = '';
 

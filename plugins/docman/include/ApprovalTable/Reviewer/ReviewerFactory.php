@@ -456,7 +456,8 @@ class Docman_ApprovalTableReviewerFactory // phpcs:ignore PSR1.Classes.ClassDecl
                         new MailLogger()
                     )
                 )
-            )
+            ),
+            Codendi_HTMLPurifier::instance(),
         );
 
         $atsm->setTable($this->table);

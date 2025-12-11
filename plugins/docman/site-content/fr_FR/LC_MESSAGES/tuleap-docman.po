@@ -732,6 +732,9 @@ msgstr ""
 "dashboard. <br /><em>Pour le moment seuls les fichiers embarqués sont "
 "supportés</em>."
 
+msgid "Do my review"
+msgstr "Faire ma revue"
+
 msgid "Docman item"
 msgstr "Elément du docman"
 
@@ -759,11 +762,17 @@ msgstr "Lecteur de document"
 msgid "Document Writer"
 msgstr "Rédacteur de document"
 
+msgid "Document details"
+msgstr "Détails du document"
+
 msgid "Document id:"
 msgstr "Id. document :"
 
 msgid "Document is locked by another user."
 msgstr "Le document est reservé par un autre utilisateur."
+
+msgid "Document link"
+msgstr "Lien vers le document"
 
 msgid "Document manager"
 msgstr "Gestionnaire de documents"
@@ -1173,6 +1182,9 @@ msgstr "Taille maximum des fichiers  (en Octets)"
 msgid "Maximum number of files"
 msgstr "Nombre maximum de fichiers"
 
+msgid "Message"
+msgstr "Message"
+
 msgid "Message:"
 msgstr "Message du demandeur :"
 
@@ -1317,6 +1329,9 @@ msgstr "Type de notification :"
 
 msgid "Notification email"
 msgstr "Email de notification"
+
+msgid "Notification type"
+msgstr "Type de notification"
 
 msgid "Notification type:"
 msgstr "Type de notification :"
@@ -1605,6 +1620,15 @@ msgstr ""
 "%1$s notifie les approbateurs l'un après l'autre.\n"
 "Personne *ne sera notifié* tant que vous n'approuvez/réprouvez pas le "
 "document."
+
+#, php-format
+msgid ""
+"Sequence. %s notifies reviewers one after another. People <em>will not be "
+"notified</em> to review the document <em>until you approved it</em>."
+msgstr ""
+"Séquence. %s notifie les approbateurs l'un après l'autre. Ils <em>ne seront "
+"pas notifiés</em> pour revoir le document <em>tant que vous ne l'aurez pas "
+"approuvé</em>."
 
 msgid "Sequential"
 msgstr "Sequentiellement"
@@ -1895,6 +1919,9 @@ msgid "This is an automatic message. Please do not reply to this email"
 msgstr ""
 "Ceci est un message généré automatiquement. Merci de ne pas répondre à cet "
 "email"
+
+msgid "This is an automatic message. Please do not reply to this email."
+msgstr "Il s'agit d'un message automatique. Merci de ne pas y répondre."
 
 msgid "This is not possible to create approval table for Empty documents."
 msgstr ""

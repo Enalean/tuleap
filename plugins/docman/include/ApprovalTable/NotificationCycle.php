@@ -21,24 +21,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableNotificationCycle
+use Tuleap\Config\ConfigurationVariables;
+use Tuleap\ServerHostname;
+
+class Docman_ApprovalTableNotificationCycle // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $table;
     public $owner;
     public $item;
 
-    /** @var MailNotificationBuilder */
-    private $mail_notification_builder;
-
     /** @var Docman_NotificationsManager|null */
     private $notificationManager = null;
 
-    public function __construct(MailNotificationBuilder $mail_builder)
-    {
-        $this->table                     = null;
-        $this->owner                     = null;
-        $this->item                      = null;
-        $this->mail_notification_builder = $mail_builder;
+    public function __construct(
+        private readonly MailNotificationBuilder $mail_notification_builder,
+        private readonly Codendi_HTMLPurifier $purifier,
+    ) {
+        $this->table = null;
+        $this->owner = null;
+        $this->item  = null;
     }
 
     public function reviewUpdated($review)
@@ -76,6 +77,7 @@ class Docman_ApprovalTableNotificationCycle
     }
 
     // Actions
+
     /**
      * Action
      */
@@ -132,8 +134,8 @@ class Docman_ApprovalTableNotificationCycle
      * Notify everybody in the same time
      *
      * @return bool Will return false only if there is no table or no
- * reviewers to notify. If one notification fail, I don't have the tools to
- * report it to the user.
+     * reviewers to notify. If one notification fail, I don't have the tools to
+     * report it to the user.
      */
     public function notifyAllAtOnce()
     {
@@ -221,22 +223,14 @@ class Docman_ApprovalTableNotificationCycle
      */
     public function changeItemStatus($reviewer, $status)
     {
-       // TBD
+        // TBD
     }
 
     public function getReviewUrl()
     {
-        $baseUrl   = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
+        $baseUrl   = ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
         $reviewUrl = $baseUrl . '&action=details&section=approval&id=' . $this->item->getId();
         return $reviewUrl;
-    }
-
-    public function _getEmailToOwner()
-    {
-        $mail = $this->_getMail();
-        $mail->setFrom(ForgeConfig::get('sys_noreply'));
-        $mail->setTo($this->owner->getEmail());
-        return $mail;
     }
 
     /**
@@ -248,7 +242,7 @@ class Docman_ApprovalTableNotificationCycle
         $project         = $project_manager->getProject($this->item->getGroupId());
         $reviewUrl       = $this->getReviewUrl();
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was rejected by a reviewer'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle());
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was rejected by a reviewer'), ForgeConfig::get(ConfigurationVariables::NAME), $this->item->getTitle());
 
         $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was  rejected by %3$s <%4$s>.
 Direct access to the approval table:
@@ -290,7 +284,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
             $comment = dgettext('tuleap-docman', 'with comments');
         }
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by a reviewer %3$s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle(), $comment);
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by a reviewer %3$s'), ForgeConfig::get(ConfigurationVariables::NAME), $this->item->getTitle(), $comment);
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
@@ -315,7 +309,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
         assert($service instanceof \Tuleap\Docman\ServiceDocman);
 
         $reviewUrl = $this->getReviewUrl();
-        $baseUrl   = \Tuleap\ServerHostname::HTTPSUrl() . $service->getUrl();
+        $baseUrl   = ServerHostname::HTTPSUrl() . $service->getUrl();
         $propUrl   = $baseUrl;
         if ($this->item->getParentId()) {
             $propUrl .= 'preview/' . urlencode((string) $this->item->getId());
@@ -336,7 +330,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
             $comment = dgettext('tuleap-docman', 'with comments');
         }
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by last reviewer %3$s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle(), $comment);
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by last reviewer %3$s'), ForgeConfig::get(ConfigurationVariables::NAME), $this->item->getTitle(), $comment);
 
         return $this->mail_notification_builder->buildAndSendEmail(
             $project,
@@ -359,7 +353,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
         $project         = $project_manager->getProject($this->item->getGroupId());
         $reviewUrl       = $this->getReviewUrl();
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer will not review \'%2$s\''), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle());
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer will not review \'%2$s\''), ForgeConfig::get(ConfigurationVariables::NAME), $this->item->getTitle());
 
         $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' will not be reviewed by %3$s <%4$s>.
 
@@ -397,7 +391,7 @@ The notification sequence is on hold until %1$s approves or rejects the document
             $commentSeq .= "\n";
         }
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer commented \'%2$s\''), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle());
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer commented \'%2$s\''), ForgeConfig::get(ConfigurationVariables::NAME), $this->item->getTitle());
 
         $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was commented (but neither approved nor rejected) by \'%2$s\' <%3$s>.
 %5$s
@@ -429,14 +423,14 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
         $reviewUrl = $this->getReviewUrl() . '&review=1';
 
         $subject = $this->getNotificationSubject();
-        $body    = $this->getNotificationBodyText();
+        $body    = $this->getNotificationBodyHTML();
 
         return $this->mail_notification_builder->buildAndSendEmail(
             $group,
             [$reviewer->getEmail()],
             $subject,
-            '',
             $body,
+            '',
             $reviewUrl,
             DocmanPlugin::TRUNCATED_SERVICE_NAME,
             new MailEnhancer()
@@ -498,39 +492,29 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
     }
 
     // Class accessor
-    public function _getReviewerDao()
+    public function _getReviewerDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
     }
 
-    public function _getMail()
-    {
-        return new Codendi_Mail();
-    }
-
-    public function _getUserManager()
+    public function _getUserManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return UserManager::instance();
     }
 
-    public function _getUserById($id)
+    public function _getUserById($id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return UserManager::instance()->getUserById($id);
     }
 
-    public function _getItemFactory()
+    public function _getItemFactory() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_ItemFactory($this->item->getGroupId());
     }
 
-    public function _getEventManager()
+    public function _getEventManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return EventManager::instance();
-    }
-
-    public function _getSettingsBo($groupId)
-    {
-        return Docman_SettingsBo::instance($groupId);
     }
 
     public function setNotificationManager($notificationManager)
@@ -540,56 +524,40 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
 
     public function getNotificationSubject()
     {
-        return sprintf(dgettext('tuleap-docman', '[%1$s] Please review \'%2$s\''), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle());
+        return sprintf(dgettext('tuleap-docman', '[%1$s] Please review \'%2$s\''), ForgeConfig::get(ConfigurationVariables::NAME), $this->item->getTitle());
     }
 
-    public function getNotificationBodyText()
+    public function getNotificationBodyHTML(): string
     {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($this->item->getGroupId());
-        $baseUrl         = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
-        $itemUrl         = $baseUrl . '&action=show&id=' . $this->item->getId();
-        $comment         = '';
-        $userComment     = $this->table->getDescription();
-
-        if ($userComment != '') {
-            $comment  = sprintf(dgettext('tuleap-docman', 'Message:
-------------
-%1$s
-------------'), $userComment);
-            $comment .= "\n\n";
+        $document_id     = $this->item->getId();
+        if ($this->item instanceof Docman_Folder) {
+            $document_link = ServerHostname::HTTPSUrl() . '/plugins/document/' . $project->getUnixNameLowerCase() . '/folder/' . $document_id;
+        } else {
+            $folder_id     = $this->item->getParentId();
+            $document_link = ServerHostname::HTTPSUrl() . '/plugins/document/' . $project->getUnixNameLowerCase() . '/folder/' . $folder_id . '/' . $document_id;
         }
+        $comment           = $this->table->getDescription();
+        $notification_type = match ((int) $this->table->getNotification()) {
+            PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL => sprintf(
+                dgettext('tuleap-docman', 'Sequence. %s notifies reviewers one after another. People <em>will not be notified</em> to review the document <em>until you approved it</em>.'),
+                ForgeConfig::get(ConfigurationVariables::NAME),
+            ),
+            PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE  => dgettext('tuleap-docman', 'All at once'),
+        };
+        $review_url = ServerHostname::HTTPSUrl() . '/plugins/document/' . $project->getUnixNameLowerCase() . '/approval-table/' . $document_id;
 
-        $reviewUrl = $this->getReviewUrl() . '&review=1';
-
-        // Notification style
-        $notifStyle = '';
-        switch ($this->table->getNotification()) {
-            case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-                $notifStyle = sprintf(dgettext('tuleap-docman', 'Sequence.
-%1$s notifies reviewers one after another.
-People *will not be notified* to review the document *until you approved it*.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
-                break;
-            case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-                $notifStyle = dgettext('tuleap-docman', 'All at once');
-                break;
-        }
-
-        return sprintf(dgettext('tuleap-docman', 'You are requested to review the following document:
-
-Project: %2$s
-Title: %1$s
-Document: <%4$s>
-
-Requester: %3$s <%8$s>
-Your review: <%7$s>
-
-%5$sNotification type: %6$s
-
-Click on the following link to approve or reject the document:
-<%7$s>
-
---
-This is an automatic message. Please do not reply to this email.'), $this->item->getTitle(), $project->getPublicName(), $this->owner->getRealName(), $itemUrl, $comment, $notifStyle, $reviewUrl, $this->owner->getEmail());
+        $template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/templates');
+        return $template_renderer->renderToString('notification-mail', [
+            'project-name'      => $project->getPublicName(),
+            'document-title'    => $this->item->getTitle(),
+            'document-link'     => $document_link,
+            'owner-name'        => $this->owner->getRealName(),
+            'owner-mail'        => $this->owner->getEmail(),
+            'comment'           => $comment !== '' ? $comment : false,
+            'notification-type' => $this->purifier->purify($notification_type, Codendi_HTMLPurifier::CONFIG_LIGHT),
+            'review-url'        => $review_url,
+        ]);
     }
 }

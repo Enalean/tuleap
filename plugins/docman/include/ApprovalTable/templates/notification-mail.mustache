@@ -1,0 +1,43 @@
+<h3>{{# dgettext }} tuleap-docman | You are requested to review the following document: {{/ dgettext }}</h3>
+<table style="width: 100%">
+    <tr style="color: black;background-color: #f6f6f6">
+        <td colspan="2"><strong>{{# dgettext }} tuleap-docman | Document details {{/ dgettext }}</strong></td>
+    </tr>
+    <tr>
+        <td><strong>{{# dgettext }} tuleap-docman | Project {{/ dgettext }}</strong></td>
+        <td>{{ project-name }}</td>
+    </tr>
+    <tr>
+        <td><strong>{{# dgettext }} tuleap-docman | Title {{/ dgettext }}</strong></td>
+        <td>{{ document-title }}</td>
+    </tr>
+    <tr>
+        <td><strong>{{# dgettext }} tuleap-docman | Document link {{/ dgettext }}</strong></td>
+        <td><a href="{{ document-link }}">{{ document-link }}</a></td>
+    </tr>
+
+    <tr style="color: black;background-color: #f6f6f6">
+        <td colspan="2"><strong>{{# dgettext }} tuleap-docman | Approval table {{/ dgettext }}</strong></td>
+    </tr>
+    <tr>
+        <td><strong>{{# dgettext }} tuleap-docman | Requester {{/ dgettext }}</strong></td>
+        <td>{{ owner-name }} <a href="mailto:{{ owner-mail }}">&lt;{{ owner-mail }}&gt;</a></td>
+    </tr>
+    {{# comment }}
+        <tr>
+            <td><strong>{{# dgettext }} tuleap-docman | Message {{/ dgettext }}</strong></td>
+            <td>{{ . }}</td>
+        </tr>
+    {{/ comment }}
+    <tr>
+        <td><strong>{{# dgettext }} tuleap-docman | Notification type {{/ dgettext }}</strong></td>
+        <td>{{{ notification-type }}}</td>
+    </tr>
+</table>
+<div style="padding: 5px">
+<span class="cta">
+    <a href="{{ review-url }}" style="float: unset">{{# dgettext }} tuleap-docman | Do my review {{/ dgettext }}</a>
+</span>
+</div>
+<hr />
+<p>{{# dgettext }} tuleap-docman | This is an automatic message. Please do not reply to this email. {{/ dgettext }}</p>
