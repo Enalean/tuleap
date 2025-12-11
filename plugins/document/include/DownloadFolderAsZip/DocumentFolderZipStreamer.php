@@ -43,54 +43,17 @@ use ZipStream\ZipStream;
 
 final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implements DispatchableWithProject
 {
-    /**
-     * @var DocumentTreeProjectExtractor
-     */
-    private $project_extractor;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var ZipStreamerLoggingHelper
-     */
-    private $error_logging_helper;
-    /**
-     * @var ZipStreamMailNotificationSender
-     */
-    private $notification_sender;
-    /**
-     * @var FolderSizeIsAllowedChecker
-     */
-    private $folder_size_is_allowed_checker;
-
-    /**
-     * @var FileDownloadLimitsBuilder
-     */
-    private $download_limits_builder;
-    /**
-     * @var BinaryFileResponseBuilder
-     */
-    private $binary_file_response_builder;
-
     public function __construct(
-        BinaryFileResponseBuilder $binary_file_response_builder,
-        DocumentTreeProjectExtractor $project_extractor,
-        \UserManager $user_manager,
-        ZipStreamerLoggingHelper $error_logging_helper,
-        ZipStreamMailNotificationSender $notification_sender,
-        FolderSizeIsAllowedChecker $folder_size_is_allowed_checker,
-        FileDownloadLimitsBuilder $download_limits_builder,
+        private BinaryFileResponseBuilder $binary_file_response_builder,
+        private DocumentTreeProjectExtractor $project_extractor,
+        private \UserManager $user_manager,
+        private ZipStreamerLoggingHelper $error_logging_helper,
+        private ZipStreamMailNotificationSender $notification_sender,
+        private FolderSizeIsAllowedChecker $folder_size_is_allowed_checker,
+        private FileDownloadLimitsBuilder $download_limits_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
-        $this->binary_file_response_builder   = $binary_file_response_builder;
-        $this->user_manager                   = $user_manager;
-        $this->project_extractor              = $project_extractor;
-        $this->error_logging_helper           = $error_logging_helper;
-        $this->notification_sender            = $notification_sender;
-        $this->folder_size_is_allowed_checker = $folder_size_is_allowed_checker;
-        $this->download_limits_builder        = $download_limits_builder;
         parent::__construct($emitter, ...$middleware_stack);
     }
 
@@ -102,7 +65,7 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
         $user              = $this->user_manager->getCurrentUser();
         $folder            = $this->getFolder($user, $project, $request_variables);
 
-        $factory = \Docman_FolderFactory::instance($project->getID());
+        $factory = \Docman_ItemFactory::instance((int) $project->getID());
         $factory->getItemTree($folder, $user, false, true);
         $this->checkFolderSizeIsAllowedForDownload($folder);
 
@@ -129,7 +92,7 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
         }
 
         $folder_id      = (int) $variables['folder_id'];
-        $folder_factory = \Docman_FolderFactory::instance($project->getID());
+        $folder_factory = \Docman_ItemFactory::instance((int) $project->getID());
         $folder         = $folder_factory->getItemFromDb($folder_id);
 
         if (! Docman_PermissionsManager::instance($project->getID())->userCanAccess($user, $folder_id)) {

@@ -27,12 +27,12 @@ use Tuleap\Docman\Item\ItemVisitor;
 /**
  * @template-implements ItemVisitor<string>
  */
-class Docman_View_GetActionOnIconVisitor implements ItemVisitor
+class Docman_View_GetActionOnIconVisitor implements ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): string
     {
-        return $params['view']->getActionOnIconForFolder($item, $params);
+        return $this->visitItem($item, $params);
     }
 
     public function visitDocument(Docman_Document $item, array $params = []): string

@@ -64,34 +64,6 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
         );
     }
 
-    public function expandFolder()
-    {
-        $folderFactory = new Docman_FolderFactory();
-        $folderFactory->expand($this->_getFolderFromRequest());
-    }
-
-    public function expandAll($params)
-    {
-        $params['hierarchy']->accept(new Docman_ExpandAllHierarchyVisitor(), ['folderFactory' => new Docman_FolderFactory()]);
-    }
-
-    public function collapseFolder()
-    {
-        $folderFactory = new Docman_FolderFactory();
-        $folderFactory->collapse($this->_getFolderFromRequest());
-    }
-
-    private function _getFolderFromRequest()
-    {
-        $request = \Tuleap\HTTPRequest::instance();
-        $folder  = new Docman_Folder();
-        $folder->setId((int) $request->get('id'));
-        $folder->setGroupId((int) $request->get('group_id'));
-        return $folder;
-    }
-
-    //@todo need to check owner rights on parent
-
     private function _checkOwnerChange(string $new_owner_name, PFUser $change_requestor)
     {
         $new_owner_id = (new OwnerRetriever($this->_getUserManagerInstance()))->getOwnerIdFromLoginName($new_owner_name);
@@ -485,9 +457,6 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
                         }
                     }
 
-                    $folderFactory = $this->_getFolderFactory();
-                    $folderFactory->expand($parent);
-
                     $item_type = $item_factory->getItemTypeForItem($new_item);
 
                     switch ($item_type) {
@@ -814,11 +783,6 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
     public function _getItemFactory($groupId = null)
     {
         return new Docman_ItemFactory($groupId);
-    }
-
-    public function _getFolderFactory($groupId = null)
-    {
-        return new Docman_FolderFactory($groupId);
     }
 
     protected $version_factory;
