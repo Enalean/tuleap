@@ -581,23 +581,9 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                 }
                 $this->view = $item->accept($get_show_view, $report);
                 break;
-            case 'expandFolder':
-                $this->action = 'expandFolder';
-                if ($this->request->get('view') == 'ulsubfolder') {
-                    $this->view = 'RawTree';
-                } else {
-                    $this->_viewParams['item'] = $root;
-                    $this->view                = 'Tree';
-                }
-                break;
             case 'getRootFolder':
                 $this->_viewParams['action_result'] = $root->getId();
                 $this->_setView('getRootFolder');
-                break;
-            case 'collapseFolder':
-                $this->action              = 'collapseFolder';
-                $this->_viewParams['item'] = $root;
-                $this->view                = 'Tree';
                 break;
             case 'admin_set_permissions':
                 \Docman_View_Admin_Permissions::getCSRFToken($this->getGroupId())->check();

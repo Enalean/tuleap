@@ -76,12 +76,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             document.observe("dom:loaded", this.initNewItemEvent);
         }
 
-        // Expand/Collapse
-        this.initExpandCollapseEvent = this.initExpandCollapse.bindAsEventListener(this);
-        if (this.options.action == "browse") {
-            document.observe("dom:loaded", this.initExpandCollapseEvent);
-        }
-
         // Approval table
         this.approvalTableCreateDetailsHidden = false;
 
@@ -102,10 +96,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             .each(function (properties) {
                 properties.checkbox.stopObserving("click", this.onNewItemCheckboxChangeEvent);
             });
-        // Expand/Collapse
-        document.stopObserving("dom:loaded", this.initExpandCollapseEvent);
-        // Expand/Collapse
-        document.stopObserving("dom:loaded", this.focusEvent);
 
         //itemHighlight
         $H(this.itemHighlight)
@@ -293,10 +283,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             });
     },
     //}}}
-    //{{{----------------------------- Expand/Collapse
-    initExpandCollapse: function () {
-        this._expandCollapse(document.body);
-    },
+    //{{{-----------------------------
     toggleMultipleValuesChoice: function () {
         var type = $("type");
         var mulVal = $("multiplevalues_allowed");
@@ -314,107 +301,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             Event.observe(type, "change", _toggleCheckBox);
             _toggleCheckBox();
         }
-    },
-    _expandCollapse: function (parent_element) {
-        var docman_item_type_folder = new RegExp("(^|\\s)docman_item_type_folder(\\s|$)");
-        var item_ = new RegExp("^item_.*");
-
-        var folders = parent_element.querySelectorAll(
-            ".docman_item_type_folder, .docman_item_type_folder_open",
-        );
-        [].forEach.call(
-            folders,
-            function (element) {
-                Event.observe(
-                    element,
-                    "click",
-                    function (event) {
-                        var element = Event.element(event).parentNode; //element == image, element.parentNode == link
-                        //We search the first parent which has id == "item_%"
-                        var node = element.parentNode.parentNode;
-                        while (!node.id.match(item_)) {
-                            node = node.parentNode;
-                        }
-                        var icon, subitems;
-                        if (element.className.match(docman_item_type_folder)) {
-                            //collapse --> expand
-                            Element.removeClassName(element, "docman_item_type_folder");
-                            Element.addClassName(element, "docman_item_type_folder_open");
-                            icon = element.select(".docman_item_icon").first();
-                            icon.src = icon.src.replace("folder.png", "folder-open.png");
-                            subitems = $("subitems_" + node.id.split("_")[1]);
-                            if (subitems) {
-                                subitems.show();
-                                new Ajax.Request(
-                                    "?group_id=" +
-                                        this.group_id +
-                                        "&action=expandFolder&view=none&id=" +
-                                        node.id.split("_")[1],
-                                    {
-                                        asynchronous: true,
-                                    },
-                                );
-                            } else {
-                                const old_icon_src = icon.src;
-                                if (this.options.folderSpinner) {
-                                    icon.src = this.options.folderSpinner;
-                                }
-                                var target = Builder.node("div");
-                                var outer = Builder.node("div");
-                                outer.appendChild(target);
-                                node.appendChild(outer);
-                                Element.hide(outer);
-
-                                Element.setStyle(document.body, { cursor: "wait" });
-                                const expandUrl =
-                                    "?group_id=" +
-                                    this.group_id +
-                                    "&view=ulsubfolder&action=expandFolder&id=" +
-                                    node.id.split("_")[1];
-                                new Ajax.Updater(target, expandUrl, {
-                                    asynchronous: true,
-                                    evalScripts: true,
-                                    onComplete: function (transport) {
-                                        if (!transport.responseText.length) {
-                                            const fake = Builder.node("div", {
-                                                id: "subitems_" + node.id.split("_")[1],
-                                            });
-                                            target.appendChild(fake);
-                                        }
-                                        this._expandCollapse(target); //
-                                        this.initShowOptions(); //register events for new loaded items
-                                        Element.setStyle(document.body, { cursor: "default" });
-                                        outer.show();
-                                        icon.src = old_icon_src;
-                                    }.bind(this),
-                                });
-                            }
-                        } else {
-                            //expand --> collapse
-                            Element.removeClassName(element, "docman_item_type_folder_open");
-                            Element.addClassName(element, "docman_item_type_folder");
-                            icon = element.select(".docman_item_icon").first();
-                            icon.src = icon.src.replace("folder-open.png", "folder.png");
-                            subitems = $("subitems_" + node.id.split("_")[1]);
-                            if (subitems) {
-                                subitems.hide();
-                            }
-                            new Ajax.Request(
-                                "?group_id=" +
-                                    this.group_id +
-                                    "&action=collapseFolder&view=none&id=" +
-                                    node.id.split("_")[1],
-                                {
-                                    asynchronous: true,
-                                },
-                            );
-                        }
-                        Event.stop(event);
-                        return false;
-                    }.bind(this),
-                );
-            }.bind(this),
-        );
     },
     //}}}
 

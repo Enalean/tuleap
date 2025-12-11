@@ -7,10 +7,10 @@
 * Docman_View_RawTreeView
 */
 
-class Docman_View_RawTree extends Docman_View_View
+class Docman_View_RawTree extends Docman_View_View //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /* protected */ #[\Override]
-    public function _content($params)
+    public function _content($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $itemFactory = new Docman_ItemFactory($params['group_id']);
 
@@ -33,18 +33,13 @@ class Docman_View_RawTree extends Docman_View_View
         echo $displayItemTreeVisitor->toHtml();
     }
 
-    public function getActionOnIconForFolder(&$folder, $force_collapse = true)
-    {
-        return $force_collapse || ! (user_get_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF . '_' . $folder->getGroupId() . '_' . $folder->getId()) === false) ? 'collapseFolder' : 'expandFolder';
-    }
-
     public function getClassForFolderLink()
     {
         return 'docman_item_type_folder';
     }
 
     #[\Override]
-    public function _javascript($params)
+    public function _javascript($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // force docman object to watch click on pen icon
         $this->javascript .= "docman.initShowOptions();\n";
