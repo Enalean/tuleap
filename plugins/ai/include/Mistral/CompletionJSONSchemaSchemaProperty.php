@@ -16,22 +16,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\AICrossTracker\REST\v1;
+namespace Tuleap\AI\Mistral;
 
-/**
- * @psalm-immutable
- */
-final readonly class HelperRepresentation
+final readonly class CompletionJSONSchemaSchemaProperty
 {
+    /**
+     * @param 'string' $type
+     * @param non-empty-string $description
+     */
     public function __construct(
-        public string $title,
-        public string $tql_query,
-        public string $explanations,
+        public string $type,
+        public string $description,
     ) {
     }
 }

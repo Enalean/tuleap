@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AICrossTracker\REST\v1;
 
+use CuyZ\Valinor\Mapper\MappingError;
+use CuyZ\Valinor\Mapper\Source\JsonSource;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tracker_FormElementFactory;
@@ -44,7 +46,10 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
+use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -116,8 +121,32 @@ final class TQLAssistantResource extends AuthenticatedResource
                                 'crosstracker'
                             )
                         )
+                        ->andThen(
+                            /**
+                             * @psalm-return Ok<string>|Err<Fault>
+                             */
+                            static function (CompletionResponse $response): Ok|Err {
+                                if (! isset($response->choices[0]->message->content)) {
+                                    return Result::err(Fault::fromMessage('No choice provided in the response'));
+                                }
+                                return Result::ok((string) $response->choices[0]->message->content);
+                            }
+                        )
+                        ->andThen(
+                            /**
+                             * @psalm-return Ok<HelperRepresentation>|Err<Fault>
+                             */
+                            static function (string $selected_response): Ok|Err {
+                                $mapper = ValinorMapperBuilderFactory::mapperBuilder()->mapper();
+                                try {
+                                    return Result::ok($mapper->map(HelperRepresentation::class, new JsonSource($selected_response)));
+                                } catch (MappingError $e) {
+                                    return Result::err(Fault::fromThrowable($e));
+                                }
+                            }
+                        )
                         ->match(
-                            static fn (CompletionResponse $response) => new HelperRepresentation((string) $response->choices[0]->message->content),
+                            static fn (HelperRepresentation $helper_representation): HelperRepresentation => $helper_representation,
                             static fn (Fault $fault) => throw new RestException(400, (string) $fault)
                         );
                 },

@@ -32,7 +32,7 @@ final readonly class Completion implements \JsonSerializable
 {
     private array $messages;
 
-    public function __construct(private Model $model, Message ...$messages)
+    public function __construct(private Model $model, public CompletionResponseJSONFormat $format, Message ...$messages)
     {
         $this->messages = $messages;
     }
@@ -43,6 +43,7 @@ final readonly class Completion implements \JsonSerializable
         return [
             'safe_prompt' => true,
             'model' => $this->model,
+            'response_format' => $this->format,
             'messages' => $this->messages,
         ];
     }

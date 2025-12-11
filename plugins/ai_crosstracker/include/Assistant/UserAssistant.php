@@ -48,6 +48,7 @@ final class UserAssistant implements Assistant
 
         return new Completion(
             Model::DEVSTRALL_2512,
+            AssistantResponseFormatBuilder::buildFormat(),
             new Message(
                 Role::SYSTEM,
                 new ChunkContent(
@@ -55,6 +56,9 @@ final class UserAssistant implements Assistant
                         <<<EOT
                             You are an assistant that helps to generate TQL queries for users. TQL is a pseudo programming
                             language, described in section "TQL documentation" below.
+
+                            You do not provide assistance for anything that does not aim to produce a TQL query. Users
+                            request information using only plaintext.
                             EOT
                     ),
                     new TextChunk('### TQL documentation' . PHP_EOL . $tql_doc),
