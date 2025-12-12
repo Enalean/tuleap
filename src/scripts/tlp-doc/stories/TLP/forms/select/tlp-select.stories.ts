@@ -19,7 +19,7 @@
 
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { TemplateResult } from "lit";
-import { html } from "lit";
+import { html, nothing } from "lit";
 
 type SelectProps = {
     label: string;
@@ -77,14 +77,14 @@ function getTemplate(args: SelectProps): TemplateResult {
     // prettier-ignore
     return html`
 <div class=${getFormClasses(args)}>
-    <label class="tlp-label" for="option">${args.label} ${args.mandatory ? asterisk : ``}</label>
+    <label class="tlp-label" for="option">${args.label}${args.mandatory ? asterisk : nothing}</label>
     <select class=${getSelectClasses(args)} id="option" name="option" ?multiple=${args.multiple} ?disabled=${args.disabled} ?required="${args.mandatory}">
         <option value=""></option>
         <option value="option-1">Option 1</option>
         <option value="option-2">Option 2</option>
         <option value="option-3">Option 3</option>
         <option value="option-4">Option 4</option>
-    </select>${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
+    </select>${args.with_helper_text ? helper_text : nothing}${args.with_error ? error : nothing}
 </div>`;
 }
 
