@@ -238,7 +238,8 @@ class pullrequestPlugin extends Plugin
                     new \Tuleap\PullRequest\GitExecFactory(),
                     new GitPullRequestReferenceUpdater(
                         new GitPullRequestReferenceDAO(),
-                        new GitPullRequestReferenceNamespaceAvailabilityChecker()
+                        new GitPullRequestReferenceNamespaceAvailabilityChecker(),
+                        new \Tuleap\Process\SymfonyProcessFactory(),
                     ),
                     PullRequestNotificationSupport::buildDispatcher(self::getLogger())
                 );
@@ -499,7 +500,8 @@ class pullrequestPlugin extends Plugin
             $pull_request_git_reference_dao,
             new GitPullRequestReferenceUpdater(
                 $pull_request_git_reference_dao,
-                new GitPullRequestReferenceNamespaceAvailabilityChecker()
+                new GitPullRequestReferenceNamespaceAvailabilityChecker(),
+                new \Tuleap\Process\SymfonyProcessFactory(),
             ),
             $this->getPullRequestFactory(),
             $this->getRepositoryFactory(),

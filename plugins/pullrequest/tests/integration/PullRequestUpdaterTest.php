@@ -25,6 +25,7 @@ use GitRepositoryFactory;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
+use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use GitRepository;
@@ -106,7 +107,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
 
     public function testItUpdatesSourceBranchInPRs(): void
     {
-        $this->pr_reference_updater->method('updatePullRequestReference');
+        $this->pr_reference_updater->method('updatePullRequestReference')->willReturn(Result::ok(null));
         $this->git_exec->method('getCommonAncestor')->willReturn('sha2');
         $this->pr_merger->method('detectMergeabilityStatus');
         $this->timeline_event_creator->method('storeUpdateEvent');

@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest;
 use EventManager;
 use GitRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
@@ -100,9 +101,11 @@ class PullRequestCreator
 
         $this->git_pull_request_reference_creator->createPullRequestReference(
             $pull_request,
-            $executor_repository_source,
+            $repository_src,
             $executor_repository_destination,
             $repository_dest
+        )->orElse(
+            static fn(Fault $fault): never => throw new \RuntimeException((string) $fault)
         );
 
         $merge_status = $this->pull_request_merger->detectMergeabilityStatus(

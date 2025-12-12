@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest;
 
 use GitRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\InlineComment\InlineComment;
@@ -161,12 +162,13 @@ class PullRequestUpdater
             $pr->getMergeStatus()
         );
 
-        $executor_repository_source = $this->git_exec_factory->getGitExec($repository);
         $this->git_pull_request_reference_updater->updatePullRequestReference(
             $updated_pr,
-            $executor_repository_source,
+            $repository,
             $executor_repository_destination,
             $repository_destination
+        )->orElse(
+            static fn(Fault $fault): never => throw new \RuntimeException((string) $fault)
         );
 
         $ancestor_rev = $executor_repository_destination->getCommonAncestor($new_rev, $pr->getBranchDest());

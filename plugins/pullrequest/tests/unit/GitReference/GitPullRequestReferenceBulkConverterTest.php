@@ -23,11 +23,13 @@ namespace Tuleap\PullRequest\GitReference;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
@@ -75,7 +77,7 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
         $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repository);
         $this->logger->method('debug');
 
-        $this->pull_request_ref_updater->expects($this->exactly(3))->method('updatePullRequestReference');
+        $this->pull_request_ref_updater->expects($this->exactly(3))->method('updatePullRequestReference')->willReturn(Result::ok(null));
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
@@ -131,9 +133,7 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
         $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repository);
         $this->logger->method('debug');
 
-        $this->pull_request_ref_updater->expects($this->exactly(2))->method('updatePullRequestReference')->willThrowException(
-            $this->createMock(\Git_Command_Exception::class)
-        );
+        $this->pull_request_ref_updater->expects($this->exactly(2))->method('updatePullRequestReference')->willReturn(Result::err(Fault::fromMessage('Failure')));
         $this->logger->expects($this->exactly(2))->method('error');
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();

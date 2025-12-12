@@ -21,6 +21,11 @@
 namespace Tuleap\PullRequest\GitReference;
 
 use GitRepository;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Process\ProcessFactory;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
@@ -38,17 +43,21 @@ class GitPullRequestReferenceCreator
     public function __construct(
         GitPullRequestReferenceDAO $dao,
         GitPullRequestReferenceNamespaceAvailabilityChecker $namespace_availability_checker,
+        private readonly ProcessFactory $process_factory,
     ) {
         $this->dao                            = $dao;
         $this->namespace_availability_checker = $namespace_availability_checker;
     }
 
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
     public function createPullRequestReference(
         PullRequest $pull_request,
-        GitExec $executor_repository_source,
+        GitRepository $repository_source,
         GitExec $executor_repository_destination,
         GitRepository $repository_destination,
-    ) {
+    ): Ok|Err {
         if ((int) $pull_request->getRepoDestId() !== (int) $repository_destination->getId()) {
             throw new \LogicException('Destination repository ID does not match the one of the PR');
         }
@@ -61,16 +70,28 @@ class GitPullRequestReferenceCreator
             $reference_id = $this->dao->updateGitReferenceToNextAvailableOne($pull_request->getId());
         }
 
-        $reference = new GitPullRequestReference($reference_id, GitPullRequestReference::STATUS_NOT_YET_CREATED);
-        try {
-            $executor_repository_source->push(
-                escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
-                escapeshellarg($pull_request->getSha1Src()) . ':' . escapeshellarg($reference->getGitHeadReference())
-            );
-        } catch (\Git_Command_Exception $ex) {
-            $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_BROKEN);
-            throw $ex;
-        }
-        $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_OK);
+        $reference      = new GitPullRequestReference($reference_id, GitPullRequestReference::STATUS_NOT_YET_CREATED);
+        $create_process = $this->process_factory->buildProcess([
+            'sudo',
+            '-u',
+            'gitolite',
+            'DISPLAY_ERRORS=true',
+            __DIR__ . '/../../../bin/create-pr-reference.php',
+            $repository_source->getFullPath(),
+            $repository_destination->getFullPath(),
+            $pull_request->getSha1Src(),
+            $reference->getGitHeadReference(),
+        ]);
+
+        return $create_process->run()->match(
+            function () use ($pull_request): Ok {
+                $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_OK);
+                return Result::ok(null);
+            },
+            function (Fault $fault) use ($pull_request): Err {
+                $this->dao->updateStatusByPullRequestId($pull_request->getId(), GitPullRequestReference::STATUS_BROKEN);
+                return Result::err($fault);
+            }
+        );
     }
 }

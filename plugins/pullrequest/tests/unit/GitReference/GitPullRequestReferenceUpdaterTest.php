@@ -20,8 +20,11 @@
 
 namespace Tuleap\PullRequest\GitReference;
 
+use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\Test\Stubs\Process\ProcessFactoryStub;
+use Tuleap\Test\Stubs\Process\ProcessStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -31,30 +34,33 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
         $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
         $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
 
-        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker);
+        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker, ProcessFactoryStub::withProcess(ProcessStub::successfulProcess()));
 
         $pull_request           = $this->createMock(PullRequest::class);
-        $executor_source        = $this->createMock(GitExec::class);
         $executor_destination   = $this->createMock(GitExec::class);
         $repository_destination = $this->createMock(\GitRepository::class);
+        $repository_source      = $this->createStub(\GitRepository::class);
+
+        $repository_source->method('getFullPath')->willReturn('/source_path');
 
         $pull_request->method('getId')->willReturn(1);
         $pull_request->method('getSha1Src')->willReturn('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
         $pull_request->method('getRepoDestId')->willReturn(1);
         $repository_destination->method('getId')->willReturn(1);
-        $repository_destination->method('getPath');
+        $repository_destination->method('getFullPath')->willReturn('/dest_path');
         $dao->method('getReferenceByPullRequestId')->willReturn(
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_OK]
         );
         $dao->expects($this->once())->method('updateStatusByPullRequestId');
-        $executor_source->expects($this->once())->method('pushForce');
 
-        $reference_updater->updatePullRequestReference(
+        $result = $reference_updater->updatePullRequestReference(
             $pull_request,
-            $executor_source,
+            $repository_source,
             $executor_destination,
             $repository_destination
         );
+
+        self::assertTrue(Result::isOk($result));
     }
 
     public function testGitReferenceUpdateWhenTheReferenceIsNotFound(): void
@@ -62,12 +68,13 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
         $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
         $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
 
-        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker);
+        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker, ProcessFactoryStub::withProcess(ProcessStub::successfulProcess()));
 
         $pull_request           = $this->createMock(PullRequest::class);
-        $executor_source        = $this->createMock(GitExec::class);
         $executor_destination   = $this->createMock(GitExec::class);
         $repository_destination = $this->createMock(\GitRepository::class);
+        $repository_source      = $this->createStub(\GitRepository::class);
+
 
         $pull_request->method('getId')->willReturn(1);
         $pull_request->method('getRepoDestId')->willReturn(1);
@@ -77,12 +84,14 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
         $dao->expects($this->never())->method('updateStatusByPullRequestId');
         $this->expectException(GitReferenceNotFound::class);
 
-        $reference_updater->updatePullRequestReference(
+        $result = $reference_updater->updatePullRequestReference(
             $pull_request,
-            $executor_source,
+            $repository_source,
             $executor_destination,
             $repository_destination
         );
+
+        self::assertTrue(Result::isOk($result));
     }
 
     public function testExpectedDestinationRepositoryIsGiven(): void
@@ -90,12 +99,12 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
         $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
         $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
 
-        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker);
+        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker, ProcessFactoryStub::withProcess(ProcessStub::successfulProcess()));
 
         $pull_request           = $this->createMock(PullRequest::class);
-        $executor_source        = $this->createMock(GitExec::class);
         $executor_destination   = $this->createMock(GitExec::class);
         $repository_destination = $this->createMock(\GitRepository::class);
+        $repository_source      = $this->createStub(\GitRepository::class);
 
         $pull_request->method('getRepoDestId')->willReturn(1);
         $repository_destination->method('getId')->willReturn(2);
@@ -104,7 +113,7 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
 
         $reference_updater->updatePullRequestReference(
             $pull_request,
-            $executor_source,
+            $repository_source,
             $executor_destination,
             $repository_destination
         );
@@ -115,31 +124,31 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
         $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
         $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
 
-        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker);
+        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker, ProcessFactoryStub::withProcess(ProcessStub::successfulProcess()));
 
         $pull_request           = $this->createMock(PullRequest::class);
-        $executor_source        = $this->createMock(GitExec::class);
         $executor_destination   = $this->createMock(GitExec::class);
         $repository_destination = $this->createMock(\GitRepository::class);
+        $repository_source      = $this->createStub(\GitRepository::class);
 
         $pull_request->method('getId')->willReturn(1);
         $pull_request->method('getSha1Src')->willReturn('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
         $pull_request->method('getRepoDestId')->willReturn(1);
         $repository_destination->method('getId')->willReturn(1);
-        $repository_destination->method('getPath');
         $dao->method('getReferenceByPullRequestId')->willReturn(
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_BROKEN]
         );
 
         $dao->expects($this->never())->method('updateStatusByPullRequestId');
-        $executor_source->expects($this->never())->method('push');
 
-        $reference_updater->updatePullRequestReference(
+        $result = $reference_updater->updatePullRequestReference(
             $pull_request,
-            $executor_source,
+            $repository_source,
             $executor_destination,
             $repository_destination
         );
+
+        self::assertTrue(Result::isOk($result));
     }
 
     public function testGitReferenceIsMarkedAsBrokenWhenCannotBeUpdated(): void
@@ -147,33 +156,33 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
         $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
         $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
 
-        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker);
+        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker, ProcessFactoryStub::withProcess(ProcessStub::failingProcess()));
 
         $pull_request           = $this->createMock(PullRequest::class);
-        $executor_source        = $this->createMock(GitExec::class);
         $executor_destination   = $this->createMock(GitExec::class);
         $repository_destination = $this->createMock(\GitRepository::class);
+        $repository_source      = $this->createStub(\GitRepository::class);
+
+        $repository_source->method('getFullPath')->willReturn('/source_path');
 
         $pull_request->method('getId')->willReturn(1);
         $pull_request->method('getSha1Src')->willReturn('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
         $pull_request->method('getRepoDestId')->willReturn(1);
         $repository_destination->method('getId')->willReturn(1);
-        $repository_destination->method('getPath');
+        $repository_destination->method('getFullPath')->willReturn('/dest_path');
         $dao->method('getReferenceByPullRequestId')->willReturn(
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_NOT_YET_CREATED]
         );
         $namespace_checker->method('isAvailable')->willReturn(true);
         $dao->expects($this->once())->method('updateStatusByPullRequestId')->with($pull_request->getId(), GitPullRequestReference::STATUS_BROKEN);
-        $executor_source->expects($this->once())->method('pushForce')->willThrowException($this->createMock(\Git_Command_Exception::class));
 
-        $this->expectException(\Git_Command_Exception::class);
-
-        $reference_updater->updatePullRequestReference(
+        $result = $reference_updater->updatePullRequestReference(
             $pull_request,
-            $executor_source,
+            $repository_source,
             $executor_destination,
             $repository_destination
         );
+        self::assertTrue(Result::isErr($result));
     }
 
     public function testGitReferenceIdIsUpdatedForYetToBeCreatedReferenceWhenNamespaceIsNotAvailable(): void
@@ -181,31 +190,33 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
         $dao               = $this->createMock(GitPullRequestReferenceDAO::class);
         $namespace_checker = $this->createMock(GitPullRequestReferenceNamespaceAvailabilityChecker::class);
 
-        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker);
+        $reference_updater = new GitPullRequestReferenceUpdater($dao, $namespace_checker, ProcessFactoryStub::withProcess(ProcessStub::successfulProcess()));
 
         $pull_request           = $this->createMock(PullRequest::class);
-        $executor_source        = $this->createMock(GitExec::class);
         $executor_destination   = $this->createMock(GitExec::class);
         $repository_destination = $this->createMock(\GitRepository::class);
+        $repository_source      = $this->createStub(\GitRepository::class);
+
+        $repository_source->method('getFullPath')->willReturn('/source_path');
 
         $pull_request->method('getId')->willReturn(1);
         $pull_request->method('getSha1Src')->willReturn('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
         $pull_request->method('getRepoDestId')->willReturn(1);
         $repository_destination->method('getId')->willReturn(1);
-        $repository_destination->method('getPath');
+        $repository_destination->method('getFullPath')->willReturn('/dest_path');
         $dao->method('getReferenceByPullRequestId')->willReturn(
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_NOT_YET_CREATED]
         );
         $namespace_checker->method('isAvailable')->willReturn(false, true);
         $dao->expects($this->once())->method('updateGitReferenceToNextAvailableOne');
         $dao->expects($this->once())->method('updateStatusByPullRequestId')->with($pull_request->getId(), GitPullRequestReference::STATUS_OK);
-        $executor_source->expects($this->once())->method('pushForce');
 
-        $reference_updater->updatePullRequestReference(
+        $result = $reference_updater->updatePullRequestReference(
             $pull_request,
-            $executor_source,
+            $repository_source,
             $executor_destination,
             $repository_destination
         );
+        self::assertTrue(Result::isOk($result));
     }
 }
