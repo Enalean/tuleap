@@ -29,6 +29,7 @@ namespace Tuleap\AICrossTracker\REST\v1;
 final readonly class HelperRepresentation
 {
     public function __construct(
+        public string $thread_id,
         public string $title,
         public string $tql_query,
         public string $explanations,

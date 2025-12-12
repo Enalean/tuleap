@@ -36,4 +36,16 @@ final readonly class AssistantMessage
         $self->content = $content;
         return $self;
     }
+
+    public static function fromFakeContent(): self
+    {
+        $json = json_encode(['title' => 'foo', 'tql_query' => 'SELECT ...', 'explanations' => 'bar']);
+        assert($json !== false);
+        return self::fromStringContent(new StringContent($json));
+    }
+
+    public function toGenericMessage(): Message
+    {
+        return new Message(Role::ASSISTANT, $this->content);
+    }
 }

@@ -21,30 +21,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AI\Mistral;
+namespace Tuleap\AICrossTracker\Assistant;
 
-use Override;
+use Tuleap\Option\Option;
 
-/**
- * @psalm-immutable
- */
-final readonly class Message implements \JsonSerializable
+interface ThreadStorage
 {
-    public function __construct(private(set) Role $role, public StringContent|ChunkContent $content)
-    {
-    }
+    public function createNew(\PFUser $user, int $widget_id): ThreadID;
 
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'role' => $this->role,
-            'content' => $this->content,
-        ];
-    }
-
-    public static function buildUserMessageFromString(string $content): self
-    {
-        return new self(Role::USER, new StringContent($content));
-    }
+    public function threadExists(\PFUser $user, int $widget_id, ThreadID $thread_id): Option;
 }

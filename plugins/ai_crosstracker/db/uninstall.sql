@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
@@ -19,32 +18,5 @@
  *
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\AI\Mistral;
-
-use Override;
-
-/**
- * @psalm-immutable
- */
-final readonly class Message implements \JsonSerializable
-{
-    public function __construct(private(set) Role $role, public StringContent|ChunkContent $content)
-    {
-    }
-
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'role' => $this->role,
-            'content' => $this->content,
-        ];
-    }
-
-    public static function buildUserMessageFromString(string $content): self
-    {
-        return new self(Role::USER, new StringContent($content));
-    }
-}
+DROP TABLE IF EXISTS ai_crosstracker_completion_thread;
+DROP TABLE IF EXISTS ai_crosstracker_completion_message;

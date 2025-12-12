@@ -21,30 +21,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AI\Mistral;
+namespace Tuleap\AICrossTracker\Stub;
 
 use Override;
+use Tuleap\AI\Mistral\Message;
+use Tuleap\AICrossTracker\Assistant\MessageRepository;
+use Tuleap\AICrossTracker\Assistant\Thread;
+use Tuleap\AICrossTracker\Assistant\ThreadID;
 
-/**
- * @psalm-immutable
- */
-final readonly class Message implements \JsonSerializable
+final class MessageRepositoryStub implements MessageRepository
 {
-    public function __construct(private(set) Role $role, public StringContent|ChunkContent $content)
+    private array $threads;
+
+    public function __construct(Thread ...$threads)
     {
+        foreach ($threads as $thread) {
+            $this->threads[$thread->id->uuid->toString()] = $thread->messages;
+        }
     }
 
     #[Override]
-    public function jsonSerialize(): array
+    public function fetch(ThreadID $id): array
     {
-        return [
-            'role' => $this->role,
-            'content' => $this->content,
-        ];
+        if (! isset($this->threads[$id->uuid->toString()])) {
+            return [];
+        }
+        return $this->threads[$id->uuid->toString()];
     }
 
-    public static function buildUserMessageFromString(string $content): self
+    #[Override]
+    public function store(ThreadID $id, Message $message): void
     {
-        return new self(Role::USER, new StringContent($content));
+        $this->threads[$id->uuid->toString()][] = $message;
     }
 }

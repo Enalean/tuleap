@@ -26,12 +26,11 @@ namespace Tuleap\AICrossTracker\Assistant;
 use CuyZ\Valinor\Mapper\MappingError;
 use CuyZ\Valinor\Mapper\Source\JsonSource;
 use Tuleap\AI\Mistral\CompletionResponse;
-use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\MistralConnector;
 use Tuleap\AI\Requestor\AIRequestorEntity;
 use Tuleap\AI\Requestor\EndUserAIRequestor;
 use Tuleap\AICrossTracker\REST\v1\HelperRepresentation;
-use Tuleap\AICrossTracker\REST\v1\MessageRepresentation;
+use Tuleap\AICrossTracker\REST\v1\HelperRepresentationWithoutThreadId;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -41,33 +40,33 @@ use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final readonly class CompletionSender
 {
-    public function __construct(private MistralConnector $mistral_connector)
+    public function __construct(private MistralConnector $mistral_connector, private MessageRepository $message_repository)
     {
     }
 
     /**
      * @psalm-return Ok<HelperRepresentation>|Err<Fault>
      */
-    public function sendMessages(CurrentUserWithLoggedInInformation $current_user_with_logged_in_information, Assistant $assistant, MessageRepresentation ...$message_representation): Ok|Err
+    public function sendMessages(CurrentUserWithLoggedInInformation $current_user_with_logged_in_information, Assistant $assistant, Thread $thread): Ok|Err
     {
-        $user_messages = array_map(static fn (MessageRepresentation $message): Message => $message->toMistralMessage(), $message_representation);
-
+        $message_repository = $this->message_repository;
         return EndUserAIRequestor::fromCurrentUser($current_user_with_logged_in_information)
             ->andThen(
                 fn (AIRequestorEntity $requestor) => $this->mistral_connector->sendCompletion(
                     $requestor,
-                    $assistant->getCompletion($current_user_with_logged_in_information->user, $user_messages),
+                    $assistant->getCompletion($current_user_with_logged_in_information->user, $thread->messages),
                     'crosstracker'
                 )
             )
             ->andThen(
-            /**
-             * @psalm-return Ok<string>|Err<Fault>
-             */
-                static function (CompletionResponse $response): Ok|Err {
+                /**
+                 * @psalm-return Ok<string>|Err<Fault>
+                 */
+                static function (CompletionResponse $response) use ($message_repository, $thread): Ok|Err {
                     if (! isset($response->choices[0]->message->content)) {
                         return Result::err(Fault::fromMessage('No choice provided in the response'));
                     }
+                    $message_repository->store($thread->id, $response->choices[0]->message->toGenericMessage());
                     return Result::ok((string) $response->choices[0]->message->content);
                 }
             )
@@ -75,10 +74,19 @@ final readonly class CompletionSender
                 /**
                  * @psalm-return Ok<HelperRepresentation>|Err<Fault>
                  */
-                static function (string $selected_response): Ok|Err {
+                static function (string $selected_response) use ($thread): Ok|Err {
                     $mapper = ValinorMapperBuilderFactory::mapperBuilder()->mapper();
                     try {
-                        return Result::ok($mapper->map(HelperRepresentation::class, new JsonSource($selected_response)));
+                        $mapped = $mapper->map(HelperRepresentationWithoutThreadId::class, new JsonSource($selected_response));
+                        \assert($mapped instanceof HelperRepresentationWithoutThreadId);
+                        return Result::ok(
+                            new HelperRepresentation(
+                                $thread->id->uuid->toString(),
+                                $mapped->title,
+                                $mapped->tql_query,
+                                $mapped->explanations,
+                            )
+                        );
                     } catch (MappingError $e) {
                         return Result::err(Fault::fromThrowable($e));
                     }
