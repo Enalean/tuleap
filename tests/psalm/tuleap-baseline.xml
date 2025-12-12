@@ -71644,13 +71644,6 @@
       <code><![CDATA[searchByType]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/dao/TrackerIdSharingDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[updateAndGetLastId]]></code>
-      <code><![CDATA[updateAndGetLastId]]></code>
-    </DeprecatedMethod>
-  </file>
   <file src="src/common/dao/UGroupUserDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
