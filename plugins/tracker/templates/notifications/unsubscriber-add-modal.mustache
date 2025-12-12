@@ -11,6 +11,7 @@
             data-id="tracker-global-notifications-user-add"
             data-name="new_unsubscriber"
             data-existing="[]"
+            data-test="unsubscriber-lazybox"
         >
             <label class="tlp-label" for="tracker-global-notifications-user-add">
                 {{# dgettext }}tuleap-tracker| Users who not will receive the notification {{/dgettext}}
@@ -21,6 +22,6 @@
         <button type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
             Cancel
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">{{# dgettext }} tuleap-tracker | Save {{/ dgettext }}</button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="unsuscribe-notifification-button">{{# dgettext }} tuleap-tracker | Save {{/ dgettext }}</button>
     </div>
 </div>
