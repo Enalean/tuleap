@@ -69,7 +69,6 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
      */
     public final const string TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED = 'tracker_event_project_creation_trackers_required';
 
-    public const string LEGACY_SUFFIX       = '_from_tv3';
     public const string TRACKER_MAPPING_KEY = 'plugin_tracker_tracker';
 
     /** @var array of Tracker */
