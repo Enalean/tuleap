@@ -35,8 +35,6 @@ class Codendi_Mail implements Codendi_Mail_Interface
 {
     /**
      * @const Use the common look and feel
-     *
-     * The common look and feel is the pretty one you can see in trackers v3
      */
     public const true USE_COMMON_LOOK_AND_FEEL = true;
 
