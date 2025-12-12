@@ -43,13 +43,9 @@ function goToNotificationAdministration(): void {
 
 function addUserToUnsusbscribeNotifications(user: string): void {
     cy.get("[data-test=unsuscribe-notifification]").click();
-
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-container").last().click();
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-input").last().type(`${user}{enter}`);
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-result-label").last().click();
+    cy.get("[data-test=unsubscriber-lazybox]").within(() => {
+        cy.searchItemInLazyboxDropdown(`${user}`, `${user}`).click({ force: true });
+    });
     cy.get("[data-test=unsuscribe-notifification-button]").click();
 }
 
