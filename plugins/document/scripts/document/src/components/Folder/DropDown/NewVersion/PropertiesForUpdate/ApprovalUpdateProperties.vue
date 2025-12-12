@@ -36,6 +36,7 @@
                         value="copy"
                         v-on:change="$emit('approval-table-action-change', $event.target.value)"
                         required
+                        data-test="approval-table-action-checkbox"
                     />
                     {{ $gettext("Copy the previous approval table.") }}
                 </label>
@@ -54,6 +55,7 @@
                         name="approval-update-action"
                         value="reset"
                         v-on:change="$emit('approval-table-action-change', $event.target.value)"
+                        data-test="approval-table-action-checkbox"
                     />
                     {{ $gettext("Reset the approval cycle.") }}
                 </label>
@@ -76,6 +78,7 @@
                         name="approval-update-action"
                         value="empty"
                         v-on:change="$emit('approval-table-action-change', $event.target.value)"
+                        data-test="approval-table-action-checkbox"
                     />
                     {{ $gettext("Create a new empty approval table.") }}
                 </label>

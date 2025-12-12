@@ -31,8 +31,8 @@
 
     <slot name="update-properties" />
 
-    <a
-        v-bind:href="getUrlForPane(NOTIFS_PANE_NAME)"
+    <router-link
+        v-bind:to="{ name: 'notifications', params: { item_id: item.id } }"
         class="tlp-dropdown-menu-item"
         role="menuitem"
         data-shortcut-notifications
@@ -41,7 +41,7 @@
     >
         <i class="fa-regular fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
         <span>{{ $gettext("Notifications") }}</span>
-    </a>
+    </router-link>
     <router-link
         v-if="should_display_versions_link"
         v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
@@ -69,9 +69,9 @@
     </router-link>
 
     <slot name="update-permissions" />
-    <a
+    <router-link
         v-if="should_display_approval"
-        v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
+        v-bind:to="{ name: 'approval-table', params: { item_id: item.id } }"
         class="tlp-dropdown-menu-item"
         role="menuitem"
         data-test="document-dropdown-approval-tables"
@@ -82,7 +82,7 @@
             aria-hidden="true"
         ></i>
         <span>{{ $gettext("Approval tables") }}</span>
-    </a>
+    </router-link>
     <router-link
         v-bind:to="{ name: 'references', params: { item_id: item.id } }"
         class="tlp-dropdown-menu-item"
@@ -140,17 +140,13 @@ import {
 import type { Item } from "../../../type";
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { IS_DELETION_ALLOWED, PROJECT } from "../../../configuration-keys";
+import { IS_DELETION_ALLOWED } from "../../../configuration-keys";
 import { getDocumentProperties } from "../../../helpers/properties/document-properties";
 import { TYPE_FOLDER } from "../../../constants";
 
 const props = defineProps<{ item: Item }>();
 
-const project = strictInject(PROJECT);
 const is_deletion_allowed = strictInject(IS_DELETION_ALLOWED);
-
-const NOTIFS_PANE_NAME = "notifications";
-const APPROVAL_TABLES_PANE_NAME = "approval";
 
 const document_properties = getDocumentProperties();
 
@@ -167,10 +163,6 @@ const should_display_history = computed((): boolean => !isOtherType(props.item))
 const should_display_approval = computed(
     (): boolean => !is_item_an_empty_document.value && !isOtherType(props.item),
 );
-
-function getUrlForPane(pane_name: string): string {
-    return `/plugins/docman/?group_id=${project.id}&id=${props.item.id}&action=details&section=${pane_name}`;
-}
 
 defineExpose({ is_item_an_empty_document, is_item_a_folder, should_display_versions_link });
 </script>
