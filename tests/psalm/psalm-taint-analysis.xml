@@ -14,7 +14,6 @@
         <directory name="src/utils/"/>
         <directory name="src/www/"/>
         <ignoreFiles>
-            <directory name="src/common/tracker/"/>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/embedded_vendor/jpgraph/"/>
             <directory name="src/themes/BurningParrot/vendor/"/>
