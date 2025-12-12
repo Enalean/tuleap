@@ -82,7 +82,6 @@ if (! ini_get('variables_order')) {
 foreach (
     [
         'group_id',
-        'atid',
         'pv',
     ] as $variable
 ) {
