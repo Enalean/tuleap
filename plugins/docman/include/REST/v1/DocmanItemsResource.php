@@ -548,7 +548,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to update'));
         }
 
-        $table = $factory->getLastTableForItemWithReviewers();
+        $table = $factory->getTable();
         if ($table === null) {
             throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to update'));
         }
@@ -596,7 +596,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to perform an action on'));
         }
 
-        if ($factory->getLastTableForItem() === null) {
+        if ($factory->getTable() === null) {
             throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to perform an action on'));
         }
 
@@ -646,8 +646,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to delete'));
         }
 
-        $table = $factory->getLastTableForItem();
-        if ($table === null) {
+        if ($factory->getTable() === null) {
             throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to delete'));
         }
 
@@ -763,7 +762,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             throw new I18NRestException(400, dgettext('tuleap-docman', 'The document has no approval table'));
         }
 
-        $table = $factory->getLastTableForItemWithReviewers();
+        $table = $factory->getTable();
         if ($table === null) {
             throw new I18NRestException(400, dgettext('tuleap-docman', 'The document has no approval table'));
         }
@@ -821,7 +820,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             throw new I18NRestException(400, dgettext('tuleap-docman', 'The document has no approval table'));
         }
 
-        $table = $factory->getLastTableForItemWithReviewers();
+        $table = $factory->getTable();
         if ($table === null) {
             throw new I18NRestException(400, dgettext('tuleap-docman', 'The document has no approval table'));
         }

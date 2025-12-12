@@ -36,6 +36,9 @@ describe("AdministrationModalNotifications", () => {
                 is_doing_something: false,
                 table_notification_value: "disabled",
                 is_sending_notification: false,
+                table_do_reminder_value: false,
+                table_reminder_occurence_value: 1,
+                table_reminder_occurence_unit_value: "day",
             },
             global: {
                 ...getGlobalTestOptions({}),

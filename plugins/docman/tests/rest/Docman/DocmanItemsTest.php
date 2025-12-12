@@ -384,6 +384,7 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
                     'notification_type'      => 'all_at_once',
                     'reviewers'              => [$reviewer_id],
                     'reviewers_group_to_add' => [],
+                    'reminder_occurence'     => 0,
                 ]))),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
         );

@@ -326,6 +326,12 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+msgid "Days"
+msgstr ""
+
+msgid "Days/Weeks"
+msgstr ""
+
 msgid "Declined"
 msgstr ""
 
@@ -424,6 +430,9 @@ msgid "Error while saving your review"
 msgstr ""
 
 msgid "Error while updating table"
+msgstr ""
+
+msgid "Every"
 msgstr ""
 
 msgid "File"
@@ -851,6 +860,9 @@ msgstr ""
 msgid "Select top item"
 msgstr ""
 
+msgid "Send a mail reminder on occurence"
+msgstr ""
+
 msgid "Send a mail reminder to approver(s)"
 msgstr ""
 
@@ -1104,6 +1116,9 @@ msgid "View all versions"
 msgstr ""
 
 msgid "We detect you are using OSX"
+msgstr ""
+
+msgid "Weeks"
 msgstr ""
 
 msgid "What"

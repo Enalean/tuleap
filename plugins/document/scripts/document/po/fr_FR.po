@@ -357,6 +357,12 @@ msgstr "Couper"
 msgid "Date"
 msgstr "Date"
 
+msgid "Days"
+msgstr "Jours"
+
+msgid "Days/Weeks"
+msgstr "Jours/Semaines"
+
 msgid "Declined"
 msgstr "Décliné"
 
@@ -462,6 +468,9 @@ msgstr "Erreur lors de la sauvegarde de votre approbation"
 
 msgid "Error while updating table"
 msgstr "Erreur lors de la mise à jour de la table"
+
+msgid "Every"
+msgstr "Tout les"
 
 msgid "File"
 msgstr "Fichier"
@@ -909,6 +918,9 @@ msgstr "Sélectionner l'élément précédent"
 msgid "Select top item"
 msgstr "Sélectionner le premier élément"
 
+msgid "Send a mail reminder on occurence"
+msgstr "Envoyer un mail selon une occurence"
+
 msgid "Send a mail reminder to approver(s)"
 msgstr "Envoyer un mail au(x) approbateur(s)"
 
@@ -1191,6 +1203,9 @@ msgstr "Voir toutes les versions"
 
 msgid "We detect you are using OSX"
 msgstr "Nous détectons que vous utilisez OSX"
+
+msgid "Weeks"
+msgstr "Semaines"
 
 msgid "What"
 msgstr "Quoi"

@@ -55,6 +55,7 @@ final readonly class ItemApprovalTableRepresentation
         public bool $is_closed,
         public string $description,
         public array $reviewers,
+        public int $reminder_occurence,
     ) {
     }
 
@@ -109,6 +110,7 @@ final readonly class ItemApprovalTableRepresentation
                 ),
                 $approval_table->getReviewerArray(),
             )),
+            (int) $approval_table->getNotificationOccurence(),
         );
     }
 }

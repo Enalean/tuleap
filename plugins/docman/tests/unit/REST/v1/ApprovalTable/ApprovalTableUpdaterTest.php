@@ -69,7 +69,7 @@ final class ApprovalTableUpdaterTest extends TestCase
 
         $this->update(
             RetrieveUserByIdStub::withNoUser(),
-            new ApprovalTablePutRepresentation(105, '', '', '', [], []),
+            new ApprovalTablePutRepresentation(105, '', '', '', [], [], 0),
         );
     }
 
@@ -82,7 +82,7 @@ final class ApprovalTableUpdaterTest extends TestCase
 
         $this->update(
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithId(105)),
-            new ApprovalTablePutRepresentation(105, 'enabled', '', 'disabled', [], []),
+            new ApprovalTablePutRepresentation(105, 'enabled', '', 'disabled', [], [], 0),
         );
     }
 
@@ -95,7 +95,7 @@ final class ApprovalTableUpdaterTest extends TestCase
 
         $this->update(
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithId(105)),
-            new ApprovalTablePutRepresentation(105, 'enabled', '', 'disabled', [102, 103], []),
+            new ApprovalTablePutRepresentation(105, 'enabled', '', 'disabled', [102, 103], [], 0),
         );
     }
 }

@@ -51,10 +51,15 @@ final class ApprovalTablePutRepresentation
      * @var list<int> List of user group ids to add to the reviewers (their members are added after the reviewers from <code>reviewers</code>) {@from body} {@required true}
      */
     public array $reviewers_group_to_add;
+    /**
+     * @var int<0, max> Amount of days between each reminder to approvers {@from body} {@required true}
+     */
+    public int $reminder_occurence;
 
     /**
      * @param list<int> $reviewers
      * @param list<int> $reviewers_group_to_add
+     * @param int<0, max> $reminder_occurence
      */
     public function __construct(
         int $owner,
@@ -63,6 +68,7 @@ final class ApprovalTablePutRepresentation
         string $notification_type,
         array $reviewers,
         array $reviewers_group_to_add,
+        int $reminder_occurence,
     ) {
         $this->owner                  = $owner;
         $this->status                 = $status;
@@ -70,5 +76,6 @@ final class ApprovalTablePutRepresentation
         $this->notification_type      = $notification_type;
         $this->reviewers              = $reviewers;
         $this->reviewers_group_to_add = $reviewers_group_to_add;
+        $this->reminder_occurence     = $reminder_occurence;
     }
 }

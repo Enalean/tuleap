@@ -62,7 +62,7 @@ final readonly class ApprovalTableUpdater
                 $this->table_factory->updateTable(
                     $table_status,
                     $table_notification,
-                    null,
+                    $representation->reminder_occurence,
                     $representation->comment,
                     $representation->owner,
                 );
