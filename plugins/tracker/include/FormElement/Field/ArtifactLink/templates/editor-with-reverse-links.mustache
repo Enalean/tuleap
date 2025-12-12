@@ -1,13 +1,15 @@
-<div
-    class="tracker_formelement_read_and_edit"
-    data-link-field-id="{{ link_field_id }}"
-    data-link-field-label="{{ link_field_label }}"
-    {{# current_artifact_id }}data-current-artifact-id="{{ . }}"{{/ current_artifact_id }}
-    data-current-tracker-id="{{ current_tracker_id }}"
-    data-current-tracker-color="{{ current_tracker_color }}"
-    data-current-tracker-short-name="{{ current_tracker_short_name }}"
-    data-current-project-id="{{ current_project_id }}"
-    data-allowed-link-types="{{ allowed_link_types }}"
-    {{# parent_tracker_id }}data-parent-tracker-id="{{ . }}"{{/ parent_tracker_id }}
-></div>
-<input type="hidden" name="artifact[{{ link_field_id }}]" data-test="link-field-value" value="{{ initial_value }}" />
+<div class="tracker_formelement_read_and_edit" data-test="artifact-link-section">
+    <div
+        data-link-field-id="{{ link_field_id }}"
+        data-link-field-label="{{ link_field_label }}"
+        {{# current_artifact_id }}data-current-artifact-id="{{ . }}"{{/ current_artifact_id }}
+        data-current-tracker-id="{{ current_tracker_id }}"
+        data-current-tracker-color="{{ current_tracker_color }}"
+        data-current-tracker-short-name="{{ current_tracker_short_name }}"
+        data-current-project-id="{{ current_project_id }}"
+        data-allowed-link-types="{{ allowed_link_types }}"
+        {{# parent_tracker_id }}data-parent-tracker-id="{{ . }}"{{/ parent_tracker_id }}
+    ></div>
+    <input type="hidden" name="artifact[{{ link_field_id }}]" data-test="link-field-value"
+           value="{{ initial_value }}" />
+</div>
