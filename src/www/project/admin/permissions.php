@@ -28,13 +28,6 @@
 // type='WIKI_READ'                id='group_id'                   table='wiki_page'
 // type='WIKIPAGE_READ'            id='id'                         table='wiki_page'
 // type='WIKIATTACHMENT_READ'      id='id'                         table='wiki_attachment'
-// type='TRACKER_FIELD_SUBMIT'     id='field_id_group_artifact_id' table='artifact_field'
-// type='TRACKER_FIELD_READ'       id='field_id_group_artifact_id' table='artifact_field'
-// type='TRACKER_FIELD_UPDATE'     id='field_id_group_artifact_id' table='artifact_field'
-// type='TRACKER_ACCESS_SUBMITTER' id='group_artifact_id'          table='artifact_group_list'
-// type='TRACKER_ACCESS_ASSIGNEE'  id='group_artifact_id'          table='artifact_group_list'
-// type='TRACKER_ACCESS_FULL'      id='group_artifact_id'          table='artifact_group_list'
-// type='TRACKER_ARTIFACT_ACCESS'  id='artifact_id'                table='artifact'
 
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\User\UserGroup\NameTranslator;
@@ -59,15 +52,6 @@ function permission_get_name($permission_type)
         return $Language->getText('project_admin_permissions', 'wiki_access');
     } elseif ($permission_type == 'WIKIATTACHMENT_READ') {
         return $Language->getText('project_admin_permissions', 'wiki_attachment_access');
-    } elseif ($permission_type == 'TRACKER_FIELD_SUBMIT') {
-        return $Language->getText('project_admin_permissions', 'tracker_field_submit');
-    } elseif ($permission_type == 'TRACKER_FIELD_READ') {
-        return $Language->getText('project_admin_permissions', 'tracker_field_read');
-    } elseif ($permission_type == 'TRACKER_FIELD_UPDATE') {
-        return $Language->getText('project_admin_permissions', 'tracker_field_update');
-    } elseif ($permission_type == 'TRACKER_ACCESS_SUBMITTER') {
-    } elseif ($permission_type == 'TRACKER_ACCESS_ASSIGNEE') {
-    } elseif ($permission_type == 'TRACKER_ACCESS_FULL') {
     } else {
         $em   = EventManager::instance();
         $name = false;
@@ -91,20 +75,6 @@ function permission_get_object_type($permission_type, $object_id)
         return 'wikipage';
     } elseif ($permission_type == 'WIKIATTACHMENT_READ') {
         return 'wikiattachment';
-    } elseif ($permission_type == 'TRACKER_FIELD_SUBMIT') {
-        return 'field';
-    } elseif ($permission_type == 'TRACKER_FIELD_READ') {
-        return 'field';
-    } elseif ($permission_type == 'TRACKER_FIELD_UPDATE') {
-        return 'field';
-    } elseif ($permission_type == 'TRACKER_ACCESS_SUBMITTER') {
-        return 'tracker';
-    } elseif ($permission_type == 'TRACKER_ACCESS_ASSIGNEE') {
-        return 'tracker';
-    } elseif ($permission_type == 'TRACKER_ACCESS_FULL') {
-        return 'tracker';
-    } elseif ($permission_type == 'TRACKER_ACCESS_FULL') {
-        return 'artifact';
     } else {
         $em          = EventManager::instance();
         $object_type = false;
@@ -147,12 +117,6 @@ function permission_get_object_name($permission_type, $object_id)
         return "$object_id";
     } elseif ($permission_type == 'WIKIATTACHMENT_READ') {
         return $Language->getText('project_admin_permissions', 'wikiattachment');
-    } elseif (strpos($permission_type, 'TRACKER_ACCESS') === 0) {
-        return "LEGACY TRACKER v3 TRACKER ACCESS: $object_id";
-    } elseif (strpos($permission_type, 'TRACKER_FIELD') === 0) {
-        return "LEGACY TRACKER v3 FIELD: $object_id";
-    } elseif ($permission_type == 'TRACKER_ARTIFACT_ACCESS') {
-        return "LEGACY TRACKER v3 ARTIFACT ACCESS: $object_id";
     } else {
         $em          = EventManager::instance();
         $object_name = false;
@@ -257,9 +221,6 @@ function permission_exist($permission_type, $object_id)
 
 /**
  * Check permissions on the given object
- *
- * WARNING: don't use this method to check access permission on trackers ('TRACKER_ACCESS*' and 'TRACKER_FIELD*' permission types)
- * Why? because trackers don't use default permissions, and they need an additional parameter for field permissions.
  *
  * @param $permission_type defines the type of permission (e.g. "DOCUMENT_READ")
  * @param $object_id is the ID of the object we want to access (e.g. a docid)
