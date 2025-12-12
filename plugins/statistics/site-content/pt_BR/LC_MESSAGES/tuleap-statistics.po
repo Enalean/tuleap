@@ -31,9 +31,6 @@ msgstr ""
 msgid "Backup old"
 msgstr ""
 
-msgid "Closed (or wished end date) Artifacts (V3)"
-msgstr ""
-
 msgid "Codendi Logs"
 msgstr ""
 
@@ -163,9 +160,6 @@ msgid "No data to display"
 msgstr ""
 
 msgid "No motivation"
-msgstr ""
-
-msgid "Opened Artifacts (V3)"
 msgstr ""
 
 msgid "Project"

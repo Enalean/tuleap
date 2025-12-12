@@ -40,8 +40,6 @@ final class FrequenciesLabels implements Dispatchable
             'file'      => dgettext('tuleap-statistics', 'Files released'),
             'groups'    => dgettext('tuleap-statistics', 'Project created'),
             'wikidl'    => dgettext('tuleap-statistics', 'Wiki pages viewed'),
-            'oartifact' => dgettext('tuleap-statistics', 'Opened Artifacts (V3)'),
-            'cartifact' => dgettext('tuleap-statistics', 'Closed (or wished end date) Artifacts (V3)'),
         ];
     }
 
