@@ -31,7 +31,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $application       = new \Symfony\Component\Console\Application();
 $process_factory   = new \TuleapCfg\Command\ProcessFactory();
 $variable_provider = new VariableProviderFromEnvironment();
-$application->add(new \Tuleap\TEEContainer\StartContainerCommand(
+$application->addCommand(new \Tuleap\TEEContainer\StartContainerCommand(
     $process_factory,
     new PluginsInstallClosureBuilderFromVariable($variable_provider, $process_factory),
     $variable_provider,

@@ -43,7 +43,7 @@ $launch_system_check_command = new QueueSystemCheckCommand(
         )
     )
 );
-$application->add($launch_system_check_command);
+$application->addCommand($launch_system_check_command);
 $application->setDefaultCommand($launch_system_check_command->getName(), $is_single_command = true);
 
 $console_output = new ConsoleOutput();

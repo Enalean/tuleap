@@ -30,22 +30,22 @@ use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
 use TuleapCfg\Command\ProcessFactory;
 
 $application = new Application();
-$application->add(new \TuleapCfg\Command\ConfigureCommand());
+$application->addCommand(new \TuleapCfg\Command\ConfigureCommand());
 $process_factory   = new ProcessFactory();
 $variable_provider = new VariableProviderFromEnvironment();
-$application->add(new \TuleapCfg\Command\SystemControlCommand($process_factory));
-$application->add(new \TuleapCfg\Command\StartCommunityEditionContainerCommand(
+$application->addCommand(new \TuleapCfg\Command\SystemControlCommand($process_factory));
+$application->addCommand(new \TuleapCfg\Command\StartCommunityEditionContainerCommand(
     $process_factory,
     new \TuleapCfg\Command\Docker\PluginsInstallClosureBuilderFromVariable($variable_provider, $process_factory),
     $variable_provider,
 ));
-$application->add(new \TuleapCfg\Command\SetupMysqlInitCommand(
+$application->addCommand(new \TuleapCfg\Command\SetupMysqlInitCommand(
     new \TuleapCfg\Command\SetupMysql\DatabaseConfigurator(
         PasswordHandlerFactory::getPasswordHandler(),
         new \TuleapCfg\Command\SetupMysql\ConnectionManager(),
     ),
 ));
-$application->add(new \TuleapCfg\Command\SetupTuleapCommand(
+$application->addCommand(new \TuleapCfg\Command\SetupTuleapCommand(
     new ProcessFactory(),
     new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
     static fn (\Psr\Log\LoggerInterface $logger) => new ForgeUpgrade(
@@ -54,16 +54,16 @@ $application->add(new \TuleapCfg\Command\SetupTuleapCommand(
         new \Tuleap\DB\DatabaseUUIDV7Factory(),
     ),
 ));
-$application->add(new \TuleapCfg\Command\SetupForgeUpgradeCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\Images\SiteDeployImagesCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPMCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3Command());
-$application->add(new \TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3HooksCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginxCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\Apache\SiteDeployApacheCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\ForgeUpgrade\SiteDeployForgeUpgradeCommand());
-$application->add(new TuleapCfg\Command\SiteDeploy\Realtime\SiteDeployRealtimeCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\Locale\SiteDeployLocaleGenerationCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\Plugins\SiteDeployPluginsCommand(new ProcessFactory()));
+$application->addCommand(new \TuleapCfg\Command\SetupForgeUpgradeCommand());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\SiteDeployCommand());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\Images\SiteDeployImagesCommand());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPMCommand());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3Command());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3HooksCommand());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginxCommand());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\Apache\SiteDeployApacheCommand());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\ForgeUpgrade\SiteDeployForgeUpgradeCommand());
+$application->addCommand(new TuleapCfg\Command\SiteDeploy\Realtime\SiteDeployRealtimeCommand());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\Locale\SiteDeployLocaleGenerationCommand());
+$application->addCommand(new \TuleapCfg\Command\SiteDeploy\Plugins\SiteDeployPluginsCommand(new ProcessFactory()));
 $application->run();
