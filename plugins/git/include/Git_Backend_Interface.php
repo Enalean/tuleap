@@ -21,8 +21,6 @@
 
 interface Git_Backend_Interface
 {
-    public const string GIT_ROOT_PATH = '/var/lib/codendi/gitroot/';
-
     /**
      * Verify if the repository as already some content within
      *

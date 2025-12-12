@@ -80,32 +80,6 @@ class Git_Gitolite_ProjectSerializer //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $project_config;
     }
 
-    public function dumpPartialProjectRepoConf(Project $project, array $repositories)
-    {
-        $this->logger->debug('Dumping partial project repo conf for: ' . $project->getUnixName());
-        $project_config = '';
-        foreach ($repositories as $repository) {
-            $this->logger->debug('Fetching Repo Configuration: ' . $repository->getName() . '...');
-            $project_config .= $this->fetchReposConfig($project, $repository);
-            $this->logger->debug('Fetching Repo Configuration: ' . $repository->getName() . ': done');
-        }
-
-        return $project_config;
-    }
-
-    public function dumpPartialSuspendedProjectRepositoriesConfiguration(Project $project, array $repositories)
-    {
-        $this->logger->debug('Dumping partial suspended project repo conf for: ' . $project->getUnixName());
-        $project_config = '';
-        foreach ($repositories as $repository) {
-            $this->logger->debug('Fetching disabled repo configuration: ' . $repository->getName() . '...');
-            $project_config .= $this->fetchSuspendedRepositoryConfiguration($project, $repository);
-            $this->logger->debug('Fetching disabled repo configuration: ' . $repository->getName() . ': done');
-        }
-
-        return $project_config;
-    }
-
     public function dumpSuspendedProjectRepositoriesConfiguration(Project $project)
     {
         $this->logger->debug('Dumping suspended project repo conf for: ' . $project->getUnixName());
@@ -133,7 +107,7 @@ class Git_Gitolite_ProjectSerializer //phpcs:ignore PSR1.Classes.ClassDeclaratio
     {
         $repo_full_name = $this->repoFullName($repository, $project->getUnixName());
         $repo_config    = 'repo ' . $repo_full_name . PHP_EOL;
-        $repo_config   .= $this->fetchMailHookConfig($project, $repository);
+        $repo_config   .= $this->fetchMailHookConfig($repository);
         $repo_config   .= $this->permissions_serializer->getForRepository($repository);
         $repo_config   .= $this->fetchObjectSizeLimit($project);
 
@@ -147,14 +121,10 @@ class Git_Gitolite_ProjectSerializer //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     /**
      * Returns post-receive-email hook config in gitolite format
-     *
-     * @param Project $project
-     * @param GitRepository $repository
      */
-    public function fetchMailHookConfig($project, $repository)
+    public function fetchMailHookConfig(GitRepository $repository): string
     {
-        $conf  = '';
-        $conf .= ' config hooks.showrev = "';
+        $conf  = ' config hooks.showrev = "';
         $conf .= $repository->getPostReceiveShowRev($this->url_manager);
         $conf .= '"';
         $conf .= PHP_EOL;
@@ -165,10 +135,7 @@ class Git_Gitolite_ProjectSerializer //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $conf;
     }
 
-    /**
-     * @return string
-     */
-    private function fetchObjectSizeLimit(Project $project)
+    private function fetchObjectSizeLimit(Project $project): string
     {
         if ($this->bigObjectsAreAuthorizedForProject($project)) {
             return '';

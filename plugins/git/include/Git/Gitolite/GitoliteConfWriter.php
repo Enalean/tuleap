@@ -22,9 +22,6 @@ class Git_Gitolite_GitoliteConfWriter
 {
     public const string GITOLITE_CONF_FILE = 'conf/gitolite.conf';
 
-    /** @var Git_Gitolite_GitoliteRCReader */
-    private $gitoliterc_reader;
-
     /** @var Git_Gitolite_ConfigPermissionsSerializer */
     private $permissions_serializer;
 
@@ -43,12 +40,10 @@ class Git_Gitolite_GitoliteConfWriter
     public function __construct(
         Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
         Git_Gitolite_ProjectSerializer $project_serializer,
-        Git_Gitolite_GitoliteRCReader $gitoliterc_reader,
         \Psr\Log\LoggerInterface $logger,
         ProjectManager $project_manager,
         $gitolite_administration_path,
     ) {
-        $this->gitoliterc_reader            = $gitoliterc_reader;
         $this->permissions_serializer       = $permissions_serializer;
         $this->project_serializer           = $project_serializer;
         $this->logger                       = $logger;
@@ -56,17 +51,9 @@ class Git_Gitolite_GitoliteConfWriter
         $this->project_manager              = $project_manager;
     }
 
-    public function writeGitoliteConfiguration()
+    public function writeGitoliteConfiguration(): Git_Gitolite_GitModifications
     {
         $git_modifications = new Git_Gitolite_GitModifications();
-        $hostname          = $this->gitoliterc_reader->getHostname();
-
-        if ($hostname) {
-            $this->writeGitoliteConfigurationOnDisk($this->permissions_serializer->getGitoliteDotConfForHostname($this->getProjectList()), $git_modifications);
-            $this->writeGitoliteIncludesInHostnameFile($hostname, $git_modifications, $this->getProjectList());
-
-            return $git_modifications;
-        }
 
         $this->writeGitoliteConfigurationOnDisk($this->permissions_serializer->getGitoliteDotConf($this->getProjectList()), $git_modifications);
 
@@ -80,7 +67,7 @@ class Git_Gitolite_GitoliteConfWriter
 
         $this->moveProjectFiles($old_name, $new_name, $git_modifications, $project);
         $this->modifyProjectConf($old_name, $new_name, $git_modifications, $project);
-        $this->modifyIncludersConf($old_name, $new_name, $git_modifications, $project);
+        $this->modifyIncludersConf($old_name, $new_name, $git_modifications);
 
         return $git_modifications;
     }
@@ -146,14 +133,14 @@ class Git_Gitolite_GitoliteConfWriter
         $git_modifications->add(self::GITOLITE_CONF_FILE);
     }
 
-    private function getGitoliteConfFilePath()
+    private function getGitoliteConfFilePath(): string
     {
         return $this->gitolite_administration_path . '/' . self::GITOLITE_CONF_FILE;
     }
 
-    private function modifyIncludersConf($old_name, $new_name, Git_Gitolite_GitModifications $git_modifications, Project $project)
+    private function modifyIncludersConf($old_name, $new_name, Git_Gitolite_GitModifications $git_modifications): void
     {
-        $file_path = $this->getFullConfigFilePathFromHostname($this->gitoliterc_reader->getHostname());
+        $file_path = $this->getGitoliteConfFilePath();
         $this->proceedRenameInIncluderConf($file_path, $old_name, $new_name);
         $git_modifications->add($file_path);
     }
@@ -196,36 +183,6 @@ class Git_Gitolite_GitoliteConfWriter
         if (is_file($old_file)) {
             $git_modifications->move($old_file, $new_file);
         }
-    }
-
-    private function writeGitoliteIncludesInHostnameFile($hostname, Git_Gitolite_GitModifications $git_modifications, array $project_list)
-    {
-        $hostname_config_file = $this->getFullConfigFilePathFromHostname($hostname);
-
-        file_put_contents($hostname_config_file, $this->permissions_serializer->getAllIncludes($project_list));
-        $git_modifications->add($this->getRelativeConfigFilePathFromHostname($hostname));
-    }
-
-    private function getFullConfigFilePathFromHostname($hostname)
-    {
-        if ($hostname) {
-            return dirname($this->getGitoliteConfFilePath()) . '/' . self::getHostnameToUseAsPartOfAFileName($hostname) . '.conf';
-        }
-
-        return $this->getGitoliteConfFilePath();
-    }
-
-    private function getRelativeConfigFilePathFromHostname($hostname)
-    {
-        return 'conf/' . self::getHostnameToUseAsPartOfAFileName($hostname) . '.conf';
-    }
-
-    /**
-     * @psalm-taint-escape file
-     */
-    private static function getHostnameToUseAsPartOfAFileName(string $hostname): string
-    {
-        return str_replace('/', '', $hostname);
     }
 
     private function getProjectList()

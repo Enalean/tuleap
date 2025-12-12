@@ -114,7 +114,7 @@ final class ProjectSerializerTest extends TestCase
         $repo->setName('test_default');
         self::assertSame(
             file_get_contents($this->fix_dir . '/gitolite-mail-config/mailhook-rev.txt'),
-            $this->project_serializer->fetchMailHookConfig($prj, $repo)
+            $this->project_serializer->fetchMailHookConfig($repo)
         );
 
         // ShowRev + Mailprefix
@@ -125,7 +125,7 @@ final class ProjectSerializerTest extends TestCase
         $repo->setMailPrefix('[KOIN] ');
         self::assertSame(
             file_get_contents($this->fix_dir . '/gitolite-mail-config/mailhook-rev-mail-prefix.txt'),
-            $this->project_serializer->fetchMailHookConfig($prj, $repo)
+            $this->project_serializer->fetchMailHookConfig($repo)
         );
 
         // ShowRev + Mailprefix
@@ -136,7 +136,7 @@ final class ProjectSerializerTest extends TestCase
         $repo->setMailPrefix('["\_o<"] \t');
         self::assertSame(
             file_get_contents($this->fix_dir . '/gitolite-mail-config/mailhook-rev-mail-prefix-quote.txt'),
-            $this->project_serializer->fetchMailHookConfig($prj, $repo)
+            $this->project_serializer->fetchMailHookConfig($repo)
         );
     }
 
