@@ -23,17 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\AICrossTracker\REST\v1;
 
-use CuyZ\Valinor\Mapper\MappingError;
-use CuyZ\Valinor\Mapper\Source\JsonSource;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tracker_FormElementFactory;
 use TrackerFactory;
-use Tuleap\AI\Mistral\CompletionResponse;
-use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\MistralConnectorLive;
-use Tuleap\AI\Requestor\AIRequestorEntity;
-use Tuleap\AI\Requestor\EndUserAIRequestor;
+use Tuleap\AICrossTracker\Assistant\CompletionSender;
 use Tuleap\AICrossTracker\Assistant\ProjectAssistant;
 use Tuleap\AICrossTracker\Assistant\UserAssistant;
 use Tuleap\CrossTracker\REST\v1\CrossTrackerWidgetNotFoundException;
@@ -46,10 +41,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -104,8 +96,6 @@ final class TQLAssistantResource extends AuthenticatedResource
                         UserCrossTrackerWidget::class => new UserAssistant(),
                     };
 
-                    $user_messages = array_map(static fn (MessageRepresentation $message): Message => $message->toMistralMessage(), $messages);
-
                     $mistral_connector = new MistralConnectorLive(
                         HttpClientFactory::createClientWithCustomTimeout(60),
                         HTTPFactoryBuilder::requestFactory(),
@@ -113,38 +103,9 @@ final class TQLAssistantResource extends AuthenticatedResource
                         ValinorMapperBuilderFactory::mapperBuilder(),
                         Prometheus::instance(),
                     );
-                    return EndUserAIRequestor::fromCurrentUser($current_user_with_logged_in_information)
-                        ->andThen(
-                            fn (AIRequestorEntity $requestor) => $mistral_connector->sendCompletion(
-                                $requestor,
-                                $assistant->getCompletion($current_user_with_logged_in_information->user, $user_messages),
-                                'crosstracker'
-                            )
-                        )
-                        ->andThen(
-                            /**
-                             * @psalm-return Ok<string>|Err<Fault>
-                             */
-                            static function (CompletionResponse $response): Ok|Err {
-                                if (! isset($response->choices[0]->message->content)) {
-                                    return Result::err(Fault::fromMessage('No choice provided in the response'));
-                                }
-                                return Result::ok((string) $response->choices[0]->message->content);
-                            }
-                        )
-                        ->andThen(
-                            /**
-                             * @psalm-return Ok<HelperRepresentation>|Err<Fault>
-                             */
-                            static function (string $selected_response): Ok|Err {
-                                $mapper = ValinorMapperBuilderFactory::mapperBuilder()->mapper();
-                                try {
-                                    return Result::ok($mapper->map(HelperRepresentation::class, new JsonSource($selected_response)));
-                                } catch (MappingError $e) {
-                                    return Result::err(Fault::fromThrowable($e));
-                                }
-                            }
-                        )
+
+                    return new CompletionSender($mistral_connector)
+                        ->sendMessages($current_user_with_logged_in_information, $assistant, ...$messages)
                         ->match(
                             static fn (HelperRepresentation $helper_representation): HelperRepresentation => $helper_representation,
                             static fn (Fault $fault) => throw new RestException(400, (string) $fault)

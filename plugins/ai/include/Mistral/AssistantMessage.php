@@ -29,4 +29,11 @@ namespace Tuleap\AI\Mistral;
 final readonly class AssistantMessage
 {
     public StringContent $content;
+
+    public static function fromStringContent(StringContent $content): self
+    {
+        $self          = new self();
+        $self->content = $content;
+        return $self;
+    }
 }

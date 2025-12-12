@@ -34,4 +34,12 @@ final readonly class CompletionResponse
     public array $choices;
 
     public TokenUsage $usage;
+
+    public static function fromChoicesAndTokenUsage(TokenUsage $token_usage, CompletionResponseChoice ...$choices): self
+    {
+        $self          = new self();
+        $self->choices = $choices;
+        $self->usage   = $token_usage;
+        return $self;
+    }
 }
