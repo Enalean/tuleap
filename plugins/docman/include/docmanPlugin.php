@@ -373,7 +373,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         if ($this->currentRequestIsForPlugin()) {
             $layout = $params['layout'];
             assert($layout instanceof \Layout);
-            $layout->includeJavascriptFile($this->getAssets()->getFileURL('docman.js'));
             $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
         }
     }

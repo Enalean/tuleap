@@ -42,7 +42,6 @@ class Docman_View_RawTree extends Docman_View_View //phpcs:ignore PSR1.Classes.C
     public function _javascript($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // force docman object to watch click on pen icon
-        $this->javascript .= "docman.initShowOptions();\n";
         parent::_javascript($params);
     }
 }

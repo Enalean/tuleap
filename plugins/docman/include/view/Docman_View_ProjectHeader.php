@@ -27,39 +27,6 @@
         $project   = ProjectManager::instance()->getProject((int) $params['group_id']);
         $purifier  = Codendi_HTMLPurifier::instance();
         $csp_nonce = \Tuleap\ContentSecurityPolicy\CSPNonce::build();
-        echo '<script type="text/javascript" nonce="' . $purifier->purify($csp_nonce->value) . '"> var docman = new com.xerox.codendi.Docman(' . $params['group_id'] . ', ';
-        $di = $this->_getDocmanIcons($params);
-        echo json_encode(array_merge(
-            [
-                'folderSpinner' => $di->getFolderSpinner(),
-                'spinner'       => $di->getSpinner(),
-                'pluginPath'    => $this->_controller->pluginPath,
-                'themePath'     => $this->_controller->themePath,
-                'document_path' => '/plugins/document/' . urlencode($project->getUnixNameLowerCase()),
-                'language'      => [
-                    'btn_close'                => $GLOBALS['Language']->getText('global', 'btn_close'),
-                    'new_in'                   => dgettext('tuleap-docman', 'In:&nbsp;'),
-                    'new_other_folders'        => dgettext('tuleap-docman', 'other folders:'),
-                    'new_same_perms_as_parent' => dgettext('tuleap-docman', 'Will be created with the same permissions than its parent.'),
-                    'new_view_change'          => dgettext('tuleap-docman', 'view/change'),
-                    'report_save_opt'          => dgettext('tuleap-docman', 'Save options'),
-                    'report_custom_fltr'       => dgettext('tuleap-docman', 'Customize filters'),
-                    'report_name_new'          => dgettext('tuleap-docman', 'Please enter a new search name:'),
-                    'report_name_upd'          => dgettext('tuleap-docman', 'Update search:'),
-                    'action_doc_id'            => dgettext('tuleap-docman', 'Document id:'),
-                    'action_details'           => dgettext('tuleap-docman', 'Properties'),
-                    'action_newversion'        => dgettext('tuleap-docman', 'New version'),
-                    'action_notifications'     => dgettext('tuleap-docman', 'Notifications'),
-                    'action_paste'             => dgettext('tuleap-docman', 'Paste'),
-                    'action_approval'          => dgettext('tuleap-docman', 'Approval table'),
-                    'feedback_cut'             => dgettext('tuleap-docman', 'cut. You can now paste it wherever you want with \'Paste\' action in popup menu.'),
-                    'feedback_copy'            => dgettext('tuleap-docman', 'copied. you can now paste it wherever you want (even across projects) with \'Paste\' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while cut does. <br />Note that only the link of the <strong>wiki pages</strong> is copied, not the <strong>content</strong>.'),
-                    'new_approvaltable'        => dgettext('tuleap-docman', 'Please choose option for creating approval table'),
-                ],
-            ],
-            $this->_getJSDocmanParameters($params)
-        ));
-        echo '); </script>';
     }
 
     /* protected */ public function _getJSDocmanParameters($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
