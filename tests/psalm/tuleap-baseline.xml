@@ -6498,33 +6498,6 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="plugins/docman/include/Docman_ExpandAllHierarchyVisitor.php">
-    <MissingParamType>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[visitDocument]]></code>
-      <code><![CDATA[visitEmbeddedFile]]></code>
-      <code><![CDATA[visitEmpty]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFolder]]></code>
-      <code><![CDATA[visitLink]]></code>
-      <code><![CDATA[visitWiki]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/Docman_File.php">
     <MissingParamType>
       <code><![CDATA[$currentVersion]]></code>
@@ -11196,15 +11169,6 @@
       <code><![CDATA[_content]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_Extra.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$toolbar]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addDocmanTool]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_GetFieldsVisitor.php">
     <MissingParamType>
       <code><![CDATA[$mdIter]]></code>
@@ -11410,45 +11374,6 @@
       <code><![CDATA[setupNewItem]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_ParentsTree.php">
-    <MissingParamType>
-      <code><![CDATA[$docman]]></code>
-      <code><![CDATA[$folder]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$docman]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_itemCanBeFetched]]></code>
-      <code><![CDATA[fetch]]></code>
-      <code><![CDATA[fetchFolder]]></code>
-      <code><![CDATA[visitDocument]]></code>
-      <code><![CDATA[visitEmbeddedFile]]></code>
-      <code><![CDATA[visitEmpty]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFolder]]></code>
-      <code><![CDATA[visitLink]]></code>
-      <code><![CDATA[visitWiki]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_PermissionDeniedError.php">
     <MissingParamType>
       <code><![CDATA[$params]]></code>
@@ -11466,38 +11391,6 @@
     <MissingReturnType>
       <code><![CDATA[_content]]></code>
       <code><![CDATA[fetch]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_PositionWithinFolder.php">
-    <MissingParamType>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_displayItem]]></code>
-      <code><![CDATA[visitDocument]]></code>
-      <code><![CDATA[visitEmbeddedFile]]></code>
-      <code><![CDATA[visitEmpty]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFolder]]></code>
-      <code><![CDATA[visitLink]]></code>
-      <code><![CDATA[visitWiki]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_ProjectHeader.php">
