@@ -22,7 +22,7 @@
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
 
-/* abstract */ class Docman_View_Display extends Docman_View_Docman
+/* abstract */ class Docman_View_Display extends Docman_View_Docman //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     protected function displayTitle(array $params): void
@@ -40,7 +40,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
     }
 
     /* protected */ #[\Override]
-    public function _footer($params)
+    public function _footer($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $builder   = new DocumentFooterPresenterBuilder(ProjectManager::instance());
         $presenter = $builder->build($params, $params['group_id'], $params['item']->toRow(), $params['user']);
@@ -105,10 +105,9 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
     }
 
     #[\Override]
-    public function _javascript($params)
+    public function _javascript($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // force docman object to watch click on pen icon
-        $this->javascript .= "docman.initShowOptions();\n";
         parent::_javascript($params);
     }
 

@@ -6357,20 +6357,11 @@
       <code><![CDATA[validateInput]]></code>
     </DeprecatedMethod>
     <MissingParamType>
-      <code><![CDATA[$addresses]]></code>
       <code><![CDATA[$array1]]></code>
       <code><![CDATA[$array2]]></code>
-      <code><![CDATA[$fields]]></code>
       <code><![CDATA[$get_show_view]]></code>
-      <code><![CDATA[$go]]></code>
       <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$hierarchy]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
@@ -6394,15 +6385,12 @@
       <code><![CDATA[$pluginPath]]></code>
       <code><![CDATA[$request]]></code>
       <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
       <code><![CDATA[$root]]></code>
-      <code><![CDATA[$rootItem]]></code>
       <code><![CDATA[$themePath]]></code>
       <code><![CDATA[$ugroups]]></code>
       <code><![CDATA[$ugroups_to_delete_ids]]></code>
       <code><![CDATA[$users]]></code>
       <code><![CDATA[$users_to_delete_ids]]></code>
-      <code><![CDATA[$view]]></code>
       <code><![CDATA[$view]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -6418,21 +6406,15 @@
       <code><![CDATA[$user_can_admin]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_count]]></code>
       <code><![CDATA[_dispatch]]></code>
       <code><![CDATA[_getMetadataFactory]]></code>
       <code><![CDATA[_initReport]]></code>
-      <code><![CDATA[_validateApprovalTable]]></code>
-      <code><![CDATA[_validateRequest]]></code>
       <code><![CDATA[actionsManagement]]></code>
       <code><![CDATA[addMonitoring]]></code>
       <code><![CDATA[createItemFromUserInput]]></code>
-      <code><![CDATA[forceView]]></code>
       <code><![CDATA[getGroupId]]></code>
       <code><![CDATA[getItemFactory]]></code>
-      <code><![CDATA[getItemHierarchy]]></code>
       <code><![CDATA[getLogger]]></code>
-      <code><![CDATA[getReportId]]></code>
       <code><![CDATA[getThemePath]]></code>
       <code><![CDATA[getValueInArrays]]></code>
       <code><![CDATA[installDocman]]></code>
@@ -6442,23 +6424,16 @@
       <code><![CDATA[removeMonitoring]]></code>
       <code><![CDATA[request]]></code>
       <code><![CDATA[setMetadataValuesFromUserInput]]></code>
-      <code><![CDATA[setReportId]]></code>
       <code><![CDATA[setRequest]]></code>
-      <code><![CDATA[updateItemFromUserInput]]></code>
-      <code><![CDATA[updateMetadataFromUserInput]]></code>
       <code><![CDATA[userCanAdmin]]></code>
       <code><![CDATA[userCanManage]]></code>
       <code><![CDATA[userCanRead]]></code>
       <code><![CDATA[userCanWrite]]></code>
-      <code><![CDATA[userCannotDelete]]></code>
       <code><![CDATA[validateLove]]></code>
       <code><![CDATA[validateMetadata]]></code>
       <code><![CDATA[validateUpdateMetadata]]></code>
       <code><![CDATA[viewsManagement]]></code>
     </MissingReturnType>
-    <NoValue>
-      <code><![CDATA[$validatorList]]></code>
-    </NoValue>
     <PossiblyFalseArgument>
       <code><![CDATA[$f]]></code>
       <code><![CDATA[$f]]></code>
@@ -6479,12 +6454,8 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $valid]]></code>
       <code><![CDATA[! $valid]]></code>
-      <code><![CDATA[$valid]]></code>
-      <code><![CDATA[$valid]]></code>
-      <code><![CDATA[$valid]]></code>
     </RiskyTruthyFalsyComparison>
     <TooManyArguments>
-      <code><![CDATA[getValidator]]></code>
       <code><![CDATA[userCanAdmin]]></code>
     </TooManyArguments>
     <UndefinedMethod>
@@ -6496,17 +6467,7 @@
       <code><![CDATA[_setView]]></code>
       <code><![CDATA[_setView]]></code>
       <code><![CDATA[_setView]]></code>
-      <code><![CDATA[_set_createItemView_afterCreate]]></code>
-      <code><![CDATA[_set_createItemView_errorParentDoesNotExist]]></code>
-      <code><![CDATA[_set_deleteView_errorPerms]]></code>
       <code><![CDATA[_set_doesnot_belong_to_project_error]]></code>
-      <code><![CDATA[_set_moveView_errorPerms]]></code>
-      <code><![CDATA[_set_redirectView]]></code>
-      <code><![CDATA[_set_redirectView]]></code>
-      <code><![CDATA[_set_redirectView]]></code>
-      <code><![CDATA[_set_redirectView]]></code>
-      <code><![CDATA[_set_redirectView]]></code>
-      <code><![CDATA[_set_redirectView]]></code>
     </UndefinedMethod>
     <UndefinedVariable>
       <code><![CDATA[$metadataFactory]]></code>
@@ -11151,44 +11112,6 @@
       <code><![CDATA[array{is_active: bool, tabs: array{array{description: string, title: string, url: string}}}]]></code>
     </InvalidReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_MetadataHtmlEmbeddedFile.php">
-    <MissingParamType>
-      <code><![CDATA[$content]]></code>
-      <code><![CDATA[$show_mandatory_information]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$content]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_MetadataHtmlEmpty.php">
-    <MissingParamType>
-      <code><![CDATA[$show_mandatory_information]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_MetadataHtmlFile.php">
-    <MissingParamType>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$show_mandatory_information]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_MetadataHtmlLink.php">
-    <MissingParamType>
-      <code><![CDATA[$link_url]]></code>
-      <code><![CDATA[$show_mandatory_information]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$link_url]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_MetadataHtmlWiki.php">
-    <MissingParamType>
-      <code><![CDATA[$pagename]]></code>
-      <code><![CDATA[$show_mandatory_information]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$pagename]]></code>
-    </MissingPropertyType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_LockInfos.php">
     <DeprecatedMethod>
       <code><![CDATA[$lockInfos]]></code>
@@ -11240,18 +11163,6 @@
       <code><![CDATA[display]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_ApprovalCreate.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$section]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_getTitle]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_Browse.php">
     <MissingParamType>
       <code><![CDATA[$extraParams]]></code>
@@ -11280,18 +11191,6 @@
       <code><![CDATA[getTitleWhenFilterIsSet]]></code>
       <code><![CDATA[getUnconvertedTitle]]></code>
       <code><![CDATA[getViewForCurrentUser]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Details.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$section]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_getTitle]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Display.php">
@@ -11417,22 +11316,6 @@
       <code><![CDATA[$params]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_GetSpecificFieldsVisitor.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingTemplateParam>
-      <code><![CDATA[\Tuleap\Docman\Item\ItemVisitor]]></code>
-    </MissingTemplateParam>
-    <TooManyArguments>
-      <code><![CDATA[new \Docman_MetadataHtmlFile($params['request'])]]></code>
-    </TooManyArguments>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_Header.php">
     <MissingParamType>
       <code><![CDATA[$params]]></code>
@@ -11451,257 +11334,6 @@
       <code><![CDATA[getToolbar]]></code>
       <code><![CDATA[getUnconvertedTitle]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetails.php">
-    <MissingParamType>
-      <code><![CDATA[$id_section]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$section]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$current_section]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$sections]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[addSection]]></code>
-      <code><![CDATA[display]]></code>
-      <code><![CDATA[fetch]]></code>
-      <code><![CDATA[setCurrentSection]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSection.php">
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$title]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$hp]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$title]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
-      <code><![CDATA[getId]]></code>
-      <code><![CDATA[getTitle]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionActions.php">
-    <MissingParamType>
-      <code><![CDATA[$controller]]></code>
-      <code><![CDATA[$is_deleteable]]></code>
-      <code><![CDATA[$is_moveable]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$_controller]]></code>
-      <code><![CDATA[$is_deleteable]]></code>
-      <code><![CDATA[$is_moveable]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-    <PossiblyFalseOperand>
-      <code><![CDATA[file_get_contents($version->getPath())]]></code>
-    </PossiblyFalseOperand>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionApproval.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['Docman_ApprovalTableVersionned']]></code>
-      <code><![CDATA['Docman_Empty']]></code>
-    </ArgumentTypeCoercion>
-    <DeprecatedFunction>
-      <code><![CDATA[html_build_select_box_from_arrays($vals, $txts, 'state', $reviewer->getState(), false)]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code><![CDATA[$forceReadOnly]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$noLink]]></code>
-      <code><![CDATA[$notificationManager]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$themePath]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$user]]></code>
-      <code><![CDATA[$version]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$atf]]></code>
-      <code><![CDATA[$notificationManager]]></code>
-      <code><![CDATA[$table]]></code>
-      <code><![CDATA[$themePath]]></code>
-      <code><![CDATA[$version]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_getCurrentUser]]></code>
-      <code><![CDATA[_getDocmanIcons]]></code>
-      <code><![CDATA[_getItemVersionLink]]></code>
-      <code><![CDATA[_getPermissionsManager]]></code>
-      <code><![CDATA[_getReviewCurrentVersion]]></code>
-      <code><![CDATA[_getUserManager]]></code>
-      <code><![CDATA[getContent]]></code>
-      <code><![CDATA[getReviewForm]]></code>
-      <code><![CDATA[getReviewerTable]]></code>
-      <code><![CDATA[getTableHistory]]></code>
-      <code><![CDATA[getToolbar]]></code>
-      <code><![CDATA[initDisplay]]></code>
-      <code><![CDATA[visitEmbeddedFile]]></code>
-      <code><![CDATA[visitEmpty]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFolder]]></code>
-      <code><![CDATA[visitLink]]></code>
-      <code><![CDATA[visitWiki]]></code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->notificationsManager]]></code>
-      <code><![CDATA[$this->notificationsManager]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->notificationsManager]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionApprovalCreate.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['Docman_ApprovalTableVersionnedFactory']]></code>
-      <code><![CDATA['Docman_Empty']]></code>
-    </ArgumentTypeCoercion>
-    <DeprecatedFunction>
-      <code><![CDATA[html_build_select_box_from_arrays($vals, $txts, 'notification', $this->table->getNotification(), false)]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($vals, $txts, 'resend_notif', 'no', false)]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($vals, $txts, 'sel_user_act', 100, true)]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($vals, $txts, 'status', $this->table->getStatus(), false)]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays([1, 7], [dgettext('tuleap-docman', 'Days'), dgettext('tuleap-docman', 'Weeks')], 'period', null, false)]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$onTableUpdate]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$themePath]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_displayNotificationOccurence]]></code>
-      <code><![CDATA[_getAddReviewers]]></code>
-      <code><![CDATA[_getGlobalSettings]]></code>
-      <code><![CDATA[_getNewTable]]></code>
-      <code><![CDATA[_getNotificationSettings]]></code>
-      <code><![CDATA[_getReviewerTable]]></code>
-      <code><![CDATA[displayConfirmDelete]]></code>
-      <code><![CDATA[displayCreateTable]]></code>
-      <code><![CDATA[displayImportLastTable]]></code>
-      <code><![CDATA[displayNotificationEmail]]></code>
-      <code><![CDATA[displayUpdateForm]]></code>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionMove.php">
-    <MissingParamType>
-      <code><![CDATA[$controller]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$token]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$token]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_getJSDocmanParameters]]></code>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->params]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->params]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionPaste.php">
-    <MissingParamType>
-      <code><![CDATA[$controller]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$itemToPaste]]></code>
-      <code><![CDATA[$mdDiffers]]></code>
-      <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$dstGo]]></code>
-      <code><![CDATA[$itemToPaste]]></code>
-      <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$srcGo]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_getDocmanIcons]]></code>
-      <code><![CDATA[checkMdDifferences]]></code>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionProperties.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['Docman_Folder']]></code>
-    </ArgumentTypeCoercion>
-    <MissingParamType>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$force]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$theme_path]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$user_can_write]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$force]]></code>
-      <code><![CDATA[$formName]]></code>
-      <code><![CDATA[$inheritableMetadataArray]]></code>
-      <code><![CDATA[$theme_path]]></code>
-      <code><![CDATA[$user_can_write]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_getDefaultValuePropertyField]]></code>
-      <code><![CDATA[_getDefaultValues]]></code>
-      <code><![CDATA[_getDefaultValuesFields]]></code>
-      <code><![CDATA[_getDefaultValuesTableHeader]]></code>
-      <code><![CDATA[_getDirectLinkField]]></code>
-      <code><![CDATA[_getFieldLabel]]></code>
-      <code><![CDATA[_getInheritableMetadata]]></code>
-      <code><![CDATA[_getItemIdField]]></code>
-      <code><![CDATA[_getPropertiesFields]]></code>
-      <code><![CDATA[_getPropertyField]]></code>
-      <code><![CDATA[_getPropertyRow]]></code>
-      <code><![CDATA[_getlockInfo]]></code>
-      <code><![CDATA[_showField]]></code>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-    <TooManyArguments>
-      <code><![CDATA[getInheritableMdLabelArray]]></code>
-    </TooManyArguments>
   </file>
   <file src="plugins/docman/include/view/Docman_View_ItemRanking.php">
     <MissingParamType>
@@ -11773,18 +11405,6 @@
       <code><![CDATA[$this->view]]></code>
       <code><![CDATA[$this->view]]></code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Move.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$section]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_getTitle]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_New.php">
     <MissingParamType>
@@ -11866,18 +11486,6 @@
       <code><![CDATA[visitWiki]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_Paste.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$section]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_getTitle]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_PermissionDeniedError.php">
     <MissingParamType>
       <code><![CDATA[$params]]></code>
@@ -11934,9 +11542,6 @@
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$this->_controller->themePath]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[_getJSDocmanParameters]]></code>
       <code><![CDATA[_scripts]]></code>
@@ -11992,15 +11597,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_View.php">
-    <InvalidOperand>
-      <code><![CDATA[$item->getId()]]></code>
-    </InvalidOperand>
     <MissingParamType>
       <code><![CDATA[$bc]]></code>
       <code><![CDATA[$controller]]></code>
       <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
@@ -12033,12 +11633,7 @@
       <code><![CDATA[display]]></code>
       <code><![CDATA[getActionForItem]]></code>
       <code><![CDATA[getItemMenu]]></code>
-      <code><![CDATA[getSearchParams]]></code>
-      <code><![CDATA[getSortParams]]></code>
     </MissingReturnType>
-    <PossiblyFalseOperand>
-      <code><![CDATA[json_encode($user_actions)]]></code>
-    </PossiblyFalseOperand>
   </file>
   <file src="plugins/docman/include/view/ItemActionURLVisitor.php">
     <MissingTemplateParam>
@@ -16305,10 +15900,6 @@
     <MissingParamType>
       <code><![CDATA[$presenters]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$a->label]]></code>
-      <code><![CDATA[$b->label]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getCollectionOfUgroupToBeNotifiedPresenter]]></code>
       <code><![CDATA[sortUgroupAlphabetically]]></code>
@@ -33091,10 +32682,6 @@
     <MissingParamType>
       <code><![CDATA[$presenters]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$a->label]]></code>
-      <code><![CDATA[$b->label]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getCollectionOfUgroupToBeNotifiedPresenter]]></code>
       <code><![CDATA[sortUgroupAlphabetically]]></code>
@@ -39754,9 +39341,6 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
-    <UndefinedClass>
-      <code><![CDATA[Tracker_FormElement_DateFormatter]]></code>
-    </UndefinedClass>
     <UndefinedMethod>
       <code><![CDATA[accept]]></code>
     </UndefinedMethod>
@@ -45053,29 +44637,14 @@
     <MissingParamType>
       <code><![CDATA[$presenters]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$a->label]]></code>
-      <code><![CDATA[$b->label]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getCollectionOfUgroupToBeNotifiedPresenter]]></code>
       <code><![CDATA[sortUgroupAlphabetically]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/CollectionOfUserInvolvedInNotificationPresenterBuilder.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getAvatarUrl]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$presenters]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$a->label]]></code>
-      <code><![CDATA[$b->label]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getCollectionOfUserToBeNotifiedPresenter]]></code>
-      <code><![CDATA[sortUsersAlphabetically]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/GlobalNotification.php">
@@ -45200,12 +44769,6 @@
       <code><![CDATA[$save]]></code>
       <code><![CDATA[$send_all]]></code>
     </MissingPropertyType>
-    <RedundantCast>
-      <code><![CDATA[(bool) (count($notifications) > 0)]]></code>
-    </RedundantCast>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->delete]]></code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/PaneNotificationPresenter.php">
     <MissingParamType>
@@ -48786,11 +48349,6 @@
       <code><![CDATA[$ugroups_not_added]]></code>
       <code><![CDATA[$users_not_added]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[addFeedbackCorrectlyDeleted]]></code>
       <code><![CDATA[addFeedbackCorrectlySaved]]></code>
@@ -48830,9 +48388,6 @@
       <code><![CDATA[$this->tracker->getGroupId()]]></code>
       <code><![CDATA[$this->tracker->getGroupId()]]></code>
     </PossiblyInvalidArgument>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->tracker->getNotificationsLevel()]]></code>
-    </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($r)]]></code>
     </RiskyTruthyFalsyComparison>
@@ -54501,12 +54056,6 @@
     <InvalidArgument>
       <code><![CDATA[['link-to-milestone' => 1]]]></code>
     </InvalidArgument>
-  </file>
-  <file src="plugins/tracker/tests/unit/Notifications/CollectionOfUserInvolvedInNotificationPresenterBuilderTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$presenters[0]->label]]></code>
-      <code><![CDATA[$presenters[1]->label]]></code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/tracker/tests/unit/Notifications/ConfigNotificationEmailCustomSenderFormatterTest.php">
     <MissingReturnType>
@@ -61892,12 +61441,6 @@
       <code><![CDATA[hasHTMLBody]]></code>
       <code><![CDATA[hasTextBody]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/Notification/UgroupToBeNotifiedPresenter.php">
-    <MissingPropertyType>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$ugroup_id]]></code>
-    </MissingPropertyType>
   </file>
   <file src="src/common/Notification/UserInvolvedInNotificationPresenter.php">
     <MissingParamType>
