@@ -422,21 +422,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     /**
-     * Load a repository from its id. Mainly used as a wrapper for tests
-     *
-     * @param $repositoryId Id of the repository
-     *
-     * @return GitRepository
-     */
-    public function loadRepositoryFromId($repositoryId)
-    {
-        $repository = new GitRepository();
-        $repository->setId($repositoryId);
-        $repository->load();
-        return $repository;
-    }
-
-    /**
      * Set $driver
      *
      * @param Git_GitoliteDriver $driver The driver
@@ -469,30 +454,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function setGerritProjectAsDeleted(GitRepository $repository)
     {
         $this->getDao()->setGerritProjectAsDeleted($repository->getId());
-    }
-
-    /**
-     * @param array $repositor_ids
-     * @return array
-     */
-    public function searchOtherRepositoriesInSameProjectFromRepositoryList(GitRepository $repository, $repositor_ids)
-    {
-        $project_repositories = [];
-
-        $result = $this->getDao()->searchRepositoriesInSameProjectFromRepositoryList($repositor_ids, $repository->getProjectId());
-        if (! $result) {
-            return $project_repositories;
-        }
-
-        foreach ($result as $repo) {
-            if ($repo['repository_id'] == $repository->getId()) {
-                continue;
-            }
-
-            $project_repositories[] = $repo['repository_id'];
-        }
-
-        return $project_repositories;
     }
 
     /**

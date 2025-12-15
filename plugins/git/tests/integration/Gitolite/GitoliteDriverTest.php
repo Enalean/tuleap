@@ -29,7 +29,6 @@ use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Exec;
 use Git_Gitolite_ConfigPermissionsSerializer;
 use Git_Gitolite_GitoliteConfWriter;
-use Git_Gitolite_GitoliteRCReader;
 use Git_Gitolite_ProjectSerializer;
 use Git_GitoliteDriver;
 use GitDao;
@@ -46,7 +45,6 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitoliteDriverTest extends GitoliteTestCase
 {
-    private Git_Gitolite_GitoliteRCReader&MockObject $gitoliterc_reader;
     private Git_GitoliteDriver $a_gitolite_driver;
     private Git_GitoliteDriver $another_gitolite_driver;
     private Git_Exec&MockObject $another_git_exec;
@@ -59,8 +57,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir() . '/cache');
 
-        $this->project_manager   = $this->createMock(ProjectManager::class);
-        $this->gitoliterc_reader = $this->createMock(Git_Gitolite_GitoliteRCReader::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
         $another_gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
@@ -83,7 +80,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
         $gitolite_conf_writer = new Git_Gitolite_GitoliteConfWriter(
             $another_gitolite_permissions_serializer,
             $a_gitolite_project_serializer,
-            $this->gitoliterc_reader,
             new NullLogger(),
             $this->project_manager,
             $this->sys_data_dir . '/gitolite/admin'
@@ -122,7 +118,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
     public function testGitoliteConfUpdate(): void
     {
-        $this->gitoliterc_reader->method('getHostname')->willReturn(null);
         $this->another_git_exec->method('add');
 
         touch($this->gitolite_admin_dir . '/conf/projects/project1.conf');
@@ -149,7 +144,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
         $new_name = 'newone';
         $this->project_manager->method('getProjectByUnixName')->with($new_name)->willReturn(ProjectTestBuilder::aProject()->withUnixName($new_name)->build());
         $this->git_exec->expects($this->once())->method('push')->willReturn(true);
-        $this->gitoliterc_reader->method('getHostname');
 
         self::assertTrue(is_file($this->gitolite_admin_dir . '/conf/projects/legacy.conf'));
         self::assertFalse(is_file($this->gitolite_admin_dir . '/conf/projects/newone.conf'));
@@ -176,53 +170,11 @@ final class GitoliteDriverTest extends GitoliteTestCase
         self::assertTrue($this->logger->hasDebugRecords());
     }
 
-    public function testItOnlyIncludeHOSTNAMERelatedConfFileIfHOSTNAMEVariableIsSetInGitoliteRcFile(): void
-    {
-        $this->gitoliterc_reader->method('getHostname')->willReturn('master');
-        $this->another_git_exec->method('add');
-
-        touch($this->gitolite_admin_dir . '/conf/projects/project1.conf');
-
-        $this->another_gitolite_driver->updateMainConfIncludes();
-
-        $gitoliteConf = $this->getGitoliteConf();
-
-        self::assertMatchesRegularExpression('#^include "%HOSTNAME.conf"$#m', $gitoliteConf);
-        self::assertDoesNotMatchRegularExpression('#^include "projects/project1.conf"$#m', $gitoliteConf);
-    }
-
-    public function testItWritesTheGitoliteConfFileInTheHOSTNAMEDotConfFileIfHostnameVariableIsSet(): void
-    {
-        $hostname = 'master';
-        $this->gitoliterc_reader->method('getHostname')->willReturn($hostname);
-        $this->another_git_exec->method('add');
-
-        touch($this->gitolite_admin_dir . '/conf/projects/project1.conf');
-
-        $this->another_gitolite_driver->updateMainConfIncludes();
-
-        $gitoliteConf = $this->getFileConf($hostname);
-        self::assertMatchesRegularExpression('#^include "projects/project1.conf"$#m', $gitoliteConf);
-    }
-
     public function testItAddsAllTheRequiredFilesForPush(): void
     {
-        $hostname = 'master';
-
-        $this->gitoliterc_reader->method('getHostname')->willReturn($hostname);
-
         touch($this->gitolite_admin_dir . '/conf/projects/project1.conf');
-        $matcher = self::exactly(2);
 
-        $this->another_git_exec->expects($matcher)->method('add')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame('conf/gitolite.conf', $parameters[0]);
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('conf/master.conf', $parameters[0]);
-            }
-            return true;
-        });
+        $this->another_git_exec->expects($this->once())->method('add')->with('conf/gitolite.conf')->willReturn(true);
 
         $this->another_gitolite_driver->updateMainConfIncludes();
     }

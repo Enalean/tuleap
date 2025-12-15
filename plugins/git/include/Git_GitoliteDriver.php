@@ -59,12 +59,6 @@ class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     /** @var GitDao */
     private $git_dao;
 
-    public static $permissions_types = [
-        Git::PERM_READ  => ' R  ',
-        Git::PERM_WRITE => ' RW ',
-        Git::PERM_WPLUS => ' RW+',
-    ];
-
     public const string OLD_AUTHORIZED_KEYS_PATH = '/usr/com/gitolite/.ssh/authorized_keys';
     public const string NEW_AUTHORIZED_KEYS_PATH = '/var/lib/gitolite/.ssh/authorized_keys';
 
@@ -116,21 +110,10 @@ class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->gitolite_conf_writer = $gitolite_conf_writer ? $gitolite_conf_writer : new Git_Gitolite_GitoliteConfWriter(
             $permissions_serializer,
             $project_serializer,
-            new Git_Gitolite_GitoliteRCReader(),
             $this->logger,
             $project_manager,
             $adminPath
         );
-    }
-
-    /**
-     * Getter for $adminPath
-     *
-     * @return string
-     */
-    public function getAdminPath()
-    {
-        return $this->adminPath;
     }
 
     /**

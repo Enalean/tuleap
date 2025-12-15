@@ -560,17 +560,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         return $this->getDB()->run($sql, $project_id);
     }
 
-    public function searchRepositoriesInSameProjectFromRepositoryList(array $repository_ids, $project_id)
-    {
-        $repository_list_condition = EasyStatement::open();
-        $repository_list_condition->in('repository_id IN(?*)', $repository_ids);
-
-        $sql = "SELECT repository_id FROM plugin_git
-                WHERE $repository_list_condition AND project_id = ?";
-
-        return $this->getDB()->safeQuery($sql, array_merge($repository_list_condition->values(), [$project_id]));
-    }
-
     /**
      * Get the list of all deleted Git repositories to be purged
      *

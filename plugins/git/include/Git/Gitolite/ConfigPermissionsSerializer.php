@@ -96,37 +96,6 @@ class Git_Gitolite_ConfigPermissionsSerializer //phpcs:ignore PSR1.Classes.Class
         );
     }
 
-    public function getGitoliteDotConfForHostname(array $project_names)
-    {
-        return $this->template_renderer->renderToString(
-            'gitolite-with-hostname.conf',
-            new Git_Gitolite_Presenter_GitoliteConfPresenter(
-                $project_names,
-            )
-        );
-    }
-
-    public function getAllIncludes(array $project_names)
-    {
-        return $this->template_renderer->renderToString(
-            'gitolite-includes.conf',
-            [
-                'project_names' => $project_names,
-            ]
-        );
-    }
-
-    public function getAllIncludesForHostname($hostname, array $project_names)
-    {
-        return $this->template_renderer->renderToString(
-            'gitolite-includes-for-hostname.conf',
-            [
-                'hostname'      => $hostname,
-                'project_names' => $project_names,
-            ]
-        );
-    }
-
     public function getForRepository(GitRepository $repository)
     {
         $project      = $repository->getProject();
