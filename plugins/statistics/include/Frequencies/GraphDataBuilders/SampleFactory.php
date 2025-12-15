@@ -72,14 +72,6 @@ class SampleFactory
                 $this->sample =  new WikiSample();
                 break;
 
-            case 'oartifact':
-                $this->sample =  new OartifactSample();
-                break;
-
-            case 'cartifact':
-                $this->sample =  new CartifactSample();
-                break;
-
             default:
                 $this->sample = EventManager::instance()->dispatch(new FrequenciesSamples($character))->getSample();
                 break;
