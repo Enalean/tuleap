@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\ApprovalTable;
 
+use Codendi_HTMLPurifier;
 use Docman_ApprovalReviewer;
 use Docman_ApprovalTableItem;
 use Docman_ApprovalTableNotificationCycle;
@@ -52,7 +53,7 @@ final class ApprovalTableNotificationCycleTest extends TestCase
         $table            = new Docman_ApprovalTableItem();
         $table->reviewers = $reviewers;
 
-        $cycle = new Docman_ApprovalTableNotificationCycle($this->createMock(MailNotificationBuilder::class));
+        $cycle = new Docman_ApprovalTableNotificationCycle($this->createMock(MailNotificationBuilder::class), Codendi_HTMLPurifier::instance());
         $cycle->setTable($table);
 
         self::assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED, $cycle->getTableState());
@@ -74,7 +75,7 @@ final class ApprovalTableNotificationCycleTest extends TestCase
         $table            = new Docman_ApprovalTableItem();
         $table->reviewers = $reviewers;
 
-        $cycle = new Docman_ApprovalTableNotificationCycle($this->createMock(MailNotificationBuilder::class));
+        $cycle = new Docman_ApprovalTableNotificationCycle($this->createMock(MailNotificationBuilder::class), Codendi_HTMLPurifier::instance());
         $cycle->setTable($table);
 
         self::assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $cycle->getTableState());
@@ -96,7 +97,7 @@ final class ApprovalTableNotificationCycleTest extends TestCase
         $table            = new Docman_ApprovalTableItem();
         $table->reviewers = $reviewers;
 
-        $cycle = new Docman_ApprovalTableNotificationCycle($this->createMock(MailNotificationBuilder::class));
+        $cycle = new Docman_ApprovalTableNotificationCycle($this->createMock(MailNotificationBuilder::class), Codendi_HTMLPurifier::instance());
         $cycle->setTable($table);
 
         self::assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $cycle->getTableState());

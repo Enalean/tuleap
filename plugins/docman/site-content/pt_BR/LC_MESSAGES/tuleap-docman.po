@@ -604,6 +604,9 @@ msgid ""
 "embedded files are supported</em>."
 msgstr ""
 
+msgid "Do my review"
+msgstr ""
+
 msgid "Docman item"
 msgstr ""
 
@@ -631,10 +634,16 @@ msgstr ""
 msgid "Document Writer"
 msgstr ""
 
+msgid "Document details"
+msgstr ""
+
 msgid "Document id:"
 msgstr ""
 
 msgid "Document is locked by another user."
+msgstr ""
+
+msgid "Document link"
 msgstr ""
 
 msgid "Document manager"
@@ -1009,6 +1018,9 @@ msgstr ""
 msgid "Maximum number of files"
 msgstr ""
 
+msgid "Message"
+msgstr ""
+
 msgid "Message:"
 msgstr ""
 
@@ -1144,6 +1156,9 @@ msgid "Notification Type:"
 msgstr ""
 
 msgid "Notification email"
+msgstr ""
+
+msgid "Notification type"
 msgstr ""
 
 msgid "Notification type:"
@@ -1417,6 +1432,12 @@ msgid ""
 "People *will not be notified* to review the document *until you approved it*."
 msgstr ""
 
+#, php-format
+msgid ""
+"Sequence. %s notifies reviewers one after another. People <em>will not be "
+"notified</em> to review the document <em>until you approved it</em>."
+msgstr ""
+
 msgid "Sequential"
 msgstr ""
 
@@ -1674,6 +1695,9 @@ msgid "This document does not have an approval table. Please create one before"
 msgstr ""
 
 msgid "This is an automatic message. Please do not reply to this email"
+msgstr ""
+
+msgid "This is an automatic message. Please do not reply to this email."
 msgstr ""
 
 msgid "This is not possible to create approval table for Empty documents."
