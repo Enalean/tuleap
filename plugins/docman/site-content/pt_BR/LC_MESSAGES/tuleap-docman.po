@@ -123,9 +123,6 @@ msgstr ""
 msgid "All at once"
 msgstr ""
 
-msgid "All selected users were successfully removed from the approval table."
-msgstr ""
-
 msgid "Allow empty value"
 msgstr ""
 
@@ -138,10 +135,6 @@ msgstr ""
 
 #, php-format
 msgid "Allow multiple selection: <strong>%1$s</strong>"
-msgstr ""
-
-#, php-format
-msgid "Already in this approval table: %1$s."
 msgstr ""
 
 msgid "An error occured on element suppression."
@@ -163,18 +156,6 @@ msgstr ""
 
 #, php-format
 msgid "An error occurred on \"%1$s\" deletion"
-msgstr ""
-
-msgid "An error occurred on approval table creation for this item."
-msgstr ""
-
-msgid "An error occurred on report deletion"
-msgstr ""
-
-msgid "An error occurred on review recording."
-msgstr ""
-
-msgid "An error occurred: the approval table was not deleted."
 msgstr ""
 
 msgid "Apply a naming pattern on files."
@@ -256,18 +237,6 @@ msgstr ""
 msgid "Can't delete folder %s because it is not empty."
 msgstr ""
 
-#, php-format
-msgid "Cannot add  following user(s). Internal error: %1$s."
-msgstr ""
-
-#, php-format
-msgid "Cannot add following user(s). No access to document: %1$s."
-msgstr ""
-
-#, php-format
-msgid "Cannot add following user(s). Not registered users. %1$s."
-msgstr ""
-
 msgid "Cannot create approval table for document"
 msgstr ""
 
@@ -286,9 +255,6 @@ msgid ""
 "Cannot delete this item because it contains items you are not allowed to "
 "modify (no 'Write' access, you may even not be able to read them). Please "
 "contact your document manager administrator."
-msgstr ""
-
-msgid "Cannot remove from the approval table."
 msgstr ""
 
 msgid "Cannot review an item without approval table"
@@ -544,9 +510,6 @@ msgid "Element successfully deleted."
 msgstr ""
 
 msgid "Element successfully updated."
-msgstr ""
-
-msgid "Email sent to reviewer."
 msgstr ""
 
 msgid "Embedded File"
@@ -901,9 +864,6 @@ msgstr ""
 msgid "No element selected"
 msgstr ""
 
-msgid "No email sent to reviewers."
-msgstr ""
-
 msgid "No notification sent"
 msgstr ""
 
@@ -935,9 +895,6 @@ msgid "Obsolete date"
 msgstr ""
 
 msgid "Obsolete today"
-msgstr ""
-
-msgid "Only admin can delete Project wide reports."
 msgstr ""
 
 msgid "Operation Canceled"
@@ -1013,9 +970,6 @@ msgstr ""
 msgid "Project has no obsolete documents"
 msgstr ""
 
-msgid "Project ids mismatch. Cancel update."
-msgstr ""
-
 msgid "Project:"
 msgstr ""
 
@@ -1070,18 +1024,6 @@ msgstr ""
 msgid "Removed:"
 msgstr ""
 
-msgid "Report not found. Cancel deletion."
-msgstr ""
-
-msgid "Report not found. Cancel update."
-msgstr ""
-
-msgid "Report successfully cloned."
-msgstr ""
-
-msgid "Report successfully deleted"
-msgstr ""
-
 msgid "Requester"
 msgstr ""
 
@@ -1095,9 +1037,6 @@ msgid "Restore version"
 msgstr ""
 
 msgid "Reviewer"
-msgstr ""
-
-msgid "Reviewers were notified."
 msgstr ""
 
 msgid "Save settings"
@@ -1161,12 +1100,6 @@ msgid "Table"
 msgstr ""
 
 msgid "Table does not exist"
-msgstr ""
-
-msgid "Table settings updated."
-msgstr ""
-
-msgid "Table successfully deleted."
 msgstr ""
 
 msgid "Text"
@@ -1271,9 +1204,6 @@ msgstr ""
 msgid ""
 "The property with short name %s is a value, list_value should be empty and "
 "value should be provided."
-msgstr ""
-
-msgid "The report you want to clone doesn't exist."
 msgstr ""
 
 msgid "The requested version of this file cannot be found."
@@ -1465,9 +1395,6 @@ msgid ""
 "project administrators"
 msgstr ""
 
-msgid "User successfully added to the approval table."
-msgstr ""
-
 msgid "Validity:"
 msgstr ""
 
@@ -1620,12 +1547,6 @@ msgid ""
 "are member of."
 msgstr ""
 
-msgid "You can not delete report you do not own. Cancel deletion."
-msgstr ""
-
-msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
-msgstr ""
-
 msgid "You cannot delete the root folder."
 msgstr ""
 
@@ -1762,9 +1683,6 @@ msgstr ""
 
 #, php-format
 msgid "Your monitoring on '%1$s' has been removed."
-msgstr ""
-
-msgid "Your review was successfully recorded."
 msgstr ""
 
 #, php-format
