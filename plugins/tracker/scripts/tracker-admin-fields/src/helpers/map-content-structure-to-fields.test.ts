@@ -63,6 +63,7 @@ describe("mapContentStructureToFields", () => {
         label: "Static",
         type: STATIC_RICH_TEXT,
         required: false,
+        default_value: "",
     };
 
     const column_0: StructureFields = {

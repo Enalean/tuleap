@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createApp } from "vue";
 import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
@@ -41,5 +42,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             }),
         )
+        .use(VueDOMPurifyHTML)
         .mount(mount_point);
 });

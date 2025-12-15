@@ -161,6 +161,7 @@ export interface SeparatorStructure extends BaseFieldStructure {
 
 export interface StaticRichTextStructure extends BaseFieldStructure {
     readonly type: StaticRichText;
+    readonly default_value: string;
 }
 
 type StaticField = LineBreakStructure | SeparatorStructure | StaticRichTextStructure;
