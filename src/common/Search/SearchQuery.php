@@ -25,7 +25,6 @@ class Search_SearchQuery //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     private $words;
     private $offset;
     private $exact;
-    private $trackerv3id;
     private $is_ajax;
     private $number_of_results;
 
@@ -35,7 +34,6 @@ class Search_SearchQuery //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->words          = $request->get('words');
         $this->offset         = intval($request->getValidated('offset', 'uint', 0));
         $this->exact          = $request->getValidated('exact', 'uint', false);
-        $this->trackerv3id    = $request->getValidated('atid', 'uint', 0);
         $this->is_ajax        = $request->isAjax();
         $this->type_of_search = $request->get('type_of_search');
     }
@@ -68,11 +66,6 @@ class Search_SearchQuery //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     public function getProject()
     {
         return $this->project;
-    }
-
-    public function getTrackerV3Id()
-    {
-        return $this->trackerv3id;
     }
 
     public function isAjax()

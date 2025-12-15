@@ -159,7 +159,6 @@ var tuleap = tuleap || {};
             .always(function () {
                 $("#search-results").removeClass("loading");
                 $('.search-bar input[name="type_of_search"]').attr("value", type_of_search);
-                resetAdditionnalInformations(type_of_search, element);
             });
     }
 
@@ -187,8 +186,7 @@ var tuleap = tuleap || {};
     }
 
     function enrichUrlIfNeeded(element, type_of_search, url) {
-        if (type_of_search === "tracker" || type_of_search === "wiki") {
-            url += "&atid=" + getArtifactTypeId(element);
+        if (type_of_search === "wiki") {
             url += "&group_id=" + getGroupId();
         }
 
@@ -197,31 +195,6 @@ var tuleap = tuleap || {};
 
     function getGroupId() {
         return $('.search-bar input[name="group_id"]').val();
-    }
-
-    function resetAdditionnalInformations(type_of_search, element) {
-        purgeAdditionnalInformations();
-        addAdditionnalInformations(type_of_search, element);
-    }
-
-    function purgeAdditionnalInformations() {
-        $('.search-bar .input-append input[name="atid"]').remove();
-    }
-
-    function addAdditionnalInformations(type_of_search, element) {
-        addArtifactTypeIdToSearchFieldIfNeeded(type_of_search, element);
-    }
-
-    function addArtifactTypeIdToSearchFieldIfNeeded(type_of_search, element) {
-        if (type_of_search === "tracker") {
-            $(".search-bar .input-append").prepend(
-                "<input name='atid' type='hidden' value='" + getArtifactTypeId(element) + "'>",
-            );
-        }
-    }
-
-    function getArtifactTypeId(element) {
-        return $(element).attr("data-atid");
     }
 
     function toggleFacets() {
