@@ -181,9 +181,6 @@ msgstr ""
 msgid "Are you sure you want to delete the property '%1$s'?"
 msgstr ""
 
-msgid "Are you sure you want to remove this filter from the list?"
-msgstr ""
-
 #, php-format
 msgid ""
 "As document owner, you are notified of the obsolescence in one month of the\n"
@@ -534,9 +531,6 @@ msgid "Enabled"
 msgstr "Habilitado"
 
 msgid "End"
-msgstr ""
-
-msgid "End:"
 msgstr ""
 
 msgid "Enforce filename pattern"
@@ -1010,9 +1004,6 @@ msgstr ""
 msgid "Released lock"
 msgstr ""
 
-msgid "Remove the filter"
-msgstr ""
-
 #, php-format
 msgid "Removed monitoring for group(s) '%1$s'"
 msgstr ""
@@ -1076,9 +1067,6 @@ msgstr ""
 msgid ""
 "Specified owner does not exist. You are now the item owner. You can change "
 "owner in Item properties."
-msgstr ""
-
-msgid "Start:"
 msgstr ""
 
 msgid "Status"
