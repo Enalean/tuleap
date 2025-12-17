@@ -29,7 +29,6 @@ use ForgeConfig;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Exec;
 use Git_Gitolite_ConfigPermissionsSerializer;
-use Git_Gitolite_SSHKeyDumper;
 use Git_GitoliteDriver;
 use Git_GitRepositoryUrlManager;
 use Git_SystemEventManager;
@@ -52,7 +51,6 @@ abstract class GitoliteTestCase extends TestIntegrationTestCase
     protected Git_GitoliteDriver $driver;
     protected UserManager&MockObject $user_manager;
     protected Git_Exec&MockObject $git_exec;
-    protected Git_Gitolite_SSHKeyDumper $dumper;
     protected GitRepositoryFactory&MockObject $repository_factory;
     protected Git_Gitolite_ConfigPermissionsSerializer $gitolite_permissions_serializer;
     protected Git_GitRepositoryUrlManager $url_manager;
@@ -91,7 +89,6 @@ abstract class GitoliteTestCase extends TestIntegrationTestCase
         $this->git_exec->setLocalCommiter('TestName', 'test@example.com');
 
         $this->user_manager = $this->createMock(UserManager::class);
-        $this->dumper       = new Git_Gitolite_SSHKeyDumper($this->gitolite_admin_dir, $this->git_exec);
 
         $this->repository_factory = $this->createMock(GitRepositoryFactory::class);
 

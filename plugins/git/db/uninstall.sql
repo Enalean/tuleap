@@ -20,7 +20,6 @@ DROP TABLE IF EXISTS plugin_git_repository_fine_grained_regexp_enabled;
 DROP TABLE IF EXISTS plugin_git_default_fine_grained_regexp_enabled;
 DROP TABLE IF EXISTS plugin_git_restricted_gerrit_servers;
 DROP TABLE IF EXISTS plugin_git_restricted_gerrit_servers_allowed_projects;
-DROP TABLE IF EXISTS plugin_git_global_parameters;
 DROP TABLE IF EXISTS plugin_git_big_object_authorized_project;
 DROP TABLE IF EXISTS plugin_git_commit_status;
 DROP TABLE IF EXISTS plugin_git_default_fine_grained_permissions;

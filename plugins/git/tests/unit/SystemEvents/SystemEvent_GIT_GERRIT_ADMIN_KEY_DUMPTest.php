@@ -26,13 +26,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\SystemEvents;
 
-use Git_Gitolite_SSHKeyDumper;
 use Git_RemoteServer_Gerrit_ReplicationSSHKey;
 use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
 use Git_RemoteServer_NotFoundException;
 use PHPUnit\Framework\MockObject\MockObject;
 use SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP;
+use Tuleap\Git\Gitolite\SSHKey\Dumper;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -41,12 +41,12 @@ final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:
 {
     private SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP&MockObject $event;
     private Git_RemoteServer_GerritServerFactory&MockObject $gerrit_server_factory;
-    private Git_Gitolite_SSHKeyDumper&MockObject $ssh_key_dumper;
+    private Dumper&MockObject $ssh_key_dumper;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->ssh_key_dumper        = $this->createMock(Git_Gitolite_SSHKeyDumper::class);
+        $this->ssh_key_dumper        = $this->createMock(Dumper::class);
         $this->gerrit_server_factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
         $this->event                 = $this->createPartialMock(SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::class, ['done', 'error']);
         $this->event->injectDependencies($this->gerrit_server_factory, $this->ssh_key_dumper);
