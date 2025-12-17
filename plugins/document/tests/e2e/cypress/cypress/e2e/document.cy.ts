@@ -414,6 +414,7 @@ describe("Document new UI", () => {
                 cy.wait("@uploadFile");
                 cy.get("[data-test=document-folder-content-row]").should("have.length", 1);
 
+                cy.visitProjectService(`document-project-${now}`, "Documents");
                 cy.log("Upload a new version");
                 cy.intercept("PATCH", "*/docman/version/*").as("uploadVersion");
                 cy.get("[data-test=document-folder-content-row]").selectFile("./_fixtures/bb.txt", {
