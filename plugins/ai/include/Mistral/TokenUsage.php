@@ -40,4 +40,13 @@ final readonly class TokenUsage
         $self->completion_tokens = 0;
         return $self;
     }
+
+    public static function fromValues(int $prompt_token, int $total_token, int $completion_token): self
+    {
+        $self                    = new self();
+        $self->prompt_tokens     = $prompt_token;
+        $self->total_tokens      = $total_token;
+        $self->completion_tokens = $completion_token;
+        return $self;
+    }
 }

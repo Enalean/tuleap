@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\AICrossTracker\Assistant;
 
 use Tuleap\AI\Mistral\Message;
+use Tuleap\AI\Mistral\TokenUsage;
 
 interface MessageRepository
 {
@@ -33,4 +34,6 @@ interface MessageRepository
     public function fetch(ThreadID $id): array;
 
     public function store(ThreadID $id, Message $message): void;
+
+    public function storeWithTokenConsumption(ThreadID $id, Message $message, TokenUsage $token_usage): void;
 }

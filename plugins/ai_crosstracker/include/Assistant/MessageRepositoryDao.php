@@ -27,6 +27,7 @@ use Override;
 use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\Role;
 use Tuleap\AI\Mistral\StringContent;
+use Tuleap\AI\Mistral\TokenUsage;
 use Tuleap\DB\DataAccessObject;
 
 final class MessageRepositoryDao extends DataAccessObject implements MessageRepository
@@ -62,6 +63,25 @@ final class MessageRepositoryDao extends DataAccessObject implements MessageRepo
                 'role' => $message->role->value,
                 'date' => new \DateTimeImmutable()->getTimestamp(),
                 'content' => (string) $message->content,
+            ]
+        );
+    }
+
+    #[Override]
+    public function storeWithTokenConsumption(ThreadID $id, Message $message, TokenUsage $token_usage): void
+    {
+        $message_id = $this->uuid_factory->buildUUIDBytes();
+        $this->getDB()->insert(
+            'ai_crosstracker_completion_message',
+            [
+                'id'  => $message_id,
+                'thread_id' => $id->uuid->getBytes(),
+                'role' => $message->role->value,
+                'date' => new \DateTimeImmutable()->getTimestamp(),
+                'content' => (string) $message->content,
+                'tokens_prompt' => $token_usage->prompt_tokens,
+                'tokens_completion' => $token_usage->completion_tokens,
+                'tokens_total' => $token_usage->total_tokens,
             ]
         );
     }

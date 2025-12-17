@@ -66,7 +66,7 @@ final readonly class CompletionSender
                     if (! isset($response->choices[0]->message->content)) {
                         return Result::err(Fault::fromMessage('No choice provided in the response'));
                     }
-                    $message_repository->store($thread->id, $response->choices[0]->message->toGenericMessage());
+                    $message_repository->storeWithTokenConsumption($thread->id, $response->choices[0]->message->toGenericMessage(), $response->usage);
                     return Result::ok((string) $response->choices[0]->message->content);
                 }
             )
