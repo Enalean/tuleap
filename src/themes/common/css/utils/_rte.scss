@@ -19,19 +19,6 @@
 
 @use "basepath";
 
-/* stylelint-disable-next-line selector-class-pattern */
-.rte_toggle {
-    padding-left: 20px;
-    float: left;
-    background-image: url("#{basepath.$tuleap-common-theme-basepath}images/ic/rte.png");
-    background-repeat: no-repeat;
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.rte_clear {
-    clear: both;
-}
-
 /* stylelint-disable-next-line selector-id-pattern */
 #mail_message {
     width: auto;
