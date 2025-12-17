@@ -33,6 +33,7 @@
         <field-multi-select v-else-if="isMultiSelectField(element)" v-bind:field="element.field" />
         <field-checkbox v-else-if="isCheckbox(element.field)" v-bind:field="element.field" />
         <field-radio v-else-if="isRadioButton(element.field)" v-bind:field="element.field" />
+        <field-static-text v-else-if="isStaticText(element.field)" v-bind:field="element.field" />
         <line-separator v-else-if="isLineSeparator(element.field)" v-bind:field="element.field" />
         <line-break v-else-if="isLineBreak(element.field)" v-bind:field="element.field" />
         <base-field v-else v-bind:field="element.field" />
@@ -54,6 +55,7 @@ import {
     TEXT_FIELD,
     CHECKBOX_FIELD,
     RADIO_BUTTON_FIELD,
+    STATIC_RICH_TEXT,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     IntFieldStructure,
@@ -65,6 +67,7 @@ import type {
     LineBreakStructure,
     EditableDateFieldStructure,
     ListFieldStructure,
+    StaticRichTextStructure,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import ContainerFieldset from "./FormElements/ContainerFieldset.vue";
 import ContainerColumnWrapper from "./FormElements/ContainerColumnWrapper.vue";
@@ -80,6 +83,7 @@ import LineBreak from "./FormElements/LineBreak.vue";
 import FieldDate from "./FormElements/FieldDate.vue";
 import FieldCheckbox from "./FormElements/FieldCheckbox.vue";
 import FieldRadio from "./FormElements/FieldRadio.vue";
+import FieldStaticText from "./FormElements/FieldStaticText.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -137,5 +141,9 @@ function isCheckbox(field: StructureFields): field is ListFieldStructure {
 
 function isRadioButton(field: StructureFields): field is ListFieldStructure {
     return field.type === RADIO_BUTTON_FIELD;
+}
+
+function isStaticText(field: StructureFields): field is StaticRichTextStructure {
+    return field.type === STATIC_RICH_TEXT;
 }
 </script>

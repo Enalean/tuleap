@@ -29,6 +29,9 @@ dependencies:
   vue:
     specifier: ^3.5.25
     version: 3.5.25
+  vue-dompurify-html:
+    specifier: ^5.3.0
+    version: 5.3.0(vue@3.5.25)
   vue3-gettext:
     specifier: ^2.4.0
     version: 2.4.0(vue@3.5.25)
@@ -145,6 +148,12 @@ packages:
   /@types/parse5@5.0.3:
     resolution: {integrity: sha512-kUNnecmtkunAoQ3CnjmMkzNU/gtxG8guhi+Fk2U/kOpIKjIMKnXGp4IJCgQJrXSgMsWYimYG4TGjz/UzbGEBTw==}
     dev: false
+
+  /@types/trusted-types@2.0.7:
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+    requiresBuild: true
+    dev: false
+    optional: true
 
   /@vitejs/plugin-vue@4.6.2(vue@3.5.25):
     resolution: {integrity: sha512-kqf7SGFoG+80aZG6Pf+gsZIVvGSCKE98JbiWqcCV9cThtg91Jav0yvYFC9Zb+jKetNGF6ZKeoaxgZfND21fWKw==}
@@ -349,6 +358,12 @@ packages:
 
   /csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  /dompurify@3.3.1:
+    resolution: {integrity: sha512-qkdCKzLNtrgPFP1Vo+98FRzJnBRGe4ffyCea9IwHB1fyxPOeNTHpLKYGd4Uk9xvNoH0ZoOjwZxNptyMwqrId1Q==}
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
+    dev: false
 
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
@@ -755,6 +770,15 @@ packages:
   /vue-component-type-helpers@2.2.12:
     resolution: {integrity: sha512-YbGqHZ5/eW4SnkPNR44mKVc6ZKQoRs/Rux1sxC6rdwXb4qpbOSYfDr9DsTHolOTGmIKgM9j141mZbBeg05R1pw==}
     dev: true
+
+  /vue-dompurify-html@5.3.0(vue@3.5.25):
+    resolution: {integrity: sha512-HJQGBHbfSPcb6Mu97McdKbX7TqRHZa6Ji8OCpCNyuHca5QvQZ8IiuwghFPSO8OkSQfqXPNPKFMZdCOrnGGmOSQ==}
+    peerDependencies:
+      vue: ^3.4.36
+    dependencies:
+      dompurify: 3.3.1
+      vue: 3.5.25
+    dev: false
 
   /vue3-gettext@2.4.0(vue@3.5.25):
     resolution: {integrity: sha512-xnCndk88nzC+EiUJpNKykUulvPhivM1AQuT6oa72PA4DUOFPjJvpy5hZ/GbxLUJiqvYJebMDMTWywCJwIw+biA==}
