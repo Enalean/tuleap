@@ -216,7 +216,6 @@ class BindListUserValueGetter
     ): ?string {
         return ugroup_db_get_dynamic_members(
             $ugroup_name,
-            null,
             $tracker->getGroupId(),
             true,
             false,

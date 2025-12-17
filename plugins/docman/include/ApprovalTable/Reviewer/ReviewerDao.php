@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
+class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function getUgroupMembers($ugroupId, $groupId)
     {
@@ -29,7 +29,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
         if ($ugroupId > 100) {
             $sql = ugroup_db_get_members($ugroupId);
         } else {
-            $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
+            $sql = ugroup_db_get_dynamic_members($ugroupId, $groupId);
         }
         if ($sql === null) {
             return false;
@@ -180,7 +180,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
         return $this->_copyReviewers($srcTableId, $dstTableId, 'NULL', 0, "''", 'NULL');
     }
 
-    public function _copyReviewers($srcTableId, $dstTableId, $date, $state, $comment, $version)
+    public function _copyReviewers($srcTableId, $dstTableId, $date, $state, $comment, $version) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $sql = 'INSERT INTO plugin_docman_approval_user' .
             '(table_id, reviewer_id, `rank`, date, state, comment, version) ' .

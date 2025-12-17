@@ -72,8 +72,6 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         /* Examples of input params:
          Script: /projects, Uri=/projects/ljproj/
          Script: /project/admin/index.php, Uri=/project/admin/?group_id=101
-         Script: /tracker/index.php, Uri=/tracker/index.php?group_id=101
-         Script: /tracker/index.php, Uri=/tracker/?func=detail&aid=14&atid=101&group_id=101
         */
 
         // Restricted users cannot access any page belonging to a project they are not a member of.
@@ -88,7 +86,6 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         // Default support project is project 1.
         $allow_welcome_page                  = false;       // Allow access to welcome page
         $allow_user_browsing                 = false;      // Allow restricted users to access other user's page (Developer Profile)
-        $allow_access_to_project_trackers    = [1]; // Support project trackers are used for support requests
         $allow_access_to_project_docs        = [1]; // Support project documents and wiki (Note that the User Guide is always accessible)
         $allow_access_to_project_mail        = [1]; // Support project mailing lists (Developers Channels)
         $allow_access_to_project_frs         = [1]; // Support project file releases
@@ -103,7 +100,6 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         // For convenient reasons, admin can customize those variables as arrays
         // but for performances reasons we prefer to use hashes (avoid in_array)
         // so we transform array(101) => array(101=>0)
-        $allow_access_to_project_trackers    = array_flip($allow_access_to_project_trackers);
         $allow_access_to_project_docs        = array_flip($allow_access_to_project_docs);
         $allow_access_to_project_frs         = array_flip($allow_access_to_project_frs);
         $allow_access_to_project_refs        = array_flip($allow_access_to_project_refs);
@@ -126,10 +122,8 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
             return false;
         }
 
-        //Forbid search unless it's on a tracker
-        if (strpos($req_uri, '/search') === 0 && isset($_REQUEST['type_of_search']) && $_REQUEST['type_of_search'] == 'tracker') {
-            return true;
-        } elseif (strpos($req_uri, '/search') === 0) {
+        //Forbid search
+        if (strpos($req_uri, '/search') === 0) {
             return false;
         }
 
@@ -138,14 +132,6 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
             if ($req_uri != '/users/' . $user->getUserName()) {
                 return false;
             }
-        }
-
-        // Codendi trackers
-        if (
-            strpos($req_uri, '/tracker/') === 0 &&
-            isset($allow_access_to_project_trackers[$group_id])
-        ) {
-            $user_is_allowed = true;
         }
 
         // Trackers v5
