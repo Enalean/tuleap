@@ -74,7 +74,7 @@ final class TQLAssistantResource extends AuthenticatedResource
      * @access protected
      *
      * @param int $id Widget Id {@from body}
-     * @param string $message {@from body}
+     * @param string $message {@from body}{@min 1}{@max 500}
      * @param ?string $thread_id {@from body}
      *
      * @status 200
