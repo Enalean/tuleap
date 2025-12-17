@@ -90,6 +90,7 @@
   "pnpm": {
     "overrides": {
       "esbuild": "^0.25.1",
+      "systeminformation": "^5.27.14",
       "abab": "npm:@nolyfill/abab@^1",
       "array-includes": "npm:@nolyfill/array-includes@^1",
       "array.prototype.findlastindex": "npm:@nolyfill/array.prototype.findlastindex@^1",
