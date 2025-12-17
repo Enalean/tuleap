@@ -21,40 +21,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AICrossTracker\REST\v1;
+namespace Tuleap\AICrossTracker\Assistant;
 
 use Tuleap\AI\Mistral\Message;
-use Tuleap\AI\Mistral\Role;
-use Tuleap\AI\Mistral\StringContent;
 
 /**
  * @psalm-immutable
  */
-final class MessageRepresentation
+final class Thread
 {
     /**
-     * @var string Role of the message {@required true}{@choice user,assistant}
-     * @psalm-var 'user'|'assistant'
+     * @var Message[]
      */
-    public string $role;
-    /**
-     * @var string Content of the message {@required true}
-     */
-    public string $content;
+    public array $messages;
 
-    public function toMistralMessage(): Message
+    public function __construct(private(set) readonly ThreadID $id, Message ...$messages)
     {
-        return new Message(Role::from($this->role), new StringContent($this->content));
-    }
-
-    /**
-     * @psalm-param 'user'|'assistant' $role
-     */
-    public static function fromRoleAndContent(string $role, string $content): self
-    {
-        $self          = new self();
-        $self->role    = $role;
-        $self->content = $content;
-        return $self;
+        $this->messages = $messages;
     }
 }

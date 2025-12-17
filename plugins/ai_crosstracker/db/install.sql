@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
@@ -19,32 +18,19 @@
  *
  */
 
-declare(strict_types=1);
+DROP TABLE IF EXISTS ai_crosstracker_completion_thread;
+CREATE TABLE ai_crosstracker_completion_thread (
+    id              BINARY(16)       NOT NULL PRIMARY KEY,
+    user_id         INT UNSIGNED     NOT NULL,
+    widget_id       INT UNSIGNED     NOT NULL
+) ENGINE = InnoDB;
 
-namespace Tuleap\AI\Mistral;
-
-use Override;
-
-/**
- * @psalm-immutable
- */
-final readonly class Message implements \JsonSerializable
-{
-    public function __construct(private(set) Role $role, public StringContent|ChunkContent $content)
-    {
-    }
-
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'role' => $this->role,
-            'content' => $this->content,
-        ];
-    }
-
-    public static function buildUserMessageFromString(string $content): self
-    {
-        return new self(Role::USER, new StringContent($content));
-    }
-}
+DROP TABLE IF EXISTS ai_crosstracker_completion_message;
+CREATE TABLE ai_crosstracker_completion_message (
+    id              BINARY(16)       NOT NULL PRIMARY KEY,
+    thread_id       BINARY(16)       NOT NULL,
+    role            VARCHAR(32)      NOT NULL,
+    date            INT UNSIGNED     NOT NULL,
+    content         MEDIUMTEXT       NOT NULL,
+    INDEX idx_thread(thread_id)
+) ENGINE = InnoDB;

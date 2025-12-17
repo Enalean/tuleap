@@ -36,6 +36,7 @@ use Tuleap\NeverThrow\Result;
 final class MistralConnectorStub implements MistralConnector
 {
     private CompletionResponse $response;
+    private(set) Completion $query;
 
     public function withResponse(CompletionResponse $response): self
     {
@@ -58,6 +59,7 @@ final class MistralConnectorStub implements MistralConnector
     #[Override]
     public function sendCompletion(AIRequestorEntity $requestor, Completion $completion, string $service): Ok|Err
     {
+        $this->query = $completion;
         return Result::ok($this->response);
     }
 }

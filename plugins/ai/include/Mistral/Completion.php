@@ -30,7 +30,7 @@ use Override;
  */
 final readonly class Completion implements \JsonSerializable
 {
-    private array $messages;
+    private(set) array $messages;
 
     public function __construct(private Model $model, public CompletionResponseJSONFormat $format, Message ...$messages)
     {

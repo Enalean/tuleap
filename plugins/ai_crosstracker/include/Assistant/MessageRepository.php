@@ -21,30 +21,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AI\Mistral;
+namespace Tuleap\AICrossTracker\Assistant;
 
-use Override;
+use Tuleap\AI\Mistral\Message;
 
-/**
- * @psalm-immutable
- */
-final readonly class Message implements \JsonSerializable
+interface MessageRepository
 {
-    public function __construct(private(set) Role $role, public StringContent|ChunkContent $content)
-    {
-    }
+    /**
+     * @return Message[]
+     */
+    public function fetch(ThreadID $id): array;
 
-    #[Override]
-    public function jsonSerialize(): array
-    {
-        return [
-            'role' => $this->role,
-            'content' => $this->content,
-        ];
-    }
-
-    public static function buildUserMessageFromString(string $content): self
-    {
-        return new self(Role::USER, new StringContent($content));
-    }
+    public function store(ThreadID $id, Message $message): void;
 }
