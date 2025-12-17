@@ -175,24 +175,6 @@ function ugroup_db_list_all_ugroups_for_user($group_id, $user_id)
     return db_query($sql);
 }
 
-
-/** Return array of ugroup_id for all user-defined ugoups that user is part of
- * and having tracker-related permissions on the $group_artifact_id tracker */
-function ugroup_db_list_tracker_ugroups_for_user($group_id, $group_artifact_id, $user_id)
-{
-    $data_access       = CodendiDataAccess::instance();
-    $group_artifact_id = $data_access->quoteLikeValueSuffix($group_artifact_id);
-    $sql               = 'SELECT distinct ug.ugroup_id FROM ugroup ug, ugroup_user ugu, permissions p ' .
-      'WHERE ugu.user_id=' . db_ei($user_id) .
-      ' AND ug.group_id=' . db_ei($group_id) .
-      ' AND ugu.ugroup_id=ug.ugroup_id ' .
-      ' AND p.ugroup_id = ugu.ugroup_id ' .
-      " AND p.object_id LIKE $group_artifact_id" .
-      " AND p.permission_type LIKE 'TRACKER%'";
-
-    return util_result_column_to_array(db_query($sql));
-}
-
 /** Return array of ugroup_id for all dynamic ugoups like
  * (anonymous_user, registered_user, project_member,
  * project_admins, tracker_admins) that user is part of */
@@ -243,7 +225,6 @@ function ugroup_get_name_from_id($ugroup_id)
 /**
  * Check membership of the user to a specified ugroup
  * $group_id is necessary for automatic project groups like project member, release admin, etc.
- * $atid is necessary for trackers since the tracker admin role is different for each tracker.
  * @return bool true if user is member of the ugroup, false otherwise.
  */
 function ugroup_user_is_member($user_id, $ugroup_id, $group_id)
@@ -303,12 +284,10 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id)
 /**
  * Check membership of the user to a specified ugroup
  * $group_id is necessary for automatic project groups like project member, release admin, etc.
- * $atid is necessary for trackers since the tracker admin role is different for each tracker.
  * $keword is used to filter the users
  */
 function ugroup_db_get_dynamic_members(
     $ugroup_id,
-    $atid,
     $group_id,
     $with_display_preferences = false,
     $show_suspended = false,
@@ -337,7 +316,6 @@ function ugroup_db_get_dynamic_members(
         $user_status .= ' AND user.user_id IN (' . $data_access->escapeIntImplode($user_ids) . ')';
     }
     $group_id = $data_access->escapeInt($group_id);
-    $atid     = $data_access->escapeInt($atid);
     // Special Cases
     if ($ugroup_id == $GLOBALS['UGROUP_NONE']) {
         // Empty group
@@ -357,48 +335,8 @@ function ugroup_db_get_dynamic_members(
     } elseif ($ugroup_id == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
         return '(SELECT user.user_id, ' . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND " . $user_status . '  ORDER BY ' . $sqlorder . ')';
-    } elseif ($atid && $ugroup_id == $GLOBALS['UGROUP_TRACKER_ADMIN']) {
-        // Tracker admins
-        return '(SELECT user.user_id, ' . $sqlname . ", user.realname, user.user_name,  user.email, user.status FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND " . $user_status . '  ORDER BY ' . $sqlorder . ')';
     }
     return null;
-}
-
-/**
- * Retrieve all dynamic groups' members except ANONYMOUS, NONE, REGISTERED
- * @param int $group_id
- * @param int $atid
- * @return Array
- */
-function ugroup_get_all_dynamic_members($group_id, $atid = 0)
-{
-    $members = [];
-    $sql     = [];
-    $ugroups = [];
-    //retrieve dynamic ugroups id and name
-    $rs = db_query('SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (' . implode(',', $GLOBALS['UGROUPS']) . ') ');
-    while ($row = db_fetch_array($rs)) {
-        $ugroups[$row['ugroup_id']] = $row['name'];
-    }
-    foreach ($GLOBALS['UGROUPS'] as $ugroup_id) {
-        if ($ugroup_id == $GLOBALS['UGROUP_ANONYMOUS'] || $ugroup_id == $GLOBALS['UGROUP_REGISTERED'] || $ugroup_id == $GLOBALS['UGROUP_NONE']) {
-            continue;
-        }
-        $sql = ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id);
-        if ($sql === null) {
-            continue;
-        }
-        $rs = db_query($sql);
-        while ($row = db_fetch_array($rs)) {
-            $members[] = [
-                'ugroup_id' => $ugroup_id,
-                'name'      => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroups[$ugroup_id]),
-                'user_id'   => $row['user_id'],
-                'user_name' => $row['user_name'],
-            ];
-        }
-    }
-    return $members;
 }
 
 /**
@@ -763,7 +701,7 @@ function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validU
 {
     $containNonAdmin = 0;
     foreach ($ugroups as $ugroupId) {
-        $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, $groupId);
         if ($sql === null) {
             continue;
         }

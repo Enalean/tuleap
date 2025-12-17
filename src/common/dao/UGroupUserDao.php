@@ -28,7 +28,7 @@ require_once __DIR__ . '/../../www/project/admin/ugroup_utils.php';
 /**
  *  Data Access Object for ProjectUGroup
  */
-class UGroupUserDao extends DataAccessObject
+class UGroupUserDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
     * Searches ProjectUGroup members by UGroupId
@@ -148,7 +148,7 @@ class UGroupUserDao extends DataAccessObject
      */
     public function searchUserByDynamicUGroupId($ugroupId, $groupId)
     {
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, true);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, $groupId, true);
         if (! $sql) {
             return new DataAccessResultEmpty();
         }
@@ -157,7 +157,7 @@ class UGroupUserDao extends DataAccessObject
 
     public function searchUserByDynamicUGroupIdIncludingSuspended(int $ugroupId, int $groupId): IProvideDataAccessResult
     {
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, true);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, $groupId, false, true);
         if (! $sql) {
             return new DataAccessResultEmpty();
         }
@@ -171,7 +171,7 @@ class UGroupUserDao extends DataAccessObject
 
     public function searchUserByDynamicUGroupIdIncludingSuspendedAndDeleted($ugroupId, $groupId)
     {
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, true, true);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, $groupId, false, true, true);
 
         if (! $sql) {
             return new DataAccessResultEmpty();
@@ -197,7 +197,7 @@ class UGroupUserDao extends DataAccessObject
         $limit    = $this->da->escapeInt($limit);
         $offset   = $this->da->escapeInt($offset);
 
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, true);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, $groupId, false, true);
 
         if (! $sql) {
             return false;

@@ -55,16 +55,6 @@ class SearchFormPresenterBuilder
                 'value' => $group_id,
             ];
 
-            if ($this->request->exist('atid')) {
-                $search_entries[] = [
-                    'value'    => 'tracker',
-                    'selected' => true,
-                ];
-                $hidden[]         = [
-                    'name'  => 'atid',
-                    'value' => $this->request->get('atid'),
-                ];
-            }
             if (strpos($_SERVER['REQUEST_URI'], '/wiki/') === 0) {
                 $search_entries[] = [
                     'value'    => 'wiki',

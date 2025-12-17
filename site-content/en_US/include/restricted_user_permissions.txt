@@ -29,7 +29,6 @@
 
 // Default support project is project 1.
 
-//$allow_access_to_project_trackers    = array(1); // Support project trackers are used for support requests
 //$allow_access_to_project_docs        = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
 //$allow_access_to_project_mail        = array(1); // Support project mailing lists (Developers Channels)
 //$allow_access_to_project_frs         = array(1); // Support project file releases
