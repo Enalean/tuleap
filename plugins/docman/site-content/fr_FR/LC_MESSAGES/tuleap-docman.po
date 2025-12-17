@@ -215,9 +215,6 @@ msgstr "L'archive ne peut pas contenir des données docman."
 msgid "Are you sure you want to delete the property '%1$s'?"
 msgstr "Etes-vous sûr de vouloir supprimer la propriété '%1$s' ?"
 
-msgid "Are you sure you want to remove this filter from the list?"
-msgstr "Etes-vous sûr de vouloir enlever ce filtre de la liste ?"
-
 #, php-format
 msgid ""
 "As document owner, you are notified of the obsolescence in one month of the\n"
@@ -621,9 +618,6 @@ msgstr "Activé"
 
 msgid "End"
 msgstr "Fin"
-
-msgid "End:"
-msgstr "Fin :"
 
 msgid "Enforce filename pattern"
 msgstr "Forcer l’application du modèle de nom de fichier"
@@ -1131,9 +1125,6 @@ msgstr "Rejeté"
 msgid "Released lock"
 msgstr "Réservation annulée"
 
-msgid "Remove the filter"
-msgstr "Enlever le filtre"
-
 #, php-format
 msgid "Removed monitoring for group(s) '%1$s'"
 msgstr "Le monitoring a été supprimé pour le(s) groupe(s) '%1$s'"
@@ -1207,9 +1198,6 @@ msgid ""
 msgstr ""
 "Le propriétaire n'existe pas. Vous êtes le propriétaire. Vous pouvez changer "
 "le propriétaire dans les propriétés de l'élément."
-
-msgid "Start:"
-msgstr "Début :"
 
 msgid "Status"
 msgstr "Statut"
