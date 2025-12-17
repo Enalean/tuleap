@@ -121,16 +121,16 @@ interface AssistantMessage {
     explanations: string;
     title: string;
 }
-
-interface CrossTrackerEndpointAssistantMessage {
-    role: typeof USER_ROLE | typeof ASSISTANT_ROLE;
-    content: string;
-}
+type CrossTrackerEndpointAssistantMessage = Omit<AssistantMessage, "role"> & {
+    thread_id: string;
+};
 
 const messages = ref<Array<Readonly<UserMessage | AssistantMessage>>>([]);
 
 const widget_id = strictInject(WIDGET_ID);
 const emitter = strictInject(EMITTER);
+
+const thread_id = ref<null | string>(null);
 
 async function handlePromptSubmission(): Promise<void> {
     const submitted_prompt = prompt_user_input.value;
@@ -139,25 +139,12 @@ async function handlePromptSubmission(): Promise<void> {
     messages.value.push({ role: USER_ROLE, content: submitted_prompt });
 
     is_loading.value = true;
-    const cross_tracker_assistant_messages: Array<CrossTrackerEndpointAssistantMessage> = [];
-    for (const message of messages.value) {
-        if (message.role === USER_ROLE) {
-            cross_tracker_assistant_messages.push(message);
-            continue;
-        }
-        if (message.tql_query === "") {
-            continue;
-        }
-        cross_tracker_assistant_messages.push({
-            role: ASSISTANT_ROLE,
-            content: message.tql_query,
-        });
-    }
 
-    const response = await postJSON<Omit<AssistantMessage, "role">>(
+    const response = await postJSON<CrossTrackerEndpointAssistantMessage>(
         uri`/api/crosstracker_assistant/${widget_id}/helper`,
         {
-            messages: cross_tracker_assistant_messages,
+            message: submitted_prompt,
+            thread_id: thread_id.value,
         },
     );
 
@@ -165,6 +152,7 @@ async function handlePromptSubmission(): Promise<void> {
 
     response.match(
         (resp) => {
+            thread_id.value = resp.thread_id;
             messages.value.push({
                 role: ASSISTANT_ROLE,
                 ...resp,
