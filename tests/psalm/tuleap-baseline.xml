@@ -5643,7 +5643,6 @@
   </file>
   <file src="plugins/docman/include/ApprovalTable/NotificationCycle.php">
     <MissingParamType>
-      <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$isLastReviewer]]></code>
       <code><![CDATA[$isLastReviewer]]></code>
@@ -5676,17 +5675,13 @@
       <code><![CDATA[$table]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_getEmailToOwner]]></code>
       <code><![CDATA[_getEventManager]]></code>
       <code><![CDATA[_getItemFactory]]></code>
-      <code><![CDATA[_getMail]]></code>
       <code><![CDATA[_getReviewerDao]]></code>
-      <code><![CDATA[_getSettingsBo]]></code>
       <code><![CDATA[_getUserById]]></code>
       <code><![CDATA[_getUserManager]]></code>
       <code><![CDATA[changeItemStatus]]></code>
       <code><![CDATA[enableMonitorForReviewer]]></code>
-      <code><![CDATA[getNotificationBodyText]]></code>
       <code><![CDATA[getNotificationSubject]]></code>
       <code><![CDATA[getReviewUrl]]></code>
       <code><![CDATA[getTable]]></code>
@@ -6085,14 +6080,9 @@
       <code><![CDATA[$d[3]]]></code>
     </InvalidScalarArgument>
     <MissingParamType>
-      <code><![CDATA[$atrf]]></code>
-      <code><![CDATA[$atrf]]></code>
-      <code><![CDATA[$atrf]]></code>
-      <code><![CDATA[$atrf]]></code>
       <code><![CDATA[$cascade]]></code>
       <code><![CDATA[$cascade]]></code>
       <code><![CDATA[$controler]]></code>
-      <code><![CDATA[$description]]></code>
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$groupId]]></code>
@@ -6100,19 +6090,11 @@
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$new]]></code>
-      <code><![CDATA[$notification]]></code>
-      <code><![CDATA[$notificationOccurence]]></code>
       <code><![CDATA[$old]]></code>
-      <code><![CDATA[$owner]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
-      <code><![CDATA[$sStatus]]></code>
-      <code><![CDATA[$sUgroups]]></code>
-      <code><![CDATA[$selectedUsers]]></code>
-      <code><![CDATA[$selectedUsers]]></code>
       <code><![CDATA[$type_event]]></code>
-      <code><![CDATA[$usUserList]]></code>
       <code><![CDATA[$user]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -6123,22 +6105,10 @@
       <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$this->_controler->_actionParams]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
-      <code><![CDATA[$this->_controler->_actionParams]]></code>
       <code><![CDATA[$userManager]]></code>
       <code><![CDATA[$version_factory]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_approval_update_add_users]]></code>
-      <code><![CDATA[_approval_update_del_users]]></code>
-      <code><![CDATA[_approval_update_notif_resend]]></code>
-      <code><![CDATA[_approval_update_notify_users]]></code>
-      <code><![CDATA[_approval_update_settings]]></code>
       <code><![CDATA[_checkOwnerChange]]></code>
       <code><![CDATA[_getDocmanPermissionsManagerInstance]]></code>
       <code><![CDATA[_getEventManager]]></code>
@@ -6159,10 +6129,6 @@
       <code><![CDATA[admin_md_details_update]]></code>
       <code><![CDATA[admin_set_permissions]]></code>
       <code><![CDATA[admin_update_love]]></code>
-      <code><![CDATA[approval_delete]]></code>
-      <code><![CDATA[approval_upd_user]]></code>
-      <code><![CDATA[approval_update]]></code>
-      <code><![CDATA[approval_user_commit]]></code>
       <code><![CDATA[createDocument]]></code>
       <code><![CDATA[createFolder]]></code>
       <code><![CDATA[createItem]]></code>
@@ -6177,9 +6143,6 @@
       <code><![CDATA[raiseMonitoringUgroups]]></code>
       <code><![CDATA[removeNotificationUgroupsByItem]]></code>
       <code><![CDATA[removeNotificationUsersByItem]]></code>
-      <code><![CDATA[report_del]]></code>
-      <code><![CDATA[report_import]]></code>
-      <code><![CDATA[report_upd]]></code>
       <code><![CDATA[updateLink]]></code>
       <code><![CDATA[update_monitoring]]></code>
     </MissingReturnType>
@@ -15445,7 +15408,6 @@
   <file src="plugins/git/include/Git/Gitolite/ConfigPermissionsSerializer.php">
     <MissingParamType>
       <code><![CDATA[$etc_templates_path]]></code>
-      <code><![CDATA[$hostname]]></code>
       <code><![CDATA[$pattern]]></code>
       <code><![CDATA[$pattern_for_gitolite]]></code>
       <code><![CDATA[$pattern_for_gitolite]]></code>
@@ -15465,12 +15427,9 @@
       <code><![CDATA[denyAccessForRepository]]></code>
       <code><![CDATA[formatPermission]]></code>
       <code><![CDATA[formatSpecificPermission]]></code>
-      <code><![CDATA[getAllIncludes]]></code>
-      <code><![CDATA[getAllIncludesForHostname]]></code>
       <code><![CDATA[getFineGrainedFormattedPermissions]]></code>
       <code><![CDATA[getForRepository]]></code>
       <code><![CDATA[getGitoliteDotConf]]></code>
-      <code><![CDATA[getGitoliteDotConfForHostname]]></code>
       <code><![CDATA[getPatternConfiguration]]></code>
       <code><![CDATA[getPatternInGitoliteFormat]]></code>
       <code><![CDATA[grantUgroupsForPattern]]></code>
@@ -15550,9 +15509,6 @@
       <code><![CDATA[$dir_path]]></code>
       <code><![CDATA[$file_path]]></code>
       <code><![CDATA[$gitolite_administration_path]]></code>
-      <code><![CDATA[$hostname]]></code>
-      <code><![CDATA[$hostname]]></code>
-      <code><![CDATA[$hostname]]></code>
       <code><![CDATA[$new_file]]></code>
       <code><![CDATA[$new_name]]></code>
       <code><![CDATA[$new_name]]></code>
@@ -15570,13 +15526,9 @@
       <code><![CDATA[$project_file_path]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getFullConfigFilePathFromHostname]]></code>
-      <code><![CDATA[getGitoliteConfFilePath]]></code>
       <code><![CDATA[getProjectList]]></code>
       <code><![CDATA[getProjectPermissionConfFile]]></code>
-      <code><![CDATA[getRelativeConfigFilePathFromHostname]]></code>
       <code><![CDATA[modifyGitConfigurationFileInGitolite]]></code>
-      <code><![CDATA[modifyIncludersConf]]></code>
       <code><![CDATA[modifyProjectConf]]></code>
       <code><![CDATA[moveProjectFiles]]></code>
       <code><![CDATA[proceedRenameInIncluderConf]]></code>
@@ -15585,9 +15537,7 @@
       <code><![CDATA[readProjectListFromPath]]></code>
       <code><![CDATA[renameProject]]></code>
       <code><![CDATA[writeGitConfig]]></code>
-      <code><![CDATA[writeGitoliteConfiguration]]></code>
       <code><![CDATA[writeGitoliteConfigurationOnDisk]]></code>
-      <code><![CDATA[writeGitoliteIncludesInHostnameFile]]></code>
     </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[$orig]]></code>
@@ -15639,26 +15589,13 @@
       <code><![CDATA[updateBetween]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/Git/Gitolite/GitoliteRCReader.php">
-    <MissingReturnType>
-      <code><![CDATA[extractHostnameFromRCFile]]></code>
-      <code><![CDATA[getGitoliteRCPath]]></code>
-      <code><![CDATA[getHostname]]></code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$file_content]]></code>
-    </PossiblyFalseArgument>
-  </file>
   <file src="plugins/git/include/Git/Gitolite/ProjectSerializer.php">
     <MissingParamType>
       <code><![CDATA[$unix_name]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[dumpPartialProjectRepoConf]]></code>
-      <code><![CDATA[dumpPartialSuspendedProjectRepositoriesConfiguration]]></code>
       <code><![CDATA[dumpProjectRepoConf]]></code>
       <code><![CDATA[dumpSuspendedProjectRepositoriesConfiguration]]></code>
-      <code><![CDATA[fetchMailHookConfig]]></code>
       <code><![CDATA[fetchReposConfig]]></code>
       <code><![CDATA[fetchSuspendedRepositoryConfiguration]]></code>
       <code><![CDATA[repoFullName]]></code>
@@ -17640,7 +17577,6 @@
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$refname]]></code>
       <code><![CDATA[$refname_type]]></code>
       <code><![CDATA[$remote_server_id]]></code>
@@ -17681,7 +17617,6 @@
       <code><![CDATA[searchGerritRepositoriesWithPermissionsForUGroupAndProject]]></code>
       <code><![CDATA[searchProjectRepositoryByPath]]></code>
       <code><![CDATA[searchRepositoriesActiveInTheLast2Months]]></code>
-      <code><![CDATA[searchRepositoriesInSameProjectFromRepositoryList]]></code>
       <code><![CDATA[setGerritMigrationError]]></code>
       <code><![CDATA[setGerritMigrationSuccess]]></code>
     </MissingReturnType>
@@ -19218,16 +19153,12 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/git/include/Git_Backend_Gitolite.php">
-    <DeprecatedMethod>
-      <code><![CDATA[load]]></code>
-    </DeprecatedMethod>
     <InvalidClass>
       <code><![CDATA[gitPlugin]]></code>
     </InvalidClass>
     <MissingParamType>
       <code><![CDATA[$dao]]></code>
       <code><![CDATA[$repository]]></code>
-      <code><![CDATA[$repositoryId]]></code>
       <code><![CDATA[$type]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -19331,7 +19262,6 @@
       <code><![CDATA[$adminPath]]></code>
       <code><![CDATA[$confFilePath]]></code>
       <code><![CDATA[$oldCwd]]></code>
-      <code><![CDATA[$permissions_types]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[addModifiedConfigurationFiles]]></code>
@@ -20361,17 +20291,10 @@
       <code><![CDATA[file_get_contents($this->gitolite_admin_dir . '/conf/' . $filename . '.conf')]]></code>
       <code><![CDATA[file_get_contents($this->gitolite_admin_dir . '/conf/gitolite.conf')]]></code>
     </FalsableReturnStatement>
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
     <InvalidFalsableReturnType>
       <code><![CDATA[string]]></code>
       <code><![CDATA[string]]></code>
     </InvalidFalsableReturnType>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
     <MissingParamType>
       <code><![CDATA[$filename]]></code>
     </MissingParamType>
@@ -66007,7 +65930,6 @@
       <code><![CDATA[$number_of_results]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$project]]></code>
-      <code><![CDATA[$trackerv3id]]></code>
       <code><![CDATA[$type_of_search]]></code>
       <code><![CDATA[$words]]></code>
     </MissingPropertyType>
@@ -66016,7 +65938,6 @@
       <code><![CDATA[getNumberOfResults]]></code>
       <code><![CDATA[getOffset]]></code>
       <code><![CDATA[getProject]]></code>
-      <code><![CDATA[getTrackerV3Id]]></code>
       <code><![CDATA[getTypeOfSearch]]></code>
       <code><![CDATA[getWords]]></code>
       <code><![CDATA[isAjax]]></code>
@@ -76915,9 +76836,6 @@
       <code><![CDATA[permission_get_object_type]]></code>
       <code><![CDATA[permission_get_ugroups_permissions]]></code>
     </MissingReturnType>
-    <ParadoxicalCondition>
-      <code><![CDATA[$permission_type == 'TRACKER_ACCESS_FULL']]></code>
-    </ParadoxicalCondition>
     <PossiblyNullReference>
       <code><![CDATA[isSuperUser]]></code>
     </PossiblyNullReference>

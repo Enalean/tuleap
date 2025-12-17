@@ -150,11 +150,6 @@ msgstr "Après %s"
 msgid "All at once"
 msgstr "Tous d'un coup"
 
-msgid "All selected users were successfully removed from the approval table."
-msgstr ""
-"Tous les utilisateurs sélectionnés ont été supprimé de la table "
-"d'approbation."
-
 msgid "Allow empty value"
 msgstr "Autorise la valeur vide"
 
@@ -168,10 +163,6 @@ msgstr "Autorise les valeurs multiples"
 #, php-format
 msgid "Allow multiple selection: <strong>%1$s</strong>"
 msgstr "Autoriser la sélection multiple : <strong>%1$s</strong>"
-
-#, php-format
-msgid "Already in this approval table: %1$s."
-msgstr "Déjà dans la table d'approbation : %1$s."
 
 msgid "An error occured on element suppression."
 msgstr "Une erreur s'est produite pendant la suppression de l'élément."
@@ -197,20 +188,6 @@ msgstr ""
 #, php-format
 msgid "An error occurred on \"%1$s\" deletion"
 msgstr "Une erreur est survenue lors de la suppression de \"%1$s\""
-
-msgid "An error occurred on approval table creation for this item."
-msgstr ""
-"Un erreur est survenue lors de la création de la table d'approbation pour ce "
-"document."
-
-msgid "An error occurred on report deletion"
-msgstr "Une erreur est apparue lors de la suppression d'un rapport"
-
-msgid "An error occurred on review recording."
-msgstr "Une erreur est survenue lors de l'enregistrement de votre approbation."
-
-msgid "An error occurred: the approval table was not deleted."
-msgstr "Une erreur est survenue. La table n'a pas été supprimée."
 
 msgid "Apply a naming pattern on files."
 msgstr "Applique un modèle de nommage sur les fichiers."
@@ -311,20 +288,6 @@ msgstr "Début"
 msgid "Can't delete folder %s because it is not empty."
 msgstr "Impossible de supprimer le dossier %s car il n'est pas vide."
 
-#, php-format
-msgid "Cannot add  following user(s). Internal error: %1$s."
-msgstr "Impossible d'ajouter les utilisateurs suivants. Erreur interne : %1$s."
-
-#, php-format
-msgid "Cannot add following user(s). No access to document: %1$s."
-msgstr ""
-"Impossible d'ajouter les utilisateurs suivants. Pas d'accès au document : "
-"%1$s."
-
-#, php-format
-msgid "Cannot add following user(s). Not registered users. %1$s."
-msgstr "Impossible d'ajouter les utilisateurs suivants. N'existent pas : %1$s."
-
 msgid "Cannot create approval table for document"
 msgstr "Impossible de créer une table d'approbation pour ce document"
 
@@ -351,9 +314,6 @@ msgstr ""
 "pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne "
 "puissiez pas non plus les lire). Merci de contacter votre administrateur de "
 "gestionnaire de documents."
-
-msgid "Cannot remove from the approval table."
-msgstr "Impossible de supprimer de la table d'approbation."
 
 msgid "Cannot review an item without approval table"
 msgstr "Impossible d'approuver un item sans table d'approbation"
@@ -637,9 +597,6 @@ msgstr "L'élément a bien été supprimé."
 
 msgid "Element successfully updated."
 msgstr "L'élément a bien été mis à jour."
-
-msgid "Email sent to reviewer."
-msgstr "Email envoyé aux approbateurs."
 
 msgid "Embedded File"
 msgstr "Fichier embarqué"
@@ -1026,9 +983,6 @@ msgstr "Pas de documents à approuver."
 msgid "No element selected"
 msgstr "Aucun élément séléctionné"
 
-msgid "No email sent to reviewers."
-msgstr "Pas d'email envoyé aux approbateurs."
-
 msgid "No notification sent"
 msgstr "Aucune notification envoyée"
 
@@ -1061,9 +1015,6 @@ msgstr "Date d'obsolescence"
 
 msgid "Obsolete today"
 msgstr "Aujourd'hui obsolète"
-
-msgid "Only admin can delete Project wide reports."
-msgstr "Seuls les admins peuvent supprimer un rapport 'projet'."
 
 msgid "Operation Canceled"
 msgstr "Operation annulée"
@@ -1140,9 +1091,6 @@ msgstr "Le projet n'a pas de document réservé"
 msgid "Project has no obsolete documents"
 msgstr "Le projet n'a pas de documents obsolètes"
 
-msgid "Project ids mismatch. Cancel update."
-msgstr "Les ids de projet ne correspondent pas. Mise à jour annulée."
-
 msgid "Project:"
 msgstr "Projet :"
 
@@ -1197,18 +1145,6 @@ msgstr "Le monitoring a été supprimé pour le(s) utilisateur(s) \"%s\""
 msgid "Removed:"
 msgstr "Supprimé :"
 
-msgid "Report not found. Cancel deletion."
-msgstr "Rapport non trouvé. Suppression annulée."
-
-msgid "Report not found. Cancel update."
-msgstr "Rapport non trouvé. Mise à jour annulée."
-
-msgid "Report successfully cloned."
-msgstr "Rapport cloné."
-
-msgid "Report successfully deleted"
-msgstr "Rapport supprimé"
-
 msgid "Requester"
 msgstr "Demandeur d'approbation"
 
@@ -1223,9 +1159,6 @@ msgstr "Restitution de version"
 
 msgid "Reviewer"
 msgstr "Approbateur"
-
-msgid "Reviewers were notified."
-msgstr "Les approbateurs ont été notfiés."
 
 msgid "Save settings"
 msgstr "Enregistrer"
@@ -1298,12 +1231,6 @@ msgstr "Table"
 
 msgid "Table does not exist"
 msgstr "La table n'existe pas"
-
-msgid "Table settings updated."
-msgstr "Paramètres de la table modifiés."
-
-msgid "Table successfully deleted."
-msgstr "Table supprimée."
 
 msgid "Text"
 msgstr "Texte"
@@ -1426,9 +1353,6 @@ msgid ""
 msgstr ""
 "La propriété avec le nom %s est une valeur, list_value devrait être vide et "
 "value devrait être fourni."
-
-msgid "The report you want to clone doesn't exist."
-msgstr "Le rapport que vous voulez clonner n'existe pas."
 
 msgid "The requested version of this file cannot be found."
 msgstr "La version demandée de ce fichier ne peut être trouvé."
@@ -1637,9 +1561,6 @@ msgstr ""
 "Les groupes d'utilisateurs pouvant administrer le gestionnaire de documents, "
 "en complément des administrateurs de projet"
 
-msgid "User successfully added to the approval table."
-msgstr "L'utilisateur a été ajouté à la table."
-
 msgid "Validity:"
 msgstr "Validité :"
 
@@ -1825,14 +1746,6 @@ msgid ""
 msgstr ""
 "Vous pouvez importer des propriétés de n'importe quel projet auquel vous "
 "avez accès."
-
-msgid "You can not delete report you do not own. Cancel deletion."
-msgstr ""
-"Vous ne pouvez pas supprimer un rapport que vous ne possédez pas. "
-"Suppression annulée."
-
-msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
-msgstr "Vous ne pouvez cloner que les rapports 'projet' ou personnels."
 
 msgid "You cannot delete the root folder."
 msgstr "Vous ne pouvez pas supprimer le dossier racine."
@@ -2025,9 +1938,6 @@ msgstr ""
 #, php-format
 msgid "Your monitoring on '%1$s' has been removed."
 msgstr "Vous ne surveillez plus '%1$s'."
-
-msgid "Your review was successfully recorded."
-msgstr "Votre approbation a été enregistrée."
 
 #, php-format
 msgid "[%1$s] '%2$s' was approved by a reviewer %3$s"
