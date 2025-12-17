@@ -27,16 +27,6 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface
 {
     /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var Git_GitoliteDriver
-     */
-    protected $driver;
-
-    /**
      * @var GitDao
      */
     protected $dao;
@@ -52,20 +42,13 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     protected $gitPlugin;
 
     public const string PREFIX = 'gitolite_';
-    /**
-     * @var GitoliteAccessURLGenerator
-     */
-    private $gitolite_access_URL_generator;
 
     public function __construct(
-        Git_GitoliteDriver $driver,
-        GitoliteAccessURLGenerator $gitolite_access_URL_generator,
+        private Git_GitoliteDriver $driver,
+        private GitoliteAccessURLGenerator $gitolite_access_URL_generator,
         private \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutor $default_branch_update_executor,
-        \Psr\Log\LoggerInterface $logger,
+        private \Psr\Log\LoggerInterface $logger,
     ) {
-        $this->driver                        = $driver;
-        $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
-        $this->logger                        = $logger;
     }
 
     /**
@@ -248,7 +231,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             );
             if ($ok) {
                 try {
-                    $this->glRenameProject($project->getUnixName(), $newName);
+                    $this->glRenameProject($project, $project->getUnixName());
                 } catch (Exception $e) {
                     $backend->log($e->getMessage(), Backend::LOG_ERROR);
                     return false;
@@ -264,24 +247,18 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * Trigger rename of gitolite repositories in configuration files
      *
      * All the rename process is owned by 'root' user but gitolite modification has to be
-     * modified as 'codendiadm' because the config is localy edited and then pushed in 'gitolite'
-     * user repo. In order to make this work, the ~/.ssh/config is modified (otherwise git would
-     * not use a custom ssh key to access the repo).
+     * modified as 'codendiadm'.
      * To make a long story short: we need to execute the following code as codendiadm (so 'su' is used)
-     * and as the new name of the project is already updated in the db we need to pass the old name (instead
-     * of the project Id).
+     * and as the new name of the project is already updated in the db we need to pass the old name
      *
-     * @param String $oldName The old name of the project
-     * @param String $newName The new name of the project
      * @throws Exception
      *
-     * @return bool
      */
-    protected function glRenameProject($oldName, $newName)
+    protected function glRenameProject(Project $project, string $old_name): bool
     {
         $retVal = 0;
         $output = [];
-        $mvCmd  = realpath(__DIR__ . '/../../../src/utils/php-launcher.sh') . ' ' . realpath(__DIR__ . '/../bin/gl-rename-project.php') . ' ' . escapeshellarg($oldName) . ' ' . escapeshellarg($newName);
+        $mvCmd  = realpath(__DIR__ . '/../../../src/utils/php-launcher.sh') . ' ' . realpath(__DIR__ . '/../bin/gl-rename-project.php') . ' ' . escapeshellarg((string) $project->getID()) . ' ' . escapeshellarg($old_name);
         $cmd    = 'su -l codendiadm -c "' . $mvCmd . ' 2>&1"';
         exec($cmd, $output, $retVal);
         if ($retVal == 0) {

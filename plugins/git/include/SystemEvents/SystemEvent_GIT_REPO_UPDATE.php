@@ -78,10 +78,6 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent //phpcs:ignore PSR1.Classe
 
         $default_branch = $this->getDefaultBranchIfItExistsFromParameters();
         if ($default_branch !== null) {
-            $driver = $backend->getDriver();
-            $driver->commit(sprintf('Modifications from event #%d (repository #%d, default branch:%s)', $this->getId(), $repository->getId(), $default_branch));
-            $driver->push();
-
             try {
                 $this->default_branch_update_executor->setDefaultBranch(Git_Exec::buildFromRepository($repository), $default_branch);
             } catch (CannotExecuteDefaultBranchUpdateException $exception) {

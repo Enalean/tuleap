@@ -40,13 +40,13 @@ class SystemEventProcessor_Root extends SystemEventProcessor // phpcs:ignore PSR
     }
 
     #[\Override]
-    public function getOwner()
+    public function getOwner(): string
     {
         return SystemEvent::OWNER_ROOT;
     }
 
     #[\Override]
-    protected function postEventsActions(array $executed_events_ids, $queue_name)
+    protected function postEventsActions(): void
     {
         $this->site_cache->restoreOwnership();
 

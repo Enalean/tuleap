@@ -75,7 +75,7 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
         self::assertTrue(is_dir($this->fixtureRenamePath . '/legacy'));
         self::assertFalse(is_dir($this->fixtureRenamePath . '/newone'));
 
-        $backend->expects($this->once())->method('glRenameProject')->with('legacy', 'newone');
+        $backend->expects($this->once())->method('glRenameProject')->with($project, 'legacy');
         self::assertTrue($backend->renameProject($project, 'newone'));
 
         clearstatcache(true, $this->fixtureRenamePath . '/legacy');
@@ -137,7 +137,6 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
 
         $driver->expects($this->once())->method('fork')->with($name, 'gpig/' . $old_namespace, 'gpig/' . $new_namespace)->willReturn(true);
         $driver->expects($this->once())->method('dumpProjectRepoConf')->with($project);
-        $driver->expects($this->never())->method('push');
 
         $backend->forkOnFilesystem($old_repo, $new_repo);
     }
@@ -173,7 +172,6 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
 
         $driver->expects($this->once())->method('fork')->with($repo_name, $old_project_name . '/' . $namespace, $new_project_name . '/' . $namespace)->willReturn(true);
         $driver->expects($this->once())->method('dumpProjectRepoConf')->with($new_project);
-        $driver->expects($this->never())->method('push');
 
         $backend->forkOnFilesystem($old_repo, $new_repo);
     }
@@ -213,7 +211,6 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
         $dao->method('isRepositoryExisting')->with($project_id, $new_repo_path)->willReturn(true);
         $driver->expects($this->never())->method('fork');
         $driver->expects($this->never())->method('dumpProjectRepoConf');
-        $driver->expects($this->never())->method('push');
 
         $backend->fork($old_repo, $new_repo, $this->forkPermissions);
     }

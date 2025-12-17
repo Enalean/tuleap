@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registered trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,17 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor
+declare(strict_types=1);
+
+namespace Tuleap\Git\Gitolite;
+
+final class GitoliteAdministrationPendingChanges
 {
-    #[\Override]
-    public function getOwner(): string
+    private bool $pending_changes = false;
+
+    public function areTherePendingChangesThatMustBeApplied(): bool
     {
-        return SystemEvent::OWNER_APP;
+        return $this->pending_changes;
     }
 
-    #[\Override]
-    public function getProcessOwner()
+    public function markAsChangesPending(): void
     {
-        return ForgeConfig::get('sys_http_user');
+        $this->pending_changes = true;
     }
 }

@@ -76,6 +76,7 @@ use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Process\SymfonyProcessFactory;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -186,7 +187,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             $this->git_dao,
             $git_plugin,
             $this->createMock(BigObjectAuthorizationManager::class),
-            null,
+            new SymfonyProcessFactory(),
             null,
             $this->createMock(Git_Gitolite_ConfigPermissionsSerializer::class),
             null,

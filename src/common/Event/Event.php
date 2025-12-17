@@ -460,13 +460,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const string RENAME_PROJECT = 'rename_project';
 
     /**
-     *  Parameters:
-     *      'executed_events_ids' => array
-     *      'queue_name'          => string
-     */
-    public const string POST_SYSTEM_EVENTS_ACTIONS = 'post_system_events_actions';
-
-    /**
      * Event raised to get project's Git repositories information with REST
      *
      * Parameters:
