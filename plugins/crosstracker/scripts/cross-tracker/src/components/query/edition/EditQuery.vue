@@ -162,6 +162,7 @@ function doesAiPluginIsEnabled(): boolean {
     return external_plugins.includes(AI_CROSSTRACKER_PLUGIN);
 }
 function handleSearchFromAi(event: TQLQueryEvent): void {
+    title.value = event.title;
     tql_query.value = event.tql_query;
     searched_tql_query.value = tql_query.value;
     query_editor.value?.updateEditor(event.tql_query);

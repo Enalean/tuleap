@@ -52,7 +52,6 @@ export const QUERY_UPDATER: StrictInjectionKey<UpdateQuery> = Symbol();
 export const WIDGET_TITLE_UPDATER: StrictInjectionKey<WidgetTitleUpdater> = Symbol();
 export const ARROW_REDRAW_TRIGGERER: StrictInjectionKey<ArrowRedrawTriggerer> = Symbol();
 export const WIDGET_CONTAINER: StrictInjectionKey<HTMLElement> = Symbol();
-export const MOUNT_POINT: StrictInjectionKey<HTMLElement> = Symbol();
 export const DASHBOARD_ID: StrictInjectionKey<number> = Symbol();
 export const EXTERNAL_PLUGINS: StrictInjectionKey<string[]> = Symbol();
 export const TABLE_DATA_STORE: StrictInjectionKey<TableDataStore> = Symbol();

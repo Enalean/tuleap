@@ -37,6 +37,7 @@ export const STARTING_XLSX_EXPORT_EVENT = "starting-xlsx-export-event";
 export const SELECTABLE_TABLE_RESIZED_EVENT = "selectable-table-resized-event";
 export const DISPLAY_XLSX_MODAL_EVENT = "display-xlsx-modal-event";
 export const HIDE_XLSX_MODAL_EVENT = "hide-xlsx-modal-event";
+export const TOGGLE_AI_ASSISTANT_EVENT = "toggle-ai-assistant";
 export const SEND_TQL_QUERY_FROM_CHATBOT_EVENT = "send-tql-query-from-chat-bot-event";
 
 export type Events = {
@@ -57,6 +58,7 @@ export type Events = {
     [DISPLAY_XLSX_MODAL_EVENT]: void;
     [HIDE_XLSX_MODAL_EVENT]: void;
     [HIDE_XLSX_MODAL_EVENT]: void;
+    [TOGGLE_AI_ASSISTANT_EVENT]: void;
     [SEND_TQL_QUERY_FROM_CHATBOT_EVENT]: TQLQueryEvent;
 };
 
@@ -103,4 +105,5 @@ export type DisplayQueryPreviewEvent = {
 
 export type TQLQueryEvent = {
     readonly tql_query: string;
+    readonly title: string;
 };
