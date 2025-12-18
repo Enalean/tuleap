@@ -355,7 +355,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
                         $html .= '<table>';
                         $html .= ' <tr>';
                         $html .= '  <td colspan="2">';
-                        $html .= '   <img src="' . $job->getStatusIcon() . '" width="10" height="10" /> ' . $html_purifier->purify($job->getName()) . ':';
+                        $html .= '   <i class="hudson-icon-margin ' .  $html_purifier->purify($job->getStatusIcon()) . '" /> ' . $html_purifier->purify($job->getName()) . ':';
                         $html .= '  </td>';
                         $html .= ' </tr>';
                         $html .= ' <tr>';
@@ -371,7 +371,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
                         $html .= '   </ul>';
                         $html .= '  </td>';
                         $html .= '  <td class="widget_lastbuilds_weather">';
-                        $html .= dgettext('tuleap-hudson', 'Weather Report:') . '<img src="' . $job->getWeatherReportIcon() . '" align="middle" />';
+                        $html .= dgettext('tuleap-hudson', 'Weather Report:') . '<i class="' . $job->getWeatherReportIcon() . ' weather-report-spacing" />';
                         $html .= '  </td>';
                         $html .= ' </tr>';
                         $html .= '</table>';

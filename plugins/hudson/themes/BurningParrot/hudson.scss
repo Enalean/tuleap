@@ -33,8 +33,12 @@
     margin: 0 5px 0 0;
 }
 
-.widget-lastbuilds-weather-img {
-    vertical-align: middle;
+.hudson-icon-margin {
+    margin-right: 0 var(--tlp-small-spacing) 0 0;
+}
+
+.weather-report-spacing {
+    padding: var(--tlp-small-spacing);
 }
 
 .hudson-test-results-link {
@@ -92,4 +96,20 @@
     )
     + .continuous-integration-trigger-option-details {
     display: block;
+}
+
+.status-info {
+    color: var(--tlp-info-color);
+}
+
+.status-warning {
+    color: var(--tlp-warning-color);
+}
+
+.status-error {
+    color: var(--tlp-danger-color);
+}
+
+.status-not-run {
+    color: var(--tlp-dimmed-color);
 }

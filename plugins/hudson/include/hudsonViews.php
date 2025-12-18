@@ -396,7 +396,7 @@ class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     $job = $hudson_job_with_exception->getHudsonJob();
 
                     echo '<td>';
-                    echo '<img src="' . $purifier->purify($job->getStatusIcon()) . '" alt="' . $purifier->purify($job->getStatus()) . '" title="' . $purifier->purify($job->getStatus()) . '" /> ';
+                    echo '<i class="' . $purifier->purify($job->getStatusIcon()) . '" title="' . $purifier->purify($job->getStatus()) . '" ></i>';
                     echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '" title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Show job %1$s'), $job->getName())) . '">' . $purifier->purify($job->getName()) . '</a>';
                     echo '</td>';
                     if ($job->getLastSuccessfulBuildNumber() !== 0) {
@@ -442,7 +442,7 @@ class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     }
                 } catch (Exception $e) {
                     echo '  <td>';
-                    echo '<img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'link_error.png" alt="' . $purifier->purify($e->getMessage()) . '" title="' . $purifier->purify($e->getMessage()) . '" /> ';
+                    echo '<i class="fa-solid fa-link-slash" title="' . $purifier->purify($e->getMessage()) . '" ></i>';
                     echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($hudson_jobs_complementary_information[$job_id]['url'])) . '" title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Show job %1$s'), $hudson_jobs_complementary_information[$job_id]['name'])) . '">';
                     echo $purifier->purify($hudson_jobs_complementary_information[$job_id]['name']);
                     echo '</a>';

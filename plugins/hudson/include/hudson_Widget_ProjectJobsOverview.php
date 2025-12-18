@@ -22,7 +22,7 @@
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
 
-class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $plugin;
     public $group_id;
@@ -86,7 +86,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget //phpcs:ign
 
                     $html .= '<tr class="' . util_get_alt_row_color($cpt) . '">';
                     $html .= ' <td>';
-                    $html .= ' <img class="widget-jenkins-job-icon" src="' . $purifier->purify($job->getStatusIcon()) . '" title="' . $purifier->purify($job->getStatus()) . '" >';
+                    $html .= ' <i class="widget-jenkins-job-icon ' . $purifier->purify($job->getStatusIcon()) . '" title="' . $purifier->purify($job->getStatus()) . '" >';
                     $html .= ' </td>';
                     $html .= ' <td style="width:99%">';
                     $html .= '  <a class="widget-jenkins-job" href="/plugins/hudson/?action=view_job&group_id=' . urlencode($this->group_id) . '&job_id=' . urlencode($job_id) . '">' . $purifier->purify($job->getName()) . '</a><br />';
