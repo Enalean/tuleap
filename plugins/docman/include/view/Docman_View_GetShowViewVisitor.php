@@ -25,12 +25,12 @@ use Tuleap\Docman\Item\OtherDocument;
 /**
  * @template-implements ItemVisitor<string>
  */
-class Docman_View_GetShowViewVisitor implements ItemVisitor
+class Docman_View_GetShowViewVisitor implements ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function visitFolder(Docman_Folder $item, $params = [])
     {
-        return (string) Docman_View_Browse::getViewForCurrentUser($item->getGroupId(), $params);
+        return 'Redirect';
     }
 
     #[\Override]
@@ -54,19 +54,19 @@ class Docman_View_GetShowViewVisitor implements ItemVisitor
     #[\Override]
     public function visitFile(Docman_File $item, $params = [])
     {
-        return 'Download';
+        return 'Redirect';
     }
 
     #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
-        return 'Embedded';
+        return 'Redirect';
     }
 
     #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = [])
     {
-        return 'Empty';
+        return 'Redirect';
     }
 
     #[\Override]

@@ -63,9 +63,6 @@ msgstr "%s a été modifié par %s."
 msgid "%s has been removed by %s."
 msgstr "%s a été supprimé par %s."
 
-msgid "* Mandatory field"
-msgstr "* Champ obligatoire"
-
 msgid "12 Months from today"
 msgstr "12 Mois"
 
@@ -74,11 +71,6 @@ msgstr "3 Mois"
 
 msgid "6 Months from today"
 msgstr "6 Mois"
-
-msgid "<br />You need Manage permission to define permissions."
-msgstr ""
-"<br />Vous devez avoir les droits de Gestionnaire pour définir les "
-"permissions."
 
 msgid ""
 "<br><a href=\"/my/\">Back to your personal page</a><em> or you can request "
@@ -122,9 +114,6 @@ msgstr "Une propriété avec le même nom mais un type différent existe déjà.
 msgid "Access"
 msgstr "Accès"
 
-msgid "Access Permissions"
-msgstr "Permissions d'accès"
-
 msgid "Active"
 msgstr "Active"
 
@@ -134,14 +123,8 @@ msgstr "Ajouter"
 msgid "Added:"
 msgstr "Ajouté :"
 
-msgid "Admin"
-msgstr "Admin"
-
 msgid "Administration"
 msgstr "Administration"
-
-msgid "After"
-msgstr "Après"
 
 #, php-format
 msgid "After %s"
@@ -277,9 +260,6 @@ msgstr "Le nom de la metadonnée est erroné."
 
 msgid "Bad property type"
 msgstr "Mauvais type de propriété"
-
-msgid "Begin"
-msgstr "Début"
 
 #, php-format
 msgid "Can't delete folder %s because it is not empty."
@@ -538,9 +518,6 @@ msgstr "Gestionnaire de documents"
 msgid "Document manager administrators"
 msgstr "Administrateurs du gestionnaire de documents"
 
-msgid "Document properties"
-msgstr "Propriétés du document"
-
 msgid "Document settings"
 msgstr "Paramètres de documents"
 
@@ -553,9 +530,6 @@ msgstr "Document créé."
 msgid "Document title"
 msgstr "Titre du document"
 
-msgid "Document type"
-msgstr "Nature du document"
-
 msgid "Document viewer"
 msgstr "Visionneur de document"
 
@@ -564,9 +538,6 @@ msgstr "Documents"
 
 msgid "Documents administration"
 msgstr "Administration des documents"
-
-msgid "Documents found"
-msgstr "Documents trouvés"
 
 msgid ""
 "Documents labeled with the deleted element were reset to the \"None\" value."
@@ -585,9 +556,6 @@ msgstr "Brouillon"
 
 msgid "Edit"
 msgstr "Modification"
-
-msgid "Edit properties"
-msgstr "Editer les propriétés"
 
 msgid "Element successfully deleted."
 msgstr "L'élément a bien été supprimé."
@@ -615,9 +583,6 @@ msgstr "Documents vides"
 
 msgid "Enabled"
 msgstr "Activé"
-
-msgid "End"
-msgstr "Fin"
 
 msgid "Enforce filename pattern"
 msgstr "Forcer l’application du modèle de nom de fichier"
@@ -964,10 +929,6 @@ msgstr "Une nouvelle version de la page wiki %s a été créee par %s."
 msgid "New version successfully created."
 msgstr "Nouvelle version créée."
 
-#, php-format
-msgid "Next %1$s"
-msgstr "%1$s Suivants"
-
 msgid "No"
 msgstr "Non"
 
@@ -1065,13 +1026,6 @@ msgstr "Permissions mises à jour."
 
 msgid "Permissions:"
 msgstr "Permissions :"
-
-msgid "Position:"
-msgstr "Position :"
-
-#, php-format
-msgid "Previous %1$s"
-msgstr "%1$s Précédents"
 
 msgid "Project"
 msgstr "Projet"
@@ -1213,9 +1167,6 @@ msgstr "Valider les permissions"
 
 msgid "Switch to the new user interface"
 msgstr "Basculer sur la nouvelle interface utilisateur"
-
-msgid "Table"
-msgstr "Table"
 
 msgid "Table does not exist"
 msgstr "La table n'existe pas"
@@ -1416,9 +1367,6 @@ msgstr "Il n'y a pas de table d'approbation sur laquelle appliquer une action"
 msgid "There is no approval table to update"
 msgstr "Il n'y a pas de table d'approbation à mettre à jour"
 
-msgid "There is no data attached to this item."
-msgstr "Il n'y a pas de donnée pour cet élément."
-
 msgid "This document does not have an approval table. Please create one before"
 msgstr "Ce document n'a pas de table d'approbation. Merci d'en créer un avant"
 
@@ -1466,9 +1414,6 @@ msgstr "Pour restaurer le monitoring, veuillez visiter :"
 
 msgid "To stop monitoring, please visit:"
 msgstr "Pour arrêter le monitoring, veuillez visiter :"
-
-msgid "Tree"
-msgstr "Arbre"
 
 msgid "Try to create an unknown property"
 msgstr "Tentative de création d'une propriété inconnue"
@@ -1539,9 +1484,6 @@ msgstr "Utilisée"
 msgid "User %d not found"
 msgstr "Utilisateur %d non trouvé"
 
-msgid "User groups"
-msgstr "Groupes d'utilisateurs"
-
 msgid ""
 "User groups who can administrate the document manager, in addition of "
 "project administrators"
@@ -1576,9 +1518,6 @@ msgstr "Numéro de la version"
 
 msgid "View and update obsolete documents."
 msgstr "Afficher et modifier les documents obsolètes."
-
-msgid "View as:"
-msgstr "Vue:"
 
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."
@@ -1621,9 +1560,6 @@ msgstr "Page wiki supprimé du service wiki avec succès."
 
 msgid "Wiki pages"
 msgstr "Pages wiki"
-
-msgid "Will be created with the same permissions than its parent."
-msgstr "Les même permissions que celles du parent."
 
 #, php-format
 msgid ""
@@ -1894,6 +1830,13 @@ msgstr ""
 "--\n"
 "Ceci est un message généré automatiquement. Merci de ne pas répondre à cet "
 "email."
+
+msgid ""
+"Your link is not anymore valid: accessing element via the old interface is "
+"not supported."
+msgstr ""
+"Votre lien n'est plus valide : accéder à un élément via l'ancienne interface "
+"n'est pas supporté."
 
 msgid ""
 "Your link is not anymore valid: accessing properties via the old interface "

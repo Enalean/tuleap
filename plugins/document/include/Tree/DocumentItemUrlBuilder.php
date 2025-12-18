@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Tree;
 
-class DocumentItemPreviewUrlBuilder
+class DocumentItemUrlBuilder
 {
     private function __construct(private \ProjectManager $project_manager)
     {
@@ -35,12 +35,27 @@ class DocumentItemPreviewUrlBuilder
 
     public function getUrl(\Docman_Item $item): string
     {
-        $project = $this->project_manager->getProject((int) $item->getGroupId());
-
-        $base_url = '/plugins/document/' . urlencode($project->getUnixNameLowerCase());
+        $base_url = $this->getBaseUrl($item);
 
         return $item->getParentId() === 0
             ? $base_url
             : $base_url . '/preview/' . urlencode((string) $item->getId());
+    }
+
+    public function getRedirectionForEmbeddedFile(\Docman_Item $item): string
+    {
+        return $this->getBaseUrl($item) . '/folder/' . urlencode((string) $item->getParentId()) . '/' . urlencode((string) $item->getId());
+    }
+
+    private function getBaseUrl(\Docman_Item $item): string
+    {
+        $project = $this->project_manager->getProject((int) $item->getGroupId());
+
+        return '/plugins/document/' . urlencode($project->getUnixNameLowerCase());
+    }
+
+    public function getRedirectionForFolder(\Docman_Folder $item): string
+    {
+        return $this->getBaseUrl($item) . '/folder/' . urlencode((string) $item->getId());
     }
 }

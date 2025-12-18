@@ -21,10 +21,10 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-/* abstract */ class Docman_View_RedirectAfterCrud extends Docman_View_View
+/* abstract */ class Docman_View_RedirectAfterCrud extends Docman_View_View //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
-    public function _content($params)
+    public function display($params = []): void
     {
         if (isset($params['redirect_to'])) {
             $url = $params['redirect_to'];

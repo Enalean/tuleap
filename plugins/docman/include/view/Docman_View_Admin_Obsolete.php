@@ -22,9 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Document\Tree\DocumentItemPreviewUrlBuilder;
+use Tuleap\Document\Tree\DocumentItemUrlBuilder;
 
-class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string IDENTIFIER = 'admin_obsolete';
 
@@ -143,7 +143,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
 
                 $table .= '<td>';
                 $table .= '<span style="white-space: nowrap;">';
-                $url    = DocumentItemPreviewUrlBuilder::buildSelf()->getUrl($item);
+                $url    = DocumentItemUrlBuilder::buildSelf()->getUrl($item);
                 $table .= '<a data-help-window href="' . $url . '">';
                 $table .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
                 $table .= '</a>';

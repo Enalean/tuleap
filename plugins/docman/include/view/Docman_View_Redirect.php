@@ -21,14 +21,15 @@
 
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\Item\OtherDocument;
+use Tuleap\Document\Tree\DocumentItemUrlBuilder;
 
 /**
  * @implements ItemVisitor<string>
  */
-class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
+class Docman_View_Redirect extends Docman_View_View implements ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /* protected */ #[\Override]
-    public function _content($params)
+    public function _content($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (isset($params['redirect_to'])) {
             $url = $params['redirect_to'];
@@ -48,13 +49,14 @@ class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
     }
 
     #[\Override]
-    public function visitFolder(Docman_Folder $item, $params = [])
+    public function visitFolder(Docman_Folder $item, $params = []): string
     {
-        throw new Exception('Redirect view cannot be applied to Folders');
+        $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
+        return DocumentItemUrlBuilder::buildSelf()->getRedirectionForFolder($item) . '/';
     }
 
     #[\Override]
-    public function visitWiki(Docman_Wiki $item, $params = [])
+    public function visitWiki(Docman_Wiki $item, $params = []): string
     {
         $project_id = urlencode($item->getGroupId());
         $pagename   = urlencode($item->getPagename());
@@ -62,7 +64,7 @@ class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
     }
 
     #[\Override]
-    public function visitLink(Docman_Link $item, $params = [])
+    public function visitLink(Docman_Link $item, $params = []): string
     {
         $url = null;
         if (isset($params['version_number'])) {
@@ -100,31 +102,35 @@ class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
     }
 
     #[\Override]
-    public function visitFile(Docman_File $item, $params = [])
+    public function visitFile(Docman_File $item, $params = []): string
     {
-        throw new Exception('Redirect view cannot be applied to Files');
+        $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
+        return DocumentItemUrlBuilder::buildSelf()->getUrl($item) . '/';
     }
 
     #[\Override]
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = []): string
     {
-        throw new Exception('Redirect view cannot be applied to Embedded Files');
+        $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
+        return DocumentItemUrlBuilder::buildSelf()->getRedirectionForEmbeddedFile($item) . '/';
     }
 
     #[\Override]
-    public function visitEmpty(Docman_Empty $item, $params = [])
+    public function visitEmpty(Docman_Empty $item, $params = []): string
     {
-        throw new Exception('Redirect view cannot be applied to Empty documents');
+        $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
+        return DocumentItemUrlBuilder::buildSelf()->getUrl($item) . '/';
     }
 
     #[\Override]
-    public function visitItem(Docman_Item $item, array $params = [])
+    public function visitItem(Docman_Item $item, array $params = []): string
     {
-        throw new Exception('Redirect view cannot be applied to unknown item documents');
+        $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
+        return DocumentItemUrlBuilder::buildSelf()->getUrl($item) . '/';
     }
 
     #[\Override]
-    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    public function visitOtherDocument(OtherDocument $item, array $params = []): string
     {
         return EventManager::instance()
             ->dispatch(new \Tuleap\Docman\Item\OtherDocumentHrefEvent($item))
