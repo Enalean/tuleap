@@ -352,19 +352,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         return $this->pluginInfo;
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
-    public function cssfile($params): void
-    {
-        // Only show the stylesheet if we're actually in the Docman pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (
-            $this->currentRequestIsForPlugin() ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
-        ) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('default-style.css') . '" />' . "\n";
-        }
-    }
-
     #[\Tuleap\Plugin\ListeningToEventName('javascript_file')]
     public function javascriptFile($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
