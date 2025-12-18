@@ -7,6 +7,6 @@
 * Docman_View_Error
 */
 
-class Docman_View_Error extends Docman_View_Header
+class Docman_View_Error extends Docman_View_View //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
 }

@@ -92,25 +92,16 @@ final class FileVersionRepresentation
         string $changelog,
         string $authoring_tool,
     ) {
-        $this->id            = $id;
-        $this->number        = $number;
-        $this->name          = ($label) ?: '';
-        $this->filename      = $filename;
-        $this->author        = $author;
-        $this->coauthors     = $coauthors;
-        $this->date          = $date;
-        $this->changelog     = $changelog;
-        $this->approval_href = $approval_href;
-        $this->download_href = '/plugins/docman/?'
-            . http_build_query(
-                [
-                    'group_id'       => $group_id,
-                    'action'         => 'show',
-                    'id'             => $item_id,
-                    'version_number' => $number,
-                ]
-            );
-
+        $this->id             = $id;
+        $this->number         = $number;
+        $this->name           = ($label) ?: '';
+        $this->filename       = $filename;
+        $this->author         = $author;
+        $this->coauthors      = $coauthors;
+        $this->date           = $date;
+        $this->changelog      = $changelog;
+        $this->approval_href  = $approval_href;
+        $this->download_href  = '/plugins/docman/download/' . urlencode((string) $item_id) . '/' . urlencode((string) $number);
         $this->authoring_tool = $authoring_tool;
     }
 

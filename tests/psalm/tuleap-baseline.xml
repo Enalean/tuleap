@@ -6310,9 +6310,6 @@
     </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/Docman_Controller.php">
-    <DeprecatedFunction>
-      <code><![CDATA[user_set_preference('hide_' . $this->request->get('action'), 1)]]></code>
-    </DeprecatedFunction>
     <DeprecatedMethod>
       <code><![CDATA[getFromLabel]]></code>
       <code><![CDATA[getFromLabel]]></code>
@@ -6418,12 +6415,8 @@
       <code><![CDATA[! $valid]]></code>
       <code><![CDATA[! $valid]]></code>
     </RiskyTruthyFalsyComparison>
-    <TooManyArguments>
-      <code><![CDATA[userCanAdmin]]></code>
-    </TooManyArguments>
     <UndefinedMethod>
       <code><![CDATA[_includeView]]></code>
-      <code><![CDATA[_setView]]></code>
       <code><![CDATA[_setView]]></code>
       <code><![CDATA[_setView]]></code>
       <code><![CDATA[_setView]]></code>
@@ -11013,139 +11006,6 @@
       <code><![CDATA[display]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_Browse.php">
-    <MissingParamType>
-      <code><![CDATA[$extraParams]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$report]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$dfltParams]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_buildSearchUrl]]></code>
-      <code><![CDATA[_filter]]></code>
-      <code><![CDATA[_getDefaultUrlParams]]></code>
-      <code><![CDATA[_getTitle]]></code>
-      <code><![CDATA[getActionOnIconForFolder]]></code>
-      <code><![CDATA[getClassForFolderLink]]></code>
-      <code><![CDATA[getDefaultViews]]></code>
-      <code><![CDATA[getItemClasses]]></code>
-      <code><![CDATA[getTitleWhenFilterIsSet]]></code>
-      <code><![CDATA[getUnconvertedTitle]]></code>
-      <code><![CDATA[getViewForCurrentUser]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Display.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_footer]]></code>
-      <code><![CDATA[_javascript]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Docman.php">
-    <MissingReturnType>
-      <code><![CDATA[addDocmanTool]]></code>
-      <code><![CDATA[getToolbar]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Download.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Embedded.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Empty.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_GetFieldsVisitor.php">
-    <MissingParamType>
-      <code><![CDATA[$mdIter]]></code>
-      <code><![CDATA[$mdLabelToSkip]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$mdLabelToSkip]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[buildFieldArray]]></code>
-      <code><![CDATA[visitDocument]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_GetMenuItemsVisitor.php">
-    <MissingParamType>
-      <code><![CDATA[$groupId]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$user]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$actions]]></code>
-      <code><![CDATA[$user]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[visitDocument]]></code>
-    </MissingReturnType>
-    <MissingTemplateParam>
-      <code><![CDATA[ItemVisitor]]></code>
-    </MissingTemplateParam>
-    <PossiblyNullArgument>
-      <code><![CDATA[$item->getId()]]></code>
-    </PossiblyNullArgument>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->dPm]]></code>
-      <code><![CDATA[$this->if]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->dPm]]></code>
-      <code><![CDATA[$this->dPm]]></code>
-      <code><![CDATA[$this->dPm]]></code>
-      <code><![CDATA[$this->dPm]]></code>
-      <code><![CDATA[$this->dPm]]></code>
-      <code><![CDATA[$this->dPm]]></code>
-      <code><![CDATA[$this->if]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_GetShowViewVisitor.php">
     <MissingParamType>
       <code><![CDATA[$params]]></code>
@@ -11157,175 +11017,12 @@
       <code><![CDATA[$params]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_Header.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_feedback]]></code>
-      <code><![CDATA[_footer]]></code>
-      <code><![CDATA[_getTitle]]></code>
-      <code><![CDATA[_header]]></code>
-      <code><![CDATA[getProjectIdFromParams]]></code>
-      <code><![CDATA[getToolbar]]></code>
-      <code><![CDATA[getUnconvertedTitle]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemRanking.php">
-    <MissingParamType>
-      <code><![CDATA[$parentItem]]></code>
-      <code><![CDATA[$v]]></code>
-      <code><![CDATA[$v]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$dropDownName]]></code>
-      <code><![CDATA[$selectedValue]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getDropDownWidget]]></code>
-      <code><![CDATA[setDropDownName]]></code>
-      <code><![CDATA[setSelectedValue]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemTreeUlVisitor.php">
-    <MissingParamType>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$view]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$defaultUrl]]></code>
-      <code><![CDATA[$docmanIcons]]></code>
-      <code><![CDATA[$firstNodeStripped]]></code>
-      <code><![CDATA[$get_action_on_title]]></code>
-      <code><![CDATA[$get_class_for_link]]></code>
-      <code><![CDATA[$hp]]></code>
-      <code><![CDATA[$html]]></code>
-      <code><![CDATA[$js]]></code>
-      <code><![CDATA[$showOptions]]></code>
-      <code><![CDATA[$stripFirstNode]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_canDisplayItem]]></code>
-      <code><![CDATA[_canDisplaySubItems]]></code>
-      <code><![CDATA[_displayItem]]></code>
-      <code><![CDATA[getJavascript]]></code>
-      <code><![CDATA[toHtml]]></code>
-      <code><![CDATA[visitDocument]]></code>
-    </MissingReturnType>
-    <MissingTemplateParam>
-      <code><![CDATA[\Tuleap\Docman\Item\ItemVisitor]]></code>
-    </MissingTemplateParam>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$action]]></code>
-      <code><![CDATA[$action]]></code>
-      <code><![CDATA[$action]]></code>
-      <code><![CDATA[$action]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->view]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->view]]></code>
-      <code><![CDATA[$this->view]]></code>
-      <code><![CDATA[$this->view]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_New.php">
-    <MissingParamType>
-      <code><![CDATA[$fields]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$newItem]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_getAction]]></code>
-      <code><![CDATA[_getActionText]]></code>
-      <code><![CDATA[_getCategories]]></code>
-      <code><![CDATA[_getDefaultValuesFieldset]]></code>
-      <code><![CDATA[_getEnctype]]></code>
-      <code><![CDATA[_getForm]]></code>
-      <code><![CDATA[_getGeneralProperties]]></code>
-      <code><![CDATA[_getGeneralPropertiesFieldset]]></code>
-      <code><![CDATA[_getJSDocmanParameters]]></code>
-      <code><![CDATA[_getLocationFieldset]]></code>
-      <code><![CDATA[_getNewItem]]></code>
-      <code><![CDATA[_getPermissionsFieldset]]></code>
-      <code><![CDATA[_getPropertiesFields]]></code>
-      <code><![CDATA[_getPropertiesFieldsDisplay]]></code>
-      <code><![CDATA[_getSpecificProperties]]></code>
-      <code><![CDATA[_getSpecificPropertiesFieldset]]></code>
-      <code><![CDATA[metadataToSkip]]></code>
-      <code><![CDATA[setupNewItem]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_PermissionDeniedError.php">
     <MissingParamType>
       <code><![CDATA[$params]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[display]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_PermissionsForItem.php">
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[fetch]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ProjectHeader.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_getJSDocmanParameters]]></code>
-      <code><![CDATA[_scripts]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_RawTree.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-      <code><![CDATA[_javascript]]></code>
-      <code><![CDATA[getClassForFolderLink]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Redirect.php">
@@ -11346,25 +11043,6 @@
     <MissingParamType>
       <code><![CDATA[$params]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Table.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Tree.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[_content]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_View.php">
     <MissingParamType>
@@ -76701,7 +76379,6 @@
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_templates)]]></code>
       <code><![CDATA[db_ei($row['user_id'])]]></code>
       <code><![CDATA[db_ei($ugroup_id)]]></code>
@@ -76716,7 +76393,6 @@
       <code><![CDATA[db_ei($ugroup_id)]]></code>
       <code><![CDATA[db_ei($ugroup_id)]]></code>
       <code><![CDATA[db_ei($ugroup_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
       <code><![CDATA[db_ei($user_id)]]></code>
       <code><![CDATA[db_ei($user_id)]]></code>
       <code><![CDATA[db_ei($user_id)]]></code>
@@ -76742,8 +76418,6 @@
       <code><![CDATA[db_fetch_array($res)]]></code>
       <code><![CDATA[db_fetch_array($res)]]></code>
       <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_fetch_array($rs)]]></code>
-      <code><![CDATA[db_fetch_array($rs)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
@@ -76766,10 +76440,7 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($usersSql)]]></code>
-      <code><![CDATA[db_query('SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (' . implode(',', $GLOBALS['UGROUPS']) . ') ')]]></code>
       <code><![CDATA[db_result($res, 0, 'name')]]></code>
       <code><![CDATA[db_result($res, 0, 'name')]]></code>
       <code><![CDATA[db_result($res, 0, 'name')]]></code>
@@ -76781,7 +76452,6 @@
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[groupAddHistory]]></code>
@@ -76790,7 +76460,6 @@
       <code><![CDATA[groupAddHistory]]></code>
       <code><![CDATA[isTrackerAdmin]]></code>
       <code><![CDATA[isTrackerAdmin]]></code>
-      <code><![CDATA[quoteLikeValueSuffix]]></code>
       <code><![CDATA[quoteLikeValueSurround]]></code>
     </DeprecatedMethod>
     <InvalidReturnStatement>
@@ -76800,9 +76469,6 @@
       <code><![CDATA[false]]></code>
     </InvalidReturnType>
     <MissingParamType>
-      <code><![CDATA[$atid]]></code>
-      <code><![CDATA[$group_artifact_id]]></code>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
@@ -76836,7 +76502,6 @@
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$with_display_preferences]]></code>
       <code><![CDATA[$with_display_preferences]]></code>
     </MissingParamType>
@@ -76846,7 +76511,6 @@
       <code><![CDATA[ugroup_db_get_ugroup]]></code>
       <code><![CDATA[ugroup_db_list_all_ugroups_for_user]]></code>
       <code><![CDATA[ugroup_db_list_dynamic_ugroups_for_user]]></code>
-      <code><![CDATA[ugroup_db_list_tracker_ugroups_for_user]]></code>
       <code><![CDATA[ugroup_get_name_from_id]]></code>
       <code><![CDATA[ugroup_get_parent]]></code>
       <code><![CDATA[ugroup_get_ugroups_with_members]]></code>

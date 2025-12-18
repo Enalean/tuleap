@@ -29,7 +29,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
-use Tuleap\Document\Tree\DocumentItemPreviewUrlBuilder;
+use Tuleap\Document\Tree\DocumentItemUrlBuilder;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
@@ -361,19 +361,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
     #[\Override]
     public function request()
     {
-        if (
-            $this->request->exist('action')
-            && ($this->request->get('action') == 'plugin_docman_approval_reviewer'
-                || $this->request->get('action') == 'plugin_docman_approval_requester'
-                )
-        ) {
-            if ($this->request->get('hide')) {
-                user_set_preference('hide_' . $this->request->get('action'), 1);
-            } else {
-                user_del_preference('hide_' . $this->request->get('action'));
-            }
-            exit;
-        }
         if (! $this->request->exist('group_id')) {
             $this->feedback->log('error', 'Project is missing.');
             $this->_setView('Error');
@@ -408,23 +395,7 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
             $view                        = $this->request->exist('action') ? $this->request->get('action') : 'show';
             $this->_viewParams['action'] = $view;
 
-            // Start is used by Table view (like LIMIT start,offset)
-            if ($this->request->exist('start')) {
-                $this->_viewParams['start'] = (int) $this->request->get('start');
-            }
 
-            if ($this->request->exist('pv')) {
-                $this->_viewParams['pv'] = (int) $this->request->get('pv');
-            }
-
-            if ($this->request->exist('report')) {
-                $this->_viewParams['report'] = $this->request->get('report');
-                $views                       = Docman_View_Browse::getDefaultViews();
-                $validator                   = new Valid_WhiteList('report', $views);
-                $views_keys                  = array_keys($views);
-                $default_view                = $views[$views_keys[0]];
-                $this->_viewParams['report'] = $this->request->getValidated('report', $validator, $default_view);
-            }
 
             $item_factory = $this->getItemFactory();
             $root         = $item_factory->getRoot($this->request->get('group_id'));
@@ -527,28 +498,15 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
     public function _dispatch($view, $item, $root, $get_show_view)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
-        $item_factory = $this->getItemFactory();
-        $user         = $this->getUser();
-        $dpm          = $this->_getPermissionsManager();
 
         switch ($view) {
             case 'show':
-                if ($item->isObsolete()) {
-                    if (! $this->userCanAdmin($item->getId())) {
-                        // redirect to details view
-                        $this->view = 'Details';
-                        break;
-                    }
-                }
-                $report = $this->request->get('report');
-                if (! is_array($report)) {
-                    $report = [];
-                }
+                $report = [];
                 $this->view = $item->accept($get_show_view, $report);
                 break;
             case 'getRootFolder':
-                $this->_viewParams['action_result'] = $root->getId();
-                $this->_setView('getRootFolder');
+                $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
+                $GLOBALS['Response']->redirect(DocumentItemUrlBuilder::buildSelf()->getUrl($item). "/");
                 break;
             case 'admin_set_permissions':
                 \Docman_View_Admin_Permissions::getCSRFToken($this->getGroupId())->check();
@@ -559,7 +517,7 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                 $section = $this->request->get('section');
                 if ($section === 'properties') {
                     $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing properties via the old interface is not supported.'));
-                    $GLOBALS['Response']->redirect(DocumentItemPreviewUrlBuilder::buildSelf()->getUrl($item));
+                    $GLOBALS['Response']->redirect(DocumentItemUrlBuilder::buildSelf()->getUrl($item));
                 } elseif ($section === 'history') {
                     $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing the history via the old interface is not supported.'));
                     $project      = ProjectManager::instance()->getProject((int) $item->getGroupId());
