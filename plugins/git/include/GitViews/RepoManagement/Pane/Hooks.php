@@ -144,7 +144,7 @@ class Hooks extends Pane
     }
 
     #[\Override]
-    public function getJavascriptViteAssets(): array
+    public function getJavascriptAssets(): array
     {
         return [
             new JavascriptViteAsset(

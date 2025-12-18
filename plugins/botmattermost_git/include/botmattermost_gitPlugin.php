@@ -102,7 +102,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         if ($this->isAllowed($additional_content->repository->getProjectId())) {
             $render = $this->getController($additional_content->request)->render($additional_content->repository);
             $additional_content->addHTML($render);
-            $additional_content->addJavascriptViteAsset(
+            $additional_content->addJavascriptAsset(
                 new JavascriptViteAsset(
                     new IncludeViteAssets(
                         __DIR__ . '/../frontend-assets',

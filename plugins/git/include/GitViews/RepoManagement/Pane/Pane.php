@@ -23,7 +23,7 @@ namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 use GitRepository;
 use Codendi_HTMLPurifier;
 use Tuleap\HTTPRequest;
-use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 /**
  * A pane to be displayed in git repo management
@@ -95,9 +95,9 @@ abstract class Pane
     }
 
     /**
-     * @return list<JavascriptViteAsset>
+     * @return list<JavascriptAssetGeneric>
      */
-    public function getJavascriptViteAssets(): array
+    public function getJavascriptAssets(): array
     {
         return [];
     }
