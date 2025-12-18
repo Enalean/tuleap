@@ -25,7 +25,6 @@ const output = webpack_configurator.configureOutput(path.resolve(__dirname, "./f
 module.exports = [
     {
         entry: {
-            "default-style": "./themes/default/css/style.scss",
             "burningparrot-style": "./themes/BurningParrot/css/docman.scss",
             "admin-style": "./themes/BurningParrot/css/admin.scss",
             "admin-permissions": "./scripts/admin-permissions.ts",
