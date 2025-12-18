@@ -23,16 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Folders;
 
+use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
+use Tuleap\Docman\REST\v1\ItemRepresentationVisitor;
 use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
 use Tuleap\Docman\REST\v1\Search\ListOfCustomPropertyRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
-final class BuildSearchedItemRepresentationsFromSearchReport
+final readonly class BuildSearchedItemRepresentationsFromSearchReport
 {
     public function __construct(
         private ItemStatusMapper $status_mapper,
@@ -40,9 +41,9 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         private ItemRepresentationCollectionBuilder $item_representation_collection_builder,
         private \Docman_ItemFactory $item_factory,
         private SearchRepresentationTypeVisitor $type_visitor,
-        private FilePropertiesVisitor $file_properties_visitor,
         private ListOfCustomPropertyRepresentationBuilder $custom_property_builder,
         private ProvideUserAvatarUrl $provide_user_avatar_url,
+        private ItemRepresentationVisitor $item_representation_visitor,
     ) {
     }
 
@@ -73,6 +74,8 @@ final class BuildSearchedItemRepresentationsFromSearchReport
 
             $owner = $this->user_manager->getUserById($item->getOwnerId());
             assert($owner instanceof \PFUser);
+            $item_representation = $item->accept($this->item_representation_visitor, ['current_user' => $user]);
+            assert($item_representation instanceof ItemRepresentation || $item_representation === null);
             $search_results[] = SearchRepresentation::build(
                 $item,
                 \Codendi_HTMLPurifier::instance(),
@@ -80,7 +83,9 @@ final class BuildSearchedItemRepresentationsFromSearchReport
                 $owner,
                 $this->item_representation_collection_builder->buildParentRowCollection($item, $user, $limit, $offset),
                 $item->accept($this->type_visitor),
-                $item->accept($this->file_properties_visitor),
+                $item_representation?->file_properties,
+                $item_representation?->wiki_properties,
+                $item_representation?->link_properties,
                 $this->custom_property_builder->getCustomProperties($item, $wanted_custom_properties),
                 $this->provide_user_avatar_url,
             );

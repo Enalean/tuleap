@@ -599,7 +599,8 @@ final class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($folder['link_properties'], null);
         $this->assertEquals($empty['link_properties'], null);
         $this->assertEquals($file['link_properties'], null);
-        $this->assertEquals($link['link_properties'], null);
+        $this->assertNotNull($link['link_properties']);
+        $this->assertEquals($link['link_properties']['link_url'], 'https://my.example.test');
         $this->assertEquals($embedded['link_properties'], null);
         $this->assertEquals($wiki['link_properties'], null);
 

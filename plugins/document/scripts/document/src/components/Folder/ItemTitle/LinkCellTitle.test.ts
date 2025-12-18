@@ -24,25 +24,25 @@ import { shallowMount } from "@vue/test-utils";
 import { TYPE_LINK } from "../../../constants";
 import type { Link } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { PROJECT } from "../../../configuration-keys";
-import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
+import { ItemBuilder } from "../../../../tests/builders/ItemBuilder";
 
 describe("LinkCellTitle", () => {
     it(`should render link title`, () => {
-        const item = {
-            id: 42,
-            title: "my link",
-            link_properties: {},
-            type: TYPE_LINK,
-        } as Link;
+        const item: Link = {
+            ...new ItemBuilder(42)
+                .withType(TYPE_LINK)
+                .withTitle("my link")
+                .buildApprovableDocument(),
+            link_properties: {
+                link_url: "https://example.com",
+                version_number: null,
+            },
+        };
 
         const wrapper = shallowMount(LinkCellTitle, {
             props: { item },
             global: {
                 ...getGlobalTestOptions({}),
-                provide: {
-                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
-                },
             },
         });
 

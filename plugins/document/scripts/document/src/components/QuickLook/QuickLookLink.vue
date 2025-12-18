@@ -20,30 +20,21 @@
 
 <template>
     <div class="document-quick-look-document-action">
-        <button type="button" class="tlp-button-primary tlp-button-small" v-on:click="redirectUrl">
+        <a
+            v-bind:href="item.link_properties.link_url"
+            type="button"
+            class="tlp-button-primary tlp-button-small"
+        >
             {{ $gettext("Open link") }}
             <i class="fa-solid fa-right-long tlp-button-icon" aria-hidden="true"></i>
-        </button>
+        </a>
         <drop-down-quick-look v-bind:item="item" />
     </div>
 </template>
 
 <script setup lang="ts">
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
-import type { Item } from "../../type";
-import { useGettext } from "vue3-gettext";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT } from "../../configuration-keys";
+import type { Link } from "../../type";
 
-const { $gettext } = useGettext();
-
-const project = strictInject(PROJECT);
-
-const props = defineProps<{ item: Item }>();
-
-function redirectUrl(): void {
-    window.location.assign(
-        encodeURI(`/plugins/docman/?group_id=${project.id}&action=show&id=${props.item.id}`),
-    );
-}
+defineProps<{ item: Link }>();
 </script>

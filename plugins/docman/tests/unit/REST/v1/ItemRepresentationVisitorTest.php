@@ -134,7 +134,9 @@ final class ItemRepresentationVisitorTest extends TestCase
 
         $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
-        $this->link_version_factory->expects($this->never())->method('getLatestVersion');
+        $this->link_version_factory->expects($this->once())->method('getLatestVersion');
+
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->item_visitor->visitLink($item, $params);
     }

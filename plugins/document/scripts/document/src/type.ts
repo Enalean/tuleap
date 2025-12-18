@@ -106,6 +106,8 @@ export interface ItemSearchResult {
         readonly title: string;
     }>;
     readonly file_properties: FileProperties | null;
+    readonly wiki_properties: WikiProperties | null;
+    readonly link_properties: LinkProperties | null;
     readonly custom_properties: {
         readonly [key: AdditionalFieldNumber]: CustomPropertySearchResult;
     };

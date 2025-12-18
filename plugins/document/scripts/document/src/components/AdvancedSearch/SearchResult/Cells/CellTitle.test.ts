@@ -28,6 +28,7 @@ import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import { OTHER_ITEM_TYPES } from "../../../../injection-keys";
 import { PROJECT } from "../../../../configuration-keys";
 import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
+import { TYPE_LINK, TYPE_WIKI } from "../../../../constants";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -94,14 +95,34 @@ describe("CellTitle", () => {
     it("should output a link for Wiki", () => {
         const item = {
             id: 123,
-            type: "wiki",
+            type: TYPE_WIKI,
             title: "Lorem",
+            wiki_properties: {
+                page_name: "my_wiki_page",
+            },
         } as unknown as ItemSearchResult;
 
         const wrapper = getWrapper(item, {});
 
         const link = wrapper.find("[data-test=link]");
-        expect(link.attributes().href).toBe("/plugins/docman/?group_id=101&action=show&id=123");
+        expect(link.attributes().href).toBe("/wiki/?group_id=101&pagename=my_wiki_page");
+        expect(link.attributes().title).toBe("Lorem");
+    });
+
+    it("should output a link for Link", () => {
+        const item = {
+            id: 123,
+            type: TYPE_LINK,
+            title: "Lorem",
+            link_properties: {
+                link_url: "https://example.com",
+            },
+        } as unknown as ItemSearchResult;
+
+        const wrapper = getWrapper(item, {});
+
+        const link = wrapper.find("[data-test=link]");
+        expect(link.attributes().href).toBe("https://example.com");
         expect(link.attributes().title).toBe("Lorem");
     });
 

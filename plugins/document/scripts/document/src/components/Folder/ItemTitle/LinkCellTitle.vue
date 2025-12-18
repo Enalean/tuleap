@@ -23,9 +23,13 @@
     <div>
         <fake-caret v-bind:item="item" />
         <i class="fa-fw document-folder-content-icon" v-bind:class="ICON_LINK"></i>
-        <a v-bind:href="document_link_url" class="document-folder-subitem-link" draggable="false">
-            {{ item.title
-            }}<i
+        <a
+            v-bind:href="item.link_properties.link_url"
+            class="document-folder-subitem-link"
+            draggable="false"
+        >
+            {{ item.title }}
+            <i
                 class="fas document-action-icon"
                 v-bind:class="ACTION_ICON_LINK"
                 aria-hidden="true"
@@ -37,16 +41,7 @@
 <script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
 import { ICON_LINK, ACTION_ICON_LINK } from "../../../constants";
-import type { Item } from "../../../type";
-import { computed } from "vue";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT } from "../../../configuration-keys";
+import type { Link } from "../../../type";
 
-const props = defineProps<{ item: Item }>();
-
-const project = strictInject(PROJECT);
-
-const document_link_url = computed((): string => {
-    return `/plugins/docman/?group_id=${project.id}&action=show&id=${props.item.id}`;
-});
+defineProps<{ item: Link }>();
 </script>

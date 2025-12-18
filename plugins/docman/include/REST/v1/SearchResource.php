@@ -45,7 +45,6 @@ use Tuleap\Docman\REST\v1\Folders\SearchRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
-use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
 use Tuleap\Docman\REST\v1\Search\ListOfCustomPropertyRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
@@ -318,9 +317,9 @@ final class SearchResource extends AuthenticatedResource
             ),
             $item_factory,
             new SearchRepresentationTypeVisitor(\EventManager::instance()),
-            new FilePropertiesVisitor($version_factory, $event_manager),
             new ListOfCustomPropertyRepresentationBuilder(),
             $provide_user_avatar_url,
+            $visitor,
         );
 
         $wanted_custom_properties = (new SearchColumnCollectionBuilder())

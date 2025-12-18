@@ -29,8 +29,8 @@
             draggable="false"
             data-test="wiki-document-link"
         >
-            {{ item.title
-            }}<i
+            {{ item.title }}
+            <i
                 class="fas document-action-icon"
                 v-bind:class="ACTION_ICON_WIKI"
                 aria-hidden="true"
@@ -41,17 +41,18 @@
 
 <script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
-import { ICON_WIKI, ACTION_ICON_WIKI } from "../../../constants";
-import type { Item } from "../../../type";
+import { ACTION_ICON_WIKI, ICON_WIKI } from "../../../constants";
+import type { Wiki } from "../../../type";
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT } from "../../../configuration-keys";
 
-const props = defineProps<{ item: Item }>();
+const props = defineProps<{ item: Wiki }>();
 
 const project = strictInject(PROJECT);
 
-const wiki_url = computed((): string => {
-    return `/plugins/docman/?group_id=${project.id}&action=show&id=${props.item.id}`;
-});
+const wiki_url = computed(
+    (): string =>
+        `/wiki/?group_id=${project.id}&pagename=${encodeURIComponent(props.item.wiki_properties.page_name)}`,
+);
 </script>

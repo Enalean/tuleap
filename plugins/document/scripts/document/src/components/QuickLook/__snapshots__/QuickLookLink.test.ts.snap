@@ -4,8 +4,9 @@ exports[`QuickLookLink > renders quick look for link document 1`] = `
 <div
   class="document-quick-look-document-action"
 >
-  <button
+  <a
     class="tlp-button-primary tlp-button-small"
+    href="https://example.com"
     type="button"
   >
     Open link 
@@ -13,7 +14,7 @@ exports[`QuickLookLink > renders quick look for link document 1`] = `
       aria-hidden="true"
       class="fa-solid fa-right-long tlp-button-icon"
     />
-  </button>
+  </a>
   <drop-down-quick-look-stub
     item="[object Object]"
   />
