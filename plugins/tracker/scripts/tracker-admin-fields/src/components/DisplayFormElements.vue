@@ -34,6 +34,7 @@
         <field-checkbox v-else-if="isCheckbox(element.field)" v-bind:field="element.field" />
         <field-radio v-else-if="isRadioButton(element.field)" v-bind:field="element.field" />
         <field-static-text v-else-if="isStaticText(element.field)" v-bind:field="element.field" />
+        <field-id v-else-if="isAnIdField(element.field)" v-bind:field="element.field" />
         <line-separator v-else-if="isLineSeparator(element.field)" v-bind:field="element.field" />
         <line-break v-else-if="isLineBreak(element.field)" v-bind:field="element.field" />
         <base-field v-else v-bind:field="element.field" />
@@ -55,6 +56,8 @@ import {
     TEXT_FIELD,
     CHECKBOX_FIELD,
     RADIO_BUTTON_FIELD,
+    ARTIFACT_ID_FIELD,
+    ARTIFACT_ID_IN_TRACKER_FIELD,
     STATIC_RICH_TEXT,
 } from "@tuleap/plugin-tracker-constants";
 import type {
@@ -84,6 +87,7 @@ import FieldDate from "./FormElements/FieldDate.vue";
 import FieldCheckbox from "./FormElements/FieldCheckbox.vue";
 import FieldRadio from "./FormElements/FieldRadio.vue";
 import FieldStaticText from "./FormElements/FieldStaticText.vue";
+import FieldId from "./FormElements/FieldId.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -145,5 +149,9 @@ function isRadioButton(field: StructureFields): field is ListFieldStructure {
 
 function isStaticText(field: StructureFields): field is StaticRichTextStructure {
     return field.type === STATIC_RICH_TEXT;
+}
+
+function isAnIdField(field: StructureFields): boolean {
+    return field.type === ARTIFACT_ID_FIELD || field.type === ARTIFACT_ID_IN_TRACKER_FIELD;
 }
 </script>
