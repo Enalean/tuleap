@@ -18,13 +18,16 @@
   -->
 
 <template>
-    <div class="tlp-framed">
-        <h2>{{ $gettext("Fields usage") }}</h2>
+    <section>
+        <palette-container />
+        <div class="tlp-framed">
+            <h2>{{ $gettext("Fields usage") }}</h2>
 
-        <tracker-structure v-bind:root="root" v-if="root.children.length > 0" />
+            <tracker-structure v-bind:root="root" v-if="root.children.length > 0" />
 
-        <empty-state v-if="root.children.length === 0" />
-    </div>
+            <empty-state v-if="root.children.length === 0" />
+        </div>
+    </section>
 </template>
 
 <script setup lang="ts">
@@ -35,6 +38,7 @@ import EmptyState from "./EmptyState.vue";
 import TrackerStructure from "./TrackerStructure.vue";
 import { mapContentStructureToFields } from "../helpers/map-content-structure-to-fields";
 import type { ElementWithChildren } from "../type";
+import PaletteContainer from "./Palette/PaletteContainer.vue";
 
 const { $gettext } = useGettext();
 
@@ -46,3 +50,10 @@ const props = defineProps<{
 
 const root = ref<ElementWithChildren>(mapContentStructureToFields(props.structure, props.fields));
 </script>
+
+<style lang="scss" scoped>
+section {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+}
+</style>

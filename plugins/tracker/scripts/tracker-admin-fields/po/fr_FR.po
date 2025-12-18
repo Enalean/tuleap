@@ -15,11 +15,101 @@ msgstr ""
 msgid "%{user} user's avatar"
 msgstr "Avatar de l'utilisateur %{user}"
 
+msgid "Add fields"
+msgstr "Ajouter des champs"
+
+msgid "Artifact id"
+msgstr "Id artifact"
+
+msgid "Artifact link"
+msgstr "Liens entre artifacts"
+
+msgid "Checkbox"
+msgstr "Case à cocher"
+
+msgid "Column"
+msgstr "Colonne"
+
+msgid "Computed value"
+msgstr "Valeur calculée"
+
+msgid "Cross references"
+msgstr "Références croisées"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Field..."
+msgstr "Champ..."
+
 msgid "Fields usage"
 msgstr "Utilisation des champs"
 
+msgid "Fieldset"
+msgstr "Groupe de champs"
+
+msgid "File upload"
+msgstr "Fichier à téléverser"
+
+msgid "Float"
+msgstr "Flottant"
+
+msgid "Integer"
+msgstr "Entier"
+
+msgid "Last update by"
+msgstr "Dernière mise à jour par"
+
+msgid "Last update date"
+msgstr "Date de mise à jour"
+
+msgid "Line break"
+msgstr "Saut de ligne"
+
+msgid "Multi selectbox"
+msgstr "Liste à choix multiple"
+
 msgid "No fields"
 msgstr "Aucun champ"
+
+msgid "Open list"
+msgstr "Liste ouverte"
+
+msgid "Per tracker id"
+msgstr "Id dans le tracker"
+
+msgid "Permissions on artifact"
+msgstr "Permissions sur l'artifact"
+
+msgid "Radio"
+msgstr "Bouton radio"
+
+msgid "Rank"
+msgstr "Rang"
+
+msgid "Selectbox"
+msgstr "Liste de choix"
+
+msgid "Separator"
+msgstr "Séparateur"
+
+msgid "Shared field"
+msgstr "Champ partagé"
+
+msgid "Static text"
+msgstr "Texte statique"
+
+msgid "String"
+msgstr "Chaîne de caractères"
+
+msgid "Submitted by"
+msgstr "Auteur de l'artifact"
+
+msgid "Submitted on"
+msgstr "Date de création"
+
+msgid "Text"
+msgstr "Texte"
 
 msgid "This tracker does not have any field yet."
 msgstr "Ce tracker n'a pas encore de champ."
