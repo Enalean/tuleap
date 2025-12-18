@@ -25,6 +25,10 @@ import { getAttributeOrThrow } from "@tuleap/dom";
 import FieldsUsage from "./components/FieldsUsage.vue";
 import "./styles/tracker-admin-fields.scss";
 import { PROJECT_ID } from "./type";
+import { CURRENT_USER, IS_USER_LOADING } from "./injection-symbols";
+import type { User } from "@tuleap/core-rest-api-types";
+import { Option } from "@tuleap/option";
+import { getJSON, uri } from "@tuleap/fetch-result";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("tracker-admin-fields-usage-mount-point");
@@ -32,10 +36,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    let current_user: Option<User> = Option.nothing<User>();
+    let is_user_loading = true;
+    let has_error = false;
+
+    await getJSON<User>(uri`/api/v1/users/self`).match(
+        (user) => {
+            current_user = Option.fromValue<User>(user);
+            is_user_loading = false;
+        },
+        () => {
+            has_error = true;
+        },
+    );
+
     createApp(FieldsUsage, {
         tracker_id: parseInt(getAttributeOrThrow(mount_point, "data-tracker-id"), 10),
         fields: JSON.parse(getAttributeOrThrow(mount_point, "data-fields")),
         structure: JSON.parse(getAttributeOrThrow(mount_point, "data-structure")),
+        has_error,
     })
         .use(
             /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
@@ -45,5 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         )
         .use(VueDOMPurifyHTML)
         .provide(PROJECT_ID, parseInt(getAttributeOrThrow(mount_point, "data-project-id"), 10))
+        .provide(CURRENT_USER, current_user)
+        .provide(IS_USER_LOADING, is_user_loading)
         .mount(mount_point);
 });

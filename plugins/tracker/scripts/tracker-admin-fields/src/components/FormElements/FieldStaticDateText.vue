@@ -18,21 +18,27 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <label-for-field v-bind:id="'artifact-id-' + field.field_id" v-bind:field="field" />
-        <a
-            v-if="field.type === ARTIFACT_ID_IN_TRACKER_FIELD"
-            data-test="artifact-id-in-tracker-field"
-            >3</a
-        >
-        <a v-else data-test="artifact-id-field">#42</a>
+    <div class="tlp-property">
+        <label-for-field v-bind:id="'static-date-' + field.field_id" v-bind:field="field" />
+        <p>{{ getFormattedCurrentDate() }}</p>
     </div>
 </template>
+
 <script setup lang="ts">
 import LabelForField from "./LabelForField.vue";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
-import { ARTIFACT_ID_IN_TRACKER_FIELD } from "@tuleap/plugin-tracker-constants";
+import { getLocaleWithDefault, getTimezoneOrThrow, IntlFormatter } from "@tuleap/date-helper";
+
 defineProps<{
     field: StructureFields;
 }>();
+
+function getFormattedCurrentDate(): string {
+    const formatter = IntlFormatter(
+        getLocaleWithDefault(document),
+        getTimezoneOrThrow(document),
+        "date-with-time",
+    );
+    return formatter.format(new Date().toISOString());
+}
 </script>

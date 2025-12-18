@@ -21,6 +21,7 @@
     <section>
         <palette-container />
         <div class="tlp-framed">
+            <error-state v-if="has_error" />
             <h2>{{ $gettext("Fields usage") }}</h2>
 
             <tracker-structure v-bind:root="root" v-if="root.children.length > 0" />
@@ -39,6 +40,7 @@ import TrackerStructure from "./TrackerStructure.vue";
 import { mapContentStructureToFields } from "../helpers/map-content-structure-to-fields";
 import type { ElementWithChildren } from "../type";
 import PaletteContainer from "./Palette/PaletteContainer.vue";
+import ErrorState from "./ErrorState.vue";
 
 const { $gettext } = useGettext();
 
@@ -46,6 +48,7 @@ const props = defineProps<{
     tracker_id: number;
     fields: ReadonlyArray<StructureFields>;
     structure: ReadonlyArray<StructureFormat>;
+    has_error: boolean;
 }>();
 
 const root = ref<ElementWithChildren>(mapContentStructureToFields(props.structure, props.fields));

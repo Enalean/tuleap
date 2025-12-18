@@ -24,6 +24,7 @@ import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import EmptyState from "./EmptyState.vue";
 import TrackerStructure from "./TrackerStructure.vue";
 import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
+import ErrorState from "./ErrorState.vue";
 
 vi.mock("@tuleap/mention", () => ({
     initMentions(): void {
@@ -38,6 +39,7 @@ describe("FieldsUsage", () => {
                 tracker_id: 123,
                 fields: [],
                 structure: [],
+                has_error: false,
             },
             global: {
                 ...getGlobalTestOptions(),
@@ -46,6 +48,7 @@ describe("FieldsUsage", () => {
 
         await new Promise(process.nextTick);
 
+        expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(TrackerStructure).exists()).toBe(false);
     });
@@ -64,6 +67,7 @@ describe("FieldsUsage", () => {
                     },
                 ],
                 structure: [{ id: 123, content: null }],
+                has_error: false,
             },
             global: {
                 ...getGlobalTestOptions(),
@@ -72,6 +76,34 @@ describe("FieldsUsage", () => {
 
         await new Promise(process.nextTick);
 
+        expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
+        expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(TrackerStructure).exists()).toBe(true);
+    });
+    it("should display and error", async () => {
+        const wrapper = shallowMount(FieldsUsage, {
+            props: {
+                tracker_id: 123,
+                fields: [
+                    {
+                        field_id: 123,
+                        name: "details",
+                        label: "Details",
+                        type: CONTAINER_FIELDSET,
+                        required: false,
+                    },
+                ],
+                structure: [{ id: 123, content: null }],
+                has_error: true,
+            },
+            global: {
+                ...getGlobalTestOptions(),
+            },
+        });
+
+        await new Promise(process.nextTick);
+
+        expect(wrapper.findComponent(ErrorState).exists()).toBe(true);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(TrackerStructure).exists()).toBe(true);
     });
