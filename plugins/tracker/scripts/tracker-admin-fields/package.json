@@ -9,6 +9,7 @@
     "@tuleap/core-constants": "workspace:^",
     "@tuleap/dom": "workspace:^",
     "@tuleap/gettext": "workspace:^",
+    "@tuleap/list-picker": "workspace:^",
     "@tuleap/plugin-tracker-constants": "workspace:^",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:^",
     "@tuleap/tlp-date-picker": "workspace:^",

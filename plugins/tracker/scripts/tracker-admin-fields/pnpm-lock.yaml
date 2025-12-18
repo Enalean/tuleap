@@ -14,6 +14,9 @@ dependencies:
   '@tuleap/gettext':
     specifier: workspace:^
     version: link:../../../../lib/frontend/gettext
+  '@tuleap/list-picker':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/list-picker
   '@tuleap/plugin-tracker-constants':
     specifier: workspace:^
     version: link:../lib/constants
