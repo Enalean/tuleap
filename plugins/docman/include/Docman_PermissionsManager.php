@@ -212,7 +212,7 @@ class Docman_PermissionsManager // phpcs:ignoreFile
             $pm      = $this->_getPermissionManagerInstance();
             $canRead = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_READ, $user->getUgroups($this->getProject()->getID(), []))
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_READ, $user->getUgroups($this->getProject()->getID()))
                 || $this->_userHasWritePermission($user, $item_id);
 
             $this->_setCanRead($user->getId(), $item_id, $canRead);
@@ -296,7 +296,7 @@ class Docman_PermissionsManager // phpcs:ignoreFile
         $pm       = $this->_getPermissionManagerInstance();
         $canWrite = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_WRITE, $user->getUgroups($this->getProject()->getID(), []))
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_WRITE, $user->getUgroups($this->getProject()->getID()))
                 || $this->userCanManage($user, $item_id);
         if ($canWrite) {
             $this->_setCanRead($user->getId(), $item_id, true);
@@ -352,7 +352,7 @@ class Docman_PermissionsManager // phpcs:ignoreFile
             $pm        = $this->_getPermissionManagerInstance();
             $canManage = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_MANAGE, $user->getUgroups($this->getProject()->getID(), []));
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_MANAGE, $user->getUgroups($this->getProject()->getID()));
             $this->_setCanManage($user->getId(), $item_id, $canManage);
         }
         return $this->cache_manage[$user->getId()][$item_id];
@@ -536,7 +536,7 @@ class Docman_PermissionsManager // phpcs:ignoreFile
         }
 
         if (count($objIds) > 0) {
-            $dar = $dao->retrievePermissionsForItems($objIds, self::ITEM_PERMISSION_TYPES, $user->getUgroups($this->getProject()->getID(), []));
+            $dar = $dao->retrievePermissionsForItems($objIds, self::ITEM_PERMISSION_TYPES, $user->getUgroups($this->getProject()->getID()));
             foreach ($dar as $row) {
                 switch ($row['permission_type']) {
                     case self::ITEM_PERMISSION_TYPE_MANAGE:
@@ -648,7 +648,7 @@ class Docman_PermissionsManager // phpcs:ignoreFile
         if ($this->userCanAdmin($user)) {
             $oneWritable = true;
         } else {
-            $oneWritable = $dao->oneFolderIsWritable($this->getProject()->getID(), $user->getUgroups($this->getProject()->getID(), []));
+            $oneWritable = $dao->oneFolderIsWritable($this->getProject()->getID(), $user->getUgroups($this->getProject()->getID()));
         }
 
         return $oneWritable;

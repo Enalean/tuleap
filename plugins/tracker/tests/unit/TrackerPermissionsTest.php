@@ -198,7 +198,6 @@ final class TrackerPermissionsTest extends TestCase
             'UGROUP_PROJECT_ADMIN'      => 4,
             'UGROUP_FILE_MANAGER_ADMIN' => 11,
             'UGROUP_WIKI_ADMIN'         => 14,
-            'UGROUP_TRACKER_ADMIN'      => 15,
         ];
         $_SERVER['REQUEST_METHOD'] = 'GET';
     }

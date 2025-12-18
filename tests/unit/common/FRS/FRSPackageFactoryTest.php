@@ -176,7 +176,7 @@ final class FRSPackageFactoryTest extends TestCase
     {
         $this->frs_permission_manager->method('userCanRead')->willReturn(true);
         $this->frs_permission_manager->method('isAdmin')->willReturn(false);
-        $this->user->expects($this->once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
+        $this->user->expects($this->once())->method('getUgroups')->with($this->group_id)->willReturn([1, 2, 76]);
 
         $this->permission_manager->method('isPermissionExist')->willReturn(true);
         $this->permission_manager->expects($this->once())->method('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->willReturn($can_read_package);
@@ -207,7 +207,7 @@ final class FRSPackageFactoryTest extends TestCase
         $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
         $this->frs_permission_manager->method('userCanRead')->willReturn(true);
         $this->frs_permission_manager->method('isAdmin');
-        $this->user->expects($this->once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
+        $this->user->expects($this->once())->method('getUgroups')->with($this->group_id)->willReturn([1, 2, 76]);
 
         $this->permission_manager = $this->createMock(PermissionsManager::class);
         $this->permission_manager->expects($this->once())->method('isPermissionExist')->with($this->package_id, 'PACKAGE_READ')->willReturn(false);

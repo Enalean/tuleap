@@ -35,7 +35,6 @@ class UGroupRetrieverWithLegacy
         'UGROUP_PROJECT_ADMIN'      => ProjectUGroup::PROJECT_ADMIN,
         'UGROUP_FILE_MANAGER_ADMIN' => ProjectUGroup::FILE_MANAGER_ADMIN,
         'UGROUP_WIKI_ADMIN'         => ProjectUGroup::WIKI_ADMIN,
-        'UGROUP_TRACKER_ADMIN'      => ProjectUGroup::TRACKER_ADMIN,
     ];
 
     /**

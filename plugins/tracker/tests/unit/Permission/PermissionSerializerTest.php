@@ -74,7 +74,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
     private function getUserWithGroups(array $ugroup_ids): PFUser&MockObject
     {
         $user = $this->createMock(\PFUser::class);
-        $user->method('getUgroups')->with($this->project_id, $this->anything())->willReturn($ugroup_ids);
+        $user->method('getUgroups')->with($this->project_id)->willReturn($ugroup_ids);
 
         return $user;
     }

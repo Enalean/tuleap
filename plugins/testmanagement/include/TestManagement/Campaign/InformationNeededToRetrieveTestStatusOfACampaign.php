@@ -93,7 +93,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaign
 
         return new self(
             $campaign,
-            $user->getUgroups($project->getID(), []),
+            $user->getUgroups($project->getID()),
             $test_exec_status_field,
             $test_campaign_art_link_field,
         );

@@ -160,7 +160,6 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PS
         $project_member_user->method('isMember')->with($group_id, 0)->willReturn(true);
         $project_member_user->method('isMemberOfUGroup')->with(1001, $this->anything())->willReturn(false);
         $project_member_user->method('isMemberOfUGroup')->with(1002, $this->anything())->willReturn(false);
-        $project_member_user->method('isTrackerAdmin')->willReturn(false);
 
         $registered_user = $this->createMock(\PFUser::class);
         $registered_user->method('getId')->willReturn(777);

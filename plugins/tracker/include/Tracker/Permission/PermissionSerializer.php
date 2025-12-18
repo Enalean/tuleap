@@ -194,6 +194,6 @@ class Tracker_Permission_PermissionsSerializer // phpcs:ignore PSR1.Classes.Clas
 
     private function getUserUGroups(PFUser $user, Artifact $artifact)
     {
-        return $user->getUgroups($artifact->getTracker()->getProject()->getID(), []);
+        return $user->getUgroups($artifact->getTracker()->getProject()->getID());
     }
 }

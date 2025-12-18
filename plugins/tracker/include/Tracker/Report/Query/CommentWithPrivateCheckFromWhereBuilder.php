@@ -75,7 +75,7 @@ final class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereB
 
     private function getUgroupIdsForUser(): array
     {
-        return $this->user->getUgroups((int) $this->tracker->getGroupId(), []);
+        return $this->user->getUgroups((int) $this->tracker->getGroupId());
     }
 
     private function removeEnclosingSimpleQuoteToNotFailMatchSqlQuery(string $value): string

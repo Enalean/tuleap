@@ -1191,10 +1191,7 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
             $this->id,
             $permission_type,
             $user->getUgroups(
-                $this->getTracker()->getGroupId(),
-                [
-                    'tracker' => $this->getTrackerId(),
-                ]
+                $this->getTracker()->getGroupId()
             )
         );
     }

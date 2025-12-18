@@ -83,7 +83,7 @@ class TestStatusPerTestDefinitionsInformationForUserRetriever
         return new TestPlanMilestoneInformationNeededToRetrieveTestStatusPerTestDefinition(
             $milestone,
             $test_definitions,
-            $user->getUgroups($project->getID(), []),
+            $user->getUgroups($project->getID()),
             $test_exec_status_field_id,
             $test_exec_art_link_field_id,
             $test_campaign_art_link_field_id,

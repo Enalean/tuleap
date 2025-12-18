@@ -245,7 +245,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         $result = [];
         foreach ($fields as $field) {
             $project_id = (int) $field->getTracker()->getProject()->getID();
-            $ugroups    = $user->getUgroups($project_id, ['project_id' => $project_id]);
+            $ugroups    = $user->getUgroups($project_id);
             foreach ($ugroups as $ugroup) {
                 $result[] = new UserGroupInProject($project_id, (int) $ugroup);
             }
@@ -263,7 +263,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         $result = [];
         foreach ($trackers as $tracker) {
             $project_id = (int) $tracker->getProject()->getID();
-            $ugroups    = $user->getUgroups($project_id, ['project_id' => $project_id]);
+            $ugroups    = $user->getUgroups($project_id);
             foreach ($ugroups as $ugroup) {
                 $result[] = new UserGroupInProject($project_id, (int) $ugroup);
             }
@@ -281,7 +281,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         $ugroups_id = [];
         foreach ($trackers as $tracker) {
             $project_id = (int) $tracker->getProject()->getID();
-            $ugroups_id = array_merge($ugroups_id, $user->getUgroups($project_id, ['project_id' => $project_id]));
+            $ugroups_id = array_merge($ugroups_id, $user->getUgroups($project_id));
         }
 
         return array_map(static fn(int|string $id) => (int) $id, $ugroups_id);
@@ -296,7 +296,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         $ugroups_id = [];
         foreach ($artifacts as $artifact) {
             $project_id = (int) $artifact->getTracker()->getProject()->getID();
-            $ugroups_id = array_merge($ugroups_id, $user->getUgroups($project_id, ['project_id' => $project_id]));
+            $ugroups_id = array_merge($ugroups_id, $user->getUgroups($project_id));
         }
 
         return array_map(static fn(int|string $id) => (int) $id, $ugroups_id);

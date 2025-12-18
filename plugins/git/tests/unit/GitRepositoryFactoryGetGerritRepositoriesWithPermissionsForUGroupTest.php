@@ -64,7 +64,7 @@ final class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTes
         $user_ugroups  = [404, 416];
         $this->project = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
         $this->user    = $this->createMock(PFUser::class);
-        $this->user->method('getUgroups')->with($this->project_id, null)->willReturn($user_ugroups);
+        $this->user->method('getUgroups')->with($this->project_id)->willReturn($user_ugroups);
 
         $this->ugroup = ProjectUGroupTestBuilder::aCustomUserGroup($ugroup_id)->build();
     }
