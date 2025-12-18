@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_Report
+class Docman_Report //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $id;
     public $name;
@@ -61,34 +61,9 @@ class Docman_Report
         $this->columns = [];
     }
 
-    public function setId($i)
-    {
-        $this->id = $i;
-    }
-
     public function getId()
     {
         return $this->id;
-    }
-
-    public function setName($v)
-    {
-        $this->name = $v;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setTitle($v)
-    {
-        $this->title = $v;
-    }
-
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     public function setGroupId($g)
@@ -101,26 +76,6 @@ class Docman_Report
         return $this->groupId;
     }
 
-    public function setUserId($v)
-    {
-        $this->userId = $v;
-    }
-
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    public function setItemId($v)
-    {
-        $this->itemId = $v;
-    }
-
-    public function getItemId()
-    {
-        return $this->itemId;
-    }
-
     public function setScope($v)
     {
         $this->scope = $v;
@@ -129,21 +84,6 @@ class Docman_Report
     public function getScope()
     {
         return $this->scope;
-    }
-
-    public function setIsDefault($v)
-    {
-        $this->isDefault = $v;
-    }
-
-    public function getIsDefault()
-    {
-        return $this->isDefault;
-    }
-
-    public function setAdvancedSearch($v)
-    {
-        $this->advancedSearch = $v;
     }
 
     public function getAdvancedSearch()
@@ -159,16 +99,6 @@ class Docman_Report
     public function getDescription()
     {
         return $this->description;
-    }
-
-    public function setImage($v)
-    {
-        $this->image = $v;
-    }
-
-    public function getImage()
-    {
-        return $this->image;
     }
 
     public function initFromRow(array $row): void
@@ -227,14 +157,6 @@ class Docman_Report
         return $this->filters;
     }
 
-    /**
-     * @param Docman_Filter[] $a
-     */
-    public function setFiltersArray(array $a): void
-    {
-        $this->filters = $a;
-    }
-
     public function addFilter(Docman_Filter $f): void
     {
         $this->filters[] = $f;
@@ -244,33 +166,5 @@ class Docman_Report
     {
         $i = new ArrayIterator($this->filters);
         return $i;
-    }
-
-    public function getUrlParameters()
-    {
-        $param = [];
-        // Report Id
-        /*if($this->getId() !== null
-           && $this->getId() > 0) {
-            $param['report_id'] = $this->getId();
-        }*/
-
-        // Advanced search
-        if ($this->advancedSearch) {
-            $param['advsearch'] = 1;
-        }
-        return $param;
-    }
-
-    public function getGlobalSearchMetadata(): Docman_Metadata
-    {
-        $filterFactory = new Docman_FilterFactory($this->groupId);
-        return $filterFactory->getGlobalSearchMetadata();
-    }
-
-    public function getItemTypeSearchMetadata(): Docman_Metadata
-    {
-        $filterFactory = new Docman_FilterFactory($this->groupId);
-        return $filterFactory->getItemTypeSearchMetadata();
     }
 }

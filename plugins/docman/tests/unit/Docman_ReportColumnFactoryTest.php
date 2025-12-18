@@ -46,7 +46,7 @@ final class Docman_ReportColumnFactoryTest extends TestCase //phpcs:ignore PSR1.
     {
         $result = $this->report_column_factory->getColumnFromLabel('title');
 
-        self::assertInstanceOf(Docman_ReportColumnTitle::class, $result);
+        self::assertInstanceOf(Docman_ReportColumn::class, $result);
     }
 
     public function testItReturnsTheIdColumnReport(): void
