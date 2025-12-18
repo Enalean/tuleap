@@ -24,6 +24,7 @@ use GitRepository;
 use TemplateRendererFactory;
 use Tuleap\Git\DefaultBranch\RepositoryBranchSelectorOptionPresenter;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
+use Tuleap\HTTPRequest;
 
 class GeneralSettings extends Pane
 {
@@ -41,7 +42,7 @@ class GeneralSettings extends Pane
      */
     public bool $allow_artifact_closure;
 
-    public function __construct(GitRepository $repository, \Tuleap\HTTPRequest $request, VerifyArtifactClosureIsAllowed $closure_verifier)
+    public function __construct(GitRepository $repository, HTTPRequest $request, VerifyArtifactClosureIsAllowed $closure_verifier)
     {
         parent::__construct($repository, $request);
 
@@ -105,22 +106,22 @@ class GeneralSettings extends Pane
         return $this->getTitle();
     }
 
-    public function project_id()
+    public function project_id() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->repository->getProjectId();
     }
 
-    public function pane_identifier()
+    public function pane_identifier() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->getIdentifier();
     }
 
-    public function repository_id()
+    public function repository_id() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->repository->getId();
     }
 
-    public function repository_description_label()
+    public function repository_description_label() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Description');
     }
@@ -130,7 +131,7 @@ class GeneralSettings extends Pane
         return $this->repository->getDescription();
     }
 
-    public function save_label()
+    public function save_label() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Save');
     }

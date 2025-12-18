@@ -1,49 +1,70 @@
-<div id="git-notification-mattermost-section">
-    <h3>{{title}}</h3>
-    {{^ bot_assigned }}
-        <div class="git-notification-mattermost-configuration-empty-state">
-            <p>{{ any_configured_notification }}</p>
-            {{# has_bots }}
-                <p class="git-notification-mattermost-configuration-description">{{ any_configured_notification_tips }}</p>
-                <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add" data-test="add-git-bot">
-                    <i class="fa-solid fa-plus"></i> {{ button_config }}
-                </button>
-            {{/ has_bots }}
-            {{^ has_bots }}
-                <p>{{ empty_bot_list }}</p>
-            {{/ has_bots }}
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h2 class="tlp-pane-title">{{title}}</h2>
         </div>
-        {{> modal-add-bot }}
-    {{/ bot_assigned }}
-    {{# bot_assigned }}
-        <section class="panel">
-            <div class="panel-header">
-                <p class="panel-name">
-                    {{# avatar }}<img class="avatar img-circle" src="{{ avatar }}">{{/ avatar }}
-                    {{ name }}
-                </p>
-            </div>
-            <div class="panel-container" data-test="git-bot-mattermost-list">
-                <section class="panel-section">
-                    <p class="bot-assigned-label">{{ label_channels_handles }}</p>
-                    {{# channels }}<p>{{ channels }}</p>{{/ channels }}
-                    {{^ channels }}
-                        <div class="git-notification-mattermost-configuration-empty-state">
-                            <p class="git-notification-mattermost-configuration-description">{{ empty_channel_list }}</p>
-                        </div>
-                    {{/ channels }}
-                </section>
-                <section class="panel-section panel-section-actions button-group">
-                    <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-edit-{{ id }}">
-                        <i class="fa fa-pencil-square-o"></i> {{ button_edit }}
-                    </button>
-                    <button class="btn btn-danger" data-toggle="modal" href="#admin-config-bot-delete-{{ id }}">
-                        <i class="fa fa-trash-o"></i> {{ button_delete }}
-                    </button>
-                    {{> modal-edit-bot }}
-                    {{> modal-delete-bot }}
-                </section>
-            </div>
+        <section class="tlp-pane-section">
+        {{^ bot_assigned }}
+                <p>{{ any_configured_notification }}</p>
+                {{# has_bots }}
+                    <p>{{ any_configured_notification_tips }}</p>
+                    <div class="tlp-table-actions">
+                        <button
+                            class="tlp-button-primary tlp-table-actions-element"
+                            data-target-modal-id="botmattermost-git-notification-add-modal"
+                            data-modal-trigger
+                            data-test="add-git-bot">
+                            <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i> {{ button_config }}
+                        </button>
+                        {{> modal-add-bot }}
+                    </div>
+                {{/ has_bots }}
+                {{^ has_bots }}
+                    <p>{{ empty_bot_list }}</p>
+                {{/ has_bots }}
+        {{/ bot_assigned }}
+            {{# bot_assigned }}
+                <table class="tlp-table" data-test="git-bot-mattermost-list">
+                    <thead>
+                    <tr>
+                        <th>{{# avatar }}<img class="tlp-avatar" src="{{ avatar }}">{{/ avatar }}{{ name }}</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ label_channels_handles }}:
+                            {{# channels }}
+                                {{ channels }}
+                            {{/ channels }}
+                            {{^ channels}}
+                                {{ empty_channel_list}}
+                            {{/channels}}
+                        </td>
+                        <td class="tlp-table-cell-actions">
+                            <button type="button"
+                                    class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                                    data-modal-trigger
+                                    data-target-modal-id="botmattermost-git-notification-edit-modal"
+                            >
+                                <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
+                                {{ button_edit }}
+                            </button>
+                            <button type="button"
+                                    class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                                    data-modal-trigger
+                                    data-target-modal-id="botmattermost-git-notification-delete-modal"
+                            >
+                                <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                                {{ button_delete }}
+                            </button>
+                            {{> modal-delete-bot }}
+                            {{> modal-edit-bot }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            {{/ bot_assigned }}
         </section>
-    {{/ bot_assigned }}
-</div>
+    </div>
+</section>

@@ -1618,6 +1618,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getHeaderRenderer(),
             $git_dao,
             $git_dao,
+            new User_ForgeUserGroupFactory(new UserGroupDao()),
         );
     }
 

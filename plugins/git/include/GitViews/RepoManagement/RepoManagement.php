@@ -47,6 +47,7 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         'pullrequest', // should belong to pullrequest plugin, but it is a temporary situation, no need to fire a hook for that
         'delete',
         'perms',
+        'mail',
         'hooks',
     ];
 
@@ -72,6 +73,7 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         private EventManager $event_manager,
         private ProjectManager $project_manager,
         private VerifyArtifactClosureIsAllowed $closure_verifier,
+        private readonly User_ForgeUserGroupFactory $user_group_factory,
     ) {
         $this->panes        = $this->buildPanes($repository);
         $this->current_pane = 'settings';
@@ -125,8 +127,10 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $collection->add(new Pane\Notification(
             $repository,
             $this->request,
+            $this->event_manager,
             $user_to_be_notified_builder,
-            $group_to_be_notified_builder
+            $group_to_be_notified_builder,
+            $this->user_group_factory,
         ));
         $collection->add(new Pane\Hooks($repository, $this->request, $webhook_factory, $webhook_dao));
 

@@ -36,6 +36,9 @@ msgstr[1] "%s commits poussés sur %s"
 msgid "A Gerrit project with that name already exists on that server"
 msgstr "Un projet Gerrit du même nom existe déjà sur ce serveur"
 
+msgid "A comma-separated list of email addresses."
+msgstr "Une liste d'adresses e-mail séparées par des virgules."
+
 msgid "A file already exists with this name under gitroot"
 msgstr "Un fichier existe déjà avec ce nom sous gitroot"
 
@@ -75,6 +78,9 @@ msgstr "Ajouter un webhook générique"
 msgid "Add gerrit server"
 msgstr "Ajouter un serveur gerrit"
 
+msgid "Add notification"
+msgstr "Ajouter une notification"
+
 msgid "Add permission on a new branch"
 msgstr "Ajouter une permission sur une nouvelle branche"
 
@@ -83,6 +89,9 @@ msgstr "Ajouter une permission sur une nouvelle étiquette"
 
 msgid "Add server"
 msgstr "Ajouter un serveur"
+
+msgid "Add the notification"
+msgstr "Ajouter la notification"
 
 msgid "All projects can now use this Gerrit server."
 msgstr ""
@@ -388,6 +397,9 @@ msgstr "Éditer le modèle Gerrit"
 
 msgid "Edit generic webhook"
 msgstr "Éditer un webhook générique"
+
+msgid "Emails who will receive the notification"
+msgstr "E-mails qui recevront la notification"
 
 msgid "Empty"
 msgstr "Vide"
@@ -745,6 +757,9 @@ msgstr "Hôte non renseigné"
 
 msgid "Notification Prefix"
 msgstr "Préfixe de notification"
+
+msgid "Notification deletion"
+msgstr "Suppression de notification"
 
 msgid "Notifications"
 msgstr "Notifications"
@@ -1236,6 +1251,11 @@ msgstr ""
 msgid "There is no logged pushes in the last %1$s week(s)"
 msgstr "Pas de push pour la/les dernière(s) %1$s semaine(s)"
 
+msgid "These can be mailing list addresses or external recipients."
+msgstr ""
+"Elles peuvent être celles de listes de diffusion ou de destinataires "
+"externes."
+
 msgid ""
 "This file contains bidirectional Unicode text. It may be interpreted "
 "differently than what is shown. This might be used to inject malicious code "
@@ -1411,8 +1431,8 @@ msgstr "Le groupe %s a été supprimé des notifications"
 msgid "User group \"%s\" successfully added to notifications"
 msgstr "Le groupe \"%s\" a été ajouté aux notifications"
 
-msgid "User, group, email"
-msgstr "Utilisateur, groupe, email"
+msgid "User groups that will receive the notification"
+msgstr "Groupes d'utilisateurs qui recevront la notification"
 
 msgid ""
 "Users from selected user groups will be able to authenticate using their "
@@ -1420,6 +1440,9 @@ msgid ""
 msgstr ""
 "Les utilisateurs des groupes sélectionnés pourront s'authentifier avec leurs "
 "clés d'accès lorsqu'ils appellent les APIs pour changer le status des builds."
+
+msgid "Users who will receive the notification"
+msgstr "Utilisateurs qui recevront la notification"
 
 msgid "View"
 msgstr "Aperçu"
@@ -1483,6 +1506,11 @@ msgstr ""
 "Vous êtes en train de supprimer définitivement le dépôt <strong>%1$s</"
 "strong>. Cette action ne pourra <strong>pas</strong> être annulée. Êtes vous "
 "certain de vouloir continuer ?"
+
+msgid "You are about to remove the notification. Please confirm your action."
+msgstr ""
+"Vous êtes sur le point de supprimer la notification. Merci de confirmer "
+"votre action."
 
 msgid "You are about to remove the webhook. Please confirm your action."
 msgstr ""

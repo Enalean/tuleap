@@ -20,15 +20,18 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
-use EventManager;
 use GitRepository;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Git\GitPresenters\RepositoryPaneNotificationPresenter;
 use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\HTTPRequest;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Project\UGroups\UserGroupsPresenterBuilder;
+use User_ForgeUserGroupFactory;
 
 class Notification extends Pane
 {
@@ -44,15 +47,22 @@ class Notification extends Pane
      */
     private $group_to_be_notified_builder;
 
+    private AdditionalNotificationPaneContent $additional_notification_pane_content;
+
     public function __construct(
         GitRepository $repository,
-        \Tuleap\HTTPRequest $request,
+        HTTPRequest $request,
+        EventDispatcherInterface $event_manager,
         CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
         CollectionOfUgroupToBeNotifiedPresenterBuilder $group_to_be_notified_builder,
+        private readonly User_ForgeUserGroupFactory $user_group_factory,
     ) {
         parent::__construct($repository, $request);
-        $this->user_to_be_notified_builder  = $user_to_be_notified_builder;
-        $this->group_to_be_notified_builder = $group_to_be_notified_builder;
+        $this->user_to_be_notified_builder          = $user_to_be_notified_builder;
+        $this->group_to_be_notified_builder         = $group_to_be_notified_builder;
+        $this->additional_notification_pane_content = new AdditionalNotificationPaneContent($repository, $request);
+
+        $event_manager->dispatch($this->additional_notification_pane_content);
     }
 
     /**
@@ -90,28 +100,32 @@ class Notification extends Pane
                 $this->repository,
                 $this->getIdentifier(),
                 $users,
-                $groups
+                $groups,
+                new UserGroupsPresenterBuilder()->getUgroups(
+                    $this->user_group_factory->getAllForProject(
+                        $this->repository->getProject()
+                    ),
+                    []
+                )
             )
         );
-        $html    .= $this->getPluginNotifications();
-        $assets   = new IncludeViteAssets(
-            __DIR__ . '/../../../../scripts/repository-admin/frontend-assets',
-            '/assets/git/repository-admin'
-        );
-        $GLOBALS['Response']->includeFooterJavascriptFile((new JavascriptViteAsset($assets, 'src/admin-notifications.js'))->getFileURL());
+        $html    .= $this->additional_notification_pane_content->getContent();
 
         return $html;
     }
 
-    private function getPluginNotifications()
+    #[\Override]
+    public function getJavascriptViteAssets(): array
     {
-        $output = '';
-        EventManager::instance()->processEvent(GIT_ADDITIONAL_NOTIFICATIONS, [
-            'request'    => $this->request,
-            'repository' => $this->repository,
-            'output'     => &$output,
-        ]);
-
-        return $output;
+        return [
+            ...$this->additional_notification_pane_content->getJavascriptViteAssets(),
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../../scripts/repository-admin/frontend-assets',
+                    '/assets/git/repository-admin'
+                ),
+                'src/admin-notifications.ts',
+            ),
+        ];
     }
 }

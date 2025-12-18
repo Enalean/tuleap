@@ -32,6 +32,7 @@ use Tuleap\Date\DateHelper;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Git\Driver\Gerrit\UnsupportedGerritVersionException;
 use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
+use Tuleap\HTTPRequest;
 
 class Gerrit extends Pane
 {
@@ -65,7 +66,7 @@ class Gerrit extends Pane
 
     public function __construct(
         GitRepository $repository,
-        \Tuleap\HTTPRequest $request,
+        HTTPRequest $request,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         array $gerrit_servers,

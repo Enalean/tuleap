@@ -35,9 +35,10 @@ use Tuleap\BotMattermostGit\SenderServices\GitNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\GitNotificationSender;
 use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationSender;
+use Tuleap\Git\GitViews\RepoManagement\Pane\AdditionalNotificationPaneContent;
 use Tuleap\Git\Hook\PostReceiveExecuteEvent;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Plugin\ListeningToEventName;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\PullRequest\GetCreatePullRequest;
 
@@ -66,10 +67,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
     #[Override]
     public function getHooksAndCallbacks()
     {
-        $this->addHook('javascript_file');
-
         if (defined('GIT_BASE_URL')) {
-            $this->addHook(GIT_ADDITIONAL_NOTIFICATIONS);
             $this->addHook(PostReceiveExecuteEvent::NAME);
         }
         if (defined('PULLREQUEST_BASE_DIR')) {
@@ -98,11 +96,21 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         return 'plugin_botmattermost_git';
     }
 
-    public function git_additional_notifications(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectAdditionalNotificationPaneContent(AdditionalNotificationPaneContent $additional_content): void
     {
-        if ($this->isAllowed($params['repository']->getProjectId())) {
-            $render            = $this->getController($params['request'])->render($params['repository']);
-            $params['output'] .= $render;
+        if ($this->isAllowed($additional_content->repository->getProjectId())) {
+            $render = $this->getController($additional_content->request)->render($additional_content->repository);
+            $additional_content->addHTML($render);
+            $additional_content->addJavascriptViteAsset(
+                new JavascriptViteAsset(
+                    new IncludeViteAssets(
+                        __DIR__ . '/../frontend-assets',
+                        '/assets/botmattermost_git'
+                    ),
+                    'scripts/botmattermost-git.ts',
+                ),
+            );
         }
     }
 
@@ -152,33 +160,6 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
                 $project,
                 $repository_destination
             );
-        }
-    }
-
-    #[ListeningToEventName('cssfile')]
-    public function cssfile(): void
-    {
-        $git_plugin = PluginManager::instance()->getPluginByName('git');
-        if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
-            $asset = new IncludeAssets(
-                __DIR__ . '/../frontend-assets/',
-                '/assets/botmattermost_git'
-            );
-            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style.css') . '" />';
-        }
-    }
-
-    public function javascript_file(array $params): void  //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $git_plugin = PluginManager::instance()->getPluginByName('git');
-        if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
-            $asset  = new IncludeAssets(
-                __DIR__ . '/../frontend-assets/',
-                '/assets/botmattermost_git'
-            );
-            $layout = $params['layout'];
-            assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($asset, 'autocompleter.js'));
         }
     }
 

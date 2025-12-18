@@ -147,6 +147,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
         private readonly HeaderRenderer $header_renderer,
         private readonly VerifyArtifactClosureIsAllowed $closure_verifier,
         private readonly ConfigureAllowArtifactClosure $configure_artifact_closure,
+        private readonly User_ForgeUserGroupFactory $user_group_factory,
     ) {
         parent::__construct($user_manager, $request);
 
@@ -190,6 +191,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->header_renderer,
             $this->projectManager,
             $this->closure_verifier,
+            $this->user_group_factory,
         );
     }
 
@@ -832,7 +834,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $mailPrefix = $this->request->getValidated('mail_prefix', $valid, '');
             $this->addAction('notificationUpdatePrefix', [$this->groupId, $repoId, $mailPrefix, $pane]);
         }
-        $add_mail = $this->request->getValidated('add_mail');
+        $add_mail = $this->request->getValidated('add_mail', new Valid_Array());
         if ($add_mail) {
             $invalid_entries = new InvalidEntryInAutocompleterCollection();
             $autocompleter   = new RequestFromAutocompleter(

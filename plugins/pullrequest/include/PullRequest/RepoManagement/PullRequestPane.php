@@ -24,6 +24,7 @@ use GitRepository;
 use TemplateRendererFactory;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Pane;
+use Tuleap\HTTPRequest;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullRequestPane extends Pane
@@ -37,7 +38,7 @@ class PullRequestPane extends Pane
 
     public function __construct(
         GitRepository $repository,
-        \Tuleap\HTTPRequest $request,
+        HTTPRequest $request,
         MergeSettingRetriever $merge_setting_retriever,
     ) {
         parent::__construct($repository, $request);

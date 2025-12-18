@@ -35,6 +35,7 @@ use GitRepository;
 use CSRFSynchronizerToken;
 use EventManager;
 use TemplateRendererFactory;
+use Tuleap\HTTPRequest;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 
@@ -67,7 +68,7 @@ class Hooks extends Pane
 
     public function __construct(
         GitRepository $repository,
-        \Tuleap\HTTPRequest $request,
+        HTTPRequest $request,
         WebhookFactory $webhook_factory,
         WebhookDao $webhook_dao,
     ) {

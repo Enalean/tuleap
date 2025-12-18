@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { loadUserAndUgroupAutocompleter } from "@tuleap/user-and-ugroup-autocompleter";
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 
-document.addEventListener("DOMContentLoaded", function () {
-    const input = document.querySelector("#add_mail");
-    if (!input) {
-        return;
-    }
-    loadUserAndUgroupAutocompleter(input);
+document.addEventListener("DOMContentLoaded", () => {
+    openAllTargetModalsOnClick(document, "[data-modal-trigger]");
 });
