@@ -26,9 +26,10 @@ use ParagonIE\EasyDB\EasyStatement;
  */
 class UGroupDao extends \Tuleap\DB\DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    private const int LEGACY_FORUM_ADMIN_ID = 16;
-    private const int LEGACY_NEWS_ADMIN_ID  = 17;
-    private const int LEGACY_NEWS_WRITER_ID = 18;
+    private const int LEGACY_TRACKERS_ADMIN_ID = 15;
+    private const int LEGACY_FORUM_ADMIN_ID    = 16;
+    private const int LEGACY_NEWS_ADMIN_ID     = 17;
+    private const int LEGACY_NEWS_WRITER_ID    = 18;
     /**
      * @psalm-return ?UGroupRow
      */
@@ -64,7 +65,12 @@ class UGroupDao extends \Tuleap\DB\DataAccessObject // phpcs:ignore PSR1.Classes
      */
     public function searchDynamicAndStaticByGroupId(int $project_id): array
     {
-        $legacy_groups = [self::LEGACY_NEWS_ADMIN_ID, self::LEGACY_NEWS_WRITER_ID, self::LEGACY_FORUM_ADMIN_ID];
+        $legacy_groups = [
+            self::LEGACY_TRACKERS_ADMIN_ID,
+            self::LEGACY_NEWS_ADMIN_ID,
+            self::LEGACY_NEWS_WRITER_ID,
+            self::LEGACY_FORUM_ADMIN_ID,
+        ];
 
         $exclude_statement = EasyStatement::open()->in('ugroup_id NOT IN (?*)', $legacy_groups);
         $params            = [$project_id, ...$legacy_groups];

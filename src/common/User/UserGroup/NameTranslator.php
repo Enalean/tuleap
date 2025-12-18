@@ -32,7 +32,6 @@ class NameTranslator
     public const  string PROJECT_MEMBERS            = 'ugroup_project_members_name_key';
     private const string WIKI_ADMINS                = 'ugroup_wiki_admin_name_key';
     private const string FILE_ADMINS                = 'ugroup_file_manager_admin_name_key';
-    private const string TV3_TRACKER_ADMINS         = 'ugroup_tracker_admins_name_key';
     public const  string CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label';
     public const  string CONFIG_AUTHENTICATED_LABEL = 'ugroup_authenticated_label';
 
@@ -97,8 +96,6 @@ class NameTranslator
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_file_manager_admin_name_key');
             case self::WIKI_ADMINS:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_wiki_admin_name_key');
-            case self::TV3_TRACKER_ADMINS:
-                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_tracker_admins_name_key');
             case self::NOBODY:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_nobody_name_key');
             default:

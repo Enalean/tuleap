@@ -53,7 +53,6 @@ final class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
             ['ugroup_id' => '12', 'name' => 'ugroup_document_tech_name_key', 'description' => 'ugroup_document_tech_desc_key', 'group_id' => '100'],
             ['ugroup_id' => '13', 'name' => 'ugroup_document_admin_name_key', 'description' => 'ugroup_document_admin_desc_key', 'group_id' => '100'],
             ['ugroup_id' => '14', 'name' => 'ugroup_wiki_admin_name_key', 'description' => 'ugroup_wiki_admin_desc_key', 'group_id' => '100'],
-            ['ugroup_id' => '15', 'name' => 'ugroup_tracker_admins_name_key', 'description' => 'ugroup_tracker_admins_desc_key', 'group_id' => '100'],
             ['ugroup_id' => '100', 'name' => 'ugroup_nobody_name_key', 'description' => 'ugroup_nobody_desc_key', 'group_id' => '100'],
             ['ugroup_id' => '103', 'name' => 'Integrators', 'description' => '', 'group_id' => '123'],
             ['ugroup_id' => '103', 'name' => 'ugroup_supra_name_key', 'description' => '', 'group_id' => '123'],
@@ -108,13 +107,13 @@ final class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAllUgroupsOfAProject(): void
     {
         $ugroups = $this->ugroup_manager->getUGroups($this->project);
-        self::assertCount(12, $ugroups);
+        self::assertCount(11, $ugroups);
     }
 
     public function testItExcludesGivenUgroups(): void
     {
         $ugroups = $this->ugroup_manager->getUGroups($this->project, [ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS]);
-        self::assertCount(10, $ugroups);
+        self::assertCount(9, $ugroups);
     }
 
     public function testItReturnsAStaticUGroupOfAProject(): void

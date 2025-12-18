@@ -71,7 +71,6 @@
                   <item ID="V827" label="ugroup_authenticated_users_name_key" is_hidden="0"/>
                   <item ID="V828" label="ugroup_file_manager_admin_name_key" is_hidden="0"/>
                   <item ID="V829" label="ugroup_wiki_admin_name_key" is_hidden="0"/>
-                  <item ID="V830" label="ugroup_tracker_admins_name_key" is_hidden="0"/>
                   <item ID="V831" label="test" is_hidden="0"/>
                   <item ID="V832" label="tv5admins" is_hidden="0"/>
                   <item ID="V833" label="group01" is_hidden="0"/>
