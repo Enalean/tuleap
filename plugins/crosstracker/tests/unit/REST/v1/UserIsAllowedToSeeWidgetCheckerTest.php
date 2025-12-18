@@ -84,7 +84,7 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
     public function testItThrowsExceptionWhenTheCurrentUserWantToSeeAnotherUserWidget(): void
     {
         $this->user = UserTestBuilder::buildWithId(104);
-        $widget     = UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, 105);
+        $widget     = UserCrossTrackerWidget::build(76, 1, UserDashboardController::DASHBOARD_TYPE, 105);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
@@ -94,7 +94,7 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
 
     public function testTheUserCanViewTheUserWidget(): void
     {
-        $widget = UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, (int) $this->user->getId());
+        $widget = UserCrossTrackerWidget::build(76, 1, UserDashboardController::DASHBOARD_TYPE, (int) $this->user->getId());
 
         $this->checkUserIsAllowedToSeeWidget($widget);
 
@@ -104,7 +104,7 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
     public function testItThrowsExceptionWhenTheCurrentUserWantToSeeFromPrivateProjectWithoutAccess(): void
     {
         $project                = ProjectTestBuilder::aProject()->withId(105)->build();
-        $widget                 = ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
+        $widget                 = ProjectCrossTrackerWidget::build(76, 1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
         $this->project_manager  = ProjectByIDFactoryStub::buildWith($project);
         $this->url_verification = CheckUserCanAccessProjectStub::build()->withPrivateProjectForUser(
             ProjectTestBuilder::aProject()->withId(105)->build(),
@@ -117,10 +117,31 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
         $this->checkUserIsAllowedToSeeWidget($widget);
     }
 
+    public function testItReturnsNothingOptionWhenUserCannotSeeTheWidget(): void
+    {
+        $project                = ProjectTestBuilder::aProject()->withId(105)->build();
+        $widget                 = ProjectCrossTrackerWidget::build(76, 1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
+        $this->project_manager  = ProjectByIDFactoryStub::buildWith($project);
+        $this->url_verification = CheckUserCanAccessProjectStub::build()->withPrivateProjectForUser(
+            ProjectTestBuilder::aProject()->withId(105)->build(),
+            $this->user,
+        );
+
+        $user_is_allowed_to_see_widget_checker = new UserIsAllowedToSeeWidgetChecker(
+            $this->project_manager,
+            $this->url_verification,
+            RetrieveCrossTrackerWidgetStub::withWidget($widget),
+        );
+
+        $result = $user_is_allowed_to_see_widget_checker->getWidgetUserCanSee($this->user, 1);
+
+        self::assertTrue($result->isNothing());
+    }
+
     public function testTheUserCanViewTheProjectWidget(): void
     {
         $project               = ProjectTestBuilder::aProject()->withId(105)->build();
-        $widget                = ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
+        $widget                = ProjectCrossTrackerWidget::build(76, 1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
         $this->project_manager = ProjectByIDFactoryStub::buildWith($project);
 
         $this->checkUserIsAllowedToSeeWidget($widget);
@@ -128,10 +149,27 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
         self::expectNotToPerformAssertions();
     }
 
+    public function testItReturnsTheWidgetTheUserCanSee(): void
+    {
+        $project               = ProjectTestBuilder::aProject()->withId(105)->build();
+        $widget                = ProjectCrossTrackerWidget::build(76, 1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
+        $this->project_manager = ProjectByIDFactoryStub::buildWith($project);
+
+        $user_is_allowed_to_see_widget_checker = new UserIsAllowedToSeeWidgetChecker(
+            $this->project_manager,
+            $this->url_verification,
+            RetrieveCrossTrackerWidgetStub::withWidget($widget),
+        );
+
+        $result = $user_is_allowed_to_see_widget_checker->getWidgetUserCanSee($this->user, 1)->unwrapOr(null);
+
+        self::assertEquals($widget, $result);
+    }
+
     public function testTheUserCanUpdateTheProjectWidget(): void
     {
         $project                = ProjectTestBuilder::aProject()->withId(105)->build();
-        $widget                 = ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
+        $widget                 = ProjectCrossTrackerWidget::build(76, 1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
         $this->user             = UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build();
         $this->project_manager  = ProjectByIDFactoryStub::buildWith($project);
         $this->url_verification = CheckUserCanAccessProjectStub::build()->withUserAdminOf($this->user, $project);
@@ -144,7 +182,7 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
     public function testTheUserCannotUpdateTheProjectWidget(): void
     {
         $project                = ProjectTestBuilder::aProject()->withId(105)->build();
-        $widget                 = ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
+        $widget                 = ProjectCrossTrackerWidget::build(76, 1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
         $this->project_manager  = ProjectByIDFactoryStub::buildWith($project);
         $this->url_verification = CheckUserCanAccessProjectStub::build();
 
@@ -156,7 +194,7 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
 
     public function testTheUserCanUpdateTheUserWidget(): void
     {
-        $widget = UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, (int) $this->user->getId());
+        $widget = UserCrossTrackerWidget::build(44, 1, UserDashboardController::DASHBOARD_TYPE, (int) $this->user->getId());
 
         $this->checkUserIsAllowedToUpdateWidget($widget);
 
@@ -165,7 +203,7 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
 
     public function testTheUserCannotUpdateTheUserWidget(): void
     {
-        $widget     = UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, (int) $this->user->getId());
+        $widget     = UserCrossTrackerWidget::build(44, 1, UserDashboardController::DASHBOARD_TYPE, (int) $this->user->getId());
         $this->user = UserTestBuilder::buildWithId(215);
 
         $this->expectException(RestException::class);

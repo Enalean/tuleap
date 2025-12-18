@@ -46,19 +46,15 @@ final class CrossTrackerDataBuilder extends RESTTestDataBuilder
 
         echo "Generate Cross Tracker\n";
 
-        $widget_dao = new CrossTrackerWidgetDao();
-        $query_dao  = new CrossTrackerQueryDao();
-        $widget_id  = $widget_dao->createWidget();
-        $query_dao->create('', 'Title 1', 'Description', $widget_id, false);
-
-        $dashboard_widget_dao = new DashboardWidgetDao(
+        $widget_dao            = new CrossTrackerWidgetDao();
+        $query_dao             = new CrossTrackerQueryDao();
+        $dashboard_widget_dao  = new DashboardWidgetDao(
             new WidgetFactory(
                 UserManager::instance(),
                 new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
                 EventManager::instance()
             )
         );
-
         $project_dashboard_dao = new ProjectDashboardDao($dashboard_widget_dao);
         $dashboards            = $project_dashboard_dao->searchAllProjectDashboards(
             (int) $this->getTrackerInProjectPrivateMember(self::EPICS_TRACKER_SHORTNAME)->getProject()->getID()
@@ -66,6 +62,10 @@ final class CrossTrackerDataBuilder extends RESTTestDataBuilder
         if ($dashboards === []) {
             throw new LogicException('Project private member has no dashboards');
         }
+
+        $widget_id = $widget_dao->createWidget();
+        $query_dao->create('', 'Title 1', 'Description', $widget_id, false);
+        $dashboard_widget_dao->create($dashboards[0]['project_id'], 'g', $dashboards[0]['id'], 'crosstrackersearch', $widget_id);
 
         $test_user_1_id = $this->getUserOrThrow(self::TEST_USER_1_NAME)->getId();
 

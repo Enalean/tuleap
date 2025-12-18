@@ -29,6 +29,7 @@ use Tuleap\AI\Mistral\Role;
 use Tuleap\AI\Mistral\StringContent;
 use Tuleap\AICrossTracker\Stub\MessageRepositoryStub;
 use Tuleap\AICrossTracker\Stub\ThreadStorageStub;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\DB\DatabaseUUIDFactory;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -54,7 +55,7 @@ final class ThreadRepositoryTest extends TestCase
         );
 
         $thread = $thread_repository->fetchThread(
-            111,
+            ProjectCrossTrackerWidget::build(111, 1, 'foo', 123),
             UserTestBuilder::anActiveUser()->build(),
             null,
             Message::buildUserMessageFromString('some question'),
@@ -85,7 +86,7 @@ final class ThreadRepositoryTest extends TestCase
         );
 
         $thread = $thread_repository->fetchThread(
-            345,
+            ProjectCrossTrackerWidget::build(345, 1, 'foo', 123),
             UserTestBuilder::buildWithId(123),
             $uuid,
             Message::buildUserMessageFromString('some question'),
@@ -129,7 +130,7 @@ final class ThreadRepositoryTest extends TestCase
         );
 
         $thread = $thread_repository->fetchThread(
-            345,
+            ProjectCrossTrackerWidget::build(345, 1, 'foo', 123),
             UserTestBuilder::buildWithId(123),
             $uuid_2,
             Message::buildUserMessageFromString('some question 2'),
@@ -162,7 +163,7 @@ final class ThreadRepositoryTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->withId(123)->build();
 
         $thread = $thread_repository->fetchThread(
-            345,
+            ProjectCrossTrackerWidget::build(345, 1, 'foo', 123),
             $user,
             null,
             Message::buildUserMessageFromString('some question'),
@@ -197,7 +198,7 @@ final class ThreadRepositoryTest extends TestCase
         );
 
         $thread_repository->fetchThread(
-            345,
+            ProjectCrossTrackerWidget::build(345, 1, 'foo', 123),
             UserTestBuilder::buildWithId(123),
             $uuid,
             Message::buildUserMessageFromString('some question'),
@@ -234,7 +235,7 @@ final class ThreadRepositoryTest extends TestCase
         );
 
         $result = $thread_repository->fetchThread(
-            345,
+            ProjectCrossTrackerWidget::build(345, 1, 'foo', 123),
             UserTestBuilder::buildWithId(123),
             $uuid,
             Message::buildUserMessageFromString('some question'),

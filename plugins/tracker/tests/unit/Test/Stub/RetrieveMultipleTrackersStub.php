@@ -51,4 +51,9 @@ final class RetrieveMultipleTrackersStub implements RetrieveMultipleTrackers
 
         return new self($trackers);
     }
+
+    public static function withoutTrackers(): self
+    {
+        return new self([]);
+    }
 }

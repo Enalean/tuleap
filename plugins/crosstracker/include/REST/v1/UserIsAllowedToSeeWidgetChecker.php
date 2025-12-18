@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\include\CheckUserCanAccessProjectAndIsAdmin;
+use Tuleap\Option\Option;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\REST\ProjectAuthorization;
 
@@ -46,21 +47,39 @@ final readonly class UserIsAllowedToSeeWidgetChecker
      */
     public function checkUserIsAllowedToSeeWidget(PFUser $user, int $widget_id): void
     {
-        $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id)
-            ->match(
-                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($user): void {
+        $this->getWidgetUserCanSee($user, $widget_id)
+            ->orElse(
+                fn () => throw new RestException(404, 'Widget not found')
+            );
+    }
+
+    /**
+     * @return Option<ProjectCrossTrackerWidget>|Option<UserCrossTrackerWidget>
+     */
+    public function getWidgetUserCanSee(PFUser $user, int $widget_id): Option
+    {
+        return $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id)->match(
+            /**
+             * @psalm-return Option<ProjectCrossTrackerWidget>|Option<UserCrossTrackerWidget>
+             */
+            function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($user): Option {
+                try {
                     $this->validateUserAccessToWidget(
                         $user,
                         $widget,
-                        fn (PFUser $user, \Project $project) => ProjectAuthorization::userCanAccessProject(
+                        fn(PFUser $user, \Project $project) => ProjectAuthorization::userCanAccessProject(
                             $user,
                             $project,
                             $this->url_verification
                         )
                     );
-                },
-                fn () => null
-            );
+                    return Option::fromValue($widget);
+                } catch (RestException) {
+                    return Option::nothing(ProjectCrossTrackerWidget::class);
+                }
+            },
+            fn () => Option::nothing(ProjectCrossTrackerWidget::class),
+        );
     }
 
     /**

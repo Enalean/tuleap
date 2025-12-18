@@ -28,15 +28,17 @@ namespace Tuleap\CrossTracker\Widget;
 final readonly class UserCrossTrackerWidget
 {
     private function __construct(
+        private(set) int $widget_id,
         private int $dashboard_id,
         private string $dashboard_type,
         private int $user_id,
     ) {
     }
 
-    public static function build(int $dashboard_id, string $dashboard_type, int $user_id): self
+    public static function build(int $widget_id, int $dashboard_id, string $dashboard_type, int $user_id): self
     {
         return new self(
+            $widget_id,
             $dashboard_id,
             $dashboard_type,
             $user_id
