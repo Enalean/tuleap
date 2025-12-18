@@ -16,7 +16,6 @@ chown -R codendiadm:codendiadm \
     /data/lib/tuleap/images \
     /data/lib/tuleap/mediawiki \
     /data/lib/tuleap/tracker \
-    /data/lib/tuleap/trackerv3 \
     /data/lib/tuleap/user \
     /data/lib/tuleap/wiki \
     /data/lib/tuleap/gitolite/admin \
