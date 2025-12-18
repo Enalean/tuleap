@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Tests\Stub;
 
 use GitRepository;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\GitReferenceNotFound;
 use Tuleap\PullRequest\GitReference\UpdateGitPullRequestReference;
@@ -37,13 +39,13 @@ final class UpdateGitPullRequestReferenceStub implements UpdateGitPullRequestRef
     }
 
     /**
-     * @throws \Git_Command_Exception
      * @throws GitReferenceNotFound
      */
     #[\Override]
-    public function updatePullRequestReference(PullRequest $pull_request, GitExec $executor_repository_source, GitExec $executor_repository_destination, GitRepository $repository_destination,): void
+    public function updatePullRequestReference(PullRequest $pull_request, GitRepository $repository_source, GitExec $executor_repository_destination, GitRepository $repository_destination,): Ok
     {
         $this->update_pull_request_reference_call_count++;
+        return Result::ok(null);
     }
 
     public static function build(): self

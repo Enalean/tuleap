@@ -21,6 +21,7 @@
 namespace Tuleap\PullRequest\GitReference;
 
 use GitRepositoryFactory;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\GitExec;
 
@@ -99,13 +100,14 @@ class GitPullRequestReferenceBulkConverter
             try {
                 $this->updater->updatePullRequestReference(
                     $pull_request_without_git_ref,
-                    GitExec::buildFromRepository($repository_source),
+                    $repository_source,
                     GitExec::buildFromRepository($repository_destination),
                     $repository_destination
+                )->match(
+                    fn() => $this->logger->debug("Git reference successfully created for PR #$pull_request_id"),
+                    fn(Fault $fault) => $this->logger->error("PR #$pull_request_id marked as broken: " . (string) $fault)
                 );
                 $this->logger->debug("Git reference successfully created for PR #$pull_request_id");
-            } catch (\Git_Command_Exception $ex) {
-                $this->logger->error("PR #$pull_request_id marked as broken: " . $ex->getMessage());
             } catch (GitPullRequestReferenceNotFoundException $ex) {
                 $this->logger->error('Incoherent state found, did you run forgeupgrade?', ['exception' => $ex]);
             }

@@ -26,6 +26,7 @@ use GitRepository;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tuleap\Git\RetrieveGitRepository;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Option\Option;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\BypassBrokenGitReferenceCheck;
@@ -87,9 +88,11 @@ final class PullRequestWithGitReferenceRetriever
         $repository_destination = $this->getRepository($pull_request->getRepoDestId());
         $this->git_pull_request_reference_updater->updatePullRequestReference(
             $pull_request,
-            GitExec::buildFromRepository($repository_source),
+            $repository_source,
             GitExec::buildFromRepository($repository_destination),
             $repository_destination
+        )->orElse(
+            static fn(Fault $fault): never => throw new \RuntimeException((string) $fault)
         );
     }
 

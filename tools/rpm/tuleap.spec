@@ -767,6 +767,7 @@ done
 ## Plugin PullRequest
 %{__install} plugins/pullrequest/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
+%{__install} plugins/pullrequest/etc/sudoers.d/tuleap-pullrequest $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_pullrequest
 
 # Plugin svn
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
@@ -1181,6 +1182,7 @@ fi
 %files plugin-pullrequest
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/pullrequest
+%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_pullrequest
 %attr(00644,root,root) /etc/logrotate.d/tuleap_pullrequest
 %config(noreplace) /etc/logrotate.d/tuleap_pullrequest
 

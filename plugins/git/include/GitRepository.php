@@ -554,10 +554,8 @@ class GitRepository //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
 
     /**
      * Return the full absolute path to the repository
-     *
-     * @return String
      */
-    public function getFullPath()
+    public function getFullPath(): string
     {
         $root_path = $this->getGitRootPath();
         if (is_string($root_path) && strlen($root_path) > 0) {

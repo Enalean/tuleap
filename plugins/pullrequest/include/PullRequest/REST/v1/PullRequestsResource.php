@@ -195,7 +195,8 @@ class PullRequestsResource extends AuthenticatedResource
             $this->event_manager,
             new GitPullRequestReferenceCreator(
                 new GitPullRequestReferenceDAO(),
-                new GitPullRequestReferenceNamespaceAvailabilityChecker()
+                new GitPullRequestReferenceNamespaceAvailabilityChecker(),
+                new \Tuleap\Process\SymfonyProcessFactory(),
             ),
             $event_dispatcher,
         );
@@ -979,7 +980,8 @@ class PullRequestsResource extends AuthenticatedResource
                     new \Tuleap\PullRequest\GitExecFactory(),
                     new GitPullRequestReferenceUpdater(
                         new GitPullRequestReferenceDAO(),
-                        new GitPullRequestReferenceNamespaceAvailabilityChecker()
+                        new GitPullRequestReferenceNamespaceAvailabilityChecker(),
+                        new \Tuleap\Process\SymfonyProcessFactory(),
                     ),
                     PullRequestNotificationSupport::buildDispatcher(\pullrequestPlugin::getLogger())
                 ),
@@ -1411,7 +1413,8 @@ class PullRequestsResource extends AuthenticatedResource
         $git_pull_request_reference_retriever = new GitPullRequestReferenceRetriever($git_pull_request_reference_dao);
         $git_pull_request_reference_updater   = new GitPullRequestReferenceUpdater(
             $git_pull_request_reference_dao,
-            new GitPullRequestReferenceNamespaceAvailabilityChecker()
+            new GitPullRequestReferenceNamespaceAvailabilityChecker(),
+            new \Tuleap\Process\SymfonyProcessFactory(),
         );
 
         return new PullRequestWithGitReferenceRetriever(
