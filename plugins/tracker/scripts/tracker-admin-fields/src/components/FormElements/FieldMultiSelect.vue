@@ -20,18 +20,21 @@
 <template>
     <div class="tlp-form-element">
         <label-for-field v-bind:id="id" v-bind:field="field" />
-        <select ref="select_element" class="tlp-select" v-bind:id="id" multiple></select>
+        <select ref="select_element" class="tlp-select" v-bind:id="id" multiple>
+            <select-box-options v-bind:field="field" />
+        </select>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
 import { createListPicker } from "@tuleap/list-picker";
-import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+import type { ListFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import LabelForField from "./LabelForField.vue";
+import SelectBoxOptions from "./SelectBoxOptions/SelectBoxOptions.vue";
 
 const props = defineProps<{
-    field: StructureFields;
+    field: ListFieldStructure;
 }>();
 
 const select_element = ref<HTMLSelectElement | undefined>();

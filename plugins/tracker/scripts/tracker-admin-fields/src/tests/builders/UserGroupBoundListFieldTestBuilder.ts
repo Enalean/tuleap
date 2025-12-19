@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2025-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,41 +17,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { UserBoundListField, UserBoundListItem } from "@tuleap/plugin-tracker-rest-api-types";
-import { LIST_BIND_USERS, CHECKBOX_FIELD } from "@tuleap/plugin-tracker-constants";
+import type {
+    UserGroupBoundListField,
+    UserGroupBoundListItem,
+} from "@tuleap/plugin-tracker-rest-api-types";
+import { LIST_BIND_UGROUPS, SELECTBOX_FIELD } from "@tuleap/plugin-tracker-constants";
 
-export class UserBoundListFieldTestBuilder {
-    private readonly field_id = 18;
-    private readonly label = "Users";
-    private readonly name = "users";
+export class UserGroupBoundListFieldTestBuilder {
+    private field_id = 18;
+    private readonly label = "Two doors";
+    private readonly name = "two_doors";
     private readonly required = false;
-    private readonly type = CHECKBOX_FIELD;
-    private default_value: ReadonlyArray<UserBoundListItem> = [];
+    private readonly type = SELECTBOX_FIELD;
+    private default_value: ReadonlyArray<UserGroupBoundListItem> = [];
     private readonly bindings = {
-        type: LIST_BIND_USERS,
+        type: LIST_BIND_UGROUPS,
     };
-
-    private values: ReadonlyArray<UserBoundListItem> = [];
+    private values: ReadonlyArray<UserGroupBoundListItem> = [];
 
     private constructor() {}
 
-    public static aUserBoundListField(): UserBoundListFieldTestBuilder {
-        return new UserBoundListFieldTestBuilder();
+    public static aUserGroupBoundListField(): UserGroupBoundListFieldTestBuilder {
+        return new UserGroupBoundListFieldTestBuilder();
     }
 
-    public withValues(...values: ReadonlyArray<UserBoundListItem>): UserBoundListFieldTestBuilder {
+    public withValues(
+        ...values: ReadonlyArray<UserGroupBoundListItem>
+    ): UserGroupBoundListFieldTestBuilder {
         this.values = values;
         return this;
     }
 
     public withDefaultValues(
-        ...values: ReadonlyArray<UserBoundListItem>
-    ): UserBoundListFieldTestBuilder {
+        ...values: ReadonlyArray<UserGroupBoundListItem>
+    ): UserGroupBoundListFieldTestBuilder {
         this.default_value = values;
         return this;
     }
 
-    public build(): UserBoundListField {
+    public build(): UserGroupBoundListField {
         return {
             field_id: this.field_id,
             label: this.label,
