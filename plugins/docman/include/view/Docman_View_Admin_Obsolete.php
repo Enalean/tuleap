@@ -85,7 +85,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
 
     private function getTable($params)
     {
-        $html = '';
+        $document_url_builder = new DocumentItemUrlBuilder(ProjectManager::instance());
 
         // Get root
         $itemFactory = new Docman_ItemFactory($params['group_id']);
@@ -143,7 +143,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
 
                 $table .= '<td>';
                 $table .= '<span style="white-space: nowrap;">';
-                $url    = DocumentItemUrlBuilder::buildSelf()->getUrl($item);
+                $url    = $document_url_builder->getUrl($item);
                 $table .= '<a data-help-window href="' . $url . '">';
                 $table .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
                 $table .= '</a>';

@@ -28,6 +28,14 @@ use Tuleap\Document\Tree\DocumentItemUrlBuilder;
  */
 class Docman_View_Redirect extends Docman_View_View implements ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
+    private DocumentItemUrlBuilder $document_item_url_builder;
+
+    public function __construct(Docman_Controller $controller)
+    {
+        parent::__construct($controller);
+        $this->document_item_url_builder = new DocumentItemUrlBuilder(ProjectManager::instance());
+    }
+
     /* protected */ #[\Override]
     public function _content($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
@@ -52,7 +60,7 @@ class Docman_View_Redirect extends Docman_View_View implements ItemVisitor //php
     public function visitFolder(Docman_Folder $item, $params = []): string
     {
         $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
-        return DocumentItemUrlBuilder::buildSelf()->getRedirectionForFolder($item) . '/';
+        return $this->document_item_url_builder->getRedirectionForFolder($item) . '/';
     }
 
     #[\Override]
@@ -105,28 +113,28 @@ class Docman_View_Redirect extends Docman_View_View implements ItemVisitor //php
     public function visitFile(Docman_File $item, $params = []): string
     {
         $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
-        return DocumentItemUrlBuilder::buildSelf()->getUrl($item) . '/';
+        return $this->document_item_url_builder->getUrl($item) . '/';
     }
 
     #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = []): string
     {
         $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
-        return DocumentItemUrlBuilder::buildSelf()->getRedirectionForEmbeddedFile($item) . '/';
+        return $this->document_item_url_builder->getRedirectionForEmbeddedFile($item) . '/';
     }
 
     #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = []): string
     {
         $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
-        return DocumentItemUrlBuilder::buildSelf()->getUrl($item) . '/';
+        return $this->document_item_url_builder->getUrl($item) . '/';
     }
 
     #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): string
     {
         $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
-        return DocumentItemUrlBuilder::buildSelf()->getUrl($item) . '/';
+        return $this->document_item_url_builder->getUrl($item) . '/';
     }
 
     #[\Override]

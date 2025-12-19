@@ -25,14 +25,8 @@ use Tuleap\Docman\Metadata\CreationMetadataValidator;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\Docman\ResponseFeedbackWrapper;
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
-use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
-use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 use Tuleap\Document\Tree\DocumentItemUrlBuilder;
 use Tuleap\Project\MappingRegistry;
-use Tuleap\User\InvalidEntryInAutocompleterCollection;
-use Tuleap\User\RequestFromAutocompleter;
 
 class Docman_Controller extends Controler // phpcs:ignoreFile
 {
@@ -75,6 +69,7 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
      * @var string
      */
     public $pluginPath;
+    private DocumentItemUrlBuilder $document_url_builder;
 
     public function __construct($plugin, $pluginPath, $themePath, $request)
     {
@@ -113,6 +108,8 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
             $this->notificationsManager_Subscribers
         );
         $notification_event_adder->addNotificationManagement();
+
+        $this->document_url_builder = new DocumentItemUrlBuilder(ProjectManager::instance());
     }
 
     // Franlky, this is not at all the best place to do this.
@@ -474,7 +471,7 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                 break;
             case 'getRootFolder':
                 $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing element via the old interface is not supported.'));
-                $GLOBALS['Response']->redirect(DocumentItemUrlBuilder::buildSelf()->getUrl($item). "/");
+                $GLOBALS['Response']->redirect($this->document_url_builder->getUrl($item). "/");
                 break;
             case 'admin_set_permissions':
                 \Docman_View_Admin_Permissions::getCSRFToken($this->getGroupId())->check();
@@ -485,7 +482,7 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                 $section = $this->request->get('section');
                 if ($section === 'properties') {
                     $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing properties via the old interface is not supported.'));
-                    $GLOBALS['Response']->redirect(DocumentItemUrlBuilder::buildSelf()->getUrl($item));
+                    $GLOBALS['Response']->redirect($this->document_url_builder->getUrl($item));
                 } elseif ($section === 'history') {
                     $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing the history via the old interface is not supported.'));
                     $project      = ProjectManager::instance()->getProject((int) $item->getGroupId());
