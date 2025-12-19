@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@storybook/addon-docs": "^10.0.2",
-    "@storybook/addon-links": "^10.0.2",
+    "@storybook/addon-docs": "^10.1.10",
+    "@storybook/addon-links": "^10.1.10",
     "@tuleap/core-constants": "workspace:*",
     "@tuleap/filter-inline-table": "workspace:^",
     "@tuleap/lazybox": "workspace:^",
@@ -32,10 +32,10 @@
     "lit": "^3.1.3",
     "msw": "^2.7.3",
     "msw-storybook-addon": "^2.0.4",
-    "storybook": "^10.0.2"
+    "storybook": "^10.1.10"
   },
   "devDependencies": {
-    "@storybook/web-components-vite": "^10.0.2",
+    "@storybook/web-components-vite": "^10.1.10",
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/core-rest-api-types": "workspace:^",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:^"
