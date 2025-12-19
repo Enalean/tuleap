@@ -71,7 +71,6 @@ export const defineJestConfiguration = (): JestConfiguration => {
                 "ts-jest",
                 {
                     diagnostics: false,
-                    isolatedModules: true,
                 },
             ],
             "^.+\\.js$": path.resolve(__dirname, "./babel-jest-process.js"),

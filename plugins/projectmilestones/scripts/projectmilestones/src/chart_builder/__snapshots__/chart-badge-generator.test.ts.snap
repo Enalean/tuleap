@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ChartBadgeGenerator - When the badge is created, Then value of remaining effort is displayed in the front of the badge 1`] = `
 <svg>

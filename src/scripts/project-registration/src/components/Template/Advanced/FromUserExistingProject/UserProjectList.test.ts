@@ -79,9 +79,10 @@ describe("UserProjectList", () => {
         expect(wrapper).toMatchSnapshot();
     });
 
-    it("Should select the previously selected project by default when one has been previously selected", () => {
+    it("Should select the previously selected project by default when one has been previously selected", async () => {
         selected_company_template = project_a;
         wrapper = getWrapper();
+        await wrapper.vm.$nextTick();
 
         const option = selectOrThrow(
             wrapper.element,

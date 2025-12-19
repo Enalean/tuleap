@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`JenkinsServer displays the badge and a basic popover 1`] = `
 <div><span class="tlp-badge-secondary tlp-badge-outline git-repository-list-header-badge"><span>1 Jenkins server setup</span></span>

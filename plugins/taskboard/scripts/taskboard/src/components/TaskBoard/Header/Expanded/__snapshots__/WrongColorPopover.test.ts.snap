@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`WrongColorPopover initiates a popover to inform user that the chosen color is wrong 1`] = `
 <div

@@ -211,7 +211,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
             expect(wrapper.attributes("data-tlp-tooltip")).toBe("0.00%");
 
             expect(points_remaining_value.text()).toBe("100");
-            expect(points_remaining_progress.attributes("style")).toBe("width: 0.00%;");
+            expect(points_remaining_progress.attributes("style")).toBe("width: 0%;");
         });
     });
 });

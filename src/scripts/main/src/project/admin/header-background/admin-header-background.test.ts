@@ -21,10 +21,17 @@ import { setupFormSubmission } from "./admin-header-background";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
+const noop = (): void => {
+    //Do nothing
+};
+
+jest.useFakeTimers();
+
 describe("admin-header-background", () => {
     it("sets a project header background", async () => {
         const { mount_point, form } = createDocumentExpectedFormStructure("beach-daytime");
-        const location = { ...window.location, reload: jest.fn() };
+        const location = { hash: "#unexpected", reload: noop } as Location;
+        const reload = jest.spyOn(location, "reload");
 
         const tlpPut = jest.spyOn(tlp_fetch, "put");
 
@@ -32,15 +39,17 @@ describe("admin-header-background", () => {
 
         setupFormSubmission(mount_point, location);
 
-        await form.submit();
+        form.requestSubmit();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(location.hash).toBe("#header-background-change-success");
-        expect(location.reload).toHaveBeenCalled();
+        expect(reload).toHaveBeenCalled();
     });
 
     it("removes a project header background", async () => {
         const { mount_point, form } = createDocumentExpectedFormStructure("0");
-        const location = { ...window.location, reload: jest.fn() };
+        const location = { hash: "#unexpected", reload: noop } as Location;
+        const reload = jest.spyOn(location, "reload");
 
         const tlpDelete = jest.spyOn(tlp_fetch, "del");
 
@@ -48,21 +57,20 @@ describe("admin-header-background", () => {
 
         setupFormSubmission(mount_point, location);
 
-        await form.submit();
+        form.requestSubmit();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(location.hash).toBe("#header-background-change-success");
-        expect(location.reload).toHaveBeenCalled();
+        expect(reload).toHaveBeenCalled();
     });
 
     it("shows a success message when it seems a background has been changed", () => {
         const { mount_point, success_element } =
             createDocumentExpectedFormStructure("beach-daytime");
+        const location = { hash: "#header-background-change-success" } as Location;
 
         const class_hide_feedback = "project-admin-background-feedback-hidden";
         success_element.classList.add(class_hide_feedback);
-
-        const location = window.location;
-        location.hash = "#header-background-change-success";
 
         setupFormSubmission(mount_point, location);
 

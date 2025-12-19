@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to top planning of the project is rendered 1`] = `
 <div

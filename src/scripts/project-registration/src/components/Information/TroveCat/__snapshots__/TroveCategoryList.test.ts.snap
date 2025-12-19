@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`TroveCategoryList - Display correctly the component 1`] = `
 <div class="tlp-form-element"><label class="tlp-label" for="trovecat">licence <i class="fa-solid fa-asterisk"></i></label><select class="tlp-select tlp-select-large" id="trovecat" name="trovecat" required="">
