@@ -143,7 +143,6 @@ final class GitRoutingTest extends TestCase
                 'getUserDao',
                 'getGitDao',
                 'getHeaderRenderer',
-                'getThemeManager',
                 'getGitRepositoryHeaderDisplayer',
                 'getName',
             ]

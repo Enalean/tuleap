@@ -11,12 +11,14 @@
         "@tuleap/lazybox": "workspace:^",
         "@tuleap/lazybox-users-autocomplete": "workspace:^",
         "@tuleap/locale": "workspace:^",
-        "@tuleap/tlp-modal": "workspace:*"
+        "@tuleap/tlp-modal": "workspace:^",
+        "@tuleap/tlp-relative-date": "workspace:^"
     },
     "devDependencies": {
         "@tuleap/build-system-configurator": "workspace:*"
     },
     "scripts": {
+        "typecheck": "tsc --noEmit",
         "build": "vite build",
         "watch": "vite build --watch --mode development --minify false"
     }

@@ -1,4 +1,0 @@
-codendi.locales['git'] = {
-    remove_webhook_title: 'Wait a minute…',
-    regexp_permission_enabled_info: 'Regular expressions are available, only \\n can\'t be used'
-};

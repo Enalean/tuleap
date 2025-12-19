@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import common from "./webpack.common.mjs";
-import { webpack_configurator } from "@tuleap/build-system-configurator";
+declare(strict_types=1);
 
-export default webpack_configurator.extendProdConfiguration(common);
+namespace Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit;
+
+use Git_Driver_Gerrit_Template_Template;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class GerritTemplatePresenter
+{
+    public int $template_id;
+    public string $template_name;
+
+    public function __construct(
+        Git_Driver_Gerrit_Template_Template $template,
+    ) {
+        $this->template_id   = (int) $template->getId();
+        $this->template_name = $template->getName();
+    }
+}

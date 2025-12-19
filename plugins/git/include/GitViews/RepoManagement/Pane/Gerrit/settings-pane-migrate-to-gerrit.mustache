@@ -1,0 +1,100 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h2 class="tlp-pane-title">{{# dgettext }}tuleap-git | Migration to Gerrit{{/ dgettext }}</h2>
+        </div>
+        <section class="tlp-pane-section">
+            {{^ is_repository_created }}
+            <div class="tlp-alert-info">
+                {{# dgettext }}tuleap-git | The repository is in queue for creation. Please check back here in a few minutes.{{/ dgettext }}
+            </div>
+            {{/ is_repository_created }}
+            {{# is_repository_created }}
+            <form method="post" action="/plugins/git/">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+                <input type="hidden" name="repo_id" value="{{ repository_id }}"/>
+                <input type="hidden" name="group_id" value="{{ project_id }}"/>
+                <input type="hidden" name="pane" value="{{ gerrit_pane }}"/>
+                <input type="hidden" id="action" name="action" value="{{ migrate_to_gerrit_action }}"/>
+
+                {{# is_parent_suspended }}
+                    <p class="tlp-alert-danger">
+                        {{# dgettext }}tuleap-git | Parent project is not active, you are not allowed to migrate your repository on gerrit.{{/ dgettext }}
+                    </p>
+                {{/ is_parent_suspended }}
+                <p>{{# dgettext }}tuleap-git | You are about to migrate your repository %s to Gerrit. | <em>{{ repository_name }}</em>{{/ dgettext }}</p>
+                <div class="tlp-alert-info">
+                    {{# dgettext }}tuleap-git | The management of the repository (permissions, …) will be delegated to Gerrit:{{/ dgettext }}
+                    <ul>
+                        <li>{{# dgettext }}tuleap-git | A project %s will be created on the chosen server. | <em>{{ gerrit_project_name }}</em>{{/ dgettext }}</li>
+                        <li>{{# dgettext }}tuleap-git | The current repository will become a mirror of the Gerrit reference.{{/ dgettext }}</li>
+                    </ul>
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="gerrit_url">
+                        {{# dgettext }}tuleap-git | Please choose the Gerrit server{{/ dgettext }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <select
+                        name="remote_server_id"
+                        id="gerrit_url"
+                        class="tlp-select tlp-select-adjusted"
+                        required
+                        {{# is_parent_suspended }}disabled{{/ is_parent_suspended }}
+                    >
+                        <option value="">{{# dgettext }}tuleap-git | -- Please choose{{/ dgettext }}</option>
+                        {{# gerrit_servers }}
+                            <option
+                                data-repo-delete="{{ should_delete }}"
+                                value="{{ server_id }}"
+                                data-repo-delete-plugin-enabled="{{ is_delete_plugin_enabled }}"
+                            >{{ base_url }}</option>
+                        {{/ gerrit_servers }}
+                    </select>
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="gerrit_template">
+                        {{# dgettext }}tuleap-git | Please choose a permissions configuration template for the migration, they will be applied to the migrated repository on Gerrit{{/ dgettext }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <select
+                        name="gerrit_template_id"
+                        id="gerrit_template"
+                        class="tlp-select tlp-select-adjusted"
+                        required
+                        {{# is_parent_suspended }}disabled{{/ is_parent_suspended }}
+                    >
+                        <option value="">{{# dgettext }}tuleap-git | -- Please choose{{/ dgettext }}</option>
+                        <option value="none">{{# dgettext }}tuleap-git | No pre-set permissions{{/ dgettext }}</option>
+                        <option value="default">{{# dgettext }}tuleap-git | Permissions defined in Git{{/ dgettext }}</option>
+                        {{# gerrit_templates }}
+                            <option value="{{ template_id }}">{{ template_name }}</option>
+                        {{/ gerrit_templates }}
+                    </select>
+                </div>
+                <div class="tlp-pane-section-submit">
+                    <button
+                        type="submit"
+                        class="tlp-button-primary"
+                        id="migrate_access_right"
+                        {{# is_parent_suspended }}disabled{{/ is_parent_suspended }}
+                    >
+                        {{# dgettext }}tuleap-git | Migrate the repository to Gerrit{{/ dgettext }}
+                    </button>
+                    <div id="gerrit_past_project_delete" class="tlp-alert-info gerrit-pane-hidden">
+                        <p>{{# dgettext }}tuleap-git | This repository was migrated to the server in the past. You cannot migrate again without deleting the project on the Gerrit server.{{/ dgettext }}</p>
+                        <button type="submit" class="tlp-button-danger">{{# dgettext }}tuleap-git | Delete Gerrit project{{/ dgettext }}</button>
+                    </div>
+                    {{^ is_parent_suspended }}
+                        <div id="gerrit_past_project_delete_plugin_disabled" class="tlp-alert-info gerrit-pane-hidden">
+                            <p>{{# dgettext }}tuleap-git | This repository was migrated to the server in the past. You cannot migrate again without deleting the project on the Gerrit server.{{/ dgettext }}</p>
+                        </div>
+                    {{/ is_parent_suspended }}
+                </div>
+            </form>
+            {{/ is_repository_created }}
+        </section>
+    </div>
+</section>

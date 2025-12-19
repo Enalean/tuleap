@@ -20,73 +20,66 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
-use Codendi_HTMLPurifier;
+use Git_Driver_Gerrit;
 use Git_Driver_Gerrit_Exception;
 use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
-use Git_Driver_Gerrit_ProjectCreatorStatusDao;
+use Git_Driver_Gerrit_Template_Template;
 use Git_RemoteServer_Gerrit_ProjectNameBuilder;
 use Git_RemoteServer_GerritServer;
 use GitRepository;
-use Tuleap\Date\DateHelper;
-use Tuleap\Date\RelativeDatesAssetsRetriever;
+use ProjectManager;
+use TemplateRenderer;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Git\Driver\Gerrit\UnsupportedGerritVersionException;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit\DisconnectFromGerritPanePresenter;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit\GerritMigrationFailurePresenter;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit\GerritPanePresenter;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit\GerritRepositoryPresenter;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit\GerritServerPresenter;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit\GerritTemplatePresenter;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit\MigrateToGerritPanePresenter;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit\MigrationToGerritFailedFault;
 use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\HTTPRequest;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 
-class Gerrit extends Pane
+final class Gerrit extends Pane
 {
     public const string OPTION_DISCONNECT_GERRIT_PROJECT = 'gerrit_project_delete';
     public const string OPTION_DELETE_GERRIT_PROJECT     = 'delete';
     public const string OPTION_READONLY_GERRIT_PROJECT   = 'read-only';
+    public const string ID                               = 'gerrit';
+    public const string CONFIRM_DISCONNECT_ACTION        = 'confirm_disconnect_gerrit';
 
     /**
-     * @var Git_RemoteServer_GerritServer[]
+     * @param Git_RemoteServer_GerritServer[]       $gerrit_servers
+     * @param Git_Driver_Gerrit_Template_Template[] $gerrit_config_templates
      */
-    private $gerrit_servers;
-
-    /**
-     *  @var Git_Driver_Gerrit_GerritDriverFactory
-     */
-    private $driver_factory;
-
-    /**
-     * @var GerritCanMigrateChecker
-     */
-    private $gerrit_can_migrate_checker;
-
-    /**
-     * @var \Git_Driver_Gerrit_Template_Template[]
-     */
-    private $templates;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-
     public function __construct(
         GitRepository $repository,
         HTTPRequest $request,
-        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        array $gerrit_servers,
-        array $gerrit_config_templates,
-        \ProjectManager $project_manager,
+        private readonly Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        private readonly GerritCanMigrateChecker $gerrit_can_migrate_checker,
+        private readonly array $gerrit_servers,
+        private readonly array $gerrit_config_templates,
+        private readonly ProjectManager $project_manager,
+        private readonly TemplateRenderer $template_renderer,
+        private readonly Git_Driver_Gerrit_ProjectCreatorStatus $gerrit_creator_status,
     ) {
         parent::__construct($repository, $request);
-        $this->gerrit_servers             = $gerrit_servers;
-        $this->driver_factory             = $driver_factory;
-        $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
-        $this->templates                  = $gerrit_config_templates;
-        $this->repository                 = $repository;
-        $this->project_manager            = $project_manager;
     }
 
     /**
      * @return bool true if the pane can be displayed
      */
     #[\Override]
-    public function canBeDisplayed()
+    public function canBeDisplayed(): bool
     {
         return $this->gerrit_can_migrate_checker->canMigrate($this->repository->getProject());
     }
@@ -95,16 +88,16 @@ class Gerrit extends Pane
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
     #[\Override]
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
-        return 'gerrit';
+        return self::ID;
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
     #[\Override]
-    public function getTitle()
+    public function getTitle(): string
     {
         return dgettext('tuleap-git', 'Gerrit');
     }
@@ -113,137 +106,84 @@ class Gerrit extends Pane
      * @see GitViews_RepoManagement_Pane::getContent()
      */
     #[\Override]
-    public function getContent()
+    public function getContent(): string
     {
         if ($this->repository->isMigratedToGerrit()) {
             try {
-                $user = \Tuleap\HTTPRequest::instance()->getCurrentUser();
+                $user = HTTPRequest::instance()->getCurrentUser();
                 return $this->getContentAlreadyMigrated($user);
-            } catch (UnsupportedGerritVersionException $exception) {
-                return '<p class="alert alert-error">' .
-                    dgettext('tuleap-git', 'You are using a version of Gerrit that is not supported, please contact your site administrators.') .
-                    '</p>';
+            } catch (UnsupportedGerritVersionException) {
+                return sprintf(
+                    '<div class="tlp-alert-danger">%s</div>',
+                    dgettext(
+                        'tuleap-git',
+                        'You are using a version of Gerrit that is not supported, please contact your site administrators.'
+                    )
+                );
             }
         }
 
-        $html     = '';
-        $disabled = '';
-
-        if (! $this->repository->isCreated()) {
-            $html .= '<div class="alert alert-info wait_creation">';
-            $html .= dgettext('tuleap-git', 'The repository is in queue for creation. Please check back here in a few minutes');
-            $html .= '</div>';
-
-            $disabled = 'disabled=true';
-        }
-
-        $parent                      = $this->project_manager->getParentProject($this->repository->getProjectId());
-        $parent_is_suspended         = false;
-        $parent_is_suspended_message = '';
-        if ($parent !== null && ! $parent->isActive()) {
-            $disabled                    = 'disabled=true';
-            $parent_is_suspended_message = dgettext('tuleap-git', 'Parent project is not active, you are not allowed to migrate your repository on gerrit.');
-            $parent_is_suspended         = true;
-        }
-
+        $parent       = $this->project_manager->getParentProject($this->repository->getProjectId());
         $name_builder = new Git_RemoteServer_Gerrit_ProjectNameBuilder();
 
-        $html .= '<h2>' . dgettext('tuleap-git', 'Migration to Gerrit') . '</h2>';
-        $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=' . $this->repository->getProjectId() . '">';
-        $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
-        $html .= $this->csrf_token()->fetchHTMLInput();
-        $html .= '<input type="hidden" name="pane" value="' . $this->getIdentifier() . '" />';
-        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';
-
-        if ($parent_is_suspended === true) {
-            $html .= '<p class="alert alert-danger">
-                    ' . $parent_is_suspended_message . '
-                </p>';
-        }
-
-        $html .= '<p>';
-        $html .= sprintf(dgettext('tuleap-git', 'You are about to migrate your repository <em>%1$s</em> to Gerrit.'), $this->repository->getName());
-        $html .= '</p>';
-        $html .= '<div class="git_repomanagement_gerrit_more_description">';
-        $html .= sprintf(dgettext('tuleap-git', 'The management of the repository (permissions, ...) will be delegated to Gerrit: <ul><li>A project <em>%1$s</em> will be created on the chosen server.</li><li>The current repository will become a mirror of the Gerrit reference.</li></ul>'), $name_builder->getGerritProjectName($this->repository));
-        $html .= '</div>';
-        $html .= '<p>';
-        $html .= '<label for="gerrit_url">' . dgettext('tuleap-git', 'Please choose the Gerrit server:') . '</label>';
-        $html .= '<select name="remote_server_id" id="gerrit_url" ' . $disabled . '>';
-        $html .= '<option value="" selected="selected">' . $GLOBALS['Language']->getText('global', 'please_choose_dashed') . '</option>';
-        $html .= $this->getServers();
-        $html .= '</select>';
-        $html .= '</p>';
-        $html .= '<p>';
-        $html .= '<label for="gerrit_template">' . dgettext('tuleap-git', 'Please choose a permission\'s configuration template for the migration,<br />they will be applied to the migrated repository on Gerrit:') . '</label>';
-        $html .= '<select name="gerrit_template_id" id="gerrit_template" ' . $disabled . '>';
-        $html .= '<option value="" selected="selected">' . $GLOBALS['Language']->getText('global', 'please_choose_dashed') . '</option>';
-        $html .= $this->getTemplates();
-        $html .= '</select>';
-        $html .= '</p>';
-
-        $html .= '<p id="migrate_access_right"><input type="submit" name="save" value="' . dgettext('tuleap-git', 'Migrate repo to Gerrit') . '" ' . $disabled . ' /></p>';
-        $html .= '<div id="gerrit_past_project_delete" class="alert alert-info">
-                    <p>' . dgettext('tuleap-git', 'This repository was migrated to the server in the past. You cannot migrate again without deleting the project on the Gerrit server') . '
-                    </p>
-                    <p>
-                        <input type="submit" name="submit" value="' . dgettext('tuleap-git', 'Delete gerrit project') . '" />
-                    </p>
-                </div>';
-        if ($parent_is_suspended !== true) {
-            $html .= '<p id="gerrit_past_project_delete_plugin_diasabled" class="alert alert-info">
-                    ' . dgettext('tuleap-git', 'This repository was migrated to the server in the past. You cannot migrate again without deleting the project on the Gerrit server') . '
-                </p>';
-        }
-        $html .= '</form>';
-        return $html;
+        $presenter = new MigrateToGerritPanePresenter(
+            $this->csrf_token(),
+            $this->repository,
+            Option::fromNullable($parent),
+            $name_builder->getGerritProjectName($this->repository),
+            $this->buildGerritServerPresenters(),
+            $this->buildGerritTemplatePresenters(),
+        );
+        return $this->template_renderer->renderToString('settings-pane-migrate-to-gerrit', $presenter);
     }
 
-    private function getServers()
+    #[\Override]
+    public function getJavascriptViteAssets(): array
     {
-        $html = '';
+        return [
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../../scripts/repository-admin/frontend-assets',
+                    '/assets/git/repository-admin'
+                ),
+                'src/gerrit-pane.ts'
+            ),
+        ];
+    }
+
+    /**
+     * @return list<GerritServerPresenter>
+     */
+    private function buildGerritServerPresenters(): array
+    {
+        $presenters = [];
         foreach ($this->gerrit_servers as $server) {
             $driver = $this->driver_factory->getDriver($server);
             try {
-                $plugin_enabled = (int) $driver->isDeletePluginEnabled($server);
-                $should_delete  = (int) $this->doesRemoteGerritProjectNeedDeleting($server);
-            } catch (UnsupportedGerritVersionException $exception) {
+                $is_delete_plugin_enabled = (int) $driver->isDeletePluginEnabled($server);
+                $should_delete            = (int) $this->doesRemoteGerritProjectNeedDeleting($server);
+            } catch (UnsupportedGerritVersionException) {
                 continue;
             }
-
-            $html .= '<option
-                        data-repo-delete="' . (int) $should_delete . '"
-                        value="' . (int) $server->getId() . '"
-                        data-repo-delete-plugin-enabled="' . (int) $plugin_enabled . '">'
-                    . $this->hp->purify($server->getBaseUrl()) .
-                    '</option>';
+            $presenters[] = new GerritServerPresenter($server, $is_delete_plugin_enabled, $should_delete);
         }
-
-        return $html;
+        return $presenters;
     }
 
-    private function getTemplates()
+    /**
+     * @return list<GerritTemplatePresenter>
+     */
+    private function buildGerritTemplatePresenters(): array
     {
-        $html = '<option
-                        value="none">'
-                . dgettext('tuleap-git', 'No pre-set permissions') .
-                '</option>
-                 <option
-                        value="default">'
-                . dgettext('tuleap-git', 'Permissions defined in Git') .
-                '</option>';
-
-        foreach ($this->templates as $template) {
-            $html .= '<option
-                        value="' . (int) $template->getId() . '">'
-                    . $this->hp->purify($template->getName()) .
-                    '</option>';
-        }
-
-        return $html;
+        return array_values(
+            array_map(
+                static fn(Git_Driver_Gerrit_Template_Template $template) => new GerritTemplatePresenter($template),
+                $this->gerrit_config_templates
+            )
+        );
     }
 
-    private function doesRemoteGerritProjectNeedDeleting(Git_RemoteServer_GerritServer $server)
+    private function doesRemoteGerritProjectNeedDeleting(Git_RemoteServer_GerritServer $server): bool
     {
         if ($server->getId() != $this->repository->getRemoteServerId()) {
             return false;
@@ -268,131 +208,77 @@ class Gerrit extends Pane
 
     private function getContentAlreadyMigrated(\PFUser $user): string
     {
-        $btn_name = 'confirm_disconnect_gerrit';
-        if ($this->request->get($btn_name)) {
-            return $this->getDisconnectFromGerritConfirmationScreen();
+        if ($this->request->get(self::CONFIRM_DISCONNECT_ACTION)) {
+            $disconnect_presenter = new DisconnectFromGerritPanePresenter(
+                $this->csrf_token(),
+                $this->repository,
+                $this->request->get(self::OPTION_DISCONNECT_GERRIT_PROJECT) ?? '',
+            );
+            return $this->template_renderer->renderToString('settings-pane-gerrit-confirm-disconnect', $disconnect_presenter);
         }
 
-        $html  = '';
-        $html .= '<fieldset class="gerrit_disconnect">';
-        $html .= '<legend class="gerrit_disconnect">' . dgettext('tuleap-git', 'Migration to Gerrit') . '</legend>';
-        $html .= $this->getMessageAccordingToMigrationStatus($user);
-        $html .= '</fieldset>';
-
-        $html .= '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '">';
-        $html .= $this->csrf_token()->fetchHTMLInput();
-        $html .= '<fieldset class="gerrit_disconnect">';
-        $html .= '<legend class="gerrit_disconnect">' . dgettext('tuleap-git', 'Disconnect from Gerrit') . '</legend>';
-        $html .= $this->getDisconnectFromGerritOptions();
-        $html .= '<button type="submit" class="btn" name="' . $btn_name . '" value="1">';
-        $html .= '<i class="fa fa-power-off"></i> ' . dgettext('tuleap-git', 'Disconnect');
-        $html .= '</button>';
-        $html .= '</fieldset>';
-        $html .= '</form>';
-        return $html;
+        $presenter = $this->getPresenterBasedOnMigrationStatus()
+            ->match(
+                fn(?GerritRepositoryPresenter $repository_presenter) => new GerritPanePresenter(
+                    $this->csrf_token(),
+                    $this->repository,
+                    $repository_presenter,
+                    null,
+                ),
+                function (MigrationToGerritFailedFault $fault) use ($user) {
+                    $date_builder      = new TlpRelativeDatePresenterBuilder();
+                    $migration_failure = new GerritMigrationFailurePresenter(
+                        $date_builder->getTlpRelativeDatePresenterInInlineContext($fault->date, $user),
+                        $fault->logs
+                    );
+                    return new GerritPanePresenter(
+                        $this->csrf_token(),
+                        $this->repository,
+                        null,
+                        $migration_failure,
+                    );
+                }
+            );
+        return $this->template_renderer->renderToString('settings-pane-gerrit', $presenter);
     }
 
-    private function getMessageAccordingToMigrationStatus(\PFUser $user): string
+    /**
+     * @return Ok<GerritRepositoryPresenter> | Ok<null> | Err<MigrationToGerritFailedFault>
+     */
+    private function getPresenterBasedOnMigrationStatus(): Ok|Err
     {
-        $project_creator_status = new Git_Driver_Gerrit_ProjectCreatorStatus(
-            new Git_Driver_Gerrit_ProjectCreatorStatusDao()
-        );
-        switch ($project_creator_status->getStatus($this->repository)) {
-            case Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE:
-                return '';
-
-            case null:
-            case Git_Driver_Gerrit_ProjectCreatorStatus::DONE:
-                return $this->getMigratedToGerritInfo();
-
-            case Git_Driver_Gerrit_ProjectCreatorStatus::ERROR:
-                return $this->getMigratedToGerritError($project_creator_status, $user);
+        $status = $this->gerrit_creator_status->getStatus($this->repository);
+        if ($status === Git_Driver_Gerrit_ProjectCreatorStatus::ERROR) {
+            $migration_date = \DateTimeImmutable::createFromTimestamp(
+                $this->gerrit_creator_status->getEventDate($this->repository)
+            );
+            return Result::err(
+                new MigrationToGerritFailedFault(
+                    $migration_date,
+                    $this->gerrit_creator_status->getLog($this->repository),
+                )
+            );
         }
-         return '';
-    }
-
-    private function getMigratedToGerritInfo(): string
-    {
-        $purifier       = Codendi_HTMLPurifier::instance();
-        $driver         = $this->getGerritDriverForRepository($this->repository);
-        $gerrit_project = $driver->getGerritProjectName($this->repository);
-        $gerrit_server  = $this->getGerritServerForRepository($this->repository);
-        $link           = $gerrit_server->getProjectAdminUrl($gerrit_project);
-
-        $html  = '';
-        $html .= '<p>';
-        $html .= sprintf(dgettext('tuleap-git', 'The repository <em>%1$s</em> has already been migrated to the Gerrit project: <a href="%3$s">%2$s</a>.'), $purifier->purify($this->repository->getName()), $purifier->purify($gerrit_project), $purifier->purify($link));
-        $html .= '</p>';
-        $html .= '<div class="git_repomanagement_gerrit_more_description">';
-        $html .= sprintf(dgettext('tuleap-git', 'As a reminder, the management of the repository (permissions, ...) has been delegated to Gerrit: <ul><li>A project <em>%1$s</em> has been created on the server <a href="%2$s">%2$s</a>.</li><li>The current repository is now a mirror of the Gerrit reference.</li></ul>'), $purifier->purify($gerrit_project), $purifier->purify($gerrit_server->getBaseUrl()));
-        $html .= '</div>';
-        return $html;
-    }
-
-    private function getMigratedToGerritError(Git_Driver_Gerrit_ProjectCreatorStatus $status, \PFUser $user): string
-    {
-        $GLOBALS['Response']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
-        $date = DateHelper::relativeDateInlineContext((int) $status->getEventDate($this->repository), $user);
-        return '<div class="alert alert-error">' . sprintf(dgettext('tuleap-git', 'The migration failed %1$s, the gerrit repository is probably <strong>corrupted or partially migrated</strong>, do not use it and contact your site administration'), $date) . '</div>' .
-               '<pre class="pre-scrollable">' . $status->getLog($this->repository) . '</pre>';
-    }
-
-    private function getDisconnectFromGerritConfirmationScreen()
-    {
-        $html  = '';
-        $html .= '<h3>' . dgettext('tuleap-git', 'Disconnect from Gerrit') . '</h3>';
-
-        $html .= '<form method="POST" action="/plugins/git/?group_id=' . $this->repository->getProjectId() . '">';
-        $html .= $this->csrf_token()->fetchHTMLInput();
-        $html .= '<input type="hidden" name="action" value="disconnect_gerrit" />';
-        $html .= '<input type="hidden" name="pane" value="' . $this->getIdentifier() . '" />';
-        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';
-
-        $html .= '<div class="alert alert-block">';
-        $html .= '<h4>' . $GLOBALS['Language']->getText('global', 'warning') . '</h4>';
-        $html .= '<p>' . dgettext('tuleap-git', 'This operation <strong>cannot</strong> be undone. This repository will never again be managed by a gerrit server. Do you confirm the disconnection?') . '</p>';
-        $html .= '<p>';
-        $html .= '<input type="hidden" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="' . $this->hp->purify($this->request->get(self::OPTION_DISCONNECT_GERRIT_PROJECT)) . '"/>';
-        $html .= '<button type="submit" name="disconnect" value="1" class="btn btn-danger">' . dgettext('tuleap-git', 'Yes, I want to disconnect from Gerrit') . '</button> ';
-        $html .= '<button type="button" class="btn" onclick="window.location=window.location;">' . dgettext('tuleap-git', 'No') . '</button> ';
-        $html .= '</p>';
-        $html .= '</div>';
-
-        $html .= '</form>';
-
-        return $html;
-    }
-
-    private function getDisconnectFromGerritOptions()
-    {
-        $gerrit_server = $this->getGerritServerForRepository($this->repository);
-        $html          = '';
-
-        $driver = $this->driver_factory->getDriver($gerrit_server);
-        if ($driver->isDeletePluginEnabled($gerrit_server)) {
-            $html .= '<label class="radio"><input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="' . self::OPTION_DELETE_GERRIT_PROJECT . '"/>'
-                . dgettext('tuleap-git', 'Also Delete project on Gerrit')
-                . '</label>';
+        if ($status === null || $status === Git_Driver_Gerrit_ProjectCreatorStatus::DONE) {
+            return Result::ok(
+                new GerritRepositoryPresenter(
+                    $this->repository,
+                    $this->getGerritDriverForRepository($this->repository),
+                    $this->getGerritServerForRepository($this->repository),
+                )
+            );
         }
-
-        $html .= '<label class="radio"><input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="' . self::OPTION_READONLY_GERRIT_PROJECT . '"/>'
-            . dgettext('tuleap-git', 'Make project on Gerrit Read-Only')
-            . '</label>'
-            . '<label class="radio"><input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '"/>'
-            . dgettext('tuleap-git', 'Leave project on Gerrit')
-            . '</label>';
-
-        return $html;
+        return Result::ok(null);
     }
 
-    private function getGerritDriverForRepository(GitRepository $repository)
+    private function getGerritDriverForRepository(GitRepository $repository): Git_Driver_Gerrit
     {
         $server = $this->getGerritServerForRepository($repository);
 
         return $this->driver_factory->getDriver($server);
     }
 
-    private function getGerritServerForRepository(GitRepository $repository)
+    private function getGerritServerForRepository(GitRepository $repository): Git_RemoteServer_GerritServer
     {
         return $this->gerrit_servers[$repository->getRemoteServerId()];
     }

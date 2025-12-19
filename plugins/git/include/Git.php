@@ -23,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Git\DefaultBranch\CannotSetANonExistingBranchAsDefaultException;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Gerrit;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
@@ -49,11 +50,13 @@ use Tuleap\User\RequestFromAutocompleter;
 
 class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const string ADMIN_ACTION                  = 'admin';
-    public const string ADMIN_GERRIT_TEMPLATES_ACTION = 'admin-gerrit-templates';
-    public const string GIT_ADMIN_USER_GROUPS_ACTION  = 'admin-git-admins';
-    public const string ADMIN_DEFAULT_SETTINGS_ACTION = 'admin-default-settings';
-    public const string ADMIN_GIT_ADMINS_ACTION       = 'admin-git-admins';
+    public const string ADMIN_ACTION                   = 'admin';
+    public const string ADMIN_GERRIT_TEMPLATES_ACTION  = 'admin-gerrit-templates';
+    public const string GIT_ADMIN_USER_GROUPS_ACTION   = 'admin-git-admins';
+    public const string ADMIN_DEFAULT_SETTINGS_ACTION  = 'admin-default-settings';
+    public const string ADMIN_GIT_ADMINS_ACTION        = 'admin-git-admins';
+    public const string ADMIN_MIGRATE_TO_GERRIT_ACTION = 'migrate_to_gerrit';
+    public const string DISCONNECT_GERRIT_ACTION       = 'disconnect_gerrit';
 
     public const string PERM_READ  = 'PLUGIN_GIT_READ';
     public const string PERM_WRITE = 'PLUGIN_GIT_WRITE';
@@ -274,8 +277,8 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 'fetch_git_config',
                 'fetch_git_template',
                 'view_last_git_pushes',
-                'migrate_to_gerrit',
-                'disconnect_gerrit',
+                self::ADMIN_MIGRATE_TO_GERRIT_ACTION,
+                self::DISCONNECT_GERRIT_ACTION,
                 'delete_gerrit_project',
             ];
             if ($user->isSuperUser()) {
@@ -628,8 +631,8 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $imageRenderer = new Git_LastPushesGraph($groupId, $weeksNumber);
                 $imageRenderer->display();
                 break;
-            case 'migrate_to_gerrit':
-                $this->defaultCSRFChecks($repository, 'gerrit');
+            case self::ADMIN_MIGRATE_TO_GERRIT_ACTION:
+                $this->defaultCSRFChecks($repository, Gerrit::ID);
                 if (! $this->gerrit_can_migrate_checker->canMigrate($repository->getProject())) {
                     $this->redirectToProjectRepositoriesList();
                     break;
@@ -657,12 +660,12 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', [$this->groupId, $repository->getId(), $pane]);
                 }
                 break;
-            case 'disconnect_gerrit':
+            case self::DISCONNECT_GERRIT_ACTION:
                 if (empty($repository)) {
                     $this->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
                     $this->redirectToProjectRepositoriesList();
                 } else {
-                    $this->defaultCSRFChecks($repository, 'gerrit');
+                    $this->defaultCSRFChecks($repository, Gerrit::ID);
                     $this->addAction('disconnectFromGerrit', [$repository]);
                     $this->addAction('redirectToRepoManagement', [$this->groupId, $repository->getId(), $pane]);
                 }
@@ -670,7 +673,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
             case 'delete_gerrit_project':
                 $server              = $this->gerrit_server_factory->getServerById($repository->getRemoteServerId());
                 $project_gerrit_name = $this->driver_factory->getDriver($server)->getGerritProjectName($repository);
-                $this->defaultCSRFChecks($repository, 'gerrit');
+                $this->defaultCSRFChecks($repository, Gerrit::ID);
 
                 try {
                     $this->driver_factory->getDriver($server)->deleteProject($server, $project_gerrit_name);

@@ -33,6 +33,9 @@ msgid_plural "%s commits pushed on %s"
 msgstr[0] "%s commit poussé sur %s"
 msgstr[1] "%s commits poussés sur %s"
 
+msgid "-- Please choose"
+msgstr "-- Sélectionner"
+
 msgid "A Gerrit project with that name already exists on that server"
 msgstr "Un projet Gerrit du même nom existe déjà sur ce serveur"
 
@@ -41,6 +44,12 @@ msgstr "Une liste d'adresses e-mail séparées par des virgules."
 
 msgid "A file already exists with this name under gitroot"
 msgstr "Un fichier existe déjà avec ce nom sous gitroot"
+
+msgid "A project %1$s has been created on the server %2$s."
+msgstr "Un projet %1$s a été créé sur le serveur %2$s."
+
+msgid "A project %s will be created on the chosen server."
+msgstr "Un projet %s sera créé sur le serveur sélectionné."
 
 #, php-format
 msgid "A push occured on %s"
@@ -92,6 +101,9 @@ msgstr "Ajouter un serveur"
 
 msgid "Add the notification"
 msgstr "Ajouter la notification"
+
+msgid "Additional actions"
+msgstr "Actions supplémentaires"
 
 msgid "All projects can now use this Gerrit server."
 msgstr ""
@@ -192,17 +204,11 @@ msgstr "La fermeture des artifacts n'est plus autorisée pour ce dépôt"
 msgid "Artifact closure is now allowed for repository"
 msgstr "La fermeture des artifacts est maintenant autorisée pour ce dépôt"
 
-#, php-format
 msgid ""
-"As a reminder, the management of the repository (permissions, ...) has been "
-"delegated to Gerrit: <ul><li>A project <em>%1$s</em> has been created on the "
-"server <a href=\"%2$s\">%2$s</a>.</li><li>The current repository is now a "
-"mirror of the Gerrit reference.</li></ul>"
+"As a reminder, the management of the repository (permissions, …) has been "
+"delegated to Gerrit:"
 msgstr ""
-"Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à "
-"Gerrit : <ul><li>Un projet <em>%1$s</em> a été créé sur le serveur <a "
-"href=\"%2$s\">%2$s</a>.</li><li>Le dépot courant est maintenant un miroir de "
-"la référence sur Gerrit.</li></ul>"
+"Pour rappel, la gestion du dépôt (permissions, …) à été déléguée à Gerrit :"
 
 msgid "Authorize"
 msgstr "Autoriser"
@@ -352,7 +358,7 @@ msgstr "Supprimer"
 msgid "Delete %1$s"
 msgstr "Supprimer %1$s"
 
-msgid "Delete gerrit project"
+msgid "Delete Gerrit project"
 msgstr "Supprimer ce projet sur Gerrit"
 
 msgid "Delete this repository"
@@ -371,7 +377,7 @@ msgid "Details"
 msgstr "Détails"
 
 msgid "Disconnect"
-msgstr "Déconnexion"
+msgstr "Déconnecter"
 
 msgid "Disconnect from Gerrit"
 msgstr "Déconnexion de Gerrit"
@@ -498,6 +504,9 @@ msgstr "Modèles Gerrit"
 
 msgid "Gerrit permission configuration templates"
 msgstr "Modèles de configuration de permissions Gerrit"
+
+msgid "Gerrit repository"
+msgstr "Dépôt Gerrit"
 
 msgid "Gerrit template"
 msgstr "Modèle Gerrit"
@@ -687,8 +696,8 @@ msgstr "Nombre maximum de jours dans le passé"
 msgid "Maximum number of push by repository"
 msgstr "Nombre maximum de push par dépôt"
 
-msgid "Migrate repo to Gerrit"
-msgstr "Migrer repo vers Gerrit"
+msgid "Migrate the repository to Gerrit"
+msgstr "Migrer le dépôt vers Gerrit"
 
 #, php-format
 msgid "Migration of %1$s to gerrit error"
@@ -817,14 +826,14 @@ msgid "Please choose"
 msgstr "Choisir"
 
 msgid ""
-"Please choose a permission's configuration template for the migration,<br /"
-">they will be applied to the migrated repository on Gerrit:"
+"Please choose a permissions configuration template for the migration, they "
+"will be applied to the migrated repository on Gerrit"
 msgstr ""
-"Choisissez un modèle de permissions pour la migration,<br /> elles seront "
-"appliquées au dépôt migré sur Gerrit:"
+"Choisissez un modèle de permissions pour la migration, elles seront "
+"appliquées au dépôt migré sur Gerrit"
 
-msgid "Please choose the Gerrit server:"
-msgstr "Veuillez choisir le serveur Gerrit de destination :"
+msgid "Please choose the Gerrit server"
+msgstr "Veuillez choisir le serveur Gerrit de destination"
 
 msgid "Please confirm your action."
 msgstr ""
@@ -1091,6 +1100,12 @@ msgstr "La branche %s existe déjà dans le dépôt %s"
 msgid "The branch name %s is not a valid branch name"
 msgstr "Le nom de branche %s n'est pas valide"
 
+msgid "The current repository is now a mirror of the Gerrit reference."
+msgstr "Le dépôt courant est maintenant un miroir de la référence sur Gerrit."
+
+msgid "The current repository will become a mirror of the Gerrit reference."
+msgstr "Le dépôt courant deviendra un miroir de la référence sur Gerrit."
+
 msgid ""
 "The deletion of the project under Gerrit is on going, please wait for a few "
 "minutes."
@@ -1106,23 +1121,16 @@ msgstr ""
 "Certains projets n'ont pas été enlevés parce que ces projets utilisent ce "
 "serveur Gerrit : %1$s"
 
-#, php-format
 msgid ""
-"The management of the repository (permissions, ...) will be delegated to "
-"Gerrit: <ul><li>A project <em>%1$s</em> will be created on the chosen server."
-"</li><li>The current repository will become a mirror of the Gerrit reference."
-"</li></ul>"
-msgstr ""
-"La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un "
-"projet <em>%1$s</em> sera créé sur le serveur sélectionné.</li><li>Le dépot "
-"courant deviendra un miroir de la référence sur Gerrit.</li></ul>"
+"The management of the repository (permissions, …) will be delegated to "
+"Gerrit:"
+msgstr "La gestion du dépôt (permissions, …) sera déléguée à Gerrit :"
 
 msgid ""
 "The management of this Git repository has been delegated to the Gerrit "
 "platform: %s"
 msgstr "La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit : %s"
 
-#, php-format
 msgid ""
 "The migration failed %1$s, the gerrit repository is probably "
 "<strong>corrupted or partially migrated</strong>, do not use it and contact "
@@ -1169,13 +1177,9 @@ msgstr ""
 "L'utilisation des expression régulières a été désactivée au niveau de la "
 "plateforme."
 
-#, php-format
 msgid ""
-"The repository <em>%1$s</em> has already been migrated to the Gerrit "
-"project: <a href=\"%3$s\">%2$s</a>."
-msgstr ""
-"Le dépôt <em>%1$s</em> a déjà été migré sur le projet Gerrit : <a "
-"href=\"%3$s\">%2$s</a>."
+"The repository %1$s has already been migrated to the Gerrit project: %2$s."
+msgstr "Le dépôt %1$s a déjà été migré sur le projet Gerrit : %2$s."
 
 msgid "The repository cannot be deleted until it is disconnected from Gerrit"
 msgstr "Le dépôt ne peut être supprimé avant d'être déconnecté de Gerrit"
@@ -1186,6 +1190,12 @@ msgstr "Le dépôt n'existe pas"
 msgid ""
 "The repository is in queue for creation. Please check back here in a few "
 "minutes"
+msgstr ""
+"Le dépôt est en attente de création. Veuillez revenir dans quelques minutes."
+
+msgid ""
+"The repository is in queue for creation. Please check back here in a few "
+"minutes."
 msgstr ""
 "Le dépôt est en attente de création. Veuillez revenir dans quelques minutes."
 
@@ -1291,7 +1301,7 @@ msgstr ""
 
 msgid ""
 "This repository was migrated to the server in the past. You cannot migrate "
-"again without deleting the project on the Gerrit server"
+"again without deleting the project on the Gerrit server."
 msgstr ""
 "Ce dépôt a déjà été migré sur Gerrit et existe encore. Il n'est pas possible "
 "de migrer ce dépôt sur ce même serveur avant de l'avoir supprimé."
@@ -1459,6 +1469,9 @@ msgstr "Attendez une minute…"
 msgid "Warning"
 msgstr "Attention"
 
+msgid "Warning!"
+msgstr "Attention !"
+
 msgid "Webhook added"
 msgstr "Webhook ajouté"
 
@@ -1491,11 +1504,10 @@ msgstr "Oui, je veux déconnecter ce dépôt de Gerrit"
 msgid "Yes, revoke access"
 msgstr "Oui, interdire l'accès"
 
-#, php-format
-msgid "You are about to migrate your repository <em>%1$s</em> to Gerrit."
+msgid "You are about to migrate your repository %s to Gerrit."
 msgstr ""
-"Vous vous apprêtez à effectuer la migration de votre dépôt <em>%1$s</em> "
-"vers l'outil Gerrit."
+"Vous vous apprêtez à effectuer la migration de votre dépôt %s vers l'outil "
+"Gerrit."
 
 #, php-format
 msgid ""
