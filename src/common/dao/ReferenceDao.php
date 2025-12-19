@@ -232,7 +232,7 @@ class ReferenceDao extends DataAccessObject implements GetSystemReferenceNatureB
     {
         $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
         // Order by scope to return 'P'roject references before 'S'ystem references
-        // This may happen for old tracker created before Reference management.
+        // This may happen for old services created before Reference management.
         // Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf(
             'SELECT * FROM reference,reference_group WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s ORDER BY reference.scope AND reference.nature NOT IN (%s)',
@@ -251,7 +251,7 @@ class ReferenceDao extends DataAccessObject implements GetSystemReferenceNatureB
     {
         $exclusion = implode(',', array_map($this->da->quoteSmart(...), self::NOT_ANYMORE_SUPPORTED_NATURES));
         // Order by scope to return 'P'roject references before 'S'ystem references
-        // This may happen for old tracker created before Reference management.
+        // This may happen for old services created before Reference management.
         // Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf(
             'SELECT * FROM reference r,reference_group rg WHERE ' .

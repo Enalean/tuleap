@@ -56,12 +56,12 @@ $GLOBALS['UGROUPS']                   = [
 *          |
 *     +----+-----+
 *     |          |
-*  statics    members
-*                ^
+*  static       members
+*  (id > 100)    ^
 *                |
 *         +------+- - - -   -   -
 *         |
-*    tracker_tech
+*    wiki_admin
 */
 function ugroup_get_parent($ugroup_id)
 {
@@ -175,7 +175,7 @@ function ugroup_db_list_all_ugroups_for_user($group_id, $user_id)
 
 /** Return array of ugroup_id for all dynamic ugoups like
  * (anonymous_user, registered_user, project_member,
- * project_admins, tracker_admins) that user is part of */
+ * project_admins, wiki_admins) that user is part of */
 function ugroup_db_list_dynamic_ugroups_for_user($group_id, $user_id)
 {
     $user = UserManager::instance()->getUserById($user_id);

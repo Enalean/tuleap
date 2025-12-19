@@ -22,7 +22,7 @@
 use Tuleap\Project\Duplication\DuplicationType;
 use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 
-class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
+class PermissionsDao extends DataAccessObject implements IPermissionsNGDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
     * Gets all tables of the db
@@ -120,17 +120,6 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 
         $sql = sprintf('SELECT * FROM permissions WHERE ' . $_where_clause);
 
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Permissions by TrackerId and Ugroups
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchPermissionsByArtifactFieldId($object_id)
-    {
-        $object_id = $this->da->escapeInt($object_id);
-        $sql       = "SELECT * FROM permissions WHERE object_id LIKE '$object_id#%'";
         return $this->retrieve($sql);
     }
 
