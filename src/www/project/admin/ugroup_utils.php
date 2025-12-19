@@ -37,7 +37,6 @@ $GLOBALS['UGROUP_PROJECT_MEMBERS']    = ProjectUGroup::PROJECT_MEMBERS;
 $GLOBALS['UGROUP_PROJECT_ADMIN']      = ProjectUGroup::PROJECT_ADMIN;
 $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'] = ProjectUGroup::FILE_MANAGER_ADMIN;
 $GLOBALS['UGROUP_WIKI_ADMIN']         = ProjectUGroup::WIKI_ADMIN;
-$GLOBALS['UGROUP_TRACKER_ADMIN']      = ProjectUGroup::TRACKER_ADMIN;
 $GLOBALS['UGROUPS']                   = [
     'UGROUP_NONE'               => $GLOBALS['UGROUP_NONE'],
     'UGROUP_ANONYMOUS'          => $GLOBALS['UGROUP_ANONYMOUS'],
@@ -47,7 +46,6 @@ $GLOBALS['UGROUPS']                   = [
     'UGROUP_PROJECT_ADMIN'      => $GLOBALS['UGROUP_PROJECT_ADMIN'],
     'UGROUP_FILE_MANAGER_ADMIN' => $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'],
     'UGROUP_WIKI_ADMIN'         => $GLOBALS['UGROUP_WIKI_ADMIN'],
-    'UGROUP_TRACKER_ADMIN'      => $GLOBALS['UGROUP_TRACKER_ADMIN'],
 ];
 /*
 *      anonymous
@@ -178,7 +176,7 @@ function ugroup_db_list_all_ugroups_for_user($group_id, $user_id)
 /** Return array of ugroup_id for all dynamic ugoups like
  * (anonymous_user, registered_user, project_member,
  * project_admins, tracker_admins) that user is part of */
-function ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $user_id)
+function ugroup_db_list_dynamic_ugroups_for_user($group_id, $user_id)
 {
     $user = UserManager::instance()->getUserById($user_id);
 
@@ -199,17 +197,6 @@ function ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $user_id
     }
     if ($user->isMember($group_id, 'W2')) {
         $res[] = $GLOBALS['UGROUP_WIKI_ADMIN'];
-    }
-    if (is_int($instances)) {
-        if ($user->isTrackerAdmin($group_id, $instances)) {
-            $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
-        }
-    } elseif (is_array($instances)) {
-        if (isset($instances['artifact_type'])) {
-            if ($user->isTrackerAdmin($group_id, $instances['artifact_type'])) {
-                $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
-            }
-        }
     }
 
     return $res;

@@ -417,7 +417,7 @@ class FRSReleaseFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             return $pm->userHasPermission(
                 $release_id,
                 FRSRelease::PERM_READ,
-                $user->getUgroups($project_id, [])
+                $user->getUgroups($project_id)
             );
         }
 

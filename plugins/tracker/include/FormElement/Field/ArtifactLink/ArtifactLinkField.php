@@ -717,7 +717,7 @@ class ArtifactLinkField extends TrackerField
                 $is_reverse             = false;
                 $hp                     = Codendi_HTMLPurifier::instance();
 
-                $ugroups = $current_user->getUgroups($this_project_id, []);
+                $ugroups = $current_user->getUgroups($this_project_id);
 
                 $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = [];
@@ -792,7 +792,7 @@ class ArtifactLinkField extends TrackerField
                 $read_only              = true;
                 $use_data_from_db       = false;
 
-                $ugroups = $current_user->getUgroups($this->getTracker()->getGroupId(), []);
+                $ugroups = $current_user->getUgroups($this->getTracker()->getGroupId());
                 $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = [];
                 $json    = ['tabs' => []];

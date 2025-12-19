@@ -699,8 +699,7 @@ class ListFieldUserBind extends ListFieldBind
                 ($ug == $GLOBALS['UGROUP_NONE']) ||
                 ($ug == $GLOBALS['UGROUP_ANONYMOUS']) ||
                 ($ug == $GLOBALS['UGROUP_PROJECT_MEMBERS']) ||
-                ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) ||
-                ($ug == $GLOBALS['UGROUP_TRACKER_ADMIN'])
+                ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN'])
             ) {
                 continue;
             }

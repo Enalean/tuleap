@@ -242,7 +242,7 @@ class MediawikiManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 
         $common_ugroups_ids = array_intersect(
             $this->getReadAccessControl($project),
-            $user->getUgroups($project->getID(), [])
+            $user->getUgroups($project->getID())
         );
 
         return ! empty($common_ugroups_ids);
@@ -263,7 +263,7 @@ class MediawikiManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 
         $common_ugroups_ids = array_intersect(
             $this->getWriteAccessControl($project),
-            $user->getUgroups($project->getID(), [])
+            $user->getUgroups($project->getID())
         );
 
         return ! empty($common_ugroups_ids);

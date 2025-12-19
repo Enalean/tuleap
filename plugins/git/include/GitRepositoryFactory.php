@@ -162,7 +162,7 @@ class GitRepositoryFactory implements RetrieveGitRepository, RetrieveAllGitRepos
     public function getGerritRepositoriesWithPermissionsForUGroupAndProject(Project $project, ProjectUGroup $ugroup, PFUser $user)
     {
         $repositories = [];
-        $ugroups      = $user->getUgroups($project->getID(), null);
+        $ugroups      = $user->getUgroups($project->getID());
         $ugroups[]    = $ugroup->getId();
         $dar          = $this->dao->searchGerritRepositoriesWithPermissionsForUGroupAndProject($project->getID(), $ugroups);
         foreach ($dar as $row) {

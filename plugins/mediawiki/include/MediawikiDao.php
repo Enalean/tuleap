@@ -239,7 +239,7 @@ class MediawikiDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDec
     public function getMediawikiGroupsMappedForUGroups(PFUser $user, Project $project)
     {
         $group_id   = $this->da->escapeInt($project->getID());
-        $ugroup_ids = $this->da->escapeIntImplode($user->getUgroups($project->getID(), null));
+        $ugroup_ids = $this->da->escapeIntImplode($user->getUgroups($project->getID()));
 
         $sql = "SELECT DISTINCT tuleap_mwgroups.real_name
                 FROM plugin_mediawiki_ugroup_mapping AS ugroup_mapping

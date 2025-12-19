@@ -55,7 +55,7 @@ class LatestHeartbeatsCollector
         $artifacts = $this->dao->searchLastTestExecUpdate(
             (int) $project->getID(),
             (int) $collection::NB_MAX_ENTRIES,
-            $user->getUgroups($project->getID(), [])
+            $user->getUgroups($project->getID())
         );
 
         if (! $artifacts) {

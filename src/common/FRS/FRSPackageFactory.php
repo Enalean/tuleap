@@ -392,7 +392,7 @@ class FRSPackageFactory
     {
         $global_permission_manager = $this->getPermissionsManager();
 
-        $user_groups = $user->getUgroups($package->getGroupID(), []);
+        $user_groups = $user->getUgroups($package->getGroupID());
 
         $package_id = $package->getPackageID();
 

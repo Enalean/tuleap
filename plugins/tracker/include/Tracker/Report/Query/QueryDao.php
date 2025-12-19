@@ -46,10 +46,9 @@ final class QueryDao extends DataAccessObject
         array $permissions,
         ?int $contributor_field_id,
     ): array {
-        $instances       = ['artifact_type' => $tracker_id];
-        $ugroups         = $user->getUgroups($project_id, $instances);
+        $ugroups         = $user->getUgroups($project_id);
         $static_ugroups  = $user->getStaticUgroups($project_id);
-        $dynamic_ugroups = $user->getDynamicUgroups($project_id, $instances);
+        $dynamic_ugroups = $user->getDynamicUgroups($project_id);
         $user_is_admin   = $this->userIsAdmin($user, $project_id, $permissions, $ugroups);
 
         $from_where = new ParametrizedFromWhere(
@@ -311,21 +310,6 @@ final class QueryDao extends DataAccessObject
         }
         // }}}
 
-        // {{{ tracker_admins
-        if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::TRACKER_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
-            $sqls[] = $this->getSqlFilterForSubmittedByGroup(
-                $from_where,
-                new ParametrizedFrom(
-                    'INNER JOIN tracker_perm AS p ON (
-                        artifact.submitted_by = p.user_id
-                        AND p.tracker_id = ?
-                        AND p.perm_level >= 2)',
-                    [$tracker_id],
-                )
-            );
-        }
-        //}}}
-
         // {{{ project_members
         if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::PROJECT_MEMBERS, $dynamic_ugroups, $allowed_ugroups)) {
             $sqls[] = $this->getSqlFilterForSubmittedByGroup(
@@ -389,23 +373,6 @@ final class QueryDao extends DataAccessObject
             );
         }
         // }}}
-
-        // {{{ tracker_admins
-        if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::TRACKER_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
-            $sqls[] = $this->getSqlFilterForContributorGroup(
-                $from_where,
-                $contributor_field_id,
-                new ParametrizedFrom(
-                    'INNER JOIN tracker_perm AS p ON (
-                        p.user_id = tcvl.bindvalue_id
-                        AND p.tracker_id = ?
-                        AND p.perm_level >= 2
-                    )',
-                    [$tracker_id]
-                )
-            );
-        }
-        //}}}
 
         // {{{ project_members
         if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::PROJECT_MEMBERS, $dynamic_ugroups, $allowed_ugroups)) {

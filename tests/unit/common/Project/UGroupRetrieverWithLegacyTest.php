@@ -56,7 +56,6 @@ final class UGroupRetrieverWithLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(4, $this->ugroup_retriever->getUGroupId($this->project, 'UGROUP_PROJECT_ADMIN'));
         self::assertEquals(11, $this->ugroup_retriever->getUGroupId($this->project, 'UGROUP_FILE_MANAGER_ADMIN'));
         self::assertEquals(14, $this->ugroup_retriever->getUGroupId($this->project, 'UGROUP_WIKI_ADMIN'));
-        self::assertEquals(15, $this->ugroup_retriever->getUGroupId($this->project, 'UGROUP_TRACKER_ADMIN'));
     }
 
     public function testGetUgroupReturnProjectUgroup(): void
@@ -92,7 +91,6 @@ final class UGroupRetrieverWithLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
             'UGROUP_PROJECT_ADMIN'      => ProjectUGroup::PROJECT_ADMIN,
             'UGROUP_FILE_MANAGER_ADMIN' => ProjectUGroup::FILE_MANAGER_ADMIN,
             'UGROUP_WIKI_ADMIN'         => ProjectUGroup::WIKI_ADMIN,
-            'UGROUP_TRACKER_ADMIN'      => ProjectUGroup::TRACKER_ADMIN,
         ];
 
         $ugroups['legroup'] = 42;
