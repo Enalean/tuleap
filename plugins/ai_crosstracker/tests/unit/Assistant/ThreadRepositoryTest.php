@@ -50,14 +50,17 @@ final class ThreadRepositoryTest extends TestCase
         $thread_repository = new ThreadRepository(
             new MessageRepositoryStub(),
             new ThreadStorageStub($this->uuid_factory),
+            $this->uuid_factory,
         );
 
-        $thread = $thread_repository->fetchNewThread(
+        $thread = $thread_repository->fetchThread(
             111,
             UserTestBuilder::anActiveUser()->build(),
+            null,
             Message::buildUserMessageFromString('some question'),
-        );
+        )->unwrapOr(null);
 
+        self::assertInstanceOf(Thread::class, $thread);
         self::assertCount(1, $thread->messages);
 
         self::assertEquals(Role::USER, $thread->messages[0]->role);
@@ -66,7 +69,8 @@ final class ThreadRepositoryTest extends TestCase
 
     public function testAThreadOfMessageWithPreviousExchanges(): void
     {
-        $thread_id = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()));
+        $uuid      = '019b2bf2-3cb7-736a-8979-a16b0297cc1d';
+        $thread_id = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromHexadecimalString($uuid)->unwrapOr(null));
 
         $thread_repository = new ThreadRepository(
             new MessageRepositoryStub(
@@ -77,12 +81,13 @@ final class ThreadRepositoryTest extends TestCase
                 ),
             ),
             new ThreadStorageStub($this->uuid_factory),
+            $this->uuid_factory,
         );
 
-        $thread = $thread_repository->fetchExistingThread(
+        $thread = $thread_repository->fetchThread(
             345,
             UserTestBuilder::buildWithId(123),
-            $thread_id,
+            $uuid,
             Message::buildUserMessageFromString('some question'),
         )->unwrapOr(null);
 
@@ -101,8 +106,10 @@ final class ThreadRepositoryTest extends TestCase
 
     public function testDistinguishDifferentThreadsOfMessages(): void
     {
-        $thread_1 = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()));
-        $thread_2 = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()));
+        $uuid_1   = '019b2bf2-3cb7-736a-8979-a16b0297cc1d';
+        $thread_1 = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromHexadecimalString($uuid_1)->unwrapOr(null));
+        $uuid_2   = '019b2bf2-3cb7-736a-8979-a16b0297cc2d';
+        $thread_2 = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromHexadecimalString($uuid_2)->unwrapOr(null));
 
         $thread_repository = new ThreadRepository(
             new MessageRepositoryStub(
@@ -118,12 +125,13 @@ final class ThreadRepositoryTest extends TestCase
                 ),
             ),
             new ThreadStorageStub($this->uuid_factory),
+            $this->uuid_factory,
         );
 
-        $thread = $thread_repository->fetchExistingThread(
+        $thread = $thread_repository->fetchThread(
             345,
             UserTestBuilder::buildWithId(123),
-            $thread_2,
+            $uuid_2,
             Message::buildUserMessageFromString('some question 2'),
         )->unwrapOr(null);
 
@@ -148,15 +156,17 @@ final class ThreadRepositoryTest extends TestCase
         $thread_repository = new ThreadRepository(
             $message_repository,
             $thread_storage,
+            $this->uuid_factory,
         );
 
         $user = UserTestBuilder::anActiveUser()->withId(123)->build();
 
-        $thread = $thread_repository->fetchNewThread(
+        $thread = $thread_repository->fetchThread(
             345,
             $user,
+            null,
             Message::buildUserMessageFromString('some question'),
-        );
+        )->unwrapOr(null);
 
         $stored_messages = $message_repository->fetch($thread->id);
         self::assertCount(1, $stored_messages);
@@ -169,7 +179,9 @@ final class ThreadRepositoryTest extends TestCase
 
     public function testItStoresNewMessagesForExistingThreads(): void
     {
-        $thread_id          = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()));
+        $uuid      = '019b2bf2-3cb7-736a-8979-a16b0297cc1d';
+        $thread_id = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromHexadecimalString($uuid)->unwrapOr(null));
+
         $message_repository =  new MessageRepositoryStub(
             new Thread(
                 $thread_id,
@@ -181,12 +193,13 @@ final class ThreadRepositoryTest extends TestCase
         $thread_repository = new ThreadRepository(
             $message_repository,
             new ThreadStorageStub($this->uuid_factory),
+            $this->uuid_factory,
         );
 
-        $thread_repository->fetchExistingThread(
+        $thread_repository->fetchThread(
             345,
             UserTestBuilder::buildWithId(123),
-            $thread_id,
+            $uuid,
             Message::buildUserMessageFromString('some question'),
         );
 
@@ -205,7 +218,8 @@ final class ThreadRepositoryTest extends TestCase
 
     public function testAThreadIdMustBeAttachedToAWidgetAndAUser(): void
     {
-        $thread_id = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()));
+        $uuid      = '019b2bf2-3cb7-736a-8979-a16b0297cc1d';
+        $thread_id = ThreadID::fromUUID($this->uuid_factory->buildUUIDFromHexadecimalString($uuid)->unwrapOr(null));
 
         $thread_repository = new ThreadRepository(
             new MessageRepositoryStub(
@@ -216,12 +230,13 @@ final class ThreadRepositoryTest extends TestCase
                 ),
             ),
             new ThreadStorageStub($this->uuid_factory)->withoutExistingThread(),
+            $this->uuid_factory,
         );
 
-        $result = $thread_repository->fetchExistingThread(
+        $result = $thread_repository->fetchThread(
             345,
             UserTestBuilder::buildWithId(123),
-            $thread_id,
+            $uuid,
             Message::buildUserMessageFromString('some question'),
         );
 

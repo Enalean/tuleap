@@ -27,10 +27,13 @@ CREATE TABLE ai_crosstracker_completion_thread (
 
 DROP TABLE IF EXISTS ai_crosstracker_completion_message;
 CREATE TABLE ai_crosstracker_completion_message (
-    id              BINARY(16)       NOT NULL PRIMARY KEY,
-    thread_id       BINARY(16)       NOT NULL,
-    role            VARCHAR(32)      NOT NULL,
-    date            INT UNSIGNED     NOT NULL,
-    content         MEDIUMTEXT       NOT NULL,
+    id                BINARY(16)       NOT NULL PRIMARY KEY,
+    thread_id         BINARY(16)       NOT NULL,
+    role              VARCHAR(32)      NOT NULL,
+    date              INT UNSIGNED     NOT NULL,
+    content           MEDIUMTEXT       NOT NULL,
+    tokens_prompt     INT UNSIGNED     NOT NULL DEFAULT 0,
+    tokens_completion INT UNSIGNED     NOT NULL DEFAULT 0,
+    tokens_total      INT UNSIGNED     NOT NULL DEFAULT 0,
     INDEX idx_thread(thread_id)
 ) ENGINE = InnoDB;

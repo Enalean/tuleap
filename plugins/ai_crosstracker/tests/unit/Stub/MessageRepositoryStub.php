@@ -25,6 +25,7 @@ namespace Tuleap\AICrossTracker\Stub;
 
 use Override;
 use Tuleap\AI\Mistral\Message;
+use Tuleap\AI\Mistral\TokenUsage;
 use Tuleap\AICrossTracker\Assistant\MessageRepository;
 use Tuleap\AICrossTracker\Assistant\Thread;
 use Tuleap\AICrossTracker\Assistant\ThreadID;
@@ -32,6 +33,7 @@ use Tuleap\AICrossTracker\Assistant\ThreadID;
 final class MessageRepositoryStub implements MessageRepository
 {
     private array $threads;
+    private(set) TokenUsage $token_usage;
 
     public function __construct(Thread ...$threads)
     {
@@ -53,5 +55,12 @@ final class MessageRepositoryStub implements MessageRepository
     public function store(ThreadID $id, Message $message): void
     {
         $this->threads[$id->uuid->toString()][] = $message;
+    }
+
+    #[Override]
+    public function storeWithTokenConsumption(ThreadID $id, Message $message, TokenUsage $token_usage): void
+    {
+        $this->store($id, $message);
+        $this->token_usage = $token_usage;
     }
 }

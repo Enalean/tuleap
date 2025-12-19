@@ -165,7 +165,7 @@ final class CompletionSenderTest extends TestCase
         $json = json_encode(['title' => 'foo', 'tql_query' => 'SELECT ...', 'explanations' => 'bar']);
         assert($json !== false);
         $completion_response = CompletionResponse::fromChoicesAndTokenUsage(
-            TokenUsage::fromFakeValues(),
+            TokenUsage::fromValues(1500, 2000, 500),
             CompletionResponseChoice::fromAssistantMessage(
                 AssistantMessage::fromStringContent(
                     new StringContent($json)
@@ -196,5 +196,9 @@ final class CompletionSenderTest extends TestCase
         self::assertCount(1, $new_messages);
         self::assertEquals(Role::ASSISTANT, $new_messages[0]->role);
         self::assertEquals($json, $new_messages[0]->content);
+
+        self::assertEquals(1500, $message_repository->token_usage->prompt_tokens);
+        self::assertEquals(500, $message_repository->token_usage->completion_tokens);
+        self::assertEquals(2000, $message_repository->token_usage->total_tokens);
     }
 }

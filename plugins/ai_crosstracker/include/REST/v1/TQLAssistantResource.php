@@ -33,7 +33,6 @@ use Tuleap\AICrossTracker\Assistant\CompletionSender;
 use Tuleap\AICrossTracker\Assistant\MessageRepositoryDao;
 use Tuleap\AICrossTracker\Assistant\ProjectAssistant;
 use Tuleap\AICrossTracker\Assistant\Thread;
-use Tuleap\AICrossTracker\Assistant\ThreadID;
 use Tuleap\AICrossTracker\Assistant\ThreadRepository;
 use Tuleap\AICrossTracker\Assistant\ThreadStorageDao;
 use Tuleap\AICrossTracker\Assistant\UserAssistant;
@@ -44,7 +43,6 @@ use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\DB\DatabaseUUIDV7Factory;
-use Tuleap\DB\UUID;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -98,51 +96,46 @@ final class TQLAssistantResource extends AuthenticatedResource
             $message_repository = new MessageRepositoryDao();
             $thread_repository  = new ThreadRepository(
                 $message_repository,
-                new ThreadStorageDao()
+                new ThreadStorageDao(),
+                $uuid_factory,
             );
-            if ($thread_id === null) {
-                $thread = $thread_repository->fetchNewThread($id, $current_user_with_logged_in_information->user, $mistral_message);
-            } else {
-                $thread = $uuid_factory->buildUUIDFromHexadecimalString($thread_id)
-                    ->match(
-                        static fn (UUID $uuid): Thread => $thread_repository->fetchExistingThread($id, $current_user_with_logged_in_information->user, new ThreadID($uuid), $mistral_message)->match(
-                            static fn (Thread $thread): Thread => $thread,
-                            static fn () => throw new RestException(400, 'Invalid thread id'),
-                        ),
-                        static fn () => throw new RestException(400, 'Invalid UUID')
-                    );
-            }
 
-            $cross_tracker_retriever = new CrossTrackerWidgetRetriever($this->getWidgetDao());
-            return $cross_tracker_retriever->retrieveWidgetById($id)->match(
-                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($current_user_with_logged_in_information, $thread, $message_repository): HelperRepresentation {
-                    $assistant = match ($widget::class) {
-                        ProjectCrossTrackerWidget::class => new ProjectAssistant(
-                            ProjectManager::instance(),
-                            TrackerFactory::instance(),
-                            Tracker_FormElementFactory::instance(),
-                            $widget
-                        ),
-                        UserCrossTrackerWidget::class => new UserAssistant(),
-                    };
+            return $thread_repository->fetchThread($id, $current_user_with_logged_in_information->user, $thread_id, $mistral_message)
+                ->match(
+                    function (Thread $thread) use ($id, $current_user_with_logged_in_information, $message_repository): HelperRepresentation {
+                        $cross_tracker_retriever = new CrossTrackerWidgetRetriever($this->getWidgetDao());
+                        return $cross_tracker_retriever->retrieveWidgetById($id)->match(
+                            function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($current_user_with_logged_in_information, $thread, $message_repository): HelperRepresentation {
+                                $assistant = match ($widget::class) {
+                                    ProjectCrossTrackerWidget::class => new ProjectAssistant(
+                                        ProjectManager::instance(),
+                                        TrackerFactory::instance(),
+                                        Tracker_FormElementFactory::instance(),
+                                        $widget
+                                    ),
+                                    UserCrossTrackerWidget::class => new UserAssistant(),
+                                };
 
-                    $mistral_connector = new MistralConnectorLive(
-                        HttpClientFactory::createClientWithCustomTimeout(60),
-                        HTTPFactoryBuilder::requestFactory(),
-                        HTTPFactoryBuilder::streamFactory(),
-                        ValinorMapperBuilderFactory::mapperBuilder(),
-                        Prometheus::instance(),
-                    );
+                                $mistral_connector = new MistralConnectorLive(
+                                    HttpClientFactory::createClientWithCustomTimeout(60),
+                                    HTTPFactoryBuilder::requestFactory(),
+                                    HTTPFactoryBuilder::streamFactory(),
+                                    ValinorMapperBuilderFactory::mapperBuilder(),
+                                    Prometheus::instance(),
+                                );
 
-                    return new CompletionSender($mistral_connector, $message_repository)
-                        ->sendMessages($current_user_with_logged_in_information, $assistant, $thread)
-                        ->match(
-                            static fn (HelperRepresentation $helper_representation): HelperRepresentation => $helper_representation,
-                            static fn (Fault $fault) => throw new RestException(400, (string) $fault)
+                                return new CompletionSender($mistral_connector, $message_repository)
+                                    ->sendMessages($current_user_with_logged_in_information, $assistant, $thread)
+                                    ->match(
+                                        static fn (HelperRepresentation $helper_representation): HelperRepresentation => $helper_representation,
+                                        static fn (Fault $fault) => throw new RestException(400, (string) $fault)
+                                    );
+                            },
+                            static fn() => throw new RestException(400, 'Unknown widget type'),
                         );
-                },
-                static fn() => throw new RestException(400, 'Unknown widget type'),
-            );
+                    },
+                    static fn() => throw new RestException(400, 'Invalid UUID'),
+                );
         } catch (\Project_NotFoundException) {
             throw new RestException(404, 'Project not found');
         } catch (CrossTrackerWidgetNotFoundException) {
