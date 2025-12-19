@@ -21,24 +21,27 @@ import type {
     UserGroupBoundListField,
     UserGroupBoundListItem,
 } from "@tuleap/plugin-tracker-rest-api-types";
-import { LIST_BIND_UGROUPS, SELECTBOX_FIELD } from "@tuleap/plugin-tracker-constants";
+import { LIST_BIND_UGROUPS } from "@tuleap/plugin-tracker-constants";
+import type { ListType } from "./lists-types";
 
 export class UserGroupBoundListFieldTestBuilder {
     private field_id = 18;
     private readonly label = "Two doors";
     private readonly name = "two_doors";
-    private readonly required = false;
-    private readonly type = SELECTBOX_FIELD;
+    private required = false;
+    private readonly type: ListType;
     private default_value: ReadonlyArray<UserGroupBoundListItem> = [];
     private readonly bindings = {
         type: LIST_BIND_UGROUPS,
     };
     private values: ReadonlyArray<UserGroupBoundListItem> = [];
 
-    private constructor() {}
+    private constructor(type: ListType) {
+        this.type = type;
+    }
 
-    public static aUserGroupBoundListField(): UserGroupBoundListFieldTestBuilder {
-        return new UserGroupBoundListFieldTestBuilder();
+    public static aUserGroupBoundListField(type: ListType): UserGroupBoundListFieldTestBuilder {
+        return new UserGroupBoundListFieldTestBuilder(type);
     }
 
     public withValues(
@@ -52,6 +55,11 @@ export class UserGroupBoundListFieldTestBuilder {
         ...values: ReadonlyArray<UserGroupBoundListItem>
     ): UserGroupBoundListFieldTestBuilder {
         this.default_value = values;
+        return this;
+    }
+
+    public withRequiredValue(): UserGroupBoundListFieldTestBuilder {
+        this.required = true;
         return this;
     }
 

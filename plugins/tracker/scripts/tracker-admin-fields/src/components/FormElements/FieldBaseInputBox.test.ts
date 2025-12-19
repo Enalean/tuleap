@@ -42,7 +42,7 @@ describe("FieldBaseInputBox", () => {
                 .withColor("red-wine")
                 .build();
 
-            const field = StaticBoundListFieldTestBuilder.aStaticBoundListField()
+            const field = StaticBoundListFieldTestBuilder.aStaticBoundListField(CHECKBOX_FIELD)
                 .withDefaultValues(default_value)
                 .withValues(
                     StaticListItemTestBuilder.aStaticListItem(1).withLabel("MX-3").build(),
@@ -92,7 +92,7 @@ describe("FieldBaseInputBox", () => {
                 .withColor("red-wine")
                 .build();
 
-            const field = StaticBoundListFieldTestBuilder.aStaticBoundListField()
+            const field = StaticBoundListFieldTestBuilder.aStaticBoundListField(RADIO_BUTTON_FIELD)
                 .withDefaultValues(default_value)
                 .withValues(
                     StaticListItemTestBuilder.aStaticListItem(1).withLabel("MX-3").build(),
@@ -141,7 +141,7 @@ describe("FieldBaseInputBox", () => {
     describe("Badge displays", () => {
         it("displays the color badge component if the current list is a static bound list", () => {
             const field: StaticBoundListField =
-                StaticBoundListFieldTestBuilder.aStaticBoundListField()
+                StaticBoundListFieldTestBuilder.aStaticBoundListField(CHECKBOX_FIELD)
                     .withValues(
                         StaticListItemTestBuilder.aStaticListItem(1).withColor("red-wine").build(),
                     )
@@ -156,7 +156,9 @@ describe("FieldBaseInputBox", () => {
             expect(wrapper.findComponent(UserBadge).exists()).toBe(false);
         });
         it("displays the user badge component if the current list is a user bound list", () => {
-            const field: UserBoundListField = UserBoundListFieldTestBuilder.aUserBoundListField()
+            const field: UserBoundListField = UserBoundListFieldTestBuilder.aUserBoundListField(
+                CHECKBOX_FIELD,
+            )
                 .withValues({
                     id: 101,
                     label: "User 1",

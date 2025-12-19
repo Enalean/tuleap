@@ -18,6 +18,9 @@
   -->
 
 <template>
+    <option v-if="!field.required" v-bind:value="NONE_VALUE" data-test="none-value">
+        {{ $gettext("None") }}
+    </option>
     <option
         v-for="value in usable_values"
         v-bind:key="value.id"
@@ -36,7 +39,11 @@
 
 <script setup lang="ts">
 import type { ListFieldItem, ListFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
-import { isStaticListValue, isUserBoundListValue } from "../../../helpers/list-field-value";
+import {
+    isStaticListValue,
+    isUserBoundListValue,
+    NONE_VALUE,
+} from "../../../helpers/list-field-value";
 
 const props = defineProps<{
     field: ListFieldStructure;

@@ -20,6 +20,8 @@
 import { describe, it, expect } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
+import { MULTI_SELECTBOX_FIELD, SELECTBOX_FIELD } from "@tuleap/plugin-tracker-constants";
 import { StaticBoundListFieldTestBuilder } from "../../../tests/builders/StaticBoundListFieldTestBuilder";
 import type {
     ListFieldStructure,
@@ -37,6 +39,9 @@ import SelectBoxOptions from "./SelectBoxOptions.vue";
 describe("SelectBoxOptions", () => {
     const getWrapper = (field: ListFieldStructure): VueWrapper =>
         shallowMount(SelectBoxOptions, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
             props: {
                 field,
             },
@@ -64,7 +69,8 @@ describe("SelectBoxOptions", () => {
         ];
 
         const wrapper = getWrapper(
-            StaticBoundListFieldTestBuilder.aStaticBoundListField()
+            StaticBoundListFieldTestBuilder.aStaticBoundListField(MULTI_SELECTBOX_FIELD)
+                .withRequiredValue()
                 .withValues(...values)
                 .withDefaultValues(values[1], values[3])
                 .build(),
@@ -99,7 +105,8 @@ describe("SelectBoxOptions", () => {
         ];
 
         const wrapper = getWrapper(
-            UserBoundListFieldTestBuilder.aUserBoundListField()
+            UserBoundListFieldTestBuilder.aUserBoundListField(SELECTBOX_FIELD)
+                .withRequiredValue()
                 .withValues(...values)
                 .withDefaultValues(values[1])
                 .build(),
@@ -137,7 +144,8 @@ describe("SelectBoxOptions", () => {
         ];
 
         const wrapper = getWrapper(
-            UserGroupBoundListFieldTestBuilder.aUserGroupBoundListField()
+            UserGroupBoundListFieldTestBuilder.aUserGroupBoundListField(SELECTBOX_FIELD)
+                .withRequiredValue()
                 .withValues(...values)
                 .withDefaultValues(values[1])
                 .build(),
@@ -152,5 +160,21 @@ describe("SelectBoxOptions", () => {
         expect(option_2.attributes("value")).toBe(values[1].id.toString());
         expect(option_2.attributes("selected")).toBeDefined();
         expect(option_2.text()).toBe(values[1].ugroup_reference.label);
+    });
+
+    it("should insert the NONE_VALUE when the field is not required", () => {
+        const wrapper = getWrapper(
+            StaticBoundListFieldTestBuilder.aStaticBoundListField(MULTI_SELECTBOX_FIELD)
+                .withValues(
+                    StaticListItemTestBuilder.aStaticListItem(1001)
+                        .withLabel("Foo")
+                        .withColor("fiesta-red")
+                        .isHidden()
+                        .build(),
+                )
+                .build(),
+        );
+
+        expect(wrapper.find("[data-test=none-value]").exists()).toBe(true);
     });
 });

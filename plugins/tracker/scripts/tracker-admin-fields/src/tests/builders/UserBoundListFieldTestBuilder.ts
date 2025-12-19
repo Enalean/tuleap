@@ -18,14 +18,15 @@
  */
 
 import type { UserBoundListField, UserBoundListItem } from "@tuleap/plugin-tracker-rest-api-types";
-import { LIST_BIND_USERS, CHECKBOX_FIELD } from "@tuleap/plugin-tracker-constants";
+import { LIST_BIND_USERS } from "@tuleap/plugin-tracker-constants";
+import type { ListType } from "./lists-types";
 
 export class UserBoundListFieldTestBuilder {
     private readonly field_id = 18;
     private readonly label = "Users";
     private readonly name = "users";
-    private readonly required = false;
-    private readonly type = CHECKBOX_FIELD;
+    private required = false;
+    private readonly type: ListType;
     private default_value: ReadonlyArray<UserBoundListItem> = [];
     private readonly bindings = {
         type: LIST_BIND_USERS,
@@ -33,10 +34,12 @@ export class UserBoundListFieldTestBuilder {
 
     private values: ReadonlyArray<UserBoundListItem> = [];
 
-    private constructor() {}
+    private constructor(type: ListType) {
+        this.type = type;
+    }
 
-    public static aUserBoundListField(): UserBoundListFieldTestBuilder {
-        return new UserBoundListFieldTestBuilder();
+    public static aUserBoundListField(type: ListType): UserBoundListFieldTestBuilder {
+        return new UserBoundListFieldTestBuilder(type);
     }
 
     public withValues(...values: ReadonlyArray<UserBoundListItem>): UserBoundListFieldTestBuilder {
@@ -48,6 +51,11 @@ export class UserBoundListFieldTestBuilder {
         ...values: ReadonlyArray<UserBoundListItem>
     ): UserBoundListFieldTestBuilder {
         this.default_value = values;
+        return this;
+    }
+
+    public withRequiredValue(): UserBoundListFieldTestBuilder {
+        this.required = true;
         return this;
     }
 

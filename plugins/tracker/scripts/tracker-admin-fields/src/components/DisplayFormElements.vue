@@ -30,10 +30,6 @@
         <field-float v-else-if="isFloatField(element.field)" v-bind:field="element.field" />
         <field-date v-else-if="isDateField(element.field)" v-bind:field="element.field" />
         <field-select v-else-if="isSelectField(element.field)" v-bind:field="element.field" />
-        <field-multi-select
-            v-else-if="isMultiSelectField(element.field)"
-            v-bind:field="element.field"
-        />
         <field-checkbox v-else-if="isCheckbox(element.field)" v-bind:field="element.field" />
         <field-radio v-else-if="isRadioButton(element.field)" v-bind:field="element.field" />
         <field-static-text v-else-if="isStaticText(element.field)" v-bind:field="element.field" />
@@ -81,7 +77,6 @@ import BaseField from "./FormElements/BaseField.vue";
 import FieldText from "./FormElements/FieldText.vue";
 import FieldString from "./FormElements/FieldString.vue";
 import FieldSelect from "./FormElements/FieldSelect.vue";
-import FieldMultiSelect from "./FormElements/FieldMultiSelect.vue";
 import FieldInt from "./FormElements/FieldInt.vue";
 import FieldFloat from "./FormElements/FieldFloat.vue";
 import LineSeparator from "./FormElements/LineSeparator.vue";
@@ -119,11 +114,7 @@ function isStringField(field: StructureFields): field is StringFieldStructure {
 }
 
 function isSelectField(field: StructureFields): field is ListFieldStructure {
-    return field.type === SELECTBOX_FIELD;
-}
-
-function isMultiSelectField(field: StructureFields): field is ListFieldStructure {
-    return field.type === MULTI_SELECTBOX_FIELD;
+    return field.type === SELECTBOX_FIELD || field.type === MULTI_SELECTBOX_FIELD;
 }
 
 function isFieldset(element: Element): element is Fieldset {

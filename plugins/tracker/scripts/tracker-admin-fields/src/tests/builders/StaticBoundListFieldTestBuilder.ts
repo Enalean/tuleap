@@ -18,23 +18,27 @@
  */
 
 import type { StaticBoundListField, StaticListItem } from "@tuleap/plugin-tracker-rest-api-types";
-import { LIST_BIND_STATIC, CHECKBOX_FIELD } from "@tuleap/plugin-tracker-constants";
+import { LIST_BIND_STATIC } from "@tuleap/plugin-tracker-constants";
+import type { ListType } from "./lists-types";
 
 export class StaticBoundListFieldTestBuilder {
     private field_id = 18;
     private readonly label = "Two doors";
     private readonly name = "two_doors";
-    private readonly required = false;
-    private readonly type = CHECKBOX_FIELD;
+    private required = false;
+    private readonly type: ListType;
     private default_value: ReadonlyArray<StaticListItem> = [];
     private readonly bindings = {
         type: LIST_BIND_STATIC,
     };
     private values: ReadonlyArray<StaticListItem> = [];
-    private constructor() {}
 
-    public static aStaticBoundListField(): StaticBoundListFieldTestBuilder {
-        return new StaticBoundListFieldTestBuilder();
+    private constructor(type: ListType) {
+        this.type = type;
+    }
+
+    public static aStaticBoundListField(type: ListType): StaticBoundListFieldTestBuilder {
+        return new StaticBoundListFieldTestBuilder(type);
     }
 
     public withValues(...values: ReadonlyArray<StaticListItem>): StaticBoundListFieldTestBuilder {
@@ -46,6 +50,11 @@ export class StaticBoundListFieldTestBuilder {
         ...values: ReadonlyArray<StaticListItem>
     ): StaticBoundListFieldTestBuilder {
         this.default_value = values;
+        return this;
+    }
+
+    public withRequiredValue(): StaticBoundListFieldTestBuilder {
+        this.required = true;
         return this;
     }
 

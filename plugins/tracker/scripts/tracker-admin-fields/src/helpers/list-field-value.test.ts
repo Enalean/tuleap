@@ -24,7 +24,11 @@ import type {
     UserBoundListField,
     UserGroupBoundListField,
 } from "@tuleap/plugin-tracker-rest-api-types";
-import { CHECKBOX_FIELD, LIST_BIND_UGROUPS } from "@tuleap/plugin-tracker-constants";
+import {
+    CHECKBOX_FIELD,
+    LIST_BIND_UGROUPS,
+    SELECTBOX_FIELD,
+} from "@tuleap/plugin-tracker-constants";
 import { isStaticListField, listFieldValue } from "./list-field-value";
 import { RegisteredUserWithAvatarTestBuilder } from "../tests/builders/RegisteredUserWithAvatarTestBuilder";
 import { UserGroupRepresentationTestBuilder } from "../tests/builders/UserGroupRepresentationTestBuilder";
@@ -36,7 +40,7 @@ describe("list-field-value", () => {
     describe("listFieldValue", () => {
         it("returns the filtered value if a list is a static list", () => {
             const field: StaticBoundListField =
-                StaticBoundListFieldTestBuilder.aStaticBoundListField()
+                StaticBoundListFieldTestBuilder.aStaticBoundListField(SELECTBOX_FIELD)
                     .withValues(
                         StaticListItemTestBuilder.aStaticListItem(1).build(),
                         StaticListItemTestBuilder.aStaticListItem(2).isHidden().build(),
@@ -51,7 +55,9 @@ describe("list-field-value", () => {
             expect(listFieldValue(field)).toStrictEqual(expected_result);
         });
         it("returns the whole list value when the field values is not a static list", () => {
-            const field: UserBoundListField = UserBoundListFieldTestBuilder.aUserBoundListField()
+            const field: UserBoundListField = UserBoundListFieldTestBuilder.aUserBoundListField(
+                SELECTBOX_FIELD,
+            )
                 .withValues(
                     {
                         id: 1,
@@ -76,7 +82,7 @@ describe("list-field-value", () => {
         });
         describe("isStaticListField", () => {
             const user_bound_field: UserBoundListField =
-                UserBoundListFieldTestBuilder.aUserBoundListField()
+                UserBoundListFieldTestBuilder.aUserBoundListField(SELECTBOX_FIELD)
                     .withValues({
                         id: 1,
                         label: "user 1 (user1)",
@@ -110,7 +116,7 @@ describe("list-field-value", () => {
             };
 
             const static_field: StaticBoundListField =
-                StaticBoundListFieldTestBuilder.aStaticBoundListField()
+                StaticBoundListFieldTestBuilder.aStaticBoundListField(SELECTBOX_FIELD)
                     .withDefaultValues(StaticListItemTestBuilder.aStaticListItem(1).build())
                     .build();
 
