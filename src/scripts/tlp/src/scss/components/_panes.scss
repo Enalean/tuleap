@@ -36,6 +36,10 @@
     &.tlp-pane-hidden {
         display: none;
     }
+
+    &:last-child {
+        margin: 0;
+    }
 }
 
 .tlp-pane-container {
