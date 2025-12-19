@@ -23,6 +23,12 @@
         v-bind:key="value.id"
         v-bind:value="value.id"
         v-bind:selected="isDefaultValue(value)"
+        v-bind:data-color-value="
+            isStaticListValue(value) && value.value_color ? value.value_color : undefined
+        "
+        v-bind:data-avatar-url="
+            isUserBoundListValue(value) ? value.user_reference.avatar_url : undefined
+        "
     >
         {{ getValue(value) }}
     </option>
