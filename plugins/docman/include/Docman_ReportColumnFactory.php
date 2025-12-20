@@ -24,7 +24,7 @@
 use Tuleap\Docman\Search\FilenameColumnReport;
 use Tuleap\Docman\Search\IdColumnReport;
 
-class Docman_ReportColumnFactory
+class Docman_ReportColumnFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $groupId;
 
@@ -41,11 +41,6 @@ class Docman_ReportColumnFactory
                 $col = new Docman_ReportColumnLocation();
                 break;
 
-            case 'title':
-                $md  = $mdFactory->getFromLabel($colLabel);
-                $col = new Docman_ReportColumnTitle($md);
-                break;
-
             case 'id':
                 $col = new IdColumnReport();
                 break;
@@ -55,19 +50,13 @@ class Docman_ReportColumnFactory
                 break;
 
             default:
-                $md = $mdFactory->getFromLabel($colLabel);
-                switch ($md?->getType()) {
-                    case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                        $col = new Docman_ReportColumnList($md);
-                        break;
-                    default:
-                        $col = new Docman_ReportColumn($md);
-                }
+                $md  = $mdFactory->getFromLabel($colLabel);
+                $col = new Docman_ReportColumn($md);
         }
         return $col;
     }
 
-    public function &_getMetadataFactory()
+    public function &_getMetadataFactory() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $mdf = new Docman_MetadataFactory($this->groupId);
         return $mdf;

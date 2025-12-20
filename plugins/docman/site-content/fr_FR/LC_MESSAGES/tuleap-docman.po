@@ -305,9 +305,6 @@ msgstr "Vérification avant import"
 msgid "Click on the following link to approve or reject the document"
 msgstr "Cliquez sur le lien suivant pour approuver ou réprouver le document"
 
-msgid "Click on title to toggle table sort"
-msgstr "Cliquez sur le titre pour inverser le tri du tableau"
-
 msgid "Closed"
 msgstr "Fermé"
 
@@ -1225,9 +1222,6 @@ msgid ""
 msgstr ""
 "Le fichier est obsolète et n'est plus disponible dans les vues standard "
 "(Arbre, Table, ...)"
-
-msgid "The folder associated to this report no longer exists."
-msgstr "Le dossier associé à ce rapport n'existe plus."
 
 #, php-format
 msgid "The item %1$s doesn't exist or doesn't belong to project %2$s."

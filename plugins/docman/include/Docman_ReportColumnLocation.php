@@ -36,40 +36,8 @@ class Docman_ReportColumnLocation extends \Docman_ReportColumn
     }
 
     #[\Override]
-    public function getSortSelectorHtml()
-    {
-        return;
-    }
-
-    #[\Override]
-    public function getTitle($defaultUrl, $viewParams = '')
-    {
-        return \dgettext('tuleap-docman', 'Location');
-    }
-
-    #[\Override]
     public function initFromRequest($request)
     {
         return;
-    }
-
-    #[\Override]
-    public function getTableBox($item, $view, $params)
-    {
-        $hp        = \Codendi_HTMLPurifier::instance();
-        $pathTitle = $item->getPathTitle();
-        $pathId    = $item->getPathId();
-        $pathUrl   = [];
-        foreach ($pathTitle as $key => $title) {
-            $id = $pathId[$key];
-            // Replace in the current url the id of the root item.
-            $dfltParams       = $view->_getDefaultUrlParams($params);
-            $dfltParams['id'] = $id;
-            $url              = \Tuleap\Docman\View\DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $dfltParams);
-            $href             = '<a href="' . $url . '">' . $hp->purify($title, \CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
-            $pathUrl[]        = $href;
-        }
-        $html = \implode(' / ', $pathUrl);
-        return $html;
     }
 }

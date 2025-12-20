@@ -51,74 +51,12 @@ class Docman_ReportColumn
         return $sortParam;
     }
 
-    public function getSortSelectorHtml()
-    {
-        $html = '';
-        $sort = $this->getSort();
-        if ($sort !== \null) {
-            $html .= '<input type="hidden" name="' . $this->getSortParameter() . '" value="' . $sort . '" />';
-            $html .= "\n";
-        }
-        return $html;
-    }
-
-    public function getTitle($view, $viewParams)
-    {
-        $sort = $this->getSort();
-        if ($sort == 1) {
-            $toggleValue = '0';
-            $toogleIcon  = '<img src="' . \util_get_image_theme('up_arrow.png') . '" border="0" >';
-        } else {
-            $toggleValue = '1';
-            $toogleIcon  = '<img src="' . \util_get_image_theme('dn_arrow.png') . '" border="0" >';
-        }
-        // URL
-        $toggleParam = [];
-        $sortParam   = $this->getSortParameter();
-        if ($sortParam !== \null) {
-            $toggleParam[$sortParam] = $toggleValue;
-        }
-        $url      = $view->_buildSearchUrl($viewParams, [$sortParam => $toggleValue]);
-        $title    = \dgettext('tuleap-docman', 'Click on title to toggle table sort');
-        $purifier = \Codendi_HTMLPurifier::instance();
-        $link     = $purifier->purify($this->md->getName());
-        if ($sort !== \null) {
-            $link .= '&nbsp;' . $toogleIcon;
-        }
-        $href = '<a href="' . $url . '" title="' . $title . '">' . $link . '</a>';
-        return $href;
-    }
-
     public function initFromRequest($request)
     {
         $sortparam = $this->getSortParameter();
         if ($request->exist($sortparam)) {
             $this->setSort((int) $request->get($sortparam));
         }
-    }
-
-    public function _getMdHtml($item) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        $mdHtml = \null;
-        $md     = $item->getMetadataFromLabel($this->md->getLabel());
-        if ($md !== \null) {
-            $mdHtml = \Docman_MetadataHtmlFactory::getFromMetadata($md, []);
-        }
-        return $mdHtml;
-    }
-
-    public function getTableBox($item, $view, $params)
-    {
-        $mdHtml = $this->_getMdHtml($item);
-        if ($mdHtml !== \null) {
-            return $mdHtml->getValue();
-        }
-        return '';
-    }
-
-    public function getJavascript($item, $view)
-    {
-        return '';
     }
 
     public function getColumnProperty(): Docman_Metadata|Docman_ListMetadata|null

@@ -249,9 +249,6 @@ msgstr ""
 msgid "Click on the following link to approve or reject the document"
 msgstr ""
 
-msgid "Click on title to toggle table sort"
-msgstr ""
-
 msgid "Closed"
 msgstr ""
 
@@ -1089,9 +1086,6 @@ msgstr ""
 msgid ""
 "The file is obsolete and no longer available in standard views (Tree, "
 "Table, ...)"
-msgstr ""
-
-msgid "The folder associated to this report no longer exists."
 msgstr ""
 
 #, php-format

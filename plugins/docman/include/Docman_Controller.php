@@ -178,10 +178,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
             );
         }
 
-        // Clone reports
-        $reportFactory = new Docman_ReportFactory($source_project_id);
-        $reportFactory->copy($destination_project_id, $metadataMapping, $user, false, $item_mapping);
-
         if ($mapping_registry) {
             $mapping_registry->setCustomMapping(\DocmanPlugin::ITEM_MAPPING_KEY, $item_mapping);
         }
@@ -278,18 +274,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
     public function getThemePath()
     {
         return $this->themePath;
-    }
-
-    public function _initReport($item)
-    {
-        $reportFactory = new Docman_ReportFactory($this->getGroupId());
-
-        if ($this->reportId === null && $this->request->exist('report_id')) {
-            $this->reportId = (int) $this->request->get('report_id');
-        }
-        $report = $reportFactory->get($this->reportId, $this->request, $item, $this->feedback);
-
-        $this->_viewParams['filter'] = $report;
     }
 
     public function getValueInArrays($key, $array1, $array2)
@@ -438,22 +422,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                     // Load report
                     // If the item (folder) defined in the report is not the
                     // same than the current one, replace it.
-                    $this->_initReport($item);
-                    if (
-                        $this->_viewParams['filter'] !== null
-                        && $this->_viewParams['filter']->getItemId() !== null
-                        && $this->_viewParams['filter']->getItemId() != $item->getId()
-                    ) {
-                        $reportItem = $item_factory->getItemFromDb($this->_viewParams['filter']->getItemId());
-                        // If item defined in the report exists, use it
-                        // otherwise raise an error
-                        if (! $reportItem) {
-                            $this->feedback->log('warning', dgettext('tuleap-docman', 'The folder associated to this report no longer exists.'));
-                        } else {
-                            unset($item);
-                            $item = $reportItem;
-                        }
-                    }
 
                     if ($this->request->get('action') == 'ajax_reference_tooltip') {
                         $this->groupId = $item->getGroupId();

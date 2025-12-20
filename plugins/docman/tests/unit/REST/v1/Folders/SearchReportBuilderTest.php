@@ -26,7 +26,6 @@ namespace Tuleap\Docman\REST\v1\Folders;
 use Docman_FilterFactory;
 use Docman_Metadata;
 use Docman_MetadataFactory;
-use Docman_ReportColumnTitle;
 use Docman_SettingsBo;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\Metadata\CustomMetadataException;
@@ -72,7 +71,7 @@ final class SearchReportBuilderTest extends TestCase
         $column_factory = $this->createMock(\Docman_ReportColumnFactory::class);
         $metadata       = new Docman_Metadata();
         $metadata->setLabel('My column');
-        $column_title = new Docman_ReportColumnTitle($metadata);
+        $column_title = new \Docman_ReportColumn($metadata);
         $column_factory->method('getColumnFromLabel')->willReturn($column_title);
 
         $column_report_builder = new ColumnReportAugmenter($column_factory, new SearchSortPropertyMapper());
