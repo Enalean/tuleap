@@ -46,7 +46,7 @@ final class WidgetPermissionCheckerTest extends TestCase
         $user               = UserTestBuilder::aUser()->withId(101)->build();
         $permission_checker = new WidgetPermissionChecker(
             $this->project_manager,
-            RetrieveCrossTrackerWidgetStub::withWidget(UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, (int) $user->getId())),
+            RetrieveCrossTrackerWidgetStub::withWidget(UserCrossTrackerWidget::build(44, 1, UserDashboardController::DASHBOARD_TYPE, (int) $user->getId())),
         );
         self::assertTrue($permission_checker->isUserWidgetAdmin($user, 1));
     }
@@ -57,7 +57,7 @@ final class WidgetPermissionCheckerTest extends TestCase
         $other_user_id      = 101;
         $permission_checker = new WidgetPermissionChecker(
             $this->project_manager,
-            RetrieveCrossTrackerWidgetStub::withWidget(UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, $other_user_id)),
+            RetrieveCrossTrackerWidgetStub::withWidget(UserCrossTrackerWidget::build(44, 1, UserDashboardController::DASHBOARD_TYPE, $other_user_id)),
         );
         self::assertFalse($permission_checker->isUserWidgetAdmin($user, 1));
     }
@@ -71,7 +71,7 @@ final class WidgetPermissionCheckerTest extends TestCase
         $user->method('isAdmin')->willReturn(true);
         $permission_checker = new WidgetPermissionChecker(
             $this->project_manager,
-            RetrieveCrossTrackerWidgetStub::withWidget(ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getID())),
+            RetrieveCrossTrackerWidgetStub::withWidget(ProjectCrossTrackerWidget::build(76, 1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getID())),
         );
         self::assertTrue($permission_checker->isUserWidgetAdmin($user, 1));
     }
@@ -85,7 +85,7 @@ final class WidgetPermissionCheckerTest extends TestCase
         $user->method('isAdmin')->willReturn(false);
         $permission_checker = new WidgetPermissionChecker(
             $this->project_manager,
-            RetrieveCrossTrackerWidgetStub::withWidget(ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getID())),
+            RetrieveCrossTrackerWidgetStub::withWidget(ProjectCrossTrackerWidget::build(76, 1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getID())),
         );
         self::assertFalse($permission_checker->isUserWidgetAdmin($user, 1));
     }

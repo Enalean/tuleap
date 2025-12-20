@@ -26,6 +26,8 @@ namespace Tuleap\AICrossTracker\Stub;
 use Override;
 use Tuleap\AICrossTracker\Assistant\ThreadID;
 use Tuleap\AICrossTracker\Assistant\ThreadStorage;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\DB\DatabaseUUIDFactory;
 use Tuleap\Option\Option;
 
@@ -46,10 +48,10 @@ final class ThreadStorageStub implements ThreadStorage
     }
 
     #[Override]
-    public function createNew(\PFUser $user, int $widget_id): ThreadID
+    public function createNew(\PFUser $user, ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget): ThreadID
     {
         $this->user      = $user;
-        $this->widget_id = $widget_id;
+        $this->widget_id = $widget->widget_id;
         return new ThreadID(
             $this->uuid_factory->buildUUIDFromBytesData(
                 $this->uuid_factory->buildUUIDBytes()
@@ -58,7 +60,7 @@ final class ThreadStorageStub implements ThreadStorage
     }
 
     #[Override]
-    public function threadExists(\PFUser $user, int $widget_id, ThreadID $thread_id): Option
+    public function threadExists(\PFUser $user, ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget, ThreadID $thread_id): Option
     {
         if ($this->thread_exists) {
             return Option::fromValue($thread_id);

@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AICrossTracker\Assistant;
 
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\Option\Option;
 
 interface ThreadStorage
 {
-    public function createNew(\PFUser $user, int $widget_id): ThreadID;
+    public function createNew(\PFUser $user, ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget): ThreadID;
 
-    public function threadExists(\PFUser $user, int $widget_id, ThreadID $thread_id): Option;
+    public function threadExists(\PFUser $user, ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget, ThreadID $thread_id): Option;
 }

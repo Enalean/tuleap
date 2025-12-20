@@ -43,7 +43,7 @@ final class ProjectAssistantTest extends \Tuleap\Test\PHPUnit\TestCase
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(123)->build()),
             RetrieveMultipleTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->withUserCanView(true)->build()),
             RetrieveUsedFieldsStub::withNoFields(),
-            ProjectCrossTrackerWidget::build(1, 'foo', 123)
+            ProjectCrossTrackerWidget::build(1, 1, 'foo', 123)
         );
         $completion   = $assistant->getCompletion(
             UserTestBuilder::anActiveUser()->build(),

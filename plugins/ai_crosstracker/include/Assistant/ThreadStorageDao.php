@@ -24,13 +24,15 @@ declare(strict_types=1);
 namespace Tuleap\AICrossTracker\Assistant;
 
 use Override;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
 
 final class ThreadStorageDao extends DataAccessObject implements ThreadStorage
 {
     #[Override]
-    public function createNew(\PFUser $user, int $widget_id): ThreadID
+    public function createNew(\PFUser $user, ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget): ThreadID
     {
         $id = $this->uuid_factory->buildUUIDBytes();
         $this->getDB()->insert(
@@ -38,7 +40,7 @@ final class ThreadStorageDao extends DataAccessObject implements ThreadStorage
             [
                 'id' => $id,
                 'user_id' => $user->getId(),
-                'widget_id' => $widget_id,
+                'widget_id' => $widget->widget_id,
             ]
         );
         return new ThreadID(
@@ -47,7 +49,7 @@ final class ThreadStorageDao extends DataAccessObject implements ThreadStorage
     }
 
     #[Override]
-    public function threadExists(\PFUser $user, int $widget_id, ThreadID $thread_id): Option
+    public function threadExists(\PFUser $user, ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget, ThreadID $thread_id): Option
     {
         $row = $this->getDB()->row(
             <<<EOT
@@ -58,7 +60,7 @@ final class ThreadStorageDao extends DataAccessObject implements ThreadStorage
             AND id = ?
             EOT,
             $user->getId(),
-            $widget_id,
+            $widget->widget_id,
             $thread_id->uuid->getBytes(),
         );
         if ($row !== null) {

@@ -64,6 +64,7 @@ final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCros
         if ($row['dashboard_type'] === ProjectDashboardController::DASHBOARD_TYPE) {
             return Option::fromValue(
                 ProjectCrossTrackerWidget::build(
+                    $content_id,
                     $row['dashboard_id'],
                     $row['dashboard_type'],
                     $row['project_id']
@@ -74,6 +75,7 @@ final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCros
         if ($row['dashboard_type'] === UserDashboardController::DASHBOARD_TYPE) {
             return Option::fromValue(
                 UserCrossTrackerWidget::build(
+                    $content_id,
                     $row['dashboard_id'],
                     $row['dashboard_type'],
                     $row['user_id']

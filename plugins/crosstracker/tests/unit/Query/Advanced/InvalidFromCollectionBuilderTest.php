@@ -62,8 +62,8 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         $this->project_factory  = ProjectByIDFactoryStub::buildWithoutProject();
         $this->event_dispatcher = EventDispatcherStub::withIdentityCallback();
 
-        $this->project_widget_retriever = RetrieveCrossTrackerWidgetStub::withWidget(ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, 101));
-        $this->user_widget_retriever    = RetrieveCrossTrackerWidgetStub::withWidget(UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, 101));
+        $this->project_widget_retriever = RetrieveCrossTrackerWidgetStub::withWidget(ProjectCrossTrackerWidget::build(44, 1, ProjectDashboardController::DASHBOARD_TYPE, 101));
+        $this->user_widget_retriever    = RetrieveCrossTrackerWidgetStub::withWidget(UserCrossTrackerWidget::build(76, 1, UserDashboardController::DASHBOARD_TYPE, 101));
     }
 
     /**

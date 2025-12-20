@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\AICrossTracker\Assistant;
 
 use Tuleap\AI\Mistral\Message;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\DB\DatabaseUUIDFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Option\Option;
@@ -37,21 +39,21 @@ final readonly class ThreadRepository
     /**
      * @psalm-return Option<Thread>
      */
-    public function fetchThread(int $widget_id, \PFUser $user, ?string $thread_id, Message $submitted_message): Option
+    public function fetchThread(ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget, \PFUser $user, ?string $thread_id, Message $submitted_message): Option
     {
         if ($thread_id !== null) {
-            return $this->fetchExistingThread($widget_id, $user, $thread_id, $submitted_message);
+            return $this->fetchExistingThread($widget, $user, $thread_id, $submitted_message);
         } else {
-            return $this->fetchNewThread($widget_id, $user, $submitted_message);
+            return $this->fetchNewThread($widget, $user, $submitted_message);
         }
     }
 
     /**
      * @psalm-return Option<Thread>
      */
-    private function fetchNewThread(int $widget_id, \PFUser $user, Message $submitted_message): Option
+    private function fetchNewThread(ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget, \PFUser $user, Message $submitted_message): Option
     {
-        $id = $this->thread_storage->createNew($user, $widget_id);
+        $id = $this->thread_storage->createNew($user, $widget);
 
         $this->message_repository->store($id, $submitted_message);
 
@@ -66,10 +68,10 @@ final readonly class ThreadRepository
     /**
      * @psalm-return Option<Thread>
      */
-    private function fetchExistingThread(int $widget_id, \PFUser $user, string $thread_id, Message $submitted_message): Option
+    private function fetchExistingThread(ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget, \PFUser $user, string $thread_id, Message $submitted_message): Option
     {
         return $this->uuid_factory->buildUUIDFromHexadecimalString($thread_id)->andThen(
-            fn (UUID $uuid) => $this->thread_storage->threadExists($user, $widget_id, new ThreadID($uuid))->andThen(
+            fn (UUID $uuid) => $this->thread_storage->threadExists($user, $widget, new ThreadID($uuid))->andThen(
                 function (ThreadID $thread_id) use ($submitted_message) {
                     $user_messages = array_merge(
                         $this->message_repository->fetch($thread_id),
