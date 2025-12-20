@@ -24,28 +24,10 @@
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\Item\Icon\GetIconForItemEvent;
 
-readonly class Docman_Icons
+readonly class Docman_Icons // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(private string $images_path, private EventDispatcherInterface $event_manager)
     {
-    }
-
-    public function getActionIcon($action)
-    {
-        switch ($action) {
-            case 'popup':
-                return $this->images_path . 'popup.png';
-            case 'newFolder':
-                return $this->images_path . 'folder-new.png';
-            case 'newDocument':
-                return $this->images_path . 'document-new.png';
-            case 'details':
-                return $this->images_path . 'item-details.png';
-            case 'show':
-                return $this->images_path . 'folder-show.png';
-            default:
-                break;
-        }
     }
 
     public function getIconForItem(&$item, $params = null)
@@ -180,16 +162,6 @@ readonly class Docman_Icons
                 $icon = 'binary';
         }
         return $icon;
-    }
-
-    public function getFolderSpinner()
-    {
-        return $this->images_path . 'folder-spinner.gif';
-    }
-
-    public function getSpinner()
-    {
-        return $this->images_path . 'spinner.gif';
     }
 
     public function getIcon($icon)

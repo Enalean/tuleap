@@ -34,29 +34,6 @@ final class ColumnReportAugmenter
     {
     }
 
-    public function addColumnsFromRequest(\Tuleap\HTTPRequest $request, array $report_columns, \Docman_Report $report): void
-    {
-        $keep_ref_on_update_date = null;
-        $is_there_a_sort         = false;
-
-        foreach ($report_columns as $column_label) {
-            $column = $this->column_factory->getColumnFromLabel($column_label);
-            // set sort if provided by request parameters
-            $column->initFromRequest($request);
-
-            if ($column_label === 'update_date') {
-                $keep_ref_on_update_date = $column;
-            }
-            if ($column->getSort() !== null) {
-                $is_there_a_sort = true;
-            }
-
-            $report->addColumn($column);
-        }
-
-        $this->setSortOnLastUpdateDateWhenNoSortIsDefined($is_there_a_sort, $keep_ref_on_update_date);
-    }
-
     /**
      * @param string[] $report_columns
      * @throws ColumnCannotBeSortedException

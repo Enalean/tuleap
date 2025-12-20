@@ -106,7 +106,6 @@ function util_get_alt_row_color($i)
     return html_get_alt_row_color($i);
 }
 
-//function util_get_alt_row_color ($i) {
 function html_get_alt_row_color($i)
 {
     global $HTML;
@@ -433,14 +432,6 @@ function site_header(HeaderConfiguration|array $params): void
     echo html_feedback_top($GLOBALS['feedback']);
 }
 
-function site_footer($params)
-{
-    global $HTML;
-    echo html_feedback_bottom($GLOBALS['feedback']);
-    $HTML->footer($params);
-}
-
-
 function site_project_header(Project $project, HeaderConfiguration|array $params): void
 {
     /*
@@ -475,8 +466,6 @@ function site_project_header(Project $project, HeaderConfiguration|array $params
 }
 
 /*!     @function site_project_footer
-    @abstract currently a simple shim that should be on every project page,
-        rather than a direct call to site_footer() or theme_footer()
     @param params array() empty
     @result text - echos HTML to the screen directly
 */
@@ -492,62 +481,4 @@ function site_project_footer($params)
         echo html_feedback_bottom($GLOBALS['feedback']);
         $GLOBALS['HTML']->footer($params);
     }
-}
-
-function html_trash_link($link, $warn, $alt)
-{
-    $purifier = Codendi_HTMLPurifier::instance();
-    return '<a data-test="html_trash_link" href="' . $link . '" onClick="return confirm(\'' . $purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">' .
-        '<img src="' . util_get_image_theme('ic/trash.png') . '" ' . 'height="16" width="16" border="0" alt="' . $purifier->purify($alt) . '" title="' . $purifier->purify($alt) . '">' .
-        '</a>';
-}
-
-/**
- *
- *  Returns a date operator field
- *
- *  @param value: initial value
- *  @param ro: if true, the field is read-only
- *
- *    @return    string
- */
-function html_select_operator($name = '', $value = '', $ro = false)
-{
-    if ($ro) {
-        $html = htmlspecialchars($value);
-    } else {
-        $html = '<select name="' . $name . '">' .
-        '<option value="1"' . (($value == '1') ? 'selected="selected"' : '') . '>&gt;</option>' .
-        '<option value="0"' . (($value == '0') ? 'selected="selected"' : '') . '>=</option>' .
-        '<option value="-1"' . (($value == '-1') ? 'selected="selected"' : '') . '>&lt;</option>' .
-        '</select>';
-    }
-    return($html);
-}
-
-/**
- *  Returns a date field
- *
- *  @param value: initial value
- *  @param size: the field size
- *  @param maxlength: the max field size
- *  @param ro: if true, the field is read-only
- *
- *    @return    string
- */
-function html_field_date(
-    $field_name = '',
-    $value = '',
-    $ro = false,
-    $size = '10',
-    $maxlength = '10',
-    $form_name = 'artifact_form',
-    $today = false,
-) {
-    if ($ro) {
-        $html = $value;
-    } else {
-        $html = $GLOBALS['HTML']->getDatePicker('field_' . $field_name, $field_name, $value, $size, $maxlength);
-    }
-    return($html);
 }

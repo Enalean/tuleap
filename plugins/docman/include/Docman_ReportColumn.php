@@ -42,23 +42,6 @@ class Docman_ReportColumn
         return $this->sort;
     }
 
-    public function getSortParameter()
-    {
-        $sortParam = \null;
-        if ($this->md !== \null) {
-            $sortParam = 'sort_' . $this->md->getLabel();
-        }
-        return $sortParam;
-    }
-
-    public function initFromRequest($request)
-    {
-        $sortparam = $this->getSortParameter();
-        if ($request->exist($sortparam)) {
-            $this->setSort((int) $request->get($sortparam));
-        }
-    }
-
     public function getColumnProperty(): Docman_Metadata|Docman_ListMetadata|null
     {
         return $this->md;

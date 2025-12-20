@@ -56,14 +56,6 @@ class Docman_Filter
         return $param;
     }
 
-    public function _urlMatchDelete($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        if ($request->exist('del_filter') && $this->md->getLabel() == $request->get('del_filter')) {
-            return \true;
-        }
-        return \false;
-    }
-
     public function _urlValueIsValid($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($request->exist($this->md->getLabel())) {
@@ -77,28 +69,6 @@ class Docman_Filter
         if ($this->_urlValueIsValid($request)) {
             $this->setValue($request->get($this->md->getLabel()));
             return \true;
-        }
-        return \false;
-    }
-    // Add new fields
-    public function _urlMatchAdd($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        if ($request->exist('add_filter') && $this->md->getLabel() == $request->get('add_filter')) {
-            return \true;
-        }
-        return \false;
-    }
-
-    public function initOnUrlMatch($request)
-    {
-        if ($this->md !== \null) {
-            if (! $this->_urlMatchDelete($request)) {
-                if ($this->_urlMatchUpdate($request)) {
-                    return \true;
-                } else {
-                    return $this->_urlMatchAdd($request);
-                }
-            }
         }
         return \false;
     }
