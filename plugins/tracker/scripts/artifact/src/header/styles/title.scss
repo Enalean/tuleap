@@ -1,0 +1,122 @@
+/**
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "pkg:@tuleap/project-background";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
+
+body {
+    @include project-background.apply-background(
+        ".tracker-artifact-titles",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
+}
+
+.tracker-artifact-main-title {
+    display: flex;
+    flex-direction: row;
+    gap: var(--tlp-small-spacing);
+    text-shadow: none;
+
+    > .artifact-title {
+        color: var(--tlp-dark-color);
+        font-weight: 600;
+
+        .project-with-background & {
+            color: var(--tlp-white-color);
+        }
+    }
+
+    > .cross-ref-badge {
+        height: 36px;
+        border-radius: 20px;
+        font-size: 18px;
+        line-height: 26px;
+    }
+}
+
+.tracker-artifact-view-title {
+    display: flex;
+    flex-direction: row;
+
+    .tracker-artifact-parents-title:hover {
+        text-decoration: underline;
+    }
+
+    .tracker-artifact-title-hierarchy-icon {
+        margin: var(--tlp-small-spacing) var(--tlp-small-spacing) 0 0;
+        opacity: 0.5;
+
+        .project-with-background & {
+            color: var(--tlp-white-color);
+        }
+    }
+}
+
+.tracker-hierarchy,
+.tracker-hierarchy ul,
+.tracker-hierarchy li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.tracker-artifact-parents-titles {
+    display: flex;
+    flex-direction: row;
+    gap: var(--tlp-small-spacing);
+    padding: 0 0 calc(var(--tlp-small-spacing) / 2);
+    color: var(--tlp-dark-color);
+
+    .project-with-background & {
+        color: var(--tlp-white-color);
+    }
+
+    .tracker-artifact-parents-title:hover {
+        text-decoration: underline;
+    }
+}
+
+.tracker-artifact-view-parents {
+    display: flex;
+    flex-direction: row;
+    color: var(--tlp-dark-color);
+
+    .project-with-background & {
+        color: var(--tlp-white-color);
+    }
+
+    .tracker-artifact-title-hierarchy-icon {
+        margin: 0 var(--tlp-small-spacing) 0 0;
+        opacity: 0.5;
+    }
+}
+
+.tree-blank {
+    display: inline-block;
+    width: 16px;
+}
+
+.tracker-artifact-titles {
+    padding: var(--tlp-medium-spacing);
+}
+
+.direct-link-to-artifact:hover {
+    text-decoration: none;
+}

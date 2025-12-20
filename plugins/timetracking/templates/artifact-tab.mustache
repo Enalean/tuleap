@@ -1,16 +1,22 @@
-<fieldset class="tracker_artifact_fieldset">
-    <div class="tracker_artifact_fieldset_content timetracking-from">
-        {{# user_can_add_time }}
-            <a class="btn btn-primary timetracking-add-button"
-               href="#timetracking-add-time-modal"
-               data-toggle="modal"
-               data-test="timetracking-add-button"
-            >
-                <i class="fa-solid fa-plus"></i> {{# dgettext }} tuleap-timetracking | Add {{/ dgettext }}
-            </a>
-        {{/ user_can_add_time }}
-        <table class="table">
-            <thead>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# dgettext }} tuleap-timetracking | Time tracking {{/ dgettext }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <div class="tlp-table-actions">
+                {{# user_can_add_time }}
+                    <button class="tlp-button-primary tracker-artifact-timetracking-modal-trigger tlp-table-actions-element"
+                       type="button"
+                       data-test="timetracking-add-button"
+                       data-target-modal-id="timetracking-add-time-modal"
+                    >
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i> {{# dgettext }} tuleap-timetracking | Add {{/ dgettext }}
+                    </button>
+                {{/ user_can_add_time }}
+            </div>
+            <table class="tlp-table">
+                <thead>
                 <tr>
                     <th>{{# dgettext }} tuleap-timetracking | Date {{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-timetracking | User {{/ dgettext }}</th>
@@ -18,68 +24,71 @@
                     <th>{{# dgettext }} tuleap-timetracking | Time {{/ dgettext }}</th>
                     <th></th>
                 </tr>
-            </thead>
-            <tbody data-test="timetracking-times">
+                </thead>
+                <tbody data-test="timetracking-times">
                 {{# has_times }}
                     {{# times }}
                         <tr>
                             <td>{{ day }}</td>
                             <td>
                                 {{# user }}
-                                    <div class="avatar timetracking-time-user-avatar">
-                                        {{# has_avatar }}<img src="{{ avatar_url }}" loading="lazy" />{{/ has_avatar }}
+                                    <div class="tlp-avatar">
+                                        {{# has_avatar }}<img src="{{ avatar_url }}" loading="lazy" alt="User avatar"/>{{/ has_avatar }}
                                     </div>
                                     {{ label }}
                                 {{/ user }}
                             </td>
                             <td>{{ step }}</td>
                             <td>{{ time }}</td>
-                            <td>
-                                <div>
-                                    <a class="timetracking-edit-action {{^ time_belongs_to_user }} timetracking-action-not-clickable{{/ time_belongs_to_user }}"
-                                       data-toggle="modal"
-                                       data-test="timetracking-update-time"
-                                       href="#timetracking-edit-{{ id }}"
-                                    >
-                                        <i class="fas fa-pencil-alt"></i> {{# dgettext }} tuleap-timetracking | Update {{/ dgettext }}
-                                    </a>
-                                    {{# time_belongs_to_user }}
-                                        {{> timetracking-edit-modal }}
-                                    {{/ time_belongs_to_user }}
-                                    <a {{^ time_belongs_to_user }}class="timetracking-action-not-clickable"{{/ time_belongs_to_user }}
-                                        data-toggle="modal"
-                                        href="#timetracking-delete-{{ id }}"
-                                        data-test="timetracking-delete-time"
-                                    >
-                                        <i class="far fa-trash-alt"></i> {{# dgettext }} tuleap-timetracking | Delete {{/ dgettext }}
-                                    </a>
-                                    {{# time_belongs_to_user }}
-                                        {{> timetracking-delete-modal }}
-                                    {{/ time_belongs_to_user }}
-                                </div>
+                            <td class="tlp-table-cell-actions">
+                                <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline tracker-artifact-timetracking-modal-trigger"
+                                   {{^ time_belongs_to_user }}disabled=""{{/ time_belongs_to_user }}
+                                   data-test="timetracking-update-time"
+                                   data-target-modal-id="artifact-timetracking-edit-time-{{ id }}"
+                                >
+                                    <i class="fa-solid fa-pencil" aria-hidden="true"></i> {{# dgettext }} tuleap-timetracking | Edit {{/ dgettext }}
+                                </button>
+                                {{# time_belongs_to_user }}
+                                    {{> timetracking-edit-modal }}
+                                {{/ time_belongs_to_user }}
+                                <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline tracker-artifact-timetracking-modal-trigger"
+                                   {{^ time_belongs_to_user }}disabled{{/ time_belongs_to_user }}
+                                   data-test="timetracking-delete-time"
+                                   data-target-modal-id="artifact-timetracking-delete-time-{{ id }}"
+                                >
+                                    <i class="fa-regular fa-trash-alt" aria-hidden="true"></i> {{# dgettext }} tuleap-timetracking | Delete {{/ dgettext }}
+                                </button>
+                                {{# time_belongs_to_user }}
+                                    {{> timetracking-delete-modal }}
+                                {{/ time_belongs_to_user }}
                             </td>
                         </tr>
                     {{/ times }}
-                    <tr>
-                        <td colspan="3"></td>
-                        <td class="total-timetracking-row" data-test="total-timetracking-row">∑ {{ total_time }}</td>
-                        <td></td>
-                    </tr>
                 {{/ has_times }}
 
 
                 {{^ has_times }}
                     <tr>
-                        <td class="table-cell-empty" colspan="5">
+                        <td class="tlp-table-cell-empty" colspan="5">
                             {{# dgettext }} tuleap-timetracking | No times saved {{/ dgettext }}
                         </td>
                     </tr>
                 {{/ has_times }}
-            </tbody>
-        </table>
+                </tbody>
+                {{# has_times }}
+                <tfoot>
+                    <tr>
+                        <th colspan="3"></th>
+                        <th data-test="total-timetracking-row">∑ {{ total_time }}</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                {{/ has_times }}
+            </table>
+        </section>
     </div>
 
     {{# user_can_add_time }}
         {{> timetracking-add-modal }}
     {{/ user_can_add_time }}
-</fieldset>
+</section>

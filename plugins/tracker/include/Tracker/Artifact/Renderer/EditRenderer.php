@@ -23,8 +23,12 @@
  */
 
 use Tuleap\Date\RelativeDatesAssetsRetriever;
+use Tuleap\HTTPRequest;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
+use Tuleap\Tracker\Artifact\Event\IsArtifactViewInBurningParrotEvent;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -88,12 +92,14 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     {
         $html = parent::fetchFormContent($request, $current_user);
 
+        $html .= '<div class="tracker-artifact-titles">';
         if ($this->artifact->getTracker()->isProjectAllowedToUseType()) {
             $html .= $this->fetchTitleIsGraph();
         } else {
             $html .= $this->fetchTitleInHierarchy($this->hierarchy);
         }
 
+        $html .= '</div>';
         $html .= $this->fetchView($request, $current_user);
         return $html;
     }
@@ -120,6 +126,15 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     #[\Override]
     protected function displayHeader()
     {
+        $assets = new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../../scripts/artifact/frontend-assets',
+                '/assets/trackers/artifact',
+            ),
+            'src/header/title.ts',
+        );
+        $GLOBALS['HTML']->addJavascriptAsset($assets);
+
         if (CodeBlockFeaturesOnArtifact::getInstance()->isMermaidNeeded()) {
             $js_asset = new \Tuleap\Layout\JavascriptViteAsset(
                 new \Tuleap\Layout\IncludeViteAssets(
@@ -195,9 +210,16 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     private function fetchTitleIsGraph(): string
     {
-        $html  = '';
-        $html .= $this->artifact->fetchHiddenTrackerId();
-        $html .= $this->fetchMultipleParentsTitle($this->artifact);
+        $html = $this->artifact->fetchHiddenTrackerId();
+
+        $is_burning_parrot = $this->event_manager
+            ->dispatch(new IsArtifactViewInBurningParrotEvent(HTTPRequest::instance()))
+            ->isBurningParrot();
+        if ($is_burning_parrot) {
+            $html .= $this->fetchMultipleParentsTitle($this->artifact);
+        } else {
+            $html .= $this->fetchMultipleParentsTitleFlamingParrot($this->artifact);
+        }
 
         return $html;
     }
@@ -215,7 +237,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $html;
     }
 
-    private function fetchMultipleParentsTitle(Artifact $artifact): string
+    private function fetchMultipleParentsTitleFlamingParrot(Artifact $artifact): string
     {
         $hierarchy = $this->getParentHierarchy();
         $tab_level = 0;
@@ -239,9 +261,37 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $html .= '<li>';
         $html .= $this->displayANumberOfBlankTab($tab_level);
         $html .= '<div class="tree-last">&nbsp;</div>';
-        $html .= $artifact->getXRefAndTitle();
+        $html .= $artifact->getXRefAndTitleFlamingParrot();
         $html .= '</li>';
         $html .= '</ul>';
+        $html .= $artifact->fetchActionButtons();
+        $html .= $this->fetchShowHideFieldSetsButton();
+        $html .= '</div>';
+        return $html;
+    }
+
+    private function fetchMultipleParentsTitle(Artifact $artifact): string
+    {
+        $hierarchy = $this->getParentHierarchy();
+        $tab_level = 0;
+        $html      = '<ul class="tracker-hierarchy" data-test="tracker-hierarchy">';
+        $parents   = array_reverse($hierarchy->getArtifacts());
+
+        foreach ($parents as $parent) {
+            foreach ($parent as $father) {
+                $html .= '<li class="tracker-artifact-view-parents">';
+                $html .= $this->displayANumberOfBlankTab($tab_level);
+                $html .= '<i class="fa-solid fa-l tracker-artifact-title-hierarchy-icon" aria-hidden="true"></i>';
+                $html .= $father->fetchDirectLinkToArtifactWithTitle();
+                $html .= '</li>';
+            }
+            $tab_level++;
+        }
+        $html .= '</ul>';
+        $html .= '<div class="tracker-artifact-view-title" data-test="tracker-artifact-title">';
+        $html .= $this->displayANumberOfBlankTab($tab_level);
+        $html .= '<i class="fa-solid fa-l tracker-artifact-title-hierarchy-icon" aria-hidden="true"></i>';
+        $html .= $artifact->getXRefAndMainTitle();
         $html .= $artifact->fetchActionButtons();
         $html .= $this->fetchShowHideFieldSetsButton();
         $html .= '</div>';
@@ -292,7 +342,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             if ($parents) {
                 $html .= $parent->fetchDirectLinkToArtifactWithTitle();
             } else {
-                $html .= $parent->getXRefAndTitle();
+                $html .= $parent->getXRefAndTitleFlamingParrot();
             }
             if ($parents) {
                 $html .= '</li><li>';

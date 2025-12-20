@@ -1,60 +1,70 @@
-<div id="timetracking-edit-{{ id }}"
-     class="modal hide fade"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="timetracking-edit-time-modal-title"
-     aria-hidden="true"
+<form
+    method="POST"
+    action="{{ edit_url }}"
+    class="tlp-modal"
+    role="dialog"
+    id="artifact-timetracking-edit-time-{{ id }}"
+    aria-labelledby="timetracking-edit-time-modal-{{ id }}"
 >
-    <div class="modal-header">
-        <h3>{{# dgettext }} tuleap-timetracking | Edit time {{/ dgettext }}</h3>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="timetracking-edit-time-modal-{{ id }}">
+            {{# dgettext }} tuleap-timetracking | Edit time {{/ dgettext }}
+        </h1>
+        <button type="button" class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
     </div>
 
-    <form action="{{ edit_url }}" method="post">
-        <div class="modal-body">
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
+    <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
 
-            <input type="hidden" name="time-id" value="{{ id }}">
+        <input type="hidden" name="time-id" value="{{ id }}">
 
-            <label>{{# dgettext }} tuleap-timetracking | Step {{/ dgettext }}</label>
-            <input type="text" name="timetracking-edit-time-step" value="{{ step }}">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="edit-input-step">{{# dgettext }} tuleap-timetracking | Step {{/ dgettext }}</label>
+            <input type="text" id="edit-input-step" name="timetracking-edit-time-step" value="{{ step }}" class="tlp-input" size="15">
+        </div>
 
-            <label>{{# dgettext }} tuleap-timetracking | Date {{/ dgettext }}</label>
-            <div class="input-prepend dropdown input-append date">
-                <span class="tuleap_field_date">
-                    <input name="timetracking-edit-time-date"
-                           id="timetracking-edit-time-date"
-                           data-test="timetracking-edit-row-date"
-                           data-format="yyyy-MM-dd"
-                           type="text"
-                           value="{{ day }}">
-                    </input>
-                    <span class="add-on add-on-calendar">
-                        <i class="fas fa-calendar-alt" data-time-icon="fa-clock" data-date-icon="fa-calendar-alt"></i>
-                    </span>
-                </span>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="artifact-timetracking-edit-date-picker">
+                {{# dgettext }} tuleap-timetracking | Date {{/ dgettext }}
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+            </label>
+            <div class="tlp-form-element tlp-form-element-prepend">
+                <span class="tlp-prepend"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span>
+                <input type="text" id="artifact-timetracking-edit-date-picker" class="tlp-input" size="11" value="{{ day }}" data-test="timetracking-edit-row-date" required>
             </div>
+        </div>
 
-            <label>{{# dgettext }} tuleap-timetracking | Time {{/ dgettext }}</label>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="edit-input-time">
+                {{# dgettext }} tuleap-timetracking | Time {{/ dgettext }}
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+            </label>
             <input type="text"
+                   id="edit-input-time"
+                   class="tlp-input"
                    name="timetracking-edit-time-time"
                    data-test="timetracking-edit-row-time"
-                   placeholder="00:00"
+                   placeholder="{{# dgettext }} tuleap-timetracking | hh:mm {{/ dgettext }}"
                    pattern="{{ pattern }}"
+                   size="4"
                    required
                    value="{{ time }}"
             >
         </div>
+    </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{# gettext }}Close{{/ gettext }}</button>
-            <input type="submit"
-                   class="btn btn-primary"
-                   name="timetracking-edit-time"
-                   data-test="timetracking-edit-time"
-                   value="{{# dgettext }} tuleap-timetracking | Edit time {{/ dgettext }}"
-            >
-        </div>
-    </form>
-</div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Close{{/ gettext }}
+        </button>
+        <button type="submit"
+               class="tlp-button-primary tlp-modal-action"
+               name="timetracking-edit-time"
+               data-test="timetracking-edit-time"
+        >{{# dgettext }} tuleap-timetracking | Edit time {{/ dgettext }}</button>
+    </div>
+</form>

@@ -6,6 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/burningparrot-theme": "workspace:^",
     "@tuleap/dom": "workspace:^",
     "@tuleap/fault": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",
@@ -19,9 +20,11 @@
     "@tuleap/plugin-tracker-link-field": "workspace:^",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/plugin-tracker-rte-creator": "workspace:*",
+    "@tuleap/project-background": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-styles": "workspace:^",
+    "@tuleap/tooltip": "workspace:^",
     "dompurify": "^3.2.4",
     "lit-html": "^2.8.0"
   },

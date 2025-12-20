@@ -56,6 +56,9 @@ msgstr "Affiche les temps passés sur les différents trackers"
 msgid "Displays your time tracking of the whole platform."
 msgstr "Afficher votre suivi de temps de toute la plateforme."
 
+msgid "Edit"
+msgstr "Éditer"
+
 msgid "Edit time"
 msgstr "Editer un temps"
 
@@ -148,9 +151,6 @@ msgstr "Le suivi de temps est désactivé pour ce tracker."
 
 msgid "Time tracking is enabled for tracker."
 msgstr "Le suivi de temps est activé pour ce tracker."
-
-msgid "Update"
-msgstr "Mettre à jour"
 
 msgid "User"
 msgstr "Utilisateur"
