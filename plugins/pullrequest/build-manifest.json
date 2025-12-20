@@ -19,6 +19,10 @@
             "src": "scripts/pullrequest-commits/src",
             "po": "scripts/pullrequest-commits/po"
         },
+        "tuleap-pullrequest-changes": {
+            "src": "scripts/pullrequest-changes/src",
+            "po": "scripts/pullrequest-changes/po"
+        },
         "create-pullrequest-button": {
             "src": "scripts/create-pullrequest-button/src",
             "po": "scripts/create-pullrequest-button/po"
