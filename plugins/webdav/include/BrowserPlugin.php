@@ -25,7 +25,7 @@ use Sabre\HTTP\ResponseInterface;
 /**
  * This is a web based WebDAV client added as a plugin into the WebDAV server
  */
-class BrowserPlugin extends Sabre\DAV\Browser\Plugin
+class BrowserPlugin extends Sabre\DAV\Browser\Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private $purifier;
 
@@ -47,7 +47,7 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
         echo '<form name="deleteform" method="post" action="">
         <input type="hidden" name="action" value="delete" />
         <input type="hidden" name="node" value="' . $this->purifier->purify($file['href']) . '" />
-        <td><button type="submit" style="background:white; border:0;" value="delete"><img src="/themes/Dawn/images/ic/trash.png"></button>';
+        <td><button type="submit" style="background:white; border:0;" value="delete">' . _('Delete') . '</button>';
         echo '</td></form>';
     }
 
@@ -64,33 +64,7 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
         <input type="hidden" name="action" value="rename" />
         <input type="hidden" name="node" value="' . $this->purifier->purify($file['href']) . '" />
         <td><input type="text" name="name" />
-        <button type="submit" style="background:white; border:0;" value="rename"><img src="/themes/Dawn/images/ic/edit.png"></button></td>
-        </form>';
-    }
-
-    /**
-     * Shows the move form (not implemented yet)
-     *
-     * @param mixed $file
-     * @param array $destinations
-     *
-     * @return void
-     */
-    public function moveForm($file, $destinations)
-    {
-        echo '<form method="post" action="">
-        <input type="hidden" name="action" value="move" />
-        <td><select name="select">
-        <OPTION VALUE="" SELECTED="yes">';
-        foreach (array_keys($destinations) as $key) {
-            echo '<OPTGROUP LABEL="' . $this->purifier->purify($key) . '">';
-            foreach ($destinations[$key] as $destination) {
-                echo '<OPTION VALUE="' . $this->purifier->purify($destination) . '">' . $this->purifier->purify(basename($destination)) . '</OPTION>';
-            }
-        }
-        echo '</select>
-        <input type="hidden" name="node" value="' . $this->purifier->purify($file['href']) . '" />
-        <button type="submit" style="background:white; border:0;" value="move"><img src="/themes/Dawn/images/ic/admin.png"></button></td>
+        <button type="submit" style="background:white; border:0;" value="rename">' . _('Edit') . '</button></td>
         </form>';
     }
 
@@ -104,53 +78,8 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
         echo '<form method="post" action="">
         <input type="hidden" name="action" value="mkcol" />
         ' . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'name')) . ' : <input type="text" name="name" />
-        <button type="submit" style="background:white; border:0;" value="create"><img src="/themes/Dawn/images/ic/add.png"></button>
+        <button type="submit" style="background:white; border:0;" value="create">' . _('Add') . '</button>
         </form>';
-    }
-
-    /**
-     * Returns the list of packages we can move the release into
-     *
-     * @param Array $release
-     *
-     * @return Array
-     */
-    public function getReleaseDestinations($release)
-    {
-        $project      = $this->server->tree->getNodeForPath(dirname(dirname($release['href'])));
-        $packages     = $project->getChildren();
-        $destinations = [];
-        foreach ($packages as $package) {
-            $destinationPath = $project->getName() . '/' . $package->getName();
-            if ($destinationPath != dirname($release['href'])) {
-                $destinations['Package'][] = $destinationPath;
-            }
-        }
-        return $destinations;
-    }
-
-    /**
-     * Returns the list of releases we can move the file into
-     *
-     * @param Array $file
-     *
-     * @return Array
-     */
-    public function getFileDestinations($file)
-    {
-        $project      = $this->server->tree->getNodeForPath(dirname(dirname(dirname($file['href']))));
-        $packages     = $project->getChildren();
-        $destinations = [];
-        foreach ($packages as $package) {
-            $releases = $package->getChildren();
-            foreach ($releases as $release) {
-                $destinationPath = $project->getName() . '/' . $package->getName() . '/' . $release->getName();
-                if ($destinationPath != dirname($file['href'])) {
-                    $destinations[$package->getName()][] = $destinationPath;
-                }
-            }
-        }
-        return $destinations;
     }
 
     /**
@@ -326,8 +255,6 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
                 if ($node->userCanWrite()) {
                     $this->deleteForm($file);
                     $this->renameForm($file);
-                    $destinations = $this->getReleaseDestinations($file);
-                    //$this->moveForm($file, $destinations);
                 }
             }
             if ($node instanceof WebDAVFRSRelease) {
@@ -335,8 +262,6 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
                 echo "<td>{$lastmodified}</td>";
                 if ($node->userCanWrite()) {
                     $this->deleteForm($file);
-                    $destinations = $this->getFileDestinations($file);
-                    //$this->moveForm($file, $destinations);
                 }
             }
             if ($node instanceof WebDAVDocmanFolder) {

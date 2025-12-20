@@ -48,52 +48,6 @@ function exit_wiki_empty()
     exit;
 }
 
-/**
- * Generate url to Expend/Collapse a part of a page
- * @see my_hide_url
- */
-function hide_url($svc, $db_item_id, $defaultHide = false, $hide = null)
-{
-    $pref_name = 'hide_' . $svc . $db_item_id;
-
-    if (empty($hide)) {
-        if (isset($_REQUEST['hide_' . $svc])) {
-            $hide = $_REQUEST['hide_' . $svc];
-        }
-    }
-
-    $noPref   = false;
-    $old_hide = user_get_preference($pref_name);
-
-  // Make sure they are both 0 if never set before
-    if ($old_hide == false) {
-        $noPref   = true;
-        $old_hide = 0;
-    }
-
-  // If no given value for hide, keep the old one
-    if (! isset($hide)) {
-        $hide = $old_hide;
-    }
-
-  // Update pref value if needed
-    if ($old_hide != $hide) {
-        user_set_preference($pref_name, $hide);
-    }
-
-    if ($hide == 2 || ($noPref && $defaultHide)) {
-        $hide_url = 'hide_' . $svc . '=1&hide_item_id=' . $db_item_id;
-        $hide_img = '<img src="' . util_get_image_theme('pointer_right.png') . '" align="middle" border="0" alt="Expand">';
-        $hide_now = true;
-    } else {
-        $hide_url = 'hide_' . $svc . '=2&hide_item_id=' . $db_item_id;
-        $hide_img = '<img src="' . util_get_image_theme('pointer_down.png') . '" align="middle" border="0" alt="Collapse">';
-        $hide_now = false;
-    }
-
-    return [$hide_now, $hide_url, $hide_img];
-}
-
 function wiki_display_header()
 {
     $GLOBALS['wiki_view']->header();

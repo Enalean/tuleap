@@ -362,58 +362,6 @@ button[name="tracker_query_submit"] {
     margin-bottom: 0;
 }
 
-.tracker_decorator,
-.tracker_nodecorator {
-    width: 1em;
-    height: 1em;
-    border: 1px solid transparent;
-}
-
-.tracker_decorator {
-    border: 1px solid #808080;
-}
-
-.tracker_decorator_list,
-.tracker_decorator_list_adv {
-    overflow: auto;
-    border: 1px solid #808080;
-    background-color: #ffffff;
-    background-image: url("../default/images/gradient-white.png");
-    background-repeat: repeat-x;
-    background-position: left top;
-    cursor: default;
-    user-select: none;
-}
-
-.tracker_decorator_list .tracker_decorator_list_pointer {
-    width: 16px;
-    height: 18px;
-    float: right;
-    background-image: url("../default/images/pointer_down.png");
-    background-repeat: no-repeat;
-    background-position: right bottom;
-    vertical-align: middle;
-}
-
-.tracker_decorator_list ul,
-.tracker_decorator_list_adv ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-.tracker_decorator_list .tracker_decorator_option_preselected,
-.tracker_decorator_list_adv .tracker_decorator_option_preselected {
-    background: #008ed6;
-    color: #ffffff;
-}
-
-.tracker_decorator_list .tracker_decorator_option_hover,
-.tracker_decorator_list_adv .tracker_decorator_option_hover {
-    background: #6bb2d6;
-    color: #ffffff;
-}
-
 .tracker-admin-one-list-field:has(.tracker_admin_static_value_hide_checkbox > input:not(:checked)),
 .tracker-admin-one-list-field:has(.tracker_admin_static_value_delete_checkbox > input:checked) {
     background: url("../default/images/tracker_admin_static_value_hidden.png") top left repeat;

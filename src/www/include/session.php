@@ -66,15 +66,3 @@ function session_require($req)
         exit_error($Language->getText('include_session', 'insufficient_access'), $Language->getText('include_session', 'no_access'));
     }
 }
-
-/**
- *  session_continue - A utility method to carry on with an already established session with
- *  sessionKey
- *
- * @param string The session key
- */
-function session_continue($sessionKey)
-{
-    $current_user = UserManager::instance()->getCurrentUserWithLoggedInInformation($sessionKey);
-    return $current_user->is_logged_in;
-}

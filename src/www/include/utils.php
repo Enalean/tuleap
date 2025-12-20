@@ -139,16 +139,6 @@ function util_make_reference_links($data, $group_id)
     return $data;
 }
 
-// Clean up email address (remove starting and ending spaces),replace semicolon by comma and put to lower
-// case
-function util_cleanup_emails($addresses)
-{
-    $addresses = preg_replace('/\s+[,;]/', ',', $addresses);
-    $addresses = preg_replace('/[,;]\s+/', ',', $addresses);
-    $addresses = str_replace(';', ',', $addresses);
-    return strtolower(rtrim(trim($addresses)));
-}
-
 // This function get the image file for the theme.
 // The theme may be specified as an optional second parameter.
 // If no theme parameter is given, the current global theme is used.

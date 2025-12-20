@@ -25,7 +25,6 @@ namespace Tuleap\Project\Admin\Reference\Browse;
 
 final readonly class BrowseReferencePresenter
 {
-    public string $trash_icon;
     public bool $has_external_references;
     public bool $has_warning_messages;
     public bool $has_project_references;
@@ -46,7 +45,6 @@ final readonly class BrowseReferencePresenter
         public array $external_system_references,
         public array $warning_messages,
     ) {
-        $this->trash_icon              = util_get_image_theme('ic/trash.png');
         $this->has_external_references = count($this->external_system_references) > 0;
         $this->has_project_references  = count($this->project_references) > 0;
         $this->has_system_references   = count($this->system_references) > 0;
