@@ -276,7 +276,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * - add system references withut services
      * - copy ugroups and save mapping for further import
      * - copy FRS packages with permissions
-     * - copy trackers
      * - copy wiki
      * - copy layout summary page
      * - Add the template as a project reference

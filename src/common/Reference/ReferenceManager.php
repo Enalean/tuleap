@@ -430,8 +430,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
 
     /**
      * Add project references which are not system references.
-     * Make sure that references for trackers that have been added
-     * separately in project/register.php script are not created twice
      */
     public function addProjectReferences($template_id, $group_id)
     {
@@ -454,7 +452,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
                 $row['is_active'], // is_used
                 $group_id
             );
-            $this->createReference($ref, true); // Force reference creation because default trackers use reserved keywords
+            $this->createReference($ref, true);
         }
         return true;
     }
