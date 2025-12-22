@@ -78,7 +78,7 @@ function logs_display($sql, int $span, $field, $title = '')
             print ' <th>' . $GLOBALS['Language']->getText('project_admin_utils', 'action') . '</th>' . "\n";
         }
         print ' <th>' . $GLOBALS['Language']->getText('project_export_utils', 'user') . '</th>' . "\n"
-            . ' <th>' . $GLOBALS['Language']->getText('project_export_artifact_history_export', 'email') . '</th>' . "\n"
+            . ' <th>' . _('Email') . '</th>' . "\n"
             . ' <th>' . $hp->purify($field) . '</th>' . "\n"
             . ' <th align="right">' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'time') . '</th>' . "\n"
             . '</tr></thead><tbody>' . "\n";
@@ -298,7 +298,7 @@ function svnaccess_logs_daily($project, int $span = 7, $who = 'allusers')
         . '<TR valign="top">'
         . '<TD><B>' . $GLOBALS['Language']->getText('project_admin_utils', 'date') . '</B></TD>'
         . '<TD><B>' . $GLOBALS['Language']->getText('project_export_utils', 'user') . '</B></TD>'
-        . '<TD><B>' . $GLOBALS['Language']->getText('project_export_artifact_history_export', 'email') . '</B></TD>'
+        . '<TD><B>' . _('Email') . '</B></TD>'
         . '<TD><B>' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'accesses') . '</B></TD>'
         . '<TD><B>' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'browsing') . '</B></TD>'
         . '</TR>' . "\n";

@@ -33,7 +33,6 @@ class GetUserWidgetList extends GetWidgetList
         'myprojects',
         'mybookmarks',
         'mymonitoredfp',
-        'myartifacts',
         'myimageviewer',
         'mylatestsvncommits',
         'mysystemevent',

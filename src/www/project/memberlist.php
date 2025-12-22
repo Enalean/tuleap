@@ -64,7 +64,7 @@ $query =  'SELECT user.user_name AS user_name,user.user_id AS user_id,'
 
 $title_arr   = [];
 $title_arr[] = $Language->getText('project_memberlist', 'developer');
-$title_arr[] = $Language->getText('project_export_artifact_history_export', 'email');
+$title_arr[] = _('Email');
 
 $user_helper = new UserHelper();
 $hp          = Codendi_HTMLPurifier::instance();

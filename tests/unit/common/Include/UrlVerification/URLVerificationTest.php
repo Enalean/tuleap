@@ -90,7 +90,7 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
         $urlVerification = new URLVerification();
         self::assertFalse(
             $urlVerification->isException(
-                ['SCRIPT_NAME' => '/projects/foobar/?p=/api/reference/extractCross']
+                ['SCRIPT_NAME' => '/projects/foobar/?p=/api/whatever']
             )
         );
     }
@@ -98,7 +98,7 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTreatsExtractionOfCrossReferencesApiAsException(): void
     {
         $urlVerification = new URLVerification();
-        self::assertTrue($urlVerification->isException(['SCRIPT_NAME' => '/api/reference/extractCross']));
+        self::assertTrue($urlVerification->isException(['SCRIPT_NAME' => '/api/whatever']));
     }
 
     public function testIsScriptAllowedForAnonymousFromHook(): void

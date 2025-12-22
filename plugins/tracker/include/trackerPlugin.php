@@ -354,7 +354,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $this->addHook('javascript_file');
         $this->addHook(NatureCollection::NAME);
-        $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, 'get_artifact_reference_group_id');
         $this->addHook(Event::JAVASCRIPT, 'javascript');
         $this->addHook(Event::TOGGLE, 'toggle');
         $this->addHook('permission_get_name', 'permission_get_name');
@@ -968,15 +967,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             Artifact::REFERENCE_NATURE,
             new Nature('artifact', 'fas fa-list-ol', dgettext('tuleap-tracker', 'Artifact'), true)
         );
-    }
-
-    public function get_artifact_reference_group_id($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($params['artifact_id']);
-        if ($artifact) {
-            $tracker            = $artifact->getTracker();
-            $params['group_id'] = $tracker->getGroupId();
-        }
     }
 
     #[ListeningToEventClass]
