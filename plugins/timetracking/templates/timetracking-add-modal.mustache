@@ -39,7 +39,15 @@
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span>
-                <input type="text" id="artifact-timetracking-add-date-picker" class="tlp-input" size="11" value="{{ default_date_value }}" required>
+                <input type="text"
+                       name="timetracking-new-time-date"
+                       id="artifact-timetracking-add-date-picker"
+                       data-test="timetracking-new-row-date"
+                       class="tlp-input"
+                       size="11"
+                       value="{{ default_date_value }}"
+                       required
+                >
             </div>
         </div>
 
