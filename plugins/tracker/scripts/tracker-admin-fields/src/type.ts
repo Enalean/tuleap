@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+
+export const PROJECT_ID: StrictInjectionKey<number> = Symbol("PROJECT_ID");
 
 type Child = Field | Fieldset | ColumnWrapper;
 

@@ -14,9 +14,11 @@
     }
   },
   "dependencies": {
+    "@tuleap/dom": "workspace:*",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-popovers": "workspace:^",
     "dompurify": "^3.2.4",
     "lit-html": "^2.8.0",
     "marked": "^4.0.10",

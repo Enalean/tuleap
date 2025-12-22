@@ -36,6 +36,8 @@ import { defaultOptionsIfNotProvided } from "./options-defaulter";
 import { ExistingFormatSelector } from "./format-selector/ExistingFormatSelector";
 import { FlamingParrotEditorAreaBuilder } from "./format-selector/editor-area/FlamingParrotEditorAreaBuilder";
 import { EditorAreaRenderer } from "./format-selector/editor-area/EditorAreaRenderer";
+import { BurningParrotDocumentAdapter } from "./format-selector/BurningParrotDocumentAdapter";
+import { BurningParrotEditorAreaBuilder } from "./format-selector/editor-area/BurningParrotEditorAreaBuilder";
 
 export class RichTextEditorFactory {
     private readonly markdown_converter: HTMLToMarkdownConverterInterface;
@@ -111,5 +113,19 @@ export class RichTextEditorFactory {
     ): RichTextEditorFactory {
         const format_selector = new ExistingFormatSelector(doc);
         return new RichTextEditorFactory(format_selector, default_format, locale);
+    }
+
+    public static forBurningParrotWithFormatSelector(
+        doc: Document,
+        locale: string,
+    ): RichTextEditorFactory {
+        const gettext_provider = initGettextSync("rich-text-editor", { fr_FR, pt_BR }, locale);
+        const document_adapter = new BurningParrotDocumentAdapter(doc);
+        const builder = new BurningParrotEditorAreaBuilder(
+            document_adapter,
+            new EditorAreaRenderer(gettext_provider),
+        );
+        const default_format = document_adapter.getDefaultFormat();
+        return new RichTextEditorFactory(builder, default_format, locale);
     }
 }

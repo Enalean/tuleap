@@ -17,13 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import FieldsUsage from "./FieldsUsage.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import EmptyState from "./EmptyState.vue";
 import TrackerStructure from "./TrackerStructure.vue";
 import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
+
+vi.mock("@tuleap/mention", () => ({
+    initMentions(): void {
+        // Mock @tuleap/mention because it needs jquery in tests
+    },
+}));
 
 describe("FieldsUsage", () => {
     it("should display an empty state", async () => {

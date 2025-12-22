@@ -1913,7 +1913,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     new ArtifactLinksUsageDao(),
                     new SystemTypePresenterBuilder(\EventManager::instance()),
                 ),
-            )
+            ),
+            new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'),
         );
     }
 

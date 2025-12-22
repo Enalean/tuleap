@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PreviewEditButton when is_in_edit_mode is false, it will create a Edit button 1`] = `
-<button type="button" class="btn btn-small rte-button">
-  <i aria-hidden="true" class="fas fa-fw fa-pencil-alt"></i>
+<button type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small rte-button">
+  <i aria-hidden="true" class="fa-fw fa-solid fa-pencil tlp-button-icon"></i>
   Edit
 </button>
 `;
 
 exports[`PreviewEditButton when is_in_edit_mode is true, it will create a Preview button 1`] = `
-<button type="button" class="btn btn-small rte-button">
-  <i aria-hidden="true" class="fas fa-fw fa-eye"></i>
+<button type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small rte-button">
+  <i aria-hidden="true" class="fa-fw fa-solid fa-eye tlp-button-icon"></i>
   Preview
 </button>
 `;

@@ -21,7 +21,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 import type { TemplateResult } from "lit-html";
 import { html } from "lit-html";
 import { getCommonMarkSyntaxPopoverHelperContent } from "../commonmark-syntax-helper";
-import "../FlamingParrotPopoverButtonElement";
+import "../BurningParrotPopoverButtonElement";
 
 export interface HelpButtonPresenter {
     readonly is_disabled: boolean;
@@ -33,18 +33,18 @@ export function createSyntaxHelpButton(
 ): TemplateResult {
     const helper_popover = getCommonMarkSyntaxPopoverHelperContent(gettext_provider);
     return html`
-        <fp-popover-button>
+        <bp-popover-button>
             <button
                 type="button"
-                class="btn btn-small rte-button"
+                class="tlp-button-secondary tlp-button-outline tlp-button-small rte-button"
                 data-button
                 data-test="help-button"
                 ?disabled="${presenter.is_disabled}"
             >
-                <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+                <i class="fa-solid fa-circle-question tlp-button-icon" aria-hidden="true"></i>
                 ${gettext_provider.gettext("Help")}
             </button>
             ${helper_popover}
-        </fp-popover-button>
+        </bp-popover-button>
     `;
 }

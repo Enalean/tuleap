@@ -18,7 +18,11 @@
   -->
 
 <template>
-    <button class="btn" type="button" v-on:click="markAsDeleted()">
+    <button
+        class="tlp-button-danger tlp-button-outline tlp-button-small"
+        type="button"
+        v-on:click="markAsDeleted()"
+    >
         <i class="far fa-trash-alt"></i>
         {{ $gettext("Delete") }}
     </button>

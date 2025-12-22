@@ -20,11 +20,9 @@
 
 .rte_format { /* stylelint-disable-line selector-class-pattern */
     display: flex;
-    align-items: baseline;
-}
-
-.rte_format > select { /* stylelint-disable-line selector-class-pattern */
-    width: auto;
+    align-items: center;
+    gap: calc(var(--tlp-small-spacing) * 0.5);
+    margin-bottom: var(--tlp-small-spacing);
 }
 
 .rte-button {
@@ -35,13 +33,22 @@
     display: none;
 }
 
+.format-select-box {
+    margin: 0;
+}
+
 .popover {
     max-width: none;
     padding: 0;
 }
 
-.popover-content {
+.popover > .popover-content {
     padding: 0;
+
+    > .tlp-table {
+        margin: 0;
+        width: 100%;
+    }
 }
 
 .popover-h1-indentation,
@@ -63,4 +70,8 @@
 
 .popover-link-indentation {
     white-space: nowrap;
+}
+
+.popover-code-block-example {
+    white-space: pre-wrap;
 }

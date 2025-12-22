@@ -20,6 +20,7 @@
 import { vite } from "@tuleap/build-system-configurator";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 import * as path from "path";
+import { viteExternalsPlugin } from "vite-plugin-externals";
 import vue from "@vitejs/plugin-vue";
 
 export default vite.defineAppConfig(
@@ -28,7 +29,14 @@ export default vite.defineAppConfig(
         sub_app_name: path.basename(__dirname),
     },
     {
-        plugins: [POGettextPlugin.vite(), vue()],
+        plugins: [
+            POGettextPlugin.vite(),
+            vue(),
+            viteExternalsPlugin({
+                ckeditor4: "CKEDITOR",
+                jquery: "jQuery",
+            }),
+        ],
         build: {
             rollupOptions: {
                 input: {
