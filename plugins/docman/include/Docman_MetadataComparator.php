@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_MetadataComparator
+class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $docmanIcons;
     public $srcGo;
@@ -80,7 +80,7 @@ class Docman_MetadataComparator
      *
      * Same algo used in Docman_View_ItemDetailsSectionPaste::_checkLoveToImport
      */
-    public function getLoveCompareTable($srcMd, $dstMd, $mdMap, &$sthToImport)
+    private function getLoveCompareTable($srcMd, $dstMd, $mdMap, &$sthToImport)
     {
         $html = '';
 

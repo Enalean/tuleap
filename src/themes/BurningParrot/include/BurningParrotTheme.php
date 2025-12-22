@@ -159,10 +159,6 @@ class BurningParrotTheme extends BaseLayout
     {
     }
 
-    public function getDatePicker()
-    {
-    }
-
     public function header(HeaderConfiguration|array $params): void
     {
         $project = null;

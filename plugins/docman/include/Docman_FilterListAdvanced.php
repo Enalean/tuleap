@@ -72,16 +72,6 @@ class Docman_FilterListAdvanced extends \Docman_FilterList
         return \false;
     }
 
-    #[\Override]
-    public function _urlMatchAdd($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        if (parent::_urlMatchAdd($request)) {
-            $this->setValue([0]);
-            return \true;
-        }
-        return \false;
-    }
-
     public function addValue($val)
     {
         $this->value[] = $val;

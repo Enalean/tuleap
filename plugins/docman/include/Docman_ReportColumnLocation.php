@@ -34,10 +34,4 @@ class Docman_ReportColumnLocation extends \Docman_ReportColumn
     {
         return;
     }
-
-    #[\Override]
-    public function initFromRequest($request)
-    {
-        return;
-    }
 }

@@ -17,10 +17,6 @@ msgid "\"%1$s\" Property details"
 msgstr "Détails de la propriété \"%1$s\""
 
 #, php-format
-msgid "\"%1$s\" is required, please fill the field."
-msgstr "\"%1$s\" est requis, merci de remplir le champ."
-
-#, php-format
 msgid "\"%1$s\" successfully deleted"
 msgstr "\"%1$s\" supprimée"
 
@@ -62,15 +58,6 @@ msgstr "%s a été modifié par %s."
 #, php-format
 msgid "%s has been removed by %s."
 msgstr "%s a été supprimé par %s."
-
-msgid "12 Months from today"
-msgstr "12 Mois"
-
-msgid "3 Months from today"
-msgstr "3 Mois"
-
-msgid "6 Months from today"
-msgstr "6 Mois"
 
 msgid ""
 "<br><a href=\"/my/\">Back to your personal page</a><em> or you can request "
@@ -325,9 +312,6 @@ msgstr "Copie de %s"
 msgid "Copy of %s in %s at version %d."
 msgstr "Copie de %s dans %s à la version %d."
 
-msgid "Corresponding date:"
-msgstr "Date correspondante :"
-
 msgid "Create"
 msgstr "Créer"
 
@@ -345,9 +329,6 @@ msgstr "Créer une propriété"
 
 msgid "Create value"
 msgstr "Créer une nouvelle valeur"
-
-msgid "Creation date:"
-msgstr "Date de création :"
 
 msgid "Date"
 msgstr "Date"
@@ -448,9 +429,6 @@ msgstr "Description"
 
 msgid "Description of the document."
 msgstr "Description du document."
-
-msgid "Description:"
-msgstr "Description :"
 
 msgid "Description: <strong><em>new text</em></strong>"
 msgstr "Description : <strong><em>nouveau texte</em></strong>"
@@ -617,46 +595,6 @@ msgstr "Erreur lors de la mise à jour de la table d'approbation"
 msgid "File"
 msgstr "Fichier"
 
-#, php-format
-msgid "File upload error(%1$s). Failed to write file to disk."
-msgstr ""
-"Erreur de chargement de fichier(%1$s). Échec de l'écriture du fichier sur le "
-"disque."
-
-#, php-format
-msgid "File upload error(%1$s). File upload stopped by extension."
-msgstr ""
-"Erreur de chargement de fichier(%1$s). L'envoi de fichier est arrêté par "
-"l'extension."
-
-#, php-format
-msgid "File upload error(%1$s). Missing a temporary folder."
-msgstr ""
-"Erreur de chargement de fichier(%1$s). Un dossier temporaire est manquant."
-
-#, php-format
-msgid "File upload error(%1$s). No file was uploaded."
-msgstr "Erreur de chargement de fichier(%1$s). Aucun fichier chargé."
-
-#, php-format
-msgid ""
-"File upload error(%1$s). The uploaded file exceeds the maximum allowed file "
-"size."
-msgstr "Erreur de chargement de fichier(%1$s). Le fichier est trop gros."
-
-#, php-format
-msgid "File upload error(%1$s). The uploaded file was only partially uploaded."
-msgstr ""
-"Erreur de chargement de fichier(%1$s). Le fichier n'a été que partiellement "
-"chargé."
-
-#, php-format
-msgid "File upload error(%1$s). Unknown error code."
-msgstr "Erreur de chargement de fichier(%1$s). Code d'erreur inconnu."
-
-msgid "File upload error. Please try again."
-msgstr "Erreur de chargement de fichier."
-
 msgid "File upload limits"
 msgstr "Limites de téléversement"
 
@@ -665,9 +603,6 @@ msgstr "Modèle de nom de fichier"
 
 msgid "Files"
 msgstr "Fichiers"
-
-msgid "Fixed date"
-msgstr "Date fixe"
 
 msgid "Folder"
 msgstr "Dossier"
@@ -791,9 +726,6 @@ msgstr "Les permissions des éléments ne sont pas listées."
 
 msgid "Keep history"
 msgstr "Garde l'historique"
-
-msgid "Last update date:"
-msgstr "Date de dernière mise à jour :"
 
 msgid "Last update of the document content or properties."
 msgstr "Dernière mise à jour du document ou de ses propriétés."
@@ -965,9 +897,6 @@ msgstr "Documents obsolètes"
 msgid "Obsolete date"
 msgstr "Date d'obsolescence"
 
-msgid "Obsolete today"
-msgstr "Aujourd'hui obsolète"
-
 msgid "Operation Canceled"
 msgstr "Operation annulée"
 
@@ -979,9 +908,6 @@ msgstr "Autres chemins:"
 
 msgid "Owner"
 msgstr "Propriétaire"
-
-msgid "Owner:"
-msgstr "Propriétaire :"
 
 msgid "Parameter is missing"
 msgstr "Le paramètre est manquant"
@@ -1063,9 +989,6 @@ msgstr "Valeurs de la propriété"
 
 msgid "Rank"
 msgstr "Rang"
-
-msgid "Rank:"
-msgstr "Rang :"
 
 msgid "Redirect to document with given id."
 msgstr "Redirige au document correspondant à l'ID donné."
@@ -1153,9 +1076,6 @@ msgstr ""
 msgid "Status"
 msgstr "Statut"
 
-msgid "Status:"
-msgstr "Statut :"
-
 msgid "String"
 msgstr "Chaîne de caractères"
 
@@ -1187,15 +1107,6 @@ msgstr ""
 #, php-format
 msgid "The column: '%s' cannot be sorted."
 msgstr "La colonne : '%s' ne peut pas être triée."
-
-#, php-format
-msgid ""
-"The date entered in field \"%1$s\" is not valid. Valid date format is YYYY-M-"
-"D (e.g. '%2$s' for today) or let the field blank."
-msgstr ""
-"La date entrée dans le champ \"%1$s\" n'est pas valide. Le format de date "
-"valide est YYYY-M-D (ex. '%2$s' pour aujourd'hui) ou alors laissez le champ "
-"vide."
 
 msgid "The date format is incorrect. The format must be \"YYYY-MM-DD\""
 msgstr ""
@@ -1484,9 +1395,6 @@ msgid ""
 msgstr ""
 "Les groupes d'utilisateurs pouvant administrer le gestionnaire de documents, "
 "en complément des administrateurs de projet"
-
-msgid "Validity:"
-msgstr "Validité :"
 
 msgid "Value \"%2$s\" in \"%1$s\" property"
 msgstr "Valeur \"%2$s\" de la propriété \"%1$s\""

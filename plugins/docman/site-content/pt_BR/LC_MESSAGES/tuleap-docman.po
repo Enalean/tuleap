@@ -11,10 +11,6 @@ msgid "\"%1$s\" Property details"
 msgstr ""
 
 #, php-format
-msgid "\"%1$s\" is required, please fill the field."
-msgstr ""
-
-#, php-format
 msgid "\"%1$s\" successfully deleted"
 msgstr ""
 
@@ -47,15 +43,6 @@ msgstr ""
 
 #, php-format
 msgid "%s has been removed by %s."
-msgstr ""
-
-msgid "12 Months from today"
-msgstr ""
-
-msgid "3 Months from today"
-msgstr ""
-
-msgid "6 Months from today"
 msgstr ""
 
 msgid ""
@@ -269,9 +256,6 @@ msgstr ""
 msgid "Copy of %s in %s at version %d."
 msgstr ""
 
-msgid "Corresponding date:"
-msgstr ""
-
 msgid "Create"
 msgstr "Criar"
 
@@ -288,9 +272,6 @@ msgid "Create property"
 msgstr ""
 
 msgid "Create value"
-msgstr ""
-
-msgid "Creation date:"
 msgstr ""
 
 msgid "Date"
@@ -368,9 +349,6 @@ msgid "Description"
 msgstr "Descrição"
 
 msgid "Description of the document."
-msgstr ""
-
-msgid "Description:"
 msgstr ""
 
 msgid "Description: <strong><em>new text</em></strong>"
@@ -531,39 +509,6 @@ msgstr ""
 msgid "File"
 msgstr "Arquivo"
 
-#, php-format
-msgid "File upload error(%1$s). Failed to write file to disk."
-msgstr ""
-
-#, php-format
-msgid "File upload error(%1$s). File upload stopped by extension."
-msgstr ""
-
-#, php-format
-msgid "File upload error(%1$s). Missing a temporary folder."
-msgstr ""
-
-#, php-format
-msgid "File upload error(%1$s). No file was uploaded."
-msgstr ""
-
-#, php-format
-msgid ""
-"File upload error(%1$s). The uploaded file exceeds the maximum allowed file "
-"size."
-msgstr ""
-
-#, php-format
-msgid "File upload error(%1$s). The uploaded file was only partially uploaded."
-msgstr ""
-
-#, php-format
-msgid "File upload error(%1$s). Unknown error code."
-msgstr ""
-
-msgid "File upload error. Please try again."
-msgstr ""
-
 msgid "File upload limits"
 msgstr ""
 
@@ -571,9 +516,6 @@ msgid "Filename pattern"
 msgstr ""
 
 msgid "Files"
-msgstr ""
-
-msgid "Fixed date"
 msgstr ""
 
 msgid "Folder"
@@ -681,9 +623,6 @@ msgid "Items permissions are not listed."
 msgstr ""
 
 msgid "Keep history"
-msgstr ""
-
-msgid "Last update date:"
 msgstr ""
 
 msgid "Last update of the document content or properties."
@@ -848,9 +787,6 @@ msgstr ""
 msgid "Obsolete date"
 msgstr ""
 
-msgid "Obsolete today"
-msgstr ""
-
 msgid "Operation Canceled"
 msgstr ""
 
@@ -862,9 +798,6 @@ msgstr ""
 
 msgid "Owner"
 msgstr "Proprietário"
-
-msgid "Owner:"
-msgstr ""
 
 msgid "Parameter is missing"
 msgstr ""
@@ -945,9 +878,6 @@ msgstr ""
 msgid "Rank"
 msgstr ""
 
-msgid "Rank:"
-msgstr ""
-
 msgid "Redirect to document with given id."
 msgstr ""
 
@@ -1025,9 +955,6 @@ msgstr ""
 msgid "Status"
 msgstr "Estado"
 
-msgid "Status:"
-msgstr ""
-
 msgid "String"
 msgstr ""
 
@@ -1058,12 +985,6 @@ msgstr ""
 #, php-format
 msgid "The column: '%s' cannot be sorted."
 msgstr "A coluna: '%s' não pode ser classificada."
-
-#, php-format
-msgid ""
-"The date entered in field \"%1$s\" is not valid. Valid date format is YYYY-M-"
-"D (e.g. '%2$s' for today) or let the field blank."
-msgstr ""
 
 msgid "The date format is incorrect. The format must be \"YYYY-MM-DD\""
 msgstr ""
@@ -1319,9 +1240,6 @@ msgstr ""
 msgid ""
 "User groups who can administrate the document manager, in addition of "
 "project administrators"
-msgstr ""
-
-msgid "Validity:"
 msgstr ""
 
 msgid "Value \"%2$s\" in \"%1$s\" property"

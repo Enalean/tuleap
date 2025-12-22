@@ -117,10 +117,4 @@ class Docman_FilterFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
 
         return $filter;
     }
-
-    public function &getDao()
-    {
-        $dao = new Docman_FilterDao(CodendiDataAccess::instance());
-        return $dao;
-    }
 }
