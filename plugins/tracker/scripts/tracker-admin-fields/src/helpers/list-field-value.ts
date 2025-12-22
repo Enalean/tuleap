@@ -26,6 +26,8 @@ import type {
 } from "@tuleap/plugin-tracker-rest-api-types";
 import { LIST_BIND_STATIC } from "@tuleap/plugin-tracker-constants";
 
+export const NONE_VALUE = "100";
+
 export function listFieldValue(field: ListFieldStructure): ReadonlyArray<ListFieldItem> {
     if (isStaticListField(field)) {
         return field.values.filter((value) => !value.is_hidden);

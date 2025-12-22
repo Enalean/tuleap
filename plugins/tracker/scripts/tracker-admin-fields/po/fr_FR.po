@@ -72,6 +72,9 @@ msgstr "Liste à choix multiple"
 msgid "No fields"
 msgstr "Aucun champ"
 
+msgid "None"
+msgstr "Aucun"
+
 msgid "Open list"
 msgstr "Liste ouverte"
 
