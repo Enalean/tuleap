@@ -32,9 +32,9 @@
 class Tuleap_Template
 {
     /**
-     * @var array The variables to pass to the template
+     * @var array<literal-string,string|bool|list<string>> The variables to pass to the template
      */
-    protected $vars;
+    private array $vars = [];
 
     /**
      * @var The file name of the template
@@ -49,15 +49,15 @@ class Tuleap_Template
     public function __construct($file = null)
     {
         $this->file = $file;
-        $this->vars = [];
     }
 
     /**
-     * Set a template variable.
+     * @param literal-string $name
+     * @param string|bool|list<string> $value
      */
-    public function set($name, $value)
+    public function set(string $name, string|bool|array $value): void
     {
-        $this->vars[$name] = is_object($value) ? $value->fetch() : $value;
+        $this->vars[$name] = $value;
     }
 
     /**
@@ -78,7 +78,16 @@ class Tuleap_Template
             throw new Exception('A template file name is required');
         }
 
-        extract($this->vars);          // Extract the vars to local namespace
+        /*
+         * Note: As we properly control the name of the variables we consider
+         * we can remove the extract taint by making sure `file` cannot be manipulated.
+         * This is not great, ideally the code should be rewritten to avoid the dependency
+         * on extract.
+         */
+        $vars = $this->vars;
+        /** @psalm-taint-escape extract */
+        unset($vars['file']);
+        extract($vars);          // Extract the vars to local namespace
         ob_start();                    // Start output buffering
         include($file);                // Include the file
         $contents = ob_get_contents(); // Get the contents of the buffer

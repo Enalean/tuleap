@@ -88,6 +88,9 @@ class JiraSuccessImportNotifier
         );
     }
 
+    /**
+     * @return list<string>
+     */
     private function getAdditionalBreadcrumbs(Tracker $tracker): array
     {
         $hp = \Codendi_HTMLPurifier::instance();
