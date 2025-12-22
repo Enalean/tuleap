@@ -75,7 +75,7 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
     /**
      * REPOSITORY MANAGEMENT VIEW
      */
-    public function repoManagement(GitRepository $repository, bool $is_burning_parrot)
+    public function repoManagement(GitRepository $repository): void
     {
         $params               = $this->getData();
         $repo_management_view = new GitViews_RepoManagement(
@@ -106,12 +106,7 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
         );
 
         echo '<h1 class="project-administration-title">' . Codendi_HTMLPurifier::instance()->purify($repository->getName()) . ' - ' . $GLOBALS['Language']->getText('global', 'Settings') . '</h1>';
-        if ($is_burning_parrot) {
-            $repo_management_view->display();
-        } else {
-            $repo_management_view->displayFlamingParrot();
-        }
-
+        $repo_management_view->display();
         $this->footer();
     }
 

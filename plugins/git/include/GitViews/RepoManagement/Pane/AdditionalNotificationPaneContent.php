@@ -23,17 +23,17 @@ namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 use GitRepository;
 use Tuleap\Event\Dispatchable;
 use Tuleap\HTTPRequest;
-use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 final class AdditionalNotificationPaneContent implements Dispatchable
 {
     public const string NAME = 'collectAdditionalNotificationPaneContent';
 
-    private string $output = '';
+    private string $html = '';
     /**
-     * @var list<JavascriptViteAsset>
+     * @var list<JavascriptAssetGeneric> $assets
      */
-    private array $javascript_vite_assets = [];
+    private array $assets = [];
 
     public function __construct(
         public readonly GitRepository $repository,
@@ -43,24 +43,24 @@ final class AdditionalNotificationPaneContent implements Dispatchable
 
     public function addHTML(string $content): void
     {
-        $this->output .= $content;
+        $this->html .= $content;
     }
 
-    public function addJavascriptViteAsset(JavascriptViteAsset $asset): void
+    public function addJavascriptAsset(JavascriptAssetGeneric $asset): void
     {
-        $this->javascript_vite_assets[] = $asset;
+        $this->assets[] = $asset;
     }
 
-    public function getContent(): string
+    public function getHTML(): string
     {
-        return $this->output;
+        return $this->html;
     }
 
     /**
-     * @return list<JavascriptViteAsset>
+     * @return list<JavascriptAssetGeneric>
      */
-    public function getJavascriptViteAssets(): array
+    public function getJavascriptAssets(): array
     {
-        return $this->javascript_vite_assets;
+        return $this->assets;
     }
 }

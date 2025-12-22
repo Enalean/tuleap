@@ -109,16 +109,16 @@ class Notification extends Pane
                 )
             )
         );
-        $html    .= $this->additional_notification_pane_content->getContent();
+        $html    .= $this->additional_notification_pane_content->getHTML();
 
         return $html;
     }
 
     #[\Override]
-    public function getJavascriptViteAssets(): array
+    public function getJavascriptAssets(): array
     {
         return [
-            ...$this->additional_notification_pane_content->getJavascriptViteAssets(),
+            ...$this->additional_notification_pane_content->getJavascriptAssets(),
             new JavascriptViteAsset(
                 new IncludeViteAssets(
                     __DIR__ . '/../../../../scripts/repository-admin/frontend-assets',

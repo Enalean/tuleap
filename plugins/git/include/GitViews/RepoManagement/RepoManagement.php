@@ -40,18 +40,6 @@ use Tuleap\Git\Webhook\WebhookFactory;
  */
 class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const array BURNING_PARROT_COMPATIBLE_PANES = [
-        false, // when no pane is given, it maps to 'settings'
-        'settings',
-        'cibuilds',
-        'pullrequest', // should belong to pullrequest plugin, but it is a temporary situation, no need to fire a hook for that
-        'delete',
-        'perms',
-        'mail',
-        'hooks',
-        Pane\Gerrit::ID,
-    ];
-
     /**
      * @var Pane\Pane[]
      */
@@ -152,42 +140,6 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $indexed_panes;
     }
 
-    /**
-     * Output repo management sub screen to the browser
-     */
-    public function displayFlamingParrot(): void
-    {
-        echo '<div class="main-project-tabs"><ul class="nav nav-tabs">';
-        foreach ($this->panes as $pane) {
-            $this->displayTabFlamingParrot($pane);
-        }
-        echo '</ul></div>';
-        echo '<div class="git-administration-content">';
-        echo '<div id="git_repomanagement" class="tab-content git_repomanagement">';
-        echo '<div class="tab-pane active">';
-        echo $this->panes[$this->current_pane]->getContent();
-        echo '</div>';
-        echo '</div>';
-    }
-
-    private function displayTabFlamingParrot(Pane\Pane $pane): void
-    {
-        echo '<li class="' . ($this->current_pane == $pane->getIdentifier() ? 'active' : '') . '">';
-        $url      = GIT_BASE_URL . '/?' . http_build_query(
-            [
-                'action' => 'repo_management',
-                'group_id' => $this->repository->getProjectId(),
-                'repo_id'  => $this->repository->getId(),
-                'pane'     => $pane->getIdentifier(),
-            ]
-        );
-        $purifier = Codendi_HTMLPurifier::instance();
-
-        echo '<a href="' . $url . '" title="' . $purifier->purify($pane->getTitle()) . '" data-test="' . $purifier->purify($pane->getIdentifier()) . '">' .
-            $purifier->purify($pane->getLabel()) .
-            '</a></li>';
-    }
-
     public function display(): void
     {
         echo '<div class="main-project-tabs"><nav class="tlp-tabs">';
@@ -220,7 +172,7 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function addPaneAssets(): void
     {
         assert($GLOBALS['HTML'] instanceof \Tuleap\Layout\BaseLayout);
-        foreach ($this->panes[$this->current_pane]->getJavascriptViteAssets() as $asset) {
+        foreach ($this->panes[$this->current_pane]->getJavascriptAssets() as $asset) {
             $GLOBALS['HTML']->addJavascriptAsset($asset);
         }
     }
