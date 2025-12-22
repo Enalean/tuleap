@@ -41,7 +41,9 @@ describe("Time tracking", function () {
         cy.get("[data-test=timetracking-add-button]").click();
 
         cy.get("[data-test=timetracking-new-row-step]").type("My time");
-        cy.get("[data-test=timetracking-new-row-date]").clear().type(date);
+        // datepicker lib add readonly attribute to the input field so we need to force
+        // eslint-disable-next-line cypress/no-force
+        cy.get("[data-test=timetracking-new-row-date]").type(`{selectAll}${date}`, { force: true });
         cy.get("[data-test=timetracking-new-row-time]").type(time);
 
         cy.get("[data-test=timetracking-add-time]").click();
@@ -78,17 +80,21 @@ describe("Time tracking", function () {
 
         createAnArtifactWithTime("2020-02-06", "03:00");
 
-        cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 2);
+        cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 1);
 
         cy.get("[data-test=timetracking-add-button]").click();
 
         cy.get("[data-test=timetracking-new-row-step]").type("My time");
-        cy.get("[data-test=timetracking-new-row-date]").clear().type("2020-02-07");
+        // datepicker lib add readonly attribute to the input field so we need to force
+        // eslint-disable-next-line cypress/no-force
+        cy.get("[data-test=timetracking-new-row-date]").type("{selectAll}2020-02-07", {
+            force: true,
+        });
         cy.get("[data-test=timetracking-new-row-time]").type("04:00");
 
         cy.get("[data-test=timetracking-add-time]").click();
 
-        cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 3);
+        cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 2);
 
         cy.get("[data-test=total-timetracking-row]").contains("7");
 
@@ -97,13 +103,17 @@ describe("Time tracking", function () {
 
         cy.get("[data-test=timetracking-update-time]").click();
         cy.get("[data-test=timetracking-edit-row-time]").clear().type("01:00");
-        cy.get("[data-test=timetracking-edit-row-date]").clear().type("2020-03-02");
+        // datepicker lib add readonly attribute to the input field so we need to force
+        // eslint-disable-next-line cypress/no-force
+        cy.get("[data-test=timetracking-edit-row-date]").type("{selectAll}2020-03-02", {
+            force: true,
+        });
 
         cy.get("[data-test=timetracking-edit-time]").click();
 
-        cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 2);
+        cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 1);
 
-        cy.get("[data-test=total-timetracking-row]").contains("1");
+        cy.get("[data-test=total-timetracking-row]").contains("01:00");
     });
 
     it("regular user should be able to track his time in his personal widget", function () {
