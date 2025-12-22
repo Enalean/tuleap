@@ -77,8 +77,7 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
 use Tuleap\Git\Gitolite\RegenerateConfigurationCommand;
 use Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator;
-use Tuleap\Git\Gitolite\SSHKey\DumperFactory;
-use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
+use Tuleap\Git\Gitolite\SSHKey\Gitolite3Dumper;
 use Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer;
 use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
@@ -90,7 +89,6 @@ use Tuleap\Git\GitRepositoryBrowserController;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GitXMLImportDefaultBranchRetriever;
-use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Hook\Asynchronous\AsynchronousEventHandler;
@@ -1980,61 +1978,26 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new Git_GitRepositoryUrlManager($this);
     }
 
-    /**
-     * @return \Tuleap\Git\Gitolite\SSHKey\Dumper
-     */
-    private function getSSHKeyDumper()
+    private function getSSHKeyDumper(): Gitolite3Dumper
     {
-        $factory = $this->getSSHKeyDumperFactory();
-        return $factory->buildDumper();
-    }
-
-    /**
-     * @return \Tuleap\Git\Gitolite\SSHKey\MassDumper
-     */
-    private function getSSHKeyMassDumper()
-    {
-        $factory = $this->getSSHKeyDumperFactory();
-        return $factory->buildMassDumper();
-    }
-
-    /**
-     * @return DumperFactory
-     */
-    private function getSSHKeyDumperFactory()
-    {
-        $user_manager = UserManager::instance();
-
-        $whole_instance_keys = new WholeInstanceKeysAggregator(
-            new GitoliteAdmin(),
-            new GerritServer(new Git_RemoteServer_Dao()),
-            new User($user_manager)
-        );
-
-        $gitolite_admin_path = $this->getGitoliteAdminPath();
-        $git_exec            = new Git_Exec($gitolite_admin_path);
-
         $system_command = new System_Command();
-
-        return new DumperFactory(
-            $this->getManagementDetector(),
-            new AuthorizedKeysFileCreator($whole_instance_keys, $system_command),
+        return new Gitolite3Dumper(
+            new AuthorizedKeysFileCreator(
+                new WholeInstanceKeysAggregator(
+                    new GitoliteAdmin(),
+                    new GerritServer(new Git_RemoteServer_Dao()),
+                    new User(UserManager::instance())
+                ),
+                $system_command,
+            ),
             $system_command,
-            $git_exec,
-            $gitolite_admin_path,
-            $user_manager,
-            $this->getLogger()
+            $this->getLogger(),
         );
     }
 
-    /**
-     * @return ManagementDetector
-     */
-    private function getManagementDetector()
+    private function getSSHKeyMassDumper(): \Tuleap\Git\Gitolite\SSHKey\MassDumper
     {
-        return new ManagementDetector(
-            new GlobalParameterDao()
-        );
+        return new \Tuleap\Git\Gitolite\SSHKey\Gitolite3MassDumper($this->getSSHKeyDumper());
     }
 
     public function fill_project_history_sub_events($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

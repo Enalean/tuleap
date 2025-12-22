@@ -25,8 +25,7 @@ class SystemEvent_GIT_USER_RENAME extends SystemEvent //phpcs:ignore PSR1.Classe
 {
     public const string NAME = 'GIT_USER_RENAME';
 
-    /** @var Git_Gitolite_SSHKeyDumper*/
-    private $ssh_key_dumper;
+    private Dumper $ssh_key_dumper;
 
     /** @var UserManager */
     private $user_manager;
@@ -59,7 +58,7 @@ class SystemEvent_GIT_USER_RENAME extends SystemEvent //phpcs:ignore PSR1.Classe
         return $this->parameters;
     }
 
-    public function injectDependencies(Dumper $ssh_key_dumper, UserManager $user_manager)
+    public function injectDependencies(Dumper $ssh_key_dumper, UserManager $user_manager): void
     {
         $this->ssh_key_dumper = $ssh_key_dumper;
         $this->user_manager   = $user_manager;
