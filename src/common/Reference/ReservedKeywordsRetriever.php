@@ -20,61 +20,18 @@
 
 namespace Tuleap\Reference;
 
-use Event;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
-class ReservedKeywordsRetriever
+final readonly class ReservedKeywordsRetriever
 {
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-
-    public function __construct(\EventManager $event_manager)
+    public function __construct(private EventDispatcherInterface $event_manager)
     {
-        $this->event_manager = $event_manager;
-    }
-
-    private function getReservedKeyWords(): array
-    {
-        return [
-            'art',
-            'artifact',
-            'doc',
-            'file',
-            'wiki',
-            'cvs',
-            'svn',
-            'news',
-            'forum',
-            'msg',
-            'cc',
-            'tracker',
-            'release',
-            'tag',
-            'thread',
-            'im',
-            'project',
-            'folder',
-            'plugin',
-            'img',
-            'commit',
-            'rev',
-            'revision',
-            'patch',
-            'proj',
-            'dossier',
-        ];
     }
 
     public function loadReservedKeywords(): array
     {
-        $additional_reserved_keywords = [];
-
-        $this->event_manager->processEvent(
-            Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,
-            ['keywords' => &$additional_reserved_keywords]
-        );
-
-        return array_merge($this->getReservedKeyWords(), $additional_reserved_keywords);
+        return $this->event_manager
+            ->dispatch(new GetReservedKeywordsEvent())
+            ->getKeywords();
     }
 }

@@ -84,6 +84,7 @@ use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\CheckCrossReferenceValidityEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetProjectIdForSystemReferenceEvent;
+use Tuleap\Reference\GetReservedKeywordsEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CurrentPage;
@@ -2872,5 +2873,13 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 dgettext('tuleap-tracker', 'Archive should not contain tracker data.'),
             );
         }
+    }
+
+    #[ListeningToEventClass]
+    public function getReservedKeywordsEvent(GetReservedKeywordsEvent $event): void
+    {
+        $event->addKeyword('art');
+        $event->addKeyword('artifact');
+        $event->addKeyword('tracker');
     }
 }

@@ -53,6 +53,7 @@ use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -102,6 +103,7 @@ use Tuleap\PullRequest\Tooltip\Presenter;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
+use Tuleap\Reference\GetReservedKeywordsEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
@@ -367,13 +369,11 @@ class pullrequestPlugin extends Plugin
         return $keyword === self::PR_REFERENCE_KEYWORD || $keyword === self::PULLREQUEST_REFERENCE_KEYWORD;
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES)]
-    public function getPluginsAvailableKeywordsReferences($params): void
+    #[ListeningToEventClass]
+    public function getReservedKeywordsEvent(GetReservedKeywordsEvent $event): void
     {
-        $params['keywords'] = array_merge(
-            $params['keywords'],
-            [self::PR_REFERENCE_KEYWORD, self::PULLREQUEST_REFERENCE_KEYWORD]
-        );
+        $event->addKeyword(self::PR_REFERENCE_KEYWORD);
+        $event->addKeyword(self::PULLREQUEST_REFERENCE_KEYWORD);
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]

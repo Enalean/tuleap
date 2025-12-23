@@ -92,11 +92,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const string GET_SYSTEM_EVENT_CLASS = 'get_system_event_class';
 
      /**
-      * This event is used to get all reserved keywords provided by plugins for reference
-      */
-    public const string GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES = 'get_plugins_available_keywords_references';
-
-     /**
       * Allow to define the group_id of an artifact reference
       *
       * Parameters

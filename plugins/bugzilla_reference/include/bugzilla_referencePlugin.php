@@ -33,8 +33,10 @@ use Tuleap\Bugzilla\Reference\ReferenceSaver;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\CrossReferencesDao;
+use Tuleap\Reference\GetReservedKeywordsEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\ReferenceValidator;
 use Tuleap\Reference\ReservedKeywordsRetriever;
@@ -45,7 +47,7 @@ use Tuleap\Reference\NatureCollection;
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($id)
     {
@@ -54,7 +56,6 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         bindtextdomain('tuleap-bugzilla_reference', BUGZILLA_REFERENCE_BASE_DIR . '/site-content');
 
         $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(NatureCollection::NAME);
         $this->addHook(Event::POST_REFERENCE_EXTRACTED);
         $this->addHook(Event::REMOVE_CROSS_REFERENCE);
@@ -112,10 +113,11 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         });
     }
 
-    public function get_plugins_available_keywords_references(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function getReservedKeywordsEvent(GetReservedKeywordsEvent $event): void
     {
         foreach ($this->getReferenceRetriever()->getAllReferences() as $reference) {
-            $params['keywords'][] = $reference->getKeyword();
+            $event->addKeyword($reference->getKeyword());
         }
     }
 
