@@ -1046,7 +1046,6 @@ fi
 # API Explorer is not packaged with the core
 %dir %{APP_DIR}/src/www/api
 %{APP_DIR}/src/www/api/index.php
-%{APP_DIR}/src/www/api/reference
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file
 %{APP_DIR}/src/www/help

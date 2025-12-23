@@ -91,17 +91,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public const string GET_SYSTEM_EVENT_CLASS = 'get_system_event_class';
 
-     /**
-      * Allow to define the group_id of an artifact reference
-      *
-      * Parameters
-      *     'artifact_id' => Id of an artifact
-      *
-      * Expected results:
-      *     'group_id'    => Id of the project the artifact belongs to
-      */
-    public const string GET_ARTIFACT_REFERENCE_GROUP_ID = 'get_artifact_reference_group_id';
-
     /**
      * Project unix name changed
      *

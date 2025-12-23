@@ -21,23 +21,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference;
 
-class TuleapReferenceRetriever
-{
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-    /**
-     * @var \ReferenceManager
-     */
-    private $reference_manager;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Reference\GetProjectIdForSystemReferenceEvent;
+use Tuleap\Tracker\Artifact\Artifact;
 
+readonly class TuleapReferenceRetriever
+{
     public function __construct(
-        \EventManager $event_manager,
-        \ReferenceManager $reference_manager,
+        private EventDispatcherInterface $event_manager,
+        private \ReferenceManager $reference_manager,
     ) {
-        $this->event_manager     = $event_manager;
-        $this->reference_manager = $reference_manager;
     }
 
     /**
@@ -57,7 +50,7 @@ class TuleapReferenceRetriever
         }
 
         // Set group_id otherwise it is always 100 (#legacycode)
-        $external_reference->setGroupId((int) $project_id);
+        $external_reference->setGroupId($project_id);
 
         return $external_reference;
     }
@@ -65,16 +58,11 @@ class TuleapReferenceRetriever
     /**
      * @throws TuleapReferencedArtifactNotFoundException
      */
-    private function getArtifactProjectId(int $artifact_id): string
+    private function getArtifactProjectId(int $artifact_id): int
     {
-        $artifact_project_id = null;
-        $this->event_manager->processEvent(
-            \Event::GET_ARTIFACT_REFERENCE_GROUP_ID,
-            [
-                'artifact_id' => $artifact_id,
-                'group_id' => &$artifact_project_id,
-            ]
-        );
+        $artifact_project_id = $this->event_manager
+            ->dispatch(new GetProjectIdForSystemReferenceEvent(Artifact::REFERENCE_NATURE, (string) $artifact_id))
+            ->getProjectId();
 
         if ($artifact_project_id === null) {
             throw new TuleapReferencedArtifactNotFoundException(
