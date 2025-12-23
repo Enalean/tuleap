@@ -194,9 +194,10 @@ export const LinkFieldEditor = (
         element.autocompleter = link_field_creator.createLinkSelectorAutoCompleter();
         element.creatorController = link_field_creator.createArtifactCreatorController();
 
-        if (edition_switcher !== null && parent !== null) {
+        const artifact_field_div = parent?.parentElement ?? null;
+        if (edition_switcher !== null && artifact_field_div !== null) {
             element.addEventListener("change", () => {
-                parent.classList.add("in-edition");
+                artifact_field_div.classList.add("in-edition");
                 edition_switcher.toggleSubmitArtifactBar(
                     CKEDITOR.instances.tracker_followup_comment_new,
                     document.querySelector("#rte_format_selectboxnew"),
