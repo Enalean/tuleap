@@ -29,9 +29,10 @@ use Tuleap\AI\Mistral\CompletionResponse;
 use Tuleap\AI\Mistral\MistralConnector;
 use Tuleap\AI\Requestor\AIRequestorEntity;
 use Tuleap\AI\Requestor\EndUserAIRequestor;
-use Tuleap\AICrossTracker\REST\v1\HelperRepresentation;
+use Tuleap\AICrossTracker\REST\v1\HelperRepresentationWithInterpretedExplanations;
 use Tuleap\AICrossTracker\REST\v1\HelperRepresentationWithoutThreadId;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -40,12 +41,15 @@ use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final readonly class CompletionSender
 {
-    public function __construct(private MistralConnector $mistral_connector, private MessageRepository $message_repository)
-    {
+    public function __construct(
+        private MistralConnector $mistral_connector,
+        private MessageRepository $message_repository,
+        private ContentInterpretor $content_interpretor,
+    ) {
     }
 
     /**
-     * @psalm-return Ok<HelperRepresentation>|Err<Fault>
+     * @psalm-return Ok<HelperRepresentationWithInterpretedExplanations>|Err<Fault>
      */
     public function sendMessages(CurrentUserWithLoggedInInformation $current_user_with_logged_in_information, Assistant $assistant, Thread $thread): Ok|Err
     {
@@ -72,19 +76,19 @@ final readonly class CompletionSender
             )
             ->andThen(
                 /**
-                 * @psalm-return Ok<HelperRepresentation>|Err<Fault>
+                 * @psalm-return Ok<HelperRepresentationWithInterpretedExplanations>|Err<Fault>
                  */
-                static function (string $selected_response) use ($thread): Ok|Err {
+                function (string $selected_response) use ($thread): Ok|Err {
                     $mapper = ValinorMapperBuilderFactory::mapperBuilder()->mapper();
                     try {
                         $mapped = $mapper->map(HelperRepresentationWithoutThreadId::class, new JsonSource($selected_response));
                         \assert($mapped instanceof HelperRepresentationWithoutThreadId);
                         return Result::ok(
-                            new HelperRepresentation(
+                            new HelperRepresentationWithInterpretedExplanations(
                                 $thread->id->uuid->toString(),
                                 $mapped->title,
                                 $mapped->tql_query,
-                                $mapped->explanations,
+                                $this->content_interpretor->getInterpretedContent($mapped->explanations),
                             )
                         );
                     } catch (MappingError $e) {

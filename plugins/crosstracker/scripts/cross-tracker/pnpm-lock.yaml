@@ -47,9 +47,6 @@ dependencies:
   '@tuleap/vue3-gettext-init':
     specifier: workspace:^
     version: link:../../../../lib/frontend/vue3-gettext-init
-  marked:
-    specifier: ^4.0.10
-    version: 4.3.0
   mitt:
     specifier: ^3.0.0
     version: 3.0.1
@@ -88,9 +85,6 @@ devDependencies:
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin
-  '@types/marked':
-    specifier: ^3.0.2
-    version: 3.0.4
   '@types/uuid':
     specifier: ^9.0.8
     version: 9.0.8
@@ -161,10 +155,6 @@ packages:
       '@types/minimatch': 5.1.2
       '@types/node': 20.12.13
     dev: false
-
-  /@types/marked@3.0.4:
-    resolution: {integrity: sha512-fzrd0O45A0hZl3+Fs3+BcuD3SF+kEkV0KHBXrSPi1B73PnDJI9wcUkpA8JoujFKqgyOijeKgIllFYsgJFhNB5g==}
-    dev: true
 
   /@types/minimatch@5.1.2:
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
@@ -550,12 +540,6 @@ packages:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
-
-  /marked@4.3.0:
-    resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
-    engines: {node: '>= 12'}
-    hasBin: true
-    dev: false
 
   /minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}

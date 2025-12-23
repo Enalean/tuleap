@@ -29,8 +29,10 @@ use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\MistralConnectorLive;
+use Tuleap\AICrossTracker\Assistant\CompletionSender;
 use Tuleap\AICrossTracker\Assistant\MessageRepositoryDao;
 use Tuleap\AICrossTracker\Assistant\ChatThreadManager;
+use Tuleap\AICrossTracker\Assistant\ThreadRepository;
 use Tuleap\AICrossTracker\Assistant\ThreadStorageDao;
 use Tuleap\CrossTracker\REST\v1\UserIsAllowedToSeeWidgetChecker;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
@@ -42,6 +44,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -72,7 +75,7 @@ final class TQLAssistantResource extends AuthenticatedResource
      * @status 200
      * @throws RestException
      */
-    protected function post(int $id, string $message, ?string $thread_id = null): HelperRepresentation
+    protected function post(int $id, string $message, ?string $thread_id = null): HelperRepresentationWithInterpretedExplanations
     {
         $this->checkAccess();
 
@@ -82,22 +85,29 @@ final class TQLAssistantResource extends AuthenticatedResource
             ->getWidgetUserCanSee($current_user_with_logged_in_information->user, $id)
             ->match(
                 function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($current_user_with_logged_in_information, $mistral_message, $thread_id) {
+                    $message_repository = new MessageRepositoryDao();
                     return new ChatThreadManager(
-                        new DatabaseUUIDV7Factory(),
-                        new MessageRepositoryDao(),
-                        new ThreadStorageDao(),
+                        new ThreadRepository(
+                            $message_repository,
+                            new ThreadStorageDao(),
+                            new DatabaseUUIDV7Factory(),
+                        ),
                         ProjectManager::instance(),
                         TrackerFactory::instance(),
                         Tracker_FormElementFactory::instance(),
-                        new MistralConnectorLive(
-                            HttpClientFactory::createClientWithCustomTimeout(60),
-                            HTTPFactoryBuilder::requestFactory(),
-                            HTTPFactoryBuilder::streamFactory(),
-                            ValinorMapperBuilderFactory::mapperBuilder(),
-                            Prometheus::instance(),
-                        )
+                        new CompletionSender(
+                            new MistralConnectorLive(
+                                HttpClientFactory::createClientWithCustomTimeout(60),
+                                HTTPFactoryBuilder::requestFactory(),
+                                HTTPFactoryBuilder::streamFactory(),
+                                ValinorMapperBuilderFactory::mapperBuilder(),
+                                Prometheus::instance(),
+                            ),
+                            $message_repository,
+                            CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance()),
+                        ),
                     )->handleConversation($current_user_with_logged_in_information, $widget, $mistral_message, $thread_id)->match(
-                        static fn (HelperRepresentation $helper_representation): HelperRepresentation => $helper_representation,
+                        static fn (HelperRepresentationWithInterpretedExplanations $helper_representation): HelperRepresentationWithInterpretedExplanations => $helper_representation,
                         static fn (Fault $fault) => throw new RestException(400, (string) $fault),
                     );
                 },

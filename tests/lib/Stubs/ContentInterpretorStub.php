@@ -24,32 +24,40 @@ namespace Tuleap\Test\Stubs;
 
 use Tuleap\Markdown\ContentInterpretor;
 
-final class ContentInterpretorStub implements ContentInterpretor
+final readonly class ContentInterpretorStub implements ContentInterpretor
 {
-    private function __construct(private string $return_value)
+    /**
+     * @param \Closure(string):string $transformation
+     */
+    private function __construct(private \Closure $transformation)
     {
     }
 
     public static function withInterpretedText(string $interpreted_text): self
     {
-        return new self($interpreted_text);
+        return new self(static fn(): string => $interpreted_text);
+    }
+
+    public static function withoutInterpretation(): self
+    {
+        return new self(static fn(string $content): string => $content);
     }
 
     #[\Override]
     public function getInterpretedContent(string $content): string
     {
-        return $this->return_value;
+        return ($this->transformation)($content);
     }
 
     #[\Override]
     public function getInterpretedContentWithReferences(string $content, int $project_id): string
     {
-        return $this->return_value;
+        return $this->getInterpretedContent($content);
     }
 
     #[\Override]
     public function getContentStrippedOfTags(string $content): string
     {
-        return $this->return_value;
+        return $this->getInterpretedContent($content);
     }
 }

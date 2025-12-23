@@ -45,7 +45,7 @@
                                 >{{ $gettext('Apply') }}</button><!--
                             --></pre>
                         </tlp-syntax-highlighting>
-                        <div v-dompurify-html="parse(message.explanations)"></div>
+                        <div v-dompurify-html="message.explanations"></div>
                     </div>
                 </template>
                 <div v-if="is_loading" class="assistant-ai-loader-container">
@@ -98,7 +98,6 @@ import { ref } from "vue";
 import { postJSON, uri } from "@tuleap/fetch-result";
 import { EMITTER, WIDGET_ID } from "../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { parse } from "marked";
 import { SEND_TQL_QUERY_FROM_CHATBOT_EVENT } from "../helpers/widget-events";
 
 const { $gettext } = useGettext();
