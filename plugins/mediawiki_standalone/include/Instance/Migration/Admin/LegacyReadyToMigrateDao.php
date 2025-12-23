@@ -28,6 +28,10 @@ final class LegacyReadyToMigrateDao extends DataAccessObject implements ProjectR
 {
     public function searchProjectsUsingLegacyMediaWiki(): array
     {
+        $legacy_mw_table = $this->getDB()->run('SHOW TABLES LIKE "plugin_mediawiki_database"');
+        if (count($legacy_mw_table) === 0) {
+            return [];
+        }
         return $this->getDB()->run(
             'SELECT project.*, ongoing.is_error as ongoing_initialization_error
             FROM `groups` as project
