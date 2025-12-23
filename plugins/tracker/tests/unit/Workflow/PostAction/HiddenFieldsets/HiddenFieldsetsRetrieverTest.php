@@ -69,8 +69,9 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $fieldset_02 = $this->createMock(FieldsetContainer::class);
 
         $this->form_element_factory->method('getFieldsetById')
-            ->willReturnCallback(static fn (int $id) => match ($id) {
-331 => $fieldset_01, 651 => $fieldset_02
+            ->willReturnCallback(static fn(int $id) => match ($id) {
+                331 => $fieldset_01,
+                651 => $fieldset_02
             });
 
         $transition = new \Transition($transition_id, $this->workflow_id, null, ListStaticValueBuilder::aStaticValue('field')->build());

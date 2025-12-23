@@ -69,7 +69,7 @@ class XMLFullStructureExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs
         $this->event_manager
             ->method('processEvent')
             ->willReturnCallback(fn (string $event) => match ($event) {
-AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML => true
+                AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML => true
             });
 
         $this->xml_exporter->export($this->project);

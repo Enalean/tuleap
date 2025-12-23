@@ -63,20 +63,20 @@ final class GroupLinkSynchronizer
                     ->andThen(fn(Project $project) => $this->administrator_checker->checkUserIsGitAdministrator($project, $group_link_command->user)
                         ->map(static fn() => $project))
                     ->andThen(function (Project $project) use ($group_link) {
-                            try {
-                                $credentials     = $this->group_link_credentials_retriever->retrieveCredentials($group_link);
-                                $gitlab_projects = $this->gitlab_projects->getGroupProjectsFromGitlabAPI($credentials, $group_link->gitlab_group_id);
-                            } catch (GitlabRequestException $e) {
-                                return Result::err(GitlabRequestFault::fromGitlabRequestException($e));
-                            } catch (GitlabResponseAPIException $e) {
-                                return Result::err(GitlabResponseAPIFault::fromGitlabResponseAPIException($e));
-                            }
-                            return Result::ok(new IntegrateRepositoriesInGroupLinkCommand(
-                                $group_link,
-                                $project,
-                                $credentials,
-                                $gitlab_projects
-                            ));
+                        try {
+                            $credentials     = $this->group_link_credentials_retriever->retrieveCredentials($group_link);
+                            $gitlab_projects = $this->gitlab_projects->getGroupProjectsFromGitlabAPI($credentials, $group_link->gitlab_group_id);
+                        } catch (GitlabRequestException $e) {
+                            return Result::err(GitlabRequestFault::fromGitlabRequestException($e));
+                        } catch (GitlabResponseAPIException $e) {
+                            return Result::err(GitlabResponseAPIFault::fromGitlabResponseAPIException($e));
+                        }
+                        return Result::ok(new IntegrateRepositoriesInGroupLinkCommand(
+                            $group_link,
+                            $project,
+                            $credentials,
+                            $gitlab_projects
+                        ));
                     }))
                 ->andThen(fn(IntegrateRepositoriesInGroupLinkCommand $command) => $this->integrateProjects($command))
         );
