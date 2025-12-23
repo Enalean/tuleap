@@ -41,6 +41,9 @@ class JiraImportNotifier
         $this->mail_notification_builder = $mail_notification_builder;
     }
 
+    /**
+     * @param list<string> $additional_breadcrumbs
+     */
     public function notify(
         string $subject,
         \Project $project,

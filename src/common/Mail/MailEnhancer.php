@@ -26,8 +26,8 @@ class MailEnhancer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     /** @var Array */
     private $additional_headers = [];
 
-    /** @var Array */
-    private $additional_properties = [];
+    /** @var array<literal-string,string|list<string>> */
+    private array $additional_properties = [];
 
     /** @var int */
     private $message_id;
@@ -60,18 +60,18 @@ class MailEnhancer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     }
 
     /**
-     * @param string $property_name
-     * @param mixed  $property_value
+     * @param literal-string $property_name
+     * @param string|list<string> $property_value
      */
-    public function addPropertiesToLookAndFeel($property_name, $property_value)
+    public function addPropertiesToLookAndFeel(string $property_name, string|array $property_value): void
     {
         $this->additional_properties[$property_name] = $property_value;
     }
 
     /**
-     * @return Array
+     * @return array<literal-string,string|list<string>>
      */
-    private function getAdditionalPropertiesForLookAndFeel()
+    private function getAdditionalPropertiesForLookAndFeel(): array
     {
         return $this->additional_properties;
     }

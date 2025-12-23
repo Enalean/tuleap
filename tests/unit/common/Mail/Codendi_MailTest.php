@@ -59,7 +59,7 @@ final class Codendi_MailTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:igno
         $body = 'body';
 
         $tpl = $this->createMock(Tuleap_Template_Mail::class);
-        $tpl->expects($this->once())->method('set')->willReturn(['body', $body]);
+        $tpl->expects($this->once())->method('set');
         $tpl->expects($this->once())->method('fetch')->willReturn('body content');
 
         $mail = new Codendi_Mail();
