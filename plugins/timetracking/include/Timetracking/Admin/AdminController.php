@@ -27,6 +27,8 @@ use PermissionsNormalizerOverrideCollection;
 use ProjectHistoryDao;
 use TemplateRendererFactory;
 use TrackerManager;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Tracker\Tracker;
 use User_ForgeUserGroupFactory;
 
@@ -105,6 +107,15 @@ class AdminController
             $this->enabler->isTimetrackingEnabledForTracker($tracker),
             $this->getReadersUGroupPresenters($tracker),
             $this->getWritersUGroupPresenters($tracker)
+        );
+        $GLOBALS['HTML']->addCssAsset(
+            CssViteAsset::fromFileName(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/timetracking-tab-styles/frontend-assets',
+                    '/assets/timetracking/timetracking-tab-styles'
+                ),
+                'src/style.scss'
+            )
         );
         $tracker->displayAdminItemHeaderBurningParrot(
             $this->tracker_manager,
