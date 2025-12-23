@@ -11,14 +11,15 @@ treefmt-nix.mkWrapper pkgs {
       "-disable-indentation"
       "-disable-insert-final-newline"
       "-disable-max-line-length"
-      "-disable-end-of-line"
     ];
     includes = [ "*" ];
     excludes = [
       "src/common/wiki/phpwiki/*"
-      "*/_fixtures/phpwiki/*"
+      "*/_fixtures/*"
+      "*/fixtures/*"
       "src/www/scripts/*"
       "*.test.ts"
+      "*.graphml"
     ];
     priority = 1;
   };
