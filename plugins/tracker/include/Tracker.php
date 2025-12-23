@@ -2063,10 +2063,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return new Tracker_ArtifactByEmailStatus($this->getMailGatewayConfig(), CachedSemanticDescriptionFieldRetriever::instance());
     }
 
-    /**
-     * @return string
-     */
-    public function displayRulesAsJavascript()
+    public function displayRulesAsJavascript(): string
     {
         return $this->getGlobalRulesManager()->displayRulesAsJavascript();
     }
