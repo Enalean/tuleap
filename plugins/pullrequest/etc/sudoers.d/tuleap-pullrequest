@@ -1,3 +1,4 @@
 Defaults:codendiadm !requiretty
 Defaults:codendiadm !env_reset
 codendiadm ALL= (gitolite) SETENV: NOPASSWD: /usr/share/tuleap/plugins/pullrequest/bin/create-pr-reference.php
+codendiadm ALL= (gitolite) SETENV: NOPASSWD: /usr/share/tuleap/plugins/pullrequest/bin/push-pr-merge.php
