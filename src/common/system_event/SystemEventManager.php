@@ -34,8 +34,11 @@ class SystemEventManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     public $followers_dao;
 
     // Constructor
-    private function __construct(?SystemEventDao $dao = null, ?SystemEventsFollowersDao $followers_dao = null)
-    {
+    private function __construct(
+        private \Psr\Clock\ClockInterface $clock,
+        ?SystemEventDao $dao = null,
+        ?SystemEventsFollowersDao $followers_dao = null,
+    ) {
         $this->dao           = $dao;
         $this->followers_dao = $followers_dao;
         $this->_getDao();
@@ -78,35 +81,24 @@ class SystemEventManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         throw new Exception('Cannot clone singleton');
     }
 
-    protected static $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    protected static ?self $instance = null;
 
-    /**
-     * SystemEventManager is singleton
-     *
-     * @return SystemEventManager
-     */
-    public static function instance()
+    public static function instance(): self
     {
-        if (! isset(self::$_instance)) {
-            $c               = self::class;
-            self::$_instance = new $c();
+        if (self::$instance === null) {
+            self::$instance = new self(\Lcobucci\Clock\SystemClock::fromSystemTimezone());
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
-    public static function setInstance(SystemEventManager $instance)
+    public static function setInstance(self $instance): void
     {
-        self::$_instance = $instance;
+        self::$instance = $instance;
     }
 
-    public static function clearInstance()
+    public static function clearInstance(): void
     {
-        self::$_instance = null;
-    }
-
-    public function testInstance(SystemEventDao $dao, SystemEventsFollowersDao $followers_dao)
-    {
-        return new SystemEventManager($dao, $followers_dao);
+        self::$instance = null;
     }
 
     public function _getEventManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
@@ -293,7 +285,7 @@ class SystemEventManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     public function createEvent($type, $parameters, $priority, $owner = SystemEvent::OWNER_ROOT, $klass = null)
     {
         SystemEventInstrumentation::increment(SystemEvent::STATUS_NEW);
-        if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'], $owner)) {
+        if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $this->clock->now()->getTimestamp(), $owner)) {
             if ($klass) {
                 $sysevent = $this->instanciateSystemEventOnCreateByClass($id, $type, $owner, $parameters, $priority, $klass);
             } else {
@@ -307,12 +299,12 @@ class SystemEventManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
     private function instanciateSystemEventOnCreateByClass($id, $type, $owner, $parameters, $priority, $klass)
     {
-        return $this->instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'], null, null, null);
+        return $this->instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, SystemEvent::STATUS_NEW, $this->clock->now()->getTimestamp(), null, null, null);
     }
 
     private function instanciateSystemEventOnCreate($id, $type, $owner, $parameters, $priority)
     {
-        return $this->instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'], null, null, null);
+        return $this->instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, SystemEvent::STATUS_NEW, $this->clock->now()->getTimestamp(), null, null, null);
     }
 
     private function instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log)
