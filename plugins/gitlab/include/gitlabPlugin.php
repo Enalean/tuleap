@@ -109,6 +109,7 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresenter;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresentersCollector;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
@@ -118,6 +119,7 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferenceManager;
 use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Reference\GetReferenceEvent;
+use Tuleap\Reference\GetReservedKeywordsEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Search\ItemToIndexQueueEventBased;
@@ -748,13 +750,13 @@ class gitlabPlugin extends Plugin
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES)]
-    public function getPluginsAvailableKeywordsReferences(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function getReservedKeywordsEvent(GetReservedKeywordsEvent $event): void
     {
-        $params['keywords'][] = GitlabCommitReference::REFERENCE_NAME;
-        $params['keywords'][] = GitlabMergeRequestReference::REFERENCE_NAME;
-        $params['keywords'][] = GitlabTagReference::REFERENCE_NAME;
-        $params['keywords'][] = GitlabBranchReference::REFERENCE_NAME;
+        $event->addKeyword(GitlabCommitReference::REFERENCE_NAME);
+        $event->addKeyword(GitlabMergeRequestReference::REFERENCE_NAME);
+        $event->addKeyword(GitlabTagReference::REFERENCE_NAME);
+        $event->addKeyword(GitlabBranchReference::REFERENCE_NAME);
     }
 
     #[\Tuleap\Plugin\ListeningToEventName(Event::GET_REFERENCE_ADMIN_CAPABILITIES)]

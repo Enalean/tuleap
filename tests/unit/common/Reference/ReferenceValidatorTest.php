@@ -20,9 +20,9 @@
 
 namespace Tuleap\Reference;
 
-use EventManager;
 use ReferenceDao;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceValidatorTest extends TestCase
@@ -32,11 +32,9 @@ final class ReferenceValidatorTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $event_manager = $this->createMock(EventManager::class);
-        $event_manager->method('processEvent');
         $this->reference_validator = new ReferenceValidator(
             $this->createMock(ReferenceDao::class),
-            new ReservedKeywordsRetriever($event_manager)
+            new ReservedKeywordsRetriever(EventDispatcherStub::withIdentityCallback())
         );
     }
 
@@ -59,9 +57,7 @@ final class ReferenceValidatorTest extends TestCase
 
     public function testItTestIfKeywordIsReserved(): void
     {
-        self::assertTrue($this->reference_validator->isReservedKeyword('art'));
-        self::assertTrue($this->reference_validator->isReservedKeyword('cvs'));
-        self::assertFalse($this->reference_validator->isReservedKeyword('artifacts'));
+        self::assertTrue($this->reference_validator->isReservedKeyword('project'));
         self::assertFalse($this->reference_validator->isReservedKeyword('john2'));
     }
 }

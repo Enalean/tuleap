@@ -223,6 +223,7 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
+use Tuleap\Reference\GetReservedKeywordsEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\DispatchableWithRequest;
@@ -284,7 +285,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
-        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, 'getReferenceKeywords');
         $this->addHook(NatureCollection::NAME);
         $this->addHook(GetReferenceEvent::NAME);
         $this->addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess');
@@ -697,10 +697,11 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao());
     }
 
-    public function getReferenceKeywords($params)
+    #[ListeningToEventClass]
+    public function getReservedKeywordsEvent(GetReservedKeywordsEvent $event): void
     {
-        $params['keywords'][] = Git::REFERENCE_KEYWORD;
-        $params['keywords'][] = Git::TAG_REFERENCE_KEYWORD;
+        $event->addKeyword(Git::REFERENCE_KEYWORD);
+        $event->addKeyword(Git::TAG_REFERENCE_KEYWORD);
     }
 
     public function getAvailableReferenceNatures(NatureCollection $natures): void
