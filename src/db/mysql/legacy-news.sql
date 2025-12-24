@@ -43,7 +43,6 @@ INSERT INTO `groups` SET \
                              access = 'private', \
                              status = 'A', \
                              unix_group_name = 'sitenews', \
-                             http_domain = 'sitenews._DOMAIN_NAME_', \
                              short_description = 'Site News Private Project. All Site News should be posted from this project', \
                              svn_box = 'svn1', \
                              register_time = 940000000, \

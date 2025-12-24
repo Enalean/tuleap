@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-use ForgeConfig;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectCreationData;
@@ -36,12 +35,6 @@ final class ProjectCreationDao extends DataAccessObject implements StoreProjectI
     #[\Override]
     public function create(ProjectCreationData $data): int
     {
-        if (ForgeConfig::get('sys_disable_subdomains')) {
-            $http_domain = \Tuleap\ServerHostname::hostnameWithHTTPSPort();
-        } else {
-            $http_domain = $data->getUnixName() . '.' . \Tuleap\ServerHostname::hostnameWithHTTPSPort();
-        }
-
         $access = $data->getAccess();
 
         $type = self::TYPE_PROJECT;
@@ -57,7 +50,6 @@ final class ProjectCreationDao extends DataAccessObject implements StoreProjectI
                 'group_name'          => $data->getFullName(),
                 'access'              => $access,
                 'unix_group_name'     => $data->getUnixName(),
-                'http_domain'         => $http_domain,
                 'status'              => $data->getStatus(),
                 'short_description'   => $data->getShortDescription(),
                 'register_time'       => time(),

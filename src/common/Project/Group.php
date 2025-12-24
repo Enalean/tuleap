@@ -215,11 +215,6 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->data_array['register_time'];
     }
 
-    public function getHTTPDomain()
-    {
-        return $this->data_array['http_domain'];
-    }
-
     /**
      * @return ProjectID|null
      *

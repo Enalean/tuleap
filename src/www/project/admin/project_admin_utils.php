@@ -86,7 +86,6 @@ function get_history_entries()
             'rename_request',
             'access',
             'group_type',
-            'http_domain',
             'changed_public_info',
             'changed_trove',
             'membership_request_updated',

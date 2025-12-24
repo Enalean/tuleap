@@ -66,13 +66,9 @@ class Rule_Email extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      */
     public function validEmail($email)
     {
-        $valid_chars = '-!#$%&\'*+0-9=?A-Z^_`a-z{|}~\.';
-        if (\ForgeConfig::exists('sys_disable_subdomains') && \ForgeConfig::get('sys_disable_subdomains')) {
-            $valid_domain = '[' . $valid_chars . ']+';
-        } else {
-            $valid_domain = '[' . $valid_chars . ']+\.[' . $valid_chars . ']+';
-        }
-        $regexp = '/^[' . $valid_chars . ']+' . '@' . $valid_domain . '$/D';
+        $valid_chars  = '-!#$%&\'*+0-9=?A-Z^_`a-z{|}~\.';
+        $valid_domain = '[' . $valid_chars . ']+';
+        $regexp       = '/^[' . $valid_chars . ']+' . '@' . $valid_domain . '$/D';
         return \preg_match($regexp, $email);
     }
 }
