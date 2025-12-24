@@ -35,7 +35,7 @@
     "@types/fscreen": "^1.0.1",
     "@types/jquery": "^3.5.5",
     "@types/mustache": "^4.1.2",
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^6.0.3",
     "@vue/test-utils": "^2.4.1",
     "jquery": "^3.6.0"
   },

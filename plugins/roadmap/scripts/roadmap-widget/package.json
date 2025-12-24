@@ -28,7 +28,7 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
     "@types/luxon": "^3.7.1",
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^6.0.3",
     "@vue/test-utils": "^2.4.6",
     "jest-environment-jsdom": "^29.7.0",
     "vue-demi": "0.14.10"

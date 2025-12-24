@@ -51,7 +51,7 @@
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/marked": "^3.0.2",
     "@types/uuid": "^9.0.8",
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^6.0.3",
     "@vue/test-utils": "^2.3.2",
     "prosemirror-view": "^1.33.8"
   },
