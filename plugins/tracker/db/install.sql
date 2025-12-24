@@ -276,7 +276,8 @@ CREATE TABLE tracker_changeset(
     submitted_by INT(11) NULL,
     submitted_on INT(11) NOT NULL,
     email VARCHAR(255) NULL,
-    INDEX artifact_idx(artifact_id)
+    INDEX artifact_idx(artifact_id),
+    INDEX idx_submitted_on(submitted_on)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_changeset_comment;
