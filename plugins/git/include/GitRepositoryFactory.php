@@ -50,9 +50,6 @@ class GitRepositoryFactory implements RetrieveGitRepository, RetrieveAllGitRepos
     #[\Override]
     public function getRepositoryById(int $id): ?GitRepository
     {
-        if ($id == GitRepositoryGitoliteAdmin::ID) {
-            return new GitRepositoryGitoliteAdmin();
-        }
         $row = $this->dao->searchProjectRepositoryById($id);
         return $this->getRepositoryFromRow($row);
     }
@@ -60,10 +57,6 @@ class GitRepositoryFactory implements RetrieveGitRepository, RetrieveAllGitRepos
     #[\Override]
     public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository
     {
-        if ($id == GitRepositoryGitoliteAdmin::ID) {
-            return new GitRepositoryGitoliteAdmin();
-        }
-
         $dar        = $this->dao->searchProjectRepositoryById($id);
         $repository = $this->getRepositoryFromRow($dar);
 

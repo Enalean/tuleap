@@ -85,10 +85,6 @@ CREATE TABLE IF NOT EXISTS plugin_git_remote_ugroups (
     PRIMARY KEY (group_id, ugroup_id, remote_server_id)
 );
 
-CREATE TABLE IF NOT EXISTS plugin_git_housekeeping(
-    allow_git_gc TINYINT(1) NOT NULL
-);
-
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)
        VALUES      ( 100, 'plugin_git:service_lbl_key', 'plugin_git:service_desc_key', 'plugin_git', '/plugins/git/?group_id=$group_id', 1, 0, 'system', 230 );
@@ -147,9 +143,6 @@ VALUES ('PLUGIN_GIT_ADMIN', 4, 100);
 
 INSERT INTO permissions (permission_type, object_id, ugroup_id)
 VALUES ('PLUGIN_GIT_ADMIN', 100, 4);
-
--- Enable git gc
-INSERT INTO plugin_git_housekeeping VALUES (1);
 
 -- Create table for Gerrit's refs/meta/config templates
 CREATE TABLE IF NOT EXISTS plugin_git_gerrit_config_template (

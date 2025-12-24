@@ -27,10 +27,9 @@ class WholeInstanceKeysAggregator implements IProvideKey
      */
     private $iterator;
 
-    public function __construct(GitoliteAdmin $gitolite_admin_key, GerritServer $gerrit_server_keys, User $user_keys)
+    public function __construct(GerritServer $gerrit_server_keys, User $user_keys)
     {
         $this->iterator = new \AppendIterator();
-        $this->iterator->append($gitolite_admin_key);
         $this->iterator->append($gerrit_server_keys);
         $this->iterator->append($user_keys);
     }

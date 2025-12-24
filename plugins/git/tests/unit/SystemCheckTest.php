@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Git;
 
 use Git_GitoliteDriver;
-use Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc;
 use PHPUnit\Framework\MockObject\MockObject;
 use Plugin;
 use PluginConfigChecker;
@@ -34,7 +33,6 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class SystemCheckTest extends TestCase
 {
     private Git_GitoliteDriver&MockObject $driver;
-    private Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc&MockObject $gitgc;
     private SystemCheck $system_check;
     private Plugin&MockObject $plugin;
 
@@ -42,20 +40,17 @@ final class SystemCheckTest extends TestCase
     protected function setUp(): void
     {
         $this->driver       = $this->createMock(Git_GitoliteDriver::class);
-        $this->gitgc        = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc::class);
         $this->plugin       = $this->createMock(Plugin::class);
         $this->system_check = new SystemCheck(
-            $this->gitgc,
             $this->driver,
             new PluginConfigChecker(new NullLogger()),
             $this->plugin,
         );
     }
 
-    public function testItAsksToCheckAuthorizedKeysAndToCleanUpGitoliteAdminRepository(): void
+    public function testItAsksToCheckAuthorizedKeys(): void
     {
         $this->driver->expects($this->once())->method('checkAuthorizedKeys');
-        $this->gitgc->expects($this->once())->method('cleanUpGitoliteAdminWorkingCopy');
         $this->plugin->method('getPluginEtcRoot')->willReturn('/do/not/exist');
 
         $this->system_check->process();

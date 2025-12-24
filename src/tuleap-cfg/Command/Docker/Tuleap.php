@@ -159,10 +159,6 @@ final class Tuleap
         $key_factory->getEncryptionKey();
         $key_factory->restoreOwnership(new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]));
 
-        $output->writeln('Start SSH daemon for initial setup (git)');
-        $ssh_daemon = new SSHDaemon($this->process_factory);
-        $ssh_daemon->startDaemon($output);
-
         $this->setup(
             $output,
             $fqdn,
@@ -172,8 +168,6 @@ final class Tuleap
         );
 
         $post_install->apply(fn (callable $post_install_call) => $post_install_call());
-
-        $ssh_daemon->shutdownDaemon($output);
 
         return $fqdn;
     }

@@ -21,7 +21,6 @@
 namespace Tuleap\Git;
 
 use Git_GitoliteDriver;
-use Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc;
 use Plugin;
 use PluginConfigChecker;
 
@@ -33,7 +32,6 @@ use PluginConfigChecker;
 final readonly class SystemCheck
 {
     public function __construct(
-        private Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc $gitgc,
         private Git_GitoliteDriver $gitolite,
         private PluginConfigChecker $config_checker,
         private Plugin $git_plugin,
@@ -43,7 +41,6 @@ final readonly class SystemCheck
     public function process(): void
     {
         $this->gitolite->checkAuthorizedKeys();
-        $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
 
         $this->checkIncFolderAndFileOwnership();
     }

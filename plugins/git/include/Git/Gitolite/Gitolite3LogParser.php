@@ -23,7 +23,6 @@ namespace Tuleap\Git\Gitolite;
 use DateTime;
 use Git;
 use GitRepositoryFactory;
-use GitRepositoryGitoliteAdmin;
 use Psr\Log\LoggerInterface;
 use PFUser;
 use Tuleap\Git\History\Dao;
@@ -181,9 +180,9 @@ class Gitolite3LogParser
         return $line[2] === self::GIT_COMMAND && $line[5] === Git::READ_PERM;
     }
 
-    private function isNotASystemUser($user)
+    private function isNotASystemUser($user): bool
     {
-        return $user !== GitRepositoryGitoliteAdmin::USERNAME && ! $this->user_validator->isLoginAnHTTPUserLogin($user);
+        return ! $this->user_validator->isLoginAnHTTPUserLogin($user);
     }
 
     private function cacheUserLastAccessDate(PFUser $user, DateTime $date)

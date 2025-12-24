@@ -29,18 +29,15 @@ final class WholeInstanceKeysAggregatorTest extends TestCase
 {
     public function testItUsesAllKeyProviders(): void
     {
-        $gitolite_admin_key = $this->createMock(GitoliteAdmin::class);
         $gerrit_server_keys = $this->createMock(GerritServer::class);
         $user_keys          = $this->createMock(User::class);
 
-        $gitolite_admin_key->expects($this->atLeastOnce())->method('valid');
         $gerrit_server_keys->expects($this->atLeastOnce())->method('valid');
         $user_keys->expects($this->atLeastOnce())->method('valid');
-        $gitolite_admin_key->method('rewind');
         $gerrit_server_keys->method('rewind');
         $user_keys->method('rewind');
 
-        $whole_instance_keys = new WholeInstanceKeysAggregator($gitolite_admin_key, $gerrit_server_keys, $user_keys);
+        $whole_instance_keys = new WholeInstanceKeysAggregator($gerrit_server_keys, $user_keys);
 
         iterator_to_array($whole_instance_keys);
     }

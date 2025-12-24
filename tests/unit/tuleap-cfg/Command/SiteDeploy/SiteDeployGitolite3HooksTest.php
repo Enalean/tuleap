@@ -45,14 +45,12 @@ final class SiteDeployGitolite3HooksTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitolite_base_dir = $base_dir . '/var/lib/gitolite';
 
         $this->process_factory = $this->createStub(ProcessFactory::class);
-        $this->process_factory->method('getProcessWithoutTimeout')->willReturn(new Process(['/bin/true']));
+        $this->process_factory->method('getProcessWithoutTimeout')->willReturn(new Process(['/bin/sh']));
     }
 
     public function testCreatePostReceiveHookSymlinkWorks(): void
     {
         mkdir($this->gitolite_base_dir . '/.gitolite/hooks/common', 0777, true);
-        mkdir($this->gitolite_base_dir . '/.gitolite/conf', 0777, true);
-        file_put_contents($this->gitolite_base_dir . '/.gitolite/conf/gitolite.conf', 'definitely not empty');
 
         $deploy = new SiteDeployGitolite3Hooks($this->process_factory, $this->gitolite_base_dir);
         $deploy->deploy(new NullLogger());
@@ -72,8 +70,7 @@ final class SiteDeployGitolite3HooksTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSymlinkFailGivesError(): void
     {
-        mkdir($this->gitolite_base_dir . '/.gitolite/conf', 0777, true);
-        file_put_contents($this->gitolite_base_dir . '/.gitolite/conf/gitolite.conf', 'definitely not empty');
+        mkdir($this->gitolite_base_dir . '/.gitolite/hooks/', 0777, true);
 
         $deploy = new SiteDeployGitolite3Hooks($this->process_factory, $this->gitolite_base_dir);
         $this->expectExceptionMessage('symlink(): No such file or directory');
