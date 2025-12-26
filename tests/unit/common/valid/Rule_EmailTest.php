@@ -25,72 +25,48 @@
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Rule_EmailTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Rule_EmailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Tuleap\ForgeConfigSandbox;
-
-    public function testWithoutSubDomains()
+    public function testBase(): void
     {
-        ForgeConfig::set('sys_disable_subdomains', 1);
         $r = new Rule_Email();
-        $this->assertTrue($r->isValid('user@codendi'));
-        $this->assertTrue($r->isValid('user@codendi.domain.com'));
+        $this->assertTrue($r->isValid('user@tuleap'));
+        $this->assertTrue($r->isValid('user@tuleap.example.com'));
     }
 
-    public function testWithSubDomains()
+    public function testSpecialChars(): void
     {
-        ForgeConfig::set('sys_disable_subdomains', 0);
         $r = new Rule_Email();
-        $this->assertFalse($r->isValid('user@codendi'));
-        $this->assertTrue($r->isValid('user@codendi.domain.com'));
+        $this->assertFalse($r->isValid("user@tuleap.example.com\n"));
+        $this->assertFalse($r->isValid("\nuser@tuleap.example.com"));
+        $this->assertFalse($r->isValid("user@tuleap.example.com\nuser@tuleap.example.com"));
+        $this->assertFalse($r->isValid("user@tuleap.example.com\0"));
+        $this->assertFalse($r->isValid("\0user@tuleap.example.com"));
+        $this->assertFalse($r->isValid("user@tuleap.example.com\0user@tuleap.example.com"));
     }
 
-    public function testSpecialCharsWoSD()
-    {
-        ForgeConfig::set('sys_disable_subdomains', 1);
-        $r = new Rule_Email();
-        $this->assertFalse($r->isValid("user@codendi.domain.com\n"));
-        $this->assertFalse($r->isValid("\nuser@codendi.domain.com"));
-        $this->assertFalse($r->isValid("user@codendi.domain.com\nuser@codendi.domain.com"));
-        $this->assertFalse($r->isValid("user@codendi.domain.com\0"));
-        $this->assertFalse($r->isValid("\0user@codendi.domain.com"));
-        $this->assertFalse($r->isValid("user@codendi.domain.com\0user@codendi.domain.com"));
-    }
-
-    public function testSpecialCharsWithSD()
-    {
-        ForgeConfig::set('sys_disable_subdomains', 0);
-        $r = new Rule_Email();
-        $this->assertFalse($r->isValid("user@codendi.domain.com\n"));
-        $this->assertFalse($r->isValid("\nuser@codendi.domain.com"));
-        $this->assertFalse($r->isValid("user@codendi.domain.com\nuser@codendi.domain.com"));
-        $this->assertFalse($r->isValid("user@codendi.domain.com\0"));
-        $this->assertFalse($r->isValid("\0user@codendi.domain.com"));
-        $this->assertFalse($r->isValid("user@codendi.domain.com\0user@codendi.domain.com"));
-    }
-
-    public function testMultipleEmails()
+    public function testMultipleEmails(): void
     {
         $r = new Rule_Email(',');
 
-        $this->assertTrue($r->isValid('user@codendi.domain.com'));
-        $this->assertTrue($r->isValid('user@codendi.domain.com, user2@codendi.domain.com'));
+        $this->assertTrue($r->isValid('user@tuleap.example.com'));
+        $this->assertTrue($r->isValid('user@tuleap.example.com, user2@tuleap.example.com'));
 
-        $this->assertFalse($r->isValid('user@codendi.domain.com; user2@codendi.domain.com'));
-        $this->assertFalse($r->isValid("user@codendi.domain.com, toto l'asticot"));
-        $this->assertFalse($r->isValid("toto l'asticot, user@codendi.domain.com"));
+        $this->assertFalse($r->isValid('user@tuleap.example.com; user2@tuleap.example.com'));
+        $this->assertFalse($r->isValid("user@tuleap.example.com, toto l'asticot"));
+        $this->assertFalse($r->isValid("toto l'asticot, user@tuleap.example.com"));
         $this->assertFalse($r->isValid("toto l'asticot"));
     }
 
-    public function testMultipleEmailsMultipleSeparator()
+    public function testMultipleEmailsMultipleSeparator(): void
     {
         $r = new Rule_Email('[,;]');
 
-        $this->assertTrue($r->isValid('user@codendi.domain.com'));
-        $this->assertTrue($r->isValid('user@codendi.domain.com, user2@codendi.domain.com'));
-        $this->assertTrue($r->isValid('user@codendi.domain.com; user2@codendi.domain.com'));
-        $this->assertTrue($r->isValid('user@codendi.domain.com; user2@codendi.domain.com, user3@codendi.domain.com'));
+        $this->assertTrue($r->isValid('user@tuleap.example.com'));
+        $this->assertTrue($r->isValid('user@tuleap.example.com, user2@tuleap.example.com'));
+        $this->assertTrue($r->isValid('user@tuleap.example.com; user2@tuleap.example.com'));
+        $this->assertTrue($r->isValid('user@tuleap.example.com; user2@tuleap.example.com, user3@tuleap.example.com'));
 
-        $this->assertFalse($r->isValid("user@codendi.domain.com; toto l'asticot, user3@codendi.domain.com"));
+        $this->assertFalse($r->isValid("user@tuleap.example.com; toto l'asticot, user3@tuleap.example.com"));
     }
 }

@@ -364,7 +364,6 @@ CREATE TABLE `groups` (
   access VARCHAR(16) NOT NULL DEFAULT 'private',
   status char(1) NOT NULL default 'A',
   unix_group_name varchar(30) NOT NULL default '',
-  http_domain varchar(80) default NULL,
   short_description varchar(255) default NULL,
   svn_box varchar(20) NOT NULL default 'svn1',
   register_time int(11) NOT NULL default '0',

@@ -70,12 +70,6 @@ final class ConfigurationVariables
     #[ConfigKeyLegacyBool(false)]
     public const string MAIL_SECURE_MODE = 'sys_mail_secure_mode';
 
-    #[ConfigKey('Disable sub-domains (like svn.proj.example.com)')]
-    #[ConfigKeyHelp('This is a legacy configuration variable. Subdomains must be left deactivated')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyLegacyBool(false)]
-    public const string DISABLE_SUBDOMAINS = 'sys_disable_subdomains';
-
     #[ConfigKey('Server timezone')]
     #[ConfigKeyString('Europe/Paris')]
     public const string SERVER_TIMEZONE = 'sys_server_timezone';

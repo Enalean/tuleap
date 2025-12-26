@@ -101,7 +101,6 @@ class ForgeConfig
         self::set(ConfigurationVariables::EMAIL_CONTACT, 'codendi-contact@' . $fqdn);
         self::set(ConfigurationVariables::NOREPLY, sprintf('"Tuleap" <noreply@%s>', $fqdn));
         self::setNewDefault(ConfigurationVariables::MAIL_SECURE_MODE, ConfigKeyLegacyBool::FALSE);
-        self::setNewDefault(ConfigurationVariables::DISABLE_SUBDOMAINS, ConfigKeyLegacyBool::TRUE);
     }
 
     private static function setNewDefault(string $key, mixed $value): void

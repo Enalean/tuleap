@@ -114,7 +114,6 @@ INSERT INTO `groups` SET \
   access = 'public', \
   status = 'A', \
   unix_group_name = 'admin', \
-  http_domain = 'admin._DOMAIN_NAME_', \
   short_description = 'Administration Project', \
   svn_box = 'svn1', \
   register_time = 940000000, \
@@ -134,7 +133,6 @@ INSERT INTO `groups` SET \
   access = 'private', \
   status = 's', \
   unix_group_name = 'none', \
-  http_domain = '', \
   short_description = 'The default Tuleap template', \
   svn_box = '', \
   register_time = 940000000, \
