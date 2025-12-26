@@ -41,21 +41,21 @@
                             <td>{{ step }}</td>
                             <td>{{ time }}</td>
                             <td class="tlp-table-cell-actions">
-                                <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline tracker-artifact-timetracking-modal-trigger"
+                                <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline {{# time_belongs_to_user }}tracker-artifact-timetracking-modal-trigger{{/ time_belongs_to_user }} "
                                    {{^ time_belongs_to_user }}disabled=""{{/ time_belongs_to_user }}
                                    data-test="timetracking-update-time"
-                                   data-target-modal-id="artifact-timetracking-edit-time-{{ id }}"
+                                   {{# time_belongs_to_user }} data-target-modal-id="artifact-timetracking-edit-time-{{ id }}" {{/ time_belongs_to_user }}
                                 >
                                     <i class="fa-solid fa-pencil" aria-hidden="true"></i> {{# dgettext }} tuleap-timetracking | Edit {{/ dgettext }}
                                 </button>
                                 {{# time_belongs_to_user }}
                                     {{> timetracking-edit-modal }}
                                 {{/ time_belongs_to_user }}
-                                <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline tracker-artifact-timetracking-modal-trigger"
+                                <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline {{# time_belongs_to_user }}tracker-artifact-timetracking-modal-trigger{{/ time_belongs_to_user }} "
                                    {{^ time_belongs_to_user }}disabled{{/ time_belongs_to_user }}
                                    data-test="timetracking-delete-time"
-                                   data-target-modal-id="artifact-timetracking-delete-time-{{ id }}"
-                                >
+                                   {{# time_belongs_to_user }} data-target-modal-id="artifact-timetracking-delete-time-{{ id }}" {{/ time_belongs_to_user }}
+                                       >
                                     <i class="fa-regular fa-trash-alt" aria-hidden="true"></i> {{# dgettext }} tuleap-timetracking | Delete {{/ dgettext }}
                                 </button>
                                 {{# time_belongs_to_user }}
