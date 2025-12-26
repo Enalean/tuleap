@@ -31,7 +31,7 @@ use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\Role;
 use Tuleap\AI\Mistral\StringContent;
 use Tuleap\AI\Mistral\TokenUsage;
-use Tuleap\AICrossTracker\REST\v1\HelperRepresentation;
+use Tuleap\AICrossTracker\REST\v1\HelperRepresentationWithInterpretedExplanations;
 use Tuleap\AICrossTracker\Stub\AssistantStub;
 use Tuleap\AICrossTracker\Stub\MessageRepositoryStub;
 use Tuleap\AICrossTracker\Stub\MistralConnectorStub;
@@ -40,6 +40,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -69,6 +70,7 @@ final class CompletionSenderTest extends TestCase
         $completion_sender = new CompletionSender(
             new MistralConnectorStub()->withResponse($completion_response),
             new MessageRepositoryStub(),
+            ContentInterpretorStub::withoutInterpretation(),
         );
 
         $result = $completion_sender->sendMessages(
@@ -81,7 +83,7 @@ final class CompletionSenderTest extends TestCase
         );
 
         self::assertInstanceOf(Ok::class, $result);
-        self::assertInstanceOf(HelperRepresentation::class, $result->value);
+        self::assertInstanceOf(HelperRepresentationWithInterpretedExplanations::class, $result->value);
         self::assertEquals('foo', $result->value->title);
         self::assertEquals('SELECT ...', $result->value->tql_query);
         self::assertEquals('bar', $result->value->explanations);
@@ -101,6 +103,7 @@ final class CompletionSenderTest extends TestCase
         $completion_sender = new CompletionSender(
             $mistral_stub,
             new MessageRepositoryStub(),
+            ContentInterpretorStub::withoutInterpretation(),
         );
 
         $completion_sender->sendMessages(
@@ -132,6 +135,7 @@ final class CompletionSenderTest extends TestCase
         $completion_sender = new CompletionSender(
             $mistral_stub,
             new MessageRepositoryStub(),
+            ContentInterpretorStub::withoutInterpretation(),
         );
 
         $completion_sender->sendMessages(
@@ -178,6 +182,7 @@ final class CompletionSenderTest extends TestCase
         $completion_sender = new CompletionSender(
             new MistralConnectorStub()->withResponse($completion_response),
             $message_repository,
+            ContentInterpretorStub::withoutInterpretation(),
         );
 
         $completion_sender->sendMessages(

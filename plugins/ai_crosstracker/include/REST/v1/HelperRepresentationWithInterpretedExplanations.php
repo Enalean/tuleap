@@ -26,7 +26,7 @@ namespace Tuleap\AICrossTracker\REST\v1;
 /**
  * @psalm-immutable
  */
-final readonly class HelperRepresentation
+final readonly class HelperRepresentationWithInterpretedExplanations
 {
     public function __construct(
         public string $thread_id,

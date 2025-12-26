@@ -39,6 +39,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Tracker\Test\Stub\RetrieveMultipleTrackersStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -63,22 +64,30 @@ final class ChatThreadManagerTest extends TestCase
             'explanations' => 'This query lists items in your projects.',
         ], JSON_THROW_ON_ERROR);
 
+        $message_repository = new MessageRepositoryStub();
+
         $manager = new ChatThreadManager(
-            $this->uuid_factory,
-            new MessageRepositoryStub(),
-            new ThreadStorageStub($this->uuid_factory),
+            new ThreadRepository(
+                $message_repository,
+                new ThreadStorageStub($this->uuid_factory),
+                new DatabaseUUIDV7Factory(),
+            ),
             ProjectByIDFactoryStub::buildWithoutProject(),
             RetrieveMultipleTrackersStub::withoutTrackers(),
             RetrieveUsedFieldsStub::withNoFields(),
-            new MistralConnectorStub()->withResponse(
-                CompletionResponse::fromChoicesAndTokenUsage(
-                    TokenUsage::fromValues(5, 42, 37),
-                    CompletionResponseChoice::fromAssistantMessage(
-                        AssistantMessage::fromStringContent(
-                            new StringContent($assistant_payload)
+            new CompletionSender(
+                new MistralConnectorStub()->withResponse(
+                    CompletionResponse::fromChoicesAndTokenUsage(
+                        TokenUsage::fromValues(5, 42, 37),
+                        CompletionResponseChoice::fromAssistantMessage(
+                            AssistantMessage::fromStringContent(
+                                new StringContent($assistant_payload)
+                            )
                         )
                     )
-                )
+                ),
+                $message_repository,
+                ContentInterpretorStub::withoutInterpretation(),
             ),
         );
 
@@ -92,7 +101,7 @@ final class ChatThreadManagerTest extends TestCase
 
         self::assertInstanceOf(Ok::class, $result);
         $payload = $result->unwrapOr(null);
-        self::assertInstanceOf(\Tuleap\AICrossTracker\REST\v1\HelperRepresentation::class, $payload);
+        self::assertInstanceOf(\Tuleap\AICrossTracker\REST\v1\HelperRepresentationWithInterpretedExplanations::class, $payload);
         self::assertSame('List my items', $payload->title);
         self::assertSame('TQL QUERY', $payload->tql_query);
         self::assertSame('This query lists items in your projects.', $payload->explanations);

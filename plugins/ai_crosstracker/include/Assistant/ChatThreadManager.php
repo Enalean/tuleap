@@ -24,10 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\AICrossTracker\Assistant;
 
 use Tuleap\AI\Mistral\Message;
-use Tuleap\AI\Mistral\MistralConnector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
-use Tuleap\DB\DatabaseUUIDFactory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -40,25 +38,17 @@ use Tuleap\User\CurrentUserWithLoggedInInformation;
 final readonly class ChatThreadManager
 {
     public function __construct(
-        private DatabaseUUIDFactory $uuid_factory,
-        private MessageRepository $message_repository,
-        private ThreadStorage $thread_storage,
+        private ThreadRepository $thread_repository,
         private ProjectByIDFactory $project_factory,
         private RetrieveMultipleTrackers $tracker_factory,
         private RetrieveUsedFields $fields_factory,
-        private MistralConnector $mistral_connector,
+        private CompletionSender $completion_sender,
     ) {
     }
 
     public function handleConversation(CurrentUserWithLoggedInInformation $current_user_with_logged_in_information, ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget, Message $mistral_message, ?string $thread_id = null): Ok|Err
     {
-        $thread_repository = new ThreadRepository(
-            $this->message_repository,
-            $this->thread_storage,
-            $this->uuid_factory,
-        );
-
-        return $thread_repository->fetchThread($widget, $current_user_with_logged_in_information->user, $thread_id, $mistral_message)
+        return $this->thread_repository->fetchThread($widget, $current_user_with_logged_in_information->user, $thread_id, $mistral_message)
             ->match(
                 function (Thread $thread) use ($widget, $current_user_with_logged_in_information): Ok|Err {
                     $assistant = match ($widget::class) {
@@ -71,8 +61,7 @@ final readonly class ChatThreadManager
                         UserCrossTrackerWidget::class => new UserAssistant(),
                     };
 
-                    return new CompletionSender($this->mistral_connector, $this->message_repository)
-                        ->sendMessages($current_user_with_logged_in_information, $assistant, $thread);
+                    return $this->completion_sender->sendMessages($current_user_with_logged_in_information, $assistant, $thread);
                 },
                 static fn() => Result::err(Fault::fromMessage('Invalid UUID')),
             );
