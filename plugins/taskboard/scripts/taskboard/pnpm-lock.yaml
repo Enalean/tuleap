@@ -89,8 +89,8 @@ devDependencies:
     specifier: ^4.1.2
     version: 4.1.2
   '@vitejs/plugin-vue':
-    specifier: ^4.2.3
-    version: 4.6.2(vue@3.4.38)
+    specifier: ^6.0.3
+    version: 6.0.3(vue@3.4.38)
   '@vue/test-utils':
     specifier: ^2.4.1
     version: 2.4.6
@@ -157,6 +157,10 @@ packages:
     dev: true
     optional: true
 
+  /@rolldown/pluginutils@1.0.0-beta.53:
+    resolution: {integrity: sha512-vENRlFU4YbrwVqNDZ7fLvy+JR1CRkyr01jhSiDpE1u6py3OMzQfztQU2jxykW3ALNxO4kSlqIDeYyD0Y9RcQeQ==}
+    dev: true
+
   /@types/fscreen@1.0.1:
     resolution: {integrity: sha512-hV2d0BreihMGtrg+EdAFOIl/O2EL5vhAheHJUztGE/lPFZIN8ZCpGFL8hCbtyi1CfhKjDRCf47sHjP+FwJ4q0Q==}
     dev: true
@@ -210,13 +214,14 @@ packages:
     dev: false
     optional: true
 
-  /@vitejs/plugin-vue@4.6.2(vue@3.4.38):
-    resolution: {integrity: sha512-kqf7SGFoG+80aZG6Pf+gsZIVvGSCKE98JbiWqcCV9cThtg91Jav0yvYFC9Zb+jKetNGF6ZKeoaxgZfND21fWKw==}
-    engines: {node: ^14.18.0 || >=16.0.0}
+  /@vitejs/plugin-vue@6.0.3(vue@3.4.38):
+    resolution: {integrity: sha512-TlGPkLFLVOY3T7fZrwdvKpjprR3s4fxRln0ORDo1VQ7HHyxJwTlrjKU3kpVWTlaAjIEuCTokmjkZnr8Tpc925w==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: ^4.0.0 || ^5.0.0
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
       vue: ^3.2.25
     dependencies:
+      '@rolldown/pluginutils': 1.0.0-beta.53
       vue: 3.4.38
     dev: true
 

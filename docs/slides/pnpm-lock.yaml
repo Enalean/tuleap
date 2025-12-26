@@ -816,12 +816,12 @@ packages:
       quansync: 0.2.11
     dev: true
 
-  /@rolldown/pluginutils@1.0.0-beta.29:
-    resolution: {integrity: sha512-NIJgOsMjbxAXvoGq/X0gD7VPMQ8j9g0BiDaNjVNVjvl+iKXxL3Jre0v31RmBYeLEmkbj2s02v8vFTbUXi5XS2Q==}
-    dev: true
-
   /@rolldown/pluginutils@1.0.0-beta.45:
     resolution: {integrity: sha512-Le9ulGCrD8ggInzWw/k2J8QcbPz7eGIOWqfJ2L+1R0Opm7n6J37s2hiDWlh6LJN0Lk9L5sUzMvRHKW7UxBZsQA==}
+    dev: true
+
+  /@rolldown/pluginutils@1.0.0-beta.53:
+    resolution: {integrity: sha512-vENRlFU4YbrwVqNDZ7fLvy+JR1CRkyr01jhSiDpE1u6py3OMzQfztQU2jxykW3ALNxO4kSlqIDeYyD0Y9RcQeQ==}
     dev: true
 
   /@rollup/rollup-android-arm-eabi@4.52.5:
@@ -1126,7 +1126,7 @@ packages:
       '@slidev/types': 52.6.0(typescript@5.9.3)(vite@7.1.12)
       '@unocss/extractor-mdc': 66.5.4
       '@unocss/reset': 66.5.4
-      '@vitejs/plugin-vue': 6.0.1(vite@7.1.12)(vue@3.5.22)
+      '@vitejs/plugin-vue': 6.0.3(vite@7.1.12)(vue@3.5.22)
       '@vitejs/plugin-vue-jsx': 5.1.1(vite@7.1.12)(vue@3.5.22)
       ansis: 4.2.0
       chokidar: 4.0.3
@@ -1314,7 +1314,7 @@ packages:
     dependencies:
       '@antfu/utils': 9.3.0
       '@shikijs/markdown-it': 3.14.0
-      '@vitejs/plugin-vue': 6.0.1(vite@7.1.12)(vue@3.5.22)
+      '@vitejs/plugin-vue': 6.0.3(vite@7.1.12)(vue@3.5.22)
       '@vitejs/plugin-vue-jsx': 5.1.1(vite@7.1.12)(vue@3.5.22)
       katex: 0.16.25
       mermaid: 11.12.1
@@ -1859,14 +1859,14 @@ packages:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-vue@6.0.1(vite@7.1.12)(vue@3.5.22):
-    resolution: {integrity: sha512-+MaE752hU0wfPFJEUAIxqw18+20euHHdxVtMvbFcOEpjEyfqXH/5DCoTHiVJ0J29EhTJdoTkjEv5YBKU9dnoTw==}
+  /@vitejs/plugin-vue@6.0.3(vite@7.1.12)(vue@3.5.22):
+    resolution: {integrity: sha512-TlGPkLFLVOY3T7fZrwdvKpjprR3s4fxRln0ORDo1VQ7HHyxJwTlrjKU3kpVWTlaAjIEuCTokmjkZnr8Tpc925w==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: ^5.0.0 || ^6.0.0 || ^7.0.0
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
       vue: ^3.2.25
     dependencies:
-      '@rolldown/pluginutils': 1.0.0-beta.29
+      '@rolldown/pluginutils': 1.0.0-beta.53
       vite: 7.1.12(jiti@2.6.1)(yaml@2.8.1)
       vue: 3.5.22(typescript@5.9.3)
     dev: true

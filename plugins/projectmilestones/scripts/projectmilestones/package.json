@@ -31,7 +31,7 @@
     "@types/d3-array": "^2.12.1",
     "@types/d3-selection": "^2.0.0",
     "@types/d3-shape": "^2.1.0",
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^6.0.3",
     "@vue/test-utils": "^2.2.10"
   },
   "scripts": {

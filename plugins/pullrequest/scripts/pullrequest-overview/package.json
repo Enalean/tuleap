@@ -35,7 +35,7 @@
     "@tuleap/mention": "workspace:^",
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^6.0.3",
     "@vue/test-utils": "^2.2.10"
   },
   "scripts": {
