@@ -137,7 +137,6 @@ use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder;
 use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
-use Tuleap\Document\Tree\SwitchToOldUi;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -1737,7 +1736,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(self::class);
-        $event->addConfigClass(SwitchToOldUi::class);
         $event->addConfigClass(Docman_PermissionsManager::class);
     }
 
