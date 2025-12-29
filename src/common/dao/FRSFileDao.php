@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSFileDao extends DataAccessObject
+class FRSFileDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * Return the array that match given id.
@@ -43,14 +43,6 @@ class FRSFileDao extends DataAccessObject
             'ORDER BY post_date DESC LIMIT 1',
             ['frs_package AS p', 'frs_release AS r']
         );
-    }
-
-    public function searchByIdList($idList)
-    {
-        if (is_array($idList) && count($idList) > 0) {
-            $sql_where = sprintf(' f.file_id IN (%s)', implode(', ', $idList));
-        }
-        return $this->_search($sql_where, '', '');
     }
 
     /**
@@ -117,7 +109,7 @@ class FRSFileDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function _search($where, $group = '', $order = '', $from = [])
+    public function _search($where, $group = '', $order = '', $from = []) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $sql = 'SELECT f.* '
             . ' FROM frs_file AS f '
@@ -247,62 +239,9 @@ class FRSFileDao extends DataAccessObject
         }
     }
 
-    public function _createAndReturnId($sql)
+    public function _createAndReturnId($sql) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->updateAndGetLastId($sql);
-    }
-
-    /**
-     * Update a row in the table frs_file
-     *
-     * @return true if there is no error
-     */
-    public function updateById(
-        $file_id,
-        $file_name = null,
-        $release_id = null,
-        $type_id = null,
-        $processor_id = null,
-        $release_time = null,
-        $file_size = null,
-        $status = null,
-    ) {
-        $argArray = [];
-
-        if ($file_name !== null) {
-            $argArray[] = 'file_name=' . $this->da->quoteSmart($file_name);
-        }
-
-        if ($release_id !== null) {
-            $argArray[] = 'release_id=' . ($this->da->escapeInt($release_id));
-        }
-
-        if ($type_id !== null) {
-            $argArray[] = 'type_id=' . ($this->da->escapeInt($type_id));
-        }
-
-        if ($processor_id !== null) {
-            $argArray[] = 'processor_id=' . ($this->da->escapeInt($processor_id));
-        }
-
-        if ($release_time !== null) {
-            $argArray[] = 'release_time=' . ($this->da->escapeInt($release_time));
-        }
-
-        if ($file_size !== null) {
-            $argArray[] = 'file_size=' . ($this->da->escapeInt($file_size));
-        }
-
-        if ($status !== null) {
-            $argArray[] = 'status=' . $this->da->quoteSmart($status);
-        }
-
-        $sql = 'UPDATE frs_file'
-            . ' SET ' . implode(', ', $argArray)
-            . ' WHERE file_id=' . ($this->da->escapeInt($file_id));
-
-        $inserted = $this->update($sql);
-        return $inserted;
     }
 
     public function updateFromArray($data_array)

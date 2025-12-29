@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEventDao extends DataAccessObject
+class SystemEventDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function getElapsedTime(SystemEvent $system_event): int
     {
@@ -106,19 +106,6 @@ class SystemEventDao extends DataAccessObject
             }
         }
         return null;
-    }
-
-    /** @return bool */
-    public function hasThereAnyEventsRunning()
-    {
-        $status = $this->da->quoteSmart(SystemEvent::STATUS_RUNNING);
-
-        $sql = "SELECT NULL
-                FROM system_event
-                WHERE status = $status
-                LIMIT 1";
-
-        return count($this->retrieve($sql)) > 0;
     }
 
     /**
@@ -214,51 +201,6 @@ class SystemEventDao extends DataAccessObject
         $sql    = "UPDATE system_event
                 SET status = $status
                 WHERE id = $id";
-        return $this->update($sql);
-    }
-
-    /**
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false array of event id and parameters
-     */
-    public function searchNewGitRepoUpdateEvents()
-    {
-        $sql = "SELECT id, parameters FROM system_event
-            WHERE status = 'NEW'
-            AND type = 'GIT_REPO_UPDATE'";
-
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * @param array $event_ids
-     * @return bool
-     */
-    public function markAsDone($event_ids)
-    {
-        $event_ids = $this->da->escapeIntImplode($event_ids);
-
-        $sql = "UPDATE system_event
-            SET status = 'DONE',
-                log = 'OK',
-                end_date = NOW()
-            WHERE id IN ($event_ids)";
-
-        return $this->update($sql);
-    }
-
-    /**
-     * @param array $event_ids
-     * @return bool
-     */
-    public function markAsRunning($event_ids)
-    {
-        $event_ids = $this->da->escapeIntImplode($event_ids);
-
-        $sql = "UPDATE system_event
-            SET status = 'RUNNING',
-                process_date = NOW()
-            WHERE id IN ($event_ids)";
-
         return $this->update($sql);
     }
 

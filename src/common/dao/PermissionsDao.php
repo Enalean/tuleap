@@ -60,21 +60,6 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao // ph
         return $this->retrieve($sql);
     }
 
-    public function getUgroupsByObjectIdAndPermissionType($object_id, $permission_type)
-    {
-        $object_id       = $this->da->quoteSmart($object_id, ['force_string' => true]);
-        $permission_type = $this->da->quoteSmart($permission_type);
-
-        $sql = "SELECT ugroup.*
-               FROM permissions p
-                JOIN ugroup ON ugroup.ugroup_id = p.ugroup_id
-               WHERE p.object_id = $object_id
-               AND p.permission_type = $permission_type
-               ORDER BY p.ugroup_id";
-
-        return $this->retrieve($sql);
-    }
-
     /**
      * Return the list of the default ugroup_ids authorized to access the given permission_type
      *

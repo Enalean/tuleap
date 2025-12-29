@@ -19,7 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ProjectDao extends DataAccessObject
+class ProjectDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const string GROUP_ID        = 'group_id';
     public const string STATUS          = 'status';
@@ -175,15 +175,6 @@ class ProjectDao extends DataAccessObject
          FROM `groups`
          WHERE type='2'
              AND status IN ('A','s')";
-        return $this->retrieve($sql);
-    }
-
-    public function searchPendingProjects()
-    {
-        $project_status = $this->da->quoteSmart(Project::STATUS_PENDING);
-
-        $sql = "SELECT * FROM `groups` WHERE status=$project_status ORDER BY register_time";
-
         return $this->retrieve($sql);
     }
 
@@ -564,19 +555,9 @@ class ProjectDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function searchGlobal($words, $offset, $exact)
-    {
-        return $this->searchGlobalPaginated($words, $offset, $exact, 26);
-    }
-
     public function searchGlobalPaginated($words, $offset, $exact, $limit)
     {
         return $this->searchGlobalParams($words, $offset, $exact, '', '', $limit);
-    }
-
-    public function searchGlobalForRestrictedUsers($words, $offset, $exact, $user_id)
-    {
-        return $this->searchGlobalPaginatedForRestrictedUsers($words, $offset, $exact, $user_id, 26);
     }
 
     public function searchGlobalPaginatedForRestrictedUsers($words, $offset, $exact, $user_id, $limit)

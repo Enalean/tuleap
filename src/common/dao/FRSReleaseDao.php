@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSReleaseDao extends DataAccessObject
+class FRSReleaseDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const int INCLUDE_DELETED = 0x0001;
 
@@ -124,7 +124,7 @@ class FRSReleaseDao extends DataAccessObject
      * @param $from
      * @param $extraFlags
      */
-    public function _search($where, $group = '', $order = '', $from = [], $extraFlags = 0)
+    public function _search($where, $group = '', $order = '', $from = [], $extraFlags = 0) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $sql = 'SELECT r.* ' .
         ' FROM frs_release AS r ' .
@@ -274,54 +274,9 @@ class FRSReleaseDao extends DataAccessObject
         }
     }
 
-    public function _createAndReturnId($sql)
+    public function _createAndReturnId($sql) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->updateAndGetLastId($sql);
-    }
-
-    /**
-     * Update a row in the table frs_release
-     *
-     * @return true if there is no error
-     */
-    public function updateById($release_id, $package_id = null, $name = null, $notes = null, $changes = null, $status_id = null, $preformatted = null, $release_date = null)
-    {
-        $argArray =  [];
-
-        if ($package_id !== null) {
-            $argArray[] = 'package_id=' . ($this->da->escapeInt($package_id));
-        }
-
-        if ($name !== null) {
-            $argArray[] = 'name=' . $this->da->quoteSmart($name, ['force_string' => true]);
-        }
-
-        if ($notes !== null) {
-            $argArray[] = 'notes=' . $this->da->quoteSmart($notes);
-        }
-
-        if ($changes !== null) {
-            $argArray[] = 'changes=' . $this->da->quoteSmart($changes);
-        }
-
-        if ($status_id !== null) {
-            $argArray[] = 'status_id=' . ($this->da->escapeInt($status_id));
-        }
-
-        if ($preformatted !== null) {
-            $argArray[] = 'preformatted=' . ($this->da->escapeInt($preformatted));
-        }
-
-        if ($release_date !== null) {
-            $argArray[] = 'release_date=' . ($this->da->escapeInt($release_date));
-        }
-
-        $sql = 'UPDATE frs_release' .
-        ' SET ' . implode(', ', $argArray) .
-        ' WHERE status_id != ' . $this->da->escapeInt($this->STATUS_DELETED) . ' AND release_id=' . ($this->da->escapeInt($release_id));
-
-        $inserted = $this->update($sql);
-        return $inserted;
     }
 
     public function updateFromArray($data_array)
