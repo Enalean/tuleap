@@ -22,15 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Tree;
 
-class DocumentItemUrlBuilder
-{
-    private function __construct(private \ProjectManager $project_manager)
-    {
-    }
+use Tuleap\Project\ProjectByIDFactory;
 
-    public static function buildSelf(): self
+readonly class DocumentItemUrlBuilder
+{
+    public function __construct(private ProjectByIDFactory $project_manager)
     {
-        return new self(\ProjectManager::instance());
     }
 
     public function getUrl(\Docman_Item $item): string
@@ -49,7 +46,7 @@ class DocumentItemUrlBuilder
 
     private function getBaseUrl(\Docman_Item $item): string
     {
-        $project = $this->project_manager->getProject((int) $item->getGroupId());
+        $project = $this->project_manager->getProjectById((int) $item->getGroupId());
 
         return '/plugins/document/' . urlencode($project->getUnixNameLowerCase());
     }
