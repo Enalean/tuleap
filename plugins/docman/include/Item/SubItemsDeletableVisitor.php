@@ -40,12 +40,10 @@ class SubItemsDeletableVisitor implements ItemVisitor
         }
 
         $sub_items = $item->getAllItems();
-        if ($sub_items && $sub_items->size() > 0) {
-            foreach ($sub_items->iterator() as $child) {
-                $is_child_deletable = $child->accept($this, $params);
-                if (! $is_child_deletable) {
-                    return false;
-                }
+        foreach ($sub_items as $child) {
+            $is_child_deletable = $child->accept($this, $params);
+            if (! $is_child_deletable) {
+                return false;
             }
         }
 

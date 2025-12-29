@@ -30,7 +30,6 @@ use Docman_Link;
 use Docman_Version;
 use Docman_Wiki;
 use PHPUnit\Framework\MockObject\MockObject;
-use PrioritizedList;
 use ZipStream\Exception\FileNotFoundException;
 use ZipStream\Exception\FileNotReadableException;
 use ZipStream\ZipStream;
@@ -174,12 +173,10 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $embedded->setCurrentVersion(new Docman_Version(['path' => '/path/to/embedded']));
 
         $subfolder->setItems(
-            new PrioritizedList(
-                [
-                    $file,
-                    $embedded,
-                ]
-            )
+            [
+                $file,
+                $embedded,
+            ]
         );
 
         $root_folder_children = [
@@ -193,9 +190,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             $root_folder_children[] = new Docman_File(['item_id' => 7, 'title' => 'corrupted file.png']);
         }
 
-        $root_folder->setItems(
-            new PrioritizedList($root_folder_children)
-        );
+        $root_folder->setItems($root_folder_children);
 
         return $root_folder;
     }

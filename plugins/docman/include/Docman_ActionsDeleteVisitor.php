@@ -59,15 +59,10 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
             $parent = $this->_getItemFactory()->getItemFromDb($item->getParentId());
         }
         $one_item_has_not_been_deleted = false;
-        if ($items->size()) {
-            $it = $items->iterator();
-            while ($it->valid()) {
-                $o                = $it->current();
-                $params['parent'] = $item;
-                if (! $o->accept($this, $params)) {
-                    $one_item_has_not_been_deleted = true;
-                }
-                $it->next();
+        foreach ($items as $subitem) {
+            $params['parent'] = $subitem;
+            if (! $subitem->accept($this, $params)) {
+                $one_item_has_not_been_deleted = true;
             }
         }
 

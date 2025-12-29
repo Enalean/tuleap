@@ -1237,17 +1237,6 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow //phpcs:i
     }
 
     /**
-     * Returns a hashmap with the mapping between items in $item tree and items
-     * that belongs to this group.
-     */
-    public function getItemMapping($item)
-    {
-        $v = new Docman_BuildItemMappingVisitor($this->groupId);
-        $item->accept($v);
-        return $v->getItemMapping();
-    }
-
-    /**
      * @return Docman_Item|null
      */
     public function getRoot($group_id)
@@ -1365,7 +1354,7 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow //phpcs:i
 
         if ($folder instanceof \Docman_Folder) {
             $items = $folder->getAllItems();
-            foreach ($items->iterator() as $item) {
+            foreach ($items as $item) {
                 $class = $item::class;
                 $type  = strtolower(substr(strrchr($class, '_'), 1));
 
