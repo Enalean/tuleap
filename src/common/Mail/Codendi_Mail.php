@@ -77,7 +77,11 @@ class Codendi_Mail implements Codendi_Mail_Interface
 
     public function __construct()
     {
-        $this->message                = new \Symfony\Component\Mime\Email();
+        $this->message = new \Symfony\Component\Mime\Email();
+        // Disallow message reactions done by Outlook, Tuleap does not process them
+        $this->message->getHeaders()->addTextHeader('X-MS-Reactions', 'disallow');
+        // Disallow automated message responses (OOF, read notifications...)
+        $this->message->getHeaders()->addTextHeader('X-Auto-Response-Suppress', 'all');
         $this->recipient_list_builder = new Mail_RecipientListBuilder(UserManager::instance());
         $this->logger                 = new MailLogger();
         $this->mailer                 = MailTransportBuilder::buildMailTransport($this->logger);
