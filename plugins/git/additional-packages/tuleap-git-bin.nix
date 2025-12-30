@@ -4,10 +4,14 @@
 }:
 
 let
+  pkgsGit2510 = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/cb82756ecc37fa623f8cf3e88854f9bf7f64af93.tar.gz";
+    sha256 = "1a28dlvrh2y1mps04f0mzb56syhkjd60zvr60brirvsgbrmcx46h";
+  }) { };
   tuleapVersion = builtins.readFile ../../../VERSION;
   tuleapGitBinBasePath = "/usr/lib/tuleap/git";
   gitStatic = (
-    pkgs.pkgsStatic.gitMinimal.overrideAttrs (oldAttrs: rec {
+    pkgsGit2510.pkgsStatic.gitMinimal.overrideAttrs (oldAttrs: rec {
       version = "2.51.0";
       src = pkgs.fetchurl {
         url = "https://www.kernel.org/pub/software/scm/git/git-${version}.tar.xz";

@@ -9,7 +9,7 @@ cleanup_temporary_directory() {
 trap cleanup_temporary_directory EXIT
 
 get_list_of_files() {
-    git diff --cached --name-only --diff-filter=ACMTUXB | grep \.php$
+    git diff --cached --name-only --diff-filter=ACMTUXB | grep \.php$ || true
 }
 
 get_initial_commit() {

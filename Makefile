@@ -291,7 +291,7 @@ docker-pull-verify-keyless-gha:
 
 .PHONY:scan-vuln-deps ## Scan dependencies for known vulnerabilities
 scan-vuln-deps:
-	osv-scanner --recursive --config ./tools/utils/osv-scanner/config.toml .
+	osv-scanner scan --recursive --config ./tools/utils/osv-scanner/config.toml .
 
 .PHONY:scan-secrets
 scan-secrets: ## Scan for committed secrets in the repository
