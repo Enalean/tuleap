@@ -76,12 +76,12 @@ XML;
 
         self::assertEquals('Tuleap', $job->getName());
         self::assertEquals('https://example.com/hudson/job/Tuleap/', $job->getUrl());
-        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_yellow.png', $job->getStatusIcon());
+        self::assertEquals('fa-solid fa-circle status-warning', $job->getStatusIcon());
         self::assertEquals(60, $job->getLastBuildNumber());
         self::assertEquals(60, $job->getLastSuccessfulBuildNumber());
         self::assertEquals(30, $job->getLastFailedBuildNumber());
         self::assertTrue($job->hasBuilds());
-        self::assertEquals(hudsonPlugin::ICONS_PATH . 'health_80_plus.gif', $job->getWeatherReportIcon());
+        self::assertEquals('fa-solid fa-sun', $job->getWeatherReportIcon());
     }
 
     public function testJobFromAnotherJob(): void
@@ -128,12 +128,12 @@ XML;
 
         self::assertEquals('TestProjectExistingJob', $job->getName());
         self::assertEquals('https://example.com/hudson/job/TestProjectExistingJob/', $job->getUrl());
-        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_red.png', $job->getStatusIcon());
+        self::assertEquals('fa-solid fa-circle status-error', $job->getStatusIcon());
         self::assertEquals(1, $job->getLastBuildNumber());
         self::assertEquals(0, $job->getLastSuccessfulBuildNumber());
         self::assertEquals(1, $job->getLastFailedBuildNumber());
         self::assertTrue($job->hasBuilds());
-        self::assertEquals(hudsonPlugin::ICONS_PATH . 'health_00_to_19.gif', $job->getWeatherReportIcon());
+        self::assertEquals('fa-solid fa-poo-storm', $job->getWeatherReportIcon());
     }
 
     public function testJobFromExternalJob(): void
@@ -157,7 +157,7 @@ XML;
 
         self::assertEquals('TestProjectExternalJob', $job->getName());
         self::assertEquals('https://example.com/hudson/job/TestProjectExternalJob/', $job->getUrl());
-        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_grey.png', $job->getStatusIcon());
+        self::assertEquals('fa-solid fa-circle status-not-run', $job->getStatusIcon());
         self::assertEquals(0, $job->getLastBuildNumber());
         self::assertEquals(0, $job->getLastSuccessfulBuildNumber());
         self::assertEquals(0, $job->getLastFailedBuildNumber());
@@ -185,7 +185,7 @@ XML;
 
         self::assertEquals('TestProjectMaven2', $job->getName());
         self::assertEquals('https://example.com/hudson/job/TestProjectMaven2/', $job->getUrl());
-        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_grey.png', $job->getStatusIcon());
+        self::assertEquals('fa-solid fa-circle status-not-run', $job->getStatusIcon());
         self::assertEquals(0, $job->getLastBuildNumber());
         self::assertEquals(0, $job->getLastSuccessfulBuildNumber());
         self::assertEquals(0, $job->getLastFailedBuildNumber());
@@ -213,7 +213,7 @@ XML;
 
         self::assertEquals('TestProjectMultiConfiguration', $job->getName());
         self::assertEquals('https://example.com/hudson/job/TestProjectMultiConfiguration/', $job->getUrl());
-        self::assertEquals(hudsonPlugin::ICONS_PATH . 'status_grey.png', $job->getStatusIcon());
+        self::assertEquals('fa-solid fa-circle status-not-run', $job->getStatusIcon());
         self::assertEquals(0, $job->getLastBuildNumber());
         self::assertEquals(0, $job->getLastSuccessfulBuildNumber());
         self::assertEquals(0, $job->getLastFailedBuildNumber());

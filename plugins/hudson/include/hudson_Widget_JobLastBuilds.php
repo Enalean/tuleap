@@ -22,7 +22,7 @@
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
 
-class hudson_Widget_JobLastBuilds extends HudsonJobWidget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class hudson_Widget_JobLastBuilds extends HudsonJobWidget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var HudsonJob
@@ -125,7 +125,7 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget //phpcs:ignore PSR1.Cl
             $html .= '   </ul>';
             $html .= '  </td>';
             $html .= '  <td class="widget_lastbuilds_weather">';
-            $html .= dgettext('tuleap-hudson', 'Weather Report:') . '<img src="' . $job->getWeatherReportIcon() . '" class="widget-lastbuilds-weather-img" />';
+            $html .= dgettext('tuleap-hudson', 'Weather Report:') . '<i class="' . $job->getWeatherReportIcon() . ' weather-report-spacing" />';
             $html .= '  </td>';
             $html .= ' </tr>';
             $html .= '</table>';

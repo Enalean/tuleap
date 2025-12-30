@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class HudsonJob
+class HudsonJob //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var null|string
@@ -60,7 +60,7 @@ class HudsonJob
         return '';
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         switch ($this->getColor()) {
             case 'blue':
@@ -93,36 +93,35 @@ class HudsonJob
         }
     }
 
-    public function getStatusIcon()
+    public function getStatusIcon(): string
     {
         switch ($this->getColor()) {
             case 'blue':
                 // The last build was successful.
-                return hudsonPlugin::ICONS_PATH . 'status_blue.png';
+                return 'fa-solid fa-circle status-info';
             case 'blue_anime':
                 // The last build was successful. A new build is in progress.
-                return hudsonPlugin::ICONS_PATH . 'status_blue.png';
+                return 'fa-solid fa-circle status-info';
             case 'yellow':
                 // The last build was successful but unstable. This is primarily used to represent test failures.
-                return hudsonPlugin::ICONS_PATH . 'status_yellow.png';
+                return 'fa-solid fa-circle status-warning';
             case 'yellow_anime':
                 // The last build was successful but unstable. A new build is in progress.
-                return hudsonPlugin::ICONS_PATH . 'status_yellow.png';
+                return 'fa-solid fa-circle status-warning';
             case 'red':
                 // The last build fatally failed.
-                return hudsonPlugin::ICONS_PATH . 'status_red.png';
+                return 'fa-solid fa-circle status-error';
             case 'red_anime':
                 // The last build fatally failed. A new build is in progress.
-                return hudsonPlugin::ICONS_PATH . 'status_red.png';
+                return 'fa-solid fa-circle status-error';
             case 'grey':
                 // The project has never been built before, or the project is disabled.
-                return hudsonPlugin::ICONS_PATH . 'status_grey.png';
+                return 'fa-solid fa-circle status-not-run';
             case 'grey_anime':
                 // The first build of the project is in progress.
-                return hudsonPlugin::ICONS_PATH . 'status_grey.png';
+                return 'fa-solid fa-circle status-not-run';
             default:
-                // Can we have anime icons here?
-                return hudsonPlugin::ICONS_PATH . 'status_unknown.png';
+                return 'fa-solid fa-circle status-not-run';
         }
     }
 
@@ -194,19 +193,19 @@ class HudsonJob
         return floor(array_sum($health_scores) / count($health_scores));
     }
 
-    public function getWeatherReportIcon()
+    public function getWeatherReportIcon(): string
     {
         $score = $this->getHealthAverageScore();
         if ($score >= 80) {
-            return hudsonPlugin::ICONS_PATH . 'health_80_plus.gif';
+            return 'fa-solid fa-sun';
         } elseif ($score >= 60) {
-            return hudsonPlugin::ICONS_PATH . 'health_60_to_79.gif';
+            return 'fa-solid fa-cloud-sun';
         } elseif ($score >= 40) {
-            return hudsonPlugin::ICONS_PATH . 'health_40_to_59.gif';
+            return 'fa-solid fa-cloud';
         } elseif ($score >= 20) {
-            return hudsonPlugin::ICONS_PATH . 'health_20_to_39.gif';
+            return 'fa-solid fa-cloud-rain';
         } else {
-            return hudsonPlugin::ICONS_PATH . 'health_00_to_19.gif';
+            return 'fa-solid fa-poo-storm';
         }
     }
 }
