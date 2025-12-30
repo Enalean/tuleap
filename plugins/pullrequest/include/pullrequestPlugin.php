@@ -230,7 +230,9 @@ class pullrequestPlugin extends Plugin
                 $pull_request_updater = new PullRequestUpdater(
                     $this->getPullRequestFactory(),
                     new PullRequestMerger(
-                        new MergeSettingRetriever(new MergeSettingDAO())
+                        new MergeSettingRetriever(new MergeSettingDAO()),
+                        new \Tuleap\Process\SymfonyProcessFactory(),
+                        self::getLogger(),
                     ),
                     new InlineCommentDao(),
                     new InlineCommentUpdater(),
@@ -287,7 +289,9 @@ class pullrequestPlugin extends Plugin
         return new PullRequestCloser(
             new PullRequestDao(),
             new PullRequestMerger(
-                new MergeSettingRetriever(new MergeSettingDAO())
+                new MergeSettingRetriever(new MergeSettingDAO()),
+                new \Tuleap\Process\SymfonyProcessFactory(),
+                self::getLogger(),
             ),
             $this->getTimelineEventCreator(),
             PullRequestNotificationSupport::buildDispatcher(self::getLogger())

@@ -23,39 +23,35 @@ namespace Tuleap\PullRequest;
 use PFUser;
 use GitRepository;
 use Git_Command_Exception;
+use Psr\Log\LoggerInterface;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\Process\ProcessFactory;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
-use System_Command;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
-class PullRequestMerger
+readonly class PullRequestMerger
 {
     public const string MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr';
 
-    /**
-     * @var MergeSettingRetriever
-     */
-    private $merge_setting_retriever;
 
-    public function __construct(MergeSettingRetriever $merge_setting_retriever)
-    {
-        $this->merge_setting_retriever = $merge_setting_retriever;
+    public function __construct(
+        private MergeSettingRetriever $merge_setting_retriever,
+        private ProcessFactory $process_factory,
+        private LoggerInterface $logger,
+    ) {
     }
 
     /**
      * @throws PullRequestCannotBeMerged
      */
-    public function doMergeIntoDestination(PullRequest $pull_request, GitRepository $repository_dest, PFUser $user)
+    public function doMergeIntoDestination(PullRequest $pull_request, GitRepository $repository_dest, PFUser $user): void
     {
         if ((int) $pull_request->getRepoDestId() !== (int) $repository_dest->getId()) {
             throw new \LogicException('Destination repository ID does not match the one of the PR');
         }
 
-        try {
-            $temp_working_dir = $this->getUniqueRandomDirectory();
-        } catch (\System_Command_CommandException $exception) {
-            throw new PullRequestCannotBeMerged('Temporary directory to merge the pull request can not be created');
-        }
-        $executor = new GitExec($temp_working_dir);
+        $temp_working_dir = $this->getUniqueRandomDirectory();
+        $executor         = new GitExec($temp_working_dir);
 
         $merge_setting = $this->merge_setting_retriever->getMergeSettingForRepository($repository_dest);
 
@@ -66,7 +62,25 @@ class PullRequestMerger
             } else {
                 $executor->fastForwardMergeOnly($pull_request->getSha1Src());
             }
-            $executor->push(escapeshellarg('gitolite@gl-adm:' . $repository_dest->getPath()) . ' HEAD:' . escapeshellarg($pull_request->getBranchDest()));
+
+            $push_merge_process = $this->process_factory->buildProcess([
+                'sudo',
+                '-u',
+                'gitolite',
+                'DISPLAY_ERRORS=true',
+                __DIR__ . '/../../bin/push-pr-merge.php',
+                $temp_working_dir,
+                $repository_dest->getFullPath(),
+                $pull_request->getBranchDest(),
+            ]);
+
+            $push_merge_process->run()
+                ->mapErr(
+                    function (Fault $fault): never {
+                        Fault::writeToLogger($fault, $this->logger);
+                        throw new PullRequestCannotBeMerged('Failure to push the merge result');
+                    }
+                );
         } catch (Git_Command_Exception $exception) {
             $exception_message = $exception->getMessage();
             throw new PullRequestCannotBeMerged(
@@ -114,28 +128,29 @@ class PullRequestMerger
         return PullRequest::NO_FASTFORWARD_MERGE;
     }
 
-    /**
-     * @return string
-     * @throws \System_Command_CommandException
-     */
-    private function getUniqueRandomDirectory()
+    private function getUniqueRandomDirectory(): string
     {
         $parent_tmp = \ForgeConfig::get('tmp_dir') . DIRECTORY_SEPARATOR . self::MERGE_TEMPORARY_SUBFOLDER;
 
         is_dir($parent_tmp) || mkdir($parent_tmp, 0750, true);
+        chgrp($parent_tmp, 'gitolite');
 
-        $cmd        = new System_Command();
-        $result_cmd = $cmd->exec('mktemp -d -p ' . escapeshellarg($parent_tmp) . ' pr_XXXXXX');
-        return $result_cmd[0];
+        $random_directory = $parent_tmp . DIRECTORY_SEPARATOR . 'pr_' . bin2hex(random_bytes(8));
+        \Psl\Filesystem\create_directory($random_directory, 0750);
+        chgrp($random_directory, 'gitolite');
+
+        return $random_directory;
     }
 
-    private function cleanTemporaryRepository($temporary_name)
+    private function cleanTemporaryRepository(string $temporary_name): void
     {
-        $path       = realpath($temporary_name);
+        $path = \Psl\Filesystem\canonicalize($temporary_name);
+        if ($path === null) {
+            return;
+        }
         $check_path = strpos($path, self::MERGE_TEMPORARY_SUBFOLDER);
         if ($check_path !== false) {
-            $cmd = new System_Command();
-            $cmd->exec('rm -rf ' . escapeshellarg($path));
+            \Psl\Filesystem\delete_directory($path, true);
         }
     }
 }

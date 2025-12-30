@@ -56,6 +56,7 @@ use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Option\Option;
+use Tuleap\Process\SymfonyProcessFactory;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -186,7 +187,9 @@ class PullRequestsResource extends AuthenticatedResource
 
         $this->event_manager        = EventManager::instance();
         $pull_request_merger        = new PullRequestMerger(
-            new MergeSettingRetriever(new MergeSettingDAO())
+            new MergeSettingRetriever(new MergeSettingDAO()),
+            new SymfonyProcessFactory(),
+            $this->logger,
         );
         $this->pull_request_creator = new PullRequestCreator(
             new PullRequestCreatorChecker($this->pull_request_dao),
@@ -970,7 +973,9 @@ class PullRequestsResource extends AuthenticatedResource
                 new PullRequestUpdater(
                     $this->pull_request_factory,
                     new PullRequestMerger(
-                        new MergeSettingRetriever(new MergeSettingDAO())
+                        new MergeSettingRetriever(new MergeSettingDAO()),
+                        new SymfonyProcessFactory(),
+                        $this->logger,
                     ),
                     new InlineCommentDao(),
                     new InlineCommentUpdater(),

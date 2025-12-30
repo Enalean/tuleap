@@ -78,7 +78,7 @@ class GitExec extends Git_Exec
         return $output;
     }
 
-    public function sharedCloneAndCheckout($remote, $branch_name)
+    public function sharedCloneAndCheckout(string $remote, string $branch_name): void
     {
         $output = [];
         $remote = escapeshellarg($remote);
@@ -92,12 +92,11 @@ class GitExec extends Git_Exec
         $this->gitCmd("config --global safe.directory '*'");
 
         // --work-tree --git-dir does not play well with git clone repo path
-        exec("$git $cmd 2>&1", $output, $retVal);
+        $command_to_run = "sg - gitolite -c '$git $cmd'";
+        exec("$command_to_run 2>&1", $output, $retVal);
 
-        if ($retVal == 0) {
-            return true;
-        } else {
-            throw new Git_Command_Exception("$git $cmd", $output, $retVal);
+        if ($retVal !== 0) {
+            throw new Git_Command_Exception($command_to_run, $output, $retVal);
         }
     }
 
