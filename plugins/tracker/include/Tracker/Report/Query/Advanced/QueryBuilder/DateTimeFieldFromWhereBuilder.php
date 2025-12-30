@@ -52,7 +52,7 @@ final class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, Valu
     {
         $suffix   = spl_object_hash($comparison);
         $value    = $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
-        $field_id = (int) $field->getId();
+        $field_id = $field->getId();
 
         $changeset_value_date_alias = "CVDate_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";

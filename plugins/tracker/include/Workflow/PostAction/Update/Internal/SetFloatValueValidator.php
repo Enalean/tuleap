@@ -89,7 +89,7 @@ class SetFloatValueValidator
         $float_field_ids = [];
         foreach ($float_fields as $float_field) {
             \assert($float_field instanceof \Tuleap\Tracker\FormElement\Field\Float\FloatField);
-            $float_field_ids[] = (int) $float_field->getId();
+            $float_field_ids[] = $float_field->getId();
         }
 
         return $float_field_ids;

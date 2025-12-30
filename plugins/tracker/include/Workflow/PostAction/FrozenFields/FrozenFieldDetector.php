@@ -50,7 +50,7 @@ class FrozenFieldDetector
         } catch (NoTransitionForStateException | NoFrozenFieldsPostActionException $e) {
             return false;
         }
-        $field_id = (int) $field->getId();
+        $field_id = $field->getId();
 
         if (in_array($field_id, $frozen_post_action->getFieldIds())) {
             return true;

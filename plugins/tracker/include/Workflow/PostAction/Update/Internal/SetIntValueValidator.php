@@ -89,7 +89,7 @@ class SetIntValueValidator
         $int_field_ids = [];
         foreach ($int_fields as $int_field) {
             \assert($int_field instanceof \Tuleap\Tracker\FormElement\Field\Integer\IntegerField);
-            $int_field_ids[] = (int) $int_field->getId();
+            $int_field_ids[] = $int_field->getId();
         }
         return $int_field_ids;
     }

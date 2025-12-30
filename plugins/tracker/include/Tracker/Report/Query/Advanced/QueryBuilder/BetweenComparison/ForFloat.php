@@ -38,7 +38,7 @@ final class ForFloat implements FieldFromWhereBuilder
         $comparison_value = $comparison->getValueWrapper();
         $min_value        = $comparison_value->getMinValue()->getValue();
         $max_value        = $comparison_value->getMaxValue()->getValue();
-        $field_id         = (int) $field->getId();
+        $field_id         = $field->getId();
 
         $changeset_value_float_alias = "CVFloat_{$field_id}_{$suffix}";
         $changeset_value_alias       = "CV_{$field_id}_{$suffix}";

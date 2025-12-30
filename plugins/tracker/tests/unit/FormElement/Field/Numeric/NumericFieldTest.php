@@ -39,7 +39,8 @@ final class NumericFieldTest extends TestCase
         $value_dao = $this->createMock(FloatValueDao::class);
         $value_dao->method('getLastValue')->willReturn(['value' => '123.45']);
         $artifact = ArtifactTestBuilder::anArtifact(123)->build();
-        $field    = $this->createPartialMock(FloatField::class, ['userCanRead', 'getValueDao']);
+        $field    = $this->createPartialMock(FloatField::class, ['userCanRead', 'getValueDao', 'getId']);
+        $field->method('getId')->willReturn(100);
         $field->method('userCanRead')->with($user)->willReturn(true);
         $field->method('getValueDao')->willReturn($value_dao);
 

@@ -68,7 +68,7 @@ class FileInfoForTusUploadedFileReadyToBeAttachedProvider
             return null;
         }
 
-        if ((int) $field->getId() !== (int) $row['field_id']) {
+        if ($field->getId() !== (int) $row['field_id']) {
             return null;
         }
 

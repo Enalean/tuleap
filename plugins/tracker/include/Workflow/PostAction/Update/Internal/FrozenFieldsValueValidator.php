@@ -73,7 +73,7 @@ class FrozenFieldsValueValidator
         $used_field_ids = [];
         foreach ($used_fields as $used_field) {
             \assert($used_field instanceof \Tuleap\Tracker\FormElement\Field\TrackerField);
-            $used_field_ids[] = (int) $used_field->getId();
+            $used_field_ids[] = $used_field->getId();
         }
 
         return $used_field_ids;

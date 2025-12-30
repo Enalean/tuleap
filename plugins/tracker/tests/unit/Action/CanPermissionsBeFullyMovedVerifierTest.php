@@ -92,7 +92,7 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
     private function getSourceFieldWithLastChangesetValue(?array $user_groups_names): PermissionsOnArtifactField
     {
         $source_field = $this->createStub(PermissionsOnArtifactField::class);
-        $source_field->method('getId')->willReturn('123');
+        $source_field->method('getId')->willReturn(123);
         $source_field->method('getName')->willReturn('Permissions');
 
         if ($user_groups_names === null) {
@@ -116,7 +116,7 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
     {
         $destination_field = $this->createStub(PermissionsOnArtifactField::class);
         $destination_field->method('getAllUserGroups')->willReturn($user_groups);
-        $destination_field->method('getId')->willReturn('456');
+        $destination_field->method('getId')->willReturn(456);
         $destination_field->method('getName')->willReturn('Permissions');
 
         return $destination_field;

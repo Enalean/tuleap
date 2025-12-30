@@ -24,7 +24,6 @@ use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_List;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -37,17 +36,15 @@ final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
     private Stub&\Tuleap\Tracker\FormElement\Field\List\ListField $destination_field;
     private Artifact $artifact;
     private Stub&Tracker_Artifact_ChangesetValue_List $changeset_value;
-    private \PFUser $user;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->user         = UserTestBuilder::anActiveUser()->withId(101)->withUserName('Mildred Favorito')->build();
         $this->source_field = $this->createStub(ListField::class);
-        $this->source_field->method('getId')->willReturn('123');
+        $this->source_field->method('getId')->willReturn(123);
         $this->source_field->method('getName')->willReturn('UserGroup');
         $this->destination_field = $this->createStub(ListField::class);
-        $this->destination_field->method('getId')->willReturn('456');
+        $this->destination_field->method('getId')->willReturn(456);
         $this->destination_field->method('getName')->willReturn('UserGroup');
 
         $this->changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);

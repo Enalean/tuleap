@@ -49,7 +49,7 @@ class FileUploadData
     {
         $this->field            = $field;
         $this->upload_url       = '/api/v1/tracker_fields/' . $field->getId() . '/files';
-        $this->upload_file_name = 'artifact[' . (int) $field->getId() . '][][tus-uploaded-id]';
+        $this->upload_file_name = 'artifact[' . $field->getId() . '][][tus-uploaded-id]';
         $this->upload_max_size  = (int) ForgeConfig::get('sys_max_size_upload');
     }
 

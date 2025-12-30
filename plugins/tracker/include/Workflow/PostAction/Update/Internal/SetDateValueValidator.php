@@ -90,7 +90,7 @@ class SetDateValueValidator
         $date_field_ids = [];
         foreach ($date_fields as $date_field) {
             \assert($date_field instanceof \Tuleap\Tracker\FormElement\Field\Date\DateField);
-            $date_field_ids[] = (int) $date_field->getId();
+            $date_field_ids[] = $date_field->getId();
         }
         return $date_field_ids;
     }

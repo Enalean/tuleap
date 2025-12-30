@@ -40,8 +40,8 @@ final class QueryListFieldPresenter
     public function __construct(Comparison $comparison, TrackerField $field)
     {
         $suffix           = spl_object_hash($comparison);
-        $this->field_id   = (int) $field->getId();
-        $this->tracker_id = (int) $field->getTrackerId();
+        $this->field_id   = $field->getId();
+        $this->tracker_id = $field->getTrackerId();
 
         $this->changeset_value_alias      = "CV_{$this->field_id}_{$suffix}";
         $this->changeset_value_list_alias = "CVList_{$this->field_id}_{$suffix}";

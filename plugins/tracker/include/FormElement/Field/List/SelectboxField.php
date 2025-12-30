@@ -123,7 +123,7 @@ class SelectboxField extends ListField implements Tracker_FormElement_IComputeVa
 
         $csp_nonce = $GLOBALS['Response']->getCSPNonce();
         $html      = sprintf('<script type="text/javascript" nonce="%s">', $purifier->purify($csp_nonce));
-        $html     .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $this->getName() . "', '" . $purifier->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
+        $html     .= "tuleap.tracker.fields.add('" . $this->getID() . "', '" . $this->getName() . "', '" . $purifier->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
         $values    = $this->getBind()->getAllValues();
         $html     .= "\n\t.addOption('" . dgettext('tuleap-tracker', 'None') . "'.escapeHTML(), '100', " . (empty($changeset_values) ? 'true' : 'false') . ", '')";
 
@@ -141,7 +141,7 @@ class SelectboxField extends ListField implements Tracker_FormElement_IComputeVa
         $hp            = Codendi_HTMLPurifier::instance();
         $csp_nonce     = $GLOBALS['Response']->getCSPNonce();
         $html          = sprintf('<script type="text/javascript" nonce="%s">', $hp->purify($csp_nonce));
-        $html         .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
+        $html         .= "tuleap.tracker.fields.add('" . $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
         $default_value = $this->getDefaultValue();
         $values        = $this->getBind()->getAllValues();
         $html         .= "\n\t.addOption('None'.escapeHTML(), '100', " . ($default_value == 100 ? 'true' : 'false') . ", '')";

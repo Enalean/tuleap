@@ -132,7 +132,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->user)
             ->willReturn(true);
         $field->method('getId')
-            ->willReturn('1001');
+            ->willReturn(1001);
 
         $this->factory
             ->expects($this->once())
@@ -155,7 +155,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->user)
             ->willReturn(true);
         $field->method('getId')
-            ->willReturn('1001');
+            ->willReturn(1001);
 
         $this->factory
             ->expects($this->once())

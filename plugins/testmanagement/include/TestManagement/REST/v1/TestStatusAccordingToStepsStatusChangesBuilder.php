@@ -49,7 +49,7 @@ class TestStatusAccordingToStepsStatusChangesBuilder
         $values_ids = $this->getValuesIdsIndexedByLabel($status_field);
 
         $value_representation                 = new ArtifactValuesRepresentation();
-        $value_representation->field_id       = (int) $status_field->getId();
+        $value_representation->field_id       = $status_field->getId();
         $value_representation->bind_value_ids = [$values_ids[$status]];
 
         $changes[] = $value_representation;

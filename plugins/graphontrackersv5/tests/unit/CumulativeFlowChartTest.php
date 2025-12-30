@@ -113,7 +113,7 @@ final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
         $criterion       = $this->createMock(Tracker_Report_Criteria::class);
         $criterion_field = $this->createMock(SelectboxField::class);
 
-        $criterion_field->method('getId')->willReturn('201');
+        $criterion_field->method('getId')->willReturn(201);
         $criterion_field->method('getCriteriaValue')->with($criterion)->willReturn([
             101,
             102,
@@ -196,7 +196,7 @@ final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
         $criterion       = $this->createMock(Tracker_Report_Criteria::class);
         $criterion_field = $this->createMock(SelectboxField::class);
 
-        $criterion_field->method('getId')->willReturn('201');
+        $criterion_field->method('getId')->willReturn(201);
         $criterion_field->method('getCriteriaValue')->with($criterion)->willReturn('');
 
         $criterion->method('getField')->willReturn($criterion_field);

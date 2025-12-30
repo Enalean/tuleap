@@ -228,7 +228,8 @@ final class FloatFieldTest extends TestCase
 
     public function testItDisplaysTheFloatValueInReadOnly(): void
     {
-        $float_field = $this->createPartialMock(FloatField::class, ['getArtifactTimeframeHelper']);
+        $float_field = $this->createPartialMock(FloatField::class, ['getArtifactTimeframeHelper', 'getId']);
+        $float_field->method('getId')->willReturn(123);
 
         $timeframe_helper = $this->createMock(ArtifactTimeframeHelper::class);
         $float_field->expects($this->once())->method('getArtifactTimeframeHelper')->willReturn($timeframe_helper);
@@ -248,7 +249,8 @@ final class FloatFieldTest extends TestCase
 
     public function testItDisplaysTheFloatValue0InReadOnly(): void
     {
-        $float_field = $this->createPartialMock(FloatField::class, ['getArtifactTimeframeHelper']);
+        $float_field = $this->createPartialMock(FloatField::class, ['getArtifactTimeframeHelper', 'getId']);
+        $float_field->method('getId')->willReturn(123);
 
         $timeframe_helper = $this->createMock(ArtifactTimeframeHelper::class);
         $float_field->expects($this->once())->method('getArtifactTimeframeHelper')->willReturn($timeframe_helper);

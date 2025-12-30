@@ -65,7 +65,7 @@ class FormattedChangesetValueForListFieldRetriever
         }
 
         $value_representation                 = new ArtifactValuesRepresentation();
-        $value_representation->field_id       = (int) $field->getId();
+        $value_representation->field_id       = $field->getId();
         $value_representation->bind_value_ids = [(int) $bind->getId()];
 
         return $value_representation;

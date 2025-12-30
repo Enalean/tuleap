@@ -118,7 +118,7 @@ class StepsResultsChangesBuilder
         }
 
         $value_representation           = new ArtifactValuesRepresentation();
-        $value_representation->field_id = (int) $execution_field->getId();
+        $value_representation->field_id = $execution_field->getId();
         $value_representation->value    = [
             StepsExecution::UPDATE_VALUE_KEY => $steps_changes,
         ];

@@ -1028,12 +1028,10 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
     /**
      *  Get the id
      *
-     * @return int
-     *
      * @psalm-mutation-free
      */
     #[\Override]
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

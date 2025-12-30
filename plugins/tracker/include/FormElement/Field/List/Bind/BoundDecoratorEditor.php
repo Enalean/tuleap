@@ -62,16 +62,16 @@ class BoundDecoratorEditor
     private function updateNone(\Tuleap\Tracker\FormElement\Field\TrackerField $field, int $value_id, string $color, bool $will_be_required): void
     {
         if ($will_be_required === true) {
-            $this->decorator_dao->delete((int) $field->getId(), $value_id);
+            $this->decorator_dao->delete($field->getId(), $value_id);
             return;
         }
 
         if (! Tracker_FormElement_Field_List_BindDecorator::isHexaColor($color)) {
-            $this->decorator_dao->updateNoneTlpColor((int) $field->getId(), $color);
+            $this->decorator_dao->updateNoneTlpColor($field->getId(), $color);
             return;
         }
 
         [$r, $g, $b] = ColorHelper::HexaToRGB($color);
-        $this->decorator_dao->updateNoneLegacyColor((int) $field->getId(), $r, $g, $b);
+        $this->decorator_dao->updateNoneLegacyColor($field->getId(), $r, $g, $b);
     }
 }

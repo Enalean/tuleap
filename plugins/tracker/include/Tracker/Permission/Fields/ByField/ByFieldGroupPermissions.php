@@ -111,7 +111,7 @@ class ByFieldGroupPermissions
 
     public function getFieldId(): int
     {
-        return (int) $this->field->getId();
+        return $this->field->getId();
     }
 
     public function getFieldName(): string

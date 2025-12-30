@@ -36,6 +36,6 @@ final class AddInPlacePresenter
     public function __construct(AddInPlace $add_in_place)
     {
         $this->child_tracker_id              = (int) $add_in_place->getChildTracker()->getId();
-        $this->parent_artifact_link_field_id = (int) $add_in_place->getParentArtifactLinkField()->getId();
+        $this->parent_artifact_link_field_id = $add_in_place->getParentArtifactLinkField()->getId();
     }
 }

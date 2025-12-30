@@ -35,7 +35,7 @@ class AssignedToFieldPresenter
 
     public function __construct(\Tuleap\Tracker\FormElement\Field\List\ListField $field)
     {
-        $this->id          = (int) $field->getId();
+        $this->id          = $field->getId();
         $this->is_multiple = $field->isMultiple();
     }
 }

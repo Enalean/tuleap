@@ -40,7 +40,7 @@ final class ForText implements FieldFromWhereBuilder
         $suffix           = spl_object_hash($comparison);
         $comparison_value = $comparison->getValueWrapper();
         $value            = $comparison_value->getValue();
-        $field_id         = (int) $field->getId();
+        $field_id         = $field->getId();
 
         $changeset_value_text_alias = "CVText_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";

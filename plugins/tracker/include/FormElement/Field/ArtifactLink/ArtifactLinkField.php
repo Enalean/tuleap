@@ -597,7 +597,7 @@ class ArtifactLinkField extends TrackerField
 
                 $html .= '<div
                         class="tracker-form-element-artifactlink-renderer-async"
-                        data-field-id="' . (int) $this->getId() . '"
+                        data-field-id="' . $this->getId() . '"
                         data-renderer-data="' . Codendi_HTMLPurifier::instance()->purify($json_encoded_data) . '"></div></div>';
             }
 
