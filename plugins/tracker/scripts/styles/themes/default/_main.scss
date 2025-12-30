@@ -692,7 +692,6 @@ button[name="tracker_query_submit"] {
 
     .xref-in-title {
         margin: 0 10px 0 0;
-        padding: 4px 12px;
         font-size: 18px;
         line-height: 26px;
     }
@@ -730,11 +729,14 @@ button[name="tracker_query_submit"] {
     display: inline-block;
     margin: 0 5px 0 0;
     padding: 2px 10px;
+    border: 1px solid var(--border-color, transparent);
     border-radius: 20px;
-    color: #ffffff;
+    background: var(--secondary-color);
+    color: var(--text-color, var(--tlp-white-color));
     font-size: 12px;
-    font-weight: normal;
+    font-weight: 600;
     line-height: 20px;
+    text-shadow: none;
     white-space: nowrap;
 }
 
