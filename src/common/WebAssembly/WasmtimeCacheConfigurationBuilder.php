@@ -60,7 +60,7 @@ final class WasmtimeCacheConfigurationBuilder implements WASMCacheConfigurationB
     {
         $cache_path = self::getCachePath();
         if (\Psl\Filesystem\exists($cache_path)) {
-            \Psl\Filesystem\delete_directory($cache_path, true);
+            \Tuleap\File\DirectoryRemover::deleteDirectory($cache_path);
         }
         $config_file = self::getCacheConfigPath();
         if (\Psl\Filesystem\exists($config_file)) {

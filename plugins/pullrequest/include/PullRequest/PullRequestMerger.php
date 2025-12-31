@@ -150,7 +150,7 @@ readonly class PullRequestMerger
         }
         $check_path = strpos($path, self::MERGE_TEMPORARY_SUBFOLDER);
         if ($check_path !== false) {
-            \Psl\Filesystem\delete_directory($path, true);
+            \Tuleap\File\DirectoryRemover::deleteDirectory($path);
         }
     }
 }

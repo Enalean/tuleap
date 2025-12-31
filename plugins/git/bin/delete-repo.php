@@ -36,4 +36,4 @@ if (count($argv) !== 2) {
 if ($repo_path === '' || ! is_writable($repo_path)) {
     throw new GitDriverErrorException('Empty path or permission denied ' . $repo_path);
 }
-\Psl\Filesystem\delete_directory($repo_path, true);
+\Tuleap\File\DirectoryRemover::deleteDirectory($repo_path);
