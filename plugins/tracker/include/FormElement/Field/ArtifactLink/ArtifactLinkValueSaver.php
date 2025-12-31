@@ -131,7 +131,7 @@ class ArtifactLinkValueSaver
         Tracker $from_tracker,
         Tracker $to_tracker,
         array $submitted_value,
-    ) {
+    ): ?string {
         $existing_type     = $artifactlinkinfo->getType();
         $type_by_hierarchy = $this->getTypeDefinedByHierarchy(
             $artifactlinkinfo,
@@ -355,17 +355,19 @@ class ArtifactLinkValueSaver
             $artifact_to_link = $artifactlinkinfo->getArtifact();
             if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
                 $tracker = $artifact_to_link->getTracker();
-                $type    = $this->getType($artifact, $artifactlinkinfo, $from_tracker, $tracker, $submitted_value);
+                $type    = $this->getType($artifact, $artifactlinkinfo, $from_tracker, $tracker, $submitted_value) ?? '';
 
-                if (! isset($all_artifact_to_be_linked[$tracker->getId()])) {
-                    $all_artifact_to_be_linked[$tracker->getId()] = [];
+                $tracker_id = $tracker->getId();
+
+                if (! isset($all_artifact_to_be_linked[$tracker_id])) {
+                    $all_artifact_to_be_linked[$tracker_id] = [];
                 }
 
-                if (! isset($all_artifact_to_be_linked[$tracker->getId()][$type])) {
-                    $all_artifact_to_be_linked[$tracker->getId()][$type] = [];
+                if (! isset($all_artifact_to_be_linked[$tracker_id][$type])) {
+                    $all_artifact_to_be_linked[$tracker_id][$type] = [];
                 }
 
-                $all_artifact_to_be_linked[$tracker->getId()][$type][] = $artifact_to_link->getId();
+                $all_artifact_to_be_linked[$tracker_id][$type][] = $artifact_to_link->getId();
             }
         }
 
