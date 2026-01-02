@@ -28,12 +28,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use TuleapCfg\Command\ProcessFactory;
 
 final class SiteDeployGitolite3Command extends Command
 {
-    public const NAME = 'site-deploy:gitolite3-config';
+    public const string NAME = 'site-deploy:gitolite3-config';
 
-    public function __construct()
+    public function __construct(private readonly ProcessFactory $process_factory)
     {
         parent::__construct(self::NAME);
     }
@@ -47,7 +48,7 @@ final class SiteDeployGitolite3Command extends Command
     #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        (new SiteDeployGitolite3())->deploy(
+        (new SiteDeployGitolite3($this->process_factory))->deploy(
             new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL])
         );
 

@@ -25,13 +25,21 @@ namespace TuleapCfg\Command\SiteDeploy\Gitolite3;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\File\FileWriter;
+use TuleapCfg\Command\ProcessFactory;
+use TuleapCfg\Command\SystemControlCommand;
+use TuleapCfg\Command\SystemControlSystemd;
 
-final class SiteDeployGitolite3
+final readonly class SiteDeployGitolite3
 {
-    private const GITOLITE_BASE_DIR                    = '/var/lib/gitolite';
-    private const GITOLITE_RC_CONFIG                   = '/var/lib/gitolite/.gitolite.rc';
-    private const GITOLITE_PROFILE                     = '/var/lib/gitolite/.profile';
-    private const MARKER_ONLY_PRESENT_GITOLITE3_CONFIG = '%RC =';
+    private const string GITOLITE_BASE_DIR                    = '/var/lib/gitolite';
+    private const string GITOLITE_RC_CONFIG                   = '/var/lib/gitolite/.gitolite.rc';
+    private const string GITOLITE_PROFILE                     = '/var/lib/gitolite/.profile';
+    private const string MARKER_ONLY_PRESENT_GITOLITE3_CONFIG = '%RC =';
+    private const string SSHD_TULEAP_CONFIG_PATH              = '/etc/ssh/sshd_config.d/10-tuleap.conf';
+
+    public function __construct(private ProcessFactory $process_factory)
+    {
+    }
 
     public function deploy(LoggerInterface $logger): void
     {
@@ -50,6 +58,8 @@ final class SiteDeployGitolite3
         $this->updateGitoliteConfig($logger);
 
         $this->updateGitolitePermissions($logger);
+
+        $this->deployTuleapSSHDConfig($logger);
     }
 
     private function updateGitoliteShellProfile(LoggerInterface $logger): void
@@ -180,6 +190,41 @@ final class SiteDeployGitolite3
     private function getExpectedGitoliteProfileContent(): string
     {
         return 'export PATH=/usr/lib/tuleap/git/bin${PATH:+:${PATH}}' . "\n";
+    }
+
+    private function deployTuleapSSHDConfig(LoggerInterface $logger): void
+    {
+        if (getenv(SystemControlCommand::ENV_SYSTEMCTL) === SystemControlCommand::ENV_SYSTEMCTL_DOCKER) {
+            $logger->debug('Container environment, skipping deployment of SSHD config');
+            return;
+        }
+
+        $expected_sshd_tuleap_config = \Psl\File\read(__DIR__ . '/../../../../../plugins/git/etc/tuleap-sshd.config');
+        $current_sshd_tuleap_config  = '';
+        if (\Psl\Filesystem\is_file(self::SSHD_TULEAP_CONFIG_PATH)) {
+            $current_sshd_tuleap_config = \Psl\File\read(self::SSHD_TULEAP_CONFIG_PATH);
+        }
+
+        if ($expected_sshd_tuleap_config === $current_sshd_tuleap_config) {
+            $logger->debug(self::SSHD_TULEAP_CONFIG_PATH . ' is up to date, nothing to do');
+            return;
+        }
+
+        FileWriter::writeFile(self::SSHD_TULEAP_CONFIG_PATH, $expected_sshd_tuleap_config, 0600);
+
+        $sshd_test_status = $this->process_factory->getProcess(['/usr/sbin/sshd', '-t'])->run();
+        if ($sshd_test_status !== 0) {
+            $logger->warning(sprintf('SSHd test failed with exit code %d, removing %s. Please check your SSHd configuration.', $sshd_test_status, self::SSHD_TULEAP_CONFIG_PATH));
+            \Psl\Filesystem\delete_file(self::SSHD_TULEAP_CONFIG_PATH);
+            return;
+        }
+
+        $logger->info('Reloading sshd.service');
+        $sshd_system_control = new SystemControlSystemd($this->process_factory, false, 'reload', 'sshd.service');
+        $sshd_system_control->run();
+        if (! $sshd_system_control->isSuccessful()) {
+            throw new \RuntimeException('SSHd reload failed, check your sshd.service');
+        }
     }
 
     /**

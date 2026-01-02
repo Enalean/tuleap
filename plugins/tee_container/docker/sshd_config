@@ -20,3 +20,6 @@ UsePAM yes
 
 AllowAgentForwarding no
 AllowTcpForwarding no
+
+Match User gitolite
+	AcceptEnv GIT_PROTOCOL
