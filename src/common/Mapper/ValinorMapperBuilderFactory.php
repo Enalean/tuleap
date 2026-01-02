@@ -57,7 +57,7 @@ final class ValinorMapperBuilderFactory
     {
         $cache_path = self::getCachePath();
         if (\Psl\Filesystem\exists($cache_path)) {
-            \Psl\Filesystem\delete_directory(self::getCachePath(), true);
+            \Tuleap\File\DirectoryRemover::deleteDirectory(self::getCachePath());
         }
     }
 
