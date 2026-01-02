@@ -22,7 +22,7 @@ import type { TemplateResult } from "lit";
 import { html } from "lit";
 
 type AppendProps = {
-    story: "icon" | "multiple-appends" | "prepend-and-append";
+    story: "icon" | "multiple-appends" | "prepend-and-append" | "with-button" | "with-select";
     size: string;
     placeholder: string;
     with_label: boolean;
@@ -61,6 +61,15 @@ function getAppends(args: AppendProps): TemplateResult {
     <span class=${getClasses(args, "append")}>@fbi.gov</span>
     <span class=${getClasses(args, "append")}><i class="fa-solid fa-tags" aria-hidden="true"></i></span>`
     }
+    if (args.story === "with-button") {
+        // prettier-ignore
+        return html`
+            ${getButton(args)}`;
+    }
+    if (args.story === "with-select") {
+        // prettier-ignore
+        return html`${getSelect()}`;
+    }
     if (args.with_label) {
         // prettier-ignore
         return html`
@@ -69,6 +78,29 @@ function getAppends(args: AppendProps): TemplateResult {
     // prettier-ignore
     return html`
     <span class=${getClasses(args, "append")}><i class="fa-solid fa-tags" aria-hidden="true"></i></span>`;
+}
+
+function getButton(args: AppendProps): TemplateResult {
+    // prettier-ignore
+    return html`
+    <button
+        type="button"
+        class="tlp-append tlp-button-secondary tlp-button-outline tlp-tooltip tlp-tooltip-right"
+        data-tlp-tooltip="Copy to clipboard"
+        aria-label="Copy to clipboard"
+        data-input-id="${args.story}"
+        data-copy-clicked-message="URL have been copied"
+    >
+        <i class="fa-solid fa-clipboard" aria-hidden="true"></i>
+    </button>`;
+}
+
+function getSelect(): TemplateResult {
+    return html`<select class="tlp-select tlp-select-adjusted tlp-append">
+        <option value="a">A</option>
+        <option value="b">B</option>
+        <option value="c">C</option>
+    </select>`;
 }
 
 function getTemplate(args: AppendProps): TemplateResult {
@@ -152,5 +184,17 @@ export const MultipleAppends: Story = {
 export const PrependAndAppend: Story = {
     args: {
         story: "prepend-and-append",
+    },
+};
+
+export const WithButton: Story = {
+    args: {
+        story: "with-button",
+    },
+};
+
+export const WithSelect: Story = {
+    args: {
+        story: "with-select",
     },
 };
