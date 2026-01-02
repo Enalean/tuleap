@@ -1,12 +1,14 @@
 {
   "url": "https://github.com/numtide/treefmt-nix.git",
-  "rev": "f56b1934f5f8fcab8deb5d38d42fd692632b47c2",
-  "date": "2025-10-20T09:26:31+02:00",
-  "path": "/nix/store/7jxjmwvjc6lf2ikdh9cjnzv99q3nvm19-treefmt-nix",
-  "sha256": "1klcfmqb4q4vvy9kdm5i9ddl26rhlyhf1mrd5aw1d4529bqnq5b5",
-  "hash": "sha256-ZRVs8UqikBa4Ki3X4KCnMBtBW0ux1DaT35tgsnB1jM4=",
+  "rev": "dec15f37015ac2e774c84d0952d57fcdf169b54d",
+  "date": "2025-12-30T20:20:17+01:00",
+  "path": "/nix/store/p1hv21d84rcg268g0wj213gwiwhqczw1-treefmt-nix",
+  "sha256": "1yjb9pc4pp8cg0v0p9f6a4mmvsbs9k0n8i3z805238bv60apzsy8",
+  "hash": "sha256-yOt/FTB7oSEKQH9EZMFMeuldK1HGpQs2eAzdS9hNS/o=",
   "fetchLFS": false,
   "fetchSubmodules": false,
   "deepClone": false,
-  "leaveDotGit": false
+  "fetchTags": false,
+  "leaveDotGit": false,
+  "rootDir": ""
 }

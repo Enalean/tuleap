@@ -1,12 +1,14 @@
 {
   "url": "https://github.com/hercules-ci/gitignore.nix.git",
-  "rev": "637db329424fd7e46cf4185293b9cc8c88c95394",
-  "date": "2024-02-28T03:28:52+01:00",
-  "path": "/nix/store/m8c3r36x64bl5ijp5zykw2kidhpq4rdh-gitignore.nix",
-  "sha256": "02wxkdpbhlm3yk5mhkhsp3kwakc16xpmsf2baw57nz1dg459qv8w",
-  "hash": "sha256-HG2cCnktfHsKV0s4XW83gU3F57gaTljL9KNSuG6bnQs=",
+  "rev": "cb5e3fdca1de58ccbc3ef53de65bd372b48f567c",
+  "date": "2025-11-10T21:53:45+01:00",
+  "path": "/nix/store/3bc00fhp721l219b1h1ndc1jkwak9gil-gitignore.nix",
+  "sha256": "1vjjcjx5z0lci8psn3xkcb5rqrpxknkw6w0q38bk8cadwr6whs2y",
+  "hash": "sha256-XmjITeZNMTQXGhhww6ed/Wacy2KzD6svioyCX7pkUu4=",
   "fetchLFS": false,
   "fetchSubmodules": false,
   "deepClone": false,
-  "leaveDotGit": false
+  "fetchTags": false,
+  "leaveDotGit": false,
+  "rootDir": ""
 }
