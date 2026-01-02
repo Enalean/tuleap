@@ -137,8 +137,8 @@ final class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $fieldset_01 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
         $fieldset_02 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
 
-        $fieldset_01->method('getID')->willReturn('648');
-        $fieldset_02->method('getID')->willReturn('701');
+        $fieldset_01->method('getID')->willReturn(648);
+        $fieldset_02->method('getID')->willReturn(701);
 
         $hidden_fieldsets = $this->createMock(HiddenFieldsets::class);
         $hidden_fieldsets->method('getFieldsets')->willReturn([

@@ -316,12 +316,10 @@ class FieldsetContainer extends TrackerFormElementContainer
     /**
      * getID - get this Tracker_FormElement_FieldSet ID.
      *
-     * @return int The id.
-     *
      * @psalm-mutation-free
      */
     #[Override]
-    public function getID()
+    public function getID(): int
     {
         return $this->id;
     }
@@ -352,7 +350,7 @@ class FieldsetContainer extends TrackerFormElementContainer
 
     private function isFieldsetUsedInPostAction(): bool
     {
-        return $this->getHiddenFieldsetsDao()->isFieldsetUsedInPostAction((int) $this->getID());
+        return $this->getHiddenFieldsetsDao()->isFieldsetUsedInPostAction($this->getID());
     }
 
     #[Override]

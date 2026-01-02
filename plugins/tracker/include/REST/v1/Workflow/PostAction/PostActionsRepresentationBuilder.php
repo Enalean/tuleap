@@ -122,7 +122,7 @@ class PostActionsRepresentationBuilder implements Visitor
     {
         $fieldset_ids = [];
         foreach ($hidden_fieldsets->getFieldsets() as $fieldset) {
-            $fieldset_ids[] = (int) $fieldset->getID();
+            $fieldset_ids[] = $fieldset->getID();
         }
 
         $this->post_action_representations[] = HiddenFieldsetsRepresentation::build(

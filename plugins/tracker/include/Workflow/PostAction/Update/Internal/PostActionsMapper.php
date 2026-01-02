@@ -129,7 +129,7 @@ class PostActionsMapper
 
         $fieldset_ids = [];
         foreach ($hidden_fieldsets->getFieldsets() as $fieldset) {
-            $fieldset_ids[] = (int) $fieldset->getID();
+            $fieldset_ids[] = $fieldset->getID();
         }
 
         // We set $id to null so that all post actions are re-created from scratch in the $to transition

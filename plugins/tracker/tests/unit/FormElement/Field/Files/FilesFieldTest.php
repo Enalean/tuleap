@@ -616,8 +616,10 @@ final class FilesFieldTest extends TestCase
         $formelement_field_file = $this->createPartialMock(FilesField::class, [
             'checkThatAtLeastOneFileIsUploaded',
             'isPreviousChangesetEmpty',
+            'getId',
         ]);
-        $submitted_value        = [
+        $formelement_field_file->method('getId')->willReturn(123);
+        $submitted_value = [
             [
                 'description' => '',
                 'name'        => '',
@@ -645,8 +647,10 @@ final class FilesFieldTest extends TestCase
         $formelement_field_file = $this->createPartialMock(FilesField::class, [
             'checkThatAtLeastOneFileIsUploaded',
             'isPreviousChangesetEmpty',
+            'getId',
         ]);
-        $submitted_value        = [
+        $formelement_field_file->method('getId')->willReturn(123);
+        $submitted_value = [
             'delete' => [123],
             [
                 'description' => '',

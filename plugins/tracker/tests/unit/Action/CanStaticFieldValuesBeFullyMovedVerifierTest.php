@@ -45,10 +45,10 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
     protected function setUp(): void
     {
         $this->source_list_field = $this->createMock(ListField::class);
-        $this->source_list_field->method('getId')->willReturn('123');
+        $this->source_list_field->method('getId')->willReturn(123);
         $this->source_list_field->method('getName')->willReturn('List');
         $this->destination_list_field = $this->createStub(ListField::class);
-        $this->destination_list_field->method('getId')->willReturn('456');
+        $this->destination_list_field->method('getId')->willReturn(456);
         $this->destination_list_field->method('getName')->willReturn('List');
         $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();
     }

@@ -81,7 +81,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
         $fieldset_ids = [];
         assert($post_action instanceof HiddenFieldsets);
         foreach ($post_action->getFieldsets() as $fieldset) {
-            $fieldset_ids[] = (int) $fieldset->getID();
+            $fieldset_ids[] = $fieldset->getID();
         }
 
         $this->hidden_fieldsets_dao->createPostActionForTransitionId(
@@ -122,7 +122,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
 
             $from_fieldset_ids = [];
             foreach ($from_fieldsets as $fieldset) {
-                $from_fieldset_ids[] = (int) $fieldset->getID();
+                $from_fieldset_ids[] = $fieldset->getID();
             }
 
             foreach ($field_mapping as $mapping) {

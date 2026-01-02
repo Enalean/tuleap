@@ -128,7 +128,7 @@ class CardMappedFieldUpdater
     ): array {
         $representation                 = new ArtifactValuesRepresentation();
         $mapped_field                   = $this->getMappedField($taskboard_tracker, $column, $current_user);
-        $representation->field_id       = (int) $mapped_field->getId();
+        $representation->field_id       = $mapped_field->getId();
         $first_mapped_value             = $this->getFirstMappedValue(
             $mapped_field,
             $artifact_to_add,

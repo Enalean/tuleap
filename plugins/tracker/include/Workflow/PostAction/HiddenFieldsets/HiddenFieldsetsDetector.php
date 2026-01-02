@@ -81,10 +81,10 @@ class HiddenFieldsetsDetector
             return false;
         }
 
-        $fieldset_id = (int) $fieldset->getID();
+        $fieldset_id = $fieldset->getID();
 
         foreach ($hidden_fieldsets_post_action->getFieldsets() as $fieldset_in_post_action) {
-            if ((int) $fieldset_in_post_action->getID() === $fieldset_id) {
+            if ($fieldset_in_post_action->getID() === $fieldset_id) {
                 return true;
             }
         }

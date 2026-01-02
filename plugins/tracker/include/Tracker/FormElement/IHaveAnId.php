@@ -25,8 +25,6 @@ interface Tracker_FormElement_IHaveAnId
 {
     /**
      *  Get the id
-     *
-     * @return int
      */
-    public function getId();
+    public function getId(): int;
 }

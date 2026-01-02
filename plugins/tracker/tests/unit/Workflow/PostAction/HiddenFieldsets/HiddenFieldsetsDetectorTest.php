@@ -106,8 +106,8 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getFieldsets')
             ->willReturn([$fieldset_hidden]);
 
-        $fieldset->method('getID')->willReturn('312');
-        $fieldset_hidden->method('getID')->willReturn('999');
+        $fieldset->method('getID')->willReturn(312);
+        $fieldset_hidden->method('getID')->willReturn(999);
 
         $this->assertFalse(
             $this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)
@@ -134,8 +134,8 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getFieldsets')
             ->willReturn([$fieldset_hidden]);
 
-        $fieldset->method('getID')->willReturn('312');
-        $fieldset_hidden->method('getID')->willReturn('312');
+        $fieldset->method('getID')->willReturn(312);
+        $fieldset_hidden->method('getID')->willReturn(312);
 
         $this->assertTrue(
             $this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)
@@ -170,8 +170,8 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getFieldsets')
             ->willReturn([$fieldset_hidden]);
 
-        $fieldset->method('getID')->willReturn('312');
-        $fieldset_hidden->method('getID')->willReturn('312');
+        $fieldset->method('getID')->willReturn(312);
+        $fieldset_hidden->method('getID')->willReturn(312);
 
         $this->assertTrue(
             $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($artifact)
@@ -222,7 +222,7 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getFieldsets')
             ->willReturn([]);
 
-        $fieldset->method('getID')->willReturn('312');
+        $fieldset->method('getID')->willReturn(312);
 
         $this->assertFalse(
             $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($artifact)

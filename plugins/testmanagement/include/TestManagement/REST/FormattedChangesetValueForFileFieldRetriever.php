@@ -65,7 +65,7 @@ class FormattedChangesetValueForFileFieldRetriever
         }
 
         $values_representation           = new ArtifactValuesRepresentation();
-        $values_representation->field_id = (int) $field_upload_data->getField()->getId();
+        $values_representation->field_id = $field_upload_data->getField()->getId();
 
         $changeset_value = $field_upload_data->getField()->getLastChangesetValue($artifact);
         $field_values_id = [];
@@ -84,7 +84,7 @@ class FormattedChangesetValueForFileFieldRetriever
         $file_values_id = [];
         foreach ($changeset_value->getFiles() as $file) {
             \assert($file instanceof Tracker_FileInfo);
-            $file_values_id[] = (int) $file->getId();
+            $file_values_id[] = $file->getId();
         }
 
         return $file_values_id;

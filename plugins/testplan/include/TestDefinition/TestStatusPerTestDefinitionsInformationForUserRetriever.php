@@ -108,7 +108,7 @@ class TestStatusPerTestDefinitionsInformationForUserRetriever
             return null;
         }
 
-        return (int) $status_field->getId();
+        return $status_field->getId();
     }
 
     /**
@@ -131,7 +131,7 @@ class TestStatusPerTestDefinitionsInformationForUserRetriever
             return null;
         }
 
-        return (int) $art_link_field->getId();
+        return $art_link_field->getId();
     }
 
     /**

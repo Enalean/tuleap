@@ -338,7 +338,7 @@ class SemanticVelocity extends TrackerSemantic
     private function checkFieldIdIsValidForTracker($field_id)
     {
         foreach ($this->getPossibleFields() as $field) {
-            if ((int) $field->getId() === (int) $field_id) {
+            if ($field->getId() === (int) $field_id) {
                 return true;
             }
         }

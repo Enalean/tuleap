@@ -128,8 +128,9 @@ final class ArtifactLinkFieldTest extends TestCase
 
     public function testIsValidRequiredFieldWithExistingValues(): void
     {
-        $field = $this->createPartialMock(ArtifactLinkField::class, ['isRequired', 'getLastChangesetValue', 'getReverseLinks']);
+        $field = $this->createPartialMock(ArtifactLinkField::class, ['isRequired', 'getLastChangesetValue', 'getReverseLinks', 'getId']);
         $field->method('isRequired')->willReturn(true);
+        $field->method('getId')->willReturn(123);
 
         $changeset = ChangesetTestBuilder::aChangeset(6512)->build();
         $value     = ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $field)
@@ -153,8 +154,9 @@ final class ArtifactLinkFieldTest extends TestCase
 
     public function testIsValidRequiredFieldWithNullValue(): void
     {
-        $field = $this->createPartialMock(ArtifactLinkField::class, ['isRequired', 'getSubmittedValueEmptyChecker']);
+        $field = $this->createPartialMock(ArtifactLinkField::class, ['isRequired', 'getSubmittedValueEmptyChecker', 'getId']);
         $field->method('isRequired')->willReturn(true);
+        $field->method('getId')->willReturn(123);
 
         $changeset = ChangesetTestBuilder::aChangeset(654)->build();
         $value     = ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $field)->build();
@@ -429,7 +431,8 @@ final class ArtifactLinkFieldTest extends TestCase
 
     public function testItReturnsARESTValueEvenIfThereIsNone(): void
     {
-        $field     = $this->createPartialMock(ArtifactLinkField::class, ['getValueDao']);
+        $field = $this->createPartialMock(ArtifactLinkField::class, ['getValueDao', 'getId']);
+        $field->method('getId')->willReturn(123);
         $value_dao = $this->createMock(ArtifactLinkFieldValueDao::class);
         $field->expects($this->once())->method('getValueDao')->willReturn($value_dao);
         $value_dao->method('searchReverseLinksById')->willReturn(TestHelper::emptyDar());

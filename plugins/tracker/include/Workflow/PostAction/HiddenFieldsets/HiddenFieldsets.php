@@ -101,7 +101,7 @@ class HiddenFieldsets extends Transition_PostAction
         if (count($this->getFieldsets()) > 0) {
             $child = $root->addChild(self::XML_TAG_NAME);
             foreach ($this->getFieldsets() as $fieldset) {
-                $fieldset_id = array_search((int) $fieldset->getID(), $xmlMapping);
+                $fieldset_id = array_search($fieldset->getID(), $xmlMapping);
                 if ($fieldset_id !== false) {
                     $child->addChild('fieldset_id')->addAttribute('REF', $fieldset_id);
                 }

@@ -161,9 +161,10 @@ final class FieldsetContainerTest extends TestCase
         $hidden_dao = $this->createMock(HiddenFieldsetsDao::class);
         $hidden_dao->method('isFieldsetUsedInPostAction')->willReturn(false);
 
-        $container_fieldset = $this->createPartialMock(FieldsetContainer::class, ['getHiddenFieldsetsDao', 'getFormElements']);
+        $container_fieldset = $this->createPartialMock(FieldsetContainer::class, ['getHiddenFieldsetsDao', 'getFormElements', 'getID']);
 
         $container_fieldset->method('getFormElements')->willReturn(null);
+        $container_fieldset->method('getID')->willReturn(123);
         $container_fieldset->method('getHiddenFieldsetsDao')->willReturn($hidden_dao);
 
         self::assertTrue($container_fieldset->canBeRemovedFromUsage());

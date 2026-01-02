@@ -98,11 +98,11 @@ class ExecutionCreator
         $link_field   = $this->getArtifactLinksField($tracker_reference, $user);
 
         $status_value                 = new ArtifactValuesRepresentation();
-        $status_value->field_id       = (int) $status_field->getId();
+        $status_value->field_id       = $status_field->getId();
         $status_value->bind_value_ids = [$status_field->getDefaultValue()];
 
         $link_value           = new ArtifactValuesRepresentation();
-        $link_value->field_id = (int) $link_field->getId();
+        $link_value->field_id = $link_field->getId();
         $link_value->links    = [['id' => $definition_id]];
 
         return [$status_value, $link_value];

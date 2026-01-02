@@ -680,12 +680,13 @@ final class ComputedFieldTest extends TestCase
     private function getComputedFieldForManualValueRetrievement(ComputedDao $value_dao): ComputedField
     {
         $field = $this->createPartialMock(ComputedField::class, [
-            'getValueDao', 'getChangesetValueDao', 'userCanUpdate',
+            'getValueDao', 'getChangesetValueDao', 'userCanUpdate', 'getId',
         ]);
         $field->method('getValueDao')->willReturn($value_dao);
         $old_changset = $this->createMock(Tracker_Artifact_Changeset_ValueDao::class);
         $field->method('getChangesetValueDao')->willReturn($old_changset);
         $field->method('userCanUpdate')->willReturn(true);
+        $field->method('getId')->willReturn(123);
 
         $old_changset->expects($this->once())->method('save')->with(4444, self::anything(), 1)->willReturn(1234);
 
