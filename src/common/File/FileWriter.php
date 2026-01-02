@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\File;
 
 use Psl\File\WriteMode;
+use Tuleap\Cryptography\ConcealedString;
 use function Psl\File\write;
 use function Psl\Filesystem\change_permissions;
 use function Psl\Filesystem\create_temporary_file;
@@ -41,13 +42,15 @@ final class FileWriter
      *
      * @psalm-param non-empty-string $file_path
      */
-    public static function writeFile(string $file_path, string $content, int $chmod = 0644): void
+    public static function writeFile(string $file_path, string|ConcealedString $content, int $chmod = 0644): void
     {
         $destination_directory = get_directory($file_path);
         $temporary_file        = create_temporary_file($destination_directory);
 
         try {
-            write($temporary_file, $content, WriteMode::Truncate);
+            // Ensure nobody else can read the temporary file
+            change_permissions($temporary_file, 0600);
+            write($temporary_file, (string) $content, WriteMode::Truncate);
             change_permissions($temporary_file, $chmod);
             if (! rename($temporary_file, $file_path)) {
                 throw new \RuntimeException(sprintf('Could not move %s to %s', $temporary_file, $file_path));

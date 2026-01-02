@@ -51,6 +51,7 @@ final class FileWriterTest extends TestCase
     public static function dataProviderPermissions(): array
     {
         return [
+            [0400],
             [0600],
             [0640],
             [0644],
