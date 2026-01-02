@@ -18,14 +18,14 @@
  *
  */
 
+import { describe, expect, it, vi } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
 import { synchronizeTeamOfProgram } from "./synchronize-team";
 
-jest.mock("@tuleap/tlp-fetch");
 describe("SynchronizeTeam", () => {
     describe("synchronizeTeamOfProgram", () => {
         it("Given team id and program label, Then rest route is called to synchronize team", () => {
-            const put = jest.spyOn(tlp, "put");
+            const put = vi.spyOn(tlp, "put");
 
             synchronizeTeamOfProgram("my-program", 103);
 

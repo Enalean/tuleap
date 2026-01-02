@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it } from "vitest";
 import { submitConfigurationHandler } from "./submit-configuration-handler";
 import type { GettextProvider } from "../GettextProvider";
 

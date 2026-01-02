@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
 import { DocumentAdapter } from "./DocumentAdapter";
 import type { RetrieveElement } from "./RetrieveElement";
 

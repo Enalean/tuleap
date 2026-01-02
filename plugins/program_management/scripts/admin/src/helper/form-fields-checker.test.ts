@@ -17,31 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { checkAllFieldAreFilledAndSetErrorMessage } from "./form-fields-checker";
 import * as formFieldErrorHelper from "./form-field-error-helper";
-import type { GetText } from "@tuleap/gettext";
+import type { GettextProvider } from "../GettextProvider";
 
-jest.mock("./form-field-error-helper");
 describe("form-fields-checker", function () {
-    const gettext: GetText = {
-        gettext: (msgid: string) => {
-            return msgid;
-        },
-    } as GetText;
+    const gettext: GettextProvider = {
+        gettext: (msgid) => msgid,
+    };
     describe("checkAllFieldAreFilledAndSetErrorMessage", function () {
-        let resetErrorOnSelectField: jest.SpyInstance,
-            setErrorMessageOnSelectField: jest.SpyInstance;
+        let resetErrorOnSelectField: MockInstance, setErrorMessageOnSelectField: MockInstance;
 
         beforeEach(() => {
-            resetErrorOnSelectField = jest.spyOn(formFieldErrorHelper, "resetErrorOnSelectField");
-            setErrorMessageOnSelectField = jest.spyOn(
+            resetErrorOnSelectField = vi.spyOn(formFieldErrorHelper, "resetErrorOnSelectField");
+            setErrorMessageOnSelectField = vi.spyOn(
                 formFieldErrorHelper,
                 "setErrorMessageOnSelectField",
             );
-        });
-
-        afterEach(() => {
-            jest.clearAllMocks();
         });
 
         it("should reset fields and return true when all field are filled", function () {

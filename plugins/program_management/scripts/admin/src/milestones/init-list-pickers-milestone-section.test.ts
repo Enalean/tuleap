@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { initListPickersMilestoneSection } from "./init-list-pickers-milestone-section";
 import * as listPicker from "@tuleap/list-picker";
 import * as disabledPlannableTrackerHelper from "../helper/disabled-plannable-tracker-helper";
@@ -25,15 +27,13 @@ import type { GettextProvider } from "../GettextProvider";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
-jest.mock("../helper/disabled-plannable-tracker-helper");
-jest.mock("../helper/disabled-iteration-tracker-helper");
 describe("initListPickersMilestoneSection", () => {
     const gettext: GettextProvider = {
         gettext: (msgid: string) => msgid,
     };
 
     it("When program increment tracker selector does not exist, Then nothing is done", () => {
-        const create_list_picker = jest.spyOn(listPicker, "createListPicker");
+        const create_list_picker = vi.spyOn(listPicker, "createListPicker");
         initListPickersMilestoneSection(createDocument(), gettext);
 
         expect(create_list_picker).not.toHaveBeenCalled();
@@ -111,11 +111,11 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(iteration_selector);
 
         const create_list_picker = createListPickerSpy();
-        const disabled_plannable_trackers = jest.spyOn(
+        const disabled_plannable_trackers = vi.spyOn(
             disabledPlannableTrackerHelper,
             "disabledPlannableTrackers",
         );
-        const disabled_iteration_tracker = jest.spyOn(
+        const disabled_iteration_tracker = vi.spyOn(
             disabledIterationTrackerHelper,
             "disabledIterationTrackersFromProgramIncrementAndPlannableTrackers",
         );
@@ -147,8 +147,8 @@ describe("initListPickersMilestoneSection", () => {
     });
 });
 
-function createListPickerSpy(): jest.SpyInstance<listPicker.ListPicker> {
-    return jest.spyOn(listPicker, "createListPicker").mockReturnValue({
+function createListPickerSpy(): MockInstance {
+    return vi.spyOn(listPicker, "createListPicker").mockReturnValue({
         destroy: () => {
             // Nothing to do since we did not really create something
         },

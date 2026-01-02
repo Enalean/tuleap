@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { describe, expect, it, vi } from "vitest";
 import { displayTeamsToAggregate } from "./display-teams-to-aggregate";
 import * as listPicker from "@tuleap/list-picker";
 import type { GettextProvider } from "../GettextProvider";
@@ -42,7 +44,7 @@ describe("DisplayTeamsToAggregate", () => {
             select.id = "program-management-choose-teams";
             doc.body.appendChild(select);
 
-            const create_list_picker = jest.spyOn(listPicker, "createListPicker").mockReturnValue({
+            const create_list_picker = vi.spyOn(listPicker, "createListPicker").mockReturnValue({
                 destroy: () => {
                     // Nothing to do since we did not really create something
                 },

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TimeboxLabel } from "./TimeboxLabel";
 import { RetrieveElementStub } from "./RetrieveElementStub";
 
@@ -66,7 +67,7 @@ describe(`TimeboxLabel`, () => {
         input.value = "Sicyonic";
 
         const label = TimeboxLabel.fromId(RetrieveElementStub.withElements(input), "some_id");
-        const callback = jest.fn();
+        const callback = vi.fn();
         label.addInputListener(callback);
 
         input.dispatchEvent(new InputEvent("input"));
@@ -78,7 +79,7 @@ describe(`TimeboxLabel`, () => {
         input.value = "sophiologic";
 
         const label = TimeboxLabel.fromId(RetrieveElementStub.withElements(input), "some_id");
-        const callback = jest.fn();
+        const callback = vi.fn();
         expect(callback).not.toHaveBeenCalled();
         label.addInputListener(callback);
         label.addInputListener(callback);

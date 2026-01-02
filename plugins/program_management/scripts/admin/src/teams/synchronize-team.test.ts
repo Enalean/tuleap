@@ -18,6 +18,7 @@
  *
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DocumentAdapter } from "../dom/DocumentAdapter";
 import { initSynchronizeTeamButtons, triggerTeamSynchronization } from "./synchronize-team";
 import * as api from "../api/synchronize-team";
@@ -28,7 +29,7 @@ describe("synchronize-team", () => {
     let location: Location;
 
     beforeEach(() => {
-        location = { reload: jest.fn() } as unknown as Location;
+        location = { reload: vi.fn() } as unknown as Location;
     });
 
     describe("synchronizeTeam", () => {
@@ -48,9 +49,9 @@ describe("synchronize-team", () => {
             button.className = "program-management-admin-action-synchronize-button";
             doc.body.appendChild(button);
 
-            const synchronize_team = jest
+            const synchronize_team = vi
                 .spyOn(api, "synchronizeTeamOfProgram")
-                .mockResolvedValue(Promise.resolve({} as Response));
+                .mockResolvedValue({} as Response);
 
             await triggerTeamSynchronization(button, location);
 

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import { resetErrorOnSelectField, setErrorMessageOnSelectField } from "./form-field-error-helper";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();

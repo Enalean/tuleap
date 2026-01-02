@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { describe, expect, it } from "vitest";
 import { getHTMLInputElementFromId, getHTMLSelectElementFromId } from "./HTML_element_extractor";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();

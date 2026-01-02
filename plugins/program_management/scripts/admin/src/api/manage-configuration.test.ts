@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, vi } from "vitest";
 import { saveConfiguration } from "./manage-configuration";
 import type { ProgramConfiguration } from "../type";
 import * as tlp from "@tuleap/tlp-fetch";
 
-jest.mock("@tuleap/tlp-fetch");
 describe("manageConfiguration", () => {
     describe("saveConfiguration", () => {
         it("Given configuration, Then API is called", () => {
@@ -34,7 +34,7 @@ describe("manageConfiguration", () => {
                     iteration_tracker_id: 125,
                 },
             };
-            const put = jest.spyOn(tlp, "put");
+            const put = vi.spyOn(tlp, "put");
 
             saveConfiguration(configuration);
 
