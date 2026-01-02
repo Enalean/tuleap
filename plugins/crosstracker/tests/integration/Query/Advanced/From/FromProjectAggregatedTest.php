@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced\From;
 
 use EventManager;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectUGroup;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
@@ -46,7 +46,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
 {
     private UUID $uuid;
     private PFUser $user;
-    private EventManager&MockObject $event_manager;
+    private EventManager&Stub $event_manager;
     private Project $top_project;
     private Project $sub_project_1;
     private Project $sub_project_2;
@@ -57,7 +57,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $db                  = DBFactory::getMainTuleapDBConnection()->getDB();
         $core_builder        = new CoreDatabaseBuilder($db);
         $tracker_builder     = new TrackerDatabaseBuilder($db);
-        $this->event_manager = $this->createMock(EventManager::class);
+        $this->event_manager = $this->createStub(EventManager::class);
         $this->event_manager->method('processEvent');
         EventManager::setInstance($this->event_manager);
 

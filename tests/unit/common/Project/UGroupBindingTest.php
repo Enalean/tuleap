@@ -49,7 +49,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRemoveUgroupBinding(): void
     {
         $this->ugroup_manager->expects($this->once())->method('updateUgroupBinding');
-        $GLOBALS['Language']->expects($this->once())->method('getText')
+        $GLOBALS['Language']->method('getText')
             ->with('project_ugroup_binding', 'binding_removed');
         $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 

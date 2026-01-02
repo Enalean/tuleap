@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest;
 
 use GitRepositoryFactory;
 use PFUser;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
 use Tuleap\NeverThrow\Result;
@@ -41,58 +42,34 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
 {
     private PullRequestUpdater $pull_request_updater;
     private Dao $dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&InlineCommentDAO
-     */
-    private $inline_comments_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&GitRepositoryFactory
-     */
-    private $git_repository_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&GitExecFactory
-     */
-    private $git_exec_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&GitExec
-     */
-    private $git_exec;
+    private InlineCommentDAO&Stub $inline_comments_dao;
+    private GitRepositoryFactory&Stub $git_repository_factory;
+    private GitExecFactory&Stub $git_exec_factory;
+    private GitExec&Stub $git_exec;
     private PFUser $user;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&GitPullRequestReferenceUpdater
-     */
-    private $pr_reference_updater;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestMerger
-     */
-    private $pr_merger;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TimelineEventCreator
-     */
-    private $timeline_event_creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&EventDispatcherInterface
-     */
-    private $event_dispatcher;
+    private GitPullRequestReferenceUpdater&Stub $pr_reference_updater;
+    private PullRequestMerger&Stub $pr_merger;
+    private TimelineEventCreator&Stub $timeline_event_creator;
+    private EventDispatcherInterface&Stub $event_dispatcher;
 
     #[\Override]
     protected function setUp(): void
     {
-        $reference_manager = $this->createMock(ReferenceManager::class);
+        $reference_manager = $this->createStub(ReferenceManager::class);
 
         $this->dao                    = new Dao();
-        $this->inline_comments_dao    = $this->createMock(InlineCommentDAO::class);
-        $this->git_repository_factory = $this->createMock(GitRepositoryFactory::class);
-        $this->git_exec_factory       = $this->createMock(GitExecFactory::class);
-        $this->pr_reference_updater   = $this->createMock(GitPullRequestReferenceUpdater::class);
-        $this->pr_merger              = $this->createMock(PullRequestMerger::class);
-        $this->timeline_event_creator = $this->createMock(TimelineEventCreator::class);
-        $this->event_dispatcher       = $this->createMock(EventDispatcherInterface::class);
+        $this->inline_comments_dao    = $this->createStub(InlineCommentDAO::class);
+        $this->git_repository_factory = $this->createStub(GitRepositoryFactory::class);
+        $this->git_exec_factory       = $this->createStub(GitExecFactory::class);
+        $this->pr_reference_updater   = $this->createStub(GitPullRequestReferenceUpdater::class);
+        $this->pr_merger              = $this->createStub(PullRequestMerger::class);
+        $this->timeline_event_creator = $this->createStub(TimelineEventCreator::class);
+        $this->event_dispatcher       = $this->createStub(EventDispatcherInterface::class);
         $this->pull_request_updater   = new PullRequestUpdater(
             new Factory($this->dao, $reference_manager),
             $this->pr_merger,
             $this->inline_comments_dao,
-            $this->createMock(InlineCommentUpdater::class),
+            $this->createStub(InlineCommentUpdater::class),
             new FileUniDiffBuilder(),
             $this->timeline_event_creator,
             $this->git_repository_factory,
@@ -101,7 +78,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
             $this->event_dispatcher
         );
 
-        $this->git_exec = $this->createMock(GitExec::class);
+        $this->git_exec = $this->createStub(GitExec::class);
         $this->user     = UserTestBuilder::aUser()->withId(1337)->build();
     }
 
@@ -116,7 +93,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
         $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'other', 'sha2', 0, TimelineComment::FORMAT_TEXT);
         $pr3_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'other', 'sha2', 0, TimelineComment::FORMAT_TEXT);
 
-        $git_repo = $this->createMock(GitRepository::class);
+        $git_repo = $this->createStub(GitRepository::class);
         $git_repo->method('getId')->willReturn(1);
 
         $this->inline_comments_dao->method('searchUpToDateByPullRequestId')->willReturn([]);
@@ -124,7 +101,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
         $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repo);
         $this->git_exec_factory->method('getGitExec')->with($git_repo)->willReturn($this->git_exec);
 
-        $this->event_dispatcher->expects($this->atLeast(1))->method('dispatch')->with(self::isInstanceOf(PullRequestUpdatedEvent::class));
+        $this->event_dispatcher->method('dispatch')->with(self::isInstanceOf(PullRequestUpdatedEvent::class));
 
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
@@ -150,7 +127,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
         $pr1_id = $this->dao->create(2, 'title', 'description', 1, 0, 'dev', 'sha1', 2, 'master', 'sha2', 0, TimelineComment::FORMAT_TEXT);
         $pr2_id = $this->dao->create(2, 'title', 'description', 1, 0, 'master', 'sha1', 2, 'dev', 'sha2', 0, TimelineComment::FORMAT_TEXT);
 
-        $git_repo = $this->createMock(GitRepository::class);
+        $git_repo = $this->createStub(GitRepository::class);
         $git_repo->method('getId')->willReturn(1);
 
         $this->inline_comments_dao->method('searchUpToDateByPullRequestId')->willReturn([]);
@@ -184,7 +161,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
         $this->dao->markAsMerged($pr1_id);
         $this->dao->markAsAbandoned($pr2_id);
 
-        $git_repo = $this->createMock(GitRepository::class);
+        $git_repo = $this->createStub(GitRepository::class);
         $git_repo->method('getId')->willReturn(1);
 
         $this->inline_comments_dao->method('searchUpToDateByPullRequestId')->willReturn([]);

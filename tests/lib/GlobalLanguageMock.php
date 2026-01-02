@@ -30,11 +30,11 @@ trait GlobalLanguageMock
     #[Before]
     protected function mockLanguage(): void
     {
-        $GLOBALS['Language'] = $this->getMockBuilder(BaseLanguage::class)
+        $GLOBALS['Language'] = $this->getStubBuilder(BaseLanguage::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->enableAutoReturnValueGeneration()
-            ->getMock();
+            ->getStub();
     }
 
     #[After]

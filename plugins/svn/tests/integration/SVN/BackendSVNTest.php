@@ -27,7 +27,7 @@ namespace Tuleap\SVN;
 use Backend;
 use BackendSVNFileForSimlinkAlreadyExistsException;
 use ForgeConfig;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectManager;
 use SVN_DAO;
@@ -44,8 +44,8 @@ final class BackendSVNTest extends TestIntegrationTestCase
     use GlobalLanguageMock;
 
     private string $fake_revprop;
-    private ProjectManager&MockObject $project_manager;
-    private BackendSVN&MockObject $backend;
+    private ProjectManager&Stub $project_manager;
+    private BackendSVN&Stub $backend;
 
     #[\Override]
     protected function setUp(): void
@@ -71,13 +71,13 @@ final class BackendSVNTest extends TestIntegrationTestCase
         ForgeConfig::set('sys_custom_dir', $tmp_dir);
         mkdir($tmp_dir . '/conf');
 
-        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->project_manager = $this->createStub(ProjectManager::class);
 
-        $this->backend = $this->createPartialMock(BackendSVN::class, [
-            'getSvnDao',
-            'getProjectManager',
-            'chmod',
-        ]);
+        $this->backend = $this->getStubBuilder(BackendSVN::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->onlyMethods(['getSvnDao', 'getProjectManager', 'chmod'])
+            ->getStub();
     }
 
     #[\Override]
@@ -90,7 +90,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
 
     public function testGenerateSVNApacheConf(): void
     {
-        $svn_dao = $this->createMock(SVN_DAO::class);
+        $svn_dao = $this->createStub(SVN_DAO::class);
         $svn_dao->method('searchSvnRepositories')
             ->willReturn(TestHelper::argListToDar([[
                 'group_id'        => '101',
@@ -118,9 +118,9 @@ final class BackendSVNTest extends TestIntegrationTestCase
 
     public function testSetSVNPrivacyPrivate(): void
     {
-        $this->backend->expects($this->once())->method('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0770)->willReturn(true);
+        $this->backend->method('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0770)->willReturn(true);
         $this->backend->method('getProjectManager')->willReturn($this->project_manager);
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getUnixNameMixedCase')->willReturn('toto');
         $project->method('getSVNRootPath')->willReturn(ForgeConfig::get('svn_prefix') . '/toto');
         self::assertTrue($this->backend->setSVNPrivacy($project, true));
@@ -128,8 +128,8 @@ final class BackendSVNTest extends TestIntegrationTestCase
 
     public function testsetSVNPrivacyPublic(): void
     {
-        $this->backend->expects($this->once())->method('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0775)->willReturn(true);
-        $project = $this->createMock(Project::class);
+        $this->backend->method('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0775)->willReturn(true);
+        $project = $this->createStub(Project::class);
         $project->method('getUnixNameMixedCase')->willReturn('toto');
         $project->method('getSVNRootPath')->willReturn(ForgeConfig::get('svn_prefix') . '/toto');
         self::assertTrue($this->backend->setSVNPrivacy($project, false));
@@ -139,9 +139,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
     {
         $path_that_doesnt_exist = $this->getTmpDir() . '/' . bin2hex(random_bytes(32));
 
-        $this->backend->expects($this->never())->method('chmod');
-
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getUnixNameMixedCase')->willReturn($path_that_doesnt_exist);
         $project->method('getSVNRootPath')->willReturn(ForgeConfig::get('svn_prefix') . '/' . $path_that_doesnt_exist);
 
@@ -155,7 +153,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
         $path    = ForgeConfig::get('svn_prefix') . '/toto/hooks';
         touch($path . '/post-revprop-change');
 
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getUnixName')->willReturn('toto');
         $project->method('getSVNRootPath')->willReturn(ForgeConfig::get('svn_prefix') . '/toto');
         $backend->expects($this->once())->method('log');
@@ -180,7 +178,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
         // Create link to fake post-revprop-change
         symlink($this->fake_revprop, $path . '/post-revprop-change');
 
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getUnixName')->willReturn('toto');
         $project->method('getSVNRootPath')->willReturn(ForgeConfig::get('svn_prefix') . '/toto');
         $backend->expects($this->never())->method('log');

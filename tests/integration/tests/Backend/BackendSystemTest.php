@@ -66,15 +66,16 @@ final class BackendSystemTest extends TestIntegrationTestCase
 
     public function testCleanupFrs(): void
     {
-        $backend = $this->createPartialMock(BackendSystem::class, [
-            'getFRSFileFactory',
-            'getWikiAttachment',
-        ]);
+        $backend = $this->getStubBuilder(BackendSystem::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->onlyMethods(['getFRSFileFactory', 'getWikiAttachment'])
+            ->getStub();
 
-        $ff = $this->createMock(FRSFileFactory::class);
+        $ff = $this->createStub(FRSFileFactory::class);
         $ff->method('moveFiles')->willReturn(true);
 
-        $wiki = $this->createMock(WikiAttachment::class);
+        $wiki = $this->createStub(WikiAttachment::class);
         $wiki->method('purgeAttachments')->willReturn(true);
 
         $backend->method('getFRSFileFactory')->willReturn($ff);
@@ -85,7 +86,11 @@ final class BackendSystemTest extends TestIntegrationTestCase
 
     public function testRenameFRSFolders(): void
     {
-        $backend = $this->createPartialMock(BackendSystem::class, []);
+        $backend = $this->getStubBuilder(BackendSystem::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->onlyMethods([])
+            ->getStub();
 
         $project = ProjectTestBuilder::aProject()->withUnixName('nameBeforeRename')->build();
 
