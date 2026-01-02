@@ -48,7 +48,7 @@ final class DefaultBranchPushProcessor
      */
     public function process(DefaultBranchPushReceived $push): Ok|Err
     {
-        if (! $this->closure_verifier->isArtifactClosureAllowed((int) $push->getRepository()->getId())) {
+        if (! $this->closure_verifier->isArtifactClosureAllowed($push->getRepository()->getId())) {
             return Result::err(ArtifactClosureNotAllowedFault::build($push->getRepository()));
         }
         // We intentionally do not combine the list of results.

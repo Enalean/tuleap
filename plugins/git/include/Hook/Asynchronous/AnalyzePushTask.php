@@ -48,7 +48,7 @@ final class AnalyzePushTask implements \Tuleap\Queue\QueueTask
             static fn(CommitHash $commit_hash) => (string) $commit_hash,
             $push->getCommitHashes()
         );
-        return new self($commit_hashes, (int) $push->getRepository()->getId(), (int) $push->getPusher()->getId());
+        return new self($commit_hashes, $push->getRepository()->getId(), (int) $push->getPusher()->getId());
     }
 
     #[\Override]

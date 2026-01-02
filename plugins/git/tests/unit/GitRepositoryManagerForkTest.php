@@ -314,7 +314,7 @@ final class GitRepositoryManagerForkTest extends TestCase
 
     public function testForkCrossProjectsRedirectToCrossProjectGitRepositories(): void
     {
-        $repo_id    = '1';
+        $repo_id    = 1;
         $project_id = 2;
 
         $this->user->setUserGroupData([['group_id' => $project_id, 'admin_flags' => 'A']]);

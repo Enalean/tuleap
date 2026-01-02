@@ -46,7 +46,7 @@ class CommitDetailsRetriever
 
     private function retrieveCommitDetailsFromDb(GitRepository $repository, Commit $commit): ?CommitDetails
     {
-        $row_cache = $this->dao->searchCommitDetails((int) $repository->getId(), $commit->GetHash());
+        $row_cache = $this->dao->searchCommitDetails($repository->getId(), $commit->GetHash());
         if (! $row_cache) {
             return null;
         }
@@ -83,7 +83,7 @@ class CommitDetailsRetriever
         $committer_epoch = (int) $commit->GetCommitterEpoch();
 
         $this->dao->saveCommitDetails(
-            (int) $repository->getId(),
+            $repository->getId(),
             $commit->GetHash(),
             $title,
             $author_email,

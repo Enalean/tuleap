@@ -57,7 +57,7 @@ interface Git_Backend_Interface
     /**
      * Save the repository
      */
-    public function save(GitRepository $repository): bool;
+    public function save(GitRepository $repository): void;
 
     /**
      * Test is user can read the content of this repository and metadata

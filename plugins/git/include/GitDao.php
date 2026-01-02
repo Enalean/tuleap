@@ -73,9 +73,9 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         $this->getDB()->run($sql, $repositoryId);
     }
 
-    public function save(GitRepository $repository)
+    public function save(GitRepository $repository): int
     {
-        $id = (int) $repository->getId();
+        $id = $repository->getId();
 
         $name       = $repository->getName();
         $mailPrefix = $repository->getMailPrefix();
@@ -110,7 +110,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
                 ],
                 ['repository_id' => $id]
             );
-            return true;
+            return $id;
         }
 
         $repository_backend = $repository->getBackend();
@@ -139,7 +139,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
             ]
         );
 
-        return $this->getDB()->lastInsertId();
+        return (int) $this->getDB()->lastInsertId();
     }
 
     public function delete(GitRepository $repository): void

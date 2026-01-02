@@ -387,7 +387,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 }
 
                 if ($this->request->exist('allow-artifact-closure')) {
-                    $repository_id                         = (int) $repository->getId();
+                    $repository_id                         = $repository->getId();
                     $is_artifact_closure_currently_allowed = $this->closure_verifier->isArtifactClosureAllowed($repository_id);
                     if ($this->request->get('allow-artifact-closure') === '1') {
                         if (! $is_artifact_closure_currently_allowed) {

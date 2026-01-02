@@ -129,9 +129,9 @@ final class GitXMLExporterTest extends TestCase
         });
         $default_branch_retriever = $this->createMock(RetrieveRepositoryDefaultBranch::class);
         $default_branch_retriever->method('getRepositoryDefaultBranch')
-            ->willReturnCallback(fn(GitRepository $repo) => match ((int) $repo->getId()) {
-                (int) $repository->getId()        => Result::ok('main'),
-                (int) $forked_repository->getId() => Result::ok('master'),
+            ->willReturnCallback(fn(GitRepository $repo) => match ($repo->getId()) {
+                $repository->getId()        => Result::ok('main'),
+                $forked_repository->getId() => Result::ok('master'),
                 default                           => Result::err(Fault::fromMessage('Default branch not found')),
             });
         $git_bundle = $this->createMock(GitBundle::class);

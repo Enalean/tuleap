@@ -73,7 +73,9 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
             new PullRequestWithGitReference($this->pull_request, $reference)
         );
 
-        $this->git_repository_factory             = RetrieveGitRepositoryStub::withGitRepositories(new GitRepository());
+        $git_repository = new GitRepository();
+        $git_repository->setId(123);
+        $this->git_repository_factory             = RetrieveGitRepositoryStub::withGitRepositories($git_repository);
         $this->permission_checker                 = CheckUserCanAccessPullRequestStub::withAllowed();
         $this->git_pull_request_reference_updater = UpdateGitPullRequestReferenceStub::build();
     }
@@ -185,7 +187,7 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
     public function testItReturnsThePullRequestWithTheGitReferenceAndItTheUpdateTheGitReference(): void
     {
         // Needed because of the usage of GitExec::buildFromRepository which call `GitRepository::getFullPath
-        $git_repository = $this->createMock(GitRepository::class);
+        $git_repository = $this->createStub(GitRepository::class);
         $git_repository->method('getFullPath')->willReturn('/repo.git');
         $git_repository->method('getId')->willReturn(self::REPOSITORY_ID);
 

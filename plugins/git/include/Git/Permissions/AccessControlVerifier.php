@@ -51,8 +51,10 @@ class AccessControlVerifier
             return $this->canWriteAccordingToGitolite($user, $repository, $reference);
         }
 
-        return $user->hasPermission(\Git::PERM_WRITE, $repository->getId(), $repository->getProjectId()) ||
-            $user->hasPermission(\Git::PERM_WPLUS, $repository->getId(), $repository->getProjectId());
+        $repository_id = (string) $repository->getId();
+
+        return $user->hasPermission(\Git::PERM_WRITE, $repository_id, $repository->getProjectId()) ||
+            $user->hasPermission(\Git::PERM_WPLUS, $repository_id, $repository->getProjectId());
     }
 
     /**

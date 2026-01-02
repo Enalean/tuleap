@@ -33,7 +33,7 @@ class GitRepository //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     public const string REPO_SCOPE_INDIVIDUAL = 'I';
     public const string DEFAULT_DESCRIPTION   = '-- Default description --';
 
-    private $id;
+    private ?int $id = null;
     private $parentId;
     private $name;
     private $path;
@@ -220,13 +220,16 @@ class GitRepository //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
         return new Git_PostReceiveMailManager();
     }
 
-    public function setId($id)
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function getId()
+    public function getId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException('Repository has not been initialized');
+        }
         return $this->id;
     }
 

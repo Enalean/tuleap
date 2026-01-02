@@ -45,7 +45,7 @@ final class AnalyzePushTaskTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->pusher         = UserTestBuilder::aUser()->withId(self::PUSHING_USER_ID)->build();
         $this->git_repository = $this->createStub(\GitRepository::class);
-        $this->git_repository->method('getId')->willReturn((string) self::GIT_REPOSITORY_ID);
+        $this->git_repository->method('getId')->willReturn(self::GIT_REPOSITORY_ID);
         $this->git_repository->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
     }
 

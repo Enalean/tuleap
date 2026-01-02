@@ -285,23 +285,6 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao // ph
         return $this->update($sql);
     }
 
-    public function disableRestrictedAccessForObjectId(array $permission_type, $object_id)
-    {
-        $public_ugroup_id       = $this->da->escapeInt(ProjectUGroup::REGISTERED);
-        $unrestricted_ugroup_id = $this->da->escapeInt(ProjectUGroup::AUTHENTICATED);
-        $object_id              = $this->da->quoteSmart($object_id, ['force_string' => true]);
-        $permission_type        = $this->da->quoteSmartImplode(',', $permission_type);
-
-        $sql =
-           "UPDATE permissions
-               SET ugroup_id = $public_ugroup_id
-            WHERE ugroup_id  = $unrestricted_ugroup_id
-            AND    object_id = $object_id
-            AND    permission_type IN ($permission_type)";
-
-        return $this->update($sql);
-    }
-
     #[\Override]
     public function addHistory($project_id, $permission_type, $object_id)
     {
