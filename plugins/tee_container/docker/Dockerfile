@@ -21,83 +21,83 @@ ENV TLP_INSTALL_PLUGINS_TO_ENABLE='agiledashboard api_explorer baseline cardwall
 
 HEALTHCHECK --start-period=5m --timeout=5s CMD /usr/bin/tuleap healthcheck
 
-RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
-    /usr/sbin/groupadd -g 902 -r gitolite && \
-    /usr/sbin/groupadd -g 904 -r ftpadmin && \
-    /usr/sbin/groupmod -g 50  ftp && \
-    /usr/sbin/useradd -u 900 -c 'Tuleap user' -m -d '/var/lib/tuleap' -r -g "codendiadm" -s '/bin/bash' -G ftpadmin,gitolite codendiadm && \
-    /usr/sbin/useradd -u 902 -c 'Git' -m -d '/var/lib/gitolite' -r -g gitolite gitolite && \
-    /usr/sbin/useradd -u 904 -c 'FTP Administrator' -M -d '/var/lib/tuleap/ftp' -r -g ftpadmin ftpadmin && \
-    /usr/sbin/usermod -u 14 -c 'FTP User' -d '/var/lib/tuleap/ftp' -g ftp ftp && \
-    echo "$RELEASE_CYCLE" > /etc/yum/vars/tuleap_release_cycle && \
-    dnf install --setopt=skip_missing_names_on_install=False -y epel-release rocky-release-security sudo https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
-    dnf install -y dnf-plugins-core && \
-    dnf config-manager --enable security-common && \
-    dnf remove -y dnf-plugins-core && \
-    dnf update -y && \
-    dnf install -y --setopt=skip_missing_names_on_install=False \
-    cronie \
-    glibc-locale-source \
-    openssh-server \
-    postfix \
-    supervisor \
-    tuleap-plugin-agiledashboard \
-    tuleap-plugin-api-explorer \
-    tuleap-plugin-archivedeleteditems \
-    tuleap-plugin-baseline \
-    tuleap-plugin-botmattermost \
-    tuleap-plugin-botmattermost-agiledashboard \
-    tuleap-plugin-botmattermost-git \
-    tuleap-plugin-captcha \
-    tuleap-plugin-cardwall \
-    tuleap-plugin-crosstracker \
-    tuleap-plugin-create-test-env \
-    tuleap-plugin-document \
-    tuleap-plugin-dynamic-credentials \
-    tuleap-plugin-frs \
-    tuleap-plugin-fts-db \
-    tuleap-plugin-fts-meilisearch \
-    tuleap-plugin-roadmap \
-    tuleap-plugin-git \
-    tuleap-plugin-gitlab \
-    tuleap-plugin-gitlfs \
-    tuleap-plugin-graphontrackers \
-    tuleap-plugin-hudson \
-    tuleap-plugin-hudson-git \
-    tuleap-plugin-hudson-svn \
-    tuleap-plugin-label \
-    tuleap-plugin-ldap \
-    tuleap-plugin-mediawiki \
-    tuleap-plugin-oauth2-server \
-    tuleap-plugin-onlyoffice \
-    tuleap-plugin-openidconnectclient \
-    tuleap-plugin-projectmilestones \
-    tuleap-plugin-project-ownership \
-    tuleap-plugin-prometheus-metrics \
-    tuleap-plugin-pullrequest \
-    tuleap-plugin-svn \
-    tuleap-plugin-taskboard \
-    tuleap-plugin-tee-container \
-    tuleap-plugin-testmanagement \
-    tuleap-plugin-testplan \
-    tuleap-plugin-timetracking \
-    tuleap-plugin-velocity \
-    tuleap-plugin-embed \
-    tuleap-plugin-jira-import \
-    tuleap-plugin-program_management \
-    tuleap-plugin-document_generation \
-    tuleap-plugin-tracker-functions \
-    tuleap-plugin-securitytxt \
-    tuleap-plugin-mediawiki-standalone \
-    tuleap-plugin-artidoc \
-    tuleap-plugin-pdftemplate \
-    tuleap-theme-burningparrot \
-    tuleap-theme-flamingparrot \
-    tuleap-realtime && \
-    dnf clean all && \
-    /bin/rm -rf /rpms $YUM_REPO_PATH && \
-    awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
+RUN /usr/sbin/groupadd -g 900 -r codendiadm \
+    && /usr/sbin/groupadd -g 902 -r gitolite \
+    && /usr/sbin/groupadd -g 904 -r ftpadmin \
+    && /usr/sbin/groupmod -g 50 ftp \
+    && /usr/sbin/useradd -u 900 -c 'Tuleap user' -m -d '/var/lib/tuleap' -r -g "codendiadm" -s '/bin/bash' -G ftpadmin,gitolite codendiadm \
+    && /usr/sbin/useradd -u 902 -c 'Git' -m -d '/var/lib/gitolite' -r -g gitolite gitolite \
+    && /usr/sbin/useradd -u 904 -c 'FTP Administrator' -M -d '/var/lib/tuleap/ftp' -r -g ftpadmin ftpadmin \
+    && /usr/sbin/usermod -u 14 -c 'FTP User' -d '/var/lib/tuleap/ftp' -g ftp ftp \
+    && echo "$RELEASE_CYCLE" >/etc/yum/vars/tuleap_release_cycle \
+    && dnf install --setopt=skip_missing_names_on_install=False -y epel-release rocky-release-security sudo https://rpms.remirepo.net/enterprise/remi-release-9.rpm \
+    && dnf install -y dnf-plugins-core \
+    && dnf config-manager --enable security-common \
+    && dnf remove -y dnf-plugins-core \
+    && dnf update -y \
+    && dnf install -y --setopt=skip_missing_names_on_install=False \
+        cronie \
+        glibc-locale-source \
+        openssh-server \
+        postfix \
+        supervisor \
+        tuleap-plugin-agiledashboard \
+        tuleap-plugin-api-explorer \
+        tuleap-plugin-archivedeleteditems \
+        tuleap-plugin-baseline \
+        tuleap-plugin-botmattermost \
+        tuleap-plugin-botmattermost-agiledashboard \
+        tuleap-plugin-botmattermost-git \
+        tuleap-plugin-captcha \
+        tuleap-plugin-cardwall \
+        tuleap-plugin-crosstracker \
+        tuleap-plugin-create-test-env \
+        tuleap-plugin-document \
+        tuleap-plugin-dynamic-credentials \
+        tuleap-plugin-frs \
+        tuleap-plugin-fts-db \
+        tuleap-plugin-fts-meilisearch \
+        tuleap-plugin-roadmap \
+        tuleap-plugin-git \
+        tuleap-plugin-gitlab \
+        tuleap-plugin-gitlfs \
+        tuleap-plugin-graphontrackers \
+        tuleap-plugin-hudson \
+        tuleap-plugin-hudson-git \
+        tuleap-plugin-hudson-svn \
+        tuleap-plugin-label \
+        tuleap-plugin-ldap \
+        tuleap-plugin-mediawiki \
+        tuleap-plugin-oauth2-server \
+        tuleap-plugin-onlyoffice \
+        tuleap-plugin-openidconnectclient \
+        tuleap-plugin-projectmilestones \
+        tuleap-plugin-project-ownership \
+        tuleap-plugin-prometheus-metrics \
+        tuleap-plugin-pullrequest \
+        tuleap-plugin-svn \
+        tuleap-plugin-taskboard \
+        tuleap-plugin-tee-container \
+        tuleap-plugin-testmanagement \
+        tuleap-plugin-testplan \
+        tuleap-plugin-timetracking \
+        tuleap-plugin-velocity \
+        tuleap-plugin-embed \
+        tuleap-plugin-jira-import \
+        tuleap-plugin-program_management \
+        tuleap-plugin-document_generation \
+        tuleap-plugin-tracker-functions \
+        tuleap-plugin-securitytxt \
+        tuleap-plugin-mediawiki-standalone \
+        tuleap-plugin-artidoc \
+        tuleap-plugin-pdftemplate \
+        tuleap-theme-burningparrot \
+        tuleap-theme-flamingparrot \
+        tuleap-realtime \
+    && dnf clean all \
+    && /bin/rm -rf /rpms $YUM_REPO_PATH \
+    && awk '$5 >= 3071' /etc/ssh/moduli >/etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
 
 COPY $DOCKERFILE_BASEDIR_PATH/sshd_config /etc/ssh/sshd_config
 
-ENTRYPOINT [ "/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run" ]
+ENTRYPOINT ["/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run"]

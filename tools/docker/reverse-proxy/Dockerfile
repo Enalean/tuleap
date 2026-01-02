@@ -6,6 +6,6 @@ COPY entrypoint.sh /
 
 EXPOSE 22 80 443
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["nginx", "-g", "daemon off;"]
