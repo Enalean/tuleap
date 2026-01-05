@@ -23,7 +23,6 @@ that some points may be irrelevant for some type of fields.
     -   Field is duplicated on tracker inheritance (both tracker and
         project creation)
     -   Definition is given through REST (representations)
-    -   Migrate field from TV3 (if not done)
     -   Does new field can be used for burndown?
     -   Can the field be required?
     -   What level of permissions this field supports?
