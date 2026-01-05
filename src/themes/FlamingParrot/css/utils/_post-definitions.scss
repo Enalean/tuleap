@@ -59,16 +59,4 @@ body {
     &.mediawiki .main .content {
         padding: 0;
     }
-
-    &.account-maintenance .main .content {
-        padding: 0;
-
-        h3.account-title {
-            font-size: 1.2em;
-
-            i.help-button {
-                vertical-align: initial;
-            }
-        }
-    }
 }
