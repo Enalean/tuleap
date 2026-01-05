@@ -27474,7 +27474,6 @@
     <MissingParamType>
       <code><![CDATA[$base_ref]]></code>
       <code><![CDATA[$branch_name]]></code>
-      <code><![CDATA[$branch_name]]></code>
       <code><![CDATA[$cmd]]></code>
       <code><![CDATA[$dest_reference]]></code>
       <code><![CDATA[$file_path]]></code>
@@ -74017,16 +74016,6 @@
       <code><![CDATA[! $_rVar['form_pw']]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="src/www/admin/admin_utils.php">
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$vals]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[site_admin_footer]]></code>
-      <code><![CDATA[site_admin_header]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/www/admin/approve-pending.php">
     <DeprecatedMethod>
       <code><![CDATA[groupAddHistory]]></code>
@@ -74564,11 +74553,6 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="src/www/include/help.php">
-    <MissingReturnType>
-      <code><![CDATA[help_button]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/www/include/html.php">
     <DeprecatedFunction>
       <code><![CDATA[db_fetch_array($result)]]></code>
@@ -74762,13 +74746,10 @@
   </file>
   <file src="src/www/include/user.php">
     <DeprecatedFunction>
-      <code><![CDATA[db_affected_rows($res)]]></code>
       <code><![CDATA[db_affected_rows($result)]]></code>
       <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
       <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
-      <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
       <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_es($preference_name)]]></code>
       <code><![CDATA[db_es($user_id)]]></code>
       <code><![CDATA[db_es($user_id)]]></code>
       <code><![CDATA[db_es($user_name)]]></code>
@@ -74780,7 +74761,6 @@
       <code><![CDATA[db_query("SELECT * FROM user WHERE user_id='" . db_es($user_id) . "'")]]></code>
       <code><![CDATA[db_query("SELECT * FROM user WHERE user_name='" . db_es($user_name) . "'")]]></code>
       <code><![CDATA[db_query("SELECT user_id,user_name FROM user WHERE user_id='" . db_es($user_id) . "'")]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_result($res, 0, 'user_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'email')]]></code>
       <code><![CDATA[db_result($result, 0, 'email')]]></code>
@@ -74794,7 +74774,6 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$preference_name]]></code>
       <code><![CDATA[$preference_name]]></code>
-      <code><![CDATA[$preference_name]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
@@ -74804,7 +74783,6 @@
       <code><![CDATA[$value]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[user_del_preference]]></code>
       <code><![CDATA[user_get_preference]]></code>
       <code><![CDATA[user_get_result_set]]></code>
       <code><![CDATA[user_get_result_set_from_unix]]></code>
@@ -74899,29 +74877,21 @@
       <code><![CDATA[user_set_preference($pref_name, $pref_value)]]></code>
     </DeprecatedFunction>
     <MissingParamType>
-      <code><![CDATA[$assignee]]></code>
       <code><![CDATA[$bookmark_url]]></code>
       <code><![CDATA[$bookmark_url]]></code>
       <code><![CDATA[$count]]></code>
       <code><![CDATA[$dashboard_id]]></code>
       <code><![CDATA[$db_item_id]]></code>
-      <code><![CDATA[$db_item_id]]></code>
       <code><![CDATA[$hide]]></code>
-      <code><![CDATA[$hide]]></code>
-      <code><![CDATA[$item_id]]></code>
       <code><![CDATA[$item_id]]></code>
       <code><![CDATA[$new]]></code>
       <code><![CDATA[$redirect_url]]></code>
-      <code><![CDATA[$submitter]]></code>
-      <code><![CDATA[$svc]]></code>
       <code><![CDATA[$svc]]></code>
       <code><![CDATA[$total]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[my_check_bookmark_URL]]></code>
-      <code><![CDATA[my_format_as_flag2]]></code>
       <code><![CDATA[my_has_URL_invalid_content]]></code>
-      <code><![CDATA[my_hide]]></code>
       <code><![CDATA[my_hide_url]]></code>
       <code><![CDATA[my_item_count]]></code>
     </MissingReturnType>
@@ -75190,7 +75160,6 @@
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_templates)]]></code>
       <code><![CDATA[db_ei($row['user_id'])]]></code>
       <code><![CDATA[db_ei($ugroup_id)]]></code>
@@ -75228,13 +75197,11 @@
       <code><![CDATA[db_fetch_array($res)]]></code>
       <code><![CDATA[db_fetch_array($res)]]></code>
       <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_fetch_array($res)]]></code>
       <code><![CDATA[db_fetch_array($result)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_query($query)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -75288,7 +75255,6 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_templates]]></code>
       <code><![CDATA[$keyword]]></code>
       <code><![CDATA[$show_suspended]]></code>
@@ -75322,7 +75288,6 @@
       <code><![CDATA[ugroup_db_list_dynamic_ugroups_for_user]]></code>
       <code><![CDATA[ugroup_get_name_from_id]]></code>
       <code><![CDATA[ugroup_get_parent]]></code>
-      <code><![CDATA[ugroup_get_ugroups_with_members]]></code>
       <code><![CDATA[ugroup_remove_user_from_ugroup]]></code>
       <code><![CDATA[ugroup_update]]></code>
     </MissingReturnType>

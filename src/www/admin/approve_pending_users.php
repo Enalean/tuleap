@@ -40,7 +40,6 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
 require_once __DIR__ . '/../include/proj_email.php';
-require_once __DIR__ . '/admin_utils.php';
 
 $request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();

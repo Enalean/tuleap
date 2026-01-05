@@ -13,12 +13,6 @@
 
 #
 #-----------------------------------------------
-# Script: SF/www/admin/admin_utils.php
-#
-admin_utils	title	$1 Site Administration
-admin_utils	menu	Site Admin Home
-#
-#-----------------------------------------------
 # Script: SF/www/admin/approve_pending.php
 #
 admin_approve_pending	title	Projects waiting for validation

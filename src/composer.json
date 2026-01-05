@@ -15,7 +15,6 @@
       "www/include/session.php",
       "www/include/html.php",
       "www/include/exit.php",
-      "www/include/help.php",
       "www/include/utils.php",
       "www/include/user.php",
       "www/project/admin/permissions.php",

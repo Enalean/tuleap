@@ -49,7 +49,6 @@ use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/my_utils.php';
-require_once __DIR__ . '/../admin/admin_utils.php';
 
 $request = \Tuleap\HTTPRequest::instance();
 
