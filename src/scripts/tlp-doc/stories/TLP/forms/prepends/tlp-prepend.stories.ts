@@ -22,7 +22,7 @@ import type { TemplateResult } from "lit";
 import { html } from "lit";
 
 type PrependProps = {
-    story: "icon" | "multiple-prepends" | "with-badge";
+    story: "icon" | "multiple-prepends" | "with-badge" | "with-select";
     size: string;
     placeholder: string;
     with_label: boolean;
@@ -60,7 +60,19 @@ function getPrepends(args: PrependProps): TemplateResult {
         return html`${prepend}
     <span class=${getClasses(args, "prepend")}>https://</span>`;
     }
+    if (args.story === "with-select") {
+        // prettier-ignore
+        return html`${getSelect()}`;
+    }
     return prepend;
+}
+
+function getSelect(): TemplateResult {
+    return html`<select class="tlp-select tlp-select-adjusted tlp-prepend">
+        <option value="a">A</option>
+        <option value="b">B</option>
+        <option value="c">C</option>
+    </select>`;
 }
 
 function getTemplate(args: PrependProps): TemplateResult {
@@ -142,5 +154,11 @@ export const MultiplePrepends: Story = {
 export const WithBadge: Story = {
     args: {
         story: "with-badge",
+    },
+};
+
+export const WithSelect: Story = {
+    args: {
+        story: "with-select",
     },
 };

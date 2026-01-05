@@ -206,8 +206,8 @@ $assets-base-path: "../../../" !default;
     display: flex;
     align-items: center;
 
-    > .tlp-prepend:not([class*="tlp-button"], [class*="tlp-dropdown"]),
-    > .tlp-append:not([class*="tlp-button"], [class*="tlp-dropdown"]) {
+    > .tlp-prepend:not([class*="tlp-button"], [class*="tlp-select"], [class*="tlp-dropdown"]),
+    > .tlp-append:not([class*="tlp-button"], [class*="tlp-select"], [class*="tlp-dropdown"]) {
         display: flex;
         align-items: center;
         height: var(--tlp-form-element-height);

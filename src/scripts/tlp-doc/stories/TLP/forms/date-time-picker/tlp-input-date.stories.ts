@@ -25,7 +25,26 @@ import "./date-picker.scss";
 
 type DatePickerProps = {
     time_picker: boolean;
+    criterion_selector: boolean;
 };
+
+function getCriterionSelector(): TemplateResult {
+    return html`
+        <select class="tlp-select tlp-select-adjusted tlp-prepend">
+            <option value="before">Before</option>
+            <option value="as of">As of</option>
+            <option value="after">After</option>
+        </select>
+    `;
+}
+
+function getCalendarIcon(): TemplateResult {
+    return html`
+        <span class="tlp-prepend">
+            <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+        </span>
+    `;
+}
 
 function getTemplate(args: DatePickerProps): TemplateResult {
     //prettier-ignore
@@ -44,7 +63,7 @@ function getTemplate(args: DatePickerProps): TemplateResult {
 <div class="tlp-form-element">
     <label for="date-picker" class="tlp-label">Pick a date</label>
     <div class="tlp-form-element tlp-form-element-prepend">
-        <span class="tlp-prepend"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span>
+        ${args.criterion_selector ? getCriterionSelector(): getCalendarIcon()}
         <input type="text" id="date-picker" class="tlp-input" size="11">
     </div>
 </div>`;
@@ -62,6 +81,13 @@ const meta: Meta<DatePickerProps> = {
     },
     args: {
         time_picker: false,
+        criterion_selector: false,
+    },
+    argTypes: {
+        criterion_selector: {
+            name: "With criterion selector",
+            description: "Add criterion selector before date picker",
+        },
     },
     decorators: [
         (story): TemplateResult =>
@@ -76,5 +102,6 @@ export const DatePicker: Story = {};
 export const DateTimePicker: Story = {
     args: {
         time_picker: true,
+        criterion_selector: false,
     },
 };
