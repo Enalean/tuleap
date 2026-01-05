@@ -168,7 +168,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_activator->activateServicesFromTemplate($project, $template, $data);
     }
 
-    public function testTV3ServiceUsageIsInheritedFromXml(): void
+    public function testTV3ServiceUsageIsNotInheritedFromXml(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
