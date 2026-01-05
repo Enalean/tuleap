@@ -171,7 +171,7 @@ class GitExec extends Git_Exec
     }
 
     /** @return bool true if $merged_ref is an ancestor of $base_ref */
-    public function isAncestor($base_ref, $merged_ref)
+    public function isAncestor($base_ref, $merged_ref): bool
     {
         $base_ref   = escapeshellarg($base_ref);
         $merged_ref = escapeshellarg($merged_ref);

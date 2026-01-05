@@ -170,7 +170,10 @@ class Tracker_Hierarchy
         return $tracker_ids;
     }
 
-    protected function sortByLevel($tracker1_id, $tracker2_id)
+    /**
+     * @psalm-return -1|0|1
+     */
+    protected function sortByLevel($tracker1_id, $tracker2_id): int
     {
         try {
             $level1 = $this->getLevel($tracker1_id);

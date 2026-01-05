@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.14.2@bbd217fc98c0daa0a13aea2a7f119d03ba3fc9a0">
+<files psalm-version="6.14.3@d0b040a91f280f071c1abcb1b77ce3822058725a">
   <file src="plugins/agiledashboard/include/AgileDashboard/AgileDashboard_XMLController.php">
     <PossiblyFalseArgument>
       <code><![CDATA[$rng_path]]></code>
@@ -4079,9 +4079,6 @@
     <MissingParamType>
       <code><![CDATA[$selected_field_id]]></code>
     </MissingParamType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedMethod>
       <code><![CDATA[getBind]]></code>
       <code><![CDATA[getBind]]></code>
@@ -22229,10 +22226,7 @@
       <code><![CDATA[getLastSuccessfulBuildNumber]]></code>
       <code><![CDATA[getLastSuccessfulBuildUrl]]></code>
       <code><![CDATA[getName]]></code>
-      <code><![CDATA[getStatus]]></code>
-      <code><![CDATA[getStatusIcon]]></code>
       <code><![CDATA[getUrl]]></code>
-      <code><![CDATA[getWeatherReportIcon]]></code>
       <code><![CDATA[hasBuilds]]></code>
     </MissingReturnType>
     <RiskyTruthyFalsyComparison>
@@ -27503,7 +27497,6 @@
       <code><![CDATA[$reference]]></code>
       <code><![CDATA[$reference]]></code>
       <code><![CDATA[$reference]]></code>
-      <code><![CDATA[$remote]]></code>
       <code><![CDATA[$second_commit_reference]]></code>
       <code><![CDATA[$src_reference]]></code>
       <code><![CDATA[$user]]></code>
@@ -27519,7 +27512,6 @@
       <code><![CDATA[merge]]></code>
       <code><![CDATA[parseDiffNumStatOutput]]></code>
       <code><![CDATA[removeReference]]></code>
-      <code><![CDATA[sharedCloneAndCheckout]]></code>
       <code><![CDATA[unidiff]]></code>
       <code><![CDATA[unidiffFromCommonAncestor]]></code>
     </MissingReturnType>
@@ -28053,19 +28045,12 @@
       <code><![CDATA[$merge_revision]]></code>
       <code><![CDATA[$merge_revision]]></code>
       <code><![CDATA[$merge_revision]]></code>
-      <code><![CDATA[$temporary_name]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[cleanTemporaryRepository]]></code>
       <code><![CDATA[detectMergeConflict]]></code>
       <code><![CDATA[detectMergeabilityStatus]]></code>
-      <code><![CDATA[doMergeIntoDestination]]></code>
       <code><![CDATA[isFastForwardable]]></code>
     </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$path]]></code>
-      <code><![CDATA[$path]]></code>
-    </PossiblyFalseArgument>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/PullRequestPresenter.php">
     <DeprecatedMethod>
@@ -32323,11 +32308,6 @@
       <code><![CDATA[getRow]]></code>
     </DeprecatedMethod>
   </file>
-  <file src="plugins/taskboard/include/REST/v1/Card/CardPatcher.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $remaining_effort_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/taskboard/include/REST/v1/CardRepresentation.php">
     <InvalidDocblock>
       <code><![CDATA[public $assignees;]]></code>
@@ -32347,11 +32327,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($user->getPreference($preference_name))]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/taskboard/include/REST/v1/Cell/CardMappedFieldUpdater.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $mapped_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/taskboard/include/REST/v1/Cell/CellResource.php">
     <MissingReturnType>
@@ -32373,25 +32348,12 @@
     <RedundantCast>
       <code><![CDATA[(int) $add_in_place->getChildTracker()->getId()]]></code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $add_in_place->getParentArtifactLinkField()->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/taskboard/include/Tracker/AssignedToFieldPresenter.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/taskboard/include/Tracker/TaskboardTracker.php">
     <RedundantCast>
       <code><![CDATA[(int) $this->milestone_tracker->getId()]]></code>
       <code><![CDATA[(int) $this->tracker->getId()]]></code>
     </RedundantCast>
-  </file>
-  <file src="plugins/taskboard/include/Tracker/TitleFieldPresenter.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/taskboard/include/taskboardPlugin.php">
     <MissingParamType>
@@ -32575,9 +32537,7 @@
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Campaign/InformationNeededToRetrieveTestStatusOfACampaign.php">
     <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $art_link_field->getId()]]></code>
       <code><![CDATA[(int) $campaign->getId()]]></code>
-      <code><![CDATA[(int) $status_field->getId()]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Campaign/OpenCampaignController.php">
@@ -32670,29 +32630,10 @@
       <code><![CDATA[$issue_tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/FormattedChangesetValueForFileFieldRetriever.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field_upload_data->getField()->getId()]]></code>
-      <code><![CDATA[(int) $file->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/FormattedChangesetValueForIntFieldRetriever.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/FormattedChangesetValueForListFieldRetriever.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $bind]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/FormattedChangesetValueForTextFieldRetriever.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/ArtifactNodeBuilder.php">
     <DeprecatedMethod>
@@ -32718,11 +32659,6 @@
     </DeprecatedMethod>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/CampaignCreator.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $label_field->getId()]]></code>
-      <code><![CDATA[(int) $link_field->getId()]]></code>
-      <code><![CDATA[(int) $status_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $campaign_tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
@@ -32784,10 +32720,6 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/ExecutionCreator.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $link_field->getId()]]></code>
-      <code><![CDATA[(int) $status_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $execution_tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
@@ -32881,16 +32813,6 @@
       <code><![CDATA[array {Tracker_Artifact}]]></code>
       <code><![CDATA[array {Tracker_Artifact}]]></code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/v1/StepsResultsChangesBuilder.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $execution_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/v1/TestStatusAccordingToStepsStatusChangesBuilder.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $status_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Router.php">
     <PossiblyInvalidArgument>
@@ -33570,12 +33492,6 @@
   <file src="plugins/testplan/include/TestDefinition/TestPlanTestDefinitionWithTestStatusRetriever.php">
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $test_definition->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/testplan/include/TestDefinition/TestStatusPerTestDefinitionsInformationForUserRetriever.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $art_link_field->getId()]]></code>
-      <code><![CDATA[(int) $status_field->getId()]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testplan/include/TestPlanHeaderOptionsProvider.php">
@@ -34695,9 +34611,6 @@
       <code><![CDATA[fetchMailArtifactSuffix]]></code>
       <code><![CDATA[fetchRecursiveArtifact]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->getID()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/FormElement/Container/TrackerFormElementContainer.php">
     <MissingParamType>
@@ -34875,9 +34788,6 @@
     <PossiblyUndefinedVariable>
       <code><![CDATA[$type_presenter]]></code>
     </PossiblyUndefinedVariable>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <TooManyArguments>
       <code><![CDATA[new CSVOutputStrategy(Codendi_HTMLPurifier::instance())]]></code>
       <code><![CDATA[searchById]]></code>
@@ -34959,7 +34869,6 @@
       <code><![CDATA[canLinkArtifacts]]></code>
       <code><![CDATA[getAddedArtifactIds]]></code>
       <code><![CDATA[getRemovedArtifactIds]]></code>
-      <code><![CDATA[getType]]></code>
       <code><![CDATA[getTypeDefinedByPlugin]]></code>
       <code><![CDATA[insertCrossReference]]></code>
       <code><![CDATA[removeCrossReference]]></code>
@@ -36021,9 +35930,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/Files/FileInfoForTusUploadedFileReadyToBeAttachedProvider.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $row]]></code>
     </RiskyTruthyFalsyComparison>
@@ -36651,13 +36557,6 @@
       <code><![CDATA[visitListBindUgroups]]></code>
       <code><![CDATA[visitListBindUsers]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/FormElement/Field/List/Bind/BoundDecoratorEditor.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-      <code><![CDATA[(int) $field->getId()]]></code>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/List/Bind/ListFieldBind.php">
     <DeprecatedMethod>
@@ -37471,10 +37370,6 @@
     <PossiblyUndefinedVariable>
       <code><![CDATA[$submitted_values_array]]></code>
     </PossiblyUndefinedVariable>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->getID()]]></code>
-      <code><![CDATA[(int) $this->getID()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/List/XML/XMLDecorator.php">
     <PossiblyNullReference>
@@ -39027,9 +38922,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$post_action->getValue()]]></code>
     </PossiblyInvalidArgument>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $fieldset->getID()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/REST/v1/Workflow/PostAction/RunJobRepresentation.php">
     <MissingParamType>
@@ -40566,11 +40458,6 @@
     <MissingParamType>
       <code><![CDATA[$message]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/FileUploadData.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/CitationStripper.php">
     <MissingParamType>
@@ -42760,12 +42647,6 @@
       <code><![CDATA[$error_code]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Exception/Migration/StructureCreationException.php">
-    <MissingParamType>
-      <code><![CDATA[$tracker_name]]></code>
-      <code><![CDATA[$tv3_id]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Exception/MoveArtifactSemanticsException.php">
     <MissingParamType>
       <code><![CDATA[$message]]></code>
@@ -43278,11 +43159,7 @@
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$parents]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[addRelationship]]></code>
       <code><![CDATA[assertHierarchyIsNotCyclic]]></code>
       <code><![CDATA[computeLevel]]></code>
       <code><![CDATA[getLastLevelTrackerIds]]></code>
@@ -43805,11 +43682,6 @@
       <code><![CDATA[warnAlreadyHaveFullAccess]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Permission/Fields/ByField/ByFieldGroupPermissions.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Permission/Fields/ByField/ByFieldPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$tracker->getGroupId()]]></code>
@@ -44259,18 +44131,12 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/BetweenComparison/ForFloat.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getMaxValue]]></code>
       <code><![CDATA[getMinValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/BetweenComparison/ForInteger.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getMaxValue]]></code>
       <code><![CDATA[getMinValue]]></code>
@@ -44319,11 +44185,6 @@
       <code><![CDATA[$value]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/DateTimeFieldFromWhereBuilder.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/DateTimeReadOnlyConditionBuilder.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
@@ -44347,25 +44208,16 @@
     <MissingReturnType>
       <code><![CDATA[quoteLikeValueSurround]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/EqualComparison/ForFloat.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/EqualComparison/ForInteger.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
@@ -44412,9 +44264,6 @@
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
@@ -44454,17 +44303,11 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/GreaterThanComparison/ForFloat.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/GreaterThanComparison/ForInteger.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
@@ -44513,17 +44356,11 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/GreaterThanOrEqualComparison/ForFloat.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/GreaterThanOrEqualComparison/ForInteger.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
@@ -44623,17 +44460,11 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/LesserThanComparison/ForFloat.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/LesserThanComparison/ForInteger.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
@@ -44682,17 +44513,11 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/LesserThanOrEqualComparison/ForFloat.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/LesserThanOrEqualComparison/ForInteger.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
@@ -44770,25 +44595,16 @@
     <MissingReturnType>
       <code><![CDATA[quoteLikeValueSurround]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/NotEqualComparison/ForFloat.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/NotEqualComparison/ForInteger.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
@@ -44838,9 +44654,6 @@
     <MissingReturnType>
       <code><![CDATA[quoteLikeValueSurround]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
@@ -44924,12 +44737,6 @@
       <code><![CDATA[visitSubmittedOn]]></code>
       <code><![CDATA[visitText]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/QueryListFieldPresenter.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-      <code><![CDATA[(int) $field->getTrackerId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilderVisitor.php">
     <MissingParamType>
@@ -48459,11 +48266,6 @@
       <code><![CDATA[escapeValue]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/FrozenFields/FrozenFieldDetector.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/tracker/include/Workflow/PostAction/FrozenFields/FrozenFields.php">
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
@@ -48472,9 +48274,6 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/FrozenFields/FrozenFieldsDao.php">
     <MissingParamType>
@@ -48503,27 +48302,16 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $fieldset->getID()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/HiddenFieldsets/HiddenFieldsetsDetector.php">
     <DeprecatedMethod>
       <code><![CDATA[getWorkflow]]></code>
     </DeprecatedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $fieldset->getID()]]></code>
-      <code><![CDATA[(int) $fieldset_in_post_action->getID()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/HiddenFieldsets/HiddenFieldsetsFactory.php">
     <MissingReturnType>
       <code><![CDATA[duplicate]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $fieldset->getID()]]></code>
-      <code><![CDATA[(int) $fieldset->getID()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/PostActionSubFactories.php">
     <InvalidNullableReturnType>
@@ -48611,17 +48399,11 @@
       <code><![CDATA[validateFieldIsNotUsedToDefineTheWorkflow]]></code>
       <code><![CDATA[validateFieldIsUsedInTracker]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $used_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/HiddenFieldsetsValueValidator.php">
     <MissingReturnType>
       <code><![CDATA[validateFieldsetIsUsedInTracker]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $used_fieldset->getID()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/PostActionsMapper.php">
     <PossiblyInvalidArgument>
@@ -48631,7 +48413,6 @@
       <code><![CDATA[(int) $field_date->getFieldId()]]></code>
       <code><![CDATA[(int) $field_float->getFieldId()]]></code>
       <code><![CDATA[(int) $field_int->getFieldId()]]></code>
-      <code><![CDATA[(int) $fieldset->getID()]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/SetDateValueRepository.php">
@@ -48647,9 +48428,6 @@
     <MissingReturnType>
       <code><![CDATA[validateSetDateValue]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $date_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/SetFloatValueRepository.php">
     <InvalidArgument>
@@ -48664,9 +48442,6 @@
     <MissingReturnType>
       <code><![CDATA[validateSetFloatValue]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $float_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/SetIntValueRepository.php">
     <InvalidArgument>
@@ -48682,9 +48457,6 @@
       <code><![CDATA[extractIntFieldIds]]></code>
       <code><![CDATA[validateSetIntValue]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $int_field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/PostAction.php">
     <MissingReturnType>
@@ -50513,11 +50285,6 @@
       <code><![CDATA[[\ProjectUGroup::PROJECT_MEMBERS, 'semi-crusty']]]></code>
       <code><![CDATA[[\ProjectUGroup::PROJECT_MEMBERS, 'semi-crusty']]]></code>
     </InvalidArgument>
-  </file>
-  <file src="plugins/tracker/tests/unit/Action/CanUserGroupValuesBeFullyMovedVerifierTest.php">
-    <UnusedProperty>
-      <code><![CDATA[$user]]></code>
-    </UnusedProperty>
   </file>
   <file src="plugins/tracker/tests/unit/Action/CopyArtifactTest.php">
     <MissingClosureParamType>
@@ -52741,11 +52508,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
     </UnhandledMatchCondition>
-  </file>
-  <file src="plugins/tracker/tests/unit/Hierarchy/HierarchyTest.php">
-    <NullArgument>
-      <code><![CDATA[null]]></code>
-    </NullArgument>
   </file>
   <file src="plugins/tracker/tests/unit/Hierarchy/TrackerHierarchyFactoryGetParentArtifactTest.php">
     <PossiblyNullReference>
@@ -55899,9 +55661,6 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/velocity/include/Velocity/Semantic/SemanticVelocityAdminPresenter.php">
     <InvalidPropertyAssignmentValue>

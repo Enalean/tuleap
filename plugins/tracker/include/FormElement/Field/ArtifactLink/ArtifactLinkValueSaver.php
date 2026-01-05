@@ -270,7 +270,7 @@ class ArtifactLinkValueSaver
         Tracker $from_tracker,
         $existing_type,
         $type_by_plugin,
-    ) {
+    ): void {
         if ($from_tracker->isProjectAllowedToUseType()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
