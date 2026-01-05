@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "vitest";
 import { IterationActivator } from "./IterationActivator";
 import { TimeboxLabel } from "../dom/TimeboxLabel";
 import { RetrieveElementStub } from "../dom/RetrieveElementStub";

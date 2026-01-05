@@ -17,43 +17,61 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { addTeamInProgram } from "./add-team";
 import * as api from "../api/manage-team";
 import * as restErrorHelper from "../helper/rest-error-helper";
 import * as buttonAddTeamHelper from "../helper/button-helper";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
-const createDocument = (): Document => document.implementation.createHTMLDocument();
+const createDocument = (): Document => {
+    const doc = document.implementation.createHTMLDocument();
+    doc.body.insertAdjacentHTML(
+        "beforeend",
+        `<div id="program-management-add-team-error-rest"></div>`,
+    );
 
-jest.mock("../api/manage-team");
-jest.mock("../helper/rest-error-helper");
-jest.mock("../helper/button-helper");
+    return doc;
+};
+
+vi.mock("../api/manage-team", () => {
+    return {
+        manageTeamOfProgram(): Promise<Response> {
+            return Promise.resolve(new Response());
+        },
+    };
+});
+
+vi.useFakeTimers();
+
 describe("AddTeam", () => {
     describe("addTeamInProgram", () => {
-        let manage_team: jest.SpyInstance,
-            reset_rest_error: jest.SpyInstance,
-            set_rest_error_message: jest.SpyInstance,
-            set_button_to_disabled: jest.SpyInstance,
-            reset_button: jest.SpyInstance,
+        let manage_team: MockInstance,
+            reset_rest_error: MockInstance,
+            set_rest_error_message: MockInstance,
+            set_button_to_disabled: MockInstance,
+            reset_button: MockInstance,
             button_to_add_team: HTMLButtonElement;
 
         beforeEach(() => {
-            manage_team = jest.spyOn(api, "manageTeamOfProgram");
-            reset_rest_error = jest.spyOn(restErrorHelper, "resetRestErrorAlert");
-            set_rest_error_message = jest.spyOn(restErrorHelper, "setRestErrorMessage");
-            set_button_to_disabled = jest.spyOn(
+            manage_team = vi.spyOn(api, "manageTeamOfProgram");
+            reset_rest_error = vi.spyOn(restErrorHelper, "resetRestErrorAlert");
+            set_rest_error_message = vi.spyOn(restErrorHelper, "setRestErrorMessage");
+            set_button_to_disabled = vi.spyOn(
                 buttonAddTeamHelper,
                 "setButtonToDisabledWithSpinner",
             );
-            reset_button = jest.spyOn(buttonAddTeamHelper, "resetButtonToAddTeam");
+            reset_button = vi.spyOn(buttonAddTeamHelper, "resetButtonToAddTeam");
 
             button_to_add_team = document.createElement("button");
             button_to_add_team.id = "program-management-add-team-button";
+            button_to_add_team.insertAdjacentHTML("beforeend", `<i></i>`);
 
             Object.defineProperty(window, "location", {
                 value: {
                     hash: "",
-                    reload: jest.fn(),
+                    reload: vi.fn(),
                 },
             });
         });
@@ -79,7 +97,8 @@ describe("AddTeam", () => {
             addTeamInProgram(125, doc);
             button_to_add_team.click();
 
-            await expect(manage_team).toHaveBeenCalledWith({ program_id: 125, team_ids: [140] });
+            await vi.runOnlyPendingTimersAsync();
+            expect(manage_team).toHaveBeenCalledWith({ program_id: 125, team_ids: [140] });
             expect(reset_rest_error).toHaveBeenCalled();
             expect(set_button_to_disabled).toHaveBeenCalled();
             expect(reset_button).toHaveBeenCalled();
@@ -100,10 +119,11 @@ describe("AddTeam", () => {
             addTeamInProgram(125, doc);
             button_to_add_team.click();
 
-            await expect(manage_team).toHaveBeenCalledWith({ program_id: 125, team_ids: [140] });
+            await vi.runOnlyPendingTimersAsync();
+            expect(manage_team).toHaveBeenCalledWith({ program_id: 125, team_ids: [140] });
             expect(reset_rest_error).toHaveBeenCalled();
-            await expect(set_button_to_disabled).toHaveBeenCalled();
-            await expect(set_rest_error_message).toHaveBeenCalledWith(
+            expect(set_button_to_disabled).toHaveBeenCalled();
+            expect(set_rest_error_message).toHaveBeenCalledWith(
                 doc,
                 "program-management-add-team-error-rest",
                 "400 Team not found",
@@ -117,14 +137,15 @@ describe("AddTeam", () => {
             manage_team.mockImplementation(() =>
                 Promise.reject(
                     new FetchWrapperError("Not found", {
-                        json: (): Promise<{ error: { code: number; message: string } }> =>
-                            Promise.resolve({
+                        json(): Promise<{ error: { code: number; message: string } }> {
+                            return Promise.resolve({
                                 error: {
                                     code: 400,
                                     message: "Team not found",
                                     i18n_error_message: "L'Équipe n'est pas trouvée",
                                 },
-                            }),
+                            });
+                        },
                     } as Response),
                 ),
             );
@@ -132,10 +153,11 @@ describe("AddTeam", () => {
             addTeamInProgram(125, doc);
             button_to_add_team.click();
 
-            await expect(manage_team).toHaveBeenCalledWith({ program_id: 125, team_ids: [140] });
+            await vi.runOnlyPendingTimersAsync();
+            expect(manage_team).toHaveBeenCalledWith({ program_id: 125, team_ids: [140] });
             expect(reset_rest_error).toHaveBeenCalled();
-            await expect(set_button_to_disabled).toHaveBeenCalled();
-            await expect(set_rest_error_message).toHaveBeenCalledWith(
+            expect(set_button_to_disabled).toHaveBeenCalled();
+            expect(set_rest_error_message).toHaveBeenCalledWith(
                 doc,
                 "program-management-add-team-error-rest",
                 "400 L'Équipe n'est pas trouvée",

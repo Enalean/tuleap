@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import { initPreviewTrackerLabels } from "./init-preview-labels-helper";
 import type { GettextProvider } from "../GettextProvider";
 import { DocumentAdapter } from "../dom/DocumentAdapter";
@@ -25,7 +26,7 @@ const createDocument = (): Document => document.implementation.createHTMLDocumen
 
 describe("init-preview-labels-helper", () => {
     describe("initPreviewTrackerLabels", () => {
-        const gettext_provider: GettextProvider = { gettext: (s) => s };
+        const gettext_provider: GettextProvider = { gettext: (msgid) => msgid };
         it("Do not init preview when program increment label element does not exist", function () {
             const doc = createDocument();
 

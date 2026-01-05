@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DocumentAdapter } from "./DocumentAdapter";
 import { TrackerSelector } from "./TrackerSelector";
 
@@ -72,7 +73,7 @@ describe(`TrackerSelector`, () => {
             const select_element = retriever.getSelectById("select");
             const selector = TrackerSelector.fromId(retriever, "select");
 
-            const callback = jest.fn();
+            const callback = vi.fn();
             selector.addChangeListener(callback);
             select_element.selectedIndex = -1;
             select_element.dispatchEvent(new Event("change"));
@@ -95,7 +96,7 @@ describe(`TrackerSelector`, () => {
             const select_element = retriever.getSelectById("select");
             const selector = TrackerSelector.fromId(retriever, "select");
 
-            const callback = jest.fn();
+            const callback = vi.fn();
             selector.addChangeListener(callback);
             select_element.selectedIndex = 2;
             select_element.dispatchEvent(new Event("change"));

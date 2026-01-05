@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, vi } from "vitest";
 import { handleTeamRemove } from "./button-to-remove-team-handler";
 import * as api from "../api/manage-team";
 
-jest.mock("../api/manage-team");
 describe("ButtonToRemoveTeamHandler", () => {
     describe("handleTeamRemove", () => {
         it("Given button without team id, Then error is thrown", () => {
@@ -32,12 +32,14 @@ describe("ButtonToRemoveTeamHandler", () => {
             const button = document.createElement("button");
             button.setAttribute("data-team-id", "666");
 
-            const manage_team = jest.spyOn(api, "manageTeamOfProgram");
+            const manage_team = vi
+                .spyOn(api, "manageTeamOfProgram")
+                .mockResolvedValue(new Response());
 
             Object.defineProperty(window, "location", {
                 value: {
                     hash: "",
-                    reload: jest.fn(),
+                    reload: vi.fn(),
                 },
             });
 

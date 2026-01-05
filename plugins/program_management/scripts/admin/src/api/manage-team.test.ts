@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, vi } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
 import { manageTeamOfProgram } from "./manage-team";
 
-jest.mock("@tuleap/tlp-fetch");
 describe("ManageTeam", () => {
     describe("manageTeamOfProgram", () => {
         it("Given program id and team ids, Then rest route is called to manage teams", () => {
-            const put = jest.spyOn(tlp, "put");
+            const put = vi.spyOn(tlp, "put");
 
             manageTeamOfProgram({ program_id: 105, team_ids: [123, 125] });
 

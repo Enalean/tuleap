@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import { buildProgramConfiguration } from "./program-configuration-builder";
 
 describe("program-configuration-builder", function () {
