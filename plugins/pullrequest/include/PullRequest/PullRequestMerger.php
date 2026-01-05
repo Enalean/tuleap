@@ -106,7 +106,7 @@ readonly class PullRequestMerger
         }
     }
 
-    private function isFastForwardable(GitExec $git_exec, $merge_revision, $destination_revision)
+    private function isFastForwardable(GitExec $git_exec, $merge_revision, $destination_revision): bool
     {
         return $git_exec->isAncestor($merge_revision, $destination_revision);
     }
