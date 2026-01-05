@@ -18,7 +18,6 @@
  */
 
 require_once __DIR__ . '/../../www/include/service.php';
-require_once __DIR__ . '/../../www/admin/admin_utils.php';
 require_once __DIR__ . '/../../www/include/trove.php';
 require_once __DIR__ . '/../../common/wiki/lib/WikiCloner.php';
 

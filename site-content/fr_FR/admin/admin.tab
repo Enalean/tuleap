@@ -5,13 +5,6 @@
 
 #
 #-----------------------------------------------
-# Script: SF/www/admin/admin_utils.php
-#
-admin_utils	title	Administration du site $1
-admin_utils	menu	Accueil admin. site
-
-#
-#-----------------------------------------------
 # Script: SF/www/admin/approve_pending.php
 #
 admin_approve_pending	title	Projets en attente de validation

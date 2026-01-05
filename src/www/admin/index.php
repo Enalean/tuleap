@@ -27,7 +27,6 @@ use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerterDAO;
 use Tuleap\Layout\JavascriptAsset;
 
 require_once __DIR__ . '/../include/pre.php';
-require_once __DIR__ . '/admin_utils.php';
 
 $request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();

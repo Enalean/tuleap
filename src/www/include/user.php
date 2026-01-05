@@ -196,26 +196,3 @@ function user_get_preference($preference_name)
         return false;
     }
 }
-
-//Deprecated. Use User->delPreference() instead.
-function user_del_preference($preference_name)
-{
-    global $user_pref;
-    if (user_isloggedin()) {
-        if ($user_pref && array_key_exists($preference_name, $user_pref)) {
-            unset($user_pref[$preference_name]);
-        }
-        $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-        $sql                = 'DELETE FROM user_preferences'
-            . ' WHERE preference_name="' . db_es($preference_name) . '"'
-            . ' AND user_id=' . $db_escaped_user_id;
-        $res                = db_query($sql);
-        if (db_affected_rows($res) != 1) {
-            return false;
-        } else {
-            return true;
-        }
-    } else {
-        return false;
-    }
-}
