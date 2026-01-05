@@ -25,60 +25,57 @@
  * Folder is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_Folder extends Docman_Item
+class Docman_Folder extends Docman_Item //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($data = null)
     {
         parent::__construct($data);
-        $this->_resetItems();
+        $this->resetItems();
     }
 
     #[\Override]
-    public function getType()
+    public function getType(): string
     {
         return dgettext('tuleap-docman', 'Folder');
     }
 
     #[\Override]
-    public function toRow()
+    public function toRow(): array
     {
         $row              = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
         return $row;
     }
 
-    public function isRoot()
+    public function isRoot(): bool
     {
         return $this->parent_id == 0;
     }
 
-    public $_items;
-    public function addItem(&$item)
+    public array $items = [];
+    public function addItem(&$item): void
     {
-        $this->_items->add($item, -($item->getRank()));
+        $this->items[] = $item;
     }
 
-    public function &getAllItems()
+    public function &getAllItems(): array
     {
-        return $this->_items;
+        return $this->items;
     }
 
-    public function removeAllItems()
+    public function removeAllItems(): void
     {
-        $this->_resetItems();
+        $this->resetItems();
     }
 
-    public function _resetItems()
+    private function resetItems(): void
     {
-        if (isset($this->_items)) {
-            unset($this->_items);
-        }
-        $this->_items = new PrioritizedList();
+        $this->items = [];
     }
 
-    public function setItems(PrioritizedList $items): void
+    public function setItems(array $items): void
     {
-        $this->_items = $items;
+        $this->items = $items;
     }
 
     #[\Override]

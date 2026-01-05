@@ -6089,65 +6089,6 @@
       <code><![CDATA[new Docman_FileStorage()]]></code>
     </TooFewArguments>
   </file>
-  <file src="plugins/docman/include/Docman_BuildItemMappingVisitor.php">
-    <MissingParamType>
-      <code><![CDATA[$dstItem]]></code>
-      <code><![CDATA[$dstItem]]></code>
-      <code><![CDATA[$groupId]]></code>
-      <code><![CDATA[$groupId]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$itemId]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$parentId]]></code>
-      <code><![CDATA[$parentId]]></code>
-      <code><![CDATA[$srcItem]]></code>
-      <code><![CDATA[$srcItem]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$groupId]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[checkItemPermissions]]></code>
-      <code><![CDATA[compareFolderChildren]]></code>
-      <code><![CDATA[compareItem]]></code>
-      <code><![CDATA[findMatchingChildren]]></code>
-      <code><![CDATA[findMatchingItem]]></code>
-      <code><![CDATA[getChildrenTitles]]></code>
-      <code><![CDATA[getCurrentUser]]></code>
-      <code><![CDATA[getItemDao]]></code>
-      <code><![CDATA[getItemFactory]]></code>
-      <code><![CDATA[getItemMapping]]></code>
-      <code><![CDATA[getPermissionsManager]]></code>
-      <code><![CDATA[getTitleStrings]]></code>
-      <code><![CDATA[searchMatchingChildren]]></code>
-      <code><![CDATA[searchMatchingItem]]></code>
-      <code><![CDATA[visitDocument]]></code>
-      <code><![CDATA[visitEmbeddedFile]]></code>
-      <code><![CDATA[visitEmpty]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFolder]]></code>
-      <code><![CDATA[visitLink]]></code>
-      <code><![CDATA[visitWiki]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/Docman_CloneItemsVisitor.php">
     <MissingParamType>
       <code><![CDATA[$dataRoot]]></code>
@@ -6578,18 +6519,6 @@
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$params]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$_items]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[_resetItems]]></code>
-      <code><![CDATA[addItem]]></code>
-      <code><![CDATA[getAllItems]]></code>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[isRoot]]></code>
-      <code><![CDATA[removeAllItems]]></code>
-      <code><![CDATA[toRow]]></code>
-    </MissingReturnType>
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->parent_id]]></code>
     </UndefinedThisPropertyFetch>
@@ -7063,7 +6992,6 @@
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
-      <code><![CDATA[$item]]></code>
       <code><![CDATA[$itemArray]]></code>
       <code><![CDATA[$itemIdArray]]></code>
       <code><![CDATA[$itemList]]></code>
@@ -7125,7 +7053,6 @@
       <code><![CDATA[getFolderStats]]></code>
       <code><![CDATA[getFolderTreeStats]]></code>
       <code><![CDATA[getGroupId]]></code>
-      <code><![CDATA[getItemMapping]]></code>
       <code><![CDATA[getItemTypeAsText]]></code>
       <code><![CDATA[getItemTypeForItem]]></code>
       <code><![CDATA[getLockFactory]]></code>
@@ -8864,10 +8791,6 @@
       <code><![CDATA[$user]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_itemIsWritable]]></code>
-      <code><![CDATA[getDocumentCounter]]></code>
-      <code><![CDATA[getDocumentIdList]]></code>
-      <code><![CDATA[getFolderCounter]]></code>
       <code><![CDATA[getFolderIdList]]></code>
       <code><![CDATA[getItemIdList]]></code>
       <code><![CDATA[visitDocument]]></code>
@@ -11564,41 +11487,6 @@
       <code><![CDATA[$representation->approval_table_action]]></code>
       <code><![CDATA[$representation->approval_table_action]]></code>
     </InaccessibleProperty>
-  </file>
-  <file src="plugins/docman/tests/unit/BuildItemMappingVisitorTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$itemMappingVisitor]]></code>
-      <code><![CDATA[$itemMappingVisitor]]></code>
-      <code><![CDATA[$itemMappingVisitor]]></code>
-    </InvalidArgument>
-    <MissingClosureReturnType>
-      <code><![CDATA[static fn(array $title, int $group_id, int $parent_id) => match (true) {]]></code>
-      <code><![CDATA[static fn(array $title, int $group_id, int $parent_id) => match (true) {]]></code>
-      <code><![CDATA[static fn(array $title, int $group_id, int $parent_id) => match (true) {]]></code>
-    </MissingClosureReturnType>
-    <TooManyArguments>
-      <code><![CDATA[TestHelper::arrayToDar(
-            ['item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1],
-            ['item_id' => 40, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2],
-        )]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(
-            ['item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1],
-            ['item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2],
-        )]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(
-            ['item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1],
-            ['item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2],
-        )]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['item_id' => 56, 'title' => 'Folder test', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0])]]></code>
-    </TooManyArguments>
   </file>
   <file src="plugins/docman/tests/unit/Docman_ActionsTest.php">
     <InternalMethod>
@@ -68115,19 +68003,6 @@
       <code><![CDATA[the]]></code>
       <code><![CDATA[the]]></code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="src/common/collection/PrioritizedList.php">
-    <MissingParamType>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$initial_array]]></code>
-      <code><![CDATA[$priority]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$priorities]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[add]]></code>
-    </MissingReturnType>
   </file>
   <file src="src/common/dao/CodendiDataAccess.php">
     <MissingPropertyType>

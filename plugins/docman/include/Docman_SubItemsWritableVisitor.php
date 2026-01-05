@@ -28,7 +28,7 @@ use Tuleap\Docman\Item\OtherDocument;
  * Check if all the sub items are writable by given user.
  * @template-implements ItemVisitor<bool>
  */
-class Docman_SubItemsWritableVisitor implements ItemVisitor
+class Docman_SubItemsWritableVisitor implements ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $dpm;
     public $user;
@@ -54,17 +54,11 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
         $canWrite = true;
         $this->fldCounter++;
 
-        if ($this->_itemIsWritable($item, $params)) {
+        if ($this->itemIsWritable($item, $params)) {
             $this->fldIdList[] = $item->getId();
             $items             = $item->getAllItems();
-            if ($items && $items->size() > 0) {
-                $iter = $items->iterator();
-                $iter->rewind();
-                while ($iter->valid()) {
-                    $child    = $iter->current();
-                    $canWrite = ($canWrite && $child->accept($this, $params));
-                    $iter->next();
-                }
+            foreach ($items as $child) {
+                $canWrite = ($canWrite && $child->accept($this, $params));
             }
         } else {
             $canWrite = false;
@@ -75,7 +69,7 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
     public function visitDocument(Docman_Document $item, array $params = [])
     {
         $this->docCounter++;
-        if ($this->_itemIsWritable($item, $params)) {
+        if ($this->itemIsWritable($item, $params)) {
             $this->docIdList[] = $item->getId();
             return true;
         }
@@ -124,7 +118,7 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
         return false;
     }
 
-    public function _itemIsWritable($item, $params)
+    private function itemIsWritable($item, $params): bool
     {
         return $this->dpm->userCanWrite($this->user, $item->getId());
     }
@@ -137,20 +131,5 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
     public function getFolderIdList()
     {
         return $this->fldIdList;
-    }
-
-    public function getDocumentIdList()
-    {
-        return $this->docIdList;
-    }
-
-    public function getDocumentCounter()
-    {
-        return $this->docCounter;
-    }
-
-    public function getFolderCounter()
-    {
-        return $this->fldCounter;
     }
 }

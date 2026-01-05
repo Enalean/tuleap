@@ -37,45 +37,25 @@ use ZipStream\Exception\FileNotFoundException;
 use ZipStream\Exception\FileNotReadableException;
 use ZipStream\ZipStream;
 
-final class ZipStreamFolderFilesVisitor implements ItemVisitor
+final readonly class ZipStreamFolderFilesVisitor implements ItemVisitor
 {
-    /**
-     * @var ZipStream
-     */
-    private $zip;
-    /**
-     * @var ZipStreamerLoggingHelper
-     */
-    private $error_logging_helper;
-    /**
-     * @var ErrorsListingBuilder
-     */
-    private $errors_listing_builder;
-
     public function __construct(
-        ZipStream $zip,
-        ZipStreamerLoggingHelper $error_logging_helper,
-        ErrorsListingBuilder $errors_listing_builder,
+        private ZipStream $zip,
+        private ZipStreamerLoggingHelper $error_logging_helper,
+        private ErrorsListingBuilder $errors_listing_builder,
     ) {
-        $this->zip                    = $zip;
-        $this->error_logging_helper   = $error_logging_helper;
-        $this->errors_listing_builder = $errors_listing_builder;
     }
 
     #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): void
     {
-        $items    = $item->getAllItems();
-        $iterator = $items->iterator();
+        $items = $item->getAllItems();
 
-        while ($iterator->valid()) {
-            $current_item = $iterator->current();
+        foreach ($items as $current_item) {
             $current_item->accept(
                 $this,
                 $this->getParamsWithCurrentPathUpdated($item, $params)
             );
-
-            $iterator->next();
         }
     }
 

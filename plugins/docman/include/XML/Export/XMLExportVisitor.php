@@ -119,7 +119,7 @@ class XMLExportVisitor implements ItemVisitor
         return $this->visitItem($item, $params)
             ->andThen(function (SimpleXMLElement $node) use ($item) {
                 $items = $item->getAllItems();
-                foreach ($items->iterator() as $child) {
+                foreach ($items as $child) {
                     $child->accept($this, ['xml' => $node]);
                 }
 

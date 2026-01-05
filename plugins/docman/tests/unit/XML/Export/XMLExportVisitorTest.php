@@ -33,7 +33,6 @@ use Docman_VersionFactory;
 use Docman_Wiki;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use PrioritizedList;
 use SimpleXMLElement;
 use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -316,10 +315,10 @@ final class XMLExportVisitorTest extends TestCase
     {
         $xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
         $folder = new Docman_Folder(['title' => 'My folder', 'item_id' => 42]);
-        $folder->setItems(new PrioritizedList([
+        $folder->setItems([
             new Docman_Empty(['title' => 'My sub document', 'item_id' => 43]),
             new Docman_Folder(['title' => 'My sub folder', 'item_id' => 44]),
-        ]));
+        ]);
 
         $this->perms_exporter->expects($this->exactly(3))->method('exportPermissions');
 
