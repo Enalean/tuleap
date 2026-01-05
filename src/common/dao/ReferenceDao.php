@@ -344,17 +344,6 @@ class ReferenceDao extends DataAccessObject implements GetSystemReferenceNatureB
         return $this->update($sql);
     }
 
-    public function update_keyword($old_keyword, $keyword, $group_id) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $sql = sprintf(
-            'UPDATE reference, reference_group SET keyword=%s WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s',
-            $this->da->quoteSmart($keyword),
-            $this->da->quoteSmart($old_keyword),
-            $this->da->quoteSmart($group_id)
-        );
-        return $this->update($sql);
-    }
-
     public function removeById($id)
     {
         $sql = sprintf(

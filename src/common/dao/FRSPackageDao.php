@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSPackageDao extends DataAccessObject
+class FRSPackageDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const int INCLUDE_DELETED = 0x0001;
 
@@ -73,14 +73,6 @@ class FRSPackageDao extends DataAccessObject
         );
     }
 
-    public function searchByIdList($idList)
-    {
-        if (is_array($idList) && count($idList) > 0) {
-            $sql_where = sprintf(' p.package_id IN (%s)', implode(', ', $idList));
-        }
-        return $this->_search($sql_where, '', '');
-    }
-
     /**
      * Return the list of packages for a given projet according to filters
      *
@@ -117,7 +109,7 @@ class FRSPackageDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function _search($where, $group = '', $order = '', $from = [], $extraFlags = 0)
+    public function _search($where, $group = '', $order = '', $from = [], $extraFlags = 0) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($from === null) {
             $from = [];
@@ -212,52 +204,9 @@ class FRSPackageDao extends DataAccessObject
         }
     }
 
-    public function _createAndReturnId($sql)
+    public function _createAndReturnId($sql) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->updateAndGetLastId($sql);
-    }
-
-    /**
-     * Update a row in the table frs_package
-     *
-     * @return true if there is no error
-     */
-    public function updateById(
-        $package_id,
-        $group_id,
-        $name = null,
-        $status_id = null,
-        $rank = null,
-        $approve_license = null,
-    ) {
-        $argArray = [];
-
-        if ($group_id !== null) {
-            $argArray[] = 'group_id=' . ($this->da->escapeInt($group_id));
-        }
-
-        if ($name !== null) {
-            $argArray[] = 'name=' . $this->da->quoteSmart($name, ['force_string' => true]);
-        }
-
-        if ($status_id !== null) {
-            $argArray[] = 'status_id=' . ($this->da->escapeInt($status_id));
-        }
-
-        if ($rank !== null) {
-            $argArray[] = '`rank`=' . $this->prepareRanking('frs_package', $package_id, $group_id, $rank, 'package_id', 'group_id');
-        }
-
-        if ($approve_license !== null) {
-            $argArray[] = 'approve_license=' . ($approve_license ? 1 : 0);
-        }
-
-        $sql = 'UPDATE frs_package'
-            . ' SET ' . implode(', ', $argArray)
-            . ' WHERE  status_id != ' . $this->da->escapeInt($this->STATUS_DELETED) . ' AND package_id=' . ($this->da->escapeInt($package_id));
-
-        $inserted = $this->update($sql);
-        return $inserted;
     }
 
     public function updateFromArray($data_array)

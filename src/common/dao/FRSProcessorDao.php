@@ -18,17 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSProcessorDao extends DataAccessObject
+class FRSProcessorDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public function listProcessors($group_id)
-    {
-        $sql = sprintf(
-            'SELECT * FROM frs_processor WHERE group_id=100 OR group_id=%s ORDER BY `rank`',
-            $this->da->quoteSmart((int) $group_id)
-        );
-        return $this->retrieve($sql);
-    }
-
     /**
      * @return int processor_id or null
      */

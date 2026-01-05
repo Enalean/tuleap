@@ -18,13 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSFileTypeDao extends DataAccessObject
+class FRSFileTypeDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public function listFileTypes($group_id)
-    {
-        return $this->retrieve('SELECT * FROM frs_filetype ORDER BY type_id');
-    }
-
     /**
      * @return int type_id or null
      */

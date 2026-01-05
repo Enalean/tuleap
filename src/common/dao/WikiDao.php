@@ -26,7 +26,7 @@ use Tuleap\PHPWiki\WikiPage;
 /**
  *  Data Access Object for wiki db access from other codendi components
  */
-class WikiDao extends DataAccessObject
+class WikiDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
     * This function retreives an id from wiki_page table using the pagename attribute
@@ -58,33 +58,6 @@ class WikiDao extends DataAccessObject
         } else {
             return null;
         }
-    }
-
-    /**
-    * Searches for the latest version of a wiki page
-    *
-    * @param int $groupId
-    * @param string $pagename
-    * @return int|null version number
-    */
-    public function searchCurrentWikiVersion($groupId, $pagename)
-    {
-        $version = null;
-        $sql     = sprintf(
-            'SELECT MAX(version) AS version' .
-                       ' FROM wiki_page ' .
-                       '  INNER JOIN wiki_version USING(id)' .
-                       ' WHERE group_id = %d' .
-                       ' AND pagename = %s',
-            $groupId,
-            $this->da->quoteSmart($pagename)
-        );
-        $dar     = $this->retrieve($sql);
-        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
-            $row     = $dar->current();
-            $version = $row['version'];
-        }
-        return $version;
     }
 
     /**

@@ -22,7 +22,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 require_once('include/DataAccessObject.php');
 
-class UserGroupDao extends DataAccessObject
+class UserGroupDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
     * Searches User-Group by UserId
@@ -101,19 +101,6 @@ class UserGroupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchProjectAdminsByProjectIdExcludingOneUserId($project_id, $user_id)
-    {
-        $project_id = $this->getDa()->escapeInt($project_id);
-        $user_id    = $this->getDa()->escapeInt($user_id);
-        $sql        = "SELECT u.email as email  FROM user u
-                    JOIN user_group ug
-                    USING(user_id)
-                    WHERE ug.admin_flags='A'
-                    AND u.status IN ('A', 'R')
-                    AND ug.group_id = $project_id AND u.user_id != $user_id";
-        return $this->retrieve($sql);
-    }
-
     /**
      * Remove users from a given project
      *
@@ -126,24 +113,6 @@ class UserGroupDao extends DataAccessObject
         $groupId = $this->da->escapeInt($groupId);
         $sql     = 'DELETE FROM user_group' .
                    ' WHERE group_id = ' . $groupId;
-        return $this->update($sql);
-    }
-
-    public function updateUserGroupFlags($user_id, $group_id, $flag)
-    {
-        if ($flag == '') {
-            return false;
-        }
-
-        // FIXME: find a way to escape the flag to prevent mysql injection
-        //        for now it is not possible but we don't
-        //        necessarily know who will use this dao.
-        $user_id  = $this->da->escapeInt($user_id);
-        $group_id = $this->da->escapeInt($group_id);
-        $sql      = "UPDATE user_group
-                SET $flag
-                WHERE group_id = $group_id
-                  AND user_id = $user_id";
         return $this->update($sql);
     }
 

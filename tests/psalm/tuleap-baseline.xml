@@ -68416,12 +68416,6 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeLikeValue]]></code>
       <code><![CDATA[getDa]]></code>
       <code><![CDATA[isError]]></code>
@@ -68441,8 +68435,6 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -68454,7 +68446,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[rowCount]]></code>
       <code><![CDATA[rowCount]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
@@ -68480,10 +68471,8 @@
     </InvalidFalsableReturnType>
     <InvalidReturnStatement>
       <code><![CDATA[$deleted]]></code>
-      <code><![CDATA[$inserted]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code><![CDATA[true]]></code>
       <code><![CDATA[true]]></code>
     </InvalidReturnType>
     <MissingParamType>
@@ -68491,12 +68480,9 @@
       <code><![CDATA[$data_array]]></code>
       <code><![CDATA[$file_id]]></code>
       <code><![CDATA[$file_id]]></code>
-      <code><![CDATA[$file_id]]></code>
       <code><![CDATA[$file_name]]></code>
       <code><![CDATA[$file_name]]></code>
       <code><![CDATA[$file_name]]></code>
-      <code><![CDATA[$file_name]]></code>
-      <code><![CDATA[$file_size]]></code>
       <code><![CDATA[$file_size]]></code>
       <code><![CDATA[$filepath]]></code>
       <code><![CDATA[$from]]></code>
@@ -68508,21 +68494,15 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$idList]]></code>
       <code><![CDATA[$order]]></code>
       <code><![CDATA[$post_date]]></code>
-      <code><![CDATA[$processor_id]]></code>
       <code><![CDATA[$processor_id]]></code>
       <code><![CDATA[$reference_md5]]></code>
       <code><![CDATA[$release_id]]></code>
       <code><![CDATA[$release_id]]></code>
-      <code><![CDATA[$release_id]]></code>
-      <code><![CDATA[$release_time]]></code>
       <code><![CDATA[$release_time]]></code>
       <code><![CDATA[$sql]]></code>
       <code><![CDATA[$status]]></code>
-      <code><![CDATA[$status]]></code>
-      <code><![CDATA[$type_id]]></code>
       <code><![CDATA[$type_id]]></code>
       <code><![CDATA[$where]]></code>
     </MissingParamType>
@@ -68530,7 +68510,6 @@
       <code><![CDATA[_createAndReturnId]]></code>
       <code><![CDATA[_search]]></code>
       <code><![CDATA[createFromArray]]></code>
-      <code><![CDATA[searchByIdList]]></code>
       <code><![CDATA[searchFileByName]]></code>
       <code><![CDATA[searchFileByNameFromRelease]]></code>
       <code><![CDATA[searchInReleaseById]]></code>
@@ -68547,7 +68526,6 @@
     </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable>
       <code><![CDATA[$file_id]]></code>
-      <code><![CDATA[$sql_where]]></code>
     </PossiblyUndefinedVariable>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $id]]></code>
@@ -68574,17 +68552,14 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[valid]]></code>
     </DeprecatedMethod>
     <MissingParamType>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$name]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[listFileTypes]]></code>
       <code><![CDATA[searchById]]></code>
     </MissingReturnType>
     <NullableReturnStatement>
@@ -68632,17 +68607,11 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[parent::__construct($da)]]></code>
       <code><![CDATA[prepareRanking]]></code>
       <code><![CDATA[prepareRanking]]></code>
       <code><![CDATA[prepareRanking]]></code>
-      <code><![CDATA[prepareRanking]]></code>
-      <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
@@ -68650,7 +68619,6 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[updateAndGetLastId]]></code>
@@ -68658,14 +68626,11 @@
     </DeprecatedMethod>
     <InvalidReturnStatement>
       <code><![CDATA[$deleted]]></code>
-      <code><![CDATA[$inserted]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[true]]></code>
-      <code><![CDATA[true]]></code>
     </InvalidReturnType>
     <MissingParamType>
-      <code><![CDATA[$approve_license]]></code>
       <code><![CDATA[$approve_license]]></code>
       <code><![CDATA[$da]]></code>
       <code><![CDATA[$data_array]]></code>
@@ -68680,28 +68645,22 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$idList]]></code>
       <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$order]]></code>
       <code><![CDATA[$package_id]]></code>
-      <code><![CDATA[$package_id]]></code>
       <code><![CDATA[$package_name]]></code>
-      <code><![CDATA[$rank]]></code>
       <code><![CDATA[$rank]]></code>
       <code><![CDATA[$sql]]></code>
       <code><![CDATA[$status_deleted]]></code>
       <code><![CDATA[$status_deleted]]></code>
-      <code><![CDATA[$status_id]]></code>
       <code><![CDATA[$status_id]]></code>
       <code><![CDATA[$where]]></code>
     </MissingParamType>
@@ -68714,7 +68673,6 @@
       <code><![CDATA[createFromArray]]></code>
       <code><![CDATA[searchActivePackagesByGroupId]]></code>
       <code><![CDATA[searchByFileId]]></code>
-      <code><![CDATA[searchByIdList]]></code>
       <code><![CDATA[searchInGroupById]]></code>
       <code><![CDATA[searchInGroupByReleaseId]]></code>
       <code><![CDATA[searchPackageByName]]></code>
@@ -68723,11 +68681,9 @@
     </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
     </PossiblyNullArgument>
     <PossiblyUndefinedVariable>
       <code><![CDATA[$package_id]]></code>
-      <code><![CDATA[$sql_where]]></code>
     </PossiblyUndefinedVariable>
   </file>
   <file src="src/common/dao/FRSProcessorDao.php">
@@ -68737,20 +68693,16 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[valid]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$processor_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[listProcessors]]></code>
       <code><![CDATA[searchById]]></code>
     </MissingReturnType>
     <NullableReturnStatement>
@@ -68790,12 +68742,6 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[parent::__construct($da)]]></code>
       <code><![CDATA[quoteSmart]]></code>
@@ -68810,13 +68756,9 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[updateAndGetLastId]]></code>
@@ -68824,14 +68766,11 @@
     </DeprecatedMethod>
     <InvalidReturnStatement>
       <code><![CDATA[$deleted]]></code>
-      <code><![CDATA[$inserted]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[true]]></code>
-      <code><![CDATA[true]]></code>
     </InvalidReturnType>
     <MissingParamType>
-      <code><![CDATA[$changes]]></code>
       <code><![CDATA[$changes]]></code>
       <code><![CDATA[$da]]></code>
       <code><![CDATA[$data_array]]></code>
@@ -68852,8 +68791,6 @@
       <code><![CDATA[$idList]]></code>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$notes]]></code>
       <code><![CDATA[$notes]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$order]]></code>
@@ -68862,12 +68799,8 @@
       <code><![CDATA[$package_id]]></code>
       <code><![CDATA[$package_id]]></code>
       <code><![CDATA[$package_id]]></code>
-      <code><![CDATA[$package_id]]></code>
-      <code><![CDATA[$preformatted]]></code>
       <code><![CDATA[$preformatted]]></code>
       <code><![CDATA[$release_date]]></code>
-      <code><![CDATA[$release_date]]></code>
-      <code><![CDATA[$release_id]]></code>
       <code><![CDATA[$release_id]]></code>
       <code><![CDATA[$release_id]]></code>
       <code><![CDATA[$release_name]]></code>
@@ -68875,7 +68808,6 @@
       <code><![CDATA[$status_active]]></code>
       <code><![CDATA[$status_deleted]]></code>
       <code><![CDATA[$status_deleted]]></code>
-      <code><![CDATA[$status_id]]></code>
       <code><![CDATA[$status_id]]></code>
       <code><![CDATA[$where]]></code>
     </MissingParamType>
@@ -69052,15 +68984,12 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -69096,8 +69025,6 @@
       <code><![CDATA[$object_id]]></code>
       <code><![CDATA[$object_id]]></code>
       <code><![CDATA[$object_id]]></code>
-      <code><![CDATA[$object_id]]></code>
-      <code><![CDATA[$permission_type]]></code>
       <code><![CDATA[$permission_type]]></code>
       <code><![CDATA[$permission_type]]></code>
       <code><![CDATA[$permission_type]]></code>
@@ -69117,7 +69044,6 @@
       <code><![CDATA[disableRestrictedAccess]]></code>
       <code><![CDATA[disableRestrictedAccessForObjectId]]></code>
       <code><![CDATA[doAllWikiServiceItemsHaveExplicitPermissions]]></code>
-      <code><![CDATA[getUgroupsByObjectIdAndPermissionType]]></code>
       <code><![CDATA[isThereADefaultWikiServicePermissionThatUsesUgroup]]></code>
       <code><![CDATA[isThereAnExplicitWikiServicePermission]]></code>
       <code><![CDATA[removePermission]]></code>
@@ -69269,10 +69195,8 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -69335,8 +69259,6 @@
       <code><![CDATA[$exact]]></code>
       <code><![CDATA[$exact]]></code>
       <code><![CDATA[$exact]]></code>
-      <code><![CDATA[$exact]]></code>
-      <code><![CDATA[$exact]]></code>
       <code><![CDATA[$from]]></code>
       <code><![CDATA[$groupName]]></code>
       <code><![CDATA[$id]]></code>
@@ -69352,8 +69274,6 @@
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$new]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
@@ -69387,11 +69307,8 @@
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$where]]></code>
       <code><![CDATA[$where]]></code>
-      <code><![CDATA[$words]]></code>
-      <code><![CDATA[$words]]></code>
       <code><![CDATA[$words]]></code>
       <code><![CDATA[$words]]></code>
       <code><![CDATA[$words]]></code>
@@ -69413,13 +69330,10 @@
       <code><![CDATA[searchByPublicStatus]]></code>
       <code><![CDATA[searchByStatus]]></code>
       <code><![CDATA[searchByUnixGroupName]]></code>
-      <code><![CDATA[searchGlobal]]></code>
-      <code><![CDATA[searchGlobalForRestrictedUsers]]></code>
       <code><![CDATA[searchGlobalPaginated]]></code>
       <code><![CDATA[searchGlobalPaginatedForRestrictedUsers]]></code>
       <code><![CDATA[searchGlobalParams]]></code>
       <code><![CDATA[searchMyAndPublicProjectsForRESTByShortname]]></code>
-      <code><![CDATA[searchPendingProjects]]></code>
       <code><![CDATA[searchProjectsUserIsAdmin]]></code>
       <code><![CDATA[searchProjectsWithNumberOfMembers]]></code>
       <code><![CDATA[searchSiteTemplates]]></code>
@@ -69531,9 +69445,6 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -69548,7 +69459,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
@@ -69606,7 +69516,6 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -69614,7 +69523,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$is_active]]></code>
       <code><![CDATA[$is_active]]></code>
-      <code><![CDATA[$keyword]]></code>
       <code><![CDATA[$keyword]]></code>
       <code><![CDATA[$keyword]]></code>
       <code><![CDATA[$keyword]]></code>
@@ -69629,7 +69537,6 @@
       <code><![CDATA[$nature]]></code>
       <code><![CDATA[$nature]]></code>
       <code><![CDATA[$new_short_name]]></code>
-      <code><![CDATA[$old_keyword]]></code>
       <code><![CDATA[$old_short_name]]></code>
       <code><![CDATA[$ref_id]]></code>
       <code><![CDATA[$refid]]></code>
@@ -69651,7 +69558,6 @@
       <code><![CDATA[removeById]]></code>
       <code><![CDATA[removeRefGroup]]></code>
       <code><![CDATA[updateProjectReferenceShortName]]></code>
-      <code><![CDATA[update_keyword]]></code>
       <code><![CDATA[update_ref_group]]></code>
     </MissingReturnType>
   </file>
@@ -69710,23 +69616,6 @@
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
   </file>
-  <file src="src/common/dao/SvnNotificationDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-    </InvalidFalsableReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($path)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="src/common/dao/SystemEventDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -69740,8 +69629,6 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeLikeValue]]></code>
       <code><![CDATA[getRow]]></code>
       <code><![CDATA[getRow]]></code>
@@ -69759,7 +69646,6 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
@@ -69776,10 +69662,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
@@ -69837,7 +69719,6 @@
       <code><![CDATA[null]]></code>
     </NullableReturnStatement>
     <PossiblyFalseArgument>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
       <code><![CDATA[strtotime('-1 year', time())]]></code>
     </PossiblyFalseArgument>
   </file>
@@ -70005,13 +69886,7 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeLikeValue]]></code>
-      <code><![CDATA[getDa]]></code>
-      <code><![CDATA[getDa]]></code>
       <code><![CDATA[getDa]]></code>
       <code><![CDATA[getDa]]></code>
       <code><![CDATA[getRow]]></code>
@@ -70030,7 +69905,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
@@ -70038,7 +69912,6 @@
       <code><![CDATA[rollback]]></code>
       <code><![CDATA[rollback]]></code>
       <code><![CDATA[startTransaction]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
@@ -70059,19 +69932,14 @@
     <MissingParamType>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$description]]></code>
-      <code><![CDATA[$flag]]></code>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
-      <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$user_group_id]]></code>
       <code><![CDATA[$user_group_id]]></code>
       <code><![CDATA[$user_group_id]]></code>
       <code><![CDATA[$user_group_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
@@ -70080,8 +69948,6 @@
       <code><![CDATA[getDynamicForgeUserGroupByName]]></code>
       <code><![CDATA[getForgeUGroup]]></code>
       <code><![CDATA[isUserGroupNameValid]]></code>
-      <code><![CDATA[searchProjectAdminsByProjectIdExcludingOneUserId]]></code>
-      <code><![CDATA[updateUserGroupFlags]]></code>
     </MissingReturnType>
     <PossiblyFalseReference>
       <code><![CDATA[getRow]]></code>
@@ -70093,7 +69959,6 @@
   <file src="src/common/dao/WikiDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[current]]></code>
       <code><![CDATA[current]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
@@ -70107,26 +69972,22 @@
       <code><![CDATA[foundRows]]></code>
       <code><![CDATA[getRow]]></code>
       <code><![CDATA[isError]]></code>
-      <code><![CDATA[isError]]></code>
       <code><![CDATA[quoteLikeValueSurround]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[rewind]]></code>
-      <code><![CDATA[rowCount]]></code>
       <code><![CDATA[rowCount]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>

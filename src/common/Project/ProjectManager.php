@@ -300,18 +300,6 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
     }
 
     /**
-     * @return Project[]
-     */
-    public function getAllPrivateProjects()
-    {
-        $private_projects = [];
-        foreach ($this->_getDao()->searchByPublicStatus(false) as $row) {
-            $private_projects[] = $this->getAndCacheProject($row);
-        }
-        return $private_projects;
-    }
-
-    /**
      * @return array
      */
     public function getAllPendingProjects()
