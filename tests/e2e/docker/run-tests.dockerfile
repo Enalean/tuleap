@@ -12,5 +12,5 @@ RUN apt-get update \
     && apt-get install --yes curl \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=cypress_bin_downloader /Cypress/ /Cypress/
-ENV CYPRESS_RUN_BINARY /Cypress/Cypress
+ENV CYPRESS_RUN_BINARY=/Cypress/Cypress
 RUN npm install -g junit-report-merger

@@ -69,4 +69,5 @@ treefmt-nix.mkWrapper pkgs {
       "*.phpstub"
     ];
   };
+  programs.dockerfmt.enable = true;
 }

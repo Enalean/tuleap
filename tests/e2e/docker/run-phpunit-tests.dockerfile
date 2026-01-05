@@ -15,5 +15,4 @@ RUN dnf install -y \
     python \
     bzip2 \
     sqlite \
-    && \
-    dnf clean all \
+    && dnf clean all \

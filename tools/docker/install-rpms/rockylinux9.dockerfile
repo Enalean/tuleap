@@ -37,8 +37,8 @@ CMD ["/usr/sbin/init"]
 
 FROM tuleap-installrpms-base AS ci
 COPY install-and-run.ci.service /etc/systemd/system/install-and-run.service
-RUN systemctl enable install-and-run.service && \
-    echo "Storage=persistent" >> /etc/systemd/journald.conf
+RUN systemctl enable install-and-run.service \
+    && echo "Storage=persistent" >>/etc/systemd/journald.conf
 
 FROM tuleap-installrpms-base AS interactive
 COPY install-and-run.service /etc/systemd/system/install-and-run.service
