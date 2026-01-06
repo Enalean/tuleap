@@ -251,7 +251,19 @@ class TrackerFormElementAdminView
             case 'date':
                 $html .= '<label data-test="date-specific-properties" for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
                 $value = $purifier->purify($property['value'] ? $this->formElement->formatDate($property['value']) : '');
-                $html .= $GLOBALS['HTML']->getDatePicker('formElement_properties_' . $key, "formElement_data[specific_properties][$key]", $value);
+                $html .= '<div class="tlp-form-element tlp-form-element-prepend">
+                        <span class="tlp-prepend">
+                            <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                        </span>';
+                $html .= '<input type="text"
+                        data-test="date-picker"
+                        class="tlp-input datetime-picker"
+                        id="' .  $purifier->purify('formElement_properties_' . $key, CODENDI_PURIFIER_CONVERT_HTML)  . '"
+                        name="' . $purifier->purify("formElement_data[specific_properties][$key]", CODENDI_PURIFIER_CONVERT_HTML) . '"
+                        size="' . $purifier->purify(10, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                        maxlength="' . $purifier->purify(10, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                        value="' . $purifier->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '">';
+                $html .= '</div>';
                 break;
             case 'text':
                 $html .= '<label data-test="text-specific-properties" for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';

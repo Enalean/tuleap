@@ -1679,6 +1679,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         );
 
         $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'colorpicker'));
+        $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'datepicker'));
         $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'TrackerAdminFields.js'));
 
         $this->displayAdminHeader($layout, 'editformElements', $title);

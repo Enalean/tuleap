@@ -524,11 +524,10 @@ class DateField extends TrackerField
         $hp             = Codendi_HTMLPurifier::instance();
         $html           = '';
         $criteria_value = $this->getCriteriaValue($criteria);
-        $html          .= '<div style="text-align:right">';
         $value          = isset($criteria_value['from_date']) ? $this->formatDateForReport($criteria_value['from_date']) : '';
         $html          .= '<label>';
         $html          .= dgettext('tuleap-tracker', 'Start') . ' ';
-        $html          .= $GLOBALS['HTML']->getBootstrapDatePicker(
+        $html          .= $this->getTLPDatePicker(
             'criteria_' . $this->id . '_from',
             'criteria[' . $this->id . '][from_date]',
             $value,
@@ -542,7 +541,7 @@ class DateField extends TrackerField
         $value          = isset($criteria_value['to_date']) ? $this->formatDateForReport($criteria_value['to_date']) : '';
         $html          .= '<label>';
         $html          .= dgettext('tuleap-tracker', 'End') . ' ';
-        $html          .= $GLOBALS['HTML']->getBootstrapDatePicker(
+        $html          .= $this->getTLPDatePicker(
             'criteria_' . $this->id . '_to',
             'criteria[' . $this->id . '][to_date]',
             $value,
@@ -553,7 +552,6 @@ class DateField extends TrackerField
             false,
         );
         $html          .= '</label>';
-        $html          .= '</div>';
         return $html;
     }
 
@@ -602,7 +600,7 @@ class DateField extends TrackerField
 
             $value = $criteria_value ? $this->formatDateForReport($criteria_value['to_date']) : '';
 
-            $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
+            $html .= $this->getTLPDatePicker(
                 'tracker_report_criteria_' . $this->id,
                 'criteria[' . $this->id . '][to_date]',
                 $value,
@@ -815,7 +813,7 @@ class DateField extends TrackerField
     #[Override]
     protected function fetchAdminFormElement()
     {
-        return $GLOBALS['HTML']->getBootstrapDatePicker(
+        return $this->getTLPDatePicker(
             'tracker_admin_field_' . $this->id,
             '',
             $this->hasDefaultValue() ? $this->getDefaultValue() : '',
@@ -1211,5 +1209,60 @@ class DateField extends TrackerField
     public function isAlwaysInEditMode(): bool
     {
         return false;
+    }
+
+    public function getTLPDatePicker(
+        string $id,
+        string $name,
+        string $value,
+        array $criteria_selector,
+        array $classes,
+        bool $is_time_displayed,
+        string $data_test,
+        bool $is_required,
+    ): string {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $format      = 'yyyy-MM-dd';
+        $date_class  = 'tuleap-field-date';
+        $enable_time = false;
+        $size        = 11;
+
+        if ($is_time_displayed) {
+            $format      = 'yyyy-MM-dd hh:mm';
+            $date_class  = 'tuleap-field-datetime';
+            $enable_time = true;
+            $size        = 19;
+        }
+
+        $classes[] = $date_class;
+
+        $html = '<div class="tlp-form-element tlp-form-element-prepend ' . implode(' ', $classes) . '">';
+
+        if (count($criteria_selector) > 0) {
+            $html .= '<select id="add-on-select" name="' . $criteria_selector['name'] . '" class="tlp-select tlp-select-adjusted tlp-prepend">';
+            foreach ($criteria_selector['criterias'] as $criteria_value => $criteria) {
+                $html .= '<option value="' . $criteria_value . '" ' . $criteria['selected'] . '>' . $criteria['html_value'] . '</option>';
+            }
+            $html .= '</select>';
+        } else {
+            $html .= '<span class="tlp-prepend"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span>';
+        }
+
+        $html .= '
+            <input name="' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                id="' . $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                data-format="' . $format . '"
+                type="text"
+                ' . ($is_required ? ' required ' : '') . '
+                value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                data-test="' . $hp->purify($data_test, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                class="tlp-input datetime-picker"
+                ' . ($enable_time ? 'data-enabletime="true" ' : '') . '
+                size="' . $size . '"
+            >';
+        $html .= '</div>';
+
+        return $html;
     }
 }

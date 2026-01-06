@@ -22,9 +22,7 @@
 
 $assets-base-path: "../../../" !default;
 
-@use "./selects" with (
-    $assets-base-path: $assets-base-path
-);
+@use "./selects";
 @use "./labels";
 @use "./inputs";
 

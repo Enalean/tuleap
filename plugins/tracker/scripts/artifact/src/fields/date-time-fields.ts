@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2026 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setupCSVExport } from "./csv-export.ts";
-import { init } from "./expert-mode";
-import "../themes/main.scss";
+import { createDatePicker, getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 
-document.addEventListener("DOMContentLoaded", () => {
-    init();
-    setupCSVExport(document);
-});
+export function initDateTimeFields(): void {
+    const user_locale = getLocaleWithDefault(document);
+
+    document.querySelectorAll(".datetime-picker").forEach((input_datetime) => {
+        if (!(input_datetime instanceof HTMLInputElement)) {
+            return;
+        }
+
+        createDatePicker(input_datetime, user_locale);
+    });
+}

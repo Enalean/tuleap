@@ -9,7 +9,9 @@
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/plugin-tracker-rte-creator": "workspace:*",
-    "@tuleap/tooltip": "workspace:*"
+    "@tuleap/tlp-date-picker": "workspace:^",
+    "@tuleap/tooltip": "workspace:*",
+    "jquery": "^3.7.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

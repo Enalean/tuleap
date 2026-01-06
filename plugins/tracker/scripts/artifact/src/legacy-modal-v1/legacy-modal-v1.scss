@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2026 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initListFields } from "../fields/list-fields";
-import { initDateTimeFields } from "../fields/date-time-fields";
-import "./legacy-modal-v1.scss";
-
-document.addEventListener("DOMContentLoaded", () => {
-    initListFields();
-    initDateTimeFields();
-});
+@use "pkg:@tuleap/tlp-date-picker";
+@use "pkg:@tuleap/tlp-styles/components/forms";

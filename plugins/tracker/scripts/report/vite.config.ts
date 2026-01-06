@@ -31,7 +31,7 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
-                    report: path.resolve(__dirname, "src/main.js"),
+                    report: path.resolve(__dirname, "src/report.ts"),
                 },
             },
         },

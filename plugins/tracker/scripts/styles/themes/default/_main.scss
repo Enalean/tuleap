@@ -20,6 +20,7 @@
 @use "sass:map";
 @use "pkg:@tuleap/tlp-swatch-colors";
 @use "pkg:@tuleap/flamingparrot-theme/css/utils/variables-common";
+@use "pkg:@tuleap/tlp-styles/components/forms";
 @use "./includes/cards";
 @use "./includes/field-bound-colors";
 @use "./includes/move-artifact";
@@ -2336,7 +2337,7 @@ body.sidebar-expanded .artifact-copy-button {
                     max-width: 380px;
                 }
 
-                input[type="text"]:not(.field-computed) {
+                input[type="text"]:not(.field-computed, .datetime-picker) {
                     box-sizing: border-box;
                     width: 100%;
                     height: 30px;

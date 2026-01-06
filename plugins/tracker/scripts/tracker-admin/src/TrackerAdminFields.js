@@ -20,11 +20,14 @@
 
 /* global codendi:readonly ProtoMultiSelect:readonly $:readonly $$:readonly Ajax:readonly Effect:readonly */
 
+import { createDatePicker, getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 import { createColorPicker } from "@tuleap/tlp-color-picker";
 import { getAttributeOrThrow } from "@tuleap/dom";
 
 document.observe("dom:loaded", function () {
     initColorPicker();
+    initDatetimePicker();
+
     function initTextboxlistForDefaultValues() {
         if ($("tracker_artifact_textboxlist_default")) {
             var field_id = $("field_id").value;
@@ -54,6 +57,18 @@ document.observe("dom:loaded", function () {
                     ),
                 });
             });
+        });
+    }
+
+    function initDatetimePicker() {
+        const user_locale = getLocaleWithDefault(document);
+
+        document.querySelectorAll(".datetime-picker").forEach((input_datetime) => {
+            if (!(input_datetime instanceof HTMLInputElement)) {
+                return;
+            }
+
+            createDatePicker(input_datetime, user_locale);
         });
     }
 
@@ -131,6 +146,7 @@ document.observe("dom:loaded", function () {
                         admin_field_properties.show();
 
                         //Put here the javascript stuff you need to call once the content of the modal dialog is loaded
+                        initDatetimePicker();
 
                         //Richtext editor
                         admin_field_properties
@@ -249,6 +265,7 @@ document.observe("dom:loaded", function () {
                         selected_element.show();
 
                         //Put here the javascript stuff you need to call once the content of the modal dialog is loaded
+                        initDatetimePicker();
 
                         //Color picker
                         selected_element

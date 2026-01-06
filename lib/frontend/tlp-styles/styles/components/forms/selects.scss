@@ -20,12 +20,6 @@
 @use "sass:math";
 @use "./form-element" as element;
 
-$assets-base-path: "../../../" !default;
-
-@function asset-url($file_path) {
-    @return url(#{$assets-base-path + $file_path});
-}
-
 .tlp-select {
     @include element.tlp-form-element;
 
@@ -36,8 +30,8 @@ $assets-base-path: "../../../" !default;
                 var(--tlp-form-element-select-background-size)
         )
         0 var(--tlp-form-element-padding-horizontal);
-    background: var(--tlp-form-element-background) asset-url("images/field-double-arrows.svg")
-        no-repeat;
+    background: var(--tlp-form-element-background)
+        url("@tuleap/tlp-styles/images/field-double-arrows.svg") no-repeat;
     background-position: right var(--tlp-form-element-padding-horizontal) center;
     appearance: none;
 
@@ -49,7 +43,7 @@ $assets-base-path: "../../../" !default;
             )
             0 element.$tlp-form-element-small-padding-horizontal;
         background: var(--tlp-form-element-background)
-            asset-url("images/field-double-arrows-small.svg") no-repeat;
+            url("@tuleap/tlp-styles/images/field-double-arrows-small.svg") no-repeat;
         background-position: right element.$tlp-form-element-small-padding-horizontal center;
         font-size: var(--tlp-form-element-small-font-size);
     }

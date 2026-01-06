@@ -40,8 +40,6 @@ class ServiceTracker extends Service //phpcs:ignore PSR1.Classes.ClassDeclaratio
     #[\Override]
     public function displayHeader(string $title, $breadcrumbs, array $toolbar, \Tuleap\Layout\HeaderConfiguration|array $params = []): void
     {
-        $GLOBALS['HTML']->includeCalendarScripts();
-
         $global_admin_permissions_checker = new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
             new User_ForgeUserGroupPermissionsManager(
                 new User_ForgeUserGroupPermissionsDao()

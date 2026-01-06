@@ -37,6 +37,7 @@ import { initEditionSwitcher } from "./TrackerArtifactEditionSwitcher";
 import "./text-follow-up";
 import { listenEnableDisableSubmitEvents } from "./artifact-edition-buttons-switcher/disable-submit-buttons";
 import { EventDispatcher } from "@tuleap/plugin-tracker-artifact-common";
+import { initDateTimeFields } from "../fields/date-time-fields";
 
 function initTextFields(user_locale: LocaleString): void {
     const creator = RichTextEditorsCreator(
@@ -73,6 +74,8 @@ async function initComments(user_locale: LocaleString): Promise<void> {
 
 document.addEventListener("DOMContentLoaded", async () => {
     const user_locale = getLocaleWithDefault(document);
+
+    initDateTimeFields();
     initTextFields(user_locale);
     initListFields();
     await initComments(user_locale);

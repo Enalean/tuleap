@@ -30,6 +30,7 @@ module.exports = [
             "semantics-homepage": "./src/semantics/homepage.ts",
             "status-semantic": "./src/semantics/status/status-picker.ts",
             TrackerAdminFields: "./src/TrackerAdminFields.js",
+            datepicker: "./styles/datepicker.scss",
             colorpicker: "./styles/colorpicker.scss",
             notifications: "./src/notifications/notifications.ts",
             "update-notification-reminder": "./src/notifications/update-notification-reminder.ts",

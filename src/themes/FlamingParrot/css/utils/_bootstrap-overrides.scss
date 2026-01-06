@@ -663,6 +663,14 @@ legend {
     }
 }
 
+.tlp-prepend {
+    box-sizing: border-box;
+}
+
+.tlp-prepend:not(select) + .tlp-input {
+    margin-bottom: 0;
+}
+
 // stylelint-disable-next-line selector-no-qualifying-type
 select.input-small {
     width: auto;
