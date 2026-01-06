@@ -96,7 +96,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
             ),
             SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
             new \Tuleap\Layout\IncludeCoreAssets(),
-            new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/')
+            new IncludeViteAssets(__DIR__ . '/../../../../scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/')
         );
     }
 
