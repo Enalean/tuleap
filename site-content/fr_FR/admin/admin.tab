@@ -10,12 +10,7 @@
 admin_approve_pending	title	Projets en attente de validation
 admin_approve_pending	no_pending	Aucun projet à valider
 admin_approve_pending	go_back	Retour à la page d'administration
-admin_approve_pending	approve	Approuver le projet
 admin_approve_pending	delete	Détruire le projet
-admin_approve_pending	remove_category	Enlever de la catégorie
-admin_approve_pending	approve_all	Tout approuver sur cette page
-admin_approve_pending	creator_and_creation_date	Créé le $3 par <a href="/admin/usergroup.php?user_id=$1">$2</a>
-admin_approve_pending	distributed_services	Serveurs pour les services distribués
 admin_approve_pending	error_update	Erreur lors de la mise à jour du projet
 admin_approve_pending	description	Description
 admin_approve_pending	see_project_details	Voir les détails du projet
@@ -37,7 +32,6 @@ admin_approve_pending_users	go_back	Retour à la page d'administration
 admin_approve_pending_users	no_pending	Aucun utilisateur en attente d'approbation
 admin_approve_pending_users	no_pending_validated	Aucun utilisateur en attente de validation
 admin_approve_pending_users	no_validated	Aucun utilisateur validé en attente d'approbation
-admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un e-mail
 admin_approve_pending_users	user_edit	Voir les détails de l'utilisateur
 admin_approve_pending_users	activate	Activer
 admin_approve_pending_users	activate_all	Activer tous les utilisateurs
@@ -45,7 +39,6 @@ admin_approve_pending_users	validate_notice	Valider : Un email est envoyé à l'
 admin_approve_pending_users	activate_notice	Activer : Le compte est immédiatement actif.
 admin_approve_pending_users	delete	Détruire
 admin_approve_pending_users	purpose	Motif
-admin_approve_pending_users	other_info	Autre information
 admin_approve_pending_users	name	Nom de l'utilisateur
 admin_approve_pending_users	id	Id
 admin_approve_pending_users	email	E-mail
@@ -55,17 +48,14 @@ admin_approve_pending_users	validate	Valider
 admin_approve_pending_users	validate_all	Valider tous les utilisateurs
 admin_approve_pending_users	account	le compte
 admin_approve_pending_users	ok	Ok
-admin_approve_pending_users	all_accounts	tous les comptes
 admin_approve_pending_users	status	avec le statut
 admin_approve_pending_users	status_restricted	Utilisateur restreint
 admin_approve_pending_users	status_all_restricted	Utilisateurs restreints
 admin_approve_pending_users	status_standard	standard
-admin_approve_pending_users	email_title	Bienvenue sur $1 !
 admin_approve_pending_users	data_not_parsed	Désolé, le format de la date du d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
 admin_approve_pending_users	expiry_date	Date d'expiration
 admin_approve_pending_users	expiry_date_directions	Une fois cette date passée, le compte sera suspendu.<br>Ne remplissez pas le champ si vous en souhaitez pas que le compte ait de date d'expiration.
 admin_approve_pending_users	resend	Renvoyer l'email
-admin_approve_pending_users	resend_notice	Renvoyer l'email d'activation du compte
 admin_approve_pending_users	resend_mail_success	L'email à destination de $1 a été renvoyé avec succès
 admin_approve_pending_users	resend_mail_error	Une erreur est survenue lors de l'envoie du mail à destination de $1
 admin_approve_pending_users	users_activated_success	Les utilisateurs ont été activés avec succès
@@ -92,31 +82,13 @@ admin_lastlogins	filter_no_matching_result	Il n'y a aucune connexion récente co
 #-----------------------------------------------
 # Script: SF/www/admin/newprojectmail.php
 #
-admin_newprojectmail	title	Notification par courrier électronique d'un nouveau projet
 admin_newprojectmail	success	Courrier électronique envoyé avec succès.
-#
-#-----------------------------------------------
-# Script: SF/www/admin/search.php
-#
-admin_search	title	Administration - Recherche dans les utilisateurs et projets
-admin_search	header	Fonctions de recherche de l'administrateur
-admin_search	maintenance	Maintenance des utilisateurs/projets/catégories
-admin_search	criteria	Critère de recherche
-admin_search	error_nowholedb	Un critère de recherche vide aura pour effet d'afficher toute la base de données.
-admin_search	nomatch	Aucun résultat
-admin_search	login	Nom de login
-admin_search	user_name	Nom d'utilisateur
-admin_search	unix_grp_name	Nom du groupe unix
-admin_search	grp_name	Nom du projet
-#
 #-----------------------------------------------
 # Script: SF/www/admin/user_changepw.php
 #
 admin_user_changepw	error_userid	Pas d'ID utilisateur
 admin_user_changepw	error_nopasswd	Vous devez fournir un mot de passe.
 admin_user_changepw	error_passwd	Les mots de passe ne sont pas identiques.
-admin_user_changepw	title_changed	Mot de passe modifié avec succès
-admin_user_changepw	header_changed	Confirmation du changement de mot de passe
 admin_user_changepw	msg_changed	Le mot de passe utilisateur a été modifié.
 admin_user_changepw	title	Changement de mot de passe
 admin_user_changepw	ldap_warning	Changer le mot de passe ici ne changera pas le mot de passe LDAP.
@@ -130,19 +102,8 @@ admin_user_changepw	confirm_password_field_label	Mot de passe (confirmation)
 # Script: SF/www/admin/usergroup.php
 #
 admin_usergroup	title	Administration - Information utilisateur
-admin_usergroup	error_del_u	Erreur lors de la destruction de l'utilisateur
-admin_usergroup	success_del_u	Utilisateur détruit avec succès
-admin_usergroup	error_upd_ug	Erreur lors de la mise à jour utilisateur/groupe
-admin_usergroup	success_upd_ug	Utilisateur/groupe mis à jour avec succès
 admin_usergroup	error_upd_u	Erreur lors de la mise à jour de l'utilisateur
 admin_usergroup	success_upd_u	Utilisateur mis à jour avec succès
-admin_usergroup	error_upd_ux	Erreur lors de la mise à jour du statut unix
-admin_usergroup	success_upd_ux	Statut unix mis à jour avec succès
-admin_usergroup	error_nouid	ID utilisateur manquant !
-admin_usergroup	error_nogid	ID groupe manquant !
-admin_usergroup	error_add_ug	Erreur lors de l'ajout d'un utilisateur au groupe
-admin_usergroup	success_add_ug	Utilisateur ajouté au groupe avec succès
-admin_usergroup	error_member	L'utilisateur est déjà membre du groupe $1
 admin_usergroup	header	Gestion des association utilisateur/groupe pour l'utilisateur
 admin_usergroup	shell	Shell
 admin_usergroup	email	E-mail
@@ -155,10 +116,7 @@ admin_usergroup	active	Actif
 admin_usergroup	restricted	Restreint
 admin_usergroup	suspended	Suspendu
 admin_usergroup	deleted	Détruit
-admin_usergroup	current_groups	Groupes actuels
-admin_usergroup	remove_ug	Enlever l'utilisateur de ce groupe
 admin_usergroup	admin_flags	Drapeaux d'administration
-admin_usergroup	add_ug	Ajouter l'utilisateur au groupe (ID du groupe)
 admin_usergroup	change_passwd	Changer le mot de passe
 admin_usergroup	was	Intialement :
 admin_usergroup	rename_user_msg	Le changement de Login utilisateur sur le système va être traité dans quelques instants ($1 -> $2).
@@ -171,7 +129,6 @@ admin_usergroup	is_admin	Est administrateur du projet
 admin_usergroup	no_project	Membre d'aucun projet
 admin_usergroup	last_pwd_update	Dernière mise à jour du mot de passe
 admin_usergroup	last_access_date	Dernier accès
-admin_usergroup	cannot_change_status	Impossible de changer le statut avant la validation du compte
 admin_usergroup	user_public_profile	Profil public
 admin_usergroup	more_info	Plus d'information
 admin_usergroup	update_information	Sauvegarder les informations
@@ -182,16 +139,7 @@ admin_usergroup	empty_purpose	Vide
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - Liste des utilisateurs
-admin_userlist	user_deleted	Utilisateur mis à jour avec le statut DETRUIT - Le compte Unix est planifié pour la destruction
-admin_userlist	user_active	Utilisateur mis à jour avec le statut ACTIF
-admin_userlist	user_validated	Utilisateur mis à jour avec le statut VALIDE
-admin_userlist	user_suspended	Utilisateur mis à jour avec le statut SUSPENDU
-admin_userlist	user_restricted	Utilisateur mis à jour avec le statut RESTREINT
-admin_userlist	error_uid	Erreur - L'utilisateur avec l'ID $1 est introuvable
-admin_userlist	error_noadd	Erreur - Impossibilité d'ajouter l'utilisateur au groupe
 admin_userlist	user_list	Utilisateurs
-admin_userlist	all_groups	Tous les projets
-admin_userlist	uid_toadd	ID utilisateur à ajouter
 admin_userlist	active	Actif
 admin_userlist	validated	Validé
 admin_userlist	validated_restricted	Validé et Restreint
@@ -230,16 +178,12 @@ admin_userlist	never_logged	Jamais connecté
 #
 admin_trove_cat_add	add_trove_cat	Ajouter une catégorie de projet
 admin_trove_cat_add	add	Ajouter une catégorie
-admin_trove_cat_add	short_name	Nom court de la catégorie
-admin_trove_cat_add	full_name	Nom complet de la catégorie
-admin_trove_cat_add	description	Description de la catégorie
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_delete.php
 #
 admin_trove_cat_delete	delete_trove_cat	Supprimer la catégorie
 admin_trove_cat_delete	alert_description_delete_modal	Wow, attendez une minute. Vous êtes sur le point de supprimer la catégorie de projet <b>$1</b>. Veuillez confirmer votre action.
-admin_trove_cat_delete	parent_is_root	Il est impossible de supprimer une catégorie parente.
 
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_edit.php
@@ -256,9 +200,6 @@ admin_trove_cat_edit	display_info	Sélectionnable si le parent est un parent req
 admin_trove_cat_edit	label_description	Description
 admin_trove_cat_edit	description_placeholder	Description de la catégorie de projet
 admin_trove_cat_edit	parent_category_label	Catégorie du parent
-admin_trove_cat_edit	missing_fullname	Le nom complet est obligatoire
-admin_trove_cat_edit	missing_shortname	Le nom court est obligatoire
-admin_trove_cat_edit	update_forbidden	Il est impossible de déplacer une catégorie dans sa catégorie fille ou dans elle même.
 
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
@@ -271,33 +212,7 @@ admin_trove_cat_list	edit	Modifier
 admin_trove_cat_list	delete	Supprimer
 admin_trove_cat_list	add	Ajouter une catégorie
 admin_trove_cat_list	cancel	Annuler
-#-----------------------------------------------
-# Script: src/www/admin/index.php
-#
-admin_servers	all_add	Ajouter un serveur
-admin_servers	all_choose	Choisir le serveur principal
-admin_servers	all_delete	Supprimer le serveur $1
-admin_servers	all_description	Description
-admin_servers	all_edit	Editer le serveur $1
-admin_servers	all_is_master	Principal ?
-admin_servers	all_master	Principal
-admin_servers	all_name	Nom
-admin_servers	delete	Oui, je veux supprimer ce serveur !
-admin_servers	delete_using	Les services suivants utilisent ce serveur :
-admin_servers	delete_R_U_sure	Êtes-vous sûr de vouloir supprimer ce serveur ?
-admin_servers	error_notfound	Serveur introuvable
-admin_servers	form_descr	Description :
-admin_servers	form_http	HTTP :
-admin_servers	form_https	HTTPS :
-admin_servers	form_id	Id :
-admin_servers	form_name	Nom :
-admin_servers	info_created	Le serveur <em>$1</em> a été créé
-admin_servers	info_deleted	Le serveur <em>$1</em> a été supprimé
-admin_servers	info_mastered	Le serveur <em>$1</em> est désormais le serveur principal
-admin_servers	info_updated	Le serveur <em>$1</em> a été modifié
-admin_servers	info_notcreated	Le serveur n'a pas été créé
-admin_servers	info_notdeleted	Le serveur <em>$1</em> n'a pas été supprimé
-admin_servers	info_notupdated	Le serveur <em>$1</em> n'a pas été modifié
+
 #-----------------------------------------------
 # Script: src/www/admin/descfields/desc_fields_edit.php
 #
@@ -313,7 +228,6 @@ admin_desc_fields	desc_line	Chaîne de caractères
 admin_desc_fields	desc_text	Zone de texte
 admin_desc_fields	rank	Rang
 admin_desc_fields	rank_on_screen	Rang à l'écran
-admin_desc_fields	update_required_desc_field_fail	La mise à jour du champ a echoué.
 admin_desc_fields	info_missed	Informations manquantes. Veuillez remplir tous les champs obligatoires.
 admin_desc_fields	info_rank_noint	Le rang doit être une valeur numérique.
 admin_desc_fields	add_success	Le champ a été ajouté avec succès.

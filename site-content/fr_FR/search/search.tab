@@ -15,23 +15,5 @@ search_index	no_match_found	Aucune correspondance pour <span>$1</span>
 search_index	no_more_results	Plus de correspondance aux critères trouvées
 search_index	more_results	Plus de résultats
 search_index	search_res	Résultats de la recherche pour $1 ($2 résultats)
-search_index	project_name	Nom du projet
-search_index	description	Description
-search_index	user_n	Nom d'utilisateur
-search_index	real_n	Nom complet
-search_index	thread	Fil
-search_index	author	Auteur
-search_index	date	Date
-search_index	bug_summary	Résumé du bug
-search_index	submitted_by	Soumis par
-search_index	sr_summary	Résumé de la demande de support
-search_index	task_summary	Résumé de la tâche
-search_index	created_by	Créée par
-search_index	start_date	Date de début
-search_index	end_date	Date de fin
-search_index	artifact_summary	Résumé de l'artifact
-search_index	invalid_search	ERREUR - Recherche invalide
-search_index	prev_res	Résultats précédents
-search_index	next_res	Résultats suivants
 search_index	soft	Projets
 search_index	people	Personnes

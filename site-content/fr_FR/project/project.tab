@@ -7,13 +7,7 @@
 #
 project_admin_editgroupinfo	upd_fail	La mise à jour a échouée ou aucune donnée n'a été modifiée !
 project_admin_editgroupinfo	changed_public_info	Information publique modifiée
-project_admin_editgroupinfo	editing_g_info	Modification des informations du projet
-project_admin_editgroupinfo	long_desc	Description longue&nbsp;:
-project_admin_editgroupinfo	patents	Brevets et propositions d'inventions
-project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
 project_admin_editgroupinfo	comments	Autre commentaires&nbsp;:
-project_admin_editgroupinfo	autocompleter_placeholder	Nom du projet (auto completé à la volée)
-project_admin_editgroupinfo	visibility_section	Accès
 project_admin_editgroupinfo	use_truncated_emails	Utiliser les courriels tronqués
 project_admin_editgroupinfo	truncated_emails_title	Courriels Tronqués
 project_admin_editgroupinfo	truncated_emails_impacted_services_introduction	Les courriels tronqués sont des courriels dont le contenu a été vidé (pour des raisons de confidentialité) et a été remplacé par un lien vers la ressource modifée.
@@ -21,7 +15,6 @@ project_admin_editgroupinfo	truncated_emails_impacted_services_no_available	Aucu
 project_admin_editgroupinfo	truncated_emails_impacted_services_impacted_services	Services impactés :
 project_admin_editgroupinfo	restricted_warning	Seuls ses membres peuvent accéder à un projet <b>privé</b>. <br>Un projet <b>public</b> est accessible à tous, <b>sauf les utilsateurs restreints</b>. <br>Il est <b>déconseillé d'autoriser l'accès</b> à un projet public à des <b>utilsateurs restreints</b> sans bonne raison.<br />Notez que la visibilité <b>Publique incluant les utilisateurs restreints</b> ne s'applique qu'à <em>la page d'accueil du projet</em>, à <em>Mediawiki</em> et aux <em>dépôts Git</em>.
 project_admin_editgroupinfo	general_warning	Seuls ses membres peuvent accéder à un projet <b>privé</b> <br>Un projet <b>public</b> est accessible à tous.
-project_admin_editgroupinfo	under_construction	Page en cours de construction.
 project_admin_editgroupinfo	term_of_service	Merci d'accepter les <a href='/tos/tos.php'>conditions générales d'utilisation</a> de la plateforme
 
 ## There must be a label and description value here for each service name (system or project wide) that should be localised
@@ -62,11 +55,6 @@ project_admin_editugroup	proj_members	Membres du projet
 project_admin_editugroup	edit_ug	Modifier les groupes d'utilisateurs
 #
 #-----------------------------------------------
-# Script: SF/www/project/admin/grouptrove.php
-#
-project_admin_grouptrove	changed_trove	Modifier la catégorisation du projet
-#
-#-----------------------------------------------
 # Script: SF/www/project/admin/history.php
 #
 project_admin_history	proj_history	Historique du projet
@@ -77,21 +65,11 @@ project_admin_history	proj_history	Historique du projet
 project_admin_index	invalid_p	Projet invalide
 project_admin_index	p_not_found	Projet introuvable.
 project_admin_index	user_not_removed	L'utilisateur n'a pas été enlevé - Vous ne pouvez enlever un administrateur du projet. Vous devez d'abord lui ôter ces droits d'administrateur et, éventuellement, en désigner un autre.
-project_admin_index	not_get_atf	Impossible d'obtenir un ArtifactTypeFactory
 project_admin_index	del_user_from_ug_fail	Impossible d'enlever l'utilisateur des ugroups
 project_admin_index	user_removed	Utilisateur enlevé
 project_admin_index	self_user_remove	Vous n'êtes plus membre du projet
 project_admin_index	p_admin	Administration du projet&nbsp;: $1
-project_admin_index	p_edit	Information sur le projet&nbsp;: $1
 project_admin_index	login_name	Nom de login&nbsp;:
-project_admin_index	add_user	Ajouter un utilisateur
-project_admin_index	bug_admin	Administration du gestionnaire de bugs
-project_admin_index	support_admin	Administration du gestionnaire de demande de support
-project_admin_index	patch_admin	Administration du gestionnaire de corrections
-project_admin_index	task_admin	Administration gestionnaire de tâches
-project_admin_index	doc_admin	Administration de la documentation
-project_admin_index	tracker_admin	Administrations des trackers
-project_admin_index	no_tracker_found	Aucun tracker n'est accessible
 project_admin_index	admin	Administration
 project_admin_index	member_request_delegation_title	Délégation des demandes d'accès au projet
 project_admin_index	member_request_delegation_desc_private_group	Lorsqu'un utilisateur n'a pas accès à votre projet privé, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.
@@ -107,17 +85,12 @@ project_admin_index	member_request_delegation_msg_desc	Ci-dessous le message par
 project_admin_index	member_request_delegation_msg_info	Le message destiné aux utilisateurs a été modifié .
 project_admin_index	member_request_delegation_msg_error	Impossible de modifier le message destiné aux utilisateurs.
 project_admin_index	or	ou
-project_admin_index	changed_group_type	Type de projet modifié
-project_admin_index	import_user	[Importer une liste d'utilisateurs]
-project_admin_index	show_projects	Projets créés à partir de ce modèle
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
 #
 project_admin_permissions	pack_download	Téléchargement de paquet
 project_admin_permissions	rel_download	Téléchargement de version
-project_admin_permissions	doc_access	Accès à un document
-project_admin_permissions	docgroup_access	Accès à un groupe de document
 project_admin_permissions	wiki_access	Accès au Wiki
 project_admin_permissions	wiki_attachment_access	Accès aux fichiers joints du Wiki
 project_admin_permissions	tracker_submitter_access	Accès à tous les artifacts soumis par le groupe
@@ -126,8 +99,6 @@ project_admin_permissions	wikiattachment	fichier joint du wiki
 project_admin_permissions	perm_type_not_def	permission_type '$1' indéfini
 project_admin_permissions	submit_perm	Valider les permissions
 project_admin_permissions	admins_create_modify_ug	Les administrateurs de projet peuvent aussi <a href="$1">créer ou modifier</a> des groupes d'utilisateurs.
-project_admin_permissions	perm_reset_for	Réinitialisation des permissions pour $1
-project_admin_permissions	perm_granted_for	Permission accordée à $1
 project_admin_permissions	obj_id_missed	object_id manquant
 project_admin_permissions	perm_type_missed	permission_type manquant
 project_admin_permissions	g_id_missed	group_id manquant
@@ -284,10 +255,7 @@ project_admin_utils	ugroup_membership_management_updated	Délégation de permiss
 #-----------------------------------------------
 # Script: SF/www/project/admin/servicebar.php
 #
-project_admin_servicebar	unavailable	Indisponible
 project_admin_servicebar	disabled	Inactif
-project_admin_servicebar	warning_del_s	*********** AVERTISSEMENT ***********\nVoulez-vous détruire ce service ? Ce faisant le service ($1) ne sera plus accessible à AUCUN des projets hébergés sur ce site. Voulez-vous vraiment continuer ?
-project_admin_servicebar	del_s	Détruire ce service ?
 project_admin_servicebar	del	DETRUIRE
 project_admin_servicebar	s_id_not_given	ECHEC&nbsp;: L'ID du service n'est pas spécifié
 project_admin_servicebar	s_del	Service supprimé
@@ -304,12 +272,6 @@ project_admin_servicebar	s_create_success	Service créé avec succès
 project_admin_servicebar	s_add_success	Service ajouté avec succès à $1 projet(s)
 project_admin_servicebar	s_id_missed	L'ID du service est manquant
 project_admin_servicebar	edit_s_bar	Modifier la barre de service
-project_admin_servicebar	edit_system_s	Modifier les services systèmes
-project_admin_servicebar	edit_s_for	Modifier les services du projet <B>$1</B>
-project_admin_servicebar	new_s	Nouveau service
-project_admin_servicebar	create_s	Créer un nouveau service.
-project_admin_servicebar	manage_s	Modifier les services existants
-project_admin_servicebar	availability	Disponibilité
 project_admin_servicebar	rank_on_screen	Rang à l'écran
 project_admin_servicebar	del?	Détruire ?
 project_admin_servicebar	home_page	Site Web
@@ -348,84 +310,15 @@ project_admin_ugroup_utils	ug_upd_empty	Ce groupe d'utilisateurs est devenu vide
 #
 project_admin_userperms	invalid_g	Groupe invalide
 project_admin_userperms	group_not_exist	Cet utilisateur n'existe pas.
-project_admin_userperms	unable_load_p	Impossible de charger l'objet projet
-project_admin_userperms	perm_fail_for	Erreur de permissions pour $1
 project_admin_userperms	perm_upd	Permissions mises à jour
-project_admin_userperms	user_name	Nom d'utilisateur
-project_admin_userperms	bug_track	Tracker de bugs
-project_admin_userperms	svn	SVN
-project_admin_userperms	task_man	Tracker de tâches
-project_admin_userperms	patch_man	Tracker de corrections
-project_admin_userperms	supp_man	Tracker de support
-project_admin_userperms	doc_man	Gestion Documentation
-project_admin_userperms	file_man	Gestion fichiers
-project_admin_userperms	tracker	Tracker&nbsp;: $1
-project_admin_userperms	no_users_found	Aucun membre de projet trouvé
-project_admin_userperms	tech_only	Technicien
-project_admin_userperms	admin_only	Administrateur
-project_admin_userperms	admin	Administrateur
-project_admin_userperms	tech&admin	Administrateur et Technicien
-project_admin_userperms	upd_user_perm	Mettre à jour les permissions
 
-#-----------------------------------------------
-# Script: SF/www/project/export/artifact_history_export.php
-#
-project_export_artifact_history_export	art_id	ID Artifact
-project_export_artifact_history_export	field_name	Nom du champ
-project_export_artifact_history_export	old_val	Ancienne valeur
-project_export_artifact_history_export	new_val	Nouvelle valeur
-project_export_artifact_history_export	mod_by	Modifié par
-project_export_artifact_history_export	email	E-mail
-project_export_artifact_history_export	mod_on	Modifié le
-project_export_artifact_history_export	comment_type	Type de commentaire
-project_export_artifact_history_export	label	Label
-project_export_artifact_history_export	field_name_desc	Nom interne du champ dont la valeur a été modifiée
-project_export_artifact_history_export	old_val_desc	Valeur du champ avant la modification
-project_export_artifact_history_export	new_val_desc	Valeur du champ après la modification
-project_export_artifact_history_export	mod_by_desc	Nom de l'utilisateur à l'origine de la modification
-project_export_artifact_history_export	mod_on_desc	Date de modification
-project_export_artifact_history_export	comment_type_desc	Type du commentaire ajouté à la fil de commentaires
-project_export_artifact_history_export	label_desc	Nom public du champ dont la valeur a été modifiée
-project_export_artifact_history_export	art_hist_export	Exportation de l'historique des changements
-project_export_artifact_history_export	no_hist_found	Aucun historique de changements pour ce tracker.  Impossible d'exporter des données.
-project_export_artifact_history_export	db_access_err	Erreur lors de l'accès à la base de données de ce tracker. Veuillez informer l'administrateur $1 de cette erreur.
-project_export_artifact_history_export	hist_export_format	Format d'exportation de l'historique des changements
-project_export_artifact_history_export	hist_export_format_msg	L'exportation de l'historique des changements de ce tracker comporte les champs suivants. Les valeurs données en exemple indiquent le type des données.
 #-----------------------------------------------
 # Script: SF/www/project/export/project_export_utils.php
 #
-project_export_utils	ins_err	Erreur à l'insertion $1 : $2
 project_export_utils	label	Label
 project_export_utils	sample_val	Exemple de valeur
-project_export_utils	server	Serveur
-project_export_utils	port	Port
-project_export_utils	leave_blank	(laissez-le vide)
-project_export_utils	db	Base de données
 project_export_utils	user	Utilisateur
-project_export_utils	passwd	Mot de passe
-project_export_utils	type	Type
-project_export_utils	query_is	Requête ($1) : $2
-#
-#-----------------------------------------------
-# Script: SF/www/project/export/support_request_export.php
-#
-project_export_support_request_export	support_id	ID support
-project_export_support_request_export	category	Catégorie
-project_export_support_request_export	summary	Résumé
-project_export_support_request_export	priority	Priorité
-project_export_support_request_export	submitted_by	Soumis par
-project_export_support_request_export	assigned_to	Confié à
-project_export_support_request_export	open_date	Date d'ouverture
-project_export_support_request_export	close_date	Date de clôture
-project_export_support_request_export	support_id_desc	Identifiant unique de la demande de support
-project_export_support_request_export	category_desc	Nom de la catégorie à laquelle appartient cette demande
-project_export_support_request_export	summary_desc	Description sommaire de la demande de support
-project_export_support_request_export	submitted_by_desc	utilisateur ayant soumis la demande de support
-project_export_support_request_export	assigned_to_desc	Membre du projet en charge de la demande de support
-project_export_support_request_export	open_date_desc	Date de soumission de la demande de support
-project_export_support_request_export	close_date_desc	Date de clôture de la demande de support
-project_export_support_request_export	status_desc	Statut (Ouvert, Fermé,&hellip;)
-project_export_support_request_export	follow_up_desc	Tout le fil de commentaires en un seul bloc de texte
+
 #
 #-----------------------------------------------
 # Script: src/www/project/export/access_logs_export.php
@@ -449,33 +342,9 @@ project_export_access_logs_export	page_desc	Page wiki accédée
 project_export_access_logs_export	local_time_desc	Heure locale de l'accès (H:m)
 #
 #-----------------------------------------------
-# Script: SF/www/project/export/task_assigned_to_export.php
-#
-project_export_task_assigned_to_export	task_id	ID de la tâche
-project_export_task_assigned_to_export	task_id_desc	Identifiant unique de la tâche
-project_export_task_assigned_to_export	assigned_to_desc	Membres du projet en charge de la tâche
-#
-#-----------------------------------------------
 # Script: SF/www/project/export/task_export.php
 #
-project_export_task_export	subproject	Sous-projet
-project_export_task_export	summary	Résumé de la tâche
-project_export_task_export	details	Description détaillée
-project_export_task_export	percent_complete	Pourcentage de complétion
-project_export_task_export	hours	heure(s)
-project_export_task_export	start_date	Date de début
-project_export_task_export	end_date	Date de fin
-project_export_task_export	created_by	Créée par
-project_export_task_export	depend_on_task	Dépend des tâche(s)
-project_export_task_export	subproject_desc	Nom du sous-projet dans lequel se trouve la tâche
-project_export_task_export	summary_desc	Description sommaire de la tâche
-project_export_task_export	details_desc	Description détaillée de la tâche
-project_export_task_export	percent_complete_desc	Proportion dans laquelle la tâche a été accomplie
-project_export_task_export	hours_desc	Effort passé sur la tâche en heures
-project_export_task_export	start_date_desc	Date de démarrage de la tâche
-project_export_task_export	end_date_desc	Date de clôture de la tâche
-project_export_task_export	created_by_desc	Membre du projet qui a créé la tâche
-project_export_task_export	depend_on_task_desc	Tâches dont celle-ci dépend
+
 
 project_stats_index	months	mois
 project_stats_index	weeks	semaines
@@ -529,13 +398,7 @@ project_stats_source_code_access_utils	wiki_attachment_title	Fichier joint
 project_stats_source_code_access_utils	co_upd	Checkout/Update
 project_stats_source_code_access_utils	browsing	Visualisation fichiers
 project_stats_source_code_access_utils	accesses	Accès
-#
-#-----------------------------------------------
-# Script: SF/www/project/index.php
-#
-project_index	g_missed	ID du groupe manquant
-project_index	must_spec_g	Un groupe doit être spécifié pour cette page.
-#
+
 #-----------------------------------------------
 # Script: SF/www/project/memberlist.php
 #
@@ -628,4 +491,3 @@ project_ugroup_binding	ldap_group_error	Le groupe LDAP '$1' n'existe pas.
 project_ugroup_binding	link_ldap_group	Le groupe LDAP '$1' a correctement été lié au projet.
 
 project_import	invalid_user	L'utilisateur $1 n'est pas valide. Il doit être administrateur du projet et actif
-project_import	invalid_xml	La structure du fichier n'est pas du XML valide

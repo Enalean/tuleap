@@ -10,13 +10,8 @@ file_admin_editpackages	p_name_exists	Ce nom de paquet existe déjà. Veuillez c
 file_admin_editpackages	cannot_hide	Désolé, vous ne pouvez pas cacher un paquet qui contient des versions actives. Veuillez d'abord cacher ces versions.
 file_admin_editpackages	p_updated	Paquet "$1" mis à jour avec succès
 file_admin_editpackages	perm_update_err	Erreur&nbsp;: la mise à jour des permissions a échoué
-file_admin_editpackages	perm_reset_err	Erreur&nbsp;: la ré-initialisation des permissions a échoué
-file_admin_editpackages	perm_reset	Permissions ré-initialisées à leur valeurs par défaut
 file_admin_editpackages	p_added	Paquet ajouté
-file_admin_editpackages	release_edit_f_rel	Création/Modification d'une version
 file_admin_editpackages	packages	Paquets
-file_admin_editpackages	p_explain	Vous pouvez utiliser les paquets pour regrouper les différentes versions d'un même logiciel. Un paquet comportent des versions qui regroupent des fichiers sources ou binaires qui forment un ensemble cohérent vis à vis de votre projet. \n
-file_admin_editpackages	no_p_defined	Aucun paquet n'est défini
 file_admin_editpackages	p_name	Nom du paquet
 file_admin_editpackages	rank_on_screen	Rang à l'écran
 file_admin_editpackages	update	Valider
@@ -25,9 +20,6 @@ file_admin_editpackages	perms	Permissions
 file_admin_editpackages	edit_releases	Modifier une version
 file_admin_editpackages	define	Définir
 file_admin_editpackages	create_new_p	Créer un nouveau paquet
-file_admin_editpackages	create_this_p	Créer ce paquet
-file_admin_editpackages	status_active	Actif
-file_admin_editpackages	status_hidden	Caché
 file_admin_editpackages	create_canceled	Création du paquet annulée
 file_admin_editpackages	edit_package	Edition d'un paquet
 file_admin_editpackages	update_canceled	Mise à jour du paquet annulée
@@ -40,19 +32,15 @@ file_admin_editpackages	p_not_empty	Désolé, vous ne pouvez pas supprimer un pa
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleases.php
 #
-file_admin_editreleases	create_p_before_rel	Vous devez créer un paquet avant de créer une version.
 file_admin_editreleases	p_not_exists	Ce paquet n'existe pas ou ne vous appartient pas
 file_admin_editreleases	add_rel_fail	La création de la version a échoué
 file_admin_editreleases	rel_added	Version créée avec succès
 file_admin_editreleases	rel_name_exists	Ce nom de version existe déjà
 file_admin_editreleases	rel_name_empty	Nom de version invalide : nom de version vide
-file_admin_editreleases	updating_rel	Mise à jour de la version
 file_admin_editreleases	data_uploaded	Fichier téléchargé
 file_admin_editreleases	length_err	ERREUR - Le fichier téléchargé doit être de taille non nulle et plus petit que $1 caractères.
-file_admin_editreleases	invalid_flag_err	ERREUR type de téléchargement invalide
 file_admin_editreleases	create_p_before_rel_status	Vous devez créer un paquet avant de créer une version. Vous devez aussi préciser son nom et son statut.
 file_admin_editreleases	p_not_yours	Vous essayez de modifier un paquet qui ne vous appartient pas
-file_admin_editreleases	cannot_del_rel	Désolé, vous ne pouvez pas détruire une version qui contient encore des fichiers
 file_admin_editreleases	rel_updated	Version "$1" mise à jour avec succès
 file_admin_editreleases	rel_update_failed	La mise à jour de la version a échoué
 file_admin_editreleases	f_not_yours	Le fichier $1 n'existe pas ou ne vous appartient pas
@@ -69,70 +57,27 @@ file_admin_editreleases	filename_invalid	Nom de fichier invalide ou inexistant
 file_admin_editreleases	filename_exists	Le nom de fichier existe déjà pour ce projet
 file_admin_editreleases	filename_to_be_restored	Un fichier avec ce même nom va être restauré dans quelques minutes
 file_admin_editreleases	md5_fail	La comparaison des MD5 checksum a echoué pour le fichier "$1", la valeur du MD5 calculée au niveau du serveur est "$2"
-file_admin_editreleases	no_files_selected	Aucun fichier sélectionné
 file_admin_editreleases	file_deleted	Fichier détruit : $1
 file_admin_editreleases	file_rel_notice_subject	[$1] $2 : nouvelle version du paquet $3
-file_admin_editreleases	download_explain_modified_file	Une nouvelle version de $2 (paquet $1) vient d'être publiée.
 file_admin_editreleases	download_explain_modified_package	Le project $1 vient de publier la version '$3' du package '$2'.\nVous pouvez la télécharger à l'addresse suivante :\n<$4>\n
 file_admin_editreleases	download_explain	 \n--\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet.\nSi vous ne voulez plus recevoir ces notifications à l'avenir, suivez ce lien :\n<$1>
 file_admin_editreleases	file_rel_notice_notes	\n\nNotes:\n$1\n
 file_admin_editreleases	file_rel_notice_changes	\n\nModifications:\n$1\n
 file_admin_editreleases	email_sent	E-mail envoyé - $1 utilisateurs suivent ce paquet
-file_admin_editreleases	rel_id_not_found	Ce numéro de version (ID) n'est pas dans la base de données
 file_admin_editreleases	release_new_file_version	Publier une nouvelle version
-file_admin_editreleases	step_x	Etape $1
-file_admin_editreleases	edit_change_notes	Editer les notes décrivant la version. Ces notes s'appliquent à tous les fichiers attachés à cette version.
 file_admin_editreleases	edit_release	Mettre à jour la version
-file_admin_editreleases	of_p	du paquet
 file_admin_editreleases	release_date	Date de la version
-file_admin_editreleases	of_P	du paquet
-file_admin_editreleases	upload_or_paste	Vous pouvez soit télécharger les notes et les modifications, ou les copier/coller directement ci-dessous.
 file_admin_editreleases	paste	Copier/coller les notes et modifications
-file_admin_editreleases	upload_change	Télécharger les modifications
-file_admin_editreleases	upload_notes	Télécharger les notes
 file_admin_editreleases	max_file_size	(Taille maximum de téléchargement&nbsp;: $1 MOctets)
-file_admin_editreleases	release_notes	Notes
-file_admin_editreleases	change_log	Modifications
-file_admin_editreleases	preserve_preformatted	Préserver le pré-formattage du texte.
-file_admin_editreleases	submit_refresh	Soumettre/rafraîchir
-file_admin_editreleases	attach_files	Ajouter des fichiers à cette version
-file_admin_editreleases	no_available_files	Aucun fichier disponible
-file_admin_editreleases	upload_files	Veuillez télécharger les fichiers comme expliqué ci-dessus, puis appuyez sur le bouton "Rafraîchir la liste des fichiers"</B>
-file_admin_editreleases	attach_marked_files	Ajouter les fichiers sélectionnés
-file_admin_editreleases	edit_files	Editer les fichiers dans cette version
-file_admin_editreleases	update_each	Vous <B>devez</B> renseigner les différents champs avec les valeurs appropriées faute de quoi les fichiers n'apparaîtront pas sur la page de téléchargement des fichiers.
-file_admin_editreleases	no_files_attached	Aucun fichier attaché à cette version
-file_admin_editreleases	attach_files_in_step2	Vous pouvez ajouter des fichiers dans l'étape 2 ci-dessus
 file_admin_editreleases	filename	Nom de fichier
 file_admin_editreleases	processor	Processeur
 file_admin_editreleases	file_type	Type de fichier
-file_admin_editreleases	update_refresh	Soumettre/rafraîchir
-file_admin_editreleases	delete_file	Détruire le fichier
-file_admin_editreleases	im_sure	Je suis sûr.
 file_admin_editreleases	mail_file_rel_notice	Notification par e-mail de la nouvelle version
-file_admin_editreleases	send_notice	Envoyer la notification
 file_admin_editreleases	users_monitor	$1 utilisateur(s) surveillent ce paquet. Envoyez-leur une notification de cette nouvelle version.
-file_admin_editreleases	define_new_release	Créer une nouvelle version d'un paquet
-file_admin_editreleases	contain_multiple_files	Une version d'un paquet peut contenir plusieurs fichiers. Les versions peuvent être nommées par de numéros (3.22.1, 3.23-beta1…) ou des noms.
-file_admin_editreleases	your_release	Les versions du paquet : $1
-file_admin_editreleases	no_releases_defined	Vous n'avez aucune version définie $1
 file_admin_editreleases	release_name	Nom de la version
-file_admin_editreleases	edit_this_release	Modifier cette version
-file_admin_editreleases	edit_this_p	Modifier ce paquet
-file_admin_editreleases	new_release_name	Nom de la nouvelle version
-file_admin_editreleases	belongs_to_p	appartient au paquet
-file_admin_editreleases	create_this_release	Créer cette version
 file_admin_editreleases	rel_del	Version détruite
-file_admin_editreleases	of_this_package	dans ce paquet
 file_admin_editreleases	subject	Sujet
 file_admin_editreleases	details	Détails
-file_admin_editreleases	fieldset_uploaded_files	Fichiers téléchargés
-file_admin_editreleases	fieldset_notes	Notes
-file_admin_editreleases	fieldset_permissions	Permissions
-file_admin_editreleases	fieldset_notification	Notification
-file_admin_editreleases	release_perm	Les permissions associées à cette version sont :
-file_admin_editreleases	upload_file_deleted	Vous avez récemment supprimez le fichier $1, vous pourrez à nouveau le télécharger dans moins de deux heures.
-file_admin_editreleases	create_new_release	Créer une nouvelle version
 file_admin_editreleases	create_canceled	Création de la version annulée
 file_admin_editreleases	upload_file_msg	La taille maximum autorisée est de $1 Mb - Veuillez compresser vos fichiers
 file_admin_editreleases	md5sum	md5 Checksum
@@ -148,7 +93,6 @@ file_admin_editreleases	notes_in_markdown	Les notes et modifications sont interp
 # Script: src/www/file/admin/manageprocessors.php
 #
 file_admin_manageprocessors	manage_proclist	Gérer les processeurs
-file_admin_manageprocessors	edit_proc	Cliquer sur le nom du processeur pour le modifier
 file_admin_manageprocessors	add_proc	Ajouter un nouveau processeur
 file_admin_manageprocessors	update_proc	Modifier un processeur
 file_admin_manageprocessors	rank_error	Erreur. Le rang du processeur doit être un entier.
@@ -168,8 +112,6 @@ file_confirm_download	back	Retour à la page précédente
 #-----------------------------------------------
 # Script: SF/www/file/filemodule_monitor.php
 #
-file_filemodule_monitor	monitor_a_package	Suivre un paquet
-file_filemodule_monitor	monitor_package	Suivre un paquet
 file_filemodule_monitor	insert_err	Erreur lors de l'insertion dans filemodule_monitor
 file_filemodule_monitor	p_monitored	Le suivi de ce paquet est maintenant activé
 file_filemodule_monitor	now_emails	Vous recevrez un message électronique concernant les nouvelles versions de ce paquet.
@@ -179,9 +121,7 @@ file_filemodule_monitor	choose_p	Erreur - Veuillez d'abord choisir un paquet
 file_filemodule_monitor	no_permission	Vous n'avez pas les permissions pour effectuer cette action
 file_filemodule_monitor	monitoring_people_title	Personnes qui suivent ce paquet
 file_filemodule_monitor	users_monitor	$1 utilisateur(s) suivent ce paquet anonymement.
-file_filemodule_monitor	no_list	Aucun utilisateur ne suit ce paquet publiquement
 file_filemodule_monitor	user	Utilisateur
-file_filemodule_monitor	add_users	Ajouter un utilisateur à la liste
 file_filemodule_monitor	my_monitoring	Mon suivi
 file_filemodule_monitor	anonymous	Suivre anonymement
 file_filemodule_monitor	public	Les administrateurs sauront que vous suivez ce paquet
@@ -208,7 +148,6 @@ file_file_utils	proc_name	Nom
 file_file_utils	proc_rank	Rang
 file_file_utils	add_proc	Ajouter
 file_file_utils	update_proc	Modifier
-file_file_utils	required_fields	champs obligatoires
 file_file_utils	add_proc_success	Processeur ajouté.
 file_file_utils	add_proc_fail	Ajout non effectué.
 file_file_utils	update_proc_success	Processeur modifié.
@@ -218,23 +157,15 @@ file_file_utils	delete_proc_fail	Suppression non effectuée.
 file_file_utils	del_proc	Effacer ce processeur ?
 file_file_utils	administrators_title	Administrateurs du service Fichier
 file_file_utils	readers_title	Lecteurs
-file_file_utils	permission_read_title	Lecture
-file_file_utils	access_control_intro	Cette section permet de définir les groupes d'utilisateurs qui peuvent lire et/ou écrire du contenu dans le service Fichier.
 file_file_utils	administrator_info	Les administrateurs de projet ainsi que les groupes d'utilisateurs ayant le droit d'écriture peuvent administrer ce service.
 file_file_utils	readers_info	Les groupes d'utilisateurs suivant ont accès au service. L'accès a un paquet peut être restreint via les permissions du paquet (bien que la sélection de groupes d'utilisateurs pour les paquets ne peut être plus large que ci-dessous)
 file_file_utils	frs_admins_submit_button	Sauvegarder les droits d'accès
 file_file_utils	updated_permissions	Les permissions ont été mises à jour
-file_file_utils	write_title	Administrateurs
-file_file_utils	no_data_selected	Aucune donnée selectionnée.
 file_file_utils	error_data_incorrect	Les données semblent incorrectes.
 #
 #-----------------------------------------------
 # Script: SF/www/file/showfiles.php
 #
-file_showfiles	file_p_for	Paquets du projet '$1'
-file_showfiles	no_file_p	Aucun paquet
-file_showfiles	no_p_available	Il n'y a aucun paquet disponible
-file_showfiles	release_notes	Versions et Notes
 file_showfiles	size	Taille (Ko)
 file_showfiles	d_l	D/L
 file_showfiles	arch	Arch.
@@ -246,15 +177,12 @@ file_showfiles	md5sum	Md5sum du fichier
 file_showfiles	user	Propriétaire
 file_showfiles	release	La version
 file_showfiles	package	Le paquet
-file_showfiles	warn_chars	$1 '$2' contient des caractères qui peuvent être incompatibles avec l'usage de webdav
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php
 #
 file_shownotes	not_found_err	Erreur - Introuvable
 file_shownotes	release_not_found	Cette version est introuvable
-file_shownotes	release_notes	Notes et Modifications de la version
-file_shownotes	release_name	Nom de version
 file_shownotes	changes	Modifications
 file_shownotes	notes	Notes
 

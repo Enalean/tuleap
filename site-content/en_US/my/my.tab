@@ -13,20 +13,13 @@
 #-----------------------------------------------
 # Script: SF/www/my/index.php
 #
-my_index	my_dashboard	My Dashboard
 my_index	account_maintenance	My Account
 my_index	title	Personal Page for $1
 my_index	message	Your personal page contains lists of bugs [<b>A</b>]ssigned to or  [<b>S</b>]ubmitted by you, tasks assigned with percentage completion, packages plus a list of groups that you are a member of.<P>
-my_index	err_artf	Failed to create ArtifactTypeFactory
-my_index	my_bugs	My Bugs
-my_index	my_srs	My Support Requests
 my_index	my_files	Monitored File Packages
 my_index	my_files_msg	<b>You are not monitoring any files</b><P>If you monitor files, you will be sent new release notices via email, with a link to the new file on our download server.<P>You can monitor files by visiting a project's &quot;Summary Page&quot; and clicking on the appropriate icon in the files section.<BR>&nbsp;
 my_index	stop_file	Stop Monitoring this Package?
 my_index	stop_monitor	STOP MONITORING
-my_index	my_tasks	My Tasks
-my_index	my_arts	My Artifacts (legacy trackers)
-my_index	display_arts	Display artifacts:
 my_index	my_bookmarks	My Bookmarks
 my_index	no_bookmark	You currently do not have any bookmarks saved
 my_index	edit_link	Edit
@@ -35,27 +28,13 @@ my_index	add_bookmark	Add a bookmark
 my_index	my_projects	My Projects
 my_index	not_member	You're not a member of any project
 my_index	admin_link	Admin
-my_index	priv_proj	<em>Private project</em>
 my_index	my_projects_legend	Legend:
 #my_index	a	A
 #my_index	s	S
 #my_index	as	AS
-my_index	no_info	Do not show any artifacts
-my_index	a_info	assigned to me [A]
-my_index	s_info	submitted by me [S]
-my_index	as_info	assigned to or submitted by me [AS]
 my_index	my_admin	Pending users and projects
 my_index	my_admin_non_super	Pending projects
 my_index	my_admin_description	List and give a quick access to pending users and projects.
-my_index	no_bug	No bug yet
-my_index	no_task	No task yet
-my_index	no_support	No support request yet
-my_index	my_latest_svn_commit	My Latest SVN Commits
-my_index	my_latest_svn_commit_desc	Lists SVN commits you have done, by project.
-my_index	my_latest_svn_commit_on	on
-my_index	my_latest_svn_commit_by	by
-my_index	my_latest_commit_empty	No commit found
-my_index	my_latest_svn_commit_nb_prefs	Maximum number of SVN commits to display per project
 my_index	send_mail	Contact members of project $1
 my_index	mail_sent	Mail sent to all members of project $1
 my_index	mail_not_sent	Mail not sent to members of project $1

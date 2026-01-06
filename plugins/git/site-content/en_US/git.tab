@@ -1,7 +1,6 @@
 project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
 project_admin_utils	regexp_activated_for_git_repository	Regexp usage changed for git repository $1
 project_admin_utils	regexp_activated_for_git_template	Regexp usage changed for project $1
-project_admin_utils	perm_reset_for_git_repository	Permission reset for git repository $1
 project_admin_utils	default_git_perms_granted_for_project	Default git permissions granted for project $1
 
 project_admin_utils	git_repo_create	Git repository creation

@@ -13,14 +13,8 @@
 #-----------------------------------------------
 # Script: src/common/project//confirmation.php
 #
-register_confirmation	registration_complete	Registration Complete
-register_confirmation	upd_fail	UPDATING TO ACTIVE FAILED. PLEASE report to $1 $2
 register_confirmation	ins_file_fail	INSERTING FILEMODULE FAILED. PLEASE report to admin@$1 $2
 register_confirmation	set_owner_fail	SETTING YOU AS OWNER FAILED. PLEASE report to $1 $2
-register_confirmation	get_help	Get Help
-register_confirmation	developers	Developers
-register_confirmation	cant_copy_svn_infos	ERROR - Can not copy default SVN information
-register_confirmation	cant_copy_truncated_emails	ERROR - Cannot copy truncated emails option from parent project
 register_confirmation	cant_copy_msg_to_requester	ERROR - Can not copy default message to requester to access your project.
 
 register_project_one_step	services_used	Services used:
