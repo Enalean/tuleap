@@ -95,7 +95,7 @@ class AdminPresenter
         $this->is_execution_disabled          = $is_execution_disabled;
 
         if ($this->is_definition_disabled && $test_definition_tracker_config->selected_tracker !== null) {
-            $this->definition_admin_url = TRACKER_BASE_URL . '?' .
+            $this->definition_admin_url = \trackerPlugin::TRACKER_BASE_URL . '?' .
                 http_build_query(
                     [
                         'tracker' => $test_definition_tracker_config->selected_tracker->tracker_id,
@@ -105,7 +105,7 @@ class AdminPresenter
         }
 
         if ($this->is_execution_disabled && $test_execution_tracker_config->selected_tracker !== null) {
-            $this->execution_admin_url = TRACKER_BASE_URL . '?' .
+            $this->execution_admin_url = \trackerPlugin::TRACKER_BASE_URL . '?' .
                 http_build_query(
                     [
                         'tracker' => $test_execution_tracker_config->selected_tracker->tracker_id,

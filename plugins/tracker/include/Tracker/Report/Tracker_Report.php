@@ -644,7 +644,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
             $presenter = new CommentCriterionPresenter($comment_criterion);
 
             $renderer = TemplateRendererFactory::build()->getRenderer(
-                TRACKER_TEMPLATE_DIR . '/report/'
+                __DIR__ . '/../../../templates/report/',
             );
 
             $array_of_html_criteria[] = $renderer->renderToString('comment-criterion', $presenter);
@@ -676,7 +676,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            TRACKER_TEMPLATE_DIR . '/report/'
+            __DIR__ . '/../../../templates/report/',
         );
 
         return $renderer->renderToString('tracker-report-expert-query', $tracker_report_expert_query_presenter);
@@ -866,7 +866,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
     {
         return TemplateRendererFactory::build()->getRenderer(
             [
-                TRACKER_TEMPLATE_DIR . '/report',
+                __DIR__ . '/../../../templates/report/',
                 __DIR__ . '/../../../../../src/templates/common',
             ]
         );
@@ -1058,7 +1058,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 $GLOBALS['Response']->addCssAsset(CssViteAsset::fromFileName($assets, 'themes/success-modal.scss'));
 
                 $renderer = TemplateRendererFactory::build()->getRenderer(
-                    TRACKER_TEMPLATE_DIR  . '/tracker-creation/'
+                    __DIR__ . '/../../../templates/tracker-creation/',
                 );
 
                 $html .= $renderer->renderToString(
@@ -1373,12 +1373,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
 
                     if (empty($masschange_aids)) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'No artifacts have been selected'));
-                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $tracker->getId());
+                        $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $tracker->getId());
                     }
                     $tracker->displayMasschangeForm($layout, $current_user, $masschange_aids);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $tracker->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $tracker->getId());
                 }
                 break;
             case 'update-masschange-aids':

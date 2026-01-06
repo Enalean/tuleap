@@ -53,7 +53,7 @@ class ArtifactsDeletionConfigController
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,
-            TRACKER_TEMPLATE_DIR,
+            __DIR__ . '/../../../../templates',
             'siteadmin-config/artifacts-deletion',
             new ArtifactsDeletionConfigPresenter(
                 $csrf,

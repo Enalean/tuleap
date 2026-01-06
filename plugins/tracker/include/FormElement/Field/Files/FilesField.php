@@ -412,7 +412,7 @@ class FilesField extends TrackerField
             return;
         }
 
-        return TRACKER_BASE_URL . '/attachments/' . $this->getFilenameSlug($file_info);
+        return \trackerPlugin::TRACKER_BASE_URL . '/attachments/' . $this->getFilenameSlug($file_info);
     }
 
     public function getFileHTMLPreviewUrl(Tracker_FileInfo $file_info)
@@ -427,7 +427,7 @@ class FilesField extends TrackerField
             return;
         }
 
-        return TRACKER_BASE_URL . '/attachments/preview/' . $this->getFilenameSlug($file_info);
+        return \trackerPlugin::TRACKER_BASE_URL . '/attachments/preview/' . $this->getFilenameSlug($file_info);
     }
 
     /**

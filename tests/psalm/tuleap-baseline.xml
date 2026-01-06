@@ -20907,7 +20907,6 @@
       <code><![CDATA[getRenderer]]></code>
       <code><![CDATA[getRow]]></code>
       <code><![CDATA[getStrokeUrl]]></code>
-      <code><![CDATA[getTemplateRenderer]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[getTracker]]></code>
       <code><![CDATA[getWidgetContent]]></code>
@@ -21743,7 +21742,6 @@
       <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[getChartFactory]]></code>
       <code><![CDATA[getCharts]]></code>
-      <code><![CDATA[getTemplateRenderer]]></code>
       <code><![CDATA[getType]]></code>
       <code><![CDATA[initiateSession]]></code>
       <code><![CDATA[processRequest]]></code>
@@ -27936,7 +27934,6 @@
     <MissingReturnType>
       <code><![CDATA[detectMergeConflict]]></code>
       <code><![CDATA[detectMergeabilityStatus]]></code>
-      <code><![CDATA[isFastForwardable]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/PullRequestPresenter.php">
@@ -34657,7 +34654,6 @@
       <code><![CDATA[getArtifactLinksToRenderFromChangesetValue]]></code>
       <code><![CDATA[getNormalizedSubmittedValue]]></code>
       <code><![CDATA[getReverseArtifactLinksToRender]]></code>
-      <code><![CDATA[getTemplateRenderer]]></code>
       <code><![CDATA[getTrackerFactory]]></code>
       <code><![CDATA[getWidgetTitle]]></code>
       <code><![CDATA[setArtifactFactory]]></code>
@@ -34760,7 +34756,6 @@
       <code><![CDATA[insertCrossReference]]></code>
       <code><![CDATA[removeCrossReference]]></code>
       <code><![CDATA[saveValue]]></code>
-      <code><![CDATA[warnOverrideOfExistingType]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$this->artifact_factory->getArtifactById($target_artifact_id)]]></code>
@@ -39338,7 +39333,6 @@
       <code><![CDATA[$layout]]></code>
       <code><![CDATA[$layout]]></code>
       <code><![CDATA[$layout]]></code>
-      <code><![CDATA[TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')]]></code>
     </ArgumentTypeCoercion>
     <DeprecatedMethod>
       <code><![CDATA[createNewChangeset]]></code>
@@ -39756,9 +39750,6 @@
       <code><![CDATA[PFUser[]]]></code>
       <code><![CDATA[bool]]></code>
     </InvalidReturnType>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')]]></code>
-    </LessSpecificReturnStatement>
     <MissingParamType>
       <code><![CDATA[$comment]]></code>
       <code><![CDATA[$fields_data]]></code>
@@ -39822,9 +39813,6 @@
       <code><![CDATA[summonArtifactRedirectors]]></code>
       <code><![CDATA[wasLastModifiedByAnonymous]]></code>
     </MissingReturnType>
-    <MoreSpecificReturnType>
-      <code><![CDATA[MustacheRenderer]]></code>
-    </MoreSpecificReturnType>
     <NullableReturnStatement>
       <code><![CDATA[$previous]]></code>
       <code><![CDATA[$this->getFormElementFactory()->getABurndownField($user, $this->getTracker())]]></code>
@@ -43033,9 +43021,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/Hierarchy.php">
-    <MissingClosureReturnType>
-      <code><![CDATA[function ($tracker1_id, $tracker2_id) {]]></code>
-    </MissingClosureReturnType>
     <MissingParamType>
       <code><![CDATA[$child_id]]></code>
       <code><![CDATA[$parent_id]]></code>
@@ -43051,7 +43036,6 @@
       <code><![CDATA[computeLevel]]></code>
       <code><![CDATA[getLastLevelTrackerIds]]></code>
       <code><![CDATA[getLevelRecursive]]></code>
-      <code><![CDATA[sortByLevel]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchyDAO.php">
@@ -45172,7 +45156,6 @@
       <code><![CDATA[delete]]></code>
       <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[getReport]]></code>
-      <code><![CDATA[getTemplateRenderer]]></code>
       <code><![CDATA[getType]]></code>
       <code><![CDATA[initiateSession]]></code>
       <code><![CDATA[process]]></code>
@@ -45393,7 +45376,6 @@
       <code><![CDATA[getSortDao]]></code>
       <code><![CDATA[getSortIcon]]></code>
       <code><![CDATA[getTableColumns]]></code>
-      <code><![CDATA[getTemplateRenderer]]></code>
       <code><![CDATA[getType]]></code>
       <code><![CDATA[initiateSession]]></code>
       <code><![CDATA[injectUnsavedColumnsInRendererDB]]></code>
@@ -49239,7 +49221,6 @@
       <code><![CDATA[buildRightVersionOfMilestonesBurndownResource]]></code>
       <code><![CDATA[burning_parrot_get_stylesheets]]></code>
       <code><![CDATA[clearRecentlyVisitedArtifacts]]></code>
-      <code><![CDATA[collectGlyphLocations]]></code>
       <code><![CDATA[collectRoutesEvent]]></code>
       <code><![CDATA[collect_errors_without_importing_xml_project]]></code>
       <code><![CDATA[configureAtXMLImport]]></code>

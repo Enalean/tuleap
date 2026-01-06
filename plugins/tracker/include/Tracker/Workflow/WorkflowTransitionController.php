@@ -68,7 +68,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
                 \Feedback::ERROR,
                 dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.')
             );
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
+            $layout->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }
 
         $workflow_assets = new IncludeAssets(
@@ -89,7 +89,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         );
 
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/workflow-transitions');
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/workflow-transitions');
         $renderer->renderToPage('workflow-transitions', new WorkflowMountPointPresenter($tracker->getId(), $event->getServiceNameUsed()));
 
         $tracker->displayFooter($this->tracker_manager);

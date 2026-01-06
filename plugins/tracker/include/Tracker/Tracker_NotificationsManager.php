@@ -348,12 +348,9 @@ class Tracker_NotificationsManager
         $renderer->renderToPage('admin-notifications-unsubscribers', $unsubscriber_list_presenter);
     }
 
-    /**
-     * @return TemplateRenderer
-     */
-    private function getNotificationsRenderer()
+    private function getNotificationsRenderer(): TemplateRenderer
     {
-        return TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates/notifications');
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/notifications');
     }
 
     /**

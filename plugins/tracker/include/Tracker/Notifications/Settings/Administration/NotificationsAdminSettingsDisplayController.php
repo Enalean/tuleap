@@ -57,7 +57,7 @@ class NotificationsAdminSettingsDisplayController implements DispatchableWithReq
                     'Access denied. You don\'t have permissions to perform this action.'
                 )
             );
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
+            $layout->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
         }
         $include_assets =  new IncludeAssets(
             __DIR__ . '/../../../../../scripts/tracker-admin/frontend-assets',

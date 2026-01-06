@@ -93,7 +93,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     #[\Override]
     public function getHooksAndCallbacks()
     {
-        if (defined('TRACKER_BASE_URL')) {
+        if (defined('\trackerPlugin::TRACKER_BASE_URL')) {
             $this->addHook('javascript_file');
             $this->addHook('tracker_report_renderer_types');
             $this->addHook('tracker_report_renderer_instance');
@@ -404,7 +404,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         return (defined('AGILEDASHBOARD_BASE_DIR') &&
                 strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL . '/') === 0 ||
-                strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0);
+                strpos($_SERVER['REQUEST_URI'], \trackerPlugin::TRACKER_BASE_URL . '/') === 0);
     }
 
     private function canUseStandardJavsacript()
@@ -531,7 +531,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         $report_id                  = key($redirect_params);
         $renderer_id                = current($redirect_params);
-        $redirect->base_url         = TRACKER_BASE_URL;
+        $redirect->base_url         = \trackerPlugin::TRACKER_BASE_URL;
         $redirect->query_parameters = [
             'report'   => $report_id,
             'renderer' => $renderer_id,

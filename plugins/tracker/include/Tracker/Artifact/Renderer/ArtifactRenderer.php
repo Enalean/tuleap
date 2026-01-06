@@ -51,7 +51,7 @@ abstract class Tracker_Artifact_ArtifactRenderer // phpcs:ignore PSR1.Classes.Cl
         $this->tracker            = $tracker;
         $this->event_manager      = $event_manager;
         $this->redirect           = new Tracker_Artifact_Redirect();
-        $this->redirect->base_url = TRACKER_BASE_URL;
+        $this->redirect->base_url = \trackerPlugin::TRACKER_BASE_URL;
     }
 
     /**

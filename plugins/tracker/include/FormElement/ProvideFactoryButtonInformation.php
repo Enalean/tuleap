@@ -58,6 +58,6 @@ abstract class ProvideFactoryButtonInformation
 
     final public function getCSRFTokenForElementUpdate(): CSRFSynchronizerToken
     {
-        return new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(['func' => 'admin-formElements', 'tracker' => $this->getTrackerId()]));
+        return new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['func' => 'admin-formElements', 'tracker' => $this->getTrackerId()]));
     }
 }

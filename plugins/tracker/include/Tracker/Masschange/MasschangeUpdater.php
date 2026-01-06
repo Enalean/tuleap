@@ -66,7 +66,7 @@ final readonly class MasschangeUpdater
                     'error',
                     dgettext('tuleap-tracker', 'No artifacts have been selected')
                 );
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
+                $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
             }
 
             $unsubscribe = $request->get('masschange-unsubscribe-option');
@@ -82,7 +82,7 @@ final readonly class MasschangeUpdater
                     'error',
                     dgettext('tuleap-tracker', 'No artifacts have been selected')
                 );
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
+                $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
             }
 
             $comment = $request->get('artifact_masschange_followup_comment');
@@ -109,13 +109,13 @@ final readonly class MasschangeUpdater
             );
             $this->event_manager->dispatch($event);
 
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
+            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
         } else {
             $GLOBALS['Response']->addFeedback(
                 'error',
                 dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.')
             );
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_report->getId());
+            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->tracker_report->getId());
         }
     }
 

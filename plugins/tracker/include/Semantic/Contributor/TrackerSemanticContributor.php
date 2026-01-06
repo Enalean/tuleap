@@ -143,7 +143,7 @@ class TrackerSemanticContributor extends TrackerSemantic
             $this->getLabel()
         );
 
-        $template_renderer       = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $template_renderer       = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
         $admin_presenter_builder = new \Tuleap\Tracker\Semantic\Contributor\AdminPresenterBuilder(Tracker_FormElementFactory::instance());
 
         echo $template_renderer->renderToString(

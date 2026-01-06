@@ -194,7 +194,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
 
     private function getAdminSemanticUrl(): string
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query([
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => $this->tracker->getId(),
             'func' => 'admin-semantic',
         ]);

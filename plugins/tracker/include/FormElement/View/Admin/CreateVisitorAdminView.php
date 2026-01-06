@@ -58,7 +58,7 @@ class CreateVisitorAdminView extends VisitorAdminView
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $title = 'Create a new ' . $this->label;
-        $url   = TRACKER_BASE_URL . '/?tracker=' . (int) $this->element->getTracker()->getId() . '&amp;func=admin-formElements&amp;create-formElement[' . $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) . ']=1';
+        $url   = \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->element->getTracker()->getId() . '&amp;func=admin-formElements&amp;create-formElement[' . $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) . ']=1';
 
         $form_content  = $this->fetchForm();
         $form_content .= ($csrf_token ?? $this->element->getCSRFTokenForElementUpdate())->fetchHTMLInput();

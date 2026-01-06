@@ -145,7 +145,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
         $formatted_types = $this->buildFormattedTypes($project);
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../../templates');
         $presenter = new ArtifactLinksPresenter(
             $project,
             $this->getCSRF($project),

@@ -100,10 +100,10 @@ class ArtifactIdField extends IntegerField implements Tracker_FormElement_Field_
         ?array $redirection_parameters = null,
     ): string {
         if ($redirection_parameters !== null && count($redirection_parameters) > 0) {
-            $url = TRACKER_BASE_URL . '/?' . http_build_query($redirection_parameters);
+            $url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query($redirection_parameters);
             return '<a class="direct-link-to-artifact" href="' . $url . '">' . $value . '</a>';
         }
-        return '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $value]) . '">' . $value . '</a>';
+        return '<a class="direct-link-to-artifact" href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $value]) . '">' . $value . '</a>';
     }
 
     /**
@@ -152,7 +152,7 @@ class ArtifactIdField extends IntegerField implements Tracker_FormElement_Field_
     #[Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        return '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">#' . (int) $artifact->id . '</a>';
+        return '<a href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">#' . (int) $artifact->id . '</a>';
     }
 
     /**
@@ -169,7 +169,7 @@ class ArtifactIdField extends IntegerField implements Tracker_FormElement_Field_
         $output = '';
         switch ($format) {
             case 'html':
-                $output .= '<a href="' . \Tuleap\ServerHostname::HTTPSUrl() . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">#' . (int) $artifact->id . '</a>';
+                $output .= '<a href="' . \Tuleap\ServerHostname::HTTPSUrl() . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">#' . (int) $artifact->id . '</a>';
                 break;
             default:
                 $output .= '#' . $artifact->id;
@@ -193,7 +193,7 @@ class ArtifactIdField extends IntegerField implements Tracker_FormElement_Field_
     #[Override]
     protected function fetchAdminFormElement(): string
     {
-        return '<a href="#' . TRACKER_BASE_URL . '/?aid=123" aria-disabled="true">#42</a>';
+        return '<a href="#' . \trackerPlugin::TRACKER_BASE_URL . '/?aid=123" aria-disabled="true">#42</a>';
     }
 
     #[Override]

@@ -74,7 +74,7 @@ class SemanticCardPresenter
         $this->semantic_url               = $form_url;
         $this->tracker_shortname          = $tracker->getItemName();
         $this->card_preview               = $card_preview;
-        $this->back_url                   = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->back_url                   = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func'    => 'admin-semantic',

@@ -99,6 +99,6 @@ class ArtifactNotificationActionButtonPresenterBuilder
 
     private function getUnsubscribeButtonUrl(int $artifact_id): string
     {
-        return TRACKER_BASE_URL . '/?aid=' . $artifact_id . '&func=manage-subscription&artifact=' . $artifact_id;
+        return \trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $artifact_id . '&func=manage-subscription&artifact=' . $artifact_id;
     }
 }

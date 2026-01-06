@@ -437,7 +437,7 @@ class BurndownField extends TrackerField implements Tracker_FormElement_Field_Re
     {
         $html  = '';
         $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this, $this->getChartFieldUsage());
-        $html .= '<img src="' . TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
+        $html .= '<img src="' . \trackerPlugin::TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
         $html .= '<a class="btn chart-cache-button-generate" disabled="disabled">' .
                  dgettext('tuleap-tracker', 'Force cache regeneration') .
                  '</a>';
@@ -620,7 +620,7 @@ class BurndownField extends TrackerField implements Tracker_FormElement_Field_Re
             ]
         );
 
-        return TRACKER_BASE_URL . '/?' . $url_query;
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . $url_query;
     }
 
     #[Override]
@@ -745,7 +745,7 @@ class BurndownField extends TrackerField implements Tracker_FormElement_Field_Re
      */
     protected function renderPresenter(BurndownFieldPresenter $burndown_presenter)
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates');
 
         return $renderer->renderToString('burndown-field', $burndown_presenter);
     }

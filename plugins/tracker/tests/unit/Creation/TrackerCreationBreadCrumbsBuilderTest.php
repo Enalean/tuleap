@@ -82,7 +82,7 @@ final class TrackerCreationBreadCrumbsBuilderTest extends TestCase
         return new BreadCrumb(
             new BreadCrumbLink(
                 'Trackers',
-                TRACKER_BASE_URL . '/?group_id=101',
+                \trackerPlugin::TRACKER_BASE_URL . '/?group_id=101',
             )
         );
     }

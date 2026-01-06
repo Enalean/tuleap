@@ -138,7 +138,7 @@ final class CreateArtifactActionTest extends TestCase
         $request_data = [];
         $tracker_id   = 20;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, 6845);
-        $this->assertEquals(TRACKER_BASE_URL . "/?tracker=$tracker_id", $redirect_uri->toUrl());
+        $this->assertEquals(\trackerPlugin::TRACKER_BASE_URL . "/?tracker=$tracker_id", $redirect_uri->toUrl());
     }
 
     public function testItStaysOnTheCurrentArtifactWhenSubmitAndStayIsSpecified(): void
@@ -147,7 +147,7 @@ final class CreateArtifactActionTest extends TestCase
         $artifact_id  = 66;
         $tracker_id   = 2142;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
-        $this->assertEquals(TRACKER_BASE_URL . "/?tracker=$tracker_id&aid=$artifact_id", $redirect_uri->toUrl());
+        $this->assertEquals(\trackerPlugin::TRACKER_BASE_URL . "/?tracker=$tracker_id&aid=$artifact_id", $redirect_uri->toUrl());
     }
 
     private function assertURIHasArgument(string $url, string $argument, string $argument_value): void
@@ -164,7 +164,7 @@ final class CreateArtifactActionTest extends TestCase
         $tracker_id   = 73;
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
-        $this->assertStringStartsWith(TRACKER_BASE_URL, $redirect_uri->toUrl());
+        $this->assertStringStartsWith(\trackerPlugin::TRACKER_BASE_URL, $redirect_uri->toUrl());
         $this->assertUriHasArgument($redirect_uri->toUrl(), 'func', 'new-artifact');
         $this->assertUriHasArgument($redirect_uri->toUrl(), 'tracker', (string) $tracker_id);
     }

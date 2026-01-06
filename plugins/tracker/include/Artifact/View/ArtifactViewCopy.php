@@ -27,7 +27,7 @@ final readonly class ArtifactViewCopy extends ArtifactViewEdit
     #[\Override]
     public function getURL(): string
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query(
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'aid' => $this->artifact->getId(),
                 'func' => 'copy-artifact',

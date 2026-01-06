@@ -20,7 +20,7 @@
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_DateReminderFactory
+class Tracker_DateReminderFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     protected $tracker;
     /**
@@ -96,7 +96,7 @@ class Tracker_DateReminderFactory
             $this->isReminderBeforeOpenDate($fieldId, $notificationType);
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/notifications/' . urlencode((string) $this->getTracker()->getId()) . '/');
+            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/notifications/' . urlencode((string) $this->getTracker()->getId()) . '/');
             exit();
         }
         $reminder = $this->date_reminder_dao->addDateReminder(
@@ -221,7 +221,7 @@ class Tracker_DateReminderFactory
             }
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/notifications/' . urlencode((string) $this->getTracker()->getId()) . '/');
+            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/notifications/' . urlencode((string) $this->getTracker()->getId()) . '/');
             exit();
         }
         $updateReminder = $this->date_reminder_dao->updateDateReminder(

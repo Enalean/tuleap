@@ -66,7 +66,7 @@ final class AdminPresenterBuilderTest extends TestCase
                 [],
                 false,
                 [],
-                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
+                \trackerPlugin::TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
                 0,
                 null
             ),
@@ -93,7 +93,7 @@ final class AdminPresenterBuilderTest extends TestCase
                 [new PossibleFieldsForStatusPresenter(1, 'field A', false), new PossibleFieldsForStatusPresenter(2, 'field B', false)],
                 false,
                 [],
-                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
+                \trackerPlugin::TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
                 0,
                 null
             ),
@@ -130,7 +130,7 @@ final class AdminPresenterBuilderTest extends TestCase
                 [new PossibleFieldsForStatusPresenter(1, 'field A', false), new PossibleFieldsForStatusPresenter(2, 'field B', true)],
                 true,
                 [new StatusValuePresenter(1, 'open', true, false), new StatusValuePresenter(2, 'closed', false, true)],
-                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
+                \trackerPlugin::TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
                 true,
                 $field_B->getLabel()
             ),

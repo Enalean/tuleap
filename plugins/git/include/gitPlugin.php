@@ -385,7 +385,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(PendingDocumentsRetriever::NAME);
         $this->addHook(WorkerEvent::NAME);
 
-        if (defined('TRACKER_BASE_URL')) {
+        if (defined('\trackerPlugin::TRACKER_BASE_URL')) {
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
             $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
         }

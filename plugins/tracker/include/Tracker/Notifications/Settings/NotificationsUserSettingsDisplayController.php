@@ -55,7 +55,7 @@ final readonly class NotificationsUserSettingsDisplayController implements Dispa
         $current_user = $request->getCurrentUser();
         if ($current_user->isAnonymous()) {
             $layout->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
+            $layout->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }
 
         $user_notification_settings = $this->user_notification_settings_retriever->getUserNotificationSettings(

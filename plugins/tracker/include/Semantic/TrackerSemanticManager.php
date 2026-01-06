@@ -127,7 +127,7 @@ class TrackerSemanticManager
             if ($semantic === false) {
                 continue;
             }
-            $url = TRACKER_BASE_URL . '/?' . http_build_query([
+            $url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
                 'tracker' => $this->tracker->getId(),
                 'func' => 'admin-semantic',
                 'semantic' => $semantic->getShortName(),

@@ -39,6 +39,6 @@ final readonly class HomepagePresenter
         public array $trackers,
     ) {
         $this->is_empty        = $this->trackers === [];
-        $this->new_tracker_uri = TRACKER_BASE_URL . '/' . urlencode($project->getUnixNameLowerCase()) . '/new';
+        $this->new_tracker_uri = \trackerPlugin::TRACKER_BASE_URL . '/' . urlencode($project->getUnixNameLowerCase()) . '/new';
     }
 }

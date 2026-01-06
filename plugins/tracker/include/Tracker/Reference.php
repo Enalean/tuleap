@@ -36,7 +36,7 @@ class Tracker_Reference extends Reference
             $base_id,
             $keyword,
             dgettext('tuleap-tracker', 'Artifact') . ' - ' . $tracker->getName(),
-            TRACKER_BASE_URL . '/?aid=$1&group_id=$group_id',
+            \trackerPlugin::TRACKER_BASE_URL . '/?aid=$1&group_id=$group_id',
             $visibility,
             trackerPlugin::SERVICE_SHORTNAME,
             Artifact::REFERENCE_NATURE,

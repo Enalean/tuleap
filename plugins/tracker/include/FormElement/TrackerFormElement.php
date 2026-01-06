@@ -374,7 +374,7 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
             $redirect = true;
         }
         if ($redirect) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
+            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
         }
     }
 
@@ -873,7 +873,7 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
 
     public function getAdminEditUrl(): string
     {
-        return TRACKER_BASE_URL . '/?' .
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' .
                http_build_query(
                    [
                        'tracker'     => $this->getTracker()->getId(),
@@ -885,7 +885,7 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
 
     public function getAdminEditSubmitUrl(): string
     {
-        return TRACKER_BASE_URL . '/?' .
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' .
                http_build_query(
                    [
                        'tracker'     => $this->getTracker()->getId(),

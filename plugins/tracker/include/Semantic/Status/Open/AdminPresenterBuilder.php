@@ -65,7 +65,7 @@ final class AdminPresenterBuilder
             $possible_status_field,
             $semantic_status->getFieldId() !== 0,
             $status_values,
-            TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic',
+            \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic',
             count($selected_values) > 0,
             $semantic_status->getField()?->getLabel()
         );

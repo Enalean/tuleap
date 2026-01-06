@@ -206,7 +206,7 @@ class SemanticTimeframe extends TrackerSemantic
     private function getCSRFSynchronizerToken(): \CSRFSynchronizerToken
     {
         return new \CSRFSynchronizerToken(
-            TRACKER_BASE_URL . '/?' . http_build_query(
+            \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
                 [
                     'semantic' => self::NAME,
                     'func'     => 'admin-semantic',

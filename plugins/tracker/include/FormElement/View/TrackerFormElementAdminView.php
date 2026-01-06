@@ -375,7 +375,7 @@ class TrackerFormElementAdminView
             foreach ($fields as $field) {
                 $tracker = $field->getTracker();
                 if ($tracker->isDeleted() === false && $tracker->getProject()->isDeleted() === false) {
-                    $trackers[$tracker->getId()] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $hp->purify(urlencode((string) $tracker->getId())) . '&func=admin-formElements">' . $hp->purify($tracker->getName()) . ' (' . $hp->purify($tracker->getProject()->getPublicName()) . ')</a>';
+                    $trackers[$tracker->getId()] = '<a href="' . \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $hp->purify(urlencode((string) $tracker->getId())) . '&func=admin-formElements">' . $hp->purify($tracker->getName()) . ' (' . $hp->purify($tracker->getProject()->getPublicName()) . ')</a>';
                 }
             }
             if (! empty($trackers)) {

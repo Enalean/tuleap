@@ -358,7 +358,7 @@ final class EmailNotificationTask implements PostCreationTask
         $output  = '+============== ' . '[' . $art->getTracker()->getItemName() . ' #' . $art->getId() . '] ' . $art->fetchMailTitle($recipient_user, $format, $ignore_perms) . ' ==============+';
         $output .= PHP_EOL;
         $output .= PHP_EOL;
-        $output .= ' <' . ServerHostname::HTTPSUrl() . TRACKER_BASE_URL . '/?aid=' . $art->getId() . '>';
+        $output .= ' <' . ServerHostname::HTTPSUrl() . \trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $art->getId() . '>';
         $output .= PHP_EOL;
         $output .= dgettext('tuleap-tracker', 'last edited by:');
         $output .= ' ' . $this->user_helper->getDisplayNameFromUserId($changeset->getSubmittedBy());

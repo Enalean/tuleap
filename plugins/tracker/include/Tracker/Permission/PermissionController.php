@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Permission_PermissionController implements Tracker_Dispatchable_Interface
+class Tracker_Permission_PermissionController implements Tracker_Dispatchable_Interface // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var Tracker */
     private $tracker;
@@ -34,7 +34,7 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
     public function __construct(Tracker $tracker)
     {
         $this->tracker           = $tracker;
-        $this->renderer          = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $this->renderer          = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
         $this->presenter_builder = new Tracker_Permission_PermissionPresenterBuilder();
     }
 
@@ -76,7 +76,7 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
         $permission_manager = new Tracker_Permission_PermissionManager();
         $permission_manager->save($permission_request, $permission_setter);
 
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&func=admin-perms-tracker');
+        $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&func=admin-perms-tracker');
     }
 
     private function getPermissionSetter()

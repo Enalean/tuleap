@@ -49,13 +49,13 @@ final class SemanticProgressAdminPresenter
     ) {
         $this->is_method_effort_based      = $current_method === MethodBasedOnEffort::getMethodName();
         $this->is_method_links_count_based = $current_method === MethodBasedOnLinksCount::getMethodName();
-        $this->tracker_semantic_admin_url  = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->tracker_semantic_admin_url  = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func' => 'admin-semantic',
             ]
         );
-        $this->tracker_fields_admin_url    = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->tracker_fields_admin_url    = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func' => 'admin-formElements',

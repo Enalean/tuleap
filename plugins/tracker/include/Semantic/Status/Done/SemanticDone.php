@@ -118,7 +118,7 @@ class SemanticDone extends TrackerSemantic
     #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/semantics');
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/semantics');
 
         $semantic_status_field = $this->semantic_status->getField();
         $selected_values       = [];
@@ -162,7 +162,7 @@ class SemanticDone extends TrackerSemantic
             new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
             'done-semantic.js'
         ));
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/semantics');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/semantics');
         $presenter = new SemanticDoneAdminPresenter(
             $csrf,
             $this->tracker,
@@ -191,7 +191,7 @@ class SemanticDone extends TrackerSemantic
      */
     private function getAdminSemanticUrl()
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query([
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => $this->tracker->getId(),
             'func'    => 'admin-semantic',
         ]);

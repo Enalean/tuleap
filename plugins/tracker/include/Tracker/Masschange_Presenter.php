@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_Masschange_Presenter
+class Tracker_Masschange_Presenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var array */
     public $masschange_aids;
@@ -62,47 +62,47 @@ class Tracker_Masschange_Presenter
         $this->has_external_actions = (bool) count($external_actions) > 0;
     }
 
-    public function changing_items()
+    public function changing_items() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return sprintf(dgettext('tuleap-tracker', 'Changing %1$s artifact(s):'), count($this->masschange_aids));
     }
 
-    public function tracker_base_url()
+    public function tracker_base_url() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return TRACKER_BASE_URL;
+        return \trackerPlugin::TRACKER_BASE_URL;
     }
 
-    public function artifact_fields_title()
+    public function artifact_fields_title() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-tracker', 'Artifacts fields');
     }
 
-    public function masschange_info_title()
+    public function masschange_info_title() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-tracker', 'Masschange information');
     }
 
-    public function unsubscribe_label()
+    public function unsubscribe_label() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-tracker', 'Unsubscribe me from these artifacts\' notifications');
     }
 
-    public function add_comment()
+    public function add_comment() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-tracker', 'Add a follow-up comment');
     }
 
-    public function notification_label()
+    public function notification_label() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-tracker', 'Send notifications to people monitoring these artifacts');
     }
 
-    public function masschange_submit()
+    public function masschange_submit() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-tracker', 'Submit');
     }
 
-    public function default_comment()
+    public function default_comment() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-tracker', 'Mass Change');
     }

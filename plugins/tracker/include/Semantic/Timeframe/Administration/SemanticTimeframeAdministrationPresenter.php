@@ -79,7 +79,7 @@ class SemanticTimeframeAdministrationPresenter
         $this->has_artifact_link_field                      = $has_artifact_link_field;
         $this->current_tracker_id                           = $tracker->getId();
 
-        $this->tracker_semantic_admin_url = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->tracker_semantic_admin_url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func' => 'admin-semantic',

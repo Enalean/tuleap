@@ -31,7 +31,6 @@ use EventManager;
 use Feedback;
 use ForgeConfig;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use MustacheRenderer;
 use PermissionsManager;
 use PFUser;
 use ProjectManager;
@@ -520,7 +519,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $html  = '';
-        $html .= ' <a class="direct-link-to-artifact tracker-widget-artifacts" href="' . TRACKER_BASE_URL . '/?aid=' . $this->id . '">';
+        $html .= ' <a class="direct-link-to-artifact tracker-widget-artifacts" href="' . \trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $this->id . '">';
         $html .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= ' #';
         $html .= $this->id;
@@ -578,7 +577,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'src/header/actions-button.ts'));
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            TRACKER_TEMPLATE_DIR
+            __DIR__ . '/../../../templates',
         );
 
         $event_manager = $this->getEventManager();
@@ -937,7 +936,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                             dgettext('tuleap-tracker', 'Permission Denied')
                         );
                         $GLOBALS['Response']->redirect(
-                            TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $this->getTrackerId())
+                            \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $this->getTrackerId())
                         );
                     }
                     if ($request->get('func') === 'show-attachment') {
@@ -1238,7 +1237,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function getUriWithParameters(array $parameters): string
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query(
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             array_merge(
                 [
                     'aid' => $this->getId(),
@@ -1669,12 +1668,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return Tracker_Artifact_ChangesetFactoryBuilder::build();
     }
 
-    /**
-     * @return MustacheRenderer
-     */
-    private function getMustacheRenderer()
+    private function getMustacheRenderer(): \TemplateRenderer
     {
-        return TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates');
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
     }
 
     private function getFirstPossibleValueInListRetriever(): FirstPossibleValueInListRetriever

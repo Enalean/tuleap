@@ -30,7 +30,7 @@ class WorkflowManager
     {
         $workflow_factory = WorkflowFactory::instance();
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
-            $token             = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
+            $token             = new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
                 [
                     'tracker' => $this->tracker->getId(),
                     'func'    => Workflow::FUNC_ADMIN_RULES,
@@ -41,7 +41,7 @@ class WorkflowManager
         } elseif ($request->get('func') == Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS) {
             $token = $this->getCrossTrackerTriggerCSRFToken();
 
-            $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR . '/../templates');
+            $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
             $action   = new Tracker_Workflow_Action_Triggers_EditTriggers(
                 $this->tracker,
                 $token,
@@ -55,7 +55,7 @@ class WorkflowManager
         } elseif ($request->isPost() && $request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
             $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $workflow_factory->getTriggerRulesManager(), $this->getCrossTrackerTriggerCSRFToken());
         } else {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/workflow/' . urlencode((string) $this->tracker->getId()) . '/transitions');
+            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/workflow/' . urlencode((string) $this->tracker->getId()) . '/transitions');
             return;
         }
 
@@ -64,7 +64,7 @@ class WorkflowManager
 
     private function getCrossTrackerTriggerCSRFToken(): \Tuleap\Request\CSRFSynchronizerTokenInterface
     {
-        return new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
+        return new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $this->tracker->getId(),
                 'func'    => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,

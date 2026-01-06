@@ -33,21 +33,21 @@ class SectionsPresenter
     public string $types_url;
     public string $report_config_url;
     public string $artifacts_deletion_url;
-    public string $tracker_restoration_url = TRACKER_BASE_URL . TrackerRestorationDisplayController::URL;
+    public string $tracker_restoration_url = \trackerPlugin::TRACKER_BASE_URL . TrackerRestorationDisplayController::URL;
 
     public function __construct()
     {
-        $this->emailgateway_url  = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+        $this->emailgateway_url  = \trackerPlugin::TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action'   => 'emailgateway',
         ]);
-        $this->types_url         = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+        $this->types_url         = \trackerPlugin::TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action'   => 'artifact-links',
         ]);
-        $this->report_config_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+        $this->report_config_url = \trackerPlugin::TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action' => 'report-config',
         ]);
 
-        $this->artifacts_deletion_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+        $this->artifacts_deletion_url = \trackerPlugin::TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action' => 'artifacts-deletion',
         ]);
     }

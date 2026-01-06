@@ -59,7 +59,7 @@ class TrackerCreatorXmlErrorDisplayer
         $breadcrumbs = [
             [
                 'title' => 'Create a new tracker',
-                'url'   => TRACKER_BASE_URL . '/?group_id=' . urlencode($project->group_id) . '&amp;func=create',
+                'url'   => \trackerPlugin::TRACKER_BASE_URL . '/?group_id=' . urlencode($project->group_id) . '&amp;func=create',
             ],
         ];
         $title       = 'Trackers';

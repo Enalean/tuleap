@@ -80,7 +80,7 @@ class CreateArtifactAction
             $this->processCreate($layout, $request, $current_user);
         } else {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
+            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
         }
     }
 
@@ -244,7 +244,7 @@ class CreateArtifactAction
     protected function redirectUrlAfterArtifactSubmission(\Tuleap\HTTPRequest $request, int $tracker_id, int $artifact_id): Tracker_Artifact_Redirect
     {
         $redirect           = new Tracker_Artifact_Redirect();
-        $redirect->base_url = TRACKER_BASE_URL;
+        $redirect->base_url = \trackerPlugin::TRACKER_BASE_URL;
 
         $stay                 = $request->get('submit_and_stay');
         $continue             = $request->get('submit_and_continue');

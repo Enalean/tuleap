@@ -236,7 +236,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function getHooksAndCallbacks()
     {
         // Do not load the plugin if tracker is not installed & active
-        if (defined('TRACKER_BASE_URL')) {
+        if (defined('\trackerPlugin::TRACKER_BASE_URL')) {
             $this->addHook(trackerPlugin::TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);

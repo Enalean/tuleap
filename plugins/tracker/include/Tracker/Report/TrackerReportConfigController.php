@@ -54,7 +54,7 @@ class TrackerReportConfigController
 
         $this->admin_page_rendered->renderANoFramedPresenter(
             $title,
-            TRACKER_TEMPLATE_DIR,
+            __DIR__ . '/../../../templates',
             'siteadmin-config/tracker-report-config',
             new TrackerReportConfigPresenter(
                 $csrf_token,

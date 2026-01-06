@@ -49,7 +49,7 @@ final class AdminPresenterBuilder
             $semantic_contributor->getFieldId() !== 0,
             $possible_contributors,
             count($list_user_fields) > 0,
-            TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic'
+            \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic'
         );
     }
 }

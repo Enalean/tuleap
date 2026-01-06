@@ -37,7 +37,7 @@ class TrackerCreationBreadCrumbsBuilder
         $breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
                 dgettext('tuleap-tracker', 'Trackers'),
-                TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $project->getID()),
+                \trackerPlugin::TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $project->getID()),
             )
         );
 

@@ -33,7 +33,7 @@ final class ArtifactCopyButtonPresenterBuilder
             return new ArtifactCopyButtonPresenter(
                 dgettext('tuleap-tracker', 'Duplicate this artifact'),
                 dgettext('tuleap-tracker', 'Duplicate this artifact'),
-                TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId()
+                \trackerPlugin::TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId()
             );
         }
 
@@ -42,6 +42,6 @@ final class ArtifactCopyButtonPresenterBuilder
 
     private function isAlreadyCopyingArtifact(): bool
     {
-        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=copy-artifact') === 0;
+        return strpos($_SERVER['REQUEST_URI'], \trackerPlugin::TRACKER_BASE_URL . '/?func=copy-artifact') === 0;
     }
 }

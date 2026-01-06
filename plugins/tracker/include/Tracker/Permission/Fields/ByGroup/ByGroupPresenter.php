@@ -70,7 +70,7 @@ class ByGroupPresenter
         $this->self_url              = ByGroupController::getUrl($tracker);
         $this->update_url            = PermissionsOnFieldsUpdateController::getUrl($tracker);
         $this->by_field_url          = ByFieldController::getUrl($tracker);
-        $this->tracker_url           = TRACKER_BASE_URL . '?tracker=' . $tracker->getId();
+        $this->tracker_url           = \trackerPlugin::TRACKER_BASE_URL . '?tracker=' . $tracker->getId();
         $this->selected_id           = $selected_id;
         $this->field_list            = $field_list;
         $this->might_not_have_access = $might_not_have_access;
