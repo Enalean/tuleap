@@ -2,6 +2,8 @@ services:
   oauth2-server-rp-oidc:
     image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-aio-dev:el9-php84
     command: scl enable php84 -- php /usr/share/tuleap/plugins/oauth2_server/tests/e2e/cypress/rp-oidc/app.php
+    environment:
+      - DISPLAY_ERRORS=true
     volumes:
       - .:/usr/share/tuleap:ro
     networks:
