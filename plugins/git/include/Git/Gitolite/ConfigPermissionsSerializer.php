@@ -59,10 +59,6 @@ class Git_Gitolite_ConfigPermissionsSerializer //phpcs:ignore PSR1.Classes.Class
      * @var RegexpFineGrainedRetriever
      */
     private $regexp_retriever;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
 
     public function __construct(
         Git_Driver_Gerrit_ProjectCreatorStatus $gerrit_status,
@@ -70,7 +66,7 @@ class Git_Gitolite_ConfigPermissionsSerializer //phpcs:ignore PSR1.Classes.Class
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedPermissionFactory $fine_grained_factory,
         RegexpFineGrainedRetriever $regexp_retriever,
-        EventManager $event_manager,
+        private readonly \Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
     ) {
         $this->gerrit_status = $gerrit_status;
         $template_dirs       = [];
@@ -83,7 +79,6 @@ class Git_Gitolite_ConfigPermissionsSerializer //phpcs:ignore PSR1.Classes.Class
         $this->fine_grained_retriever = $fine_grained_retriever;
         $this->fine_grained_factory   = $fine_grained_factory;
         $this->regexp_retriever       = $regexp_retriever;
-        $this->event_manager          = $event_manager;
     }
 
     public function getGitoliteDotConf(array $project_names)
@@ -125,8 +120,7 @@ class Git_Gitolite_ConfigPermissionsSerializer //phpcs:ignore PSR1.Classes.Class
      */
     private function getExternalProtectedReferencesFormattedPermissions(GitRepository $repository)
     {
-        $protected_git_references_event = new GetProtectedGitReferences();
-        $this->event_manager->processEvent($protected_git_references_event);
+        $protected_git_references_event = $this->event_dispatcher->dispatch(new GetProtectedGitReferences());
 
         $permissions = '';
 

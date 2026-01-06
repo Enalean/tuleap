@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Gitolite;
 
-use EventManager;
 use Git;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Gitolite_ConfigPermissionsSerializer;
@@ -36,6 +35,7 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigPermissionsSerializerGerritTest extends TestCase
@@ -61,7 +61,6 @@ final class ConfigPermissionsSerializerGerritTest extends TestCase
 
         $this->gerrit_status = $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class);
 
-        $event_manager          = $this->createMock(EventManager::class);
         $fine_grained_retriever = $this->createMock(FineGrainedRetriever::class);
         $this->serializer       = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->gerrit_status,
@@ -69,10 +68,9 @@ final class ConfigPermissionsSerializerGerritTest extends TestCase
             $fine_grained_retriever,
             $this->createMock(FineGrainedPermissionFactory::class),
             $this->createMock(RegexpFineGrainedRetriever::class),
-            $event_manager
+            EventDispatcherStub::withIdentityCallback(),
         );
         $fine_grained_retriever->method('doesRepositoryUseFineGrainedPermissions');
-        $event_manager->method('processEvent');
     }
 
     #[\Override]

@@ -18,180 +18,139 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>
  */
 
-class Git_Gitolite_GitoliteConfWriter
+declare(strict_types=1);
+
+use Tuleap\Git\Gitolite\GitoliteAdministrationPendingChanges;
+use Tuleap\Project\ProjectByIDFactory;
+
+readonly class Git_Gitolite_GitoliteConfWriter
 {
-    public const string GITOLITE_CONF_FILE = 'conf/gitolite.conf';
-
-    /** @var Git_Gitolite_ConfigPermissionsSerializer */
-    private $permissions_serializer;
-
-    /** @var Git_Gitolite_ProjectSerializer */
-    private $project_serializer;
-
-    /** @var string */
-    private $gitolite_administration_path;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
-    /** @var ProjectManager */
-    private $project_manager;
+    /**
+     * @var non-empty-string
+     */
+    private string $gitolite_configuration_directory;
 
     public function __construct(
-        Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
-        Git_Gitolite_ProjectSerializer $project_serializer,
-        \Psr\Log\LoggerInterface $logger,
-        ProjectManager $project_manager,
-        $gitolite_administration_path,
+        private Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
+        private Git_Gitolite_ProjectSerializer $project_serializer,
+        private \Psr\Log\LoggerInterface $logger,
+        private ProjectByIDFactory $project_factory,
+        string $gitolite_administration_path,
     ) {
-        $this->permissions_serializer       = $permissions_serializer;
-        $this->project_serializer           = $project_serializer;
-        $this->logger                       = $logger;
-        $this->gitolite_administration_path = $gitolite_administration_path;
-        $this->project_manager              = $project_manager;
+        $this->gitolite_configuration_directory = $gitolite_administration_path . '/conf/';
     }
 
-    public function writeGitoliteConfiguration(): Git_Gitolite_GitModifications
+    public function writeGitoliteConfiguration(): GitoliteAdministrationPendingChanges
     {
-        $git_modifications = new Git_Gitolite_GitModifications();
+        $pending_changes = new GitoliteAdministrationPendingChanges();
 
-        $this->writeGitoliteConfigurationOnDisk($this->permissions_serializer->getGitoliteDotConf($this->getProjectList()), $git_modifications);
+        $this->writeGitoliteConfigurationFile(
+            $this->getGitoliteConfFilePath(),
+            $this->permissions_serializer->getGitoliteDotConf($this->getProjectList()),
+            $pending_changes
+        );
 
-        return $git_modifications;
+        return $pending_changes;
     }
 
-    public function renameProject($old_name, $new_name)
+    public function renameProject(int $project_id, string $old_name): GitoliteAdministrationPendingChanges
     {
-        $git_modifications = new Git_Gitolite_GitModifications();
-        $project           = $this->project_manager->getProjectByUnixName($new_name);
+        $pending_changes = new GitoliteAdministrationPendingChanges();
 
-        $this->moveProjectFiles($old_name, $new_name, $git_modifications, $project);
-        $this->modifyProjectConf($old_name, $new_name, $git_modifications, $project);
-        $this->modifyIncludersConf($old_name, $new_name, $git_modifications);
+        $project = $this->project_factory->getProjectById($project_id);
 
-        return $git_modifications;
+        if ($this->dumpProjectRepoConf($project)->areTherePendingChangesThatMustBeApplied()) {
+            $pending_changes->markAsChangesPending();
+        }
+
+        $old_conf_file_path = $this->getProjectPermissionConfFilePath($old_name);
+        if ($old_name !== $project->getUnixName() && \Psl\Filesystem\is_file($old_conf_file_path)) {
+            \Psl\Filesystem\delete_file($old_conf_file_path);
+        }
+
+        if ($this->writeGitoliteConfiguration()->areTherePendingChangesThatMustBeApplied()) {
+            $pending_changes->markAsChangesPending();
+        }
+
+        return $pending_changes;
     }
 
-    /**
-     * @return Git_Gitolite_GitModifications
-     */
-    public function dumpProjectRepoConf(Project $project)
+    public function dumpProjectRepoConf(Project $project): GitoliteAdministrationPendingChanges
     {
-        $git_modifications = new Git_Gitolite_GitModifications();
+        $pending_changes = new GitoliteAdministrationPendingChanges();
 
         $config_file_content = $this->project_serializer->dumpProjectRepoConf($project);
-        $this->modifyGitConfigurationFileInGitolite($project, $git_modifications, $config_file_content);
+        $this->writeProjectConfigurationFile($project, $config_file_content, $pending_changes);
 
-        return $git_modifications;
+        return $pending_changes;
     }
 
-    /**
-     * @return Git_Gitolite_GitModifications
-     */
-    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project)
+    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project): GitoliteAdministrationPendingChanges
     {
-        $git_modifications = new Git_Gitolite_GitModifications();
+        $pending_changes = new GitoliteAdministrationPendingChanges();
 
         $config_file_content = $this->project_serializer->dumpSuspendedProjectRepositoriesConfiguration($project);
-        $this->modifyGitConfigurationFileInGitolite($project, $git_modifications, $config_file_content);
+        $this->writeProjectConfigurationFile($project, $config_file_content, $pending_changes);
 
-        return $git_modifications;
+        return $pending_changes;
     }
 
-    private function modifyGitConfigurationFileInGitolite(
+    private function writeProjectConfigurationFile(
         Project $project,
-        Git_Gitolite_GitModifications $git_modifications,
-        $config_file_content,
-    ) {
+        string $config_file_content,
+        GitoliteAdministrationPendingChanges $pending_changes,
+    ): void {
         $this->logger->debug('Get Project Permission Conf File: ' . $project->getUnixName() . '...');
-        $config_file = $this->getProjectPermissionConfFile($project);
+        $config_file = $this->getProjectPermissionConfFilePath($project->getUnixName());
         $this->logger->debug('Get Project Permission Conf File: ' . $project->getUnixName() . ': done');
 
         $this->logger->debug('Write Git config: ' . $project->getUnixName() . '...');
-        $this->writeGitConfig($config_file, $config_file_content, $git_modifications);
+        $this->writeGitoliteConfigurationFile($config_file, $config_file_content, $pending_changes);
         $this->logger->debug('Write Git config: ' . $project->getUnixName() . ': done');
     }
 
-    private function getProjectPermissionConfFile(Project $project)
+    /**
+     * @return non-empty-string
+     */
+    private function getProjectPermissionConfFilePath(string $project_unix_name): string
     {
-        $prjConfDir = 'conf/projects';
-        if (! is_dir($prjConfDir)) {
-            mkdir($prjConfDir);
-        }
-        return $prjConfDir . '/' . $project->getUnixName() . '.conf';
+        return $this->getGitoliteProjectConfDirectoryPath() . '/' . $project_unix_name . '.conf';
     }
 
-    private function writeGitConfig($config_file, $config_datas, Git_Gitolite_GitModifications $git_modifications)
-    {
-        file_put_contents($config_file, $config_datas);
-        $git_modifications->add($config_file);
-    }
-
-    private function writeGitoliteConfigurationOnDisk($content, Git_Gitolite_GitModifications $git_modifications)
-    {
-        file_put_contents($this->getGitoliteConfFilePath(), $content);
-        $git_modifications->add(self::GITOLITE_CONF_FILE);
-    }
-
+    /**
+     * @return non-empty-string
+     */
     private function getGitoliteConfFilePath(): string
     {
-        return $this->gitolite_administration_path . '/' . self::GITOLITE_CONF_FILE;
+        $this->createGitoliteConfigurationDirectory($this->gitolite_configuration_directory);
+        return $this->gitolite_configuration_directory . '/gitolite.conf';
     }
 
-    private function modifyIncludersConf($old_name, $new_name, Git_Gitolite_GitModifications $git_modifications): void
+    /**
+     * @return non-empty-string
+     */
+    private function getGitoliteProjectConfDirectoryPath(): string
     {
-        $file_path = $this->getGitoliteConfFilePath();
-        $this->proceedRenameInIncluderConf($file_path, $old_name, $new_name);
-        $git_modifications->add($file_path);
+        $this->createGitoliteConfigurationDirectory($this->gitolite_configuration_directory);
+        $gitolite_project_conf_directory = $this->gitolite_configuration_directory . '/projects';
+        $this->createGitoliteConfigurationDirectory($gitolite_project_conf_directory);
+
+        return $gitolite_project_conf_directory;
     }
 
-    private function proceedRenameInIncluderConf($file_path, $old_name, $new_name)
+    /**
+     * @return list<string>
+     */
+    private function getProjectList(): array
     {
-        $orig = file_get_contents($file_path);
-        $dest = str_replace('include "projects/' . $old_name . '.conf"', 'include "projects/' . $new_name . '.conf"', $orig);
-        file_put_contents($file_path, $dest);
+        return $this->readProjectListFromPath($this->getGitoliteProjectConfDirectoryPath());
     }
 
-    private function modifyProjectConf($old_name, $new_name, Git_Gitolite_GitModifications $git_modifications, Project $project)
-    {
-        $original_file = 'conf/projects/' . $old_name . '.conf';
-
-        $this->proceedToRenameInSpecifiedProjectFile($original_file, $old_name, $new_name);
-        $git_modifications->add($original_file);
-    }
-
-    private function proceedToRenameInSpecifiedProjectFile($project_file_path, $old_name, $new_name)
-    {
-        $orig = file_get_contents($project_file_path);
-
-        $dest = preg_replace('`(^|\n)repo ' . preg_quote($old_name, '`') . '/`', '$1repo ' . $new_name . '/', $orig);
-        $dest = str_replace('@' . $old_name . '_project_', '@' . $new_name . '_project_', $dest);
-        $dest = preg_replace('%' . preg_quote($old_name, '%') . '/(.*) = "%', "$new_name/$1 = \"", $dest);
-        file_put_contents($project_file_path, $dest);
-    }
-
-    private function moveProjectFiles($old_name, $new_name, Git_Gitolite_GitModifications $git_modifications, Project $project)
-    {
-        $old_file = 'conf/projects/' . $old_name . '.conf';
-        $new_file = 'conf/projects/' . $new_name . '.conf';
-
-        $this->proceedToFileMove($old_file, $new_file, $git_modifications);
-    }
-
-    private function proceedToFileMove($old_file, $new_file, Git_Gitolite_GitModifications $git_modifications)
-    {
-        if (is_file($old_file)) {
-            $git_modifications->move($old_file, $new_file);
-        }
-    }
-
-    private function getProjectList()
-    {
-        $dir_path = dirname($this->getGitoliteConfFilePath()) . '/projects';
-        return $this->readProjectListFromPath($dir_path);
-    }
-
-    private function readProjectListFromPath($dir_path)
+    /**
+     * @param non-empty-string $dir_path
+     * @return list<string>
+     */
+    private function readProjectListFromPath(string $dir_path): array
     {
         $project_names = [];
 
@@ -206,5 +165,42 @@ class Git_Gitolite_GitoliteConfWriter
             }
         }
         return $project_names;
+    }
+
+    /**
+     * @param non-empty-string $file_path
+     */
+    private function writeGitoliteConfigurationFile(string $file_path, string $expected_content, GitoliteAdministrationPendingChanges $pending_changes): void
+    {
+        if (\Psl\Filesystem\is_file($file_path) && (\Psl\File\read($file_path) === $expected_content)) {
+            return;
+        }
+
+        \Tuleap\File\FileWriter::writeFile(
+            $file_path,
+            $expected_content,
+            0660,
+        );
+        $success_chgrp = chgrp($file_path, 'gitolite');
+        if ($success_chgrp === false) {
+            throw new \RuntimeException('Not able to set the gitolite group on ' . $file_path);
+        }
+
+        $pending_changes->markAsChangesPending();
+    }
+
+    /**
+     * @param non-empty-string $path
+     */
+    private function createGitoliteConfigurationDirectory(string $path): void
+    {
+        if (\Psl\Filesystem\is_directory($path)) {
+            return;
+        }
+        \Psl\Filesystem\create_directory($path, 0770);
+        $success_chgrp = chgrp($path, 'gitolite');
+        if ($success_chgrp === false) {
+            throw new \RuntimeException('Was not able to set the gitolite group on ' . $path);
+        }
     }
 }

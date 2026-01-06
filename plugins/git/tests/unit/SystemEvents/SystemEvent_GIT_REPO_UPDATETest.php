@@ -113,8 +113,6 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase // phpcs:ignore Squ
         $this->event->setParameters($this->repository_id . SystemEvent::PARAMETER_SEPARATOR . 'main');
         $this->repository_factory->method('getRepositoryById')->willReturn($this->repository);
         $driver = $this->createStub(Git_GitoliteDriver::class);
-        $driver->method('commit');
-        $driver->method('push');
         $this->backend->method('getDriver')->willReturn($driver);
         $this->backend->method('updateRepoConf')->willReturn(true);
         $this->backend->method('getGitRootPath');
@@ -130,8 +128,6 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase // phpcs:ignore Squ
         $this->event->setParameters($this->repository_id . SystemEvent::PARAMETER_SEPARATOR . 'main');
         $this->repository_factory->method('getRepositoryById')->willReturn($this->repository);
         $driver = $this->createStub(Git_GitoliteDriver::class);
-        $driver->method('commit');
-        $driver->method('push');
         $this->backend->method('getDriver')->willReturn($driver);
         $this->backend->method('updateRepoConf')->willReturn(true);
         $this->backend->method('getGitRootPath');

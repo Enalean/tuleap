@@ -345,7 +345,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(Event::SITE_ACCESS_CHANGE);
 
         $this->addHook('fill_project_history_sub_events');
-        $this->addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
 
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
@@ -1154,7 +1153,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $system_check->process();
     }
 
-    public function getGitoliteDriver()
+    public function getGitoliteDriver(): Git_GitoliteDriver
     {
         return new Git_GitoliteDriver(
             $this->getLogger(),
@@ -1162,7 +1161,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getGitDao(),
             $this,
             $this->getBigObjectAuthorizationManager(),
-            null,
+            new \Tuleap\Process\SymfonyProcessFactory(),
             null,
             null,
             null,
@@ -2016,30 +2015,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             'git_admin_groups',
             'git_fork_repositories'
         );
-    }
-
-    /**
-     * @see Event::POST_EVENTS_ACTIONS
-     */
-    public function post_system_events_actions($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (! $this->pluginIsConcerned($params)) {
-            return;
-        }
-
-        $this->getLogger()->info('Processing git post system events actions');
-
-        $executed_events_ids = $params['executed_events_ids'];
-
-        $this->getGitoliteDriver()->commit('Modifications from events ' . implode(',', $executed_events_ids));
-        $this->getGitoliteDriver()->push();
-    }
-
-    private function pluginIsConcerned($params)
-    {
-        return $params['queue_name'] == 'git'
-            && is_array($params['executed_events_ids'])
-            && count($params['executed_events_ids']) > 0;
     }
 
     /**

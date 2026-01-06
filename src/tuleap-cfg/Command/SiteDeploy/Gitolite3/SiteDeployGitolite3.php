@@ -54,10 +54,8 @@ final readonly class SiteDeployGitolite3
         }
 
         $this->updateGitoliteShellProfile($logger);
-
+        $this->setupGitoliteDirectoryStructure();
         $this->updateGitoliteConfig($logger);
-
-        $this->updateGitolitePermissions($logger);
 
         $this->deployTuleapSSHDConfig($logger);
     }
@@ -93,7 +91,10 @@ final readonly class SiteDeployGitolite3
         }
 
         $expected_gitolite_config = $this->getExpectedGitolite3ConfigContent();
-        $current_gitolite_config  = file_get_contents(self::GITOLITE_RC_CONFIG);
+        $current_gitolite_config  = '';
+        if (\Psl\Filesystem\is_file(self::GITOLITE_RC_CONFIG)) {
+            $current_gitolite_config = \Psl\File\read(self::GITOLITE_RC_CONFIG);
+        }
 
         if ($expected_gitolite_config !== $current_gitolite_config) {
             $logger->info('Updating ' . self::GITOLITE_RC_CONFIG);
@@ -101,20 +102,35 @@ final readonly class SiteDeployGitolite3
         }
     }
 
-    private function updateGitolitePermissions(LoggerInterface $logger): void
+    private function setupGitoliteDirectoryStructure(): void
     {
-        $dot_gitolite_dir = self::GITOLITE_BASE_DIR . '/.gitolite';
-        if (! \Psl\Filesystem\is_directory($dot_gitolite_dir)) {
-            $logger->debug('Gitolite3 .gitolite dir not detected');
-            return;
+        $repositories_symlink = self::GITOLITE_BASE_DIR . '/repositories';
+        if (! \Psl\Filesystem\is_symbolic_link($repositories_symlink)) {
+            \Psl\Filesystem\create_symbolic_link('/var/lib/tuleap/gitolite/repositories', $repositories_symlink);
         }
 
-        \Psl\Filesystem\change_permissions($dot_gitolite_dir, 0750);
-        \Psl\Filesystem\change_permissions($dot_gitolite_dir . '/hooks', 0750);
-        \Psl\Filesystem\change_permissions($dot_gitolite_dir . '/hooks/common', 0750);
+        $dot_gitolite_dir = self::GITOLITE_BASE_DIR . '/.gitolite';
+        $this->createOrUpdateGitoliteDirectory($dot_gitolite_dir, 0750);
+        $this->createOrUpdateGitoliteDirectory($dot_gitolite_dir . '/conf', 0770);
+        $this->createOrUpdateGitoliteDirectory($dot_gitolite_dir . '/conf/projects', 0770);
+        $this->createOrUpdateGitoliteDirectory($dot_gitolite_dir . '/hooks', 0750);
+        $this->createOrUpdateGitoliteDirectory($dot_gitolite_dir . '/hooks/common', 0750);
         $this->changeHooksPermissions($dot_gitolite_dir . '/hooks/common');
-        \Psl\Filesystem\change_permissions($dot_gitolite_dir . '/logs', 0750);
+        $this->createOrUpdateGitoliteDirectory($dot_gitolite_dir . '/logs', 0750);
         $this->changeLogsPermissions($dot_gitolite_dir . '/logs');
+    }
+
+    /**
+     * @param non-empty-string $path
+     */
+    private function createOrUpdateGitoliteDirectory(string $path, int $permissions): void
+    {
+        if (\Psl\Filesystem\is_directory($path)) {
+            \Psl\Filesystem\change_permissions($path, $permissions);
+        } else {
+            \Psl\Filesystem\create_directory($path, $permissions);
+        }
+        $this->setGitoliteOwnershipOnPath($path);
     }
 
     /**
@@ -152,7 +168,7 @@ final readonly class SiteDeployGitolite3
     private function hasAGitolite3Config(): bool
     {
         return is_file(self::GITOLITE_RC_CONFIG) &&
-               strpos(file_get_contents(self::GITOLITE_RC_CONFIG), self::MARKER_ONLY_PRESENT_GITOLITE3_CONFIG) !== false;
+            strpos(file_get_contents(self::GITOLITE_RC_CONFIG), self::MARKER_ONLY_PRESENT_GITOLITE3_CONFIG) !== false;
     }
 
     private function hasGitPlugin(): bool
@@ -233,6 +249,14 @@ final readonly class SiteDeployGitolite3
     private function writeFile(string $path, string $content): void
     {
         FileWriter::writeFile($path, $content);
+        $this->setGitoliteOwnershipOnPath($path);
+    }
+
+    /**
+     * @param non-empty-string $path
+     */
+    private function setGitoliteOwnershipOnPath(string $path): void
+    {
         if (chown($path, 'gitolite') === false) {
             throw new \RuntimeException('Unable to set the owner to gitolite on ' . $path);
         }

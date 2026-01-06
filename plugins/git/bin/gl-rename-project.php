@@ -26,7 +26,7 @@ require_once __DIR__ . '/../include/Git_GitoliteDriver.php';
 require_once __DIR__ . '/../include/GitRepositoryUrlManager.php';
 
 if ($argc !== 3) {
-    echo 'Usage: ' . $argv[0] . ' oldname newname' . PHP_EOL;
+    echo 'Usage: ' . $argv[0] . ' project_id oldname' . PHP_EOL;
     exit(1);
 }
 
@@ -42,16 +42,10 @@ $driver      = new Git_GitoliteDriver(
         new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao(),
         ProjectManager::instance()
     ),
-    null,
+    new \Tuleap\Process\SymfonyProcessFactory(),
     null,
     null,
     null,
     null,
 );
-if ($driver->renameProject($argv[1], $argv[2])) {
-    echo "Rename done!\n";
-    exit(0);
-} else {
-    echo '*** ERROR: Fail to rename project ' . $argv[1] . ' into ' . $argv[2] . ' gitolite repositories' . PHP_EOL;
-    exit(1);
-}
+$driver->renameProject((int) $argv[1], $argv[2]);

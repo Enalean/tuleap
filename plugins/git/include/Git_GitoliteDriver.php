@@ -22,63 +22,27 @@
 use Symfony\Component\Process\Process;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\PathJoinUtil;
+use Tuleap\NeverThrow\Fault;
 
-/**
- * This class manage the interaction between Tuleap and Gitolite
- * Warning: as gitolite "interface" is made through a git repository
- * we need to execute git commands. Those commands are very sensitive
- * to the environement (especially the current working directory).
- * So this class expect to work in Tuleap's Gitolite admin directory
- * all the time (chdir in constructor/setAdminPath) and change back to
- * the previous location after push.
- * If you want to re-do some gitolite stuff after push; you have to either
- * + Use new object
- * + Call setAdminPath again
- * And if you don't push, you will stay in Gitolite admin directory!
- *
- */
 class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var Git_Exec
-     */
-    private $gitExec;
-
-    protected $oldCwd;
-    protected $confFilePath;
-    protected $adminPath;
-
-    /** @var Git_Gitolite_GitoliteConfWriter  */
-    private $gitolite_conf_writer;
-
-    /** @var GitDao */
-    private $git_dao;
+    private readonly Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer;
 
     public const string OLD_AUTHORIZED_KEYS_PATH = '/usr/com/gitolite/.ssh/authorized_keys';
     public const string NEW_AUTHORIZED_KEYS_PATH = '/var/lib/gitolite/.ssh/authorized_keys';
 
     public function __construct(
-        \Psr\Log\LoggerInterface $logger,
+        private readonly \Psr\Log\LoggerInterface $logger,
         Git_GitRepositoryUrlManager $url_manager,
-        GitDao $git_dao,
+        private readonly GitDao $git_dao,
         GitPlugin $git_plugin,
         BigObjectAuthorizationManager $big_object_authorization_manager,
-        ?Git_Exec $gitExec = null,
+        private readonly \Tuleap\Process\ProcessFactory $process_factory,
         ?GitRepositoryFactory $repository_factory = null,
         ?Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
         ?Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null,
         ?ProjectManager $project_manager = null,
     ) {
-        $this->git_dao = $git_dao;
-        $this->logger  = $logger;
-        $adminPath     = ForgeConfig::get('sys_data_dir') . '/gitolite/admin';
-        $this->setAdminPath($adminPath);
-        $this->gitExec      = $gitExec ?: new Git_Exec($adminPath);
         $repository_factory = $repository_factory ?: new GitRepositoryFactory(
             $this->getDao(),
             ProjectManager::instance()
@@ -107,32 +71,18 @@ class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             $big_object_authorization_manager,
         );
 
-        $this->gitolite_conf_writer = $gitolite_conf_writer ? $gitolite_conf_writer : new Git_Gitolite_GitoliteConfWriter(
+        $this->gitolite_conf_writer = $gitolite_conf_writer ?? new Git_Gitolite_GitoliteConfWriter(
             $permissions_serializer,
             $project_serializer,
             $this->logger,
             $project_manager,
-            $adminPath
+            '/var/lib/gitolite/.gitolite/'
         );
     }
 
-    /**
-     * Get repositories path
-     *
-     * @return string
-     */
-    public function getRepositoriesPath()
+    public function getRepositoriesPath(): string
     {
-        return realpath($this->adminPath . '/../repositories');
-    }
-
-    public function setAdminPath($adminPath)
-    {
-        $this->oldCwd    = getcwd();
-        $this->adminPath = $adminPath;
-        chdir($this->adminPath);
-
-        $this->confFilePath = 'conf/gitolite.conf';
+        return ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/';
     }
 
     /**
@@ -174,64 +124,28 @@ class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      * Save on filesystem all permission configuration for a project
      *
      */
-    public function dumpProjectRepoConf(Project $project)
+    public function dumpProjectRepoConf(Project $project): true
     {
-        $git_modifications = $this->gitolite_conf_writer->dumpProjectRepoConf($project);
+        $pending_changes = $this->gitolite_conf_writer->dumpProjectRepoConf($project);
 
-        if ($this->addModifiedConfigurationFiles($git_modifications)) {
-            return $this->updateMainConfIncludes();
-        }
-
-        return false;
-    }
-
-    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project)
-    {
-        $git_modifications = $this->gitolite_conf_writer->dumpSuspendedProjectRepositoriesConfiguration($project);
-
-        if ($this->addModifiedConfigurationFiles($git_modifications)) {
-            return $this->updateMainConfIncludes();
-        }
-
-        return false;
-    }
-
-    private function addModifiedConfigurationFiles(Git_Gitolite_GitModifications $git_modifications)
-    {
-        foreach ($git_modifications->toAdd() as $file) {
-            if (! $this->gitExec->add($file)) {
-                return false;
-            }
+        if ($pending_changes->areTherePendingChangesThatMustBeApplied()) {
+            $this->gitolite_conf_writer->writeGitoliteConfiguration();
+            $this->triggerGitoliteUpdate();
         }
 
         return true;
     }
 
-    public function updateMainConfIncludes()
+    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project): true
     {
-        $git_modifications         = $this->gitolite_conf_writer->writeGitoliteConfiguration();
-        $files_are_correctly_added = true;
+        $pending_changes = $this->gitolite_conf_writer->dumpSuspendedProjectRepositoriesConfiguration($project);
 
-        foreach ($git_modifications->toAdd() as $touched_file) {
-            $files_are_correctly_added = $files_are_correctly_added && $this->gitExec->add($touched_file);
+        if ($pending_changes->areTherePendingChangesThatMustBeApplied()) {
+            $this->gitolite_conf_writer->writeGitoliteConfiguration();
+            $this->triggerGitoliteUpdate();
         }
 
-        return $files_are_correctly_added;
-    }
-
-    public function push()
-    {
-        $this->logger->debug('Pushing in gitolite admin repository...');
-        $res = $this->gitExec->push();
-        $this->logger->debug('Pushing in gitolite admin repository: done');
-        chdir($this->oldCwd);
-
-        return $res;
-    }
-
-    public function commit($message)
-    {
-        return $this->gitExec->commit($message);
+        return true;
     }
 
     /**
@@ -241,30 +155,13 @@ class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      * rename process is owned by "root" (system-event) so there is dedicated script
      * (see bin/gl-rename-project.php) and more details in Git_Backend_Gitolite::glRenameProject.
      *
-     * @param String $oldName The old name of the project
-     * @param String $newName The new name of the project
-     *
-     * @return bool true if success, false otherwise
      */
-    public function renameProject($oldName, $newName)
+    public function renameProject(int $project_id, string $old_name): void
     {
-        $ok = true;
-
-        $git_modifications = $this->gitolite_conf_writer->renameProject($oldName, $newName);
-
-        foreach ($git_modifications->toAdd() as $file) {
-            $ok = $ok && $this->gitExec->add($file);
+        $pending_changes = $this->gitolite_conf_writer->renameProject($project_id, $old_name);
+        if ($pending_changes->areTherePendingChangesThatMustBeApplied()) {
+            $this->triggerGitoliteUpdate();
         }
-
-        foreach ($git_modifications->toMove() as $old_file => $new_file) {
-            $ok = $ok && $this->gitExec->mv($old_file, $new_file);
-        }
-
-        if ($ok) {
-            $ok = $this->gitExec->commit('Rename project ' . $oldName . ' to ' . $newName) && $this->gitExec->push();
-        }
-
-        return $ok;
     }
 
     public function delete(string $path): void
@@ -440,5 +337,21 @@ class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     protected function getDao()
     {
         return $this->git_dao;
+    }
+
+    private function triggerGitoliteUpdate(): void
+    {
+        $gitolite_compile_process              = $this->process_factory->buildProcess(
+            ['sudo', '-u', 'gitolite', 'DISPLAY_ERRORS=true', '/usr/bin/gitolite', 'compile']
+        );
+        $gitolite_trigger_post_compile_process = $this->process_factory->buildProcess(
+            ['sudo', '-u', 'gitolite', 'DISPLAY_ERRORS=true', '/usr/bin/gitolite', 'trigger', 'POST_COMPILE']
+        );
+
+        $gitolite_compile_process->run()->andThen(
+            fn() => $gitolite_trigger_post_compile_process->run()
+        )->mapErr(
+            fn (Fault $fault) => Fault::writeToLogger($fault, $this->logger)
+        );
     }
 }

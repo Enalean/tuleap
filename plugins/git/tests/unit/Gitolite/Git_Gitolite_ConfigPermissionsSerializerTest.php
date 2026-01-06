@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Gitolite;
 
-use EventManager;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Gitolite_ConfigPermissionsSerializer;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
@@ -33,13 +32,21 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function testProtectedReferencesArePresentInTheSerialization(): void
     {
-        $event_manager                 = $this->createMock(EventManager::class);
+        $event_manager                 = EventDispatcherStub::withCallback(
+            function (object $event): object {
+                if ($event instanceof GetProtectedGitReferences) {
+                    $event->addProtectedReference(new ProtectedReferencePermission('refs/tests/*'));
+                }
+                return $event;
+            }
+        );
         $fine_grained_retriever        = $this->createMock(FineGrainedRetriever::class);
         $regexp_fine_grained_retriever = $this->createMock(RegexpFineGrainedRetriever::class);
         $serializer                    = $this->getMockBuilder(Git_Gitolite_ConfigPermissionsSerializer::class)
@@ -55,15 +62,6 @@ final class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase //phpc
             ->getMock();
         $serializer->method('fetchConfigPermissions');
 
-        $event_manager->method('processEvent')->with(
-            self::callback(function ($event) {
-                if (! $event instanceof GetProtectedGitReferences) {
-                    return false;
-                }
-                $event->addProtectedReference(new ProtectedReferencePermission('refs/tests/*'));
-                return true;
-            })
-        );
         $fine_grained_retriever->method('doesRepositoryUseFineGrainedPermissions')->willReturn(false);
         $regexp_fine_grained_retriever->method('areRegexpActivatedForRepository')->willReturn(true);
 

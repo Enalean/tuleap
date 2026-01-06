@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Gitolite;
 
-use EventManager;
 use ForgeConfig;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Gitolite_ConfigPermissionsSerializer;
@@ -41,6 +40,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectSerializerTest extends TestCase
@@ -73,7 +73,6 @@ final class ProjectSerializerTest extends TestCase
 
         $this->gerrit_project_status = $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class);
 
-        $event_manager                   = $this->createMock(EventManager::class);
         $fine_grained_retriever          = $this->createMock(FineGrainedRetriever::class);
         $gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->gerrit_project_status,
@@ -81,9 +80,8 @@ final class ProjectSerializerTest extends TestCase
             $fine_grained_retriever,
             $this->createMock(FineGrainedPermissionFactory::class),
             $this->createMock(RegexpFineGrainedRetriever::class),
-            $event_manager,
+            EventDispatcherStub::withIdentityCallback(),
         );
-        $event_manager->method('processEvent');
         $fine_grained_retriever->method('doesRepositoryUseFineGrainedPermissions');
 
         $this->big_object_authorization_manager = $this->createMock(BigObjectAuthorizationManager::class);

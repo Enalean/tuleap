@@ -97,6 +97,7 @@ use Tuleap\Git\REST\v1\Branch\BranchCreator;
 use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Http\HttpClientFactory;
+use Tuleap\Process\SymfonyProcessFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -291,7 +292,7 @@ class RepositoryResource extends AuthenticatedResource
                         new BigObjectAuthorizationDao(),
                         ProjectManager::instance()
                     ),
-                    null,
+                    new SymfonyProcessFactory(),
                     null,
                     null,
                     null,
