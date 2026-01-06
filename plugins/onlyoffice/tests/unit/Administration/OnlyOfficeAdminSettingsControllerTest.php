@@ -66,7 +66,7 @@ final class OnlyOfficeAdminSettingsControllerTest extends TestCase
                 [OnlyOfficeServerPresenter::fromServer(DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://onlyoffice.example.com/', new ConcealedString('123456')))],
                 CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub())),
             ),
-            new IncludeViteAssets(__DIR__ . '/../frontend-assets/', '/assets/onlyoffice'),
+            new IncludeViteAssets(__DIR__ . '/../../../scripts/siteadmin/frontend-assets/', '/assets/onlyoffice/siteadmin'),
         );
     }
 }

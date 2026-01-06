@@ -61,6 +61,7 @@
     <plugins>
         <plugin filename="tests/lib/Psalm/Plugin/ConcealedString/PreventConcealedStringMisuses.php"/>
         <plugin filename="tests/lib/Psalm/Plugin/NoWritableRESTRepresentation/DoNotAllowWritableRESTRepresentation.php"/>
+        <plugin filename="tests/lib/Psalm/Plugin/StaticPath/CheckNonExistingStaticPath.php"/>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
         <pluginClass class="Psl\Psalm\Plugin"/>
         <plugin filename="src/vendor/cuyz/valinor/qa/Psalm/Plugin/TreeMapperPsalmPlugin.php"/>

@@ -47,7 +47,7 @@ final class PublicKeyPresenceCheckerTest extends TestCase
     {
         $checker = new PublicKeyPresenceChecker();
 
-        self::assertTrue(Result::isErr($checker->checkPresence(__DIR__ . 'abc')));
+        self::assertTrue(Result::isErr($checker->checkPresence('abc')));
     }
 
     public function testItReturnsErrWhenKeysDirectoryIsAFile(): void

@@ -68,7 +68,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
         ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
         ForgeConfig::set('sys_lang', 'en_US');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
-        ForgeConfig::set('sys_incdir', __DIR__ . '/../../../../../../../../site-content');
+        ForgeConfig::set('sys_incdir', __DIR__ . '/../../../../../site-content');
         $this->dao              = $this->createMock(GitDao::class);
         $this->gerrit_server    = $this->createMock(Git_RemoteServer_GerritServer::class);
         $this->server_factory   = $this->createMock(Git_RemoteServer_GerritServerFactory::class);

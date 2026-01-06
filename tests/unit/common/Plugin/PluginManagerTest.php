@@ -160,7 +160,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $plugin_factory->method('isPluginInstalled');
 
         $plugin_factory->method('getAllPossiblePluginsDir')->willReturn([
-            __DIR__ . '/test',
+            __DIR__ . '/_fixtures',
         ]);
 
         $forgeupgrade_config = $this->createMock(\ForgeUpgradeConfig::class);
@@ -229,6 +229,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pm = $this->getPluginManagerForReadmeFiles();
 
+        /** @psalm-suppress NonExistingStaticPath */
         $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/md/README');
         self::assertEquals(
             '<h1>My Awesome plugin</h1>
@@ -242,6 +243,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pm = $this->getPluginManagerForReadmeFiles();
 
+        /** @psalm-suppress NonExistingStaticPath */
         $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/mkd/README');
         self::assertEquals(
             '<h1>My Awesome plugin</h1>
@@ -255,6 +257,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pm = $this->getPluginManagerForReadmeFiles();
 
+        /** @psalm-suppress NonExistingStaticPath */
         $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/txt/README');
         self::assertEquals(
             '<pre># My Awesome plugin
@@ -283,6 +286,7 @@ Description **bla bla bla**
     {
         $pm = $this->getPluginManagerForReadmeFiles();
 
+        /** @psalm-suppress NonExistingStaticPath */
         $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/not-supported/README');
         self::assertSame('', $result);
     }
@@ -291,6 +295,7 @@ Description **bla bla bla**
     {
         $pm = $this->getPluginManagerForReadmeFiles();
 
+        /** @psalm-suppress NonExistingStaticPath */
         $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/empty/README');
         self::assertSame('', $result);
     }

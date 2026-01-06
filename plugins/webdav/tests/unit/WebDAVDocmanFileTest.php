@@ -92,7 +92,7 @@ final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetNotFound(): void
     {
-        $version = new \Docman_Version(['filesize' => 2, 'path' => __DIR__ . '/_fixtures/nonExistant']);
+        $version = new \Docman_Version(['filesize' => 2, 'path' => 'nonExistant']);
 
         $item = new Docman_File();
         $item->setCurrentVersion($version);

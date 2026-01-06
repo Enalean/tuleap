@@ -40,7 +40,7 @@ final class TestManagementDataBuilder extends RESTTestDataBuilder
         parent::__construct();
         $this->instanciateFactories();
 
-        $this->template_path = __DIR__ . '/_fixtures/';
+        $this->template_path = __DIR__ . '/../_fixtures/';
     }
 
     public function setUp(): void
