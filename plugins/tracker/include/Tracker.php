@@ -106,6 +106,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\HTTPRequest;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
@@ -169,6 +170,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\Artifact\Event\IsArtifactViewInBurningParrotEvent;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -1428,15 +1430,30 @@ class Tracker implements Tracker_Dispatchable_Interface
             if ($is_email_creation_allowed) {
                 $base_layout = $GLOBALS['HTML'];
                 assert($base_layout instanceof \Tuleap\Layout\BaseLayout);
-                $base_layout->addJavascriptAsset(
-                    new \Tuleap\Layout\JavascriptViteAsset(
-                        new \Tuleap\Layout\IncludeViteAssets(
-                            __DIR__ . '/../scripts/header/frontend-assets',
-                            '/assets/trackers/header'
-                        ),
-                        'src/main.ts'
-                    )
+
+                $javascript_asset = new \Tuleap\Layout\JavascriptViteAsset(
+                    new \Tuleap\Layout\IncludeViteAssets(
+                        __DIR__ . '/../scripts/header/frontend-assets',
+                        '/assets/trackers/header'
+                    ),
+                    'src/main.ts'
                 );
+
+                $is_burning_parrot = EventManager::instance()
+                    ->dispatch(new IsArtifactViewInBurningParrotEvent(HTTPRequest::instance()))
+                    ->isBurningParrot();
+
+                if ($is_burning_parrot) {
+                    $javascript_asset = new JavascriptAsset(
+                        new IncludeAssets(
+                            __DIR__ . '/../scripts/tracker-admin/frontend-assets',
+                            '/assets/trackers/tracker-admin'
+                        ),
+                        'semantics-homepage.js'
+                    );
+                }
+
+                $base_layout->addJavascriptAsset($javascript_asset);
             }
 
             $breadcrumbs = array_merge([$this->getCrumb()], $breadcrumbs);
