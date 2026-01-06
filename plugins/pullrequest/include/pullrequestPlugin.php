@@ -202,9 +202,6 @@ class pullrequestPlugin extends Plugin
     {
         if ($event->getRequest()->get('action') === 'pull-requests') {
             $layout = $this->getThemeManager()->getBurningParrot(UserManager::instance()->getCurrentUserWithLoggedInInformation());
-            if ($layout === null) {
-                throw new \Exception('Could not load BurningParrot theme');
-            }
             $this->getPullRequestDisplayer()->display($event->getRequest(), $layout);
         }
     }

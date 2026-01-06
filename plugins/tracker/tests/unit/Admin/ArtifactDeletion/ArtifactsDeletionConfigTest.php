@@ -27,24 +27,18 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsDeletionConfigTest extends TestCase
 {
-    private ArtifactsDeletionConfigDAO|\PHPUnit\Framework\MockObject\MockObject $dao;
-    private ArtifactsDeletionConfig $config;
-
-    #[\Override]
-    protected function setUp(): void
-    {
-        $this->dao    = $this->createMock(ArtifactsDeletionConfigDAO::class);
-        $this->config = new ArtifactsDeletionConfig($this->dao);
-    }
-
     #[\PHPUnit\Framework\Attributes\TestWith([0])]
     #[\PHPUnit\Framework\Attributes\TestWith([10])]
     public function testItRetrievesDeletionLimitAndCachesIt(int $limit): void
     {
-        $this->dao->expects($this->once())->method('searchDeletableArtifactsLimit')
+        $dao = $this->createMock(ArtifactsDeletionConfigDAO::class);
+        $dao->expects($this->once())->method('searchDeletableArtifactsLimit')
             ->willReturn([['value' => $limit]]);
-        self::assertSame($limit, $this->config->getArtifactsDeletionLimit());
+
+        $config = new ArtifactsDeletionConfig($dao);
+
+        self::assertSame($limit, $config->getArtifactsDeletionLimit());
         // method is called twice to test that db is only called once and cache is effective
-        self::assertSame($limit, $this->config->getArtifactsDeletionLimit());
+        self::assertSame($limit, $config->getArtifactsDeletionLimit());
     }
 }

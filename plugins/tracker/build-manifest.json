@@ -31,6 +31,10 @@
         }
     },
     "gettext-vue3": {
+        "delete-artifact-action": {
+            "src": "scripts/delete-artifact-action/src",
+            "po": "scripts/delete-artifact-action/po"
+        },
         "move-artifact-action": {
             "src": "scripts/move-artifact-action/src",
             "po": "scripts/move-artifact-action/po"

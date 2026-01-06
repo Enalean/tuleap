@@ -54,9 +54,6 @@ class PermissionDeniedPrivateProjectController
     public function displayError(CurrentUserWithLoggedInInformation $user, ?Project $project = null)
     {
         $layout = $this->theme_manager->getBurningParrot($user);
-        if ($layout === null) {
-            throw new \Exception('Could not load BurningParrot theme');
-        }
 
         $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_('Project access error')));
 

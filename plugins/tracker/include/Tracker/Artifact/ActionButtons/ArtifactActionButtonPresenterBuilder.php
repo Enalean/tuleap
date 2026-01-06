@@ -54,6 +54,7 @@ class ArtifactActionButtonPresenterBuilder
         ArtifactCopyButtonPresenterBuilder $artifact_copy_button_builder,
         ArtifactMoveButtonPresenterBuilder $move_button_builder,
         AdditionalArtifactActionButtonsPresenterBuilder $additional_buttons_builder,
+        private readonly ArtifactDeleteModalPresenterBuilder $artifact_delete_modal_presenter_builder,
     ) {
         $this->notification_button_builder  = $notification_button_builder;
         $this->mail_button_builder          = $mail_button_builder;
@@ -77,7 +78,8 @@ class ArtifactActionButtonPresenterBuilder
             $move_artifact_modal,
             $copy_artifact,
             $notification,
-            $original_email
+            $original_email,
+            $this->artifact_delete_modal_presenter_builder->getDeleteArtifactModal($user, $artifact)
         );
     }
 }

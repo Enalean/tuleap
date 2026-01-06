@@ -181,15 +181,6 @@ msgstr "-- Veuillez choisir"
 
 #, php-format
 msgid ""
-"<h3>You are about to delete permanently the artifact \"%1$s\".</"
-"h3><p><strong>There is no way to restore the artifact.</strong></p>"
-msgstr ""
-"<h3>Vous êtes sur le point de supprimer définitivement \"%1$s\".</"
-"h3><p><strong>Cette opération est irréversible, il n'y a aucun moyen de "
-"restauration des données supprimées.</strong></p>"
-
-#, php-format
-msgid ""
 "<h4><i class=\"fa-solid fa-triangle-exclamation\"></i> Your local.inc file "
 "is outdated!</h4><p>It appears that your local.inc file contains definitions "
 "of variables that are unused and it may lead to confusion.</p><p>Please edit "
@@ -1033,9 +1024,6 @@ msgstr "Configurer la sémantique"
 msgid "Configure trackers"
 msgstr "Configurer les trackers"
 
-msgid "Confirm"
-msgstr "Confirmer"
-
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
@@ -1267,9 +1255,6 @@ msgstr "Supprimer"
 
 msgid "Delete artifacts"
 msgstr "Suppression d'artifacts"
-
-msgid "Delete canceled"
-msgstr "Suppression annulée"
 
 msgid "Delete permanently the field"
 msgstr "Supprimer définitivement le champ"

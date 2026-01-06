@@ -103,8 +103,6 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsDeletionInTrackerAdminController;
-use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\CSRFSynchronizerTokenProvider;
@@ -2191,8 +2189,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $r->post('/{project_name:[A-z0-9-]+}/new-information', $this->getRouteHandler('routeProcessNewTrackerCreation'));
 
             $r->get('/changeset/{changeset_id:[0-9]+}/diff/{format:html|text|strip-html}/{artifact_id:[0-9]+}/{field_id:[0-9]+}', $this->getRouteHandler('routeChangesetContentRetriever'));
-
-            $r->get('/artifacts-deletion/{tracker_id:\d+}', $this->getRouteHandler('routeGetArtifactsDeletion'));
         });
 
         $event->getRouteCollector()->addRoute(
@@ -2395,17 +2391,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 new PendingJiraImportDao(),
                 $this->getJiraRunner($logger)
             )
-        );
-    }
-
-    public function routeGetArtifactsDeletion(): ArtifactsDeletionInTrackerAdminController
-    {
-        return new ArtifactsDeletionInTrackerAdminController(
-            $this->getTrackerFactory(),
-            new TrackerManager(),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
-            new ArtifactsDeletionConfig(new ArtifactsDeletionConfigDAO()),
-            new UserDeletionRetriever(new ArtifactsDeletionDAO()),
         );
     }
 
