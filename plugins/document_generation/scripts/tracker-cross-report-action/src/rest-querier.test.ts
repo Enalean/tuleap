@@ -54,12 +54,38 @@ describe("API querier", () => {
                 },
             });
 
-            await getReportArtifacts(report_id, report_has_changed, 136);
+            await getReportArtifacts(report_id, report_has_changed, 136, false);
 
             expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/tracker_reports/101/artifacts", {
                 params: {
                     limit: 50,
                     values: "from_table_renderer",
+                    with_unsaved_changes: true,
+                    table_renderer_id: 136,
+                },
+            });
+        });
+
+        it("Fetch all columns when asked", async () => {
+            const tlpRecursiveGet = vi.spyOn(tlp, "recursiveGet");
+
+            const artifacts_report_response: ArtifactForCrossReportDocGen[] = [
+                {
+                    id: 74,
+                } as ArtifactForCrossReportDocGen,
+            ];
+            mockFetchSuccess(tlpRecursiveGet, {
+                return_json: {
+                    artifacts_report_response,
+                },
+            });
+
+            await getReportArtifacts(101, true, 136, true);
+
+            expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/tracker_reports/101/artifacts", {
+                params: {
+                    limit: 50,
+                    values: "all",
                     with_unsaved_changes: true,
                     table_renderer_id: 136,
                 },

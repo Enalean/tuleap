@@ -26,7 +26,7 @@ interface Properties {
     readonly current_renderer_id: number;
 }
 
-export async function startDownloadExportAllReportColumnsSpreadsheet(
+export async function startDownloadExportAllColumnsSpreadsheet(
     properties: Properties,
 ): Promise<void> {
     await downloadXLSXDocument(
@@ -37,7 +37,7 @@ export async function startDownloadExportAllReportColumnsSpreadsheet(
                 report_name: properties.current_report_name,
                 table_renderer_id: properties.current_renderer_id,
                 artifact_link_types: [],
-                all_columns: false,
+                all_columns: true,
             },
         },
         downloadXLSX,
