@@ -1,3 +1,3 @@
-FROM jenkins/jenkins:2.303.2-lts
+FROM jenkins/jenkins:lts
 
 COPY register_certificate.sh /usr/local/bin/register_certificate.sh
