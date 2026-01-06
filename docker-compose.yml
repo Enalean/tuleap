@@ -34,6 +34,7 @@ services:
     environment:
     - TULEAP_SYS_DBHOST=db
     - PHP_VERSION=php84
+    - DISPLAY_ERRORS=true
     cgroup: host
     depends_on:
     - ldap

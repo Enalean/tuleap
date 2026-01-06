@@ -7,6 +7,7 @@ services:
       - PHP_FPM=/opt/remi/${PHP_VERSION}/root/usr/sbin/php-fpm
       - PHP_CLI=/opt/remi/${PHP_VERSION}/root/usr/bin/php
       - SKIP_SANITY_CHECK=1
+      - DISPLAY_ERRORS=true
       - SEED
     volumes:
       - ${BASEDIR}:/usr/share/tuleap:ro,cached
