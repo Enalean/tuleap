@@ -1,4 +1,5 @@
 import angular from "angular";
+import { drag_autoscroll_service } from "../drag-autoscroll/drag-autoscroll-service";
 
 export default MilestoneController;
 
@@ -168,6 +169,8 @@ function MilestoneController(
     function dragularDrag(event, element) {
         event.stopPropagation();
 
+        drag_autoscroll_service.start();
+
         if (
             BacklogItemSelectedService.areThereMultipleSelectedBaklogItems() &&
             BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
@@ -182,6 +185,8 @@ function MilestoneController(
 
     function dragularCancel(event) {
         event.stopPropagation();
+
+        drag_autoscroll_service.stop();
 
         BacklogItemSelectedService.deselectAllBacklogItems();
         $scope.$apply();
@@ -198,6 +203,8 @@ function MilestoneController(
         target_index,
     ) {
         event.stopPropagation();
+
+        drag_autoscroll_service.stop();
 
         var source_list_element = angular.element(source_element),
             target_list_element = angular.element(target_element),
