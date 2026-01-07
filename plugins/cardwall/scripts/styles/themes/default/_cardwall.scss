@@ -358,10 +358,6 @@ body.fullscreen {
         border-left: $cardwall-border-between-info-panes;
     }
 
-    > .milestone-burndown {
-        padding-top: 0;
-    }
-
     > div:first-child,
     > .milestone-capacity {
         border-left: 0;
@@ -467,16 +463,6 @@ body.fullscreen {
         width: 40%;
         margin-right: 10%;
         float: left;
-    }
-
-    .milestone-burndown {
-        .line.actual {
-            stroke: $cardwall-points-color;
-        }
-
-        .circle.actual {
-            stroke: $cardwall-points-color;
-        }
     }
 
     &.mini {
