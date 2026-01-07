@@ -23,86 +23,92 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Folders;
 
+use ArrayIterator;
+use Codendi_HTMLPurifier;
+use Docman_File;
+use Docman_Folder;
+use Docman_ItemDao;
 use Docman_ItemFactory;
+use Docman_Metadata;
+use Docman_PermissionsManager;
+use Docman_Report;
+use Docman_SettingsBo;
+use Docman_Version;
+use Override;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\ItemRepresentationVisitor;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
 use Tuleap\Docman\REST\v1\Search\ListOfCustomPropertyRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Search\SearchColumn;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
-use Tuleap\Docman\Version\VersionDao;
-use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
+use Tuleap\User\REST\MinimalUserRepresentation;
+use UserManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Docman_ItemFactory&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $item_factory;
+    private UserManager&MockObject $user_manager;
+    private Docman_ItemFactory&MockObject $item_factory;
     private BuildSearchedItemRepresentationsFromSearchReport $representation_builder;
     private ItemStatusMapper $status_mapper;
-    private \PHPUnit\Framework\MockObject\MockObject|\Docman_VersionFactory $version_factory;
+    private ItemRepresentationVisitor&MockObject $item_representation_visitor;
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
-        $docman_settings = $this->createMock(\Docman_SettingsBo::class);
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
         $docman_settings->method('getMetadataUsage')->with('status')->willReturn('1');
-        $item_dao            = $this->createMock(\Docman_ItemDao::class);
+        $item_dao            = $this->createMock(Docman_ItemDao::class);
         $this->status_mapper = new ItemStatusMapper($docman_settings);
-        $this->user_manager  = $this->createMock(\UserManager::class);
-        $permissions_manager = $this->createMock(\Docman_PermissionsManager::class);
+        $this->user_manager  = $this->createMock(UserManager::class);
+        $permissions_manager = $this->createMock(Docman_PermissionsManager::class);
 
-        $this->item_factory           = $this->createMock(Docman_ItemFactory::class);
-        $this->version_factory        = $this->createMock(\Docman_VersionFactory::class);
-        $this->representation_builder = new BuildSearchedItemRepresentationsFromSearchReport(
+        $this->item_factory                = $this->createMock(Docman_ItemFactory::class);
+        $this->item_representation_visitor = $this->createMock(ItemRepresentationVisitor::class);
+        $this->representation_builder      = new BuildSearchedItemRepresentationsFromSearchReport(
             $this->status_mapper,
             $this->user_manager,
             new ItemRepresentationCollectionBuilder(
                 $this->item_factory,
                 $permissions_manager,
-                $this->createMock(ItemRepresentationVisitor::class),
+                $this->item_representation_visitor,
                 $item_dao,
-                $this->createMock(VersionDao::class)
             ),
             $this->item_factory,
             new SearchRepresentationTypeVisitor(EventDispatcherStub::withIdentityCallback()),
-            new FilePropertiesVisitor($this->version_factory, EventDispatcherStub::withIdentityCallback()),
             new ListOfCustomPropertyRepresentationBuilder(),
             ProvideUserAvatarUrlStub::build(),
+            $this->item_representation_visitor,
         );
 
-        \UserManager::setInstance($this->user_manager);
+        UserManager::setInstance($this->user_manager);
     }
 
-    #[\Override]
+    #[Override]
     protected function tearDown(): void
     {
-        \UserManager::clearInstance();
+        UserManager::clearInstance();
     }
 
     public function testItBuildsItemRepresentations(): void
     {
-        $report = new \Docman_Report();
-        $folder = new \Docman_Folder(
-            [
-                'item_id'  => 66,
-                'group_id' => 101,
-            ]
-        );
+        $report = new Docman_Report();
+        $folder = new Docman_Folder([
+            'item_id'  => 66,
+            'group_id' => 101,
+        ]);
 
         $item_one_array = [
             'item_id'     => 1,
@@ -113,7 +119,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             'user_id'     => 101,
             'parent_id'   => 0,
         ];
-        $item_one       = new \Docman_Folder($item_one_array);
+        $item_one       = new Docman_Folder($item_one_array);
         $item_two_array = [
             'item_id'     => 2,
             'title'       => 'file',
@@ -123,21 +129,49 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             'user_id'     => 101,
             'parent_id'   => 0,
         ];
-        $item_two       = new \Docman_File($item_two_array);
+        $item_two       = new Docman_File($item_two_array);
 
-        $metadata = new \Docman_Metadata();
+        $metadata = new Docman_Metadata();
         $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
         $metadata->setLabel('field_23');
         $metadata->setValue('Lorem ipsum');
         $item_two->addMetadata($metadata);
 
-        $this->version_factory
-            ->method('getCurrentVersionForItem')
-            ->willReturn(new \Docman_Version([
-                'number' => 12,
-                'filetype' => 'text/html',
-                'filesize' => 12345,
-            ]));
+        $this->item_representation_visitor->expects($this->once())->method('visitFolder')->willReturn(null);
+        $user = UserTestBuilder::buildWithDefaults();
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
+        $this->item_representation_visitor->expects($this->once())->method('visitFile')
+            ->willReturn(ItemRepresentation::build(
+                $item_two,
+                Codendi_HTMLPurifier::instance(),
+                MinimalUserRepresentation::build($user, ProvideUserAvatarUrlStub::build()),
+                true,
+                true,
+                ItemRepresentation::TYPE_FILE,
+                false,
+                true,
+                [],
+                false,
+                false,
+                'move_uri',
+                null,
+                null,
+                null,
+                FilePropertiesRepresentation::build(
+                    new Docman_Version([
+                        'number'   => 12,
+                        'filetype' => 'text/html',
+                        'filesize' => 12345,
+                    ]),
+                    'download_uri',
+                    'open_uri',
+                ),
+                null,
+                null,
+                null,
+                null,
+                null,
+            ));
 
         $current_user = UserTestBuilder::aUser()->build();
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
@@ -156,9 +190,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
                     'ignore_obsolete' => true,
                 ]
             )
-            ->willReturn(
-                new \ArrayIterator([$item_one, $item_two])
-            );
+            ->willReturn(new ArrayIterator([$item_one, $item_two]));
 
         $wanted_custom_properties = new SearchColumnCollection();
         $wanted_custom_properties->add(SearchColumn::buildForSingleValueCustomProperty('field_23', 'Comments'));
@@ -174,11 +206,11 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
 
         $this->assertItemEqualsRepresentation($item_one_array, $collection->search_representations[0]);
         $this->assertItemEqualsRepresentation($item_two_array, $collection->search_representations[1]);
-        $this->assertEquals('folder', $collection->search_representations[0]->type);
+        self::assertEquals('folder', $collection->search_representations[0]->type);
 
-        $this->assertEquals('file', $collection->search_representations[1]->type);
-        $this->assertEquals('text/html', $collection->search_representations[1]->file_properties->file_type);
-        $this->assertEquals('Lorem ipsum', $collection->search_representations[1]->custom_properties['field_23']->value);
+        self::assertEquals('file', $collection->search_representations[1]->type);
+        self::assertEquals('text/html', $collection->search_representations[1]->file_properties->file_type);
+        self::assertEquals('Lorem ipsum', $collection->search_representations[1]->custom_properties['field_23']->value);
 
         self::assertCount(2, $collection->search_representations);
     }

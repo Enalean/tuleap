@@ -22,16 +22,22 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookWiki from "./QuickLookWiki.vue";
 import { TYPE_WIKI } from "../../constants";
-import type { Item } from "../../type";
+import type { Wiki } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { PROJECT } from "../../configuration-keys";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
+import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
 
 describe("QuickLookWiki", () => {
     it("renders quick look for wiki document", () => {
-        const item = {
-            type: TYPE_WIKI,
-        } as Item;
+        const item: Wiki = {
+            ...new ItemBuilder(123).withType(TYPE_WIKI).buildApprovableDocument(),
+            wiki_properties: {
+                page_name: "my_wiki_page",
+                page_id: 12,
+                version_number: 1,
+            },
+        };
 
         const wrapper = shallowMount(QuickLookWiki, {
             global: {
@@ -40,7 +46,7 @@ describe("QuickLookWiki", () => {
                     [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
-            props: { item: item },
+            props: { item },
         });
 
         expect(wrapper.element).toMatchSnapshot();

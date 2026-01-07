@@ -4,9 +4,10 @@ exports[`QuickLookWiki > renders quick look for wiki document 1`] = `
 <div
   class="document-quick-look-document-action"
 >
-  <button
+  <a
     class="tlp-button-primary tlp-button-small"
     data-test="go-to-the-wiki-page"
+    href="/wiki/?group_id=101&pagename=my_wiki_page"
     type="button"
   >
     Open 
@@ -14,7 +15,7 @@ exports[`QuickLookWiki > renders quick look for wiki document 1`] = `
       aria-hidden="true"
       class="fa-solid fa-right-long tlp-button-icon"
     />
-  </button>
+  </a>
   <drop-down-quick-look-stub
     item="[object Object]"
   />

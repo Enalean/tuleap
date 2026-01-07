@@ -20,35 +20,32 @@
 
 <template>
     <div class="document-quick-look-document-action">
-        <button
+        <a
             type="button"
             class="tlp-button-primary tlp-button-small"
-            v-on:click="wikiPageRedirect"
+            v-bind:href="wiki_url"
             data-test="go-to-the-wiki-page"
         >
             {{ $gettext("Open") }}
             <i class="fa-solid fa-right-long tlp-button-icon" aria-hidden="true"></i>
-        </button>
+        </a>
         <drop-down-quick-look v-bind:item="item" />
     </div>
 </template>
 
 <script setup lang="ts">
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
-import type { Item } from "../../type";
-import { useGettext } from "vue3-gettext";
+import type { Wiki } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT } from "../../configuration-keys";
+import { computed } from "vue";
 
-const { $gettext } = useGettext();
+const props = defineProps<{ item: Wiki }>();
 
 const project = strictInject(PROJECT);
 
-const props = defineProps<{ item: Item }>();
-
-function wikiPageRedirect(): void {
-    window.location.assign(
-        encodeURI(`/plugins/docman/?group_id=${project.id}&action=show&id=${props.item.id}`),
-    );
-}
+const wiki_url = computed(
+    (): string =>
+        `/wiki/?group_id=${project.id}&pagename=${encodeURIComponent(props.item.wiki_properties.page_name)}`,
+);
 </script>

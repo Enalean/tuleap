@@ -22,25 +22,28 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookLink from "./QuickLookLink.vue";
 import { TYPE_LINK } from "../../constants";
-import type { Item } from "../../type";
+import type { Link } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { PROJECT } from "../../configuration-keys";
-import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
+import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
 
 describe("QuickLookLink", () => {
     it("renders quick look for link document", () => {
-        const item = {
-            type: TYPE_LINK,
-        } as Item;
+        const item: Link = {
+            ...new ItemBuilder(42)
+                .withType(TYPE_LINK)
+                .withTitle("my link")
+                .buildApprovableDocument(),
+            link_properties: {
+                link_url: "https://example.com",
+                version_number: null,
+            },
+        };
 
         const wrapper = shallowMount(QuickLookLink, {
             global: {
                 ...getGlobalTestOptions({}),
-                provide: {
-                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
-                },
             },
-            props: { item: item },
+            props: { item },
         });
 
         expect(wrapper.element).toMatchSnapshot();

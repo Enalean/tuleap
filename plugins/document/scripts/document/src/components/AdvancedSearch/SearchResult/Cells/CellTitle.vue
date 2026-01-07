@@ -152,8 +152,12 @@ const href = computed((): string | null => {
         return props.item.file_properties.open_href ?? props.item.file_properties.download_href;
     }
 
-    if (props.item.type === TYPE_LINK || props.item.type === TYPE_WIKI) {
-        return `/plugins/docman/?group_id=${project.id}&action=show&id=${props.item.id}`;
+    if (props.item.type === TYPE_LINK && props.item.link_properties) {
+        return props.item.link_properties.link_url;
+    }
+
+    if (props.item.type === TYPE_WIKI && props.item.wiki_properties) {
+        return `/wiki/?group_id=${project.id}&pagename=${encodeURIComponent(props.item.wiki_properties.page_name)}`;
     }
 
     return null;

@@ -132,7 +132,7 @@ const user_is_admin = strictInject(USER_IS_ADMIN);
 const max_nb_to_display = ref(5);
 
 function documentAdministrationUrl(): string {
-    return "/plugins/docman/?group_id=" + encodeURIComponent(project.id) + "&action=admin";
+    return `/plugins/document/${encodeURIComponent(project.name)}/admin-search`;
 }
 
 function getBreadcrumbClass(): string {
