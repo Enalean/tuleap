@@ -165,8 +165,9 @@ final class GitoliteDriverTest extends TestIntegrationTestCase
             __DIR__ . '/_fixtures/perms/newone.conf',
             $this->getGitoliteAdministrationPath() . '/conf/projects/newone.conf'
         );
-        self::assertDoesNotMatchRegularExpression('`\ninclude "projects/legacy.conf"\n`', $this->getGitoliteConf());
-        self::assertMatchesRegularExpression('`\ninclude "projects/newone.conf"\n`', $this->getGitoliteConf());
+        $gitolite_conf = $this->getGitoliteConf();
+        self::assertStringNotContainsString('include "projects/legacy.conf"', $gitolite_conf);
+        self::assertStringContainsString('include "projects/newone.conf"', $gitolite_conf);
     }
 
     private function buildRepository(\Project $project, string $name, int $id): \GitRepository

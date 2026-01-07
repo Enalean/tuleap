@@ -1095,7 +1095,6 @@ class RepositoryResource extends AuthenticatedResource
     }
 
     /**
-     * @return GitRepository|\GitRepositoryGitoliteAdmin
      *
      * @throws RestException
      */

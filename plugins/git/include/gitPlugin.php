@@ -79,7 +79,6 @@ use Tuleap\Git\Gitolite\RegenerateConfigurationCommand;
 use Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator;
 use Tuleap\Git\Gitolite\SSHKey\Gitolite3Dumper;
 use Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer;
-use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\GitPHP\Controller_Snapshot;
@@ -1136,15 +1135,9 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function proccess_system_check($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $gitgc           = new Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc(
-            new Git_GitoliteHousekeeping_GitoliteHousekeepingDao(),
-            $params['logger'],
-            $this->getGitoliteAdminPath()
-        );
         $gitolite_driver = $this->getGitoliteDriver();
 
         $system_check = new SystemCheck(
-            $gitgc,
             $gitolite_driver,
             new PluginConfigChecker($params['logger']),
             $this
@@ -1912,11 +1905,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    private function getGitoliteAdminPath()
-    {
-        return ForgeConfig::get('sys_data_dir') . '/gitolite/admin';
-    }
-
     private function getUGroupManager()
     {
         return new UGroupManager();
@@ -1984,7 +1972,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new Gitolite3Dumper(
             new AuthorizedKeysFileCreator(
                 new WholeInstanceKeysAggregator(
-                    new GitoliteAdmin(),
                     new GerritServer(new Git_RemoteServer_Dao()),
                     new User(UserManager::instance())
                 ),

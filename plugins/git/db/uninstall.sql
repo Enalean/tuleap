@@ -6,7 +6,6 @@ DROP TABLE IF EXISTS plugin_git_ci;
 DROP TABLE IF EXISTS plugin_git;
 DROP TABLE IF EXISTS plugin_git_remote_servers;
 DROP TABLE IF EXISTS plugin_git_remote_ugroups;
-DROP TABLE IF EXISTS plugin_git_housekeeping;
 DROP TABLE IF EXISTS plugin_git_gerrit_config_template;
 DROP TABLE IF EXISTS plugin_git_webhook_url;
 DROP TABLE IF EXISTS plugin_git_webhook_log;

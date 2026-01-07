@@ -28,9 +28,8 @@ use TuleapCfg\Command\ProcessFactory;
 
 final class SiteDeployGitolite3Hooks
 {
-    private const GITOLITE_BIN       = '/usr/bin/gitolite';
-    private const GITOLITE_BASE_DIR  = '/var/lib/gitolite';
-    private const TULEAP_SRC_PLUGINS = '/usr/share/tuleap/plugins';
+    private const string GITOLITE_BIN      = '/usr/bin/gitolite';
+    private const string GITOLITE_BASE_DIR = '/var/lib/gitolite';
 
     public function __construct(
         private readonly ProcessFactory $process_factory,
@@ -50,7 +49,7 @@ final class SiteDeployGitolite3Hooks
             return;
         }
 
-        if ($this->createHooksSymlink($logger)) {
+        if ($this->createHooksSymlink($logger) || $this->shouldCreateUpdateHook()) {
             $this->deployHooks($logger);
         }
     }
@@ -62,8 +61,12 @@ final class SiteDeployGitolite3Hooks
 
     private function isGitolite3Setup(): bool
     {
-        $gitolite_conf_size = @filesize($this->gitolite_base_dir . '/.gitolite/conf/gitolite.conf');
-        return $gitolite_conf_size !== false && $gitolite_conf_size > 0;
+        return \Psl\Filesystem\is_directory($this->gitolite_base_dir . '/.gitolite/hooks/');
+    }
+
+    private function shouldCreateUpdateHook(): bool
+    {
+        return ! \Psl\Filesystem\is_file($this->gitolite_base_dir . '/.gitolite/hooks/common/update');
     }
 
     private function createHooksSymlink(LoggerInterface $logger): bool

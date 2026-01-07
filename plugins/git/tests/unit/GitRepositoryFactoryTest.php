@@ -25,7 +25,6 @@ namespace Tuleap\Git;
 use Git_Backend_Interface;
 use GitDao;
 use GitRepositoryFactory;
-use GitRepositoryGitoliteAdmin;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -64,14 +63,6 @@ final class GitRepositoryFactoryTest extends TestCase
             ->with(101, 'garden/diskinstaller.git')->willReturn([]);
 
         $this->factory->getFromFullPath('/data/tuleap/gitroot/garden/diskinstaller.git');
-    }
-
-    public function testItReturnsSpecialRepositoryWhenIdMatches(): void
-    {
-        self::assertInstanceOf(
-            GitRepositoryGitoliteAdmin::class,
-            $this->factory->getRepositoryById((int) GitRepositoryGitoliteAdmin::ID)
-        );
     }
 
     public function testItCanonicalizesRepositoryName(): void

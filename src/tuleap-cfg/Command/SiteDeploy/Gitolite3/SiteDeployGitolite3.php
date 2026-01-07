@@ -31,11 +31,10 @@ use TuleapCfg\Command\SystemControlSystemd;
 
 final readonly class SiteDeployGitolite3
 {
-    private const string GITOLITE_BASE_DIR                    = '/var/lib/gitolite';
-    private const string GITOLITE_RC_CONFIG                   = '/var/lib/gitolite/.gitolite.rc';
-    private const string GITOLITE_PROFILE                     = '/var/lib/gitolite/.profile';
-    private const string MARKER_ONLY_PRESENT_GITOLITE3_CONFIG = '%RC =';
-    private const string SSHD_TULEAP_CONFIG_PATH              = '/etc/ssh/sshd_config.d/10-tuleap.conf';
+    private const string GITOLITE_BASE_DIR       = '/var/lib/gitolite';
+    private const string GITOLITE_RC_CONFIG      = '/var/lib/gitolite/.gitolite.rc';
+    private const string GITOLITE_PROFILE        = '/var/lib/gitolite/.profile';
+    private const string SSHD_TULEAP_CONFIG_PATH = '/etc/ssh/sshd_config.d/10-tuleap.conf';
 
     public function __construct(private ProcessFactory $process_factory)
     {
@@ -56,7 +55,6 @@ final readonly class SiteDeployGitolite3
         $this->updateGitoliteShellProfile($logger);
         $this->setupGitoliteDirectoryStructure();
         $this->updateGitoliteConfig($logger);
-
         $this->deployTuleapSSHDConfig($logger);
     }
 
@@ -85,11 +83,6 @@ final readonly class SiteDeployGitolite3
 
     private function updateGitoliteConfig(LoggerInterface $logger): void
     {
-        if (! $this->hasAGitolite3Config()) {
-            $logger->debug('Gitolite3 not detected');
-            return;
-        }
-
         $expected_gitolite_config = $this->getExpectedGitolite3ConfigContent();
         $current_gitolite_config  = '';
         if (\Psl\Filesystem\is_file(self::GITOLITE_RC_CONFIG)) {
@@ -163,12 +156,6 @@ final readonly class SiteDeployGitolite3
                 \Psl\Filesystem\change_permissions($file, 0755);
             }
         }
-    }
-
-    private function hasAGitolite3Config(): bool
-    {
-        return is_file(self::GITOLITE_RC_CONFIG) &&
-            strpos(file_get_contents(self::GITOLITE_RC_CONFIG), self::MARKER_ONLY_PRESENT_GITOLITE3_CONFIG) !== false;
     }
 
     private function hasGitPlugin(): bool
