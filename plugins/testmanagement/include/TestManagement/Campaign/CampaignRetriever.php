@@ -22,43 +22,20 @@ namespace Tuleap\TestManagement\Campaign;
 
 use Tracker_ArtifactFactory;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class CampaignRetriever
+readonly class CampaignRetriever
 {
-    /**
-     * @var CampaignDao
-     */
-    private $campaign_dao;
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var KeyFactory
-     */
-    private $key_factory;
-
     public function __construct(
-        Tracker_ArtifactFactory $artifact_factory,
-        CampaignDao $campaign_dao,
-        KeyFactory $key_factory,
+        private Tracker_ArtifactFactory $artifact_factory,
+        private CampaignDao $campaign_dao,
     ) {
-        $this->campaign_dao     = $campaign_dao;
-        $this->artifact_factory = $artifact_factory;
-        $this->key_factory      = $key_factory;
     }
 
     /**
-     * @param int s$id
-     *
-     * @return Campaign
-     *
      * @throws ArtifactNotFoundException
      */
-    public function getById(int $id)
+    public function getById(int $id): Campaign
     {
         $artifact = $this->artifact_factory->getArtifactById($id);
         if (! $artifact) {
@@ -68,33 +45,19 @@ class CampaignRetriever
         return $this->getByArtifact($artifact);
     }
 
-    /**
-     *
-     *
-     * @return Campaign
-     */
-    public function getByArtifact(Artifact $artifact)
+    public function getByArtifact(Artifact $artifact): Campaign
     {
         $configuration = $this->campaign_dao->searchByCampaignId($artifact->getId());
 
         if ($configuration) {
             $job = new JobConfiguration(
                 $configuration['job_url'],
-                $this->getDecryptedToken($configuration['encrypted_job_token'])
+                $configuration['job_token'] ?? new ConcealedString('')
             );
         } else {
             $job = new NoJobConfiguration();
         }
 
         return new Campaign($artifact, $artifact->getTitle() ?? '', $job);
-    }
-
-    private function getDecryptedToken(?string $encrypted_job_token): ConcealedString
-    {
-        if (! $encrypted_job_token) {
-            return new ConcealedString('');
-        }
-
-        return SymmetricCrypto::decrypt($encrypted_job_token, $this->key_factory->getLegacy2025EncryptionKey());
     }
 }

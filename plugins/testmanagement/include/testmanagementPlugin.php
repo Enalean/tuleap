@@ -468,7 +468,6 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         $campaign_retriver = new CampaignRetriever(
             Tracker_ArtifactFactory::instance(),
             new CampaignDao(),
-            new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
         );
         return new \Tuleap\TestManagement\RealTime\MercureJWTController(
             $campaign_retriver,
@@ -488,7 +487,6 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             new CampaignRetriever(
                 Tracker_ArtifactFactory::instance(),
                 new CampaignDao(),
-                new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
             ),
             new StatusUpdater(
                 new StatusValueRetriever(
@@ -505,7 +503,6 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             new CampaignRetriever(
                 Tracker_ArtifactFactory::instance(),
                 new CampaignDao(),
-                new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
             ),
             new StatusUpdater(
                 new StatusValueRetriever(

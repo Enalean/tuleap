@@ -263,22 +263,22 @@ class BucketDb
 
     /**
      * @param literal-string $table_name
-     * @param literal-string $uuid_column_name
+     * @param literal-string $id_column_name
      * @param literal-string $encrypted_data_column_name
      */
     public function reencrypt2025ContentWithTheCurrentCryptographyAPI(
         string $table_name,
-        string $uuid_column_name,
+        string $id_column_name,
         string $encrypted_data_column_name,
     ): void {
-        if ($table_name === '' || $uuid_column_name === '' || $encrypted_data_column_name === '') {
-            throw new \RuntimeException('table_name, uuid_column_name and encrypted_data_column_name must not be empty');
+        if ($table_name === '' || $id_column_name === '' || $encrypted_data_column_name === '') {
+            throw new \RuntimeException('table_name, id_column_name and encrypted_data_column_name must not be empty');
         }
         $this->dbh->beginTransaction();
         $rows = $this->dbh->query(
             sprintf(
                 'SELECT %s, %s FROM %s WHERE %s IS NOT NULL FOR UPDATE',
-                $uuid_column_name,
+                $id_column_name,
                 $encrypted_data_column_name,
                 $table_name,
                 $encrypted_data_column_name
@@ -297,20 +297,29 @@ class BucketDb
             return;
         }
 
-        $update_statement = $this->dbh->prepare('UPDATE ' . $table_name . ' SET ' . $encrypted_data_column_name . ' = ? WHERE ' . $uuid_column_name . ' = ?');
+        $update_statement = $this->dbh->prepare('UPDATE ' . $table_name . ' SET ' . $encrypted_data_column_name . ' = ? WHERE ' . $id_column_name . ' = ?');
 
         $current_encryption_key = (new KeyFactoryFromFileSystem())->getEncryptionKey();
 
         foreach ($rows as $row) {
-            $uuid = $row[$uuid_column_name];
+            $id = (string) $row[$id_column_name];
+            if ($id === '') {
+                throw new \LogicException("Encountered an empty ID while re-encrypting $table_name ($id_column_name), this is not expected. Check the code.");
+            }
 
             try {
                 $decrypted_data = $legacy_encryption_key->decrypt($row[$encrypted_data_column_name]);
-            } catch (\RuntimeException $exception) {
+            } catch (\RuntimeException | \SodiumException $exception) {
+                try {
+                    // Try to convert UUID into something readable by a human
+                    $id_representation = $this->uuid_factory->buildUUIDFromBytesData($id)->toString();
+                } catch (\Exception $exception) {
+                    $id_representation = $id;
+                }
                 $this->log->warning(
                     sprintf(
                         'Could not decrypt row %s of %s, skipping. Please investigate, it will cause issues later on.',
-                        $this->uuid_factory->buildUUIDFromBytesData($uuid)->toString(),
+                        $id_representation,
                         $table_name
                     ),
                     ['exception' => $exception]
@@ -321,10 +330,10 @@ class BucketDb
             $update_statement->execute([
                 SymmetricCrypto::encrypt(
                     new ConcealedString($decrypted_data),
-                    new EncryptionAdditionalData($table_name, $encrypted_data_column_name, $uuid),
+                    new EncryptionAdditionalData($table_name, $encrypted_data_column_name, $id),
                     $current_encryption_key
                 ),
-                $uuid,
+                $id,
             ]);
 
             \sodium_memzero($decrypted_data);

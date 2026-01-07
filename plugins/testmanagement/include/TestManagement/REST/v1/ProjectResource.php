@@ -143,7 +143,7 @@ class ProjectResource
             $user_manager,
         );
 
-        $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem());
+        $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao());
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
             $tracker_factory,

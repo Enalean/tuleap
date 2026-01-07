@@ -20,11 +20,13 @@
 
 namespace Tuleap\TestManagement\Campaign;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
 
 class CampaignDao extends DataAccessObject
 {
-    public function update(int $campaign_id, string $job_url, string $encrypted_job_token): void
+    public function update(int $campaign_id, string $job_url, ConcealedString $job_token): void
     {
         if (! $job_url) {
             $this->getDB()->delete('plugin_testmanagement_campaign', ['artifact_id' => $campaign_id]);
@@ -33,14 +35,48 @@ class CampaignDao extends DataAccessObject
         $sql = 'REPLACE INTO plugin_testmanagement_campaign (artifact_id, job_url, encrypted_job_token)
                 VALUES (?, ?, ?)';
 
-        $this->getDB()->run($sql, $campaign_id, $job_url, $encrypted_job_token);
+        $this->getDB()->run(
+            $sql,
+            $campaign_id,
+            $job_url,
+            $this->encryptDataToStoreInATableRow(
+                $job_token,
+                $this->getTokenEncryptionAdditionalData($campaign_id)
+            ),
+        );
     }
 
+    /**
+     * @return array{job_url:string,job_token:ConcealedString|null}|null
+     */
     public function searchByCampaignId(int $campaign_id): ?array
     {
-        $sql = 'SELECT * FROM plugin_testmanagement_campaign
+        $sql = 'SELECT job_url, encrypted_job_token FROM plugin_testmanagement_campaign
                 WHERE artifact_id = ?';
 
-        return $this->getDB()->row($sql, $campaign_id);
+        $row = $this->getDB()->row($sql, $campaign_id);
+
+        if ($row === null) {
+            return null;
+        }
+
+        $token = null;
+        if ($row['encrypted_job_token'] !== null) {
+            $token = $this->decryptDataStoredInATableRow(
+                $row['encrypted_job_token'],
+                $this->getTokenEncryptionAdditionalData($campaign_id)
+            );
+        }
+
+        return ['job_url' => $row['job_url'], 'job_token' => $token];
+    }
+
+    private function getTokenEncryptionAdditionalData(int $campaign_id): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData(
+            'plugin_testmanagement_campaign',
+            'encrypted_job_token',
+            (string) $campaign_id
+        );
     }
 }
