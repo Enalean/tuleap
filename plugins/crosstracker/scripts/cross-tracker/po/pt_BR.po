@@ -24,6 +24,11 @@ msgstr ""
 msgid "All artifacts created in the last 10 days"
 msgstr ""
 
+msgid ""
+"All exchanges are recorded and will be reviewed by the Tuleap Team to "
+"improve the query generation experience."
+msgstr ""
+
 msgid "All open artifacts"
 msgstr ""
 
