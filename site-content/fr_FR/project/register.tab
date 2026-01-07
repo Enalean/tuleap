@@ -6,14 +6,8 @@
 #-----------------------------------------------
 # Script: src/common/project//confirmation.php
 #
-register_confirmation	registration_complete	Enregistrement terminé
-register_confirmation	upd_fail	MISE A JOUR A ACTIF A ECHOUE. Veuillez en informer $1 $2
 register_confirmation	ins_file_fail	INSERTION DE FILEMODULE A ECHOUE. Veuillez en informer admin@$1 $2
 register_confirmation	set_owner_fail	VOUS METTRE COMME POSSESSEUR A ECHOUE. Veuillez en informer $1 $2
-register_confirmation	get_help	Obtenir de l'aide
-register_confirmation	developers	Développeurs
-register_confirmation	cant_copy_svn_infos	ERREUR - Impossible de copier les informations SVN par défaut
-register_confirmation	cant_copy_truncated_emails	ERREUR - Impossible de copier les informations de courriels tronqués depuis le projet parent
 register_confirmation	cant_copy_msg_to_requester	ERROR - Impossible de copier le message destiné aux utilisateurs qui demandent l'accès à votre projet.
 
 register_project_one_step	services_used	Services utilisés :

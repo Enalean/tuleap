@@ -5,20 +5,13 @@
 #-----------------------------------------------
 # Script: SF/www/my/index.php
 #
-my_index	my_dashboard	Mon tableau de bord
 my_index	account_maintenance	Mon compte
 my_index	title	Page personnelle de $1
 my_index	message	Votre page personnelle contient la liste des artifacts que vous avez [<b>S</b>]oumis ou qui vous ont été [<b>A</b>]ssignés avec leur niveau de complétion, les fichiers que vous surveillez et les projets dont vous êtes membre.<P>
-my_index	err_artf	Impossible de créer un ArtifactTypeFactory
-my_index	my_bugs	Mes bugs
-my_index	my_srs	Mes demandes de support
 my_index	my_files	Fichiers sous surveillance
 my_index	my_files_msg	<b>Vous ne surveillez aucun fichier.</b><P>En surveillant un fichier, vous recevrez par e-mail une note signalant la publication d'une nouvelle version et un lien vers l'espace de téléchargement.<P>Vous pouvez surveiller un fichier en visitant la page de &quot;Sommaire&quot; et en cliquant sur l'icône appropriée dans la section fichiers.<BR>&nbsp;
 my_index	stop_file	Arrêter la surveillance du paquet ?
 my_index	stop_monitor	Arrêter la surveillance
-my_index	my_tasks	Mes Tâches
-my_index	my_arts	Mes artifacts (anciens trackers)
-my_index	display_arts	Afficher les artifacts :
 my_index	my_bookmarks	Mes favoris
 my_index	no_bookmark	Vous n'avez pas encore de favori enregistré
 my_index	edit_link	Editer
@@ -27,27 +20,13 @@ my_index	add_bookmark	Ajouter un favori
 my_index	my_projects	Mes projets
 my_index	not_member	Vous n'êtes membre d'aucun projet
 my_index	admin_link	Admin
-my_index	priv_proj	<em>Projet privé</em>
 my_index	my_projects_legend	Légende :
 #my_index	a	A
 #my_index	s	S
 #my_index	as	AS
-my_index	no_info	N'afficher aucun artifact
-my_index	a_info	assignés à moi [A]
-my_index	s_info	soumis par moi [S]
-my_index	as_info	assignés à moi ou soumis par moi [AS]
 my_index	my_admin	Utilisateurs et projets en attente
 my_index	my_admin_non_super	Projets en attente
 my_index	my_admin_description	Liste et donne un accès rapide aux utilisateurs et projets en attente.
-my_index	no_bug	Pas encore de bug
-my_index	no_task	Pas encore de tâche
-my_index	no_support	Pas encore de demande de support
-my_index	my_latest_svn_commit	Mes derniers commits SVN
-my_index	my_latest_svn_commit_desc	Affiche les commits que vous avez réalisés, par projet.
-my_index	my_latest_svn_commit_on	le
-my_index	my_latest_svn_commit_by	par
-my_index	my_latest_commit_empty	Aucun commit trouvé
-my_index	my_latest_svn_commit_nb_prefs	Nombre maximum de commits SVN à afficher par projet
 my_index	send_mail	Envoyer un email aux membres du projet $1
 my_index	mail_sent	Email envoyé aux membres du projet $1
 my_index	mail_not_sent	Echec de l'envoi de mail aux membres du projet $1

@@ -49,9 +49,7 @@ global	btn_submit_and_continue	Valider et continuer
 global	btn_submit_and_stay	Valider et visualiser
 global	btn_browse	Afficher
 global	btn_create	Créer
-global	btn_preview	Prévisualiser
 global	btn_close	Fermer
-global	btn_reset	Réinitialiser
 global	btn_edit	Éditer
 global	btn_restrict	Restreindre
 global	search_title	Recherche
@@ -91,7 +89,6 @@ global	Administration	Administration
 global	Settings	Paramètres
 global	Personal	Personnel
 global	default	Défaut
-global	no_mail_for_account	Ce compte n'a pas d'adresse mail.
 global	mail_failed	Le mail n'a pas été envoyé. Veuillez contacter l'administrateur. Son adresse mail est la suivante : $1.
 global	open	Ouvert
 global	closed	Fermé

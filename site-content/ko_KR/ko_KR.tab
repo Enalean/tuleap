@@ -49,9 +49,7 @@ global	btn_submit_and_continue	저장하고 계속하기
 global	btn_submit_and_stay	저장하고 머무르기
 global	btn_browse	찾기
 global	btn_create	만들기
-global	btn_preview	미리보기
 global	btn_close	닫기
-global	btn_reset	초기화
 global	btn_edit	수정
 global	btn_restrict	제한하기
 global	search_title	검색
@@ -91,7 +89,6 @@ global	Administration	관리
 global	Settings	설정
 global	Personal	개인
 global	default	기본
-global	no_mail_for_account	이 계정에 이메일 주소가 없습니다.
 global	mail_failed	이메일이 전송되지 않았습니다. 관리자에게 문의하세요. 이메일 주소는 $1입니다.
 global	open	열림
 global	closed	닫힘

@@ -12,7 +12,6 @@ project_admin_utils	tracker_date_reminder_enabled	Activé
 project_admin_utils	tracker_date_reminder_disabled	Desactivé
 project_admin_utils	tracker_date_reminder_invalid_field	'$1' n'est pas un Id de champs date valide
 project_admin_utils	tracker_date_reminder_invalid_distance	'$1' n'est pas une distance valide
-project_admin_utils	tracker_date_reminder_invalid_Tracker	'$1' n'est pas un Id de tracker valide
 project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' n'est pas un type de notification valide
 project_admin_utils	tracker_date_reminder_invalid_status	'$1' n'est pas un status valide
 project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' n'est pas un rappel sur un champ de type date valide

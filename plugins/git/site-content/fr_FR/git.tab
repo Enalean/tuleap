@@ -1,7 +1,6 @@
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
 project_admin_utils	regexp_activated_for_git_repository	Modification dans l'utilisation des expressions régulières pour le dépôt git $1
 project_admin_utils	regexp_activated_for_git_template	Modification dans l'utilisation des expressions régulières pour le projet $1
-project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1
 project_admin_utils	default_git_perms_granted_for_project	Permissions git par défaut définies pour le projet $1
 
 project_admin_utils	git_repo_create	Création d'un dépôt Git

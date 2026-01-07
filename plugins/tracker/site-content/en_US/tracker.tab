@@ -12,7 +12,6 @@ project_admin_utils	tracker_date_reminder_enabled	Enabled
 project_admin_utils	tracker_date_reminder_disabled	Disabled
 project_admin_utils	tracker_date_reminder_invalid_field	'$1' is not a valid Field Id
 project_admin_utils	tracker_date_reminder_invalid_distance	'$1' is not a valid Distance
-project_admin_utils	tracker_date_reminder_invalid_Tracker	'$1' is not a valid Tracker Id
 project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' is not a valid Notification type
 project_admin_utils	tracker_date_reminder_invalid_status	'$1' is not a valid Reminder Status
 project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' is not a valid Date Reminder
