@@ -26,6 +26,13 @@
                 </h1>
             </div>
             <section class="tlp-pane-section assistant-ai-chatbox-container">
+                <div class="tlp-alert-info">
+                    {{
+                        $gettext(
+                            "All exchanges are recorded and will be reviewed by the Tuleap Team to improve the query generation experience.",
+                        )
+                    }}
+                </div>
                 <template v-for="(message, index) in messages" v-bind:key="index">
                     <div
                         v-if="message.role === USER_ROLE"
