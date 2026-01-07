@@ -69,7 +69,6 @@ use Tuleap\HudsonGit\Log\LogFactory;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\REST\ResourcesInjector;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
@@ -97,17 +96,6 @@ class hudson_gitPlugin extends Plugin
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(GetExternalGitHomepagePluginsEvent::NAME);
         }
-    }
-
-    /**
-     * @access protected for test purpose
-     */
-    protected function getIncludeAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/hudson_git'
-        );
     }
 
     public function display_hudson_addition_info($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

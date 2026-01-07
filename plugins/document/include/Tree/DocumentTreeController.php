@@ -37,7 +37,6 @@ use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
@@ -136,14 +135,6 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         $docman_setting_bo = new \Docman_SettingsBo($project->getID());
 
         return $docman_setting_bo->getMetadataUsage($label) === '1';
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../../frontend-assets',
-            '/assets/document'
-        );
     }
 
     private function includeJavascriptFiles(BaseLayout $layout, \Tuleap\HTTPRequest $request): void

@@ -45,6 +45,7 @@ final class GitRepositoryTest extends TestCase
         self::assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', $tmp_folder . '/default.conf'));
         self::assertTrue($repo->isSubPath(__DIR__ . '/_fixtures/perms/', $tmp_folder . '/coincoin.git.git'));
 
+        /** @psalm-suppress NonExistingStaticPath */
         self::assertFalse($repo->isSubPath(__DIR__ . '/_fixtures/perms/', __DIR__ . '/_fixtures/perms/../../default.conf'));
         self::assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
 

@@ -82,7 +82,7 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateTrackerFromXmlFail(): void
     {
-        $expected_path = (string) realpath(__DIR__ . '/../broken_path.xml');
+        $expected_path = (string) realpath('broken_path.xml');
 
         $this->xml_import->method('createFromXMLFile')
             ->with($this->project, $expected_path);
@@ -97,7 +97,7 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     // Bug tracker shouldn't raise exception because it's not mandatory for Testmanagement administration
     public function testCreateTrackerFromXmlDoesntStopIfBugTrackerCreationFail(): void
     {
-        $expected_path = (string) realpath(__DIR__ . '/../broken_path.xml');
+        $expected_path = (string) realpath('broken_path.xml');
 
         $this->xml_import->method('createFromXMLFile')
             ->with($this->project, $expected_path);

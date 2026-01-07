@@ -63,7 +63,7 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\Override]
     protected function setUp(): void
     {
-        \ForgeConfig::set('ftp_incoming_dir', __DIR__ . '/_fixtures/incoming');
+        \ForgeConfig::set('ftp_incoming_dir', \org\bovigo\vfs\vfsStream::setup()->url());
 
         $this->user    = UserTestBuilder::aUser()->build();
         $this->project = ProjectTestBuilder::aProject()->build();
