@@ -4,7 +4,7 @@
 }:
 
 let
-  pkgsPinForOCaml = import (builtins.fetchTarball {
+  pkgsPinForOCaml = import (fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/archive/ab6176ac5b0ee4f18e9cb380a41a6e1816c7bc89.tar.gz";
     sha256 = "14d5xrm6vywqg8gkyvqsaf93x9kqmdfqcsfdj9a5xxl1qds5naiz";
   }) { };
@@ -41,7 +41,7 @@ pkgs.stdenv.mkDerivation {
   src = pkgs.symlinkJoin {
     name = "mediawiki-math-tuleap-src";
     paths = [
-      (./mediawiki-math-tuleap)
+      ./mediawiki-math-tuleap
       mathExtensionTarballSrc
     ];
   };

@@ -1,4 +1,4 @@
-{ pkgs, phpBase }:
+{ phpBase }:
 
 let
   php = phpBase.withExtensions (

@@ -7,7 +7,7 @@ let
 in
 pkgs.symlinkJoin {
   name = "rpm-additional-packages";
-  paths = builtins.map importPath [
+  paths = map importPath [
     ../../plugins/dynamic_credentials/additional-packages/vault-tuleap-plugin/package.nix
     ../utils/vault-gpg-plugin-rpm-compat/package.nix
     ../utils/pre-receive-tuleap-git-repo-validation/package.nix

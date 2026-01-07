@@ -25,10 +25,11 @@ treefmt-nix.mkWrapper pkgs {
   };
   programs.gofmt.enable = true;
   programs.rustfmt.enable = true;
-  programs.nixfmt = {
-    enable = true;
-    package = pkgs.nixfmt;
-  };
+  programs.nixfmt.enable = true;
+  programs.nixf-diagnose.enable = true;
+  settings.formatter.nixf-diagnose.options = [
+    "--ignore=sema-primop-overridden"
+  ];
   programs.oxipng.enable = true;
   settings.formatter.eslint = {
     command = pkgs.writeShellScriptBin "tuleap-eslint" ''
