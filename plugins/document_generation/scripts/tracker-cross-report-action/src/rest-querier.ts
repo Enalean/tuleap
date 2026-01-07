@@ -29,9 +29,10 @@ export function getReportArtifacts(
     report_id: number,
     report_has_changed: boolean,
     table_renderer_id: number | undefined,
+    all_columns: boolean,
 ): Promise<ArtifactForCrossReportDocGen[]> {
     const params: Record<string, number | string | boolean> = {
-        values: "from_table_renderer",
+        values: all_columns ? "all" : "from_table_renderer",
         with_unsaved_changes: report_has_changed,
         limit: 50,
     };

@@ -20,6 +20,11 @@
 import { showLoaderWhileProcessing } from "./show-loader-processing";
 
 export function setupLinkForTheSpreadsheetExport(): void {
+    setupLinkForAllReportColumnsExport();
+    setupLinkForAllColumnsExport();
+}
+
+function setupLinkForAllReportColumnsExport(): void {
     const generate_spreadsheet_link = document.getElementById(
         "tracker-document-generation-xlsx-all-report-columns",
     );
@@ -40,6 +45,31 @@ export function setupLinkForTheSpreadsheetExport(): void {
             );
 
             await startDownloadExportAllReportColumnsSpreadsheet(properties);
+        });
+    });
+}
+
+function setupLinkForAllColumnsExport(): void {
+    const generate_spreadsheet_link = document.getElementById(
+        "tracker-document-generation-xlsx-all-columns",
+    );
+    if (!generate_spreadsheet_link) {
+        throw new Error("Missing generate spreadsheet all columns button");
+    }
+    generate_spreadsheet_link.addEventListener("click", async (event): Promise<void> => {
+        event.preventDefault();
+
+        if (!generate_spreadsheet_link.dataset.properties) {
+            throw new Error("Missing properties dataset");
+        }
+        const properties = JSON.parse(generate_spreadsheet_link.dataset.properties);
+
+        await showLoaderWhileProcessing(async (): Promise<void> => {
+            const { startDownloadExportAllColumnsSpreadsheet } = await import(
+                "./export-all-columns-spreadsheet"
+            );
+
+            await startDownloadExportAllColumnsSpreadsheet(properties);
         });
     });
 }

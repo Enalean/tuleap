@@ -7,6 +7,9 @@ msgstr "DOCX"
 msgid "Export Tuleap tracker reports as documents."
 msgstr "Exporter les rapports des trackers en documents."
 
+msgid "Export all columns"
+msgstr "Exporter toutes les colonnes"
+
 msgid "Export all report columns"
 msgstr "Exporter uniquement les colonnes du rapport"
 

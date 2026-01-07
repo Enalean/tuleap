@@ -26,6 +26,7 @@ interface ExportLevelSetting {
     readonly report_name: string;
     readonly table_renderer_id?: number | undefined;
     readonly artifact_link_types: ReadonlyArray<string>;
+    readonly all_columns: boolean;
 }
 
 export interface ExportSettings {

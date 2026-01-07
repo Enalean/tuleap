@@ -63,17 +63,20 @@ describe("data-formator", () => {
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
+                all_columns: false,
             },
             second_level: {
                 tracker_name: "tracker02",
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
+                all_columns: false,
             },
             third_level: {
                 tracker_name: "tracker03",
                 report_id: 3,
                 report_name: "report03",
+                all_columns: false,
             },
         });
 
@@ -141,17 +144,20 @@ describe("data-formator", () => {
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
+                all_columns: false,
             },
             second_level: {
                 tracker_name: "tracker02",
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
+                all_columns: false,
             },
             third_level: {
                 tracker_name: "tracker03",
                 report_id: 3,
                 report_name: "report03",
+                all_columns: false,
             },
         });
 
@@ -215,12 +221,14 @@ describe("data-formator", () => {
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
+                all_columns: false,
             },
             second_level: {
                 tracker_name: "tracker02",
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
+                all_columns: false,
             },
         });
 
@@ -262,6 +270,7 @@ describe("data-formator", () => {
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
+                all_columns: false,
             },
         });
 
@@ -293,6 +302,7 @@ describe("data-formator", () => {
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: [],
+                all_columns: false,
             },
         });
 
@@ -321,12 +331,14 @@ describe("data-formator", () => {
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
+                all_columns: false,
             },
             second_level: {
                 tracker_name: "tracker02",
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
+                all_columns: false,
             },
         };
 
@@ -358,17 +370,20 @@ describe("data-formator", () => {
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
+                all_columns: false,
             },
             second_level: {
                 tracker_name: "tracker02",
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
+                all_columns: false,
             },
             third_level: {
                 tracker_name: "tracker03",
                 report_id: 3,
                 report_name: "report03",
+                all_columns: false,
             },
         };
 

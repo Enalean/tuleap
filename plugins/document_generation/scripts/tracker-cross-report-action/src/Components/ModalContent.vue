@@ -152,6 +152,7 @@ async function startExport(): Promise<void> {
             report_id: selected_report_level_1.value.id,
             report_name: selected_report_level_1.value.label,
             artifact_link_types: artifact_link_types_level_1.value,
+            all_columns: false,
         },
     };
     if (selected_tracker_level_2.value !== null && selected_report_level_2.value !== null) {
@@ -162,6 +163,7 @@ async function startExport(): Promise<void> {
                 report_id: selected_report_level_2.value.id,
                 report_name: selected_report_level_2.value.label,
                 artifact_link_types: artifact_link_types_level_2.value,
+                all_columns: false,
             },
         };
     }
@@ -172,6 +174,7 @@ async function startExport(): Promise<void> {
                 tracker_name: selected_tracker_level_3.value.label,
                 report_id: selected_report_level_3.value.id,
                 report_name: selected_report_level_3.value.label,
+                all_columns: false,
             },
         };
     }
