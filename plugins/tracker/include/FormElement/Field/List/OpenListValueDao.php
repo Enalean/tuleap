@@ -53,18 +53,6 @@ class OpenListValueDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function save($id, $field_id, $label)
-    {
-        $id       = $this->da->escapeInt($id);
-        $field_id = $this->da->escapeInt($field_id);
-        $label    = $this->da->quoteSmart($label);
-        $sql      = "UPDATE $this->table_name
-                SET label = $label
-                WHERE field_id = $field_id
-                  AND id = $id";
-        return $this->update($sql);
-    }
-
     public function create($field_id, $label)
     {
         $field_id = $this->da->escapeInt($field_id);
