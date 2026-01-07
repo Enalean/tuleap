@@ -7,10 +7,15 @@
   "type": "module",
   "dependencies": {
     "@tuleap/core-constants": "workspace:^",
+    "@tuleap/core-rest-api-types": "workspace:^",
+    "@tuleap/date-helper": "workspace:^",
     "@tuleap/dom": "workspace:^",
+    "@tuleap/fault": "workspace:^",
+    "@tuleap/fetch-result": "workspace:^",
     "@tuleap/gettext": "workspace:^",
     "@tuleap/list-picker": "workspace:^",
     "@tuleap/locale": "workspace:^",
+    "@tuleap/option": "workspace:^",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:^",
     "@tuleap/plugin-tracker-constants": "workspace:^",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:^",
@@ -19,6 +24,7 @@
     "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
+    "neverthrow": "^8.2.0",
     "vue": "^3.5.25",
     "vue-dompurify-html": "^5.3.0",
     "vue3-gettext": "^2.4.0"

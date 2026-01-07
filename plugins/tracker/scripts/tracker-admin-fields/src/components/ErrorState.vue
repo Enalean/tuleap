@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2025-present. All Rights Reserved.
+  - Copyright (c) Enalean, 2026-present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,21 +18,11 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <label-for-field v-bind:id="'artifact-id-' + field.field_id" v-bind:field="field" />
-        <a
-            v-if="field.type === ARTIFACT_ID_IN_TRACKER_FIELD"
-            data-test="artifact-id-in-tracker-field"
-            >3</a
-        >
-        <a v-else data-test="artifact-id-field">#42</a>
+    <div class="tlp-alert-danger">
+        {{ $gettext("An error occurred while retrieving the current user.") }}
     </div>
 </template>
 <script setup lang="ts">
-import LabelForField from "./LabelForField.vue";
-import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
-import { ARTIFACT_ID_IN_TRACKER_FIELD } from "@tuleap/plugin-tracker-constants";
-defineProps<{
-    field: StructureFields;
-}>();
+import { useGettext } from "vue3-gettext";
+const { $gettext } = useGettext();
 </script>

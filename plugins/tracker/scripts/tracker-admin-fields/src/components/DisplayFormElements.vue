@@ -34,6 +34,14 @@
         <field-radio v-else-if="isRadioButton(element.field)" v-bind:field="element.field" />
         <field-static-text v-else-if="isStaticText(element.field)" v-bind:field="element.field" />
         <field-id v-else-if="isAnIdField(element.field)" v-bind:field="element.field" />
+        <field-static-user-text
+            v-else-if="isStaticUserText(element.field)"
+            v-bind:field="element.field"
+        />
+        <field-static-date-text
+            v-else-if="isStaticDateText(element.field)"
+            v-bind:field="element.field"
+        />
         <line-separator v-else-if="isLineSeparator(element.field)" v-bind:field="element.field" />
         <line-break v-else-if="isLineBreak(element.field)" v-bind:field="element.field" />
         <base-field v-else v-bind:field="element.field" />
@@ -58,6 +66,10 @@ import {
     ARTIFACT_ID_FIELD,
     ARTIFACT_ID_IN_TRACKER_FIELD,
     STATIC_RICH_TEXT,
+    SUBMITTED_BY_FIELD,
+    LAST_UPDATED_BY_FIELD,
+    SUBMISSION_DATE_FIELD,
+    LAST_UPDATE_DATE_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     IntFieldStructure,
@@ -86,6 +98,8 @@ import FieldCheckbox from "./FormElements/FieldCheckbox.vue";
 import FieldRadio from "./FormElements/FieldRadio.vue";
 import FieldStaticText from "./FormElements/FieldStaticText.vue";
 import FieldId from "./FormElements/FieldId.vue";
+import FieldStaticUserText from "./FormElements/FieldStaticUserText.vue";
+import FieldStaticDateText from "./FormElements/FieldStaticDateText.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -147,5 +161,13 @@ function isStaticText(field: StructureFields): field is StaticRichTextStructure 
 
 function isAnIdField(field: StructureFields): boolean {
     return field.type === ARTIFACT_ID_FIELD || field.type === ARTIFACT_ID_IN_TRACKER_FIELD;
+}
+
+function isStaticUserText(field: StructureFields): boolean {
+    return field.type === SUBMITTED_BY_FIELD || field.type === LAST_UPDATED_BY_FIELD;
+}
+
+function isStaticDateText(field: StructureFields): boolean {
+    return field.type === SUBMISSION_DATE_FIELD || field.type === LAST_UPDATE_DATE_FIELD;
 }
 </script>
