@@ -185,6 +185,9 @@ describe(`NewLinkTemplate`, () => {
                 LinkTypesCollectionStub.withParentPair(),
                 CurrentProjectIdentifier.fromId(101),
                 Option.nothing<ParentArtifactIdentifier>(),
+                {
+                    can_create_artifact: true,
+                },
             );
 
             const new_links: ReadonlyArray<NewLink> = [new_link];

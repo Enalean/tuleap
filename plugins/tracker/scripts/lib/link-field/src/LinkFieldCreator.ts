@@ -51,11 +51,13 @@ import { ProjectsCache } from "./adapters/Memory/ProjectsCache";
 import { LinkableArtifactCreator } from "./adapters/REST/creation/LinkableArtifactCreator";
 import { setTranslator } from "./gettext-catalog";
 import * as fr_FR from "../po/fr_FR.po";
+import type { LinkFieldOptions } from "./domain/LinkFieldOptions";
 
 export interface LinkFieldCreator {
     createLinkFieldController(
         field: LabeledField,
         allowed_link_types: ReadonlyArray<AllowedLinkTypeRepresentation>,
+        link_field_options?: LinkFieldOptions,
     ): LinkFieldController;
     createLinkSelectorAutoCompleter(): ArtifactLinkSelectorAutoCompleterType;
     createArtifactCreatorController(): ArtifactCreatorController;
@@ -86,7 +88,13 @@ export const LinkFieldCreator = (
     const artifact_creation_api_client = ArtifactCreationAPIClient();
 
     return {
-        createLinkFieldController(field, allowed_link_types): LinkFieldController {
+        createLinkFieldController(
+            field,
+            allowed_link_types,
+            link_field_options = {
+                can_create_artifact: true,
+            },
+        ): LinkFieldController {
             return LinkFieldController(
                 LinksRetriever(
                     link_field_api_client,
@@ -112,6 +120,7 @@ export const LinkFieldCreator = (
                 LinkTypesCollector.buildFromTypesRepresentations(allowed_link_types),
                 current_project_identifier,
                 parent_artifact_identifier,
+                link_field_options,
             );
         },
 

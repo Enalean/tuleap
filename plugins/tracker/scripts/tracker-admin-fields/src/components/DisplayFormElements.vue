@@ -42,6 +42,7 @@
             v-else-if="isStaticDateText(element.field)"
             v-bind:field="element.field"
         />
+        <field-link v-else-if="isAnArtifactLinkField(element.field)" v-bind:field="element.field" />
         <line-separator v-else-if="isLineSeparator(element.field)" v-bind:field="element.field" />
         <line-break v-else-if="isLineBreak(element.field)" v-bind:field="element.field" />
         <base-field v-else v-bind:field="element.field" />
@@ -66,6 +67,7 @@ import {
     ARTIFACT_ID_FIELD,
     ARTIFACT_ID_IN_TRACKER_FIELD,
     STATIC_RICH_TEXT,
+    ARTIFACT_LINK_FIELD,
     SUBMITTED_BY_FIELD,
     LAST_UPDATED_BY_FIELD,
     SUBMISSION_DATE_FIELD,
@@ -82,6 +84,7 @@ import type {
     EditableDateFieldStructure,
     ListFieldStructure,
     StaticRichTextStructure,
+    ArtifactLinkFieldStructure,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import ContainerFieldset from "./FormElements/ContainerFieldset.vue";
 import ContainerColumnWrapper from "./FormElements/ContainerColumnWrapper.vue";
@@ -98,6 +101,7 @@ import FieldCheckbox from "./FormElements/FieldCheckbox.vue";
 import FieldRadio from "./FormElements/FieldRadio.vue";
 import FieldStaticText from "./FormElements/FieldStaticText.vue";
 import FieldId from "./FormElements/FieldId.vue";
+import FieldLink from "./FormElements/FieldLink.vue";
 import FieldStaticUserText from "./FormElements/FieldStaticUserText.vue";
 import FieldStaticDateText from "./FormElements/FieldStaticDateText.vue";
 
@@ -157,6 +161,10 @@ function isRadioButton(field: StructureFields): field is ListFieldStructure {
 
 function isStaticText(field: StructureFields): field is StaticRichTextStructure {
     return field.type === STATIC_RICH_TEXT;
+}
+
+function isAnArtifactLinkField(field: StructureFields): field is ArtifactLinkFieldStructure {
+    return field.type === ARTIFACT_LINK_FIELD;
 }
 
 function isAnIdField(field: StructureFields): boolean {

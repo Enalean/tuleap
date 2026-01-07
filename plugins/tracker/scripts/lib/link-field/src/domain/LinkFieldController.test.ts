@@ -130,6 +130,9 @@ describe(`LinkFieldController`, () => {
             LinkTypesCollectionStub.withParentPair(),
             CurrentProjectIdentifier.fromId(CURRENT_PROJECT),
             parent_artifact_identifier,
+            {
+                can_create_artifact: true,
+            },
         );
     };
 

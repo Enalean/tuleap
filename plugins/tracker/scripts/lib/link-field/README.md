@@ -10,3 +10,11 @@ The link field element has three dependencies that must be passed as properties:
 The link field element emits a `change` event when anything is changed: when a new link is added, a link is marked for removal, a link type is changed, etc. You can listen to this event to put a warning when the user is leaving the page, for example, to warn them that there are unsaved changes.
 
 The links are stored in `LinksStore`, `NewLinksStore` and `LinksMarkedForRemovalStore`. All links in `LinksStore` and `NewLinksStore` that are NOT marked for removal in `LinksMarkedForRemovalStore` are valid links to be saved. You can create a valid JSON payload from this when saving the artifact.
+
+It is possible to tune the link field by giving the argument `link_field_options` when creating the `LinkFieldController`. The supported options are:
+
+```javascript
+{
+    can_create_artifact: boolean; // Enable/Disable the artifact creation from the Lazybox associated to the field. By default, the creation is enabled.   
+}
+```

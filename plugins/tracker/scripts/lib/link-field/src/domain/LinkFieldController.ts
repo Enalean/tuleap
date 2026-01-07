@@ -53,6 +53,7 @@ import type { LinkTypesCollection } from "./links/LinkTypesCollection";
 import type { ChangeNewLinkType } from "./links/ChangeNewLinkType";
 import type { ChangeLinkType } from "./links/ChangeLinkType";
 import type { ParentTrackerIdentifier } from "./ParentTrackerIdentifier";
+import type { LinkFieldOptions } from "./LinkFieldOptions";
 
 export type LinkFieldController = {
     getCurrentArtifactReference(): Option<ArtifactCrossReference>;
@@ -80,6 +81,7 @@ export type LinkFieldController = {
     ): LinkType;
     clearFaultNotification(): void;
     isLinkedArtifactInCurrentProject(artifact: LinkedArtifact | NewLink): boolean;
+    getLinkFieldOptions(): LinkFieldOptions;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -105,6 +107,7 @@ export const LinkFieldController = (
     allowed_link_types_collection: LinkTypesCollection,
     current_project_identifier: CurrentProjectIdentifier,
     parent_artifact_identifier: Option<ParentArtifactIdentifier>,
+    options: LinkFieldOptions,
 ): LinkFieldController => {
     const hasParentLink = (
         existing_links: ReadonlyArray<LinkedArtifact>,
@@ -126,6 +129,8 @@ export const LinkFieldController = (
     };
 
     return {
+        getLinkFieldOptions: () => options,
+
         getCurrentArtifactReference: () => current_artifact_reference,
 
         getLabeledField: () => field,

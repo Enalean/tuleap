@@ -35,6 +35,8 @@ final readonly class FieldsUsageDisplayPresenter
     private function __construct(
         public int $project_id,
         public int $id,
+        public string $shortname,
+        public string $color_value,
         public string $json_encoded_fields,
         public string $json_encoded_structure,
     ) {
@@ -49,6 +51,8 @@ final readonly class FieldsUsageDisplayPresenter
         return new self(
             (int) $tracker->getProject()->getID(),
             $tracker->getId(),
+            $tracker->getItemName(),
+            $tracker->getColor()->value,
             encode($form_element_representations_builder->buildRepresentationsInTrackerContextIgnoringReadPermission($tracker, $user)),
             encode($structure_representation_builder->getStructureRepresentation($tracker)),
         );
