@@ -22,7 +22,6 @@
 namespace Tuleap\Project\Admin\Reference;
 
 use Actions;
-use Reference;
 use ReferenceManager;
 use Tuleap\Reference\CrossReferencesDao;
 
@@ -38,167 +37,78 @@ class ReferenceAdministrationActions extends Actions
     // Create a new reference
     public function do_create() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = \Tuleap\HTTPRequest::instance();
-        // Sanity check
+        $request    = \Tuleap\HTTPRequest::instance();
+        $project_id = (int) $request->get('group_id');
+
         if (
-            (! $request->get('group_id'))
+            (! $project_id)
             || (! $request->get('keyword'))
             || (! $request->get('link'))
             || ! $request->isPost()
         ) {
-            exit_error(
-                _('Error'),
-                _('A parameter is missing, please press the "Back" button and complete the form')
+            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('A parameter is missing, please press the "Back" button and complete the form'));
+            return;
+        }
+
+        $this->checkCSRFToken($project_id);
+
+        $is_super_user = user_is_super_user();
+        $force         = (bool) $request->get('force') && $is_super_user;
+
+        $command = new ReferenceCreateCommand($this->getReferenceManager());
+        $result  = $command->createReference($request, $is_super_user, $force);
+
+        if (! $result) {
+            $GLOBALS['HTML']->addFeedback(
+                \Feedback::ERROR,
+                _('Reference pattern creation failed: the selected keyword is invalid (reserved, or already exists)')
             );
-        }
-
-        $this->checkCSRFToken($request->get('group_id'));
-
-        $force = $request->get('force');
-        if (! user_is_super_user()) {
-            $force = false;
-        }
-
-        $reference_manager = ReferenceManager::instance();
-        if ($request->get('service_short_name') == 100) { // none
-            $service_short_name = '';
         } else {
-            $service_short_name = $request->get('service_short_name');
-        }
-        $ref = new Reference(
-            0,
-            $request->get('keyword'),
-            $request->get('description'),
-            $request->get('link'),
-            $request->get('scope'),
-            $service_short_name,
-            $request->get('nature'),
-            (bool) $request->get('is_used'),
-            $request->get('group_id')
-        );
-        if (($ref->getGroupId() == 100) && ($ref->isSystemReference())) {
-            // Add reference to ALL active projects!
-            $result = $reference_manager->createSystemReference($ref, $force);
-            if (! $result) {
-                $GLOBALS['HTML']->addFeedback(
-                    \Feedback::ERROR,
-                    _('Reference pattern creation failed: the selected keyword is invalid (reserved, or already exists)')
-                );
-            } else {
-                $GLOBALS['HTML']->addFeedback(
-                    \Feedback::INFO,
-                    _('Successfully created system reference pattern - reference pattern added to all projects')
-                );
-                $GLOBALS['Response']->redirect('/project/' . urlencode($request->get('group_id')) . '/admin/references');
-            }
-        } else {
-            $result = $reference_manager->createReference($ref, $force);
-            if (! $result) {
-                $GLOBALS['HTML']->addFeedback(
-                    \Feedback::ERROR,
-                    _('Reference pattern creation failed: the selected keyword is invalid (reserved, or already exists)')
-                );
-            } else {
-                $GLOBALS['HTML']->addFeedback(
-                    \Feedback::INFO,
-                    _('Successfully created reference pattern')
-                );
-                $GLOBALS['Response']->redirect('/project/' . urlencode($request->get('group_id')) . '/admin/references');
-            }
+            $feedback_msg = ($project_id === \Project::DEFAULT_TEMPLATE_PROJECT_ID)
+                ? _('Successfully created system reference pattern - reference pattern added to all projects')
+                : _('Successfully created reference pattern');
+
+            $GLOBALS['HTML']->addFeedback(\Feedback::INFO, $feedback_msg);
+            $GLOBALS['Response']->redirect('/project/' . urlencode((string) $project_id) . '/admin/references');
         }
     }
 
     // Edit an existing reference
     public function do_edit() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = \Tuleap\HTTPRequest::instance();
-        // Sanity check
-        if (
-            (! $request->get('group_id'))
-            || (! $request->get('reference_id'))
-            || ! $request->isPost()
-        ) {
-            exit_error(
-                _('Error'),
-                _('A parameter is missing, please press the "Back" button and complete the form')
-            );
+        $request    = \Tuleap\HTTPRequest::instance();
+        $project_id = (int) $request->get('group_id');
+        $ref_id     = (int) $request->get('reference_id');
+
+        if (! $project_id || ! $ref_id || ! $request->isPost()) {
+            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('A parameter is missing, please press the "Back" button and complete the form'));
+            return;
         }
 
         $this->checkCSRFToken($request->get('group_id'));
 
-        $reference_manager = ReferenceManager::instance();
+        $reference_manager = $this->getReferenceManager();
+        $reference         = $reference_manager->loadReference($ref_id, $project_id);
 
-        $force = $request->get('force');
-        $su    = false;
-        if (user_is_super_user()) {
-            $su = true;
-        } else {
-            $force = false;
-        }
-
-        // Load existing reference from DB
-        $ref = $reference_manager->loadReference($request->get('reference_id'), $request->get('group_id'));
-
-        if (! $ref) {
+        if (! $reference) {
             echo '<p class="alert alert-error"> ' . _('This reference does not exist') . '</p>';
-
             return;
         }
 
-        $is_used = (bool) $request->get('is_used');
-        if (($ref->isSystemReference()) && ($ref->getGroupId() != 100) || $ref->getServiceShortName() !== '') {
-            // Only update is_active field
-            if ((bool) $ref->isActive() !== $is_used) {
-                $reference_manager->updateIsActive($ref, $is_used);
-            }
-        } else {
-            if (! $su) {
-                // Only a server admin may define a service_id
-                $service_short_name = '';
-            } else {
-                if ($request->get('service_short_name') == 100) { // none
-                    $service_short_name = '';
-                } else {
-                    $service_short_name = $request->get('service_short_name');
-                }
-            }
+        $command = new ReferenceUpdateCommand($reference_manager, $this->getCrossReferenceDao());
 
-            $old_keyword = $ref->getKeyword();
-            //Update table 'reference'
-            $new_ref = new Reference(
-                $request->get('reference_id'),
-                $request->get('keyword'),
-                $request->get('description'),
-                $request->get('link'),
-                $ref->getScope(), // Can't edit a ref scope
-                $service_short_name,
-                $request->get('nature'),
-                $is_used,
-                $request->get('group_id')
+        $success = $command->updateReference(
+            $reference,
+            $request,
+            user_is_super_user(),
+            (bool) $request->get('force') && user_is_super_user()
+        );
+
+        if (! $success) {
+            $GLOBALS['HTML']->addFeedback(
+                \Feedback::ERROR,
+                _('Reference pattern edition failed: the selected keyword is invalid (reserved, or already exists)')
             );
-            $result  = $reference_manager->updateReference($new_ref, $force);
-
-            if (! $result) {
-                exit_error(
-                    _('Error'),
-                    _('Reference pattern edition failed: the selected keyword is invalid (reserved, or already exists)')
-                );
-            } else {
-                if ($old_keyword != $request->get('keyword')) {
-                    //Update table 'cross_reference'
-                    $reference_dao = $this->getCrossReferenceDao();
-                    $reference_dao->updateTargetKeyword(
-                        $old_keyword,
-                        $request->get('keyword'),
-                        (int) $request->get('group_id')
-                    );
-                    $reference_dao->updateSourceKeyword(
-                        $old_keyword,
-                        $request->get('keyword'),
-                        $request->get('group_id')
-                    );
-                }
-            }
         }
     }
 
@@ -207,54 +117,33 @@ class ReferenceAdministrationActions extends Actions
     // WARNING: If it is a system reference, delete all occurences of the reference!
     public function do_delete() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = \Tuleap\HTTPRequest::instance();
-        // Sanity check
-        if (
-            (! $request->get('group_id'))
-            || (! $request->get('reference_id'))
-            || ! $request->isPost()
-        ) {
-            exit_error(
-                _('Error'),
-                _('A parameter is missing, please press the "Back" button and complete the form')
-            );
-        }
+        $request    = \Tuleap\HTTPRequest::instance();
+        $project_id = (int) $request->get('group_id');
+        $ref_id     = (int) $request->get('reference_id');
 
-        $this->checkCSRFToken($request->get('group_id'));
-
-        $reference_manager = ReferenceManager::instance();
-        // Load existing reference from DB
-        $ref = $reference_manager->loadReference($request->get('reference_id'), $request->get('group_id'));
-
-        if (! $ref) {
-            // Already deleted? User reloaded a page?
+        if (! $project_id || ! $ref_id || ! $request->isPost()) {
+            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('A parameter is missing, please press the "Back" button and complete the form'));
             return;
         }
 
-        // WARNING: If it is a system reference, delete all occurences of the reference!
-        if ($ref->isSystemReference()) {
-            $result = $reference_manager->deleteSystemReference($ref);
-            if ($result) {
-                $GLOBALS['HTML']->addFeedback(
-                    \Feedback::INFO,
-                    _('System reference pattern deleted')
-                );
-            }
-        } else {
-            $result = $reference_manager->deleteReference($ref);
-            if ($result) {
-                $GLOBALS['HTML']->addFeedback(
-                    \Feedback::INFO,
-                    _('Reference pattern deleted')
-                );
-            }
+        $this->checkCSRFToken($project_id);
+
+        $reference_manager = $this->getReferenceManager();
+        $reference         = $reference_manager->loadReference($ref_id, $project_id);
+        if (! $reference) {
+            return;
         }
+
+        $command = new ReferenceDeleteCommand($reference_manager);
+        $result  = $command->deleteReference($reference);
+
         if (! $result) {
-            exit_error(
-                _('Error'),
-                _('DELETE FAILED!')
-            );
+            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('DELETE FAILED!'));
         }
+
+        $is_system = $reference->isSystemReference();
+        $feedback  = $is_system ? _('System reference pattern deleted') : _('Reference pattern deleted');
+        $GLOBALS['HTML']->addFeedback(\Feedback::INFO, $feedback);
     }
 
     private function checkCSRFToken(int $project_id): void
@@ -267,5 +156,10 @@ class ReferenceAdministrationActions extends Actions
     private function getCrossReferenceDao(): CrossReferencesDao
     {
         return new CrossReferencesDao();
+    }
+
+    private function getReferenceManager(): ReferenceManager
+    {
+        return ReferenceManager::instance();
     }
 }

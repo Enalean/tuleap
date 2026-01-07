@@ -78690,14 +78690,6 @@
     </PossiblyNullPropertyFetch>
   </file>
   <file src="tests/unit/common/Reference/Presenters/CrossReferenceLinkPresenterCollectionBuilderTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
