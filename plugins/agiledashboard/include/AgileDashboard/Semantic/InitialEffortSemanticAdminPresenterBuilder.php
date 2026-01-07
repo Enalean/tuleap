@@ -38,7 +38,7 @@ final class InitialEffortSemanticAdminPresenterBuilder
             $initial_effort->getFieldId(),
         );
 
-        $admin_tracker_url = TRACKER_BASE_URL . '/?tracker=' . $tracker->getId() . '&func=admin-semantic';
+        $admin_tracker_url = \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $tracker->getId() . '&func=admin-semantic';
 
         return new InitialEffortAdminSemanticPresenter(
             $token,

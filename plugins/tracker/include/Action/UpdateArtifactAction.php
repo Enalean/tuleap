@@ -205,7 +205,7 @@ final readonly class UpdateArtifactAction
 
         $redirect                   = new Tracker_Artifact_Redirect();
         $redirect->mode             = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $redirect->base_url         = TRACKER_BASE_URL;
+        $redirect->base_url         = \trackerPlugin::TRACKER_BASE_URL;
         $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid, $my_dashboard_id, $project_dashboard_id);
         if ($stay) {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;

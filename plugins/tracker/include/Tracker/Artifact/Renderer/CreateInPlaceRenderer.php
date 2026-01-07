@@ -25,18 +25,17 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Artifact_Renderer_CreateInPlaceRenderer
+class Tracker_Artifact_Renderer_CreateInPlaceRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var Tracker */
     private $tracker;
 
-    /** @var MustacheRenderer */
-    private $renderer;
+    private TemplateRenderer $renderer;
 
     /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
 
-    public function __construct(Tracker $tracker, MustacheRenderer $renderer)
+    public function __construct(Tracker $tracker, TemplateRenderer $renderer)
     {
         $this->tracker                  = $tracker;
         $this->renderer                 = $renderer;

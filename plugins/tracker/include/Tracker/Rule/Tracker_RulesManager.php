@@ -294,7 +294,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                     $this->fieldIsAForbiddenTarget($tracker_id, $target_field, $source_field)
                 ) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Non authorized dependency.Please, select other fields.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $tracker_id, 'func'    => 'admin-dependencies']));
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $tracker_id, 'func'    => 'admin-dependencies']));
                 } else {
                     $this->displayDefineDependencies($engine, $request, $current_user, $source_field, $target_field);
                 }
@@ -325,7 +325,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                     }
                 }
                 $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, dgettext('tuleap-tracker', 'Transitions updated'));
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'func'    => 'admin-dependencies']));
+                $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'func'    => 'admin-dependencies']));
             }
         } else {
             $this->displayChooseSourceAndTarget($engine, $request, $current_user, null);
@@ -354,7 +354,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         echo '</div>';
         echo '<div class="tlp-pane-section">';
         echo '<p>' . dgettext('tuleap-tracker', 'Select a source field and a target field to edit dependencies between them.') . '</p>';
-        echo '<form action="' . TRACKER_BASE_URL . '/?" method="GET" class="tracker-filed-dependencies-source-and-target">';
+        echo '<form action="' . \trackerPlugin::TRACKER_BASE_URL . '/?" method="GET" class="tracker-filed-dependencies-source-and-target">';
         echo '<input type="hidden" name="tracker" value="' . (int) $this->tracker->id . '" />';
         echo '<input type="hidden" name="func" value="admin-dependencies" />';
 
@@ -405,7 +405,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
             foreach ($sources_targets as $row) {
                 if ($source = $this->form_element_factory->getFormElementById($row['source_field_id'])) {
                     if ($target = $this->form_element_factory->getFormElementById($row['target_field_id'])) {
-                        $d              = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
+                        $d              = '<a href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
                             [
                                 'tracker'      => (int) $this->tracker->id,
                                 'func'         => 'admin-dependencies',
@@ -463,7 +463,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         $target_field_values = $target_field->getVisibleValuesPlusNoneIfAny();
 
         $purifier = Codendi_HTMLPurifier::instance();
-        echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func' => 'admin-dependencies']) . '" method="POST">';
+        echo '<form action="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func' => 'admin-dependencies']) . '" method="POST">';
         echo $this->getToken()->fetchHTMLInput();
         echo '<table class="tlp-table" id="tracker-field-dependencies-matrix" data-test="tracker-field-dependencies-matrix">';
 
@@ -498,7 +498,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
 
         echo '</tbody></table>';
         echo '<section class="tlp-pane-section tlp-pane-section-submit">';
-        echo '<a class="tlp-button-primary tlp-button-outline" href="' . TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'func'    => 'admin-dependencies']) . '">';
+        echo '<a class="tlp-button-primary tlp-button-outline" href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'func'    => 'admin-dependencies']) . '">';
         echo $GLOBALS['Language']->getText('global', 'btn_cancel');
         echo '</a> ';
         echo '<input type="submit" name="create_field_dependencies" class="tlp-button-primary" data-test="create-field-dependencies-button" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';

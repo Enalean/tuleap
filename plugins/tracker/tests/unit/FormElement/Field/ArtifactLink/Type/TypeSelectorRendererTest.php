@@ -52,7 +52,7 @@ class TypeSelectorRendererTest extends TestCase
             TemplateRendererFactoryBuilder::get()
                 ->withPath($this->getTmpDir())
                 ->build()
-                ->getRenderer(TRACKER_TEMPLATE_DIR)
+                ->getRenderer(__DIR__ . '/../../../../../../templates')
         );
 
         $artifact = ArtifactTestBuilder::anArtifact(101)
@@ -90,7 +90,7 @@ class TypeSelectorRendererTest extends TestCase
             TemplateRendererFactoryBuilder::get()
                 ->withPath($this->getTmpDir())
                 ->build()
-                ->getRenderer(TRACKER_TEMPLATE_DIR)
+                ->getRenderer(__DIR__ . '/../../../../../../templates')
         );
 
         $artifact = ArtifactTestBuilder::anArtifact(101)
@@ -134,7 +134,7 @@ class TypeSelectorRendererTest extends TestCase
             TemplateRendererFactoryBuilder::get()
                 ->withPath($this->getTmpDir())
                 ->build()
-                ->getRenderer(TRACKER_TEMPLATE_DIR)
+                ->getRenderer(__DIR__ . '/../../../../../../templates')
         );
 
         $artifact = ArtifactTestBuilder::anArtifact(101)
@@ -176,7 +176,7 @@ class TypeSelectorRendererTest extends TestCase
             TemplateRendererFactoryBuilder::get()
                 ->withPath($this->getTmpDir())
                 ->build()
-                ->getRenderer(TRACKER_TEMPLATE_DIR)
+                ->getRenderer(__DIR__ . '/../../../../../../templates')
         );
 
         $artifact = ArtifactTestBuilder::anArtifact(101)

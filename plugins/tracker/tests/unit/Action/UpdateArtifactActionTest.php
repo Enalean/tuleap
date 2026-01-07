@@ -473,7 +473,7 @@ final class UpdateArtifactActionTest extends TestCase
     {
         $this->request = HTTPRequestBuilder::get()->withParam('func', 'artifact-update')->build();
         $redirect_uri  = $this->getRedirectUrl();
-        $this->assertEquals(TRACKER_BASE_URL . '/?tracker=' . self::TRACKER_ID, $redirect_uri->toUrl());
+        $this->assertEquals(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . self::TRACKER_ID, $redirect_uri->toUrl());
     }
 
     public function testItStaysOnTheCurrentArtifactWhenSubmitAndStayIsSpecified(): void
@@ -482,7 +482,7 @@ final class UpdateArtifactActionTest extends TestCase
             ->withParam('submit_and_stay', '1')
             ->build();
         $redirect_uri  = $this->getRedirectUrl();
-        $this->assertEquals(TRACKER_BASE_URL . '/?aid=' . self::ARTIFACT_ID, $redirect_uri->toUrl());
+        $this->assertEquals(\trackerPlugin::TRACKER_BASE_URL . '/?aid=' . self::ARTIFACT_ID, $redirect_uri->toUrl());
     }
 
     public function testItReturnsToThePreviousArtifactWhenFromAidIsGiven(): void
@@ -492,7 +492,7 @@ final class UpdateArtifactActionTest extends TestCase
             ->withParam('from_aid', $from_aid)
             ->build();
         $redirect_uri  = $this->getRedirectUrl();
-        $this->assertEquals(TRACKER_BASE_URL . "/?aid=$from_aid", $redirect_uri->toUrl());
+        $this->assertEquals(\trackerPlugin::TRACKER_BASE_URL . "/?aid=$from_aid", $redirect_uri->toUrl());
     }
 
     public function testItReturnsOnMyDashboardWhenDashboardIdIsProvided(): void

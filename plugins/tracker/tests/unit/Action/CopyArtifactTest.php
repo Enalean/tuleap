@@ -224,7 +224,7 @@ XML;
 
         $this->event_manager->expects($this->once())->method('dispatch');
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?aid=456');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?aid=456');
 
         $this->xml_updater->method('update');
         $this->file_updater->method('update');
@@ -238,7 +238,7 @@ XML;
 
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -249,7 +249,7 @@ XML;
 
         $this->xml_exporter->method('exportSnapshotWithoutComments')->willReturn($this->default_xml);
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
 
         $this->xml_updater->method('update');
         $this->file_updater->method('update');
@@ -299,7 +299,7 @@ XML;
             ])->build();
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
 
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
         $this->xml_updater->expects($this->never())->method('update');
@@ -318,7 +318,7 @@ XML;
             ])->build();
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
 
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
         $this->xml_updater->expects($this->never())->method('update');
@@ -338,7 +338,7 @@ XML;
             ])->build();
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
 
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
         $this->xml_updater->expects($this->never())->method('update');
@@ -359,7 +359,7 @@ XML;
 
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
 
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
         $this->xml_updater->expects($this->never())->method('update');

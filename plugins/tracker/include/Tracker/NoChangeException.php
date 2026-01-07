@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-class Tracker_NoChangeException extends Tracker_Exception
+class Tracker_NoChangeException extends Tracker_Exception // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      *
@@ -28,7 +28,7 @@ class Tracker_NoChangeException extends Tracker_Exception
     public function __construct($artifact_id, $artifact_xref, $message = null, int $code = 0)
     {
         if ($message === null) {
-            $art_link = '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?aid=' . $artifact_id . '">' .
+            $art_link = '<a class="direct-link-to-artifact" href="' . \trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $artifact_id . '">' .
                      $artifact_xref . '</a>';
             $message  = sprintf(dgettext('tuleap-tracker', 'No changes for artifact %1$s'), $art_link);
         }

@@ -63,7 +63,7 @@ class MailGatewayConfigController
 
         $this->admin_page_rendered->renderANoFramedPresenter(
             $title,
-            TRACKER_TEMPLATE_DIR,
+            __DIR__ . '/../../../../templates',
             self::$TEMPLATE,
             new MailGatewayConfigPresenter(
                 $csrf,

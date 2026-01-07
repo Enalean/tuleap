@@ -159,7 +159,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
                 ->inProject($project, \trackerPlugin::SERVICE_SHORTNAME)
                 ->build()
         );
-        $renderer = $this->renderer_factory->getRenderer(TRACKER_TEMPLATE_DIR);
+        $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../../templates');
         $renderer->renderToPage(
             'global-admin/trackers',
             new TrackersDisplayPresenter(

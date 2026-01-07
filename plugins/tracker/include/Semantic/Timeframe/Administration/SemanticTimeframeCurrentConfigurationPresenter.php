@@ -61,7 +61,7 @@ final class SemanticTimeframeCurrentConfigurationPresenter
             return '';
         }
 
-        return TRACKER_BASE_URL . '/?' . http_build_query(
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker_from_which_we_imply_the_semantic->getId(),
                 'func' => 'admin-semantic',

@@ -70,7 +70,7 @@ final class InitialEffortSemanticAdminPresenterBuilderTest extends TestCase
         self::assertEquals(
             new InitialEffortAdminSemanticPresenter(
                 $this->csrf_token,
-                TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&func=admin-semantic',
+                \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&func=admin-semantic',
                 PossibleFieldsPresenter::buildFromTrackerFieldList(
                     [
                         $this->getFieldWithLabel(1, 'field_a'),

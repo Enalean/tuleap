@@ -24,7 +24,7 @@ namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 
-class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
+class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * build Gantt chart properties
@@ -80,7 +80,7 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
                 'progress' => 0,
                 'right'    => '',
                 'hint'     => '#' . $aid,
-                'links'    => TRACKER_BASE_URL . '/?aid=' . $aid,
+                'links'    => \trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $aid,
             ];
 
             if ($field_start) {

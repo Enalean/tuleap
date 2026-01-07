@@ -80,7 +80,7 @@ final class PerTrackerArtifactIdField extends ArtifactIdField
         ?Tracker_Report $report = null,
         ?array $redirection_parameters = null,
     ): string {
-        return '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => $artifact_id]) . '">' . $value . '</a>';
+        return '<a class="direct-link-to-artifact" href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['aid' => $artifact_id]) . '">' . $value . '</a>';
     }
 
     #[Override]
@@ -107,7 +107,7 @@ final class PerTrackerArtifactIdField extends ArtifactIdField
     #[Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        return '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">' . $artifact->getPerTrackerArtifactId() . '</a>';
+        return '<a href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">' . $artifact->getPerTrackerArtifactId() . '</a>';
     }
 
     /**
@@ -124,7 +124,7 @@ final class PerTrackerArtifactIdField extends ArtifactIdField
         $output = '';
         switch ($format) {
             case 'html':
-                $output .= '<a href="' . \Tuleap\ServerHostname::HTTPSUrl() . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">' . $artifact->getPerTrackerArtifactId() . '</a>';
+                $output .= '<a href="' . \Tuleap\ServerHostname::HTTPSUrl() . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">' . $artifact->getPerTrackerArtifactId() . '</a>';
                 break;
             default:
                 $output .= $artifact->getPerTrackerArtifactId();
@@ -139,7 +139,7 @@ final class PerTrackerArtifactIdField extends ArtifactIdField
     #[Override]
     protected function fetchAdminFormElement(): string
     {
-        return '<a href="#' . TRACKER_BASE_URL . '/?aid=123" aria-disabled="true">3</a>';
+        return '<a href="#' . \trackerPlugin::TRACKER_BASE_URL . '/?aid=123" aria-disabled="true">3</a>';
     }
 
     #[Override]

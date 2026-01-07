@@ -29,7 +29,7 @@ final readonly class NewInterfacePresenter
     {
         $this->has_trackers_without_new_interface = $this->nb_trackers > 0;
 
-        $this->activate_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+        $this->activate_url = \trackerPlugin::TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action' => ArtifactLinkConfigController::ACTION_ACTIVATE_NEW_INTERFACE,
         ]);
     }

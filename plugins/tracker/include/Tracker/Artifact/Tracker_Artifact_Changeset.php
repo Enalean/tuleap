@@ -914,7 +914,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
      */
     public function getUri()
     {
-        return TRACKER_BASE_URL . '/?aid=' . $this->getArtifact()->getId() . '#followup_' . $this->getId();
+        return \trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $this->getArtifact()->getId() . '#followup_' . $this->getId();
     }
 
     /**

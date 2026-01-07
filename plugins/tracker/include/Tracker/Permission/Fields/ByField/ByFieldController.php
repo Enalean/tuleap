@@ -162,6 +162,6 @@ class ByFieldController implements DispatchableWithRequest, DispatchableWithBurn
 
     public static function getUrl(\Tuleap\Tracker\Tracker $tracker): string
     {
-        return TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
+        return \trackerPlugin::TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
     }
 }

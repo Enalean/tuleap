@@ -762,7 +762,7 @@ class ArtifactLinkField extends TrackerField
                                     $head .= '</h2>';
                                     //if ($artifact) {
                                     //    $title = $hp->purify('link a '. $tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
-                                    //    $head .= '<a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=new-artifact-link&id='.$artifact->getId().'" class="tracker-form-element-artifactlink-link-new-artifact">'. 'create a new '.$hp->purify($tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</a>';
+                                    //    $head .= '<a href="'.\trackerPlugin::TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=new-artifact-link&id='.$artifact->getId().'" class="tracker-form-element-artifactlink-link-new-artifact">'. 'create a new '.$hp->purify($tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</a>';
                                     //}
                                     $result[$key]['head'] = $head . $result[$key]['head'];
                                     break;
@@ -1835,9 +1835,9 @@ class ArtifactLinkField extends TrackerField
         return new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance()));
     }
 
-    private function getTemplateRenderer()
+    private function getTemplateRenderer(): \TemplateRenderer
     {
-        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates');
     }
 
     private function appendTypeTable(PFUser $current_user, \Tuleap\HTTPRequest $request, array &$result, bool $is_reverse_artifact_links): void

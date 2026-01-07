@@ -123,7 +123,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
                         );
                     }
 
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $artifact->getTrackerId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $artifact->getTrackerId());
                 }
             } elseif ($request->get('func') == 'new-artifact-link') {
                 echo '<html>';
@@ -233,7 +233,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
 
     private function getTrackerHomepageURL($project_id)
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query([
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'group_id' => $project_id,
         ]);
     }
@@ -258,7 +258,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
     {
         $service_tracker_breadcrumb = [
             'title'     => dgettext('tuleap-tracker', 'Trackers'),
-            'url'       => TRACKER_BASE_URL . '/?group_id=' . $project->getID(),
+            'url'       => \trackerPlugin::TRACKER_BASE_URL . '/?group_id=' . $project->getID(),
         ];
 
         if ($this->getCurrentUser()->isAdmin($project->getID())) {

@@ -141,7 +141,7 @@ class StandUpNotificationBuilder
                 ]
             );
 
-            return ServerHostname::HTTPSUrl() . TRACKER_BASE_URL . '/?' . $url_query;
+            return ServerHostname::HTTPSUrl() . \trackerPlugin::TRACKER_BASE_URL . '/?' . $url_query;
         }
 
         return null;

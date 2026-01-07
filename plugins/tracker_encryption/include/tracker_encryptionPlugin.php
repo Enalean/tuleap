@@ -144,7 +144,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                     $this->displayTrackerKeyForm($tracker_id);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='.$tracker_id);
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL.'/?tracker='.$tracker_id);
                 }
                 break;
             case 'admin-editencryptionkey':
@@ -155,7 +155,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                     $this->editTrackerKey($tracker_id, $key);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='.$tracker_id);
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL.'/?tracker='.$tracker_id);
                 }
                 break;
         }

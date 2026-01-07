@@ -114,7 +114,7 @@ class ByGroupController implements DispatchableWithRequest, DispatchableWithBurn
 
     public static function getUrl(\Tuleap\Tracker\Tracker $tracker): string
     {
-        return TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
+        return \trackerPlugin::TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
     }
 
     private function getFieldsPermissionsPerGroup(\Tuleap\Tracker\Tracker $tracker, int $selected_id): ByGroupFieldsPermissions

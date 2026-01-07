@@ -237,7 +237,7 @@ final class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.C
 
     private function canIncludeStylesheets(): bool
     {
-        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0;
+        return strpos($_SERVER['REQUEST_URI'], \trackerPlugin::TRACKER_BASE_URL . '/') === 0;
     }
 
     /**

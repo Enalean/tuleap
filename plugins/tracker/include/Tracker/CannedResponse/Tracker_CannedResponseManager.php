@@ -129,7 +129,7 @@ class Tracker_CannedResponseManager //phpcs:ignore PSR1.Classes.ClassDeclaration
                 echo '<input type="hidden" name="delete" value="' . $hp->purify($response->id) . '"/>';
                 echo $this->getCSRFTokenAdmin()->fetchHTMLInput();
 
-                echo '<a class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button" href="' . TRACKER_BASE_URL . '/?' . http_build_query([
+                echo '<a class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button" href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
                     'tracker' => (int) $this->tracker->id,
                     'func'    => 'admin-canned',
                     'edit'    => (int) $response->id,
@@ -155,7 +155,7 @@ class Tracker_CannedResponseManager //phpcs:ignore PSR1.Classes.ClassDeclaration
         </section>';
 
         //Display creation form
-        $url = TRACKER_BASE_URL . '/?' . http_build_query([
+        $url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => (int) $this->tracker->id,
             'func'    => 'admin-canned',
         ]);
@@ -225,12 +225,12 @@ class Tracker_CannedResponseManager //phpcs:ignore PSR1.Classes.ClassDeclaration
                     </h1>
                 </div>
                 <div class="tlp-pane-section">';
-            echo '<p><a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
+            echo '<p><a href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
                 'tracker' => (int) $this->tracker->id,
                 'func'    => 'admin-canned',
             ]) . '">&laquo; Go back to canned responses</a></p>';
 
-            echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query([
+            echo '<form action="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
                 'tracker' => (int) $this->tracker->id,
                 'func'    => 'admin-canned',
                 'update'  => (int) $response->id,
@@ -269,7 +269,7 @@ class Tracker_CannedResponseManager //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function getURLAdmin(): string
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query([
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => (int) $this->tracker->id,
             'func'    => 'admin-canned',
         ]);

@@ -63,7 +63,7 @@ readonly class ArtifactViewEdit extends TrackerArtifactView
     #[\Override]
     public function getURL(): string
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query(
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'aid' => $this->artifact->getId(),
             ]

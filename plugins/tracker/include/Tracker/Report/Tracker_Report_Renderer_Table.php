@@ -605,7 +605,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     private function getExportResultURL($export_only_displayed_fields)
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query(
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'report'         => $this->report->id,
                 'renderer'       => $this->id,
@@ -1095,9 +1095,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function getTemplateRenderer()
+    private function getTemplateRenderer(): TemplateRenderer
     {
-        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/report');
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/report');
     }
 
     public function getTableColumns($only_one_column, $use_data_from_db, $store_in_session = true)
@@ -1197,7 +1197,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                 }
 
-                $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+                $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
                 $purifier = Codendi_HTMLPurifier::instance();
                 //extract the first results
                 $first_result = array_shift($results);
@@ -1273,7 +1273,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         if ($widget && ($widget->owner_type === ProjectDashboardController::LEGACY_DASHBOARD_TYPE || $widget->owner_type === ProjectDashboardController::DASHBOARD_TYPE)) {
                             $redirection_parameters['project-dashboard-id'] = $widget->getDashboardId();
                         }
-                        $url = TRACKER_BASE_URL . '/?' . http_build_query($redirection_parameters);
+                        $url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query($redirection_parameters);
 
                         $html .= '<td>';
                         $html .= '<a
@@ -1613,7 +1613,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $is_used = isset($used_aggregates[$field->getId()]) && in_array($function, $used_aggregates[$field->getId()]);
             $html   .= '<li>';
 
-            $html .= '<form method="post" action="' . TRACKER_BASE_URL . '">';
+            $html .= '<form method="post" action="' . \trackerPlugin::TRACKER_BASE_URL . '">';
             $html .= $csrf_token->fetchHTMLInput();
             $html .= '<input type="hidden" name="func" value="renderer"/>';
             $html .= '<input type="hidden" name="report" value="' . $purifier->purify($this->report->getId()) . '"/>';

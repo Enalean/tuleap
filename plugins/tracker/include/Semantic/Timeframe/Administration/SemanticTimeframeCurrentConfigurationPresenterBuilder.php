@@ -78,7 +78,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilder
 
             $semantics_links[] = [
                 'tracker_name' => $tracker->getName(),
-                'tracker_semantic_timeframe_admin_url' => TRACKER_BASE_URL . '/?' . http_build_query(
+                'tracker_semantic_timeframe_admin_url' => \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
                     [
                         'tracker' => $tracker->getId(),
                         'func' => 'admin-semantic',

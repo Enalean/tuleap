@@ -46,7 +46,7 @@ final class AdminPresenterBuilder
             $semantic_description->getFieldId() !== 0,
             $possible_descriptions,
             count($text_fields) > 0,
-            TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic'
+            \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic'
         );
     }
 }

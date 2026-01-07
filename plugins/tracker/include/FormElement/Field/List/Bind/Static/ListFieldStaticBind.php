@@ -469,7 +469,7 @@ class ListFieldStaticBind extends ListFieldBind
 
     private function getTemplateRenderer(): TemplateRenderer
     {
-        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../../../templates');
     }
 
     private function getFormElementListAdminViewBuilder(): FormElementListValueAdminViewPresenterBuilder

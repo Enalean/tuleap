@@ -167,7 +167,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //
     public function getOptionsMenuItems(PFUser $current_user): array
     {
         $items = [
-            'printer_version' => '<div class="btn-group"><a class="btn btn-mini" href="' . TRACKER_BASE_URL . '/?' . http_build_query(
+            'printer_version' => '<div class="btn-group"><a class="btn btn-mini" href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
                 [
                     'report'   => $this->report->id,
                     'renderer' => $this->id,
@@ -209,9 +209,9 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //
         $items = ['add_to_dashboard' => $html] + $items;
     }
 
-    private function getTemplateRenderer()
+    private function getTemplateRenderer(): TemplateRenderer
     {
-        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/report');
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/report');
     }
 
     private function canAddToDashboard($user)
@@ -273,7 +273,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //
     protected function fetchLinkGoTo($msg, $params = [])
     {
         $html  = '';
-        $html .= '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
+        $html .= '<a href="' . \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'report'   => $this->report->id,
                 'renderer' => $this->id,

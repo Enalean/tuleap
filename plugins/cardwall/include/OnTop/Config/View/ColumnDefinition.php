@@ -230,7 +230,7 @@ final readonly class Cardwall_OnTop_Config_View_ColumnDefinition
         $input_name = "column[$column->id][bgcolor]";
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            TRACKER_TEMPLATE_DIR  . '/colorpicker/'
+            __DIR__  . '/../../../../../tracker/templates/colorpicker/'
         );
 
         return $renderer->renderToString(

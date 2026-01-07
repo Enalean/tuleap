@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Permission_PermissionManager
+class Tracker_Permission_PermissionManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function save(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter)
     {
@@ -48,7 +48,7 @@ class Tracker_Permission_PermissionManager
         if ($request->containsPermissionType(Tracker_Permission_Command::PERMISSION_ASSIGNEE) != null && $tracker->getContributorField() === null) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                sprintf(dgettext('tuleap-tracker', 'You should set a <a href="%1$s">%2$s semantic</a> before defining \'assigned to group\' permission'), TRACKER_BASE_URL . '/?' .  http_build_query(['func' => 'admin-semantic', 'tracker' => $tracker->getId()]), dgettext('tuleap-tracker', 'Contributor/assignee')),
+                sprintf(dgettext('tuleap-tracker', 'You should set a <a href="%1$s">%2$s semantic</a> before defining \'assigned to group\' permission'), \trackerPlugin::TRACKER_BASE_URL . '/?' .  http_build_query(['func' => 'admin-semantic', 'tracker' => $tracker->getId()]), dgettext('tuleap-tracker', 'Contributor/assignee')),
                 CODENDI_PURIFIER_DISABLED
             );
             return false;

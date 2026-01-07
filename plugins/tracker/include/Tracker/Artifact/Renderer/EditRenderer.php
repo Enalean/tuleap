@@ -158,7 +158,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         );
         $breadcrumbs = [
             ['title' => $this->artifact->getXRef(),
-                'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId(),
+                'url'   => \trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId(),
             ],
         ];
         $params      = [

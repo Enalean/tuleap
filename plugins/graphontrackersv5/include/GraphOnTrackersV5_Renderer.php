@@ -256,9 +256,9 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         return $html;
     }
 
-    private function getTemplateRenderer()
+    private function getTemplateRenderer(): \TemplateRenderer
     {
-        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/report');
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../tracker/templates/report');
     }
 
     /**
@@ -273,7 +273,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             if (isset($renderer_parameters['add_chart'])) {
                 $this->chart_to_edit = $this->getChartFactory()
                     ->createChart($this, $renderer_parameters['add_chart']);
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query([
+                $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
                     'report' => $this->report->id,
                     'renderer' => $this->id,
                     'func' => 'renderer',

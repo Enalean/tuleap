@@ -64,7 +64,7 @@ final class AdminPresenterBuilderTest extends TestCase
                 false,
                 [],
                 false,
-                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
+                \trackerPlugin::TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
                 false,
             ),
             $presenter
@@ -87,7 +87,7 @@ final class AdminPresenterBuilderTest extends TestCase
                 false,
                 [new PossibleFieldsForTitlePresenter(1, 'field A', false), new PossibleFieldsForTitlePresenter(2, 'field B', false)],
                 true,
-                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
+                \trackerPlugin::TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
                 false,
             ),
             $presenter
@@ -110,7 +110,7 @@ final class AdminPresenterBuilderTest extends TestCase
                 true,
                 [new PossibleFieldsForTitlePresenter(1, 'field A', false), new PossibleFieldsForTitlePresenter(2, 'field B', true)],
                 true,
-                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
+                \trackerPlugin::TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
                 false,
             ),
             $presenter

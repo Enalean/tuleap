@@ -34,7 +34,7 @@ use Tuleap\Tracker\Config\SiteAdminChecker;
 final readonly class TrackerRestorationDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public const string URL                             = '/site-admin/restore-tracker';
-    public const string FULL_URL                        = TRACKER_BASE_URL . self::URL;
+    public const string FULL_URL                        = \trackerPlugin::TRACKER_BASE_URL . self::URL;
     private const string DELETED_TRACKERS_TEMPLATE_NAME = 'deleted_trackers';
 
     public function __construct(private AdminPageRenderer $renderer, private DeleteTrackerPresenterBuilder $deleted_tracker_presenter_builder)

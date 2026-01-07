@@ -52,11 +52,11 @@ final class MoveArtifactsAdminUpdateController implements DispatchableWithReques
                 \Feedback::ERROR,
                 dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.')
             );
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
+            $layout->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }
 
         $tracker_id = $tracker->getId();
-        (new \CSRFSynchronizerToken(TRACKER_BASE_URL . '/move-artifacts/' . urlencode((string) $tracker_id)))->check();
+        (new \CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/move-artifacts/' . urlencode((string) $tracker_id)))->check();
 
         $enable_move = $request->get('enable-move-artifacts');
         if ($enable_move) {
@@ -75,6 +75,6 @@ final class MoveArtifactsAdminUpdateController implements DispatchableWithReques
             );
         }
 
-        $layout->redirect(TRACKER_BASE_URL . '/move-artifacts/' . urlencode((string) $tracker->getId()));
+        $layout->redirect(\trackerPlugin::TRACKER_BASE_URL . '/move-artifacts/' . urlencode((string) $tracker->getId()));
     }
 }

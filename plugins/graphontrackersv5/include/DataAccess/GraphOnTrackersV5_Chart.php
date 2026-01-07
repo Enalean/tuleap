@@ -227,7 +227,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable //phpcs:ignore Squiz
 
     public function getStrokeUrl($store_in_session = true)
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query([
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             '_jpg_csimd' => '1',
             'report'     => $this->renderer->report->id,
             'renderer'   => $this->renderer->id,
@@ -291,9 +291,9 @@ abstract class GraphOnTrackersV5_Chart implements Visitable //phpcs:ignore Squiz
         return $html;
     }
 
-    private function getTemplateRenderer()
+    private function getTemplateRenderer(): \TemplateRenderer
     {
-        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/report');
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../tracker/templates/report');
     }
 
     public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, bool $in_dashboard, $store_in_session = true)

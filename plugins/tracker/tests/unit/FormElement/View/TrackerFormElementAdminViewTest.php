@@ -38,7 +38,7 @@ final class TrackerFormElementAdminViewTest extends TestCase
         $result = $admin->fetchCustomHelpForShared();
         self::assertMatchesRegularExpression('%Bugs%', $result);
         self::assertMatchesRegularExpression('%Tuleap%', $result);
-        self::assertMatchesRegularExpression('%<a href="' . TRACKER_BASE_URL . '/\?tracker=101&func=admin-formElement-update-view&formElement=666"%', $result);
+        self::assertMatchesRegularExpression('%<a href="' . \trackerPlugin::TRACKER_BASE_URL . '/\?tracker=101&func=admin-formElement-update-view&formElement=666"%', $result);
     }
 
     public function givenAnAdminWithOriginalProjectAndTracker(string $project_name, string $tracker_name): TrackerFormElementAdminView

@@ -167,7 +167,7 @@ class ChartMessageFetcher
     {
         $tracker_id   = $tracker->getId();
         $tracker_name = $tracker->getName();
-        $tracker_url  = TRACKER_BASE_URL . "/?tracker=$tracker_id&func=admin-formElements";
+        $tracker_url  = \trackerPlugin::TRACKER_BASE_URL . "/?tracker=$tracker_id&func=admin-formElements";
 
         $hp = Codendi_HTMLPurifier::instance();
 

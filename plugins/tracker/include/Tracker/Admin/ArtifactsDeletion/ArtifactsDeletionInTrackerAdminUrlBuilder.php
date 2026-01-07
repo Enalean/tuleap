@@ -28,6 +28,6 @@ final class ArtifactsDeletionInTrackerAdminUrlBuilder
 {
     public static function fromTracker(Tracker $tracker): string
     {
-        return TRACKER_BASE_URL . '/artifacts-deletion/' . $tracker->getId();
+        return \trackerPlugin::TRACKER_BASE_URL . '/artifacts-deletion/' . $tracker->getId();
     }
 }

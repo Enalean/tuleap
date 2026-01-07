@@ -192,7 +192,7 @@ class Router
 
     private function redirectToArtifactViewInTimetrackingPane(Artifact $artifact)
     {
-        $url = TRACKER_BASE_URL . '/?' . http_build_query([
+        $url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'aid'  => $artifact->getId(),
             'view' => 'timetracking',
         ]);
@@ -202,7 +202,7 @@ class Router
 
     private function redirectToArtifactView(Artifact $artifact)
     {
-        $url = TRACKER_BASE_URL . '/?' . http_build_query([
+        $url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'aid'  => $artifact->getId(),
         ]);
 
@@ -250,7 +250,7 @@ class Router
             dgettext('tuleap-timetracking', "Access denied. You don't have permissions to perform this action.")
         );
 
-        $url = TRACKER_BASE_URL . '/?' . http_build_query([
+        $url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => $tracker_id,
         ]);
 

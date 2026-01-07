@@ -53,7 +53,7 @@ final class MoveArtifactsAdminController implements DispatchableWithRequest, Dis
                 \Feedback::ERROR,
                 dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.')
             );
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
+            $layout->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }
 
         $tracker->displayAdminItemHeaderBurningParrot(
@@ -64,12 +64,12 @@ final class MoveArtifactsAdminController implements DispatchableWithRequest, Dis
 
         $tracker_id = (int) $variables['tracker_id'];
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/admin');
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/admin');
         $renderer->renderToPage(
             'admin-move-artifacts',
             new MoveArtifactsAdminPresenter(
                 $tracker_id,
-                new \CSRFSynchronizerToken(TRACKER_BASE_URL . '/move-artifacts/' . urlencode((string) $tracker_id)),
+                new \CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/move-artifacts/' . urlencode((string) $tracker_id)),
                 $this->move_action_allowed_dao->isMoveActionAllowedInTracker($tracker_id),
             ),
         );

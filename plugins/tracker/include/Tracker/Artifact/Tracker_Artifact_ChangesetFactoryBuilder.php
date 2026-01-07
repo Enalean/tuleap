@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionRetriever;
 
-class Tracker_Artifact_ChangesetFactoryBuilder
+class Tracker_Artifact_ChangesetFactoryBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public static function build(): Tracker_Artifact_ChangesetFactory
     {
@@ -34,7 +34,7 @@ class Tracker_Artifact_ChangesetFactoryBuilder
             new Tracker_Artifact_ChangesetDao(),
             new Tracker_Artifact_Changeset_ValueDao(),
             new Tracker_Artifact_Changeset_CommentDao(),
-            new Tracker_Artifact_ChangesetJsonFormatter(TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')),
+            new Tracker_Artifact_ChangesetJsonFormatter(TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates')),
             Tracker_FormElementFactory::instance(),
             new TrackerPrivateCommentUGroupPermissionRetriever(
                 new TrackerPrivateCommentUGroupPermissionDao(),

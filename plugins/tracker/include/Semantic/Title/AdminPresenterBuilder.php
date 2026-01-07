@@ -52,7 +52,7 @@ final class AdminPresenterBuilder
             $semantic_title->getFieldId() !== 0,
             $possible_titles,
             count($text_fields) > 0,
-            TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic',
+            \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic',
             $this->calendar_event_config->shouldSendEventInNotification($tracker->getId()),
         );
     }

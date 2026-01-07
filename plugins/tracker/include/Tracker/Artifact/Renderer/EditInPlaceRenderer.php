@@ -33,7 +33,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer // phpcs:ignore PSR1.Classes
 {
     public function __construct(
         private Artifact $artifact,
-        private MustacheRenderer $renderer,
+        private TemplateRenderer $renderer,
         private HiddenFieldsetsDetector $hidden_fieldsets_detector,
         private FieldsDataFromRequestRetriever $fields_data_from_request_retriever,
     ) {

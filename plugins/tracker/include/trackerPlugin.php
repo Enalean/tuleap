@@ -331,7 +331,6 @@ use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\WidgetFactory;
 
-require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../include/manual_autoload.php';
 
@@ -345,6 +344,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public const string EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';
     public const string SERVICE_SHORTNAME                       = 'plugin_tracker';
     public const string TRUNCATED_SERVICE_NAME                  = 'Trackers';
+    public const string TRACKER_BASE_URL                        = '/plugins/tracker';
 
     public function __construct($id)
     {
@@ -756,7 +756,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         include $GLOBALS['Language']->getContent('script_locale', null, 'tracker');
         echo PHP_EOL;
         echo 'codendi.tracker = codendi.tracker || { };' . PHP_EOL;
-        echo "codendi.tracker.base_url = '" . TRACKER_BASE_URL . "/';" . PHP_EOL;
+        echo "codendi.tracker.base_url = '" . self::TRACKER_BASE_URL . "/';" . PHP_EOL;
     }
 
     public function toggle($params)
@@ -1501,7 +1501,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $params['buttons'][] = [
             'icon'        => 'fa-list',
             'label'       => dgettext('tuleap-tracker', 'Configure trackers'),
-            'uri'         => TRACKER_BASE_URL . '/?group_id=' . (int) $template->getID(),
+            'uri'         => self::TRACKER_BASE_URL . '/?group_id=' . (int) $template->getID(),
             'is_disabled' => ! $is_service_used,
             'title'       => ! $is_service_used ? dgettext('tuleap-tracker', 'This template does not use trackers') : '',
         ];
@@ -1686,11 +1686,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $retriever->retrieveSearchResult($indexed_item_convertor);
     }
 
-    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
+    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector): void
     {
         $glyph_locations_collector->addLocation(
             'tuleap-tracker',
-            new GlyphLocation(TRACKER_BASE_DIR . '/../glyphs')
+            new GlyphLocation(__DIR__ . '/../glyphs')
         );
     }
 
@@ -1761,7 +1761,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $template_factory      = TemplateRendererFactory::build();
         $admin_permission_pane = $template_factory
-            ->getRenderer(TRACKER_TEMPLATE_DIR . '/project-admin/')
+            ->getRenderer(__DIR__ . '/../templates/project-admin/')
             ->renderToString(
                 'project-admin-permission-per-group',
                 $presenter
@@ -2016,7 +2016,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $artifact_deletion_dao   = new ArtifactsDeletionConfigDAO();
 
         return new ConfigController(
-            new CSRFSynchronizerToken(TRACKER_BASE_URL . '/config.php'),
+            new CSRFSynchronizerToken(self::TRACKER_BASE_URL . '/config.php'),
             new MailGatewayConfigController(
                 new MailGatewayConfig(
                     new MailGatewayConfigDao(),
@@ -2145,7 +2145,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function (FastRoute\RouteCollector $r) {
+        $event->getRouteCollector()->addGroup(self::TRACKER_BASE_URL, function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
 
             $r->post('/invert_comments_order.php', $this->getRouteHandler('routePostInvertCommentsOrder'));
@@ -2403,7 +2403,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return new ArtifactsDeletionInTrackerAdminController(
             $this->getTrackerFactory(),
             new TrackerManager(),
-            TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/admin'),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
             new ArtifactsDeletionConfig(new ArtifactsDeletionConfigDAO()),
             new UserDeletionRetriever(new ArtifactsDeletionDAO()),
         );

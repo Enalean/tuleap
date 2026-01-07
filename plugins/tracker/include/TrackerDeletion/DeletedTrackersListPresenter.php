@@ -60,6 +60,6 @@ final class DeletedTrackersListPresenter
 
     public function getTemplateDir(): string
     {
-        return TRACKER_TEMPLATE_DIR . '/siteadmin-config/';
+        return __DIR__ . '/../../templates/siteadmin-config/';
     }
 }

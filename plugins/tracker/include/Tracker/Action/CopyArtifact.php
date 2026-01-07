@@ -290,13 +290,13 @@ class Tracker_Action_CopyArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function redirectToTracker()
     {
-        $url = TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId();
+        $url = \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId();
         $GLOBALS['Response']->redirect($url);
     }
 
     private function redirectToArtifact(Artifact $artifact)
     {
-        $url = TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
+        $url = \trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
         $GLOBALS['Response']->redirect($url);
     }
 

@@ -420,7 +420,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->enable_emailgateway          = $enable_emailgateway;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory()));
-        $this->renderer                     = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $this->renderer                     = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
         $this->color                        = $color;
     }
 
@@ -447,7 +447,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function getSubmitUrlWithParameters(array $parameters): string
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query(
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
             array_merge(
                 [
                     'tracker' => $this->getId(),
@@ -463,7 +463,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function getAdministrationUrl()
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query([
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => $this->getId(),
             'func'    => 'admin',
         ]);
@@ -788,7 +788,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->displaySubmit($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
 
@@ -799,7 +799,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
                     $renderer = new Tracker_Artifact_Renderer_CreateInPlaceRenderer(
                         $this,
-                        TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')
+                        TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
                     );
 
                     $renderer->display($artifact_link_id, $render_with_javascript);
@@ -825,7 +825,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->displayAdminOptions($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin-perms':
@@ -834,13 +834,13 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->getPermissionController()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin':
             case 'admin-formElements':
                 if ($this->userIsAdmin($current_user)) {
-                    $form_element_admin_url = TRACKER_BASE_URL . '/?' . http_build_query(['func' => 'admin-formElements', 'tracker' => $this->getId()]);
+                    $form_element_admin_url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['func' => 'admin-formElements', 'tracker' => $this->getId()]);
                     $csrf_token             = new CSRFSynchronizerToken($form_element_admin_url);
                     if ($request->isPost() && is_array($request->get('add-formElement'))) {
                         $csrf_token->check();
@@ -867,7 +867,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->displayAdminFormElements($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case self::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW:
@@ -882,7 +882,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     }
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin-semantic':
@@ -890,7 +890,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->getTrackerSemanticManager()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin-canned':
@@ -899,7 +899,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->getCannedResponseManager()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case Workflow::FUNC_ADMIN_RULES:
@@ -912,7 +912,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case AdminWebhooks::FUNC_ADMIN_WEBHOOKS:
@@ -921,7 +921,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $admin_webhook->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin-csvimport':
@@ -936,16 +936,16 @@ class Tracker implements Tracker_Dispatchable_Interface
 
                         if ($this->importFromCSV($request, $current_user, $csv_header, $csv_body)) {
                             $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Import succeed.'));
-                            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                         } else {
                             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Import failed.'));
-                            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                         }
                     }
                     $this->displayAdminCSVImport($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin-export':
@@ -955,7 +955,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->sendXML($this->exportToXML($xml_element));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin-dependencies':
@@ -963,7 +963,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->getGlobalRulesManager()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'submit-artifact':
@@ -1061,7 +1061,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->displayAdminFooter($layout);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin-hierarchy-update':
@@ -1069,7 +1069,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $this->getHierarchyController($request)->update();
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin-delete-artifact-confirm':
@@ -1086,12 +1086,12 @@ class Tracker implements Tracker_Dispatchable_Interface
                     }
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'admin-delete-artifact':
                 if ($this->userIsAdmin($current_user)) {
-                    $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
+                    $token = new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
                     $token->check();
                     if ($request->exist('confirm')) {
                         $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
@@ -1129,13 +1129,13 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $GLOBALS['Response']->redirect($this->getAdministrationUrl());
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'create_new_public_report':
                 if (! $this->userIsAdmin($current_user)) {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
 
                 $name      = $request->get('new_report_name');
@@ -1144,7 +1144,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
                 if (! $request->valid($validator)) {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Invalid name for a report'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
 
                 $hp = Codendi_HTMLPurifier::instance();
@@ -1154,7 +1154,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $report->criteria = [];
 
                 $this->getReportFactory()->saveObject($this->id, $report);
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
+                $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 break;
 
             default:
@@ -1279,7 +1279,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             if (! $request->isAjax()) {
                 //screwed up
                 $GLOBALS['Response']->addFeedback('error', 'Something is wrong with your request');
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?aid=' . $linked_artifact->getId());
+                $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $linked_artifact->getId());
             }
 
             echo $linked_artifact->fetchTitleWithoutUnsubscribeButton(
@@ -1496,7 +1496,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $links_collection->add(
                 new BreadCrumbLink(
                     dgettext('tuleap-tracker', 'My notifications'),
-                    TRACKER_BASE_URL . '/notifications/my/' . urlencode($this->id) . '/',
+                    \trackerPlugin::TRACKER_BASE_URL . '/notifications/my/' . urlencode($this->id) . '/',
                 )
             );
         }
@@ -1650,7 +1650,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             'tracker-general-settings',
             new Tracker_GeneralSettings_Presenter(
                 $this,
-                TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&func=admin-editoptions',
+                \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&func=admin-editoptions',
                 new Tracker_ColorPresenterCollection($this),
                 $this->getMailGatewayConfig(),
                 $this->getArtifactByMailStatus(),
@@ -1666,7 +1666,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function getAdminSettingsCSRFToken(): CSRFSynchronizerTokenInterface
     {
-        return new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&func=admin-editoptions');
+        return new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&func=admin-editoptions');
     }
 
     public function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
@@ -1739,7 +1739,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         echo '<div class="tlp-framed">';
 
-        echo '<form class="tlp-pane" method="POST" enctype="multipart/form-data" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-csvimport">
+        echo '<form class="tlp-pane" method="POST" enctype="multipart/form-data" action="' . \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-csvimport">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
@@ -1779,13 +1779,13 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminConfirmDelete(Tracker_IDisplayTrackerLayout $layout, Artifact $artifact): void
     {
-        $token    = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
+        $token    = new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
         $content  = '<div class="tracker_confirm_delete">';
         $content .= sprintf(dgettext('tuleap-tracker', '<h3>You are about to delete permanently the artifact "%1$s".</h3><p><strong>There is no way to restore the artifact.</strong></p>'), $artifact->getXRefAndTitleFlamingParrot());
         $content .= '<div class="tracker_confirm_delete_preview">';
         $content .= $this->fetchFormElementsReadOnly($artifact, []);
         $content .= '</div>';
-        $content .= '<form name="delete_artifact" method="post" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact">';
+        $content .= '<form name="delete_artifact" method="post" action="' . \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact">';
         $content .= $token->fetchHTMLInput();
         $content .= '<div class="tracker_confirm_delete_buttons">';
         $content .= '<input type="submit" tabindex="2" name="confirm" value="' . dgettext('tuleap-tracker', 'Confirm') . '" />';
@@ -1805,7 +1805,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $breadcrumbs = [
             [
                 'title' => dgettext('tuleap-tracker', 'Mass Change'),
-                'url'   => '#', //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
+                'url'   => '#', //\trackerPlugin::TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
             ],
         ];
         $this->includeJavascriptAssetsForMassChange();
@@ -2479,7 +2479,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     'error',
                     dgettext('tuleap-tracker', 'Your file is not encoded in UTF-8, we are not able to parse it safely. Please save it with UTF-8 encoding before uploading it.')
                 );
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->getId() . '&func=admin-csvimport');
+                $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->getId() . '&func=admin-csvimport');
             }
             $f = fopen($_FILES['csv_filename']['tmp_name'], 'r');
             if ($f) {
@@ -2584,7 +2584,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                             echo '</p>';
 
                             if ($is_valid) {
-                                echo '<form name="form1" method="POST" enctype="multipart/form-data" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-csvimport">';
+                                echo '<form name="form1" method="POST" enctype="multipart/form-data" action="' . \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-csvimport">';
                                 echo '<p>' . sprintf(dgettext('tuleap-tracker', 'Ready to import %1$s artifact(s): %2$s new artifact(s), %3$s existing artifact(s)'), $nb_lines, $nb_artifact_creation, $nb_artifact_update) . '</p>';
                                 echo '<input type="hidden" name="action" value="import">';
                                 if ($request->exist('notify') && $request->get('notify') == 'ok') {
@@ -2620,7 +2620,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'File not found'));
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->getId() . '&func=admin-csvimport');
+            $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->getId() . '&func=admin-csvimport');
         }
     }
 
@@ -3380,7 +3380,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function getUri()
     {
-        return TRACKER_BASE_URL . '/?tracker=' . $this->getId();
+        return \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId();
     }
 
     private function getArtifactXMLImporterForArtifactCopy(
@@ -3625,7 +3625,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public static function getTrackerGlobalAdministrationURL(Project $project): string
     {
-        return TRACKER_BASE_URL . '/' . self::GLOBAL_ADMIN_URL . '/' . (int) $project->getID();
+        return \trackerPlugin::TRACKER_BASE_URL . '/' . self::GLOBAL_ADMIN_URL . '/' . (int) $project->getID();
     }
 
     private function getInitialChangesetValidator(): Tracker_Artifact_Changeset_InitialChangesetFieldsValidator

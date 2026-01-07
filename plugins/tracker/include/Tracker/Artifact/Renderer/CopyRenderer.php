@@ -67,7 +67,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
         $breadcrumbs = [
             [
                 'title' => $title,
-                'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId() . '&func=copy-artifact',
+                'url'   => \trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId() . '&func=copy-artifact',
             ],
         ];
 

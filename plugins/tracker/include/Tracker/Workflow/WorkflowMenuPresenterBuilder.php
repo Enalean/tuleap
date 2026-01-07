@@ -71,7 +71,7 @@ final class WorkflowMenuPresenterBuilder
 
     private function buildLegacyUrl(string $action, Tracker $tracker): string
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query([
+        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => $tracker->getId(),
             'func'    => $action,
         ]);
@@ -79,6 +79,6 @@ final class WorkflowMenuPresenterBuilder
 
     private function buildFrontRouterUrl(Tracker $tracker): string
     {
-        return TRACKER_BASE_URL . Workflow::BASE_PATH . '/' . urlencode((string) $tracker->getId()) . Workflow::TRANSITION_PATH;
+        return \trackerPlugin::TRACKER_BASE_URL . Workflow::BASE_PATH . '/' . urlencode((string) $tracker->getId()) . Workflow::TRANSITION_PATH;
     }
 }

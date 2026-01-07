@@ -831,7 +831,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
 
     private function isTrackerURL(): bool
     {
-        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0;
+        return strpos($_SERVER['REQUEST_URI'], \trackerPlugin::TRACKER_BASE_URL) === 0;
     }
 
     private function canIncludeStepDefinitionAssets(): bool

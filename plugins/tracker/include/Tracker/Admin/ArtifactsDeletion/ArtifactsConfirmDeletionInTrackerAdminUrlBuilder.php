@@ -31,7 +31,7 @@ final class ArtifactsConfirmDeletionInTrackerAdminUrlBuilder
 
     private function __construct(Tracker $tracker)
     {
-        $this->url = TRACKER_BASE_URL . '/?' . http_build_query([
+        $this->url = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => $tracker->getId(),
             'func' => 'admin-delete-artifact-confirm',
         ]);

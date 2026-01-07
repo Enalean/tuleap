@@ -560,7 +560,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $burnup_fields = $this->tracker_form_element_factory->getFormElementsByType($planning_tracker, Burnup::TYPE);
 
         if ($burnup_fields && $burnup_fields[0]->isUsed()) {
-            $semantic_url = TRACKER_BASE_URL . '?' . http_build_query(
+            $semantic_url = \trackerPlugin::TRACKER_BASE_URL . '?' . http_build_query(
                 [
                     'tracker' => $planning_tracker->getId(),
                     'func'    => 'admin-formElements',

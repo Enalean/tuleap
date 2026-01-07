@@ -82,12 +82,12 @@ class PermissionsOnFieldsUpdateController implements DispatchableWithRequest
             }
         } else {
             $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . $tracker->getId());
+            $layout->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $tracker->getId());
         }
     }
 
     public static function getUrl(\Tuleap\Tracker\Tracker $tracker)
     {
-        return TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
+        return \trackerPlugin::TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
     }
 }

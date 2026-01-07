@@ -142,7 +142,7 @@ class TrackerSemanticTitle extends TrackerSemantic
             $this->getLabel()
         );
 
-        $template_rendreder      = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $template_rendreder      = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
         $admin_presenter_builder = new \Tuleap\Tracker\Semantic\Title\AdminPresenterBuilder(
             Tracker_FormElementFactory::instance(),
             new CalendarEventConfigDao(),
