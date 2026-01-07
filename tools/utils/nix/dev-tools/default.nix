@@ -1,6 +1,5 @@
 {
   pkgs ? (import ../pinned-nixpkgs.nix) { },
-  phpBase ? (import ../php-base.nix { inherit pkgs; }),
 }:
 
 let

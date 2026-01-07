@@ -25,7 +25,7 @@ let
           rev = "bd9858e201a45318fd100b0632e8e029187e2e2a";
           hash = "sha256-gjQ4lX/WjVsWZf/W1uMW/dYigjJ38SmzoJGrR29xAXo=";
         })
-        (./viewvc-tuleap/viewvc-tuleap.spec)
+        ./viewvc-tuleap/viewvc-tuleap.spec
       ];
 
       nativeBuildInputs = [

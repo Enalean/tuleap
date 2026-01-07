@@ -9,7 +9,7 @@ let
     let
       branchName =
         if (builtins.match "^[0-9]+\.[0-9]+\.99.*$" tuleapVersion != null) then "master" else tuleapVersion;
-      src = builtins.fetchTarball "https://github.com/Enalean/tuleap-documentation-${lang}/archive/refs/heads/${branchName}.tar.gz";
+      src = fetchTarball "https://github.com/Enalean/tuleap-documentation-${lang}/archive/refs/heads/${branchName}.tar.gz";
     in
     pkgs.stdenvNoCC.mkDerivation {
       name = "tuleap-documentation-${lang}";

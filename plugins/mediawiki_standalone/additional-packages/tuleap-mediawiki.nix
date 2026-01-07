@@ -40,7 +40,7 @@ let
   };
   buildMediawikiSkinsAndExtensions =
     mediawiki:
-    pkgs.stdenvNoCC.mkDerivation rec {
+    pkgs.stdenvNoCC.mkDerivation {
       name = "mediawiki-tuleap-skins-extensions-${mediawiki.tuleapUsage}";
 
       src = ./. + "/mediawiki-extensions-${mediawiki.tuleapUsage}";
