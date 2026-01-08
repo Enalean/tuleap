@@ -26,13 +26,6 @@
                 </h1>
             </div>
             <section class="tlp-pane-section assistant-ai-chatbox-container">
-                <div class="tlp-alert-info">
-                    {{
-                        $gettext(
-                            "All exchanges are recorded and will be reviewed by the Tuleap Team to improve the query generation experience.",
-                        )
-                    }}
-                </div>
                 <template v-for="(message, index) in messages" v-bind:key="index">
                     <div
                         v-if="message.role === USER_ROLE"
@@ -76,15 +69,25 @@
                     class="assistant-ai-user-prompt-container"
                     v-on:submit.prevent="handlePromptSubmission"
                 >
-                    <input
-                        type="text"
-                        class="tlp-textarea"
-                        v-model="prompt_user_input"
-                        required
-                        maxlength="500"
-                        v-bind:disabled="is_loading"
-                        v-bind:placeholder="$gettext('Describe what you are looking for...')"
-                    />
+                    <div class="tlp-form-element assistant-ai-user-prompt-input-container">
+                        <input
+                            type="text"
+                            class="tlp-input"
+                            v-model="prompt_user_input"
+                            required
+                            maxlength="500"
+                            v-bind:disabled="is_loading"
+                            v-bind:placeholder="$gettext('Describe what you are looking for...')"
+                        />
+                        <p class="tlp-text-info">
+                            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                            {{
+                                $gettext(
+                                    "All exchanges are recorded and will be reviewed by the Tuleap Team to improve the query generation experience.",
+                                )
+                            }}
+                        </p>
+                    </div>
                     <button
                         type="submit"
                         class="tlp-button-primary"
@@ -215,6 +218,10 @@ function applyAssistantTQLQuery(message: AssistantMessage): void {
 .assistant-ai-user-prompt-container {
     display: flex;
     gap: 10px;
+}
+
+.assistant-ai-user-prompt-input-container {
+    width: 100%;
 }
 
 .assistant-ai-answer,
