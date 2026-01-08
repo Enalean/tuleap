@@ -5,27 +5,21 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tuleap/concurrency-limit-pool':
-    specifier: workspace:*
-    version: link:../../lib/frontend/concurrency-limit-pool
   '@tuleap/gettext':
     specifier: workspace:*
     version: link:../../lib/frontend/gettext
   '@tuleap/list-picker':
     specifier: workspace:*
     version: link:../../lib/frontend/list-picker
-  '@tuleap/option':
-    specifier: workspace:*
-    version: link:../../lib/frontend/option
   '@tuleap/plugin-docgen-docx':
     specifier: workspace:*
     version: link:scripts/lib/docx
-  '@tuleap/plugin-docgen-xlsx':
-    specifier: workspace:*
-    version: link:scripts/lib/xlsx
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:*
     version: link:../tracker/scripts/lib/rest-api-types
+  '@tuleap/plugin-tracker-xlsx-report-exporter':
+    specifier: workspace:*
+    version: link:../tracker/scripts/lib/xlsx-report-exporter
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-fetch
@@ -50,9 +44,6 @@ dependencies:
   vue3-gettext:
     specifier: ^2.4.0
     version: 2.4.0(vue@3.4.38)
-  xlsx:
-    specifier: git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#8a7cfd47bde8258c0d91df6a737bf0136699cdf8
-    version: tuleap.net/plugins/git/tuleap/deps/sheetjs/8a7cfd47bde8258c0d91df6a737bf0136699cdf8
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -704,12 +695,4 @@ packages:
   /yaml@1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
-    dev: false
-
-  tuleap.net/plugins/git/tuleap/deps/sheetjs/8a7cfd47bde8258c0d91df6a737bf0136699cdf8:
-    resolution: {commit: 8a7cfd47bde8258c0d91df6a737bf0136699cdf8, repo: https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git, type: git}
-    name: xlsx
-    version: 0.20.3
-    engines: {node: '>=0.8'}
-    hasBin: true
     dev: false

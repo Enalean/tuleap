@@ -19,7 +19,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { organizeReportsData } from "./organize-reports-data";
-import * as rest_querier from "../rest-querier";
+import * as rest_querier from "../api/rest-querier";
 import type {
     OrganizedReportsData,
     LinkedArtifactsResponse,

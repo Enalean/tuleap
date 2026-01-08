@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { formatData } from "./data-formator";
-import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
+import { EmptyCell, NumberCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import * as organized_data from "./organize-reports-data";
-import type { OrganizedReportsData, ArtifactForCrossReportDocGen } from "../type";
+import type { ArtifactForCrossReportDocGen, OrganizedReportsData } from "../type";
 import { TextCellWithMerges } from "../type";
 import type { ExportSettings } from "../export-document";
 

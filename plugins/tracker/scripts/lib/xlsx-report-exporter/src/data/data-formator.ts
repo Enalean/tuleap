@@ -22,9 +22,9 @@ import type { ReportCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { ExportSettings } from "../export-document";
 import { organizeReportsData } from "./organize-reports-data";
 import type {
+    ArtifactForCrossReportDocGen,
     OrganizedReportsData,
     TextCellWithMerges,
-    ArtifactForCrossReportDocGen,
 } from "../type";
 import { isFieldTakenIntoAccount } from "./field-type-checker";
 import { formatHeaders } from "./headers-formator";

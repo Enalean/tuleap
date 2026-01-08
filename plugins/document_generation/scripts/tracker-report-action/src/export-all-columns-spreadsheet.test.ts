@@ -18,7 +18,7 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import * as document_exporter from "../../tracker-cross-report-action/src/export-document";
+import * as document_exporter from "@tuleap/plugin-tracker-xlsx-report-exporter";
 import { startDownloadExportAllColumnsSpreadsheet } from "./export-all-columns-spreadsheet";
 
 describe("export-all-columns-spreadsheet", () => {

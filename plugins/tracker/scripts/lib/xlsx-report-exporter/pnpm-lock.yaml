@@ -1,0 +1,43 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/concurrency-limit-pool':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/concurrency-limit-pool
+  '@tuleap/option':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/option
+  '@tuleap/plugin-docgen-docx':
+    specifier: workspace:*
+    version: link:../../../../document_generation/scripts/lib/docx
+  '@tuleap/plugin-docgen-xlsx':
+    specifier: workspace:*
+    version: link:../../../../document_generation/scripts/lib/xlsx
+  '@tuleap/plugin-tracker-rest-api-types':
+    specifier: workspace:*
+    version: link:../rest-api-types
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tlp-fetch
+  xlsx:
+    specifier: git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#8a7cfd47bde8258c0d91df6a737bf0136699cdf8
+    version: tuleap.net/plugins/git/tuleap/deps/sheetjs/8a7cfd47bde8258c0d91df6a737bf0136699cdf8
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/build-system-configurator
+
+packages:
+
+  tuleap.net/plugins/git/tuleap/deps/sheetjs/8a7cfd47bde8258c0d91df6a737bf0136699cdf8:
+    resolution: {commit: 8a7cfd47bde8258c0d91df6a737bf0136699cdf8, repo: https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git, type: git}
+    name: xlsx
+    version: 0.20.3
+    engines: {node: '>=0.8'}
+    hasBin: true
+    dev: false

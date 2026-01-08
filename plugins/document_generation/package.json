@@ -6,13 +6,11 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/concurrency-limit-pool": "workspace:*",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
-    "@tuleap/option": "workspace:*",
     "@tuleap/plugin-docgen-docx": "workspace:*",
-    "@tuleap/plugin-docgen-xlsx": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
+    "@tuleap/plugin-tracker-xlsx-report-exporter": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-styles": "workspace:^",
@@ -20,8 +18,7 @@
     "docx": "^7.3.0",
     "sprintf-js": "^1.1.2",
     "vue": "^3.4.38",
-    "vue3-gettext": "^2.4.0",
-    "xlsx": "git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#8a7cfd47bde8258c0d91df6a737bf0136699cdf8"
+    "vue3-gettext": "^2.4.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

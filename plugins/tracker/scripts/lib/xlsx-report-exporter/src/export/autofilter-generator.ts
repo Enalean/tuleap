@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { HeadersSection, ReportSection } from "../../Data/data-formator";
+import type { HeadersSection, ReportSection } from "../data/data-formator";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { utils } from "xlsx";
 import { Option } from "@tuleap/option";

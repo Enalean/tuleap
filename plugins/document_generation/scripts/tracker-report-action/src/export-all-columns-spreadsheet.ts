@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { downloadXLSXDocument } from "../../tracker-cross-report-action/src/export-document";
-import { downloadXLSX } from "../../tracker-cross-report-action/src/Exporter/XLSX/download-xlsx";
+
+import { downloadXLSX, downloadXLSXDocument } from "@tuleap/plugin-tracker-xlsx-report-exporter";
 
 interface Properties {
     readonly current_tracker_name: string;

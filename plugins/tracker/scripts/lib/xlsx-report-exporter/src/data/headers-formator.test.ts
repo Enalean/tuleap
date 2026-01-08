@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import * as tracker_names_formattor from "./tracker-names-formattor";
+import * as tracker_names_formator from "./tracker-names-formator";
 import * as reports_fields_labels_formator from "./reports-fields-labels-formator";
 import type {
     OrganizedReportsData,
@@ -35,7 +35,7 @@ describe("headers-formator", () => {
             new TextCellWithMerges("Tracker01", 1),
             new TextCellWithMerges("Tracker02", 1),
         ];
-        vi.spyOn(tracker_names_formattor, "formatTrackerNames").mockReturnValue(
+        vi.spyOn(tracker_names_formator, "formatTrackerNames").mockReturnValue(
             expected_tracker_names,
         );
         const expected_reports_fields_labels = [
