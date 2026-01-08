@@ -75,7 +75,7 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
         self::assertTrue(is_dir($this->fixtureRenamePath . '/legacy'));
         self::assertFalse(is_dir($this->fixtureRenamePath . '/newone'));
 
-        $backend->expects($this->once())->method('glRenameProject')->with($project, 'legacy');
+        $backend->expects($this->once())->method('glRenameProject')->with($project);
         self::assertTrue($backend->renameProject($project, 'newone'));
 
         clearstatcache(true, $this->fixtureRenamePath . '/legacy');

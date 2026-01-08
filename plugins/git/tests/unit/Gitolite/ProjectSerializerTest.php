@@ -229,7 +229,7 @@ final class ProjectSerializerTest extends TestCase
 
     public function testDumpSuspendedProjectRepoPermissions(): void
     {
-        $project = ProjectTestBuilder::aProject()->withUnixName('project1')->withId(404)->build();
+        $project = ProjectTestBuilder::aProject()->withUnixName('project1')->withId(404)->withStatusSuspended()->build();
 
         $repo = new GitRepository();
         $repo->setId(4);
@@ -250,7 +250,7 @@ final class ProjectSerializerTest extends TestCase
             ->with($project)->willReturn([$repo, $repo2]);
 
         // Ensure file is correct
-        $result   = $this->project_serializer->dumpSuspendedProjectRepositoriesConfiguration($project);
+        $result   = $this->project_serializer->dumpProjectRepoConf($project);
         $expected = <<<EOS
 repo project1/test_default
  - refs/.*$ = @all

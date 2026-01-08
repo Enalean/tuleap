@@ -60,7 +60,7 @@ class ProjectIsSuspended extends SystemEvent
             return false;
         }
 
-        $this->gitolite_driver->dumpSuspendedProjectRepositoriesConfiguration($project);
+        $this->gitolite_driver->dumpProjectRepoConf($project);
         $this->done();
         return true;
     }

@@ -231,7 +231,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             );
             if ($ok) {
                 try {
-                    $this->glRenameProject($project, $project->getUnixName());
+                    $this->glRenameProject($project);
                 } catch (Exception $e) {
                     $backend->log($e->getMessage(), Backend::LOG_ERROR);
                     return false;
@@ -254,16 +254,14 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @throws Exception
      *
      */
-    protected function glRenameProject(Project $project, string $old_name): bool
+    protected function glRenameProject(Project $project): void
     {
         $retVal = 0;
         $output = [];
-        $mvCmd  = realpath(__DIR__ . '/../../../src/utils/php-launcher.sh') . ' ' . realpath(__DIR__ . '/../bin/gl-rename-project.php') . ' ' . escapeshellarg((string) $project->getID()) . ' ' . escapeshellarg($old_name);
+        $mvCmd  = realpath(__DIR__ . '/../../../src/utils/php-launcher.sh') . ' ' . realpath(__DIR__ . '/../bin/gl-rename-project.php') . ' ' . escapeshellarg((string) $project->getID());
         $cmd    = 'su -l codendiadm -c "' . $mvCmd . ' 2>&1"';
         exec($cmd, $output, $retVal);
-        if ($retVal == 0) {
-            return true;
-        } else {
+        if ($retVal !== 0) {
             throw new Exception('Rename: Unable to propagate rename to gitolite conf (error code: ' . $retVal . '): ' . implode('%%%', $output));
         }
     }

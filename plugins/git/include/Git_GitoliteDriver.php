@@ -74,6 +74,7 @@ class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->gitolite_conf_writer = $gitolite_conf_writer ?? new Git_Gitolite_GitoliteConfWriter(
             $permissions_serializer,
             $project_serializer,
+            $this->git_dao,
             $this->logger,
             $project_manager,
             '/var/lib/gitolite/.gitolite/'
@@ -129,39 +130,10 @@ class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $pending_changes = $this->gitolite_conf_writer->dumpProjectRepoConf($project);
 
         if ($pending_changes->areTherePendingChangesThatMustBeApplied()) {
-            $this->gitolite_conf_writer->writeGitoliteConfiguration();
             $this->triggerGitoliteUpdate();
         }
 
         return true;
-    }
-
-    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project): true
-    {
-        $pending_changes = $this->gitolite_conf_writer->dumpSuspendedProjectRepositoriesConfiguration($project);
-
-        if ($pending_changes->areTherePendingChangesThatMustBeApplied()) {
-            $this->gitolite_conf_writer->writeGitoliteConfiguration();
-            $this->triggerGitoliteUpdate();
-        }
-
-        return true;
-    }
-
-    /**
-     * Rename a project
-     *
-     * This method is intended to be called by a "codendiadm" owned process while general
-     * rename process is owned by "root" (system-event) so there is dedicated script
-     * (see bin/gl-rename-project.php) and more details in Git_Backend_Gitolite::glRenameProject.
-     *
-     */
-    public function renameProject(int $project_id, string $old_name): void
-    {
-        $pending_changes = $this->gitolite_conf_writer->renameProject($project_id, $old_name);
-        if ($pending_changes->areTherePendingChangesThatMustBeApplied()) {
-            $this->triggerGitoliteUpdate();
-        }
     }
 
     public function delete(string $path): void

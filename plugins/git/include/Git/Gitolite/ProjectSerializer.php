@@ -62,39 +62,32 @@ class Git_Gitolite_ProjectSerializer //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->big_object_authorization_manager = $big_object_authorization_manager;
     }
 
-    /**
-     * Save on filesystem all permission configuration for a project
-     *
-     */
-    public function dumpProjectRepoConf(Project $project)
+    public function dumpProjectRepoConf(Project $project): string
     {
         $this->logger->debug('Dumping project repo conf for: ' . $project->getUnixName());
+
+        $project_is_suspended  = $project->isSuspended();
+        $project_is_accessible = $project->isActive() || $project->isSystem();
+
+        if (! ($project_is_accessible || $project_is_suspended)) {
+            return '';
+        }
 
         $project_config = '';
         foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
             $this->logger->debug('Fetching Repo Configuration: ' . $repository->getName() . '...');
-            $project_config .= $this->fetchReposConfig($project, $repository);
+            if ($project_is_accessible) {
+                $project_config .= $this->fetchReposConfig($project, $repository);
+            } elseif ($project_is_suspended) {
+                $project_config .= $this->fetchSuspendedRepositoryConfiguration($project, $repository);
+            }
             $this->logger->debug('Fetching Repo Configuration: ' . $repository->getName() . ': done');
         }
 
         return $project_config;
     }
 
-    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project)
-    {
-        $this->logger->debug('Dumping suspended project repo conf for: ' . $project->getUnixName());
-
-        $project_config = '';
-        foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
-            $this->logger->debug('Fetching disabled repo configuration: ' . $repository->getName() . '...');
-            $project_config .= $this->fetchSuspendedRepositoryConfiguration($project, $repository);
-            $this->logger->debug('Fetching disabled repo configuration: ' . $repository->getName() . ': done');
-        }
-
-        return $project_config;
-    }
-
-    private function fetchSuspendedRepositoryConfiguration(Project $project, GitRepository $repository)
+    private function fetchSuspendedRepositoryConfiguration(Project $project, GitRepository $repository): string
     {
         $repo_full_name = $this->repoFullName($repository, $project->getUnixName());
         $repo_config    = 'repo ' . $repo_full_name . PHP_EOL;
@@ -103,7 +96,7 @@ class Git_Gitolite_ProjectSerializer //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $repo_config . PHP_EOL;
     }
 
-    protected function fetchReposConfig(Project $project, GitRepository $repository)
+    protected function fetchReposConfig(Project $project, GitRepository $repository): string
     {
         $repo_full_name = $this->repoFullName($repository, $project->getUnixName());
         $repo_config    = 'repo ' . $repo_full_name . PHP_EOL;

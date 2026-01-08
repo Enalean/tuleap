@@ -18,9 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_Gitolite_Presenter_GitoliteConfPresenter
+declare(strict_types=1);
+
+namespace Tuleap\Git\Gitolite\Presenter;
+
+final readonly class GitoliteConfPresenter
 {
-    public function __construct(public readonly array $project_names)
+    /**
+     * @param list<int> $project_ids
+     */
+    public function __construct(public array $project_ids)
     {
     }
 }
