@@ -210,8 +210,6 @@ class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $query->getWords(),
             (int) $query->getProject()->getId()
         );
-        BackendLogger::getDefaultLogger('search-art.log')->debug($query->getWords());
-        BackendLogger::getDefaultLogger('search-art.log')->debug(var_export($references, true));
         if (count($references) === 1 && $references[0]->getMatch() === trim($query->getWords())) {
             $GLOBALS['HTML']->redirect($references[0]->getFullGotoLink());
         }
