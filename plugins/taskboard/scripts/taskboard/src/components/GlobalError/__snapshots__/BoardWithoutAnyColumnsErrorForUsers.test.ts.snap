@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for regular user 1`] = `
 <section

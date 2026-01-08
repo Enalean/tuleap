@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FieldsList - Display correctly a string field 1`] = `
 <div class="tlp-form-element"><label class="tlp-label" for="input-1">custom field <i class="fa-solid fa-asterisk"></i></label><input type="text" class="tlp-input tlp-input-large" id="input-1" required="">

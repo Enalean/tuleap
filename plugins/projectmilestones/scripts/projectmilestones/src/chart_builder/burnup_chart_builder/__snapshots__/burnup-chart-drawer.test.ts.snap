@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`BurnupChartDrawer createBurnupChart When the chart is created, Then there are a G element and 2 lines scale with scale label 1`] = `
 <svg

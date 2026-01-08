@@ -25,37 +25,41 @@ import { useKeyboardNavigationStore } from "../../stores/keyboard-navigation";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLink", () => {
-    it.each(["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"])(
-        "Changes the focus with arrow key %s",
-        async (key) => {
-            const quick_link = { html_url: "/link" } as QuickLink;
-            const item = {
-                icon_name: "fa-columns",
-                title: "Kanban",
-                color_name: "lake-placid-blue",
-                quick_links: [] as ReadonlyArray<QuickLink>,
-                project: {
-                    label: "Guinea Pig",
-                },
-            } as ItemDefinition;
+    function* generateKeys(): Generator<["ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight"]> {
+        yield ["ArrowUp"];
+        yield ["ArrowDown"];
+        yield ["ArrowLeft"];
+        yield ["ArrowRight"];
+    }
 
-            const wrapper = shallowMount(QuickLinkComponent, {
-                props: {
-                    link: quick_link,
-                    item,
-                    project: null,
-                },
-                global: getGlobalTestOptions(),
-            });
+    it.each([...generateKeys()])("Changes the focus with arrow key %s", async (key) => {
+        const quick_link = { html_url: "/link" } as QuickLink;
+        const item = {
+            icon_name: "fa-columns",
+            title: "Kanban",
+            color_name: "lake-placid-blue",
+            quick_links: [] as ReadonlyArray<QuickLink>,
+            project: {
+                label: "Guinea Pig",
+            },
+        } as ItemDefinition;
 
-            await wrapper.trigger("keydown", { key });
-
-            expect(useKeyboardNavigationStore().changeFocusFromQuickLink).toHaveBeenCalledWith({
+        const wrapper = shallowMount(QuickLinkComponent, {
+            props: {
+                link: quick_link,
                 item,
-                quick_link,
                 project: null,
-                key,
-            });
-        },
-    );
+            },
+            global: getGlobalTestOptions(),
+        });
+
+        await wrapper.trigger("keydown", { key });
+
+        expect(useKeyboardNavigationStore().changeFocusFromQuickLink).toHaveBeenCalledWith({
+            item,
+            quick_link,
+            project: null,
+            key,
+        });
+    });
 });

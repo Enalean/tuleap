@@ -23,6 +23,10 @@ import "angular-mocks";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 
+const noop = () => {
+    //Do nothing
+};
+
 describe("KanbanService", () => {
     let wrapPromise,
         $window,
@@ -37,6 +41,12 @@ describe("KanbanService", () => {
             $provide.decorator("SharedPropertiesService", function ($delegate) {
                 jest.spyOn($delegate, "getUUID").mockReturnValue(1312);
                 return $delegate;
+            });
+            $provide.decorator("$window", function () {
+                return {
+                    sessionStorage: { setItem: noop },
+                    location: { href: "localhost" },
+                };
             });
         });
 
@@ -470,15 +480,13 @@ describe("KanbanService", () => {
     describe(`removeKanban`, () => {
         it(`will store a feedback message in session storage
             and will redirect to the Agile Dashboard homepage`, () => {
-            delete window.location;
-            window.location = { href: "localhost" };
             const kanban = { label: "Tasks" };
             jest.spyOn(SharedPropertiesService, "getKanban").mockReturnValue(kanban);
 
             jest.spyOn(SharedPropertiesService, "getKanbanHomepageUrl").mockReturnValue(
                 "/projects/acme/kanban",
             );
-            const setItem = jest.spyOn(Storage.prototype, "setItem");
+            const setItem = jest.spyOn($window.sessionStorage, "setItem");
 
             KanbanService.removeKanban();
 

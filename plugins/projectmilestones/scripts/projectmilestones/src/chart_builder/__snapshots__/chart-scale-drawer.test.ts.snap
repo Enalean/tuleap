@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ScaleDrawer - addScaleLines - When the scales are created, Then there are 2 line element with their attributes 1`] = `
 <line class="release-line-scale" x1="0" y1="100" x2="210" y2="100"></line>

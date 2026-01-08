@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`PreviewEditButton when is_in_edit_mode is false, it will create a Edit button 1`] = `
 <button type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small rte-button">

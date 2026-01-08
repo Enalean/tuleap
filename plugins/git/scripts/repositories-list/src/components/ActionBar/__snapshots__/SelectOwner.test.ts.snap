@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SelectOwner displays a dropdown with user forks 1`] = `
 <div class="git-repository-actions-select-owners"><label class="tlp-label" for="git-repository-select-owner">Forks:</label><select id="git-repository-select-owner" class="tlp-select tlp-select-adjusted">

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`DropdownActionButton displays a dropdown for empty state 1`] = `
 <div class="tlp-dropdown"><button class="tlp-button-primary" type="button">New repository <i class="fas fa-caret-down tlp-button-icon" aria-hidden="true"></i></button>

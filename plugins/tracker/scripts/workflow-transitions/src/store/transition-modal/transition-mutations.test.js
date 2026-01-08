@@ -139,7 +139,7 @@ describe("Transition mutations", () => {
             mutations.savePostActions(state, [new_action]);
         });
         it("removes old actions", () => {
-            expect(state.post_actions_by_unique_id).not.toContain(old_action);
+            expect(Object.values(state.post_actions_by_unique_id)).not.toContain(old_action);
         });
         it("adds given actions, presented with unique_id, and referenced by unique_id", () => {
             expect(state.post_actions_by_unique_id.run_job_2).toEqual({
