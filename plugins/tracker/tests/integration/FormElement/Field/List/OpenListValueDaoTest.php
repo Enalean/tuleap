@@ -72,8 +72,8 @@ final class OpenListValueDaoTest extends TestIntegrationTestCase
         $result = $this->dao->searchByFieldId(self::FIELD_ID);
         self::assertCount(3, $result);
         $this->assertEqualOpenValue($result[0], self::VALUE_A_FIRST_VALUE);
-        $this->assertEqualOpenValue($result[1], self::VALUE_TOTO);
-        $this->assertEqualOpenValue($result[2], self::VALUE_CONSIDERABLY);
+        $this->assertEqualOpenValue($result[1], self::VALUE_CONSIDERABLY);
+        $this->assertEqualOpenValue($result[2], self::VALUE_TOTO);
 
         self::assertCount(0, $this->dao->searchByFieldId(-1));
     }
@@ -88,6 +88,16 @@ final class OpenListValueDaoTest extends TestIntegrationTestCase
         self::assertSame('my new value', $row['label']);
         self::assertSame(self::FIELD_ID, $row['field_id']);
         self::assertSame(0, $row['is_hidden']);
+    }
+
+    public function testItCannotDuplicateOpenValue(): void
+    {
+        $id = $this->dao->create(self::FIELD_ID, self::VALUE_A_FIRST_VALUE);
+        self::assertSame($this->open_values[self::VALUE_A_FIRST_VALUE], $id);
+
+        $result = $this->dao->searchByKeyword(self::FIELD_ID, self::VALUE_A_FIRST_VALUE);
+        self::assertCount(1, $result);
+        $this->assertEqualOpenValue($result[0], self::VALUE_A_FIRST_VALUE);
     }
 
     public function testItCanRetrieveAnOpenValueFromApproximateLabel(): void
