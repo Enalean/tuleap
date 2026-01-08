@@ -12100,20 +12100,6 @@
     <PossiblyNullPropertyFetch>
       <code><![CDATA[$collection->search_representations[1]->file_properties->file_type]]></code>
     </PossiblyNullPropertyFetch>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-    </PossiblyUndefinedMethod>
-    <TooManyArguments>
-      <code><![CDATA[new ItemRepresentationCollectionBuilder(
-                $this->item_factory,
-                $permissions_manager,
-                $this->createMock(ItemRepresentationVisitor::class),
-                $item_dao,
-                $this->createMock(VersionDao::class)
-            )]]></code>
-    </TooManyArguments>
   </file>
   <file src="plugins/docman/tests/unit/REST/v1/Folders/SearchReportBuilderTest.php">
     <InaccessibleProperty>
@@ -14292,54 +14278,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[str_replace('%server_name%', ServerHostname::hostnameWithHTTPSPort(), $value)]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="plugins/git/include/Git/Gitolite/GitoliteConfWriter.php">
-    <MissingParamType>
-      <code><![CDATA[$config_datas]]></code>
-      <code><![CDATA[$config_file]]></code>
-      <code><![CDATA[$config_file_content]]></code>
-      <code><![CDATA[$content]]></code>
-      <code><![CDATA[$dir_path]]></code>
-      <code><![CDATA[$file_path]]></code>
-      <code><![CDATA[$gitolite_administration_path]]></code>
-      <code><![CDATA[$new_file]]></code>
-      <code><![CDATA[$new_name]]></code>
-      <code><![CDATA[$new_name]]></code>
-      <code><![CDATA[$new_name]]></code>
-      <code><![CDATA[$new_name]]></code>
-      <code><![CDATA[$new_name]]></code>
-      <code><![CDATA[$new_name]]></code>
-      <code><![CDATA[$old_file]]></code>
-      <code><![CDATA[$old_name]]></code>
-      <code><![CDATA[$old_name]]></code>
-      <code><![CDATA[$old_name]]></code>
-      <code><![CDATA[$old_name]]></code>
-      <code><![CDATA[$old_name]]></code>
-      <code><![CDATA[$old_name]]></code>
-      <code><![CDATA[$project_file_path]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getProjectList]]></code>
-      <code><![CDATA[getProjectPermissionConfFile]]></code>
-      <code><![CDATA[modifyGitConfigurationFileInGitolite]]></code>
-      <code><![CDATA[modifyProjectConf]]></code>
-      <code><![CDATA[moveProjectFiles]]></code>
-      <code><![CDATA[proceedRenameInIncluderConf]]></code>
-      <code><![CDATA[proceedToFileMove]]></code>
-      <code><![CDATA[proceedToRenameInSpecifiedProjectFile]]></code>
-      <code><![CDATA[readProjectListFromPath]]></code>
-      <code><![CDATA[renameProject]]></code>
-      <code><![CDATA[writeGitConfig]]></code>
-      <code><![CDATA[writeGitoliteConfigurationOnDisk]]></code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$orig]]></code>
-      <code><![CDATA[$orig]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyNullArgument>
-      <code><![CDATA[$dest]]></code>
-      <code><![CDATA[$dest]]></code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/git/include/Git/Gitolite/GitoliteFileLogsDao.php">
     <MissingParamType>
@@ -17999,44 +17937,24 @@
     </PossiblyFalseOperand>
   </file>
   <file src="plugins/git/include/Git_GitoliteDriver.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[realpath($this->adminPath . '/../repositories')]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidFalsableReturnType>
     <MissingParamType>
-      <code><![CDATA[$adminPath]]></code>
       <code><![CDATA[$backup_directory]]></code>
       <code><![CDATA[$backup_directory]]></code>
       <code><![CDATA[$cmd]]></code>
       <code><![CDATA[$git_root_path]]></code>
-      <code><![CDATA[$message]]></code>
       <code><![CDATA[$new_ns]]></code>
       <code><![CDATA[$old_ns]]></code>
       <code><![CDATA[$repo]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$adminPath]]></code>
-      <code><![CDATA[$confFilePath]]></code>
-      <code><![CDATA[$oldCwd]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[addModifiedConfigurationFiles]]></code>
       <code><![CDATA[backup]]></code>
       <code><![CDATA[checkAuthorizedKeys]]></code>
-      <code><![CDATA[commit]]></code>
       <code><![CDATA[deleteBackup]]></code>
-      <code><![CDATA[dumpProjectRepoConf]]></code>
-      <code><![CDATA[dumpSuspendedProjectRepositoriesConfiguration]]></code>
       <code><![CDATA[executeShellCommand]]></code>
       <code><![CDATA[extractRepository]]></code>
       <code><![CDATA[fork]]></code>
       <code><![CDATA[getAuthorizedKeysPath]]></code>
       <code><![CDATA[getBackupPath]]></code>
-      <code><![CDATA[push]]></code>
-      <code><![CDATA[setAdminPath]]></code>
-      <code><![CDATA[updateMainConfIncludes]]></code>
     </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[$backup_path]]></code>
@@ -18699,7 +18617,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
       <code><![CDATA[load]]></code>
       <code><![CDATA[load]]></code>
     </DeprecatedMethod>
@@ -18707,8 +18624,6 @@
       <code><![CDATA[$error]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$newName]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
@@ -18772,7 +18687,6 @@
       <code><![CDATA[getGitSystemEventManager]]></code>
       <code><![CDATA[getGitolite3Parser]]></code>
       <code><![CDATA[getGitoliteAdminPath]]></code>
-      <code><![CDATA[getGitoliteDriver]]></code>
       <code><![CDATA[getHistoryValueFormatter]]></code>
       <code><![CDATA[getHooksAndCallbacks]]></code>
       <code><![CDATA[getJSONRepositoriesRetriever]]></code>
@@ -18810,11 +18724,9 @@
       <code><![CDATA[permission_get_object_name]]></code>
       <code><![CDATA[permission_get_object_type]]></code>
       <code><![CDATA[permission_user_allowed_to_change]]></code>
-      <code><![CDATA[pluginIsConcerned]]></code>
       <code><![CDATA[plugin_statistics_color]]></code>
       <code><![CDATA[plugin_statistics_disk_usage_collect_project]]></code>
       <code><![CDATA[plugin_statistics_disk_usage_service_label]]></code>
-      <code><![CDATA[post_system_events_actions]]></code>
       <code><![CDATA[proccess_system_check]]></code>
       <code><![CDATA[projectCanDisplayHierarchy]]></code>
       <code><![CDATA[projectSuspendedAndNotBlockedWarningCollector]]></code>
@@ -18978,27 +18890,6 @@
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getName]]></code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/git/tests/integration/Gitolite/GitoliteDriverTest.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[file_get_contents($this->gitolite_admin_dir . '/conf/' . $filename . '.conf')]]></code>
-      <code><![CDATA[file_get_contents($this->gitolite_admin_dir . '/conf/gitolite.conf')]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidFalsableReturnType>
-    <MissingParamType>
-      <code><![CDATA[$filename]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/git/tests/integration/Gitolite/GitoliteTestCase.php">
-    <PossiblyFalseArgument>
-      <code><![CDATA[$cwd]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyFalsePropertyAssignmentValue>
-      <code><![CDATA[getcwd()]]></code>
-    </PossiblyFalsePropertyAssignmentValue>
   </file>
   <file src="plugins/git/tests/rest/Git/GerritTest.php">
     <MissingParamType>
@@ -37162,57 +37053,6 @@
       <code><![CDATA[searchChangesetValues]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/FormElement/Field/List/OpenListValueDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[quoteLikeValueSurround]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[updateAndGetLastId]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$keyword]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$limit]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[create]]></code>
-      <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByExactLabel]]></code>
-      <code><![CDATA[searchByFieldId]]></code>
-      <code><![CDATA[searchById]]></code>
-      <code><![CDATA[searchByKeyword]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/FormElement/Field/List/RadioButtonField.php">
     <MissingParamType>
       <code><![CDATA[$is_selected]]></code>
@@ -51933,18 +51773,10 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['Tracker_FormElement_RESTValueByField_NotImplementedException']]></code>
     </ArgumentTypeCoercion>
-    <MissingClosureReturnType>
-      <code><![CDATA[static fn(int $id, string $label) => match ($label) {]]></code>
-      <code><![CDATA[static fn(int $id, string $label) => match ($label) {]]></code>
-    </MissingClosureReturnType>
     <NullArgument>
       <code><![CDATA[null]]></code>
     </NullArgument>
     <TooManyArguments>
-      <code><![CDATA[TestHelper::arrayToDar(
-                ['id' => '10', 'field_id' => '1', 'label' => 'Open_1', 'is_hidden' => false],
-                ['id' => '10', 'field_id' => '1', 'label' => 'Open_2', 'is_hidden' => false]
-            )]]></code>
       <code><![CDATA[TestHelper::arrayToDar(
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000', 'openvalue_id' => null],
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1001', 'openvalue_id' => null],
@@ -51952,9 +51784,6 @@
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => null, 'openvalue_id' => '20'],
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1002', 'openvalue_id' => null]
         )]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['id' => '30', 'field_id' => '1', 'label' => 'existing open value'])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar(['id' => '30', 'field_id' => '1', 'label' => 'existing open value'])]]></code>
-      <code><![CDATA[TestHelper::arrayToDar([])]]></code>
     </TooManyArguments>
     <UndefinedMethod>
       <code><![CDATA[getListValues]]></code>
@@ -71415,14 +71244,11 @@
       <code><![CDATA[$owner]]></code>
       <code><![CDATA[$queue]]></code>
       <code><![CDATA[$queue]]></code>
-      <code><![CDATA[$queue_name]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[executeSystemEvent]]></code>
-      <code><![CDATA[getOwner]]></code>
       <code><![CDATA[getSystemEventFromDar]]></code>
       <code><![CDATA[loopOverEventsForOwner]]></code>
-      <code><![CDATA[postEventsActions]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/system_event/SystemEventProcessorMutex.php">
@@ -71439,15 +71265,6 @@
       <code><![CDATA[$process_user['name']]]></code>
     </PossiblyInvalidArrayAccess>
   </file>
-  <file src="src/common/system_event/SystemEventProcessor_ApplicationOwner.php">
-    <MissingParamType>
-      <code><![CDATA[$queue_name]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getOwner]]></code>
-      <code><![CDATA[postEventsActions]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/system_event/SystemEventProcessor_Factory.php">
     <MissingParamType>
       <code><![CDATA[$request_queue]]></code>
@@ -71460,12 +71277,7 @@
     <InvalidOperand>
       <code><![CDATA[$process->getExitCode()]]></code>
     </InvalidOperand>
-    <MissingParamType>
-      <code><![CDATA[$queue_name]]></code>
-    </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getOwner]]></code>
-      <code><![CDATA[postEventsActions]]></code>
       <code><![CDATA[triggerApplicationOwnerEventsProcessing]]></code>
     </MissingReturnType>
   </file>

@@ -807,7 +807,7 @@ class ListFieldUserGroupBind extends ListFieldBind
         }
 
         if ($identifier !== null) {
-            $row = $this->getOpenValueDao()->searchByExactLabel($field->getId(), $identifier)->getRow();
+            $row = $this->getOpenValueDao()->searchByExactLabel($field->getId(), $identifier);
             if ($row) {
                 return OpenListField::OPEN_PREFIX . $row['id'];
             }

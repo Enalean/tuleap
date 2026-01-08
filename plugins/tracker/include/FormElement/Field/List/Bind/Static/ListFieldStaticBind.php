@@ -590,7 +590,7 @@ class ListFieldStaticBind extends ListFieldBind
         $html            = '';
         $user_row_values = $this->getOpenValueDao()->searchByFieldId($this->getField()->getId());
 
-        if ($user_row_values->count() === 0) {
+        if (count($user_row_values) === 0) {
             return $html;
         }
 
@@ -965,7 +965,7 @@ class ListFieldStaticBind extends ListFieldBind
             try {
                 $this->getValue($id);
             } catch (Tracker_FormElement_InvalidFieldValueException $e) {
-                if (! $this->getOpenValueDao()->searchById($field->getId(), $id)->getRow()) {
+                if (! $this->getOpenValueDao()->searchById($field->getId(), $id)) {
                     throw new Tracker_FormElement_InvalidFieldValueException('Bind Value with ID ' . $id . ' does not exist for field ID ' . $field->getId());
                 }
 
@@ -979,7 +979,7 @@ class ListFieldStaticBind extends ListFieldBind
             throw new Tracker_FormElement_InvalidFieldValueException('OpenList static fields values should be passed as an object with at least one of the properties "id" or "label"');
         }
 
-        $row = $this->getOpenValueDao()->searchByExactLabel($field->getId(), $identifier)->getRow();
+        $row = $this->getOpenValueDao()->searchByExactLabel($field->getId(), $identifier);
         if ($row) {
             return OpenListField::OPEN_PREFIX . $row['id'];
         }

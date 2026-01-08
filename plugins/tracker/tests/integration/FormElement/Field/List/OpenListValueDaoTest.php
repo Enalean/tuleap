@@ -59,77 +59,72 @@ final class OpenListValueDaoTest extends TestIntegrationTestCase
 
     public function testItCanRetrieveASingleOpenValue(): void
     {
-        $result = $this->dao->searchById(self::FIELD_ID, $this->open_values[self::VALUE_A_FIRST_VALUE]);
-        $row    = $result->getRow();
+        $row = $this->dao->searchById(self::FIELD_ID, $this->open_values[self::VALUE_A_FIRST_VALUE]);
 
-        self::assertIsArray($row);
+        self::assertNotNull($row);
         $this->assertEqualOpenValue($row, self::VALUE_A_FIRST_VALUE);
 
-        self::assertFalse($this->dao->searchById(self::FIELD_ID, -1)->getRow());
+        self::assertNull($this->dao->searchById(self::FIELD_ID, -1));
     }
 
     public function testItCanRetrieveAllFieldOpenValues(): void
     {
         $result = $this->dao->searchByFieldId(self::FIELD_ID);
-        self::assertSame(3, $result->rowCount());
-        $this->assertEqualOpenValue($result->getRow(), self::VALUE_A_FIRST_VALUE);
-        $this->assertEqualOpenValue($result->getRow(), self::VALUE_TOTO);
-        $this->assertEqualOpenValue($result->getRow(), self::VALUE_CONSIDERABLY);
+        self::assertCount(3, $result);
+        $this->assertEqualOpenValue($result[0], self::VALUE_A_FIRST_VALUE);
+        $this->assertEqualOpenValue($result[1], self::VALUE_TOTO);
+        $this->assertEqualOpenValue($result[2], self::VALUE_CONSIDERABLY);
 
-        self::assertFalse($this->dao->searchByFieldId(-1)->getRow());
+        self::assertCount(0, $this->dao->searchByFieldId(-1));
     }
 
     public function testItCanCreateANewOpenValue(): void
     {
-        $id     = $this->dao->create(self::FIELD_ID, 'my new value');
-        $result = $this->dao->searchById(self::FIELD_ID, $id);
-        $row    = $result->getRow();
+        $id  = $this->dao->create(self::FIELD_ID, 'my new value');
+        $row = $this->dao->searchById(self::FIELD_ID, $id);
 
         self::assertIsArray($row);
-        self::assertSame($id, (int) $row['id']);
+        self::assertSame($id, $row['id']);
         self::assertSame('my new value', $row['label']);
-        self::assertSame(self::FIELD_ID, (int) $row['field_id']);
-        self::assertSame(0, (int) $row['is_hidden']);
+        self::assertSame(self::FIELD_ID, $row['field_id']);
+        self::assertSame(0, $row['is_hidden']);
     }
 
     public function testItCanRetrieveAnOpenValueFromApproximateLabel(): void
     {
         $result = $this->dao->searchByKeyword(self::FIELD_ID, 'value');
-        self::assertSame(1, $result->rowCount());
-        $row = $result->getRow();
+        self::assertCount(1, $result);
 
-        self::assertIsArray($row);
-        $this->assertEqualOpenValue($row, self::VALUE_A_FIRST_VALUE);
+        $this->assertEqualOpenValue($result[0], self::VALUE_A_FIRST_VALUE);
     }
 
     public function testItCanRetrieveAnOpenValueFromItsLabel(): void
     {
-        $result = $this->dao->searchByExactLabel(self::FIELD_ID, self::VALUE_A_FIRST_VALUE);
-        self::assertSame(1, $result->rowCount());
-        $row = $result->getRow();
+        $row = $this->dao->searchByExactLabel(self::FIELD_ID, self::VALUE_A_FIRST_VALUE);
 
-        self::assertIsArray($row);
+        self::assertNotNull($row);
         $this->assertEqualOpenValue($row, self::VALUE_A_FIRST_VALUE);
+
+        self::assertNull($this->dao->searchByExactLabel(self::FIELD_ID, 'non existing'));
     }
 
     public function testItCanUpdateAnOpenValue(): void
     {
         $this->dao->updateOpenValue($this->open_values[self::VALUE_A_FIRST_VALUE], true, 'Welcomed');
-        $result = $this->dao->searchById(self::FIELD_ID, $this->open_values[self::VALUE_A_FIRST_VALUE]);
-        $row    = $result->getRow();
+        $row = $this->dao->searchById(self::FIELD_ID, $this->open_values[self::VALUE_A_FIRST_VALUE]);
 
         self::assertIsArray($row);
-        self::assertSame($this->open_values[self::VALUE_A_FIRST_VALUE], (int) $row['id']);
+        self::assertSame($this->open_values[self::VALUE_A_FIRST_VALUE], $row['id']);
         self::assertSame('Welcomed', $row['label']);
-        self::assertSame(self::FIELD_ID, (int) $row['field_id']);
-        self::assertSame(1, (int) $row['is_hidden']);
+        self::assertSame(self::FIELD_ID, $row['field_id']);
+        self::assertSame(1, $row['is_hidden']);
     }
 
     private function assertEqualOpenValue(array $row, string $label): void
     {
-        self::assertSame($this->open_values[$label], (int) $row['id']);
+        self::assertSame($this->open_values[$label], $row['id']);
         self::assertSame($label, $row['label']);
-        self::assertSame(self::FIELD_ID, (int) $row['field_id']);
-        self::assertSame(0, (int) $row['is_hidden']);
+        self::assertSame(self::FIELD_ID, $row['field_id']);
+        self::assertSame(0, $row['is_hidden']);
     }
 }

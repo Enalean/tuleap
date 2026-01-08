@@ -20,83 +20,95 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\List;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class OpenListValueDao extends DataAccessObject
 {
-    public function __construct()
+    /**
+     * @return ?array{
+     *     id: int,
+     *     field_id: int,
+     *     label: string,
+     *     is_hidden: int,
+     * }
+     */
+    public function searchById(int $field_id, int $id): ?array
     {
-        parent::__construct();
-        $this->table_name = 'tracker_field_openlist_value';
+        $sql = 'SELECT id, field_id, label, is_hidden FROM tracker_field_openlist_value WHERE field_id = ? AND id = ?';
+        return $this->getDB()->row($sql, $field_id, $id);
     }
 
-    public function searchById($field_id, $id)
+    /**
+     * @return array{
+     *      id: int,
+     *      field_id: int,
+     *      label: string,
+     *      is_hidden: int,
+     *  }[]
+     */
+    public function searchByFieldId(int $field_id): array
     {
-        $field_id = $this->da->escapeInt($field_id);
-        $id       = $this->da->escapeInt($id);
-        $sql      = "SELECT *
-                FROM $this->table_name
-                WHERE field_id = $field_id
-                  AND id = $id ";
-        return $this->retrieve($sql);
+        $sql = 'SELECT id, field_id, label, is_hidden FROM tracker_field_openlist_value WHERE field_id = ?';
+        return $this->getDB()->q($sql, $field_id);
     }
 
-    public function searchByFieldId($field_id)
+    public function create(int $field_id, string $label): int
     {
-        $field_id = $this->da->escapeInt($field_id);
-
-        $sql = "SELECT *
-                FROM $this->table_name
-                WHERE field_id = $field_id";
-        return $this->retrieve($sql);
+        return (int) $this->getDB()->insertReturnId('tracker_field_openlist_value', [
+            'field_id' => $field_id,
+            'label'    => $label,
+        ]);
     }
 
-    public function create($field_id, $label)
+    /**
+     * @return array{
+     *      id: int,
+     *      field_id: int,
+     *      label: string,
+     *      is_hidden: int,
+     *  }[]
+     */
+    public function searchByKeyword(int $field_id, string $keyword, int $limit = 10): array
     {
-        $field_id = $this->da->escapeInt($field_id);
-        $label    = $this->da->quoteSmart($label);
-        $sql      = "INSERT INTO $this->table_name (field_id, label)
-                VALUES ($field_id, $label)";
-        return $this->updateAndGetLastId($sql);
+        $sql = <<<SQL
+            SELECT id, field_id, label, is_hidden FROM tracker_field_openlist_value
+            WHERE field_id = ? AND is_hidden != 1 AND label LIKE ? LIMIT ?
+            SQL;
+        return $this->getDB()->safeQuery($sql, [
+            $field_id,
+            '%' . $this->getDB()->escapeLikeValue($keyword) . '%',
+            $limit,
+        ]);
     }
 
-    public function searchByKeyword($field_id, $keyword, $limit = 10)
+    /**
+     * @return ?array{
+     *     id: int,
+     *     field_id: int,
+     *     label: string,
+     *     is_hidden: int,
+     * }
+     */
+    public function searchByExactLabel(int $field_id, string $label): ?array
     {
-        $field_id = $this->da->escapeInt($field_id);
-        $limit    = $this->da->escapeInt($limit);
-        $keyword  = $this->da->quoteLikeValueSurround($keyword);
-        $sql      = "SELECT *
-                FROM $this->table_name
-                WHERE field_id = $field_id
-                  AND is_hidden != 1
-                  AND label LIKE $keyword
-                LIMIT $limit";
-        return $this->retrieve($sql);
+        $sql = <<<SQL
+            SELECT id, field_id, label, is_hidden FROM tracker_field_openlist_value
+            WHERE field_id = ? AND label = ?
+            SQL;
+        return $this->getDB()->row($sql, $field_id, $label);
     }
 
-    public function searchByExactLabel($field_id, $label)
+    public function updateOpenValue(int $id, bool $is_hidden, string $label): void
     {
-        $field_id = $this->da->escapeInt($field_id);
-        $label    = $this->da->quoteSmart($label);
-        $sql      = "SELECT *
-                FROM $this->table_name
-                WHERE field_id = $field_id
-                  AND label = $label";
-        return $this->retrieve($sql);
-    }
-
-    public function updateOpenValue(int $id, bool $is_hidden, string $label): bool
-    {
-        $id        = $this->da->escapeInt($id);
-        $is_hidden = $this->da->escapeInt($is_hidden);
-        $label     = $this->da->quoteSmart($label);
-
-        $sql = "UPDATE $this->table_name
-                SET is_hidden = $is_hidden, label = $label
-                WHERE id = $id";
-
-        return $this->update($sql);
+        $this->getDB()->update('tracker_field_openlist_value', [
+            'is_hidden' => $is_hidden,
+            'label'     => $label,
+        ], [
+            'id' => $id,
+        ]);
     }
 }
