@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_ApprovalTable;
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableReviewerFactory;
+use Docman_ApprovalTableVersionnedFactory;
 use Docman_Item;
 use Docman_PermissionsManager;
 use Docman_VersionFactory;
@@ -258,7 +259,11 @@ final class DocmanItemsApprovalTableResource extends AuthenticatedResource
             throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to update'));
         }
 
-        $table = $factory->getLastTableForItemWithReviewers();
+        if ($factory instanceof Docman_ApprovalTableVersionnedFactory) {
+            $table = $factory->getLastTableForItemWithReviewers();
+        } else {
+            $table = $factory->getTable(true);
+        }
         if ($table === null) {
             throw new I18NRestException(400, dgettext('tuleap-docman', 'There is no approval table to update'));
         }
