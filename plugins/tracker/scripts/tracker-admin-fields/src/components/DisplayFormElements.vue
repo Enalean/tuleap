@@ -44,6 +44,10 @@
         />
         <line-separator v-else-if="isLineSeparator(element.field)" v-bind:field="element.field" />
         <line-break v-else-if="isLineBreak(element.field)" v-bind:field="element.field" />
+        <field-cross-reference
+            v-else-if="isCrossReferenceField(element.field)"
+            v-bind:field="element.field"
+        />
         <base-field v-else v-bind:field="element.field" />
     </template>
 </template>
@@ -70,6 +74,7 @@ import {
     LAST_UPDATED_BY_FIELD,
     SUBMISSION_DATE_FIELD,
     LAST_UPDATE_DATE_FIELD,
+    CROSS_REFERENCE_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     IntFieldStructure,
@@ -100,6 +105,7 @@ import FieldStaticText from "./FormElements/FieldStaticText.vue";
 import FieldId from "./FormElements/FieldId.vue";
 import FieldStaticUserText from "./FormElements/FieldStaticUserText.vue";
 import FieldStaticDateText from "./FormElements/FieldStaticDateText.vue";
+import FieldCrossReference from "./FormElements/FieldCrossReference.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -169,5 +175,9 @@ function isStaticUserText(field: StructureFields): boolean {
 
 function isStaticDateText(field: StructureFields): boolean {
     return field.type === SUBMISSION_DATE_FIELD || field.type === LAST_UPDATE_DATE_FIELD;
+}
+
+function isCrossReferenceField(field: StructureFields): boolean {
+    return field.type === CROSS_REFERENCE_FIELD;
 }
 </script>

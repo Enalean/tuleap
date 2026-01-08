@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2025-present. All Rights Reserved.
+  - Copyright (c) Enalean, 2026-present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,17 +18,20 @@
   -->
 
 <template>
-    <div
-        v-bind:id="'static-text-' + field.field_id"
-        class="tlp-form-element"
-        v-dompurify-html="field.default_value"
-    ></div>
+    <div class="tlp-property">
+        <label-for-field v-bind:field="field" v-bind:id="'cross-ref-' + field.field_id" />
+        <p>{{ $gettext("Display in & out references") }}</p>
+    </div>
 </template>
 
 <script setup lang="ts">
-import type { StaticRichTextStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+import LabelForField from "./LabelForField.vue";
+import { useGettext } from "vue3-gettext";
 
 defineProps<{
-    field: StaticRichTextStructure;
+    field: StructureFields;
 }>();
+
+const { $gettext } = useGettext();
 </script>
