@@ -1,44 +1,52 @@
 <?php
 /*
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
- * Originally written by Manuel Vacelet, 2007
+ * This file is a part of Tuleap.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-{
-    public $docmanIcons;
-    public $srcGo;
-    public $dstGo;
+namespace Tuleap\Docman\Metadata;
 
-    public function __construct($srcGroupId, $dstGroupId, $themePath)
+use ArrayIterator;
+use Codendi_HTMLPurifier;
+use Docman_Metadata;
+use Docman_MetadataFactory;
+use Docman_MetadataHtmlList;
+use Docman_MetadataListOfValuesElementFactory;
+use Project;
+use ProjectManager;
+
+class MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+{
+    public Project $srcGo;
+    public Project $dstGo;
+
+    public function __construct(int $srcGroupId, int $dstGroupId)
     {
-        $this->docmanIcons = new Docman_Icons($themePath . '/images/ic/', EventManager::instance());
-        $pm                = ProjectManager::instance();
-        $this->srcGo       = $pm->getProject($srcGroupId);
-        $this->dstGo       = $pm->getProject($dstGroupId);
+        $pm          = ProjectManager::instance();
+        $this->srcGo = $pm->getProject($srcGroupId);
+        $this->dstGo = $pm->getProject($dstGroupId);
     }
 
     /**
      * For a five object iterator, return an array of object indexed by
      * $func applied on object.
      */
-    public function getArrayFromIterator($iter, $func)
+    public function getArrayFromIterator(ArrayIterator $iter, string $func): array
     {
         $a = [];
         while ($iter->valid()) {
@@ -49,20 +57,20 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return $a;
     }
 
-    public function checkMdDifferences($srcMd, $dstMd, $loveMap)
+    public function checkMdDifferences(Docman_Metadata $srcMd, Docman_Metadata $dstMd): array
     {
         $diffArray = [];
         if (! $dstMd->sameDescription($srcMd)) {
             $diffArray[] = dgettext('tuleap-docman', 'Description: <strong><em>new text</em></strong>');
         }
         if (! $dstMd->sameIsEmptyAllowed($srcMd)) {
-            $diffArray[] = sprintf(dgettext('tuleap-docman', 'Allow empty value: <strong>%1$s</strong>'), $this->getEnabledDisabledText($srcMd->getIsEmptyAllowed()));
+            $diffArray[] = sprintf(dgettext('tuleap-docman', 'Allow empty value: <strong>%1$s</strong>'), $this->getEnabledDisabledText((bool) $srcMd->getIsEmptyAllowed()));
         }
         if (! $dstMd->sameIsMultipleValuesAllowed($srcMd)) {
-            $diffArray[] = sprintf(dgettext('tuleap-docman', 'Allow multiple selection: <strong>%1$s</strong>'), $this->getEnabledDisabledText($srcMd->getIsMultipleValuesAllowed()));
+            $diffArray[] = sprintf(dgettext('tuleap-docman', 'Allow multiple selection: <strong>%1$s</strong>'), $this->getEnabledDisabledText((bool) $srcMd->getIsMultipleValuesAllowed()));
         }
         if (! $dstMd->sameUseIt($srcMd)) {
-            $diffArray[] = sprintf(dgettext('tuleap-docman', 'Usage: <strong>%1$s</strong>'), $this->getEnabledDisabledText($srcMd->getUseIt()));
+            $diffArray[] = sprintf(dgettext('tuleap-docman', 'Usage: <strong>%1$s</strong>'), $this->getEnabledDisabledText((bool) $srcMd->getUseIt()));
         }
         return $diffArray;
     }
@@ -80,7 +88,7 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      *
      * Same algo used in Docman_View_ItemDetailsSectionPaste::_checkLoveToImport
      */
-    private function getLoveCompareTable($srcMd, $dstMd, $mdMap, &$sthToImport)
+    private function getLoveCompareTable(Docman_Metadata $srcMd, Docman_Metadata $dstMd, array $mdMap, bool &$sthToImport): string
     {
         $html = '';
 
@@ -116,31 +124,31 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 $sthToImport = true;
             }
 
-            $html .= "<tr>\n";
+            $html .= '<tr>';
 
             // Name
-            $html .= "<td style=\"padding-left: 2em;\"></td>\n";
-            $html .= '<td>' . Docman_MetadataHtmlList::_getElementName($srcLove) . "</td>\n";
+            $html .= '<td></td>';
+            $html .= '<td>' . Docman_MetadataHtmlList::_getElementName($srcLove) . '</td>';
 
             // Presence in source project
-            $html .= '<td align="center"><img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" /></td>';
+            $html .= '<td><i class="fa-solid fa-check"></i></td>';
 
             // Presence in destination project
-            $html .= '<td align="center">';
+            $html .= '<td>';
             switch ($rowStyle) {
                 case 'equals':
-                    $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
+                    $html .= '<i class="fa-solid fa-check"></i>';
                     break;
             }
-            $html .= "</td>\n";
+            $html .= '</td>';
 
             // Differences
-            $html .= '<td class="docman_md_' . $rowStyle . '">';
+            $html .= '<td>';
             switch ($rowStyle) {
                 case 'missing':
                     $html .= dgettext('tuleap-docman', 'Doesn\'t exist');
             }
-            $html .= "</td>\n";
+            $html .= '</td>';
 
             // Action
             $html .= '<td>';
@@ -148,9 +156,9 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 case 'missing':
                     $html .= sprintf(dgettext('tuleap-docman', 'Will create value <strong>%1$s</strong>'), $purifier->purify($srcLove->getName()));
             }
-            $html .= "</td\n>";
+            $html .= '</td>';
 
-            $html .= "</tr>\n";
+            $html .= '</tr>';
 
             $srcLoveIter->next();
         }
@@ -159,26 +167,26 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         // that where not present in the src project.
         foreach ($dstLoveArray as $love) {
             if (! isset($matchingLove[$love->getId()])) {
-                $html .= "<tr>\n";
+                $html .= '<tr>';
                 // Name
-                $html .= "<td>&nbsp;</td>\n";
-                $html .= '<td>' . $purifier->purify($love->getName()) . "</td>\n";
+                $html .= '<td>&nbsp;</td>';
+                $html .= '<td>' . $purifier->purify($love->getName()) . '</td>';
                 // Presence in source project
-                $html .= "<td></td>\n";
+                $html .= '<td></td>';
                 // Presence in destination project
-                $html .= '<td align="center"><img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" /></td>';
+                $html .= '<td><i class="fa-solid fa-check"></i></td>';
                 // Differences
-                $html .= "<td></td>\n";
+                $html .= '<td></td>';
                 // Action
-                $html .= "<td></td>\n";
-                $html .= "</tr>\n";
+                $html .= '<td></td>';
+                $html .= '</tr>';
             }
         }
 
         return $html;
     }
 
-    public function getMetadataCompareTable(&$sthToImport)
+    public function getMetadataCompareTable(bool &$sthToImport): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
@@ -199,18 +207,29 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $mdMap = [];
         $srcMdFactory->getMetadataMapping($this->dstGo->getGroupId(), $mdMap);
 
-        $html .= sprintf(dgettext('tuleap-docman', '<p>The table below highlight the differences between %1$s and %2$s properties.</p><p>If there are differences, you can click on "Import" button at the bottom of the page. The properties of %1$s will be modified match what is defined in %2$s.</p><p><strong>Note:</strong> this operation delete neither properties nor values in %1$s and %2$s won\'t be modified.</p>'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName()));
+        $html .= '<p>' .
+                    sprintf(dgettext('tuleap-docman', 'The table below highlight the differences between %1$s and %2$s properties.'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName()))
+                    . '<br>'
+                    . sprintf(dgettext('tuleap-docman', 'If there are differences, you can click on "Import" button at the bottom of the page. The properties of %1$s will be modified match what is defined in %2$s.'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName()))
+                    . '</p>';
+        $html .= '<p>
+                    <div class="tlp-alert-info">
+                        <p class="tlp-alert-title">' . dgettext('tuleap-docman', 'Note') . '</p>' .
+                        sprintf(dgettext('tuleap-docman', 'this operation delete neither properties nor values in %1$s and %2$s won\'t be modified.'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName())) . '
+                    </div>
+                </p>';
 
         // Table
-        $html .= "<table border=\"1\">\n";
-
-        $html .= "<tr>\n";
-        $html .= '<th colspan="2">' . dgettext('tuleap-docman', 'Property') . "</th>\n";
-        $html .= '<th>' . $purifier->purify($this->srcGo->getPublicName()) . "</th>\n";
-        $html .= '<th>' . $purifier->purify($this->dstGo->getPublicName()) . "</th>\n";
-        $html .= '<th>' . sprintf(dgettext('tuleap-docman', 'Differences<br />in %1$s vs. %2$s'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName())) . "</th>\n";
-        $html .= '<th>' . sprintf(dgettext('tuleap-docman', 'Import actions<br />in %1$s'), $purifier->purify($this->dstGo->getPublicName())) . "</th>\n";
-        $html .= "</tr>\n";
+        $html .= "<table  class='tlp-table'>";
+        $html .= '<thead>';
+        $html .= '<tr>';
+        $html .= '<th colspan="2">' . dgettext('tuleap-docman', 'Property') . '</th>';
+        $html .= '<th>' . $purifier->purify($this->srcGo->getPublicName()) . '</th>';
+        $html .= '<th>' . $purifier->purify($this->dstGo->getPublicName()) . '</th>';
+        $html .= '<th>' . sprintf(dgettext('tuleap-docman', 'Differences<br />in %1$s vs. %2$s'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName())) . '</th>';
+        $html .= '<th>' . sprintf(dgettext('tuleap-docman', 'Import actions<br />in %1$s'), $purifier->purify($this->dstGo->getPublicName())) . '</th>';
+        $html .= '</tr>';
+        $html .= '</thead>';
 
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -234,7 +253,7 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
             if (isset($dstMdArray[$dstMdLabel])) {
                 $dstMd = $dstMdArray[$dstMdLabel];
-                if ($dstMd !== false) {
+                if ($dstMd instanceof Docman_Metadata) {
                     $matchingMd[$dstMdLabel] = true;
                     $dstMdStatus             = 'equivalent';
                     if ($dstMd->equals($srcMd)) {
@@ -259,30 +278,30 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $purified_property_name = $purifier->purify($srcMd->getName());
 
             // Display result
-            $html .= "<tr>\n";
+            $html .= '<tr>';
 
             // Property
-            $html .= '<td colspan="2" style="font-weight: bold;">';
+            $html .= '<td colspan="2">';
             $html .= $purified_property_name;
             $html .= '</td>';
 
             // Presence in source project
-            $html .= '<td align="center">';
-            $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
+            $html .= '<td>';
+            $html .= '<i class="fa-solid fa-check"></i>';
             $html .= '</td>';
 
             // Presence in destination project
-            $html .= '<td align="center">';
+            $html .= '<td>';
             switch ($dstMdStatus) {
                 case 'equals':
                 case 'equivalent':
-                    $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
+                    $html .= '<i class="fa-solid fa-check"></i>';
                     break;
             }
             $html .= '</td>';
 
             // Differences
-            $html .= '<td class="docman_md_' . $dstMdStatus . '">';
+            $html .= '<td>';
             switch ($dstMdStatus) {
                 case 'equivalent':
                     $html .= dgettext('tuleap-docman', 'Settings differ');
@@ -303,8 +322,11 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     // Nothing to do
                     break;
                 case 'equivalent':
-                    $diffArray = $this->checkMdDifferences($srcMd, $dstMd, $mdMap['love']);
-                    $diffStr   = '<ul style="padding:0;padding-left:1.5em;margin:0;">';
+                    if (! $dstMd instanceof Docman_Metadata) {
+                        break;
+                    }
+                    $diffArray = $this->checkMdDifferences($srcMd, $dstMd);
+                    $diffStr   = '<ul>';
                     foreach ($diffArray as $diff) {
                         $diff_purified = $purifier->purify($diff, CODENDI_PURIFIER_FULL);
                         $diffStr      .= "<li>$diff_purified</li>";
@@ -322,11 +344,11 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             }
             $html .= '</td>';
 
-            $html .= "</tr>\n";
+            $html .= '</tr>';
 
             // List of values
             if ($srcMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                if ($dstMd !== null) {
+                if ($dstMd !== null && $dstMd !== false) {
                     $html .= $this->getLoveCompareTable($srcMd, $dstMd, $mdMap, $sthToImport);
                 }
             }
@@ -339,10 +361,10 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         // present in the src project.
         foreach ($dstMdArray as $md) {
             if (! isset($matchingMd[$md->getLabel()])) {
-                $html .= "<tr>\n";
+                $html .= '<tr>';
 
                 // Name
-                $html         .= '<td colspan="2" style="font-weight: bold;">';
+                $html         .= '<td colspan="2">';
                 $purified_name = $purifier->purify($md->getName());
                 $html         .= $purified_name;
                 $html         .= '</td>';
@@ -351,8 +373,8 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 $html .= '<td></td>';
 
                 // Presence in destination project
-                $html .= '<td align="center">';
-                $html .= '<img src="' . $this->docmanIcons->getThemeIcon('tick.png') . '" />';
+                $html .= '<td>';
+                $html .= '<i class="fa-solid fa-check"></i>';
                 $html .= '</td>';
 
                 // Differences
@@ -362,11 +384,11 @@ class Docman_MetadataComparator // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 $html .= '<td></td>';
 
                 $html .= '</td>';
-                $html .= "</tr>\n";
+                $html .= '</tr>';
             }
         }
 
-        $html .= "</table>\n";
+        $html .= '</table>';
 
         return $html;
     }
