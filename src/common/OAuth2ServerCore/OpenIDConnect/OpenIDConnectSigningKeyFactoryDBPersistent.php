@@ -23,39 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 
-final class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectSigningKeyFactory
+final readonly class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectSigningKeyFactory
 {
-    /**
-     * @var KeyFactory
-     */
-    private $key_factory;
-    /**
-     * @var OpenIDConnectSigningKeyDAO
-     */
-    private $dao;
-    /**
-     * @var \DateInterval
-     */
-    private $signing_key_expiration_delay;
-    /**
-     * @var \DateInterval
-     */
-    private $id_token_expiration_delay;
-
     public function __construct(
-        KeyFactory $key_factory,
-        OpenIDConnectSigningKeyDAO $dao,
-        \DateInterval $signing_key_expiration_delay,
-        \DateInterval $id_token_expiration_delay,
+        private OpenIDConnectSigningKeyDAO $dao,
+        private \DateInterval $signing_key_expiration_delay,
+        private \DateInterval $id_token_expiration_delay,
     ) {
-        $this->key_factory                  = $key_factory;
-        $this->dao                          = $dao;
-        $this->signing_key_expiration_delay = $signing_key_expiration_delay;
-        $this->id_token_expiration_delay    = $id_token_expiration_delay;
     }
 
     /**
@@ -66,8 +41,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectS
     {
         $pem_public_keys = $this->dao->searchPublicKeys();
         if (empty($pem_public_keys)) {
-            $encryption_key  = $this->key_factory->getLegacy2025EncryptionKey();
-            $pem_public_key  = $this->generateAndSaveKey($encryption_key, $current_time)->public_key;
+            $pem_public_key  = $this->generateAndSaveKey($current_time)->public_key;
             $pem_public_keys = [$pem_public_key];
         }
 
@@ -81,20 +55,18 @@ final class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectS
     #[\Override]
     public function getKey(\DateTimeImmutable $current_time): SigningPrivateKey
     {
-        $encryption_key = $this->key_factory->getLegacy2025EncryptionKey();
-
-        $row = $this->dao->searchMostRecentNonExpiredEncryptedPrivateKey($current_time->getTimestamp());
+        $row = $this->dao->searchMostRecentNonExpiredPrivateKey($current_time->getTimestamp());
 
         if ($row === null) {
-            $new_key     = $this->generateAndSaveKey($encryption_key, $current_time);
+            $new_key     = $this->generateAndSaveKey($current_time);
             $private_key = new SigningPrivateKey(
                 SigningPublicKey::fromPEMFormat($new_key->public_key),
-                SymmetricCrypto::decrypt($new_key->encrypted_private_key, $encryption_key)
+                $new_key->private_key,
             );
         } else {
             $private_key = new SigningPrivateKey(
                 SigningPublicKey::fromPEMFormat($row['public_key']),
-                SymmetricCrypto::decrypt($row['private_key'], $encryption_key)
+                $row['private_key'],
             );
         }
 
@@ -102,9 +74,9 @@ final class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectS
     }
 
     /**
-     * @return object{public_key:string, encrypted_private_key:string}
+     * @return object{public_key:string, private_key:ConcealedString}
      */
-    private function generateAndSaveKey(EncryptionKey $encryption_key, \DateTimeImmutable $current_time): object
+    private function generateAndSaveKey(\DateTimeImmutable $current_time): object
     {
         $rsa_key = \openssl_pkey_new(
             [
@@ -114,7 +86,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectS
             ]
         );
         \openssl_pkey_export($rsa_key, $rsa_private_key_pem_format_str);
-        $encrypted_jwt_private_key = SymmetricCrypto::encrypt(new ConcealedString($rsa_private_key_pem_format_str), $encryption_key);
+        $private_key = new ConcealedString($rsa_private_key_pem_format_str);
         \sodium_memzero($rsa_private_key_pem_format_str);
         $rsa_public_key = \openssl_pkey_get_details($rsa_key)['key'];
 
@@ -123,26 +95,15 @@ final class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectS
 
         $this->dao->save(
             $rsa_public_key,
-            $encrypted_jwt_private_key,
+            $private_key,
             $new_key_expiration_date->getTimestamp(),
             $old_keys_cleanup_date->getTimestamp()
         );
 
-        return new /** @psalm-immutable */ class ($rsa_public_key, $encrypted_jwt_private_key)
+        return new /** @psalm-immutable */ readonly class ($rsa_public_key, $private_key)
         {
-            /**
-             * @var string
-             */
-            public $public_key;
-            /**
-             * @var string
-             */
-            public $encrypted_private_key;
-
-            public function __construct(string $public_key, string $encrypted_private_key)
+            public function __construct(public string $public_key, public ConcealedString $private_key)
             {
-                $this->public_key            = $public_key;
-                $this->encrypted_private_key = $encrypted_private_key;
             }
         };
     }

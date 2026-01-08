@@ -143,7 +143,6 @@ final class OAuth2ServerRoutes
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
         return new JWKSDocumentEndpointController(
             new OpenIDConnectSigningKeyFactoryDBPersistent(
-                new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                 new OpenIDConnectSigningKeyDAO(),
                 new DateInterval(self::SIGNING_KEY_EXPIRATION_DELAY),
                 new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
@@ -196,7 +195,6 @@ final class OAuth2ServerRoutes
                 new OpenIDConnectTokenBuilder(
                     new JWTBuilderFactory(),
                     new OpenIDConnectSigningKeyFactoryDBPersistent(
-                        new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                         new OpenIDConnectSigningKeyDAO(),
                         new DateInterval(self::SIGNING_KEY_EXPIRATION_DELAY),
                         new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),

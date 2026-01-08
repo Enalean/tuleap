@@ -23,14 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const SIGNING_PUBLIC_KEY = <<<EOT
+    private const string SIGNING_PUBLIC_KEY = <<<EOT
         -----BEGIN PUBLIC KEY-----
         MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApVp45DC1lniS5l9yiR81
         OM3BCESDLyZYX3pXS32oJz0eOIqgA4mnqGNvupo/ARJnu1W/KVNNqxBNGno1oNLg
@@ -42,7 +39,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
         -----END PUBLIC KEY-----
         EOT;
 
-    private const SIGNING_PRIVATE_KEY = <<<EOT
+    private const string SIGNING_PRIVATE_KEY = <<<EOT
         -----BEGIN PRIVATE KEY-----
         MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQClWnjkMLWWeJLm
         X3KJHzU4zcEIRIMvJlhfeldLfagnPR44iqADiaeoY2+6mj8BEme7Vb8pU02rEE0a
@@ -73,29 +70,15 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
         -----END PRIVATE KEY-----
         EOT;
 
-    /**
-     * @var EncryptionKey
-     */
-    private $encryption_key;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OpenIDConnectSigningKeyDAO
-     */
-    private $dao;
-    /**
-     * @var OpenIDConnectSigningKeyFactoryDBPersistent
-     */
-    private $signing_key_factory;
+
+    private \PHPUnit\Framework\MockObject\MockObject&OpenIDConnectSigningKeyDAO $dao;
+    private OpenIDConnectSigningKeyFactoryDBPersistent $signing_key_factory;
 
     #[\Override]
     protected function setUp(): void
     {
-        $encryption_key_factory = $this->createMock(KeyFactory::class);
-        $this->encryption_key   = new EncryptionKey(new ConcealedString(\random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-        $encryption_key_factory->method('getLegacy2025EncryptionKey')->willReturn($this->encryption_key);
-
         $this->dao                 = $this->createMock(OpenIDConnectSigningKeyDAO::class);
         $this->signing_key_factory = new OpenIDConnectSigningKeyFactoryDBPersistent(
-            $encryption_key_factory,
             $this->dao,
             new \DateInterval('PT60S'),
             new \DateInterval('PT10S'),
@@ -104,10 +87,10 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
 
     public function testGetExistingSigningPrivateKeyFromTheDB(): void
     {
-        $this->dao->expects($this->once())->method('searchMostRecentNonExpiredEncryptedPrivateKey')->willReturn(
+        $this->dao->expects($this->once())->method('searchMostRecentNonExpiredPrivateKey')->willReturn(
             [
                 'public_key'  => self::SIGNING_PUBLIC_KEY,
-                'private_key' => SymmetricCrypto::encrypt(new ConcealedString(self::SIGNING_PRIVATE_KEY), $this->encryption_key),
+                'private_key' => new ConcealedString(self::SIGNING_PRIVATE_KEY),
             ]
         );
 
@@ -128,7 +111,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
 
     public function testCreateNewSigningKeyWhenNoneAlreadyExistBeforeReturningPrivateKey(): void
     {
-        $this->dao->expects($this->once())->method('searchMostRecentNonExpiredEncryptedPrivateKey')->willReturn(null);
+        $this->dao->expects($this->once())->method('searchMostRecentNonExpiredPrivateKey')->willReturn(null);
         $this->dao->expects($this->once())->method('save')->with(self::anything(), self::anything(), 160, 90);
 
         $key = $this->signing_key_factory->getKey(new \DateTimeImmutable('@100'));
