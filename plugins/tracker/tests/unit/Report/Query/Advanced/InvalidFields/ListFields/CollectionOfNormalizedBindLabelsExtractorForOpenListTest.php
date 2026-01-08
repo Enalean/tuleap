@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use TestHelper;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\OpenListValueDao;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
@@ -53,9 +52,9 @@ final class CollectionOfNormalizedBindLabelsExtractorForOpenListTest extends Tes
 
     public function testItReturnsMergeOfLabelsBindStatic(): void
     {
-        $this->dao->expects($this->once())->method('searchByFieldId')->willReturn(TestHelper::argListToDar([
+        $this->dao->expects($this->once())->method('searchByFieldId')->willReturn([
             ['label' => 'my label'],
-        ]));
+        ]);
 
         $results = $this->extractor->extractCollectionOfNormalizedLabels(
             ListStaticBindBuilder::aStaticBind(
@@ -68,9 +67,9 @@ final class CollectionOfNormalizedBindLabelsExtractorForOpenListTest extends Tes
 
     public function testItReturnsMergeOfLabelsBindUsers(): void
     {
-        $this->dao->expects($this->once())->method('searchByFieldId')->willReturn(TestHelper::argListToDar([
+        $this->dao->expects($this->once())->method('searchByFieldId')->willReturn([
             ['label' => 'my label'],
-        ]));
+        ]);
 
         $results = $this->extractor->extractCollectionOfNormalizedLabels(
             ListUserBindBuilder::aUserBind(

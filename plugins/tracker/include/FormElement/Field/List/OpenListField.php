@@ -418,7 +418,7 @@ class OpenListField extends ListField implements BindVisitor
     {
         if (! isset($this->cache_openvalues[$oid])) {
             $this->cache_openvalues[$oid] = null;
-            if ($row = $this->getOpenValueDao()->searchById($this->getId(), $oid)->getRow()) {
+            if ($row = $this->getOpenValueDao()->searchById($this->getId(), $oid)) {
                 $this->cache_openvalues[$oid] = new Tracker_FormElement_Field_List_OpenValue(
                     $this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()),
                     $row['id'],
@@ -947,7 +947,7 @@ class OpenListField extends ListField implements BindVisitor
             // existing bind value
             return self::BIND_PREFIX . $sv;
         } else {
-            $row = $this->getOpenValueDao()->searchByExactLabel($this->getId(), $value)->getRow();
+            $row = $this->getOpenValueDao()->searchByExactLabel($this->getId(), $value);
             if ($row) {
                 // existing open value
                 return self::OPEN_PREFIX . $row['id'];

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use BaseLanguageFactory;
-use TestHelper;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker;
@@ -99,7 +98,7 @@ final class InvalidOrderByBuilderTest extends TestCase
             $ugroup_label_converter
         );
         $open_list_value_dao              = $this->createMock(OpenListValueDao::class);
-        $open_list_value_dao->method('searchByFieldId')->willReturn(TestHelper::emptyDar());
+        $open_list_value_dao->method('searchByFieldId')->willReturn([]);
         $user_manager = $this->createStub(UserManager::class);
         $builder      = new InvalidOrderByBuilder(
             new DuckTypedFieldChecker(
