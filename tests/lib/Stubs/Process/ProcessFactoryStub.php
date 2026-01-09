@@ -27,11 +27,11 @@ use Tuleap\Process\ProcessFactory;
 
 final readonly class ProcessFactoryStub implements ProcessFactory
 {
-    private function __construct(private Process $process)
+    private function __construct(private ProcessStub $process)
     {
     }
 
-    public static function withProcess(Process $process): self
+    public static function withProcess(ProcessStub $process): self
     {
         return new self($process);
     }

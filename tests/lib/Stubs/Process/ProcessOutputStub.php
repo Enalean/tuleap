@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Process;
+namespace Tuleap\Test\Stubs\Process;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\Process\ProcessOutput;
 
 /**
- * @template O of ProcessOutput
+ * @psalm-immutable
  */
-interface Process
+final readonly class ProcessOutputStub implements ProcessOutput
 {
-    /**
-     * @return Ok<O>|Err<ProcessExecutionFailure>
-     */
-    public function run(): Ok|Err;
+    #[\Override]
+    public function getOutput(): string
+    {
+        return '';
+    }
+
+    #[\Override]
+    public function getErrorOutput(): string
+    {
+        return '';
+    }
 }

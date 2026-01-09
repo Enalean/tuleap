@@ -78,9 +78,9 @@ See [OWASP Command Injection document](https://owasp.org/www-community/attacks/C
 
 Overall, passing user-supplied data to OS commands should preferably be avoided. If it is not possible due to
 performance reasons or lack of alternatives:
-* escape arguments: relying on the [Symfony Process component](https://symfony.com/doc/current/components/process.html)
-is the preferred way to achieve that, [`escapeshellarg()`](https://www.php.net/manual/en/function.escapeshellarg) can be
-used if necessary
+* escape arguments: relying on the [Tuleap\Process\ProcessFactory](../src/common/Process/ProcessFactory.php)
+(and the concrete implementation [Tuleap\Process\SymfonyProcessFactory](../src/common/Process/SymfonyProcessFactory.php))
+is the preferred way to achieve that, [`escapeshellarg()`](https://www.php.net/manual/en/function.escapeshellarg) can be used if necessary
 * validate arguments against an allow list
 * use `--` when possible to separate options from arguments
 

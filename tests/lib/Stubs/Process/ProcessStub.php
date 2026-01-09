@@ -27,11 +27,15 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Process\Process;
+use Tuleap\Process\ProcessExecutionFailure;
 
+/**
+ * @template-implements Process<ProcessOutputStub>
+ */
 final readonly class ProcessStub implements Process
 {
     /**
-     * @param Ok<null>|Err<Fault> $result
+     * @param Ok<ProcessOutputStub>|Err<ProcessExecutionFailure> $result
      */
     private function __construct(private Ok|Err $result)
     {
@@ -39,29 +43,19 @@ final readonly class ProcessStub implements Process
 
     public static function successfulProcess(): self
     {
-        return new self(Result::ok(null));
+        return new self(Result::ok(new ProcessOutputStub()));
     }
 
     public static function failingProcess(): self
     {
-        return new self(Result::err(Fault::fromMessage('The process failed')));
+        return new self(Result::err(
+            new ProcessExecutionFailure(new ProcessOutputStub(), Fault::fromMessage('The process failed'))
+        ));
     }
 
     #[\Override]
     public function run(): Ok|Err
     {
         return $this->result;
-    }
-
-    #[\Override]
-    public function getOutput(): string
-    {
-        return '';
-    }
-
-    #[\Override]
-    public function getErrorOutput(): string
-    {
-        return '';
     }
 }

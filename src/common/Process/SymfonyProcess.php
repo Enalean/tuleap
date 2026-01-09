@@ -27,6 +27,9 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
+/**
+ * @template-implements Process<SymfonyProcessOutput>
+ */
 final readonly class SymfonyProcess implements Process
 {
     public function __construct(private \Symfony\Component\Process\Process $process)
@@ -39,23 +42,18 @@ final readonly class SymfonyProcess implements Process
         try {
             $this->process->mustRun();
         } catch (\RuntimeException $exception) {
-            return Result::err(Fault::fromThrowableWithMessage(
+            $output = new SymfonyProcessOutput($this->process);
+            $fault  = Fault::fromThrowableWithMessage(
                 $exception,
-                sprintf('Failed to execute %s, exit code %d', $this->process->getCommandLine(), (int) $this->process->getExitCode())
-            ));
+                sprintf(
+                    "Failed to execute %s, exit code %d\n\nError output:\n%s",
+                    $this->process->getCommandLine(),
+                    (int) $this->process->getExitCode(),
+                    $output->getErrorOutput(),
+                )
+            );
+            return Result::err(new ProcessExecutionFailure($output, $fault));
         }
-        return Result::ok(null);
-    }
-
-    #[\Override]
-    public function getOutput(): string
-    {
-        return $this->process->getOutput();
-    }
-
-    #[\Override]
-    public function getErrorOutput(): string
-    {
-        return $this->process->getErrorOutput();
+        return Result::ok(new SymfonyProcessOutput($this->process));
     }
 }

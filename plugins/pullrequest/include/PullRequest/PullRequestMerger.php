@@ -25,6 +25,7 @@ use GitRepository;
 use Git_Command_Exception;
 use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Process\ProcessExecutionFailure;
 use Tuleap\Process\ProcessFactory;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
@@ -76,8 +77,8 @@ readonly class PullRequestMerger
 
             $push_merge_process->run()
                 ->mapErr(
-                    function (Fault $fault): never {
-                        Fault::writeToLogger($fault, $this->logger);
+                    function (ProcessExecutionFailure $execution_failure): never {
+                        Fault::writeToLogger($execution_failure->fault, $this->logger);
                         throw new PullRequestCannotBeMerged('Failure to push the merge result');
                     }
                 );
