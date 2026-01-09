@@ -20,25 +20,10 @@
 
 namespace Tuleap\Bugzilla\Reference;
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
-
-class ReferenceRetriever
+readonly class ReferenceRetriever
 {
-    /**
-     * @var Dao
-     */
-    private $dao;
-    /**
-     * @var EncryptionKey
-     */
-    private $encryption_key;
-
-    public function __construct(Dao $dao, EncryptionKey $encryption_key)
+    public function __construct(private Dao $dao)
     {
-        $this->dao            = $dao;
-        $this->encryption_key = $encryption_key;
     }
 
     /**
@@ -55,19 +40,14 @@ class ReferenceRetriever
         return $references;
     }
 
-    private function instantiateFromRow(array $references)
+    private function instantiateFromRow(array $references): Reference
     {
-        $api_key = new ConcealedString($references['api_key']);
-        if ($references['encrypted_api_key'] !== '') {
-            $api_key = SymmetricCrypto::decrypt($references['encrypted_api_key'], $this->encryption_key);
-        }
-
         return new Reference(
             $references['id']->toString(),
             $references['keyword'],
             $references['server'],
             $references['username'],
-            $api_key,
+            $references['api_key'],
             $references['are_followup_private'],
             $references['rest_url'],
             (bool) $references['has_api_key_always_been_encrypted']

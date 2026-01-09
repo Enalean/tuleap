@@ -85,8 +85,6 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
 
     public function routeAdmin(): DispatchableWithRequest
     {
-        $encryption_key = $this->getEncryptionKey();
-
         $controller = new Controller(
             new AdminPageRenderer(),
             new ReferenceSaver(
@@ -97,7 +95,6 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
                 ),
                 $this->getReferenceRetriever(),
                 ReferenceManager::instance(),
-                $encryption_key
             ),
             $this->getReferenceRetriever(),
             new ReferenceDestructor(new Dao())
@@ -136,13 +133,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
 
     private function getReferenceRetriever(): ReferenceRetriever
     {
-        return new ReferenceRetriever(new Dao(), $this->getEncryptionKey());
-    }
-
-    private function getEncryptionKey(): \Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey
-    {
-        $key_factory = new \Tuleap\Cryptography\KeyFactoryFromFileSystem();
-        return $key_factory->getLegacy2025EncryptionKey();
+        return new ReferenceRetriever(new Dao());
     }
 
     /** @see \Event::POST_REFERENCE_EXTRACTED */
