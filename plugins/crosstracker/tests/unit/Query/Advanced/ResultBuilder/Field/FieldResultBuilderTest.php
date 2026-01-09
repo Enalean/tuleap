@@ -118,7 +118,7 @@ final class FieldResultBuilderTest extends TestCase
         array $selected_result,
     ): SelectedValuesCollection {
         $purifier        = Codendi_HTMLPurifier::instance();
-        $user_helper     = $this->createMock(UserHelper::class);
+        $user_helper     = $this->createStub(UserHelper::class);
         $field_retriever = new ReadableFieldRetriever(
             $fields_retriever,
             RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn(

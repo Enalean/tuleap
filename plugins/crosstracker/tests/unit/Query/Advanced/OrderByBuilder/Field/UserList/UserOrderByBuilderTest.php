@@ -33,7 +33,7 @@ final class UserOrderByBuilderTest extends TestCase
 {
     public function testNoPreferences(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn(false);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
@@ -44,7 +44,7 @@ final class UserOrderByBuilderTest extends TestCase
 
     public function testPreferenceLogin(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn((string) UserHelper::PREFERENCES_LOGIN);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
@@ -55,7 +55,7 @@ final class UserOrderByBuilderTest extends TestCase
 
     public function testPreferenceRealname(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn((string) UserHelper::PREFERENCES_REAL_NAME);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
@@ -66,7 +66,7 @@ final class UserOrderByBuilderTest extends TestCase
 
     public function testPreferenceLoginRealname(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn((string) UserHelper::PREFERENCES_LOGIN_AND_NAME);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
@@ -77,7 +77,7 @@ final class UserOrderByBuilderTest extends TestCase
 
     public function testPreferenceRealnameLogin(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn((string) UserHelper::PREFERENCES_NAME_AND_LOGIN);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
