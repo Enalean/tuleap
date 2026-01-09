@@ -58,7 +58,7 @@ final class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
 
         self::assertSame(
             file_get_contents(__DIR__ . '/_fixtures/default_gitolite.conf'),
-            $serializer->getGitoliteDotConf(['projecta', 'projectb'])
+            $serializer->getGitoliteDotConf([102, 103])
         );
     }
 
@@ -75,7 +75,7 @@ final class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
 
         self::assertSame(
             file_get_contents(__DIR__ . '/_fixtures/override_gitolite.conf'),
-            $serializer->getGitoliteDotConf(['projecta', 'projectb'])
+            $serializer->getGitoliteDotConf([102, 103])
         );
     }
 }

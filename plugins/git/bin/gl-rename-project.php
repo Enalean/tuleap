@@ -25,15 +25,16 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/Git_GitoliteDriver.php';
 require_once __DIR__ . '/../include/GitRepositoryUrlManager.php';
 
-if ($argc !== 3) {
-    echo 'Usage: ' . $argv[0] . ' project_id oldname' . PHP_EOL;
+if ($argc !== 2) {
+    echo 'Usage: ' . $argv[0] . ' project_id' . PHP_EOL;
     exit(1);
 }
 
 $git_plugin = PluginManager::instance()->getPluginByName('git');
 \assert($git_plugin instanceof GitPlugin);
-$url_manager = new Git_GitRepositoryUrlManager($git_plugin);
-$driver      = new Git_GitoliteDriver(
+$url_manager     = new Git_GitRepositoryUrlManager($git_plugin);
+$project_manager = ProjectManager::instance();
+$driver          = new Git_GitoliteDriver(
     $git_plugin->getLogger(),
     $url_manager,
     new GitDao(),
@@ -46,6 +47,6 @@ $driver      = new Git_GitoliteDriver(
     null,
     null,
     null,
-    null,
+    $project_manager,
 );
-$driver->renameProject((int) $argv[1], $argv[2]);
+$driver->dumpProjectRepoConf($project_manager->getProject((int) $argv[1]));

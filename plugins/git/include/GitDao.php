@@ -799,4 +799,17 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
             ['repository_id' => $repository_id]
         );
     }
+
+    /**
+     * @return list<int>
+     */
+    public function searchProjectsWithActiveRepositories(): array
+    {
+        $sql = "SELECT DISTINCT `groups`.group_id
+            FROM `groups`
+            JOIN plugin_git ON (plugin_git.project_id = `groups`.group_id)
+            WHERE `groups`.status != 'D' AND plugin_git.repository_deletion_date = '0000-00-00 00:00:00'
+            ORDER BY `groups`.group_id";
+        return $this->getDB()->column($sql);
+    }
 }

@@ -33,6 +33,7 @@ readonly class Git_Gitolite_GitoliteConfWriter
     public function __construct(
         private Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
         private Git_Gitolite_ProjectSerializer $project_serializer,
+        private GitDao $dao,
         private \Psr\Log\LoggerInterface $logger,
         private ProjectByIDFactory $project_factory,
         string $gitolite_administration_path,
@@ -40,59 +41,56 @@ readonly class Git_Gitolite_GitoliteConfWriter
         $this->gitolite_configuration_directory = $gitolite_administration_path . '/conf/';
     }
 
-    public function writeGitoliteConfiguration(): GitoliteAdministrationPendingChanges
-    {
-        $pending_changes = new GitoliteAdministrationPendingChanges();
-
-        $this->writeGitoliteConfigurationFile(
-            $this->getGitoliteConfFilePath(),
-            $this->permissions_serializer->getGitoliteDotConf($this->getProjectList()),
-            $pending_changes
-        );
-
-        return $pending_changes;
-    }
-
-    public function renameProject(int $project_id, string $old_name): GitoliteAdministrationPendingChanges
-    {
-        $pending_changes = new GitoliteAdministrationPendingChanges();
-
-        $project = $this->project_factory->getProjectById($project_id);
-
-        if ($this->dumpProjectRepoConf($project)->areTherePendingChangesThatMustBeApplied()) {
-            $pending_changes->markAsChangesPending();
-        }
-
-        $old_conf_file_path = $this->getProjectPermissionConfFilePath($old_name);
-        if ($old_name !== $project->getUnixName() && \Psl\Filesystem\is_file($old_conf_file_path)) {
-            \Psl\Filesystem\delete_file($old_conf_file_path);
-        }
-
-        if ($this->writeGitoliteConfiguration()->areTherePendingChangesThatMustBeApplied()) {
-            $pending_changes->markAsChangesPending();
-        }
-
-        return $pending_changes;
-    }
-
     public function dumpProjectRepoConf(Project $project): GitoliteAdministrationPendingChanges
     {
         $pending_changes = new GitoliteAdministrationPendingChanges();
 
-        $config_file_content = $this->project_serializer->dumpProjectRepoConf($project);
-        $this->writeProjectConfigurationFile($project, $config_file_content, $pending_changes);
+        $this->buildAndWriteRepoConfiguration($project, $pending_changes);
+        $this->buildAndWriteGitoliteConfiguration($pending_changes);
 
         return $pending_changes;
     }
 
-    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project): GitoliteAdministrationPendingChanges
-    {
-        $pending_changes = new GitoliteAdministrationPendingChanges();
-
-        $config_file_content = $this->project_serializer->dumpSuspendedProjectRepositoriesConfiguration($project);
+    private function buildAndWriteRepoConfiguration(
+        Project $project,
+        GitoliteAdministrationPendingChanges $pending_changes,
+    ): void {
+        $config_file_content = $this->project_serializer->dumpProjectRepoConf($project);
         $this->writeProjectConfigurationFile($project, $config_file_content, $pending_changes);
+    }
 
-        return $pending_changes;
+    private function buildAndWriteGitoliteConfiguration(GitoliteAdministrationPendingChanges $pending_changes): void
+    {
+        $project_ids                          = $this->dao->searchProjectsWithActiveRepositories();
+        $expected_project_configuration_paths = [];
+        foreach ($project_ids as $project_id) {
+            $expected_file_path                     = $this->getProjectPermissionConfFilePath($project_id);
+            $expected_project_configuration_paths[] = $expected_file_path;
+            if (\Psl\Filesystem\is_file($expected_file_path)) {
+                continue;
+            }
+            $this->buildAndWriteRepoConfiguration(
+                $this->project_factory->getProjectById($project_id),
+                $pending_changes,
+            );
+        }
+
+        $this->writeGitoliteConfigurationFile(
+            $this->getGitoliteConfFilePath(),
+            $this->permissions_serializer->getGitoliteDotConf($project_ids),
+            $pending_changes
+        );
+
+        $current_project_configuration_paths  = \Psl\Filesystem\read_directory($this->getGitoliteProjectConfDirectoryPath());
+        $not_used_project_configuration_paths = \Psl\Dict\diff($current_project_configuration_paths, $expected_project_configuration_paths);
+        foreach ($not_used_project_configuration_paths as $not_used_project_configuration_path) {
+            try {
+                \Psl\Filesystem\delete_file($not_used_project_configuration_path);
+            } catch (\Psl\File\Exception\NotFoundException $exception) {
+                // Ignore file not found, our goal is to cleanup the directory
+                // If the file is already not present (e.g. deleted by another process) that goal is accomplished
+            }
+        }
     }
 
     private function writeProjectConfigurationFile(
@@ -100,21 +98,23 @@ readonly class Git_Gitolite_GitoliteConfWriter
         string $config_file_content,
         GitoliteAdministrationPendingChanges $pending_changes,
     ): void {
-        $this->logger->debug('Get Project Permission Conf File: ' . $project->getUnixName() . '...');
-        $config_file = $this->getProjectPermissionConfFilePath($project->getUnixName());
-        $this->logger->debug('Get Project Permission Conf File: ' . $project->getUnixName() . ': done');
+        $project_id = (int) $project->getID();
 
-        $this->logger->debug('Write Git config: ' . $project->getUnixName() . '...');
+        $this->logger->debug('Get Project Permission Conf File: #' . $project_id . '...');
+        $config_file = $this->getProjectPermissionConfFilePath($project_id);
+        $this->logger->debug('Get Project Permission Conf File: #' . $project_id . ': done');
+
+        $this->logger->debug('Write Git config: #' . $project_id . '...');
         $this->writeGitoliteConfigurationFile($config_file, $config_file_content, $pending_changes);
-        $this->logger->debug('Write Git config: ' . $project->getUnixName() . ': done');
+        $this->logger->debug('Write Git config: #' . $project_id . ': done');
     }
 
     /**
      * @return non-empty-string
      */
-    private function getProjectPermissionConfFilePath(string $project_unix_name): string
+    private function getProjectPermissionConfFilePath(int $project_id): string
     {
-        return $this->getGitoliteProjectConfDirectoryPath() . '/' . $project_unix_name . '.conf';
+        return $this->getGitoliteProjectConfDirectoryPath() . '/' . $project_id . '.conf';
     }
 
     /**
@@ -139,40 +139,17 @@ readonly class Git_Gitolite_GitoliteConfWriter
     }
 
     /**
-     * @return list<string>
-     */
-    private function getProjectList(): array
-    {
-        return $this->readProjectListFromPath($this->getGitoliteProjectConfDirectoryPath());
-    }
-
-    /**
-     * @param non-empty-string $dir_path
-     * @return list<string>
-     */
-    private function readProjectListFromPath(string $dir_path): array
-    {
-        $project_names = [];
-
-        if (! is_dir($dir_path)) {
-            return $project_names;
-        }
-
-        $dir = new DirectoryIterator($dir_path);
-        foreach ($dir as $file) {
-            if (! $file->isDot()) {
-                $project_names[] = basename($file->getFilename(), '.conf');
-            }
-        }
-        return $project_names;
-    }
-
-    /**
      * @param non-empty-string $file_path
      */
     private function writeGitoliteConfigurationFile(string $file_path, string $expected_content, GitoliteAdministrationPendingChanges $pending_changes): void
     {
-        if (\Psl\Filesystem\is_file($file_path) && (\Psl\File\read($file_path) === $expected_content)) {
+        $file_exist = \Psl\Filesystem\is_file($file_path);
+
+        if ($file_exist && $expected_content === '') {
+            \Psl\Filesystem\delete_file($file_path);
+        }
+
+        if ($file_exist && (\Psl\File\read($file_path) === $expected_content)) {
             return;
         }
 

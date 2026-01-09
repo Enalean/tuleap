@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Git\Gitolite\Presenter\GitoliteConfPresenter;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
@@ -81,12 +82,15 @@ class Git_Gitolite_ConfigPermissionsSerializer //phpcs:ignore PSR1.Classes.Class
         $this->regexp_retriever       = $regexp_retriever;
     }
 
-    public function getGitoliteDotConf(array $project_names)
+    /**
+     * @param list<int> $project_ids
+     */
+    public function getGitoliteDotConf(array $project_ids): string
     {
         return $this->template_renderer->renderToString(
             'gitolite.conf',
-            new Git_Gitolite_Presenter_GitoliteConfPresenter(
-                $project_names,
+            new GitoliteConfPresenter(
+                $project_ids,
             )
         );
     }
