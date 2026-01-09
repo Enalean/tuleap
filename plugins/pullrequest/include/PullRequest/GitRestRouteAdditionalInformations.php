@@ -48,7 +48,7 @@ class GitRestRouteAdditionalInformations
 
     public function getOpenPullRequestsCount(AdditionalInformationRepresentationRetriever $event)
     {
-        if (isset($this->repository_with_open_pr[(int) $event->getRepository()->getId()])) {
+        if (isset($this->repository_with_open_pr[$event->getRepository()->getId()])) {
             $opened_pullrequest = $this->dao->searchNbOfOpenedPullRequestsForRepositoryId($event->getRepository()->getId());
             $event->addInformation('opened_pull_requests', $opened_pullrequest);
         }

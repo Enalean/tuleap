@@ -58,7 +58,7 @@ final class RetrieveGitRepositoryStub implements RetrieveGitRepository
     {
         $repositories = [];
         foreach ([$first_repository, ...$other_repositories] as $repository) {
-            $repositories[(int) $repository->getId()] = $repository;
+            $repositories[$repository->getId()] = $repository;
         }
         return new self($repositories);
     }

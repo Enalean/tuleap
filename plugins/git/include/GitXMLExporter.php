@@ -130,7 +130,7 @@ class GitXmlExporter
             $root_node->addAttribute('description', $repository->getDescription());
             $root_node->addAttribute(
                 'allow_artifact_closure',
-                $this->closure_verifier->isArtifactClosureAllowed((int) $repository->getId()) ? '1' : '0',
+                $this->closure_verifier->isArtifactClosureAllowed($repository->getId()) ? '1' : '0',
             );
 
             $this->retrieve_repository_default_branch->getRepositoryDefaultBranch($repository)
@@ -160,7 +160,7 @@ class GitXmlExporter
             $bundle_path = '';
             $bundle_name = '';
             if ($repository->isInitialized()) {
-                $bundle_name = 'repository-' . (int) $repository->getId() . '.bundle';
+                $bundle_name = 'repository-' . $repository->getId() . '.bundle';
                 $bundle_path = self::EXPORT_FOLDER . DIRECTORY_SEPARATOR . $bundle_name;
             }
 

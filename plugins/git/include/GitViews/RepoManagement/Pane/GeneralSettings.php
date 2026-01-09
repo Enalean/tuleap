@@ -48,7 +48,7 @@ class GeneralSettings extends Pane
 
         $this->available_branches     = self::getAvailableBranchPresenters($repository);
         $this->have_branches          = count($this->available_branches) > 0;
-        $this->allow_artifact_closure = $closure_verifier->isArtifactClosureAllowed((int) $repository->getId());
+        $this->allow_artifact_closure = $closure_verifier->isArtifactClosureAllowed($repository->getId());
     }
 
     /**

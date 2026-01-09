@@ -58,7 +58,7 @@ final class PreReceiveAction
      */
     private function getPossibleCustomPreReceiveHookPath(\GitRepository $repository): string
     {
-        return ForgeConfig::get('sys_data_dir') . '/untrusted-code/git/pre-receive-hook/' . (int) $repository->getId() . '.wasm';
+        return ForgeConfig::get('sys_data_dir') . '/untrusted-code/git/pre-receive-hook/' . $repository->getId() . '.wasm';
     }
 
     /**

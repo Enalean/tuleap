@@ -73,7 +73,7 @@ final readonly class PullRequestDescriptionUpdatedNotification implements Notifi
                     $html_url_builder->getAbsolutePullRequestOverviewUrl($pull_request),
                     $pull_request->getId(),
                     $pull_request->getTitle(),
-                    $content_interpretor->getInterpretedContentWithReferences($pull_request->getDescription(), (int) $repository->getId()),
+                    $content_interpretor->getInterpretedContentWithReferences($pull_request->getDescription(), $repository->getId()),
                 ),
             ),
         );

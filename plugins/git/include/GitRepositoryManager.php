@@ -128,7 +128,7 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
      * @throws GitRepositoryNameIsInvalidException
      * @throws GitRepositoryInDeletionException
      */
-    private function initRepository(GitRepository $repository, GitRepositoryCreator $creator)
+    private function initRepository(GitRepository $repository, GitRepositoryCreator $creator): void
     {
         if (! $creator->isNameValid($repository->getName())) {
             throw new GitRepositoryNameIsInvalidException(
@@ -138,6 +138,7 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
 
         $this->assertRepositoryNameNotAlreadyUsed($repository);
         $this->assertRepositoryNotInDeletion($repository);
+        $repository->setId(-404);
         $id = $this->dao->save($repository);
 
         $repository->setId($id);
@@ -163,10 +164,9 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
      */
     public function createFromBundle(GitRepository $repository, GitRepositoryCreator $creator, $extraction_path, $bundle_path)
     {
+        $this->initRepository($repository, $creator);
+        $tmp_git_import_folder = ForgeConfig::get('tmp_dir') . '/git_import_' . $repository->getId();
         try {
-            $this->initRepository($repository, $creator);
-
-            $tmp_git_import_folder = ForgeConfig::get('tmp_dir') . '/git_import_' . $repository->getId();
             $this->createTemporaryWorkingDir($extraction_path, $bundle_path, $tmp_git_import_folder);
 
             $repository_full_path_arg = escapeshellarg($repository->getFullPath());
@@ -183,7 +183,10 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         }
     }
 
-    private function removeTemporaryWorkingDir($tmp_git_import_folder)
+    /**
+     * @param non-empty-string $tmp_git_import_folder
+     */
+    private function removeTemporaryWorkingDir(string $tmp_git_import_folder): void
     {
         $tmp_git_import_folder_arg = escapeshellarg($tmp_git_import_folder);
         $this->system_command->exec(
@@ -243,7 +246,7 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         $clone->setCreator($user);
         $clone->setParent($repository);
         $clone->setNamespace($namespace);
-        $clone->setId(null);
+        $clone->setId(-404);
         $path = PathJoinUtil::unixPathJoin([$to_project->getUnixName(), $namespace, $repository->getName()]) . '.git';
         $clone->setPath($path);
         $clone->setScope($scope);

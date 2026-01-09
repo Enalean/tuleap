@@ -190,22 +190,24 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             return true;
         }
 
-        if ($user->hasPermission(Git::PERM_READ, $repository->getId(), $repository->getProjectId())) {
+        $repository_id = (string) $repository->getId();
+
+        if ($user->hasPermission(Git::PERM_READ, $repository_id, $repository->getProjectId())) {
             return true;
         }
 
         if (! $repository->isMigratedToGerrit()) {
-            return $user->hasPermission(Git::PERM_WRITE, $repository->getId(), $repository->getProjectId())
-               || $user->hasPermission(Git::PERM_WPLUS, $repository->getId(), $repository->getProjectId());
+            return $user->hasPermission(Git::PERM_WRITE, $repository_id, $repository->getProjectId())
+               || $user->hasPermission(Git::PERM_WPLUS, $repository_id, $repository->getProjectId());
         }
 
         return false;
     }
 
     #[\Override]
-    public function save(GitRepository $repository): bool
+    public function save(GitRepository $repository): void
     {
-        return $this->getDao()->save($repository);
+        $this->getDao()->save($repository);
     }
 
     #[\Override]

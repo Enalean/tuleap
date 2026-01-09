@@ -46,11 +46,11 @@ class CITokenManager
     {
         $new_token = $this->token_generator->getNumber();
 
-        $this->dao->updateTokenForRepositoryId((int) $git_repository->getId(), $new_token);
+        $this->dao->updateTokenForRepositoryId($git_repository->getId(), $new_token);
     }
 
     public function getToken(GitRepository $git_repository): ?string
     {
-        return $this->dao->getTokenForRepositoryId((int) $git_repository->getId());
+        return $this->dao->getTokenForRepositoryId($git_repository->getId());
     }
 }

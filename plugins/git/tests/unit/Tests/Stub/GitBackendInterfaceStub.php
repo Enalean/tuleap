@@ -81,7 +81,7 @@ final class GitBackendInterfaceStub implements Git_Backend_Interface
     }
 
     #[\Override]
-    public function save(GitRepository $repository): bool
+    public function save(GitRepository $repository): void
     {
         throw new \Exception('GitBackendInterfaceStub::save( called while not implemented.');
     }

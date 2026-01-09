@@ -47,7 +47,7 @@ final class AsynchronousEventHandler
                 $this->logger->debug(
                     sprintf(
                         'Processing push on default branch of git repository #%d in project #%d by user #%d',
-                        (int) $push->getRepository()->getId(),
+                        $push->getRepository()->getId(),
                         (int) $push->getRepository()->getProject()->getID(),
                         (int) $push->getPusher()->getId(),
                     )

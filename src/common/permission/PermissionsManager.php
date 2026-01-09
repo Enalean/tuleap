@@ -231,9 +231,6 @@ class PermissionsManager implements IPermissionsManagerNG // phpcs:ignore PSR1.C
     }
 
     /**
-     * @param type $object_id
-     * @param type $permission_type
-     *
      * @return PermissionsNormalizerOverrideCollection
      * @throws PermissionDaoException
      */
@@ -380,7 +377,7 @@ class PermissionsManager implements IPermissionsManagerNG // phpcs:ignore PSR1.C
         return $this->_permission_dao->removePermission($permission_type, $object_id, $ugroup_id);
     }
 
-    public function addHistory($permission_type, $object_id, $group_id)
+    public function addHistory(string $permission_type, $object_id, $group_id): void
     {
         permission_add_history($group_id, $permission_type, $object_id);
     }
@@ -414,10 +411,5 @@ class PermissionsManager implements IPermissionsManagerNG // phpcs:ignore PSR1.C
     public function disableRestrictedAccess()
     {
         $this->_permission_dao->disableRestrictedAccess();
-    }
-
-    public function disableRestrictedAccessForObjectId(array $permission_type, $object_id)
-    {
-        $this->_permission_dao->disableRestrictedAccessForObjectId($permission_type, $object_id);
     }
 }

@@ -59,7 +59,7 @@ class GitPullRequestReferenceUpdater implements UpdateGitPullRequestReference
         GitExec $executor_repository_destination,
         GitRepository $repository_destination,
     ): Ok|Err {
-        if ((int) $pull_request->getRepoDestId() !== (int) $repository_destination->getId()) {
+        if ((int) $pull_request->getRepoDestId() !== $repository_destination->getId()) {
             throw new \LogicException('Destination repository ID does not match the one of the PR');
         }
 

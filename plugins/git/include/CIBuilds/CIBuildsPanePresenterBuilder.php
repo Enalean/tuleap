@@ -60,7 +60,7 @@ class CIBuildsPanePresenterBuilder
         $all_options        = $this->access_right_options_builder->getAllOptions($this->repository->getProject(), $granted_groups_ids);
 
         return new CIBuildsPanePresenter(
-            (int) $this->repository->getId(),
+            $this->repository->getId(),
             (int) $this->repository->getProjectId(),
             $all_options,
             $this->ci_token_manager->getToken($this->repository)

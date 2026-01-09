@@ -127,12 +127,12 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         ForgeConfig::set('tmp_dir', $this->getTmpDir());
 
         $this->git_dao = $this->createStub(GitDao::class);
-        $this->git_dao->method('save')->with(self::callback(
-            function (GitRepository $repository): bool {
+        $this->git_dao->method('save')->willReturnCallback(
+            function (GitRepository $repository): int {
                 $this->last_saved_repository = $repository;
-                return true;
+                return $repository->getId();
             }
-        ));
+        );
         $plugin_dao = $this->createStub(PluginDao::class);
         ProjectManager::clearInstance();
         $project_manager = ProjectManager::instance();

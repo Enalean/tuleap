@@ -46,7 +46,7 @@ readonly class PullRequestMerger
      */
     public function doMergeIntoDestination(PullRequest $pull_request, GitRepository $repository_dest, PFUser $user): void
     {
-        if ((int) $pull_request->getRepoDestId() !== (int) $repository_dest->getId()) {
+        if ((int) $pull_request->getRepoDestId() !== $repository_dest->getId()) {
             throw new \LogicException('Destination repository ID does not match the one of the PR');
         }
 

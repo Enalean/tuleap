@@ -184,9 +184,9 @@ class GitXmlImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
 
         if ((string) $repository_info['allow_artifact_closure'] === '1') {
-            $this->configure_artifact_closure->allowArtifactClosureForRepository((int) $repository->getId());
+            $this->configure_artifact_closure->allowArtifactClosureForRepository($repository->getId());
         } else {
-            $this->configure_artifact_closure->forbidArtifactClosureForRepository((int) $repository->getId());
+            $this->configure_artifact_closure->forbidArtifactClosureForRepository($repository->getId());
         }
     }
 
