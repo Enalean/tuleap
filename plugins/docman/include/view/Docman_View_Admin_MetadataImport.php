@@ -23,11 +23,13 @@
  *
  */
 
+use Tuleap\Docman\Metadata\MetadataComparator;
+
 class Docman_View_Admin_MetadataImport extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string IDENTIFIER = 'admin_import_metadata_check';
-    public $srcGo;
-    public $dstGo;
+    public Project $srcGo;
+    public Project $dstGo;
 
     #[\Override]
     protected function getIdentifier(): string
@@ -49,47 +51,50 @@ class Docman_View_Admin_MetadataImport extends \Tuleap\Docman\View\Admin\AdminVi
     }
 
     #[\Override]
-    protected function isBurningParrotCompatiblePage(): bool
-    {
-        return false;
-    }
-
-    #[\Override]
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
-        $html = '';
+        $html = '<div class="tlp-framed"><section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">' . dgettext('tuleap-docman', 'Import properties from an other project') . '</h1>
+                </div>
+                <section class="tlp-pane-section">';
 
         // True if there is sth to import in dst project.
         $sthToImport = false;
 
-        $mdCmp = new Docman_MetadataComparator(
-            $this->srcGo->getGroupId(),
-            $this->dstGo->getGroupId(),
-            $params['theme_path']
+        $mdCmp = new MetadataComparator(
+            (int) $this->srcGo->getGroupId(),
+            (int) $this->dstGo->getGroupId(),
         );
         $html .= $mdCmp->getMetadataCompareTable($sthToImport);
 
         $html .= $this->getImportForm($sthToImport);
+        $html .= '</section></div>';
 
         echo $html;
     }
 
-    private function getImportForm($sthToImport)
+    private function getImportForm(bool $sthToImport): string
     {
         $html = '';
         if ($sthToImport) {
             $html .= '<form name="" method="post" action="?">';
             $html .= '<input type="hidden" name="action" value="admin_import_metadata">';
-            $html .= '<input type="hidden" name="group_id" value="' . $this->dstGo->getGroupId() . '">';
-            $html .= '<input type="hidden" name="plugin_docman_metadata_import_group" value="' . $this->srcGo->getGroupId() . '">';
-            $html .= '<p>';
-            $html .= '<input type="submit" name="confirm" value="' . dgettext('tuleap-docman', 'Import') . '">';
+            $html .= '<input type="hidden" name="group_id" value="' . (int) $this->dstGo->getGroupId() . '">';
+            $html .= '<input type="hidden" name="plugin_docman_metadata_import_group" value="' .  (int) $this->srcGo->getGroupId() . '">';
+            $html .= '<div class="tlp-pane-section-submit">';
+            $html .= '<input class="tlp-button-primary" type="submit" name="confirm" value="' . dgettext('tuleap-docman', 'Import') . '">';
             $html .= ' ';
-            $html .= '<input type="submit" name="cancel" value="' . $GLOBALS['Language']->getText('global', 'btn_cancel') . '">';
-            $html .= '</p>';
+            $html .= '<input class="tlp-button-primary tlp-button-outline " type="submit" name="cancel" value="' . $GLOBALS['Language']->getText('global', 'btn_cancel') . '">';
+            $html .= '</div>';
             $html .= '</form>';
         } else {
-            $html .= '<p>' . dgettext('tuleap-docman', 'The properties of the two projects are aligned. Nothing to do.') . '</p>';
+            $html .= '<p>
+                        <div class="tlp-alert-info">' .
+                            dgettext('tuleap-docman', 'The properties of the two projects are aligned. Nothing to do.') . '
+                        </div>
+                    </p>';
         }
         return $html;
     }

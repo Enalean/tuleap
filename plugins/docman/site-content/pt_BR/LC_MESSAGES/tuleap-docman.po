@@ -51,15 +51,6 @@ msgid ""
 "send your request to the project administrators."
 msgstr ""
 
-#, php-format
-msgid ""
-"<p>The table below highlight the differences between %1$s and %2$s "
-"properties.</p><p>If there are differences, you can click on \"Import\" "
-"button at the bottom of the page. The properties of %1$s will be modified "
-"match what is defined in %2$s.</p><p><strong>Note:</strong> this operation "
-"delete neither properties nor values in %1$s and %2$s won't be modified.</p>"
-msgstr ""
-
 msgid "A directory already exists with this name under docman"
 msgstr ""
 
@@ -553,6 +544,13 @@ msgstr ""
 msgid "Granted groups"
 msgstr ""
 
+#, php-format
+msgid ""
+"If there are differences, you can click on \"Import\" button at the bottom "
+"of the page. The properties of %1$s will be modified match what is defined "
+"in %2$s."
+msgstr ""
+
 msgid "Import"
 msgstr ""
 
@@ -562,6 +560,9 @@ msgstr ""
 
 #, php-format
 msgid "Import actions<br />in %1$s"
+msgstr ""
+
+msgid "Import properties from an other project"
 msgstr ""
 
 msgid "Import properties from another project"
@@ -770,6 +771,9 @@ msgid "Not Yet"
 msgstr ""
 
 msgid "Not yet"
+msgstr ""
+
+msgid "Note"
 msgstr ""
 
 msgid "Notification type"
@@ -1090,6 +1094,11 @@ msgstr ""
 
 #, php-format
 msgid "The status \"%s\" is invalid."
+msgstr ""
+
+#, php-format
+msgid ""
+"The table below highlight the differences between %1$s and %2$s properties."
 msgstr ""
 
 #, php-format
@@ -1567,6 +1576,12 @@ msgid ""
 msgstr ""
 
 msgid "null is not a valid status."
+msgstr ""
+
+#, php-format
+msgid ""
+"this operation delete neither properties nor values in %1$s and %2$s won't "
+"be modified."
 msgstr ""
 
 #, php-format

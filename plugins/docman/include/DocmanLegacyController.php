@@ -25,32 +25,16 @@ namespace Tuleap\Docman;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\DispatchableWithThemeSelection;
 
-final class DocmanLegacyController implements DispatchableWithRequest, DispatchableWithThemeSelection
+final readonly class DocmanLegacyController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * @var \DocmanPlugin
-     */
-    private $plugin;
-    /**
-     * @var ExternalLinkParametersExtractor
-     */
-    private $link_parameters_extractor;
-    /**
-     * @var \Docman_ItemDao
-     */
-    private $dao;
-
     public function __construct(
-        \DocmanPlugin $plugin,
-        ExternalLinkParametersExtractor $link_parameters_extractor,
-        \Docman_ItemDao $dao,
+        private \DocmanPlugin $plugin,
+        private ExternalLinkParametersExtractor $link_parameters_extractor,
+        private \Docman_ItemDao $dao,
     ) {
-        $this->plugin                    = $plugin;
-        $this->link_parameters_extractor = $link_parameters_extractor;
-        $this->dao                       = $dao;
     }
 
     #[\Override]
@@ -68,24 +52,5 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
                 $this->dao
             )
         )->process($request, $request->getCurrentUser());
-    }
-
-    #[\Override]
-    public function isInABurningParrotPage(\Tuleap\HTTPRequest $request, array $variables): bool
-    {
-        return in_array(
-            $request->get('action'),
-            [
-                \Docman_View_Admin_MetadataDetails::IDENTIFIER,
-                \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
-                \Docman_View_Admin_Metadata::IDENTIFIER,
-                \Docman_View_Admin_LockInfos::IDENTIFIER,
-                \Docman_View_Admin_Obsolete::IDENTIFIER,
-                \Docman_View_Admin_Permissions::IDENTIFIER,
-                'admin',
-                \Docman_View_Admin_FilenamePattern::IDENTIFIER,
-            ],
-            true,
-        );
     }
 }

@@ -7519,34 +7519,6 @@
       <code><![CDATA[update]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_MetadataComparator.php">
-    <MissingParamType>
-      <code><![CDATA[$dstGroupId]]></code>
-      <code><![CDATA[$dstMd]]></code>
-      <code><![CDATA[$dstMd]]></code>
-      <code><![CDATA[$func]]></code>
-      <code><![CDATA[$iter]]></code>
-      <code><![CDATA[$loveMap]]></code>
-      <code><![CDATA[$mdMap]]></code>
-      <code><![CDATA[$srcGroupId]]></code>
-      <code><![CDATA[$srcMd]]></code>
-      <code><![CDATA[$srcMd]]></code>
-      <code><![CDATA[$sthToImport]]></code>
-      <code><![CDATA[$sthToImport]]></code>
-      <code><![CDATA[$themePath]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$docmanIcons]]></code>
-      <code><![CDATA[$dstGo]]></code>
-      <code><![CDATA[$srcGo]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[checkMdDifferences]]></code>
-      <code><![CDATA[getArrayFromIterator]]></code>
-      <code><![CDATA[getLoveCompareTable]]></code>
-      <code><![CDATA[getMetadataCompareTable]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/Docman_MetadataDao.php">
     <DeprecatedMethod>
       <code><![CDATA[getRow]]></code>
@@ -10343,18 +10315,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getTable]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Admin_MetadataImport.php">
-    <MissingParamType>
-      <code><![CDATA[$sthToImport]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$dstGo]]></code>
-      <code><![CDATA[$srcGo]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getImportForm]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_Obsolete.php">
@@ -14253,7 +14213,6 @@
       <code><![CDATA[cacheAccess]]></code>
       <code><![CDATA[cacheUserLastAccessDate]]></code>
       <code><![CDATA[isAReadAccess]]></code>
-      <code><![CDATA[isNotASystemUser]]></code>
       <code><![CDATA[parseCurrentAndPreviousMonthLogs]]></code>
       <code><![CDATA[parseLine]]></code>
       <code><![CDATA[parseLogs]]></code>
@@ -14399,11 +14358,6 @@
       <code><![CDATA[$replication_key->setGerritHostId($row['id'])]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/git/include/Git/Gitolite/SSHKey/Provider/GitoliteAdmin.php">
-    <MissingTemplateParam>
-      <code><![CDATA[GitoliteAdmin]]></code>
-    </MissingTemplateParam>
-  </file>
   <file src="plugins/git/include/Git/Gitolite/SSHKey/Provider/IProvideKey.php">
     <MissingTemplateParam>
       <code><![CDATA[\Iterator]]></code>
@@ -14422,61 +14376,6 @@
     <NullableReturnStatement>
       <code><![CDATA[$this->iterator->current()]]></code>
     </NullableReturnStatement>
-  </file>
-  <file src="plugins/git/include/Git/GitoliteHousekeeping/ChainOfResponsibility/CleanUpGitoliteAdminRepo.php">
-    <MissingParamType>
-      <code><![CDATA[$gitolite_var_path]]></code>
-      <code><![CDATA[$remote_admin_repository]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[clearExecuteAs]]></code>
-    </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[null]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="plugins/git/include/Git/GitoliteHousekeeping/ChainOfResponsibility/Command.php">
-    <MissingReturnType>
-      <code><![CDATA[executeNextCommand]]></code>
-      <code><![CDATA[getNextCommand]]></code>
-      <code><![CDATA[setNextCommand]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/GitoliteHousekeeping/GitoliteHousekeepingDao.php">
-    <MissingReturnType>
-      <code><![CDATA[enableGitGc]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/GitoliteHousekeeping/GitoliteHousekeepingGitGc.php">
-    <MissingParamType>
-      <code><![CDATA[$gitolite_admin_working_copy]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[cleanUpGitoliteAdminWorkingCopy]]></code>
-      <code><![CDATA[execGitGcAsAppAdm]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/GitoliteHousekeeping/GitoliteHousekeepingResponse.php">
-    <MissingParamType>
-      <code><![CDATA[$msg]]></code>
-      <code><![CDATA[$msg]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[abort]]></code>
-      <code><![CDATA[error]]></code>
-      <code><![CDATA[info]]></code>
-      <code><![CDATA[success]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/GitoliteHousekeeping/GitoliteHousekeepingRunner.php">
-    <MissingParamType>
-      <code><![CDATA[$gitolite_var_path]]></code>
-      <code><![CDATA[$remote_admin_repository]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[run]]></code>
-      <code><![CDATA[setUpChainFromArrayOfCommands]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/HTTP/Command.php">
     <MissingParamType>
@@ -17462,7 +17361,6 @@
       <code><![CDATA[$remote_server_migration_status]]></code>
       <code><![CDATA[$rootPath]]></code>
       <code><![CDATA[$scope]]></code>
-      <code><![CDATA[$this->notifiedMails]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[belongsToProject]]></code>
@@ -18686,7 +18584,6 @@
       <code><![CDATA[getGitPermissionsManager]]></code>
       <code><![CDATA[getGitSystemEventManager]]></code>
       <code><![CDATA[getGitolite3Parser]]></code>
-      <code><![CDATA[getGitoliteAdminPath]]></code>
       <code><![CDATA[getHistoryValueFormatter]]></code>
       <code><![CDATA[getHooksAndCallbacks]]></code>
       <code><![CDATA[getJSONRepositoriesRetriever]]></code>
@@ -19547,11 +19444,6 @@
   <file src="plugins/git/tests/unit/Gitolite/SSHKey/Provider/GerritServerTest.php">
     <ArgumentTypeCoercion>
       <code><![CDATA['Tuleap\Git\Gitolite\SSHKey\Provider\AccessException']]></code>
-    </ArgumentTypeCoercion>
-  </file>
-  <file src="plugins/git/tests/unit/GitoliteHousekeeping/GitoliteHousekeepingRunnerTest.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$expected_command]]></code>
     </ArgumentTypeCoercion>
   </file>
   <file src="plugins/git/tests/unit/Hook/DefaultBranchPush/PushAnalyzerTest.php">
@@ -32281,12 +32173,6 @@
     </RedundantCast>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$campaign_artifact_data]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/Campaign/CampaignRetriever.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $encrypted_job_token]]></code>
-      <code><![CDATA[$configuration]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Campaign/CloseCampaignController.php">
@@ -73567,7 +73453,6 @@
     </NullableReturnStatement>
     <PossiblyFalseArgument>
       <code><![CDATA[$config]]></code>
-      <code><![CDATA[file_get_contents(self::GITOLITE_RC_CONFIG)]]></code>
     </PossiblyFalseArgument>
   </file>
   <file src="src/tuleap-cfg/Command/SiteDeploy/Gitolite3/SiteDeployGitolite3Hooks.php">

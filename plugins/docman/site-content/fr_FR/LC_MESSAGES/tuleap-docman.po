@@ -68,21 +68,6 @@ msgstr ""
 "pouvez lui demander la permission.</em><br /> Ajoutez juste votre message "
 "puis envoyez."
 
-#, php-format
-msgid ""
-"<p>The table below highlight the differences between %1$s and %2$s "
-"properties.</p><p>If there are differences, you can click on \"Import\" "
-"button at the bottom of the page. The properties of %1$s will be modified "
-"match what is defined in %2$s.</p><p><strong>Note:</strong> this operation "
-"delete neither properties nor values in %1$s and %2$s won't be modified.</p>"
-msgstr ""
-"<p>La table suivante souligne les différence entre les propriétes de %1$s et "
-"%2$s.</p><p>Si il ya des différences, vous pouvez cliquer sur le bouton "
-"[Importer] à la fin de la page. Les propriétés de %1$s seront modifiées pour "
-"correspondre à ce qui est défini dans %2$s.</p><p><strong>Note :</strong> "
-"cette opération supprime ni les propriétes ni les valeurs de %1$s et %2$s.</"
-"p>"
-
 msgid "A directory already exists with this name under docman"
 msgstr "Un répertoire Docman existe déjà avec ce nom"
 
@@ -648,6 +633,16 @@ msgstr "Recherche globale de texte"
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
+#, php-format
+msgid ""
+"If there are differences, you can click on \"Import\" button at the bottom "
+"of the page. The properties of %1$s will be modified match what is defined "
+"in %2$s."
+msgstr ""
+"Si il y a des différences, vous pouvez cliquer sur le bouton[Importer] à la "
+"fin de la page. Les propriétés de %1$s seront modifiées pour correspondre à "
+"ce qui est défini dans %2$s."
+
 msgid "Import"
 msgstr "Importer"
 
@@ -658,6 +653,9 @@ msgstr "Importer les propriétés de \"%1$s\""
 #, php-format
 msgid "Import actions<br />in %1$s"
 msgstr "Actions d'import<br />dans %1$s"
+
+msgid "Import properties from an other project"
+msgstr "Importer des propriétés depuis un autre projet"
 
 msgid "Import properties from another project"
 msgstr "Importer les propriétés d'un projet"
@@ -881,6 +879,9 @@ msgstr "Pas encore"
 
 msgid "Not yet"
 msgstr "Pas encore"
+
+msgid "Note"
+msgstr "Note"
 
 msgid "Notification type"
 msgstr "Type de notification"
@@ -1234,6 +1235,13 @@ msgstr ""
 #, php-format
 msgid "The status \"%s\" is invalid."
 msgstr "Le statut \"%s\" est invalide."
+
+#, php-format
+msgid ""
+"The table below highlight the differences between %1$s and %2$s properties."
+msgstr ""
+"La table suivante souligne les différence entre les propriétes de %1$s et "
+"%2$s."
 
 #, php-format
 msgid "The value '%s' of '%s' is unknown"
@@ -1814,6 +1822,13 @@ msgstr ""
 
 msgid "null is not a valid status."
 msgstr "null n'est pas un statut valide."
+
+#, php-format
+msgid ""
+"this operation delete neither properties nor values in %1$s and %2$s won't "
+"be modified."
+msgstr ""
+"cette opération supprime ni les propriétes ni les valeurs de %1$s et %2$s."
 
 #, php-format
 msgid ""
