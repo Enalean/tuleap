@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,16 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Process;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Fault;
 
-/**
- * @template O of ProcessOutput
- */
-interface Process
+final readonly class ProcessExecutionFailure
 {
-    /**
-     * @return Ok<O>|Err<ProcessExecutionFailure>
-     */
-    public function run(): Ok|Err;
+    public function __construct(
+        public ProcessOutput $process_output,
+        public Fault $fault,
+    ) {
+    }
 }

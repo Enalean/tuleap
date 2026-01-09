@@ -323,7 +323,7 @@ class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $gitolite_compile_process->run()->andThen(
             fn() => $gitolite_trigger_post_compile_process->run()
         )->mapErr(
-            fn (Fault $fault) => Fault::writeToLogger($fault, $this->logger)
+            fn (\Tuleap\Process\ProcessExecutionFailure $execution_failure) => Fault::writeToLogger($execution_failure->fault, $this->logger)
         );
     }
 }

@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Process;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -32,36 +31,29 @@ final class SymfonyProcessTest extends TestCase
     public function testCanRunSuccessfulProcess(): void
     {
         $process = new SymfonyProcess(new \Symfony\Component\Process\Process(['sh', '-c', 'echo -n "STDOUT" && echo -n "STDERR" 1>&2']));
-        $success = $process->run();
+        $result  = $process->run();
 
-        self::assertInstanceOf(Ok::class, $success);
-        self::assertEquals('STDOUT', $process->getOutput());
-        self::assertEquals('STDERR', $process->getErrorOutput());
+        self::assertTrue(Result::isOk($result));
+        $result->map(
+            function (ProcessOutput $output): void {
+                self::assertEquals('STDOUT', $output->getOutput());
+                self::assertEquals('STDERR', $output->getErrorOutput());
+            }
+        );
     }
 
     public function testCanRunFailingProcess(): void
     {
         $process = new SymfonyProcess(new \Symfony\Component\Process\Process(['sh', '-c', 'echo -n "STDOUT" && echo -n "STDERR" 1>&2 && exit 1']));
-        $success = $process->run();
+        $result  = $process->run();
 
-        self::assertInstanceOf(Err::class, $success);
-        self::assertEquals('STDOUT', $process->getOutput());
-        self::assertEquals('STDERR', $process->getErrorOutput());
-    }
-
-    public function testTryingToGetOutputWithoutRunningTheProcessFirstFails(): void
-    {
-        $process = new SymfonyProcess(new \Symfony\Component\Process\Process(['sh']));
-
-        $this->expectException(\LogicException::class);
-        $process->getOutput();
-    }
-
-    public function testTryingToGetErrorOutputWithoutRunningTheProcessFirstFails(): void
-    {
-        $process = new SymfonyProcess(new \Symfony\Component\Process\Process(['sh']));
-
-        $this->expectException(\LogicException::class);
-        $process->getErrorOutput();
+        self::assertTrue(Result::isErr($result));
+        $result->mapErr(
+            function (ProcessExecutionFailure $execution_failure): void {
+                self::assertStringContainsString('exit code 1', (string) $execution_failure->fault);
+                self::assertEquals('STDOUT', $execution_failure->process_output->getOutput());
+                self::assertEquals('STDERR', $execution_failure->process_output->getErrorOutput());
+            }
+        );
     }
 }
