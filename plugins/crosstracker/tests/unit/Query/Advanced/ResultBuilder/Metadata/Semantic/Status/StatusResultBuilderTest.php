@@ -22,7 +22,7 @@ namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Sta
 
 use LogicException;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\StaticListRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
@@ -45,7 +45,7 @@ final class StatusResultBuilderTest extends TestCase
     private RetrieveArtifact $retrieve_artifact;
     private RetrieveSemanticStatusStub $semantic_status_retriever;
     private PFUser $user;
-    private TrackerSemanticStatus&MockObject $status_semantic;
+    private TrackerSemanticStatus&Stub $status_semantic;
     private Tracker $tracker;
 
     #[\Override]
@@ -56,7 +56,7 @@ final class StatusResultBuilderTest extends TestCase
         $this->artifact          = ArtifactTestBuilder::anArtifact(13)->inTracker($this->tracker)->build();
         $this->retrieve_artifact = RetrieveArtifactStub::withArtifacts($this->artifact);
 
-        $this->status_semantic = $this->createMock(TrackerSemanticStatus::class);
+        $this->status_semantic = $this->createStub(TrackerSemanticStatus::class);
         $this->status_semantic->method('getTracker')->willReturn($this->artifact->getTracker());
         $field = SelectboxFieldBuilder::aSelectboxField(456)->withReadPermission($this->user, true)->build();
         $this->status_semantic->method('getField')->willReturn($field);
@@ -96,7 +96,7 @@ final class StatusResultBuilderTest extends TestCase
             ->inTracker($this->artifact->getTracker())
             ->build();
 
-        $status_semantic = $this->createMock(TrackerSemanticStatus::class);
+        $status_semantic = $this->createStub(TrackerSemanticStatus::class);
         $status_semantic->method('getTracker')->willReturn($this->artifact->getTracker());
         $status_semantic->method('getField')->willReturn($field);
         $this->semantic_status_retriever->withSemanticStatus($status_semantic);

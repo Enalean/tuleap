@@ -21,7 +21,7 @@
 namespace Tuleap\CrossTracker\Widget;
 
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use ProjectManager;
 use Tuleap\CrossTracker\Tests\Stub\Widget\RetrieveCrossTrackerWidgetStub;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
@@ -33,12 +33,12 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WidgetPermissionCheckerTest extends TestCase
 {
-    private ProjectManager&MockObject $project_manager;
+    private ProjectManager&Stub $project_manager;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->project_manager = $this->createStub(ProjectManager::class);
     }
 
     public function testItReturnsTrueForUserCheckingItsOwnWidget(): void
@@ -67,7 +67,7 @@ final class WidgetPermissionCheckerTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
         $this->project_manager->method('getProject')->willReturn($project);
 
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('isAdmin')->willReturn(true);
         $permission_checker = new WidgetPermissionChecker(
             $this->project_manager,
@@ -81,7 +81,7 @@ final class WidgetPermissionCheckerTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
         $this->project_manager->method('getProject')->willReturn($project);
 
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('isAdmin')->willReturn(false);
         $permission_checker = new WidgetPermissionChecker(
             $this->project_manager,

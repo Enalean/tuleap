@@ -42,7 +42,7 @@ final class AssignedToResultBuilderTest extends TestCase
     private \UserHelper&Stub $user_helper;
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
     private RetrieveArtifactStub $retrieve_artifact;
-    private TrackerSemanticContributor&\PHPUnit\Framework\MockObject\MockObject $semantic_contributor;
+    private TrackerSemanticContributor&Stub $semantic_contributor;
     private \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField $assigned_to_field;
 
     #[\Override]
@@ -54,7 +54,7 @@ final class AssignedToResultBuilderTest extends TestCase
         $this->user_helper->method('getDisplayNameFromUser');
         $this->artifact             = ArtifactTestBuilder::anArtifact(13)->inTracker(TrackerTestBuilder::aTracker()->build())->build();
         $this->retrieve_artifact    = RetrieveArtifactStub::withArtifacts($this->artifact);
-        $this->semantic_contributor = $this->createMock(TrackerSemanticContributor::class);
+        $this->semantic_contributor = $this->createStub(TrackerSemanticContributor::class);
     }
 
     #[\Override]
