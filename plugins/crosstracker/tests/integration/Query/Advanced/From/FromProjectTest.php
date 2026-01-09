@@ -135,7 +135,11 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
 
     public function testItGetTrackerFromMyProjects(): void
     {
-        $user_manager = $this->createPartialMock(UserManager::class, ['getCurrentUser']);
+        $user_manager = $this->getStubBuilder(UserManager::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->onlyMethods(['getCurrentUser'])
+            ->getStub();
         $user_manager->method('getCurrentUser')->willReturn($this->user_member);
         UserManager::setInstance($user_manager);
 

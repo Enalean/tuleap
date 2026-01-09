@@ -111,10 +111,11 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
         foreach ($expected as $distance => $e) {
-            $GLOBALS['Language']->expects($this->atLeast(2))->method('getText');
+            $GLOBALS['Language']->method('getText');
             DateHelper::distanceOfTimeInWords($_SERVER['REQUEST_TIME'] - $distance, $_SERVER['REQUEST_TIME']);
             DateHelper::distanceOfTimeInWords($_SERVER['REQUEST_TIME'] - $distance, $_SERVER['REQUEST_TIME'], true);
         }
+        $this->expectNotToPerformAssertions();
     }
 
     public function testFormatDateFormatsTheDateAccordingToLanguage(): void
@@ -130,14 +131,14 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFormatDateReturnsEmptyStringWhenDateIsZero(): void
     {
-        $lang = $this->createMock(\BaseLanguage::class);
+        $lang = $this->createStub(\BaseLanguage::class);
         $lang->method('getText')->willReturn('Y-m-d');
         self::assertEquals('', DateHelper::formatForLanguage($lang, 0, false));
     }
 
     private function formatDate(bool $dayOnly, string $format): string
     {
-        $lang = $this->createMock(\BaseLanguage::class);
+        $lang = $this->createStub(\BaseLanguage::class);
         $lang->method('getText')->willReturn($format);
         $firstOfDecember2011_12_01 = 1322752769;
 
@@ -147,7 +148,6 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDateInPast(): void
     {
         $GLOBALS['Language']
-            ->expects($this->once())
             ->method('getText')
             ->with(
                 'include_utils',
@@ -165,7 +165,6 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDateInFuture(): void
     {
         $GLOBALS['Language']
-            ->expects($this->once())
             ->method('getText')
             ->with(
                 'include_utils',

@@ -60,7 +60,11 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $this->alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
         $core_builder->addUserToProjectMembers((int) $this->alice->getId(), $project_id);
 
-        $user_manager = $this->createPartialMock(UserManager::class, ['getCurrentUser']);
+        $user_manager = $this->getStubBuilder(UserManager::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->onlyMethods(['getCurrentUser'])
+            ->getStub();
         $user_manager->method('getCurrentUser')->willReturn($this->alice);
         UserManager::setInstance($user_manager);
 

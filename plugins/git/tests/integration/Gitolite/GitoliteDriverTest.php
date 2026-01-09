@@ -33,7 +33,6 @@ use Git_GitRepositoryUrlManager;
 use GitDao;
 use GitPlugin;
 use GitRepositoryFactory;
-use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Psr\Log\NullLogger;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
@@ -53,7 +52,7 @@ final class GitoliteDriverTest extends TestIntegrationTestCase
     use TemporaryTestDirectory;
 
     private Git_GitoliteDriver $a_gitolite_driver;
-    private ProjectManager&MockObject $project_manager;
+    private ProjectManager&\PHPUnit\Framework\MockObject\Stub $project_manager;
     private GitRepositoryFactory&\PHPUnit\Framework\MockObject\Stub $repository_factory;
     private FineGrainedRetriever&\PHPUnit\Framework\MockObject\Stub $fine_grained_retriever;
     private BigObjectAuthorizationManager&\PHPUnit\Framework\MockObject\Stub $big_object_authorization_manager;
@@ -65,7 +64,6 @@ final class GitoliteDriverTest extends TestIntegrationTestCase
 
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir() . '/cache');
 
-        $this->project_manager    = $this->createMock(ProjectManager::class);
         $this->repository_factory = $this->createStub(GitRepositoryFactory::class);
 
         $git_plugin = $this->createStub(GitPlugin::class);
@@ -75,13 +73,14 @@ final class GitoliteDriverTest extends TestIntegrationTestCase
         $logger = new NullLogger();
 
         $this->fine_grained_retriever = $this->createStub(FineGrainedRetriever::class);
+        $this->project_manager        = $this->createStub(ProjectManager::class);
 
         $another_gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
+            $this->createStub(Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
             $this->fine_grained_retriever,
             $this->createStub(FineGrainedPermissionFactory::class),
-            $this->createMock(RegexpFineGrainedRetriever::class),
+            $this->createStub(RegexpFineGrainedRetriever::class),
             EventDispatcherStub::withIdentityCallback(),
         );
 
@@ -97,13 +96,13 @@ final class GitoliteDriverTest extends TestIntegrationTestCase
         $gitolite_conf_writer = new Git_Gitolite_GitoliteConfWriter(
             $another_gitolite_permissions_serializer,
             $a_gitolite_project_serializer,
-            new NullLogger(),
+            $logger,
             $this->project_manager,
             $this->getGitoliteAdministrationPath()
         );
 
-        $git_dao                 = $this->createMock(GitDao::class);
-        $git_plugin              = $this->createMock(GitPlugin::class);
+        $git_dao                 = $this->createStub(GitDao::class);
+        $git_plugin              = $this->createStub(GitPlugin::class);
         $this->a_gitolite_driver = new Git_GitoliteDriver(
             $logger,
             $url_manager,
