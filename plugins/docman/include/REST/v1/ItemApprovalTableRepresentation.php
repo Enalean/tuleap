@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Docman_ApprovalReviewer;
 use Docman_ApprovalTable;
 use Docman_ApprovalTableVersionned;
@@ -54,6 +55,7 @@ final readonly class ItemApprovalTableRepresentation
         public string $state,
         public bool $is_closed,
         public string $description,
+        public string $post_processed_description,
         public array $reviewers,
         public int $reminder_occurence,
     ) {
@@ -68,6 +70,7 @@ final readonly class ItemApprovalTableRepresentation
         ProvideUserAvatarUrl $provide_user_avatar_url,
         Docman_VersionFactory $version_factory,
         Docman_NotificationsManager $notifications_manager,
+        Codendi_HTMLPurifier $purifier,
     ): self {
         $version_label  = '';
         $version_id     = null;
@@ -79,6 +82,8 @@ final readonly class ItemApprovalTableRepresentation
             $version_number = (int) $approval_table->getVersionNumber();
         }
 
+        $description                = $approval_table->getDescription() ?? '';
+        $post_processed_description = $purifier->purifyTextWithReferences($description, $item->getGroupId());
         return new self(
             JsonCast::toInt($approval_table->getId()),
             $table_owner,
@@ -97,7 +102,8 @@ final readonly class ItemApprovalTableRepresentation
                 default                               => throw new I18NRestException(400, dgettext('tuleap-docman', 'Invalid approval table status')),
             },
             $approval_table->isClosed(),
-            $approval_table->getDescription() ?? '',
+            $description,
+            $post_processed_description,
             array_values(array_map(
                 static fn(Docman_ApprovalReviewer $reviewer) => ItemApprovalTableReviewerRepresentation::build(
                     $item,
@@ -107,6 +113,7 @@ final readonly class ItemApprovalTableRepresentation
                     $provide_user_avatar_url,
                     $version_factory,
                     $notifications_manager,
+                    $purifier
                 ),
                 $approval_table->getReviewerArray(),
             )),

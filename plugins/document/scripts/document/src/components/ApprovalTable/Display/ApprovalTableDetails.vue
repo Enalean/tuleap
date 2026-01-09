@@ -24,7 +24,9 @@
     </div>
     <div class="tlp-property" v-if="table.version_number !== null">
         <label class="tlp-label">{{ $gettext("Attached to document version") }}</label>
-        <p data-test="table-version-number">{{ table.version_number }}</p>
+        <p data-test="table-version-number">
+            {{ table.version_number }}
+        </p>
     </div>
     <div class="tlp-property">
         <label class="tlp-label">{{ $gettext("Notification type") }}</label>
@@ -45,7 +47,12 @@
     </div>
     <div class="tlp-property">
         <label class="tlp-label">{{ $gettext("Requester comment") }}</label>
-        <p v-if="table.description !== ''" data-test="table-description">{{ table.description }}</p>
+        <p
+            v-if="table.description !== ''"
+            data-test="table-description"
+            v-dompurify-html="table.post_processed_description"
+            v-bind:title="table.post_processed_description"
+        ></p>
         <p v-else class="tlp-property-empty">{{ $gettext("No comment") }}</p>
     </div>
 

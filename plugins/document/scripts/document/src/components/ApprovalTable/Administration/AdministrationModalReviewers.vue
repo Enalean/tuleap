@@ -19,13 +19,13 @@
 
 <template>
     <h2 class="tlp-modal-subtitle">{{ $gettext("Reviewers") }}</h2>
-    <span class="tlp-text-info">
+    <div class="tlp-alert-info">
         {{
             $gettext(
                 "Table is not saved when you change it, please click on 'Update' button to save it.",
             )
         }}
-    </span>
+    </div>
     <table class="tlp-table reviewers-table">
         <thead>
             <tr>

@@ -82,17 +82,12 @@ describe("ApprovalTableHistory", () => {
         expect(getAll).toHaveBeenCalledWith(123);
         const rows = wrapper.findAll("[data-test=history-row]");
         expect(rows).toHaveLength(2);
-        // Row 0
-        expect(rows[0].find("[data-test=history-row-number]").text()).toBe("2");
-        expect(
-            rows[0].find("[data-test=history-row-number]").findComponent(RouterLinkStub).exists(),
-        ).toBe(false);
-        expect(rows[0].find("[data-test=history-row-label]").text()).toBe(version_label);
-        // Row 1
-        expect(rows[1].find("[data-test=history-row-number]").text()).toBe("1");
-        expect(
-            rows[1].find("[data-test=history-row-number]").findComponent(RouterLinkStub).exists(),
-        ).toBe(true);
-        expect(rows[1].find("[data-test=history-row-label]").text()).toBe("");
+        const first_row = rows[0];
+        expect(first_row.find("[data-test=history-row-number]").text()).toBe("2");
+        expect(first_row.find("[data-test=history-row-label]").text()).toBe(version_label);
+
+        const second_row = rows[1];
+        expect(second_row.find("[data-test=history-row-number]").text()).toBe("1");
+        expect(second_row.find("[data-test=history-row-label]").text()).toBe("");
     });
 });

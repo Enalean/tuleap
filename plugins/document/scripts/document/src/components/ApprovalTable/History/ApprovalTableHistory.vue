@@ -65,12 +65,7 @@
                         v-bind:is-in-folder-content-row="false"
                     />
                 </td>
-                <td>
-                    <document-relative-date
-                        v-bind:date="table.approval_request_date"
-                        relative_placement="right"
-                    />
-                </td>
+                <td><document-relative-date v-bind:date="table.approval_request_date" /></td>
             </tr>
         </tbody>
     </table>
@@ -112,10 +107,7 @@ function refreshHistory(): void {
 }
 
 function shouldDisplayLinkToVersion(table: ApprovalTable): boolean {
-    if (props.version !== null) {
-        return props.version !== table.version_number;
-    }
-    return props.item.approval_table?.version_number !== table.version_number;
+    return table.version_number !== null;
 }
 
 watch(() => props.item, refreshHistory);

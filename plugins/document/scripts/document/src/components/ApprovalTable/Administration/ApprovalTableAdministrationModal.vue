@@ -120,7 +120,11 @@
                     class="tlp-button-icon fa-solid fa-spin fa-circle-notch"
                     aria-hidden="true"
                 ></i>
-                <i v-else class="fa-solid fa-trash tlp-button-icon" aria-hidden="true"></i>
+                <i
+                    v-else
+                    class="fa-solid fa-trash-alt fa-regular tlp-button-icon"
+                    aria-hidden="true"
+                ></i>
                 {{ $gettext("Delete") }}
             </button>
             <button

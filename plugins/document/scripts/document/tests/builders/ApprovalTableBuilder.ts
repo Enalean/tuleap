@@ -26,6 +26,7 @@ export class ApprovalTableBuilder {
     private notification_type: string = "";
     private description: string = "";
     private approval_state: string = "";
+    private is_closed: boolean = false;
 
     constructor(id: number) {
         this.id = id;
@@ -56,6 +57,11 @@ export class ApprovalTableBuilder {
         return this;
     }
 
+    public withIsClosed(is_closed: boolean): this {
+        this.is_closed = is_closed;
+        return this;
+    }
+
     public build(): ApprovalTable {
         return {
             id: this.id,
@@ -67,8 +73,9 @@ export class ApprovalTableBuilder {
             version_number: this.version_number,
             version_label: this.version_label,
             notification_type: this.notification_type,
-            is_closed: false,
+            is_closed: this.is_closed,
             description: this.description,
+            post_processed_description: this.description,
             reviewers: [],
             state: "disabled",
             reminder_occurence: 0,

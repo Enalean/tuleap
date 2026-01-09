@@ -32,7 +32,7 @@ import { Fault } from "@tuleap/fault";
 
 vi.useFakeTimers();
 
-describe("ApprovalTableReviewModal", () => {
+describe(ApprovalTableReviewModal, () => {
     let trigger: HTMLButtonElement;
 
     function getWrapper(): VueWrapper<InstanceType<typeof ApprovalTableReviewModal>> {

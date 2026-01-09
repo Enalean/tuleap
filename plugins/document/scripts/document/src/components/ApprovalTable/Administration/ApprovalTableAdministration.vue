@@ -20,7 +20,7 @@
 <template>
     <button
         role="button"
-        class="tlp-button-primary tlp-button-mini"
+        class="tlp-button-primary tlp-button-mini tlp-button-outline"
         data-test="table-admin-button"
         ref="modal_trigger"
         v-bind:disabled="!show_modal"

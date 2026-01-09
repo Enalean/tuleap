@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import ApprovalTableReviewers from "./ApprovalTableReviewers.vue";
@@ -29,7 +29,7 @@ import type { ApprovalTableReviewer } from "../../../type";
 import { UserBuilder } from "../../../../tests/builders/UserBuilder";
 import { ApprovalTableBuilder } from "../../../../tests/builders/ApprovalTableBuilder";
 
-describe("ApprovalTableReviewers", () => {
+describe(ApprovalTableReviewers, () => {
     function getWrapper(
         reviewers: ReadonlyArray<ApprovalTableReviewer>,
         is_readonly: boolean,
@@ -51,6 +51,9 @@ describe("ApprovalTableReviewers", () => {
                     RouterLink: RouterLinkStub,
                 },
             },
+            directives: {
+                "dompurify-html": vi.fn(),
+            },
         });
     }
 
@@ -60,7 +63,7 @@ describe("ApprovalTableReviewers", () => {
         expect(wrapper.find("[data-test=no-reviewer]").exists()).toBe(true);
     });
 
-    it("Should display each reviewers", () => {
+    it("Should display each reviewers and only current user can submit an approval review", () => {
         const wrapper = getWrapper(
             [
                 {
@@ -69,8 +72,10 @@ describe("ApprovalTableReviewers", () => {
                     review_date: null,
                     state: "not_yet",
                     comment: "",
+                    post_processed_comment: "",
                     version_id: null,
                     version_name: "",
+                    notification: false,
                 },
                 {
                     user: new UserBuilder(103).build(),
@@ -78,8 +83,10 @@ describe("ApprovalTableReviewers", () => {
                     review_date: "2025-11-27 17:28:35",
                     state: "approved",
                     comment: "",
+                    post_processed_comment: "",
                     version_id: null,
                     version_name: "2",
+                    notification: false,
                 },
             ],
             false,
@@ -87,14 +94,18 @@ describe("ApprovalTableReviewers", () => {
 
         const rows = wrapper.findAll("[data-test=reviewer-row]");
         expect(rows).toHaveLength(2);
-        // Row 0
-        expect(rows[0].classes()).not.toContain("reviewer-not-current");
-        expect(rows[0].find("[data-test=reviewer-state]").text()).toBe("Not yet");
-        expect(rows[0].find("[data-test=reviewer-state] > button").exists()).toBe(true);
-        // Row 1
-        expect(rows[1].classes()).toContain("reviewer-not-current");
-        expect(rows[1].find("[data-test=reviewer-state]").text()).toBe("Approved");
-        expect(rows[1].find("[data-test=reviewer-state] > button").exists()).toBe(false);
+
+        const first_reviewer = rows[0];
+        expect(first_reviewer.find("[data-test=reviewer-state]").text()).toContain("Not yet");
+        expect(
+            first_reviewer.find("[data-test=review-modal-trigger-button]").exists(),
+        ).toBeTruthy();
+
+        const second_reviewer = rows[1];
+        expect(second_reviewer.find("[data-test=reviewer-state]").text()).toBe("Approved");
+        expect(
+            second_reviewer.find("[data-test=review-modal-trigger-button]").exists(),
+        ).toBeFalsy();
     });
 
     it("Should display each reviewers in readonly", () => {
@@ -106,8 +117,10 @@ describe("ApprovalTableReviewers", () => {
                     review_date: null,
                     state: "not_yet",
                     comment: "",
+                    post_processed_comment: "",
                     version_id: null,
                     version_name: "",
+                    notification: false,
                 },
                 {
                     user: new UserBuilder(103).build(),
@@ -115,8 +128,10 @@ describe("ApprovalTableReviewers", () => {
                     review_date: "2025-11-27 17:28:35",
                     state: "approved",
                     comment: "",
+                    post_processed_comment: "",
                     version_id: null,
                     version_name: "2",
+                    notification: false,
                 },
             ],
             true,
@@ -124,13 +139,15 @@ describe("ApprovalTableReviewers", () => {
 
         const rows = wrapper.findAll("[data-test=reviewer-row]");
         expect(rows).toHaveLength(2);
-        // Row 0
-        expect(rows[0].classes()).toContain("reviewer-not-current");
-        expect(rows[0].find("[data-test=reviewer-state]").text()).toBe("Not yet");
-        expect(rows[0].find("[data-test=reviewer-state] > a").exists()).toBe(false);
-        // Row 1
-        expect(rows[1].classes()).toContain("reviewer-not-current");
-        expect(rows[1].find("[data-test=reviewer-state]").text()).toBe("Approved");
-        expect(rows[1].find("[data-test=reviewer-state] > a").exists()).toBe(false);
+
+        const first_reviewer = rows[0];
+        expect(first_reviewer.find("[data-test=reviewer-state]").text()).toBe("Not yet");
+        expect(first_reviewer.find("[data-test=review-modal-trigger-button]").exists()).toBeFalsy();
+
+        const second_reviewer = rows[1];
+        expect(second_reviewer.find("[data-test=reviewer-state]").text()).toBe("Approved");
+        expect(
+            second_reviewer.find("[data-test=review-modal-trigger-button]").exists(),
+        ).toBeFalsy();
     });
 });

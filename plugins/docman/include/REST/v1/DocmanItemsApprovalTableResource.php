@@ -572,6 +572,7 @@ final class DocmanItemsApprovalTableResource extends AuthenticatedResource
             $this->user_avatar_url_provider,
             $this->version_factory,
             new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
+            \Codendi_HTMLPurifier::instance()
         );
     }
 }

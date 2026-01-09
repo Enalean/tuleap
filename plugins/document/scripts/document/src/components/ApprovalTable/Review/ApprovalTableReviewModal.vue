@@ -221,7 +221,10 @@ onMounted(() => {
         keyboard: true,
         dismiss_on_backdrop_click: true,
     });
-    props.trigger.addEventListener("click", () => modal.value?.show());
+
+    if (props.trigger) {
+        props.trigger.addEventListener("click", () => modal.value?.show());
+    }
 });
 
 onUnmounted(() => {
