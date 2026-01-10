@@ -58,16 +58,9 @@ class ThemeManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $GLOBALS['Response'];
     }
 
-    /**
-     * @return \Tuleap\Theme\BurningParrot\BurningParrotTheme|null
-     */
-    public function getBurningParrot(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user)
+    public function getBurningParrot(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user): BurningParrotTheme
     {
-        $path = __DIR__ . '/../../themes/BurningParrot/include/BurningParrotTheme.php';
-        if (! file_exists($path)) {
-            return null;
-        }
-        include_once $path;
+        require_once __DIR__ . '/../../themes/BurningParrot/vendor/autoload.php';
         ForgeConfig::set('sys_user_theme', 'BurningParrot');
         return new BurningParrotTheme('/themes/BurningParrot', $current_user);
     }

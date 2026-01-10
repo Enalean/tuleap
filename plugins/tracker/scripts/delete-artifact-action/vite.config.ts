@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2026 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import vue from "@vitejs/plugin-vue";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-namespace Tuleap\Tracker\Admin\ArtifactsDeletion;
-
-use Tuleap\Tracker\Tracker;
-
-final class ArtifactsDeletionInTrackerAdminUrlBuilder
-{
-    public static function fromTracker(Tracker $tracker): string
+export default vite.defineAppConfig(
     {
-        return \trackerPlugin::TRACKER_BASE_URL . '/artifacts-deletion/' . $tracker->getId();
-    }
-}
+        plugin_name: "trackers",
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "delete-artifact-modal": path.resolve(__dirname, "src/index.ts"),
+                },
+            },
+        },
+    },
+);

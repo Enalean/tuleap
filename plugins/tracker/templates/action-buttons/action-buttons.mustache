@@ -11,18 +11,37 @@
             {{> action-buttons/copy-artifact }}
             {{> action-buttons/move-artifact-button }}
 
-            {{# has_at_least_one_additional_action }}
+            {{# additional_buttons_divider }}
                 <span class="tlp-dropdown-menu-separator" role="separator"></span>
-            {{/ has_at_least_one_additional_action }}
+            {{/ additional_buttons_divider }}
 
             {{# additional_buttons }}
                 {{> action-buttons/additional-action-button }}
             {{/ additional_buttons }}
 
-            {{# divider }}
+            {{# notifications_divider }}
                 <span class="tlp-dropdown-menu-separator" role="separator"></span>
-            {{/ divider }}
+            {{/ notifications_divider }}
             {{> action-buttons/mail-notifications }}
+
+            {{# can_delete }}
+                {{# delete_divider }}
+                    <span class="tlp-dropdown-menu-separator" role="separator"></span>
+                {{/ delete_divider }}
+                <button type="button"
+                        role="menuitem"
+                        class="tlp-dropdown-menu-item tlp-dropdown-menu-item-danger"
+                        id="tracker-action-button-delete"
+                        data-test="tracker-action-button-delete"
+                        {{# is_deletion_disabled }}
+                            disabled
+                            title="{{ deletion_disabled_reason }}"
+                        {{/ is_deletion_disabled }}
+                >
+                    <i class="tlp-dropdown-menu-item-icon fa-fw fa-regular fa-trash-alt" id="tracker-action-button-delete-icon" aria-hidden="true"></i>
+                    {{# gettext }}Delete{{/ gettext }}
+                </button>
+            {{/ can_delete }}
         </div>
     </div>
      <div id="tracker-modal-actions"></div>
@@ -30,4 +49,7 @@
     {{# should_load_modal }}
         {{> action-buttons/move-artifact-modal }}
     {{/ should_load_modal }}
+    {{# can_delete }}
+        {{> action-buttons/delete-artifact-modal }}
+    {{/ can_delete }}
 {{/ has_at_least_one_action }}

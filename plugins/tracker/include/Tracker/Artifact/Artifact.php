@@ -85,7 +85,10 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Action\UpdateArtifactAction;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
@@ -93,9 +96,12 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
+use Tuleap\Tracker\Artifact\ActionButtons\ArtifactDeleteModalPresenterBuilder;
+use Tuleap\Tracker\Artifact\ActionButtons\ArtifactDeletionCSRFSynchronizerTokenProvider;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactIncomingEmailButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactMoveButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -595,7 +601,12 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $event_manager,
                 new MoveActionAllowedChecker(new MoveActionAllowedDAO()),
             ),
-            new AdditionalArtifactActionButtonsPresenterBuilder()
+            new AdditionalArtifactActionButtonsPresenterBuilder(),
+            new ArtifactDeleteModalPresenterBuilder(
+                new ArtifactDeletionCSRFSynchronizerTokenProvider(),
+                new ArtifactsDeletionConfig(new ArtifactsDeletionConfigDAO()),
+                new UserDeletionRetriever(new ArtifactsDeletionDAO()),
+            ),
         );
 
         $user = $this->getCurrentUser();
@@ -619,6 +630,14 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             } else {
                 $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'src/index-fp.ts'));
             }
+        }
+
+        if ($action_buttons_presenters->shouldLoadDeleteArtifactModal()) {
+            $include_delete_assets = new Tuleap\Layout\IncludeViteAssets(
+                __DIR__ . '/../../../scripts/delete-artifact-action/frontend-assets',
+                '/assets/trackers/delete-artifact-action'
+            );
+            $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_delete_assets, 'src/index.ts'));
         }
 
         foreach ($action_buttons_fetcher->getAdditionalActions() as $additional_action) {

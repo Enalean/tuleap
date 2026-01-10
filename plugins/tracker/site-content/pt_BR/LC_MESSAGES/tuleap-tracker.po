@@ -159,12 +159,6 @@ msgstr ""
 
 #, php-format
 msgid ""
-"<h3>You are about to delete permanently the artifact \"%1$s\".</"
-"h3><p><strong>There is no way to restore the artifact.</strong></p>"
-msgstr ""
-
-#, php-format
-msgid ""
 "<h4><i class=\"fa-solid fa-triangle-exclamation\"></i> Your local.inc file "
 "is outdated!</h4><p>It appears that your local.inc file contains definitions "
 "of variables that are unused and it may lead to confusion.</p><p>Please edit "
@@ -896,9 +890,6 @@ msgstr ""
 msgid "Configure trackers"
 msgstr ""
 
-msgid "Confirm"
-msgstr ""
-
 msgid "Confirm deletion"
 msgstr ""
 
@@ -1109,9 +1100,6 @@ msgid "Delete"
 msgstr "Excluir"
 
 msgid "Delete artifacts"
-msgstr ""
-
-msgid "Delete canceled"
 msgstr ""
 
 msgid "Delete permanently the field"

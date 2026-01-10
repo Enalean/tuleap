@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Admin;
 
-use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsDeletionInTrackerAdminUrlBuilder;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenter;
 
@@ -37,18 +36,15 @@ class HeaderPresenter
     public bool $is_notification_tab_active = false;
     public bool $is_other_tab_active        = false;
 
-    public string $artifacts_deletion_url;
-
     public function __construct(
         Tracker $tracker,
         string $current_item,
         array $additional_items,
         public readonly WorkflowMenuPresenter $workflow_menu,
     ) {
-        $this->tracker_id             = $tracker->getId();
-        $this->tracker_name           = $tracker->getName();
-        $this->additional_items       = $additional_items;
-        $this->artifacts_deletion_url = ArtifactsDeletionInTrackerAdminUrlBuilder::fromTracker($tracker);
+        $this->tracker_id       = $tracker->getId();
+        $this->tracker_name     = $tracker->getName();
+        $this->additional_items = $additional_items;
 
         $this->defineActiveTabBasedOnItem($current_item);
     }

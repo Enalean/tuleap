@@ -162,7 +162,7 @@ class FrontRouter
         }
     }
 
-    private function getBurningParrotTheme()
+    private function getBurningParrotTheme(): \Tuleap\Theme\BurningParrot\BurningParrotTheme
     {
         return $this->theme_manager->getBurningParrot($this->current_user_provider->getCurrentUserWithLoggedInInformation());
     }

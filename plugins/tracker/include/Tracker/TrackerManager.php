@@ -145,6 +145,23 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
         }
     }
 
+    private function renderNotFoundException(\Tuleap\HTTPRequest $request, string $message): never
+    {
+        new \Tuleap\Layout\ErrorRendering()->rendersError(
+            new ThemeManager(new \Tuleap\BurningParrotCompatiblePageDetector(
+                new \Tuleap\Request\CurrentPage(),
+                new \User_ForgeUserGroupPermissionsManager(
+                    new \User_ForgeUserGroupPermissionsDao()
+                )
+            ))->getBurningParrot(UserManager::instance()->getCurrentUserWithLoggedInInformation()),
+            $request,
+            404,
+            $GLOBALS['Language']->getText('global', 'error'),
+            $message,
+        );
+        exit;
+    }
+
     /**
      * Controler
      *
@@ -161,7 +178,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
             $object = $url->getDispatchableFromRequest($request, $user);
             $this->processSubElement($object, $request, $user);
         } catch (Tracker_ResourceDoesntExistException $e) {
-             exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
+             $this->renderNotFoundException($request, $e->getMessage());
         } catch (Tracker_CannotAccessTrackerException $e) {
             if (isset($object) && ! $request->isAjax()) {
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);

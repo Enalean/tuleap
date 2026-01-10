@@ -1066,3 +1066,4 @@ WHERE `groups`.status != 'D'
       AND service.short_name = 'plugin_tracker';
 
 INSERT INTO forgeconfig (name, value) VALUES ('tracker_jira_force_basic_auth', '1');
+INSERT INTO forgeconfig (name, value) VALUES ('artifacts_deletion_limit', '5');

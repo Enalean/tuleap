@@ -129,14 +129,13 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsConfirmDeletionInTrackerAdminUrlBuilder;
-use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsDeletionInTrackerAdminUrlBuilder;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
+use Tuleap\Tracker\Artifact\ActionButtons\ArtifactDeletionCSRFSynchronizerTokenProvider;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
@@ -1074,61 +1073,42 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
-            case 'admin-delete-artifact-confirm':
-                if ($this->userIsAdmin($current_user)) {
-                    $token = ArtifactsConfirmDeletionInTrackerAdminUrlBuilder::fromTracker($this)->getCSRFSynchronizerToken();
-                    $token->check();
-                    $artifact_id = $request->getValidated('id', 'uint', 0);
-                    $artifact    = $this->getTrackerArtifactFactory()->getArtifactById($artifact_id);
-                    if ($artifact && $artifact->getTrackerId() == $this->id) {
-                        $this->displayAdminConfirmDelete($layout, $artifact);
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s doesn\'t exist or doesn\'t belong to current tracker'), $request->get('id')));
-                        $GLOBALS['Response']->redirect(ArtifactsDeletionInTrackerAdminUrlBuilder::fromTracker($this));
-                    }
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
-                }
-                break;
             case 'admin-delete-artifact':
                 if ($this->userIsAdmin($current_user)) {
-                    $token = new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
-                    $token->check();
-                    if ($request->exist('confirm')) {
-                        $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
-                        if ($artifact && $artifact->getTrackerId() == $this->getId()) {
-                            $artifact_deletion_manager = new ArtifactsDeletionManager(
-                                new ArtifactsDeletionDAO(),
-                                ArtifactDeletorBuilder::buildForcedSynchronousDeletor(),
-                                new ArtifactDeletionLimitRetriever(
-                                    new ArtifactsDeletionConfig(
-                                        new ArtifactsDeletionConfigDAO(),
-                                    ),
-                                    new UserDeletionRetriever(
-                                        new ArtifactsDeletionDAO(),
-                                    ),
-                                ),
-                            );
-                            try {
-                                $artifact_deletion_manager->deleteArtifact(
-                                    $artifact,
-                                    $current_user
-                                );
-                                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s successfully deleted'), $request->get('id')));
-                            } catch (ArtifactsDeletionLimitReachedException | DeletionOfArtifactsIsNotAllowedException $exception) {
-                                $GLOBALS['Response']->addFeedback(
-                                    'error',
-                                    $exception->getI18NMessage(),
-                                );
-                            }
-                        } else {
-                            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s doesn\'t exist or doesn\'t belong to current tracker'), $request->get('id')));
-                        }
+                    $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
+                    if ($artifact === null || $artifact->getTrackerId() !== $this->getId()) {
+                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-tracker', 'Artifact %1$s doesn\'t exist or doesn\'t belong to current tracker'), $request->get('id')));
                     } else {
-                        $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Delete canceled'));
+                        $token = new ArtifactDeletionCSRFSynchronizerTokenProvider()->getToken($artifact);
+                        $token->check();
+
+                        $artifact_deletion_manager = new ArtifactsDeletionManager(
+                            new ArtifactsDeletionDAO(),
+                            ArtifactDeletorBuilder::buildForcedSynchronousDeletor(),
+                            new ArtifactDeletionLimitRetriever(
+                                new ArtifactsDeletionConfig(
+                                    new ArtifactsDeletionConfigDAO(),
+                                ),
+                                new UserDeletionRetriever(
+                                    new ArtifactsDeletionDAO(),
+                                ),
+                            ),
+                        );
+                        try {
+                            $artifact_deletion_manager->deleteArtifact(
+                                $artifact,
+                                $current_user
+                            );
+                            $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, sprintf(dgettext('tuleap-tracker', 'Artifact %1$s successfully deleted'), $request->get('id')));
+                        } catch (ArtifactsDeletionLimitReachedException | DeletionOfArtifactsIsNotAllowedException $exception) {
+                            $GLOBALS['Response']->addFeedback(
+                                Feedback::ERROR,
+                                $exception->getI18NMessage(),
+                            );
+                            $GLOBALS['Response']->redirect($artifact->getUri());
+                        }
                     }
-                    $GLOBALS['Response']->redirect($this->getAdministrationUrl());
+                    $GLOBALS['Response']->redirect($this->getUri());
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . $this->getId());
@@ -1791,29 +1771,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         ';
 
         echo '</div>';
-        $this->displayAdminFooter($layout);
-    }
-
-    public function displayAdminConfirmDelete(Tracker_IDisplayTrackerLayout $layout, Artifact $artifact): void
-    {
-        $token    = new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
-        $content  = '<div class="tracker_confirm_delete">';
-        $content .= sprintf(dgettext('tuleap-tracker', '<h3>You are about to delete permanently the artifact "%1$s".</h3><p><strong>There is no way to restore the artifact.</strong></p>'), $artifact->getXRefAndTitleFlamingParrot());
-        $content .= '<div class="tracker_confirm_delete_preview">';
-        $content .= $this->fetchFormElementsReadOnly($artifact, []);
-        $content .= '</div>';
-        $content .= '<form name="delete_artifact" method="post" action="' . \trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact">';
-        $content .= $token->fetchHTMLInput();
-        $content .= '<div class="tracker_confirm_delete_buttons">';
-        $content .= '<input type="submit" tabindex="2" name="confirm" value="' . dgettext('tuleap-tracker', 'Confirm') . '" />';
-        $content .= '<input type="submit" tabindex="1" name="cancel" value="' . dgettext('tuleap-tracker', 'Cancel') . '" />';
-        $content .= '</div>';
-        $content .= '<input type="hidden" name="id" value="' . $artifact->getId() . '" />';
-        $content .= '</form>';
-        $content .= '</div>';
-
-        $this->displayAdminItemHeader($layout, 'clean', dgettext('tuleap-tracker', 'Delete artifacts'));
-        echo $content;
         $this->displayAdminFooter($layout);
     }
 
