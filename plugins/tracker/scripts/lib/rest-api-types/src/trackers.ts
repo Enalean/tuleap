@@ -43,6 +43,7 @@ import type {
     StaticRichText,
     DefaultValueDateType,
     ShouldDisplayTime,
+    CrossReferenceFieldIdentifier,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -164,6 +165,10 @@ export interface StaticRichTextStructure extends BaseFieldStructure {
     readonly default_value: string;
 }
 
+export interface CrossReferenceStructure extends BaseFieldStructure {
+    readonly type: CrossReferenceFieldIdentifier;
+}
+
 type StaticField = LineBreakStructure | SeparatorStructure | StaticRichTextStructure;
 
 export type StructureFields =
@@ -178,7 +183,8 @@ export type StructureFields =
     | TextFieldStructure
     | NumericFieldStructure
     | StaticField
-    | UserFieldStructure;
+    | UserFieldStructure
+    | CrossReferenceStructure;
 
 export interface StructureFormat {
     readonly id: number;
