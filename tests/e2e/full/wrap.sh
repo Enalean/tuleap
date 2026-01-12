@@ -18,16 +18,20 @@ case "${1:-}" in
     "mysql80")
     export DB_HOST="mysql80"
     ;;
+    "mysql84")
+    export DB_HOST="mysql84"
+    ;;
     *)
     echo "A database type must be provided as parameter. Allowed values are:"
     echo "* mysql80"
+    echo "* mysql84"
     exit 1
 esac
 
-project_name="$(echo -n "e2e-tests-${BUILD_TAG:-dev}" | tr '.' '_' | tr '[A-Z]' '[a-z]')"
+project_name="$(echo -n "e2e-tests-${BUILD_TAG:-dev}-${DB_HOST}" | tr '.' '_' | tr '[A-Z]' '[a-z]')"
 DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f ./tests/e2e/compose-run-tests.yaml -f tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file $additional_compose_file -p $project_name"
 
-test_results_folder='./test_results_e2e_full'
+test_results_folder="./test_results_e2e_full-${DB_HOST}"
 if [ "$#" -eq "2" ]; then
     test_results_folder="$2"
 fi

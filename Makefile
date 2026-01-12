@@ -184,11 +184,11 @@ tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP
 	$(eval SETUP_ONLY ?= 0)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-e2e: ## Run E2E tests. DB to select the database to use (mysql80).
+tests-e2e: ## Run E2E tests. DB to select the database to use (mysql80,mysql84).
 	$(eval DB ?= mysql80)
 	@tests/e2e/full/wrap.sh "$(DB)"
 
-tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql80).
+tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql80,mysql84).
 	$(eval DB ?= mysql80)
 	@tests/e2e/full/wrap_for_dev_context.sh "$(DB)"
 

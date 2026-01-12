@@ -57,10 +57,13 @@ pipeline {
             }
             post {
                 always {
-                    junit 'results/e2e/full/*.xml'
+                    junit 'results/e2e/full-mysql80/*.xml'
                 }
             }
         }
+
+        stage('Build and run el10') { steps { script { actions.runBuildAndRun('el10') } } }
+
         stage ('MySQL 8.4') {
             failFast false
             parallel {
@@ -72,10 +75,19 @@ pipeline {
                     steps { script { actions.runRESTTests('mysql84', '84') } }
                     post { always { junit 'results/api-rest/*/*' } }
                 }
+                stage('E2E tests') {
+                    options { retry(1) }
+                    steps {
+                        script { actions.runEndToEndTests('full', 'mysql84') }
+                    }
+                    post {
+                        always {
+                            junit 'results/e2e/full-mysql84/*.xml'
+                        }
+                    }
+                }
             }
         }
-
-        stage('Build and run el10') { steps { script { actions.runBuildAndRun('el10') } } }
     }
     post {
         always {

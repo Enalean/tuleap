@@ -10,14 +10,18 @@ case "${1:-}" in
     "mysql80")
     export DB_HOST="mysql80"
     ;;
+    "mysql84")
+    export DB_HOST="mysql84"
+    ;;
     *)
     echo "A database type must be provided as parameter. Allowed values are:"
     echo "* mysql80"
+    echo "* mysql84"
     exit 1
 esac
 
 export TULEAP_NETWORK_INTERNAL="false"
-DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f ./tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file -p e2e-tests"
+DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f ./tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file -p e2e-tests-${DB_HOST}"
 
 test_results_folder='./test_results_e2e_full'
 if [ "$#" -eq "2" ]; then
@@ -36,5 +40,5 @@ clean_env
 export TEST_RESULT_OUTPUT="$test_results_folder"
 $DOCKERCOMPOSE up -d --build
 
-HOSTS="$($DOCKERCOMPOSE ps -q | xargs docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}{{range .NetworkSettings.Networks}}{{range .Aliases}} {{ . }}{{end}}{{end}}' | grep -v ${DB_HOST})"
+HOSTS="$($DOCKERCOMPOSE ps -q | xargs docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}{{range .NetworkSettings.Networks}}{{range .Aliases}} {{ . }}{{end}}{{end}}' | grep -v " ${DB_HOST} ")"
 echo -e "Please set in /etc/hosts:\n\e[32m$HOSTS\e[0m"
