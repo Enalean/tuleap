@@ -10,7 +10,7 @@
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/plugin-docgen-docx": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
-    "@tuleap/plugin-tracker-xlsx-report-exporter": "workspace:*",
+    "@tuleap/plugin-tracker-report-exporter": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-styles": "workspace:^",

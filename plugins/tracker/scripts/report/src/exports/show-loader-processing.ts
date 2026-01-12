@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ExportSettings } from "../export-document";
+export async function showLoaderWhileProcessing(
+    doc: Document,
+    processing_fn: () => Promise<void>,
+): Promise<void> {
+    const loading_modal_element = doc.createElement("div");
+    loading_modal_element.classList.add("tuleap-modal-loading");
+    doc.body.appendChild(loading_modal_element);
 
-export function generateFilename(export_settings: ExportSettings): string {
-    let filename: string =
-        export_settings.first_level.tracker_name + "-" + export_settings.first_level.report_name;
-
-    if (export_settings.second_level) {
-        filename += "-" + export_settings.second_level.tracker_name;
+    try {
+        await processing_fn();
+    } finally {
+        doc.body.removeChild(loading_modal_element);
     }
-
-    if (export_settings.third_level) {
-        filename += "-" + export_settings.third_level.tracker_name;
-    }
-
-    filename += ".xlsx";
-
-    return filename;
 }

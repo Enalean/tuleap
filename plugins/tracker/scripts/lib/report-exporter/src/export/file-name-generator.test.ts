@@ -38,7 +38,7 @@ describe("file-name-generator", () => {
             },
         } as ExportSettings;
 
-        const filename = generateFilename(export_settings);
+        const filename = generateFilename(export_settings, "xlsx");
 
         expect(filename).toBe("Tracker01-Report01-Tracker02-Tracker03.xlsx");
     });
@@ -54,7 +54,7 @@ describe("file-name-generator", () => {
             },
         } as ExportSettings;
 
-        const filename = generateFilename(export_settings);
+        const filename = generateFilename(export_settings, "xlsx");
 
         expect(filename).toBe("Tracker01-Report01-Tracker02.xlsx");
     });
@@ -66,8 +66,20 @@ describe("file-name-generator", () => {
             },
         } as ExportSettings;
 
-        const filename = generateFilename(export_settings);
+        const filename = generateFilename(export_settings, "xlsx");
 
         expect(filename).toBe("Tracker01-Report01.xlsx");
+    });
+    it("generates the file name csv extension", (): void => {
+        const export_settings: ExportSettings = {
+            first_level: {
+                tracker_name: "Tracker01",
+                report_name: "Report01",
+            },
+        } as ExportSettings;
+
+        const filename = generateFilename(export_settings, "csv");
+
+        expect(filename).toBe("Tracker01-Report01.csv");
     });
 });

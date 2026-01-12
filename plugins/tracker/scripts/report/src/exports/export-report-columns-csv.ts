@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { downloadXLSX, downloadDocument } from "@tuleap/plugin-tracker-report-exporter";
+import type { Properties } from "./type";
+import { downloadCSV, downloadDocument } from "@tuleap/plugin-tracker-report-exporter";
 
-interface Properties {
-    readonly current_tracker_name: string;
-    readonly current_report_id: number;
-    readonly current_report_name: string;
-    readonly current_renderer_id: number;
-}
-
-export async function startDownloadExportAllReportColumnsSpreadsheet(
+export async function startDownloadExportAllReportColumnsCSV(
     properties: Properties,
+    separator: "comma" | "semicolon" | "tab",
 ): Promise<void> {
     await downloadDocument(
         {
@@ -39,7 +34,8 @@ export async function startDownloadExportAllReportColumnsSpreadsheet(
                 artifact_link_types: [],
                 all_columns: false,
             },
+            csv_separator: separator,
         },
-        downloadXLSX,
+        downloadCSV,
     );
 }

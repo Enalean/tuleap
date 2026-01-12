@@ -33,9 +33,10 @@ export interface ExportSettings {
     readonly first_level: ExportLevelSetting;
     readonly second_level?: ExportLevelSetting;
     readonly third_level?: Omit<ExportLevelSetting, "artifact_link_types">;
+    readonly csv_separator?: "comma" | "semicolon" | "tab" | undefined;
 }
 
-export async function downloadXLSXDocument(
+export async function downloadDocument(
     export_settings: ExportSettings,
     download_document: (export_settings: ExportSettings, formatted_data: ReportSection) => void,
 ): Promise<void> {

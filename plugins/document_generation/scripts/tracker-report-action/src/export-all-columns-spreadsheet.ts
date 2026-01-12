@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { downloadXLSX, downloadXLSXDocument } from "@tuleap/plugin-tracker-xlsx-report-exporter";
+import { downloadXLSX, downloadDocument } from "@tuleap/plugin-tracker-report-exporter";
 
 interface Properties {
     readonly current_tracker_name: string;
@@ -29,7 +29,7 @@ interface Properties {
 export async function startDownloadExportAllColumnsSpreadsheet(
     properties: Properties,
 ): Promise<void> {
-    await downloadXLSXDocument(
+    await downloadDocument(
         {
             first_level: {
                 tracker_name: properties.current_tracker_name,

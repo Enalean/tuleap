@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setupCSVExport } from "./csv-export.ts";
-import { init } from "./expert-mode";
-import "../themes/main.scss";
+import type { ExportSettings } from "../export-document";
 
-document.addEventListener("DOMContentLoaded", () => {
-    init();
-    setupCSVExport(document);
-});
+export function generateFilename(
+    export_settings: ExportSettings,
+    extension: "xlsx" | "csv",
+): string {
+    let filename: string =
+        export_settings.first_level.tracker_name + "-" + export_settings.first_level.report_name;
+
+    if (export_settings.second_level) {
+        filename += "-" + export_settings.second_level.tracker_name;
+    }
+
+    if (export_settings.third_level) {
+        filename += "-" + export_settings.third_level.tracker_name;
+    }
+
+    filename += `.${extension}`;
+
+    return filename;
+}

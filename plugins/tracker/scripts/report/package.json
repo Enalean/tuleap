@@ -6,6 +6,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/dom": "workspace:*",
+    "@tuleap/plugin-tracker-report-exporter": "workspace:*",
     "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*"
   },
@@ -14,6 +16,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false"
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
   }
 }
