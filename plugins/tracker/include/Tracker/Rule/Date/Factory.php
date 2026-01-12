@@ -198,8 +198,15 @@ class Tracker_Rule_Date_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     private function populate(Tracker_Rule_Date $date_rule, $tracker_id, $source_field_id, $target_field_id, $comparator, $id = null)
     {
-        $source_field = $this->element_factory->getFormElementById($source_field_id);
-        $target_field = $this->element_factory->getFormElementById($target_field_id);
+        $source_field = $this->element_factory->getFieldById($source_field_id);
+        if (! $source_field) {
+            throw new RuntimeException('Source field not found');
+        }
+        $target_field = $this->element_factory->getFieldById($target_field_id);
+        if (! $target_field) {
+            throw new RuntimeException('Target field not found');
+        }
+
         $date_rule->setTrackerId($tracker_id)
             ->setSourceFieldId($source_field_id)
             ->setSourceField($source_field)

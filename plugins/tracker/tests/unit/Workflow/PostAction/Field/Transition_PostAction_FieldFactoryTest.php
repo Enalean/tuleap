@@ -93,7 +93,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItLoadsIntFieldPostActions(): void
     {
         $this->element_factory
-            ->method('getFormElementById')
+            ->method('getFieldById')
             ->with($this->field_id)
             ->willReturn(new IntegerField(null, null, null, null, null, null, null, null, null, null, null));
 
@@ -119,7 +119,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItLoadsFloatFieldPostActions(): void
     {
         $this->element_factory
-            ->method('getFormElementById')
+            ->method('getFieldById')
             ->with($this->field_id)
             ->willReturn(new FloatField(null, null, null, null, null, null, null, null, null, null, null));
 
@@ -145,7 +145,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItLoadsDateFieldPostActions(): void
     {
         $this->element_factory
-            ->method('getFormElementById')
+            ->method('getFieldById')
             ->with($this->field_id)
             ->willReturn(new DateField(null, null, null, null, null, null, null, null, null, null, null));
 
@@ -182,7 +182,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
         $select_box2->method('getId')->willReturn(2066);
         $select_box3 = $this->createMock(SelectboxField::class);
         $select_box3->method('getId')->willReturn(2067);
-        $this->element_factory->method('getFormElementById')->willReturnCallback(static fn (int $id) => match ($id) {
+        $this->element_factory->method('getFieldById')->willReturnCallback(static fn (int $id) => match ($id) {
             $select_box1->getId() => $select_box1,
             $select_box2->getId() => $select_box2,
             $select_box3->getId() => $select_box3,

@@ -327,6 +327,9 @@ class BurndownField extends TrackerField implements Tracker_FormElement_Field_Re
     {
         $artifact     = $changeset->getArtifact();
         $form_element = $this->getFormElementFactory()->getFormElementById($this->getId());
+        if (! $form_element) {
+            throw new \RuntimeException('Burndown field not found');
+        }
 
         $artifact_field_value_representation = new ArtifactFieldValueFullRepresentation();
         $artifact_field_value_representation->build(

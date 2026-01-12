@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Tests\REST\TrackerFields;
 
 require_once __DIR__ . '/../TrackerBase.php';
 
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -38,67 +39,113 @@ class TrackerFieldsTest extends TrackerBase
         $field_id = $this->getStaticSelectboxFieldId();
 
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', "tracker_fields/$field_id"));
-        $this->assertEquals(['OPTIONS', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertEquals(['OPTIONS', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    public function testPATCHAddsNewValuesInSelectboxBindToStaticValues()
+    public function testPATCHLabelUpdatesTheLabel(): void
+    {
+        $field_id = $this->getUserSelectboxFieldId();
+        $body     = json_encode([
+            'label' => 'Lorem ipsum',
+        ]);
+
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream((string) $body)));
+
+        self::assertSame(200, $response->getStatusCode());
+
+        $tracker_field_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertSame('Lorem ipsum', $tracker_field_json['label']);
+    }
+
+    public function testPATCHLabelThrowsAnExceptionIfUserIsNotAdmin(): void
+    {
+        $field_id = $this->getUserSelectboxFieldId();
+        $body     = json_encode([
+            'label' => 'Lorem ipsum',
+        ]);
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream((string) $body)),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
+        );
+
+        self::assertSame(403, $response->getStatusCode());
+    }
+
+    public function testPATCHNewValuesThrowsAnExceptionIfUserIsNotAdmin(): void
     {
         $field_id = $this->getStaticSelectboxFieldId();
         $body     = json_encode([
             'new_values' => ['new_value_01', 'new_value_02'],
         ]);
 
-        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream((string) $body)),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
+        );
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(403, $response->getStatusCode());
+    }
+
+    public function testPATCHNewValuesAddsNewValuesInSelectboxBindToStaticValues(): void
+    {
+        $field_id = $this->getStaticSelectboxFieldId();
+        $body     = json_encode([
+            'new_values' => ['new_value_01', 'new_value_02'],
+        ]);
+
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream((string) $body)));
+
+        self::assertEquals($response->getStatusCode(), 200);
 
         $tracker_field_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(count($tracker_field_json['values']), 7);
-        $this->assertEquals($tracker_field_json['values'][5]['label'], 'new_value_01');
-        $this->assertEquals($tracker_field_json['values'][6]['label'], 'new_value_02');
+        self::assertEquals(count($tracker_field_json['values']), 7);
+        self::assertEquals($tracker_field_json['values'][5]['label'], 'new_value_01');
+        self::assertEquals($tracker_field_json['values'][6]['label'], 'new_value_02');
     }
 
-    public function testPATCHAddsNewValuesInRadiobuttonBindToStaticValues()
+    public function testPATCHNewValuesAddsNewValuesInRadiobuttonBindToStaticValues(): void
     {
         $field_id = $this->getStaticRadiobuttonFieldId();
         $body     = json_encode([
             'new_values' => ['new_value_01', 'new_value_02'],
         ]);
 
-        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream((string) $body)));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
 
         $tracker_field_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(count($tracker_field_json['values']), 7);
-        $this->assertEquals($tracker_field_json['values'][5]['label'], 'new_value_01');
-        $this->assertEquals($tracker_field_json['values'][6]['label'], 'new_value_02');
+        self::assertEquals(count($tracker_field_json['values']), 7);
+        self::assertEquals($tracker_field_json['values'][5]['label'], 'new_value_01');
+        self::assertEquals($tracker_field_json['values'][6]['label'], 'new_value_02');
     }
 
-    public function testPATCHThrowsAnExceptionIfFieldIsNotASimpleList()
+    public function testPATCHNewValuesThrowsAnExceptionIfFieldIsNotASimpleList(): void
     {
         $field_id = $this->getStaticMultiSelectboxFieldId();
         $body     = json_encode([
             'new_values' => ['new_value_01', 'new_value_02'],
         ]);
 
-        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream((string) $body)));
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        self::assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testPATCHThrowsAnExceptionIfFieldIsNotBoundToStaticValues()
+    public function testPATCHNewValuesThrowsAnExceptionIfFieldIsNotBoundToStaticValues(): void
     {
         $field_id = $this->getUserSelectboxFieldId();
         $body     = json_encode([
             'new_values' => ['new_value_01', 'new_value_02'],
         ]);
 
-        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream((string) $body)));
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        self::assertEquals($response->getStatusCode(), 400);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -107,8 +154,8 @@ class TrackerFieldsTest extends TrackerBase
         $field    = $this->getAUsedField($this->tracker_fields_tracker_id, self::FIELD_FILE);
         $field_id = $field['field_id'];
 
-        $this->assertEquals("tracker_fields/$field_id/files", $field['file_creation_uri']);
-        $this->assertEquals(67108864, $field['max_size_upload']);
+        self::assertEquals("tracker_fields/$field_id/files", $field['file_creation_uri']);
+        self::assertEquals(67108864, $field['max_size_upload']);
 
         return $field_id;
     }
@@ -125,21 +172,21 @@ class TrackerFieldsTest extends TrackerBase
             'file_type'  => 'text/plain',
         ];
 
-        $response1 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(200, $response1->getStatusCode());
+        $response1 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream((string) json_encode($query))));
+        self::assertEquals(200, $response1->getStatusCode());
         $response1_json = json_decode($response1->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotEmpty($response1_json['upload_href']);
         $this->assertNotEmpty($response1_json['download_href']);
 
-        $response2 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(200, $response2->getStatusCode());
+        $response2 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream((string) json_encode($query))));
+        self::assertEquals(200, $response2->getStatusCode());
         $response2_json = json_decode($response2->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertSame($response1_json['upload_href'], $response2_json['upload_href']);
         self::assertSame($response1_json['download_href'], $response2_json['download_href']);
 
         $query['file_size'] = 456;
-        $response3          = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(200, $response3->getStatusCode());
+        $response3          = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream((string) json_encode($query))));
+        self::assertEquals(200, $response3->getStatusCode());
 
         $tus_response_upload = $this->getResponse(
             $this->request_factory->createRequest('PATCH', $response1_json['upload_href'])
@@ -148,12 +195,12 @@ class TrackerFieldsTest extends TrackerBase
                 ->withHeader('Upload-Offset', '0')
                 ->withBody($this->stream_factory->createStream($data))
         );
-        $this->assertEquals(204, $tus_response_upload->getStatusCode());
-        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset'));
+        self::assertEquals(204, $tus_response_upload->getStatusCode());
+        self::assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset'));
 
         $data_response = $this->getResponse($this->request_factory->createRequest('GET', $response1_json['download_href']));
-        $this->assertEquals(200, $data_response->getStatusCode());
-        $this->assertEquals(
+        self::assertEquals(200, $data_response->getStatusCode());
+        self::assertEquals(
             $data,
             $data_response->getBody()->getContents()
         );
@@ -176,19 +223,19 @@ class TrackerFieldsTest extends TrackerBase
         ];
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream(json_encode($payload)))
+            $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream((string) json_encode($payload)))
         );
-        $this->assertEquals(201, $response->getStatusCode());
+        self::assertEquals(201, $response->getStatusCode());
         $artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id)
         );
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
         foreach (json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['values'] as $field) {
             if ($field['field_id'] === $field_id) {
                 $this->assertCount(1, $field['file_descriptions']);
-                $this->assertEquals($file_id, $field['file_descriptions'][0]['id']);
+                self::assertEquals($file_id, $field['file_descriptions'][0]['id']);
                 return;
             }
         }
@@ -204,8 +251,8 @@ class TrackerFieldsTest extends TrackerBase
             'file_type'  => 'text/plain',
         ];
 
-        $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(200, $response_creation_file->getStatusCode());
+        $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream((string) json_encode($query))));
+        self::assertEquals(200, $response_creation_file->getStatusCode());
 
         $tus_response_upload = $this->getResponse(
             $this->request_factory->createRequest(
@@ -213,10 +260,10 @@ class TrackerFieldsTest extends TrackerBase
                 json_decode($response_creation_file->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['upload_href']
             )->withHeader('Tus-Resumable', '1.0.0')
         );
-        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        self::assertEquals(204, $tus_response_upload->getStatusCode());
 
-        $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(200, $response_creation_file->getStatusCode());
+        $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream((string) json_encode($query))));
+        self::assertEquals(200, $response_creation_file->getStatusCode());
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('getFileFieldId')]
@@ -229,8 +276,8 @@ class TrackerFieldsTest extends TrackerBase
             'file_type'  => 'text/plain',
         ];
 
-        $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(200, $response_creation_file->getStatusCode());
+        $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream((string) json_encode($query))));
+        self::assertEquals(200, $response_creation_file->getStatusCode());
         $this->assertEmpty(json_decode($response_creation_file->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['upload_href']);
     }
 

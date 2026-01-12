@@ -57,12 +57,12 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 // php
         $engine->data = [];
 
         $ff               = Tracker_FormElementFactory::instance();
-        $field_start      = $this->chart->getField_start()      ? $ff->getFormElementById($this->chart->getField_start())      : null;
-        $field_due        = $this->chart->getField_due()        ? $ff->getFormElementById($this->chart->getField_due())        : null;
-        $field_finish     = $this->chart->getField_finish()     ? $ff->getFormElementById($this->chart->getField_finish())     : null;
-        $field_percentage = $this->chart->getField_percentage() ? $ff->getFormElementById($this->chart->getField_percentage()) : null;
-        $field_righttext  = $this->chart->getField_righttext()  ? $ff->getFormElementById($this->chart->getField_righttext())  : null;
-        $field_summary    = $this->chart->getSummary()          ? $ff->getFormElementById($this->chart->getSummary())          : null;
+        $field_start      = $this->chart->getField_start()      ? $ff->getFieldById($this->chart->getField_start())      : null;
+        $field_due        = $this->chart->getField_due()        ? $ff->getFieldById($this->chart->getField_due())        : null;
+        $field_finish     = $this->chart->getField_finish()     ? $ff->getFieldById($this->chart->getField_finish())     : null;
+        $field_percentage = $this->chart->getField_percentage() ? $ff->getFieldById($this->chart->getField_percentage()) : null;
+        $field_righttext  = $this->chart->getField_righttext()  ? $ff->getFieldById($this->chart->getField_righttext())  : null;
+        $field_summary    = $this->chart->getSummary()          ? $ff->getFieldById($this->chart->getSummary())          : null;
         $af               = Tracker_ArtifactFactory::instance();
         $artifacts        = $af->getArtifactsByArtifactIdList(explode(',', $this->artifacts['id']));
         foreach ($artifacts as $artifact) {

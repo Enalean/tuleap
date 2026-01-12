@@ -45,7 +45,6 @@ describe("FieldSelect", () => {
         );
         const select = wrapper.find("select");
 
-        expect(select.attributes("id")).toContain("select-");
         expect(select.attributes("multiple")).not.toBeDefined();
     });
 
@@ -55,7 +54,6 @@ describe("FieldSelect", () => {
         );
         const select = wrapper.find("select");
 
-        expect(wrapper.find("select").attributes("id")).toContain("multiselect-");
         expect(select.attributes("multiple")).toBeDefined();
     });
 });

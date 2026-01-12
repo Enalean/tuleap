@@ -166,7 +166,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs
 
     private function buildGroupByField(): ?TrackerField
     {
-        return $this->getFormElementFactory()->getFormElementById($this->getFieldGroupId());
+        return $this->getFormElementFactory()->getFieldById($this->getFieldGroupId());
     }
 
     /**

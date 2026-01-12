@@ -18,7 +18,7 @@
   -->
 <template>
     <div class="tlp-property">
-        <label-for-field v-bind:id="'static-user-text-' + field.field_id" v-bind:field="field" />
+        <label-for-field v-bind:field="field" />
         <span
             v-if="is_user_loading"
             class="tlp-property"

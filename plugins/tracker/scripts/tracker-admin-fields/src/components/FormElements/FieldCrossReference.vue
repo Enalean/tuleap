@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-property">
-        <label-for-field v-bind:field="field" v-bind:id="'cross-ref-' + field.field_id" />
+        <label-for-field v-bind:field="field" />
         <p>{{ $gettext("Display in & out references") }}</p>
     </div>
 </template>

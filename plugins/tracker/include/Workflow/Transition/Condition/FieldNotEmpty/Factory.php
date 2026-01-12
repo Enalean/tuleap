@@ -44,7 +44,12 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory
 
         $fields_rows = $this->dao->searchByTransitionId($transition->getId());
         foreach ($fields_rows as $row) {
-            $condition->addField($this->element_factory->getFormElementById($row['field_id']));
+            $field = $this->element_factory->getFieldById($row['field_id']);
+            if (! $field) {
+                throw new RuntimeException('Field not found');
+            }
+
+            $condition->addField($field);
         }
 
         return $condition;

@@ -351,6 +351,9 @@ class Burnup extends TrackerField implements Tracker_FormElement_Field_ReadOnly,
 
         $burnup_representation = new BurnupRepresentation($capacity, $burnup_data);
         $formelement_field     = $this->getFormElementFactory()->getFormElementById($this->getId());
+        if (! $formelement_field) {
+            throw new \RuntimeException('Burnup field not found');
+        }
 
         $field_representation = new ArtifactFieldValueFullRepresentation();
         $field_representation->build($this->getId(), $this->getFormElementFactory()->getType($formelement_field), $this->getLabel(), $burnup_representation);

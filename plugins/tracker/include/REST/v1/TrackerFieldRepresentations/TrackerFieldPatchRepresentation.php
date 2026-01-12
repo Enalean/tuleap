@@ -26,7 +26,12 @@ namespace Tuleap\REST\v1\TrackerFieldRepresentations;
 class TrackerFieldPatchRepresentation
 {
     /**
-     * @var array | null {@type string}
+     * @var string | null The new label of the form element {@required false}
+     */
+    public ?string $label = null;
+
+    /**
+     * @var array | null The new values for list field {@type string} {@required false}
      */
     public $new_values;
 }

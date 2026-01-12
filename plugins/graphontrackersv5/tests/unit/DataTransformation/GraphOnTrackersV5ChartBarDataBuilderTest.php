@@ -89,7 +89,7 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
         $this->builder->expects($this->once())->method('getFormElementFactory')->willReturn($this->factory);
 
         $group_field = $this->buildGroupField();
-        $this->factory->expects($this->once())->method('getFormElementById')->willReturn($group_field);
+        $this->factory->expects($this->once())->method('getFieldById')->willReturn($group_field);
 
         $this->builder->expects($this->atLeast(2))->method('getFieldGroupId')->willReturn(10);
         $this->builder->expects($this->once())->method('getFieldBaseId')->willReturn(20);

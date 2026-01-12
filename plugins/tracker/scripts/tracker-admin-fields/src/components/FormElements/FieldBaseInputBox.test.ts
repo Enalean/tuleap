@@ -27,7 +27,6 @@ import type {
     UserBoundListField,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import { StaticListItemTestBuilder } from "../../tests/builders/StaticListItemTestBuilder";
-import LabelForField from "./LabelForField.vue";
 import { StaticBoundListFieldTestBuilder } from "../../tests/builders/StaticBoundListFieldTestBuilder";
 import ColorBadge from "./ColorBadge.vue";
 import UserBadge from "./UserBadge.vue";
@@ -56,9 +55,6 @@ describe("FieldBaseInputBox", () => {
                     input_box_type: CHECKBOX_FIELD,
                 },
             });
-
-            const label_field_component = wrapper.findComponent(LabelForField);
-            expect(label_field_component.attributes("id")).toBe("checkbox-18");
 
             const input_element_list = wrapper.findAll<HTMLInputElement>(
                 "[data-test=input-box-field-input]",
@@ -109,9 +105,6 @@ describe("FieldBaseInputBox", () => {
                     ...getGlobalTestOptions(),
                 },
             });
-
-            const label_field_component = wrapper.findComponent(LabelForField);
-            expect(label_field_component.attributes("id")).toBe("radio-18");
 
             const input_element_list = wrapper.findAll<HTMLInputElement>(
                 "[data-test=input-box-field-input]",

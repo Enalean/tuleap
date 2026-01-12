@@ -213,7 +213,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase 
 
         $form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $form_element_factory
-            ->method('getFormElementById')
+            ->method('getFieldById')
             ->willReturnCallback(
                 static fn (int $form_element_id) => match ($form_element_id) {
                     102 => $f1,

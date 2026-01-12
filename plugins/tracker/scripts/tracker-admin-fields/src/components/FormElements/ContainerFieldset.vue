@@ -22,7 +22,7 @@
         <div class="tlp-pane-container">
             <div class="tlp-pane-header fieldset-header">
                 <h1 class="tlp-pane-title">
-                    {{ fieldset.field.label }}
+                    <label-for-field v-bind:field="fieldset.field" />
                 </h1>
                 <fieldset-layout v-bind:fieldset="fieldset" />
             </div>
@@ -37,6 +37,7 @@
 import type { Fieldset } from "../../type";
 import DisplayFormElements from "../DisplayFormElements.vue";
 import FieldsetLayout from "./FieldsetLayout.vue";
+import LabelForField from "./LabelForField.vue";
 
 defineProps<{
     fieldset: Fieldset;

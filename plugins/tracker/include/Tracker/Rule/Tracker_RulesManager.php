@@ -304,10 +304,16 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                 $this->deleteRulesBySourceTarget($this->tracker->id, $request->get('source_field'), $request->get('target_field'));
 
                 //Add dependencies in db
-                $field_source        = $this->form_element_factory->getFormElementById($request->get('source_field'));
+                $field_source = $this->form_element_factory->getFieldById($request->get('source_field'));
+                if (! $field_source) {
+                    throw new RuntimeException('Source field not found');
+                }
                 $field_source_values = $field_source->getVisibleValuesPlusNoneIfAny();
 
-                $field_target        = $this->form_element_factory->getFormElementById($request->get('target_field'));
+                $field_target = $this->form_element_factory->getFieldById($request->get('target_field'));
+                if (! $field_target) {
+                    throw new RuntimeException('Target field not found');
+                }
                 $field_target_values = $field_target->getVisibleValuesPlusNoneIfAny();
 
                 foreach ($field_source_values as $field_source_value_id => $field_source_value) {

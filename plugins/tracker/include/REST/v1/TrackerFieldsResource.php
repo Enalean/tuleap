@@ -31,13 +31,14 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\EmptyFileToUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\FileToUploadCreator;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\UploadPathAllocator;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
-use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use UserManager;
 
 class TrackerFieldsResource extends AuthenticatedResource
@@ -65,14 +66,22 @@ class TrackerFieldsResource extends AuthenticatedResource
      * </pre>
      * <br/>
      *
-     * This partial update allows user to add new values to a simple list field (selectbox or radiobutton).
+     * This partial update allows user to update the label, or add new values to a simple list field (selectbox or radiobutton).
      * <br/>
+     * <br/>
+     * To update the label:
+     * <pre>
+     * {<br>
+     * &nbsp;"label": "Summary"<br/>
+     * }
+     * </pre>
      * <br/>
      * To add a value:
      * <pre>
      * {<br>
      * &nbsp;"new_values": ["new01", "new02"]<br/>
      * }
+     * </pre>
      *
      * @url PATCH {id}
      *
@@ -98,26 +107,37 @@ class TrackerFieldsResource extends AuthenticatedResource
         $user_manager = UserManager::instance();
         $user         = $user_manager->getCurrentUser();
 
-        $field = $this->getField($id, $user);
+        $field = $this->getFormElement($id, $user);
 
         if (! $field->getTracker()->userIsAdmin($user)) {
             throw new RestException(403, 'User is not tracker administrator.');
         }
 
+        if ($patch->label !== null) {
+            $label = trim($patch->label);
+            if ($label === '') {
+                throw new RestException(400, 'Label cannot be empty.');
+            }
+            $field->label = $label;
+            new FieldDao()->save($field);
+        }
+
         $form_element_factory = Tracker_FormElementFactory::instance();
-        if (! $form_element_factory->isFieldASimpleListField($field)) {
-            throw new RestException(400, 'Field is not a simple list.');
-        }
-
-        if (! is_a($field->getBind(), ListFieldStaticBind::class)) {
-            throw new RestException(400, 'Field values can be only add with static values.');
-        }
-
-        $request = ['add' => null];
         if ($patch->new_values !== null) {
-            $request['add'] = implode("\n", $patch->new_values);
+            if (! $form_element_factory->isFieldASimpleListField($field)) {
+                throw new RestException(400, 'Field is not a simple list.');
+            }
+
+            if (! is_a($field->getBind(), ListFieldStaticBind::class)) {
+                throw new RestException(400, 'Field values can be only add with static values.');
+            }
+
+            $request = ['add' => null];
+            if ($patch->new_values !== null) {
+                $request['add'] = implode("\n", $patch->new_values);
+            }
+            $field->getBind()->process($request, true);
         }
-        $field->getBind()->process($request, true);
 
         return Tracker_REST_FormElementRepresentation::build(
             $field,
@@ -183,10 +203,10 @@ class TrackerFieldsResource extends AuthenticatedResource
         return $file_creator->create($field, $user, $file_post_representation, new \DateTimeImmutable());
     }
 
-    private function getField(int $id, PFUser $user): TrackerField
+    private function getFormElement(int $id, PFUser $user): TrackerFormElement
     {
         $form_element_factory = Tracker_FormElementFactory::instance();
-        $field                = $form_element_factory->getFieldById($id);
+        $field                = $form_element_factory->getFormElementById($id);
 
         if (! $field) {
             throw new RestException(404, 'Field not found.');
@@ -216,7 +236,7 @@ class TrackerFieldsResource extends AuthenticatedResource
      */
     private function getFileFieldUserCanUpdate(int $id, PFUser $user): FilesField
     {
-        $field = $this->getField($id, $user);
+        $field = $this->getFormElement($id, $user);
         \assert($field instanceof FilesField);
 
         $form_element_factory = Tracker_FormElementFactory::instance();

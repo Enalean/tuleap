@@ -19,14 +19,13 @@
 
 <template>
     <div class="tlp-form-element">
-        <label-for-field v-bind:id="id" v-bind:field="field" />
+        <label-for-field v-bind:field="field" />
         <div class="tlp-form-element tlp-form-element-prepend">
             <span class="tlp-prepend">
                 <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
             </span>
             <input
                 type="text"
-                v-bind:id="id"
                 class="tlp-input"
                 v-bind:data-enabletime="enabletime"
                 v-bind:size="size"
@@ -50,7 +49,6 @@ const props = defineProps<{
     field: EditableDateFieldStructure;
 }>();
 
-const id = computed(() => "textarea-" + props.field.field_id);
 const enabletime = computed(() =>
     props.field.specific_properties.display_time === DISPLAY_DATE_AND_TIME ? "true" : undefined,
 );

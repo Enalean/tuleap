@@ -157,8 +157,15 @@ class Tracker_Rule_List_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $list_rules = $root->addChild('list_rules');
 
         foreach ($rules as $rule) {
-            $source_field = $form_element_factory->getFormElementById($rule->getSourceFieldId());
-            $target_field = $form_element_factory->getFormElementById($rule->getTargetFieldId());
+            $source_field = $form_element_factory->getFieldById($rule->getSourceFieldId());
+            if (! $source_field) {
+                throw new RuntimeException('Source field not found');
+            }
+            $target_field = $form_element_factory->getFieldById($rule->getTargetFieldId());
+            if (! $target_field) {
+                throw new RuntimeException('Target field not found');
+            }
+
             //TODO: handle sb/msb bind to users and remove condition
             if ($this->bind_factory->getType($source_field->getBind()) == 'static' && $this->bind_factory->getType($target_field->getBind()) == 'static') {
                 $child = $list_rules->addChild('rule');
