@@ -180,9 +180,9 @@ final class ArtifactCreatorTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $creator = $this->createMock(TrackerArtifactCreator::class);
+        $creator = $this->createStub(TrackerArtifactCreator::class);
         $creator->method('create')->willReturnCallback(function (): ?Artifact {
-            $GLOBALS['Response']->method('feedbackHasErrors')->willReturn(true);
+            $this->global_response->addFeedback(\Feedback::ERROR, 'Something is not correct');
 
             return null;
         });

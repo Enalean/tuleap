@@ -29,6 +29,7 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Redirect;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_FormElementFactory;
@@ -189,9 +190,10 @@ final class UpdateArtifactActionTest extends TestCase
         $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
 
         $expected = [];
-        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->process();
+
+        self::assertEquals($expected, $this->global_response->inspector->json_content);
     }
 
     public function testItSendsParentsRemainingEffortEvenIfTaskDontHaveOne(): void
@@ -208,9 +210,10 @@ final class UpdateArtifactActionTest extends TestCase
 
         $user_story_id = $this->user_story->getId();
         $expected      = [$user_story_id => ['remaining_effort' => 23]];
-        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->process();
+
+        self::assertEquals($expected, $this->global_response->inspector->json_content);
     }
 
     public function testItDoesNotSendParentWhenParentHasNoRemainingEffortField(): void
@@ -223,9 +226,9 @@ final class UpdateArtifactActionTest extends TestCase
         $this->formelement_factory->method('getComputableFieldByNameForUser')->willReturn(null);
         $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
 
-        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with([]);
-
         $this->process();
+
+        self::assertEquals([], $this->global_response->inspector->json_content);
     }
 
     public function testItSendTheAutoComputedValueOfTheArtifact(): void
@@ -255,9 +258,10 @@ final class UpdateArtifactActionTest extends TestCase
         $expected = [
             self::ARTIFACT_ID => ['remaining_effort' => '42 (autocomputed)'],
         ];
-        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->process();
+
+        self::assertEquals($expected, $this->global_response->inspector->json_content);
     }
 
     public function testItSendsTheRemainingEffortOfTheArtifactAndItsParent(): void
@@ -279,9 +283,10 @@ final class UpdateArtifactActionTest extends TestCase
             self::ARTIFACT_ID => ['remaining_effort' => 42],
             $user_story_id    => ['remaining_effort' => 23],
         ];
-        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->process();
+
+        self::assertEquals($expected, $this->global_response->inspector->json_content);
     }
 
     public function testItDoesNotSendParentsRemainingEffortWhenThereIsNoParent(): void
@@ -296,9 +301,10 @@ final class UpdateArtifactActionTest extends TestCase
         $expected = [
             self::ARTIFACT_ID => ['remaining_effort' => 42],
         ];
-        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->process();
+
+        self::assertEquals($expected, $this->global_response->inspector->json_content);
     }
 
     public function testSendCardInfoOnUpdateWithRemainingEffortItDoesNotSendParentWhenParentHasNoRemainingEffortField(): void
@@ -321,9 +327,10 @@ final class UpdateArtifactActionTest extends TestCase
         $expected = [
             self::ARTIFACT_ID => ['remaining_effort' => 42],
         ];
-        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->process();
+
+        self::assertEquals($expected, $this->global_response->inspector->json_content);
     }
 
     private function processAndCaptureOutput(): string
@@ -402,10 +409,18 @@ final class UpdateArtifactActionTest extends TestCase
             ])
             ->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/tracker/?tracker=' . self::TRACKER_ID);
-        $GLOBALS['Response']->method('addFeedback')->with(Feedback::INFO, self::stringContains('Successfully Updated'));
+        $redirection = null;
+        try {
+            $this->process();
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
 
-        $this->process();
+        self::assertEquals(new LayoutInspectorRedirection('/plugins/tracker/?tracker=' . self::TRACKER_ID), $redirection);
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(1, $feedbacks);
+        self::assertEquals(Feedback::INFO, $feedbacks[0]['level']);
+        self::assertStringContainsString('Successfully Updated', $feedbacks[0]['message']);
     }
 
     public function testItTurnsFaultIntoFeedbackAndRedirects(): void
@@ -427,14 +442,15 @@ final class UpdateArtifactActionTest extends TestCase
             ])
             ->build();
 
-        $GLOBALS['Response']->expects($this->once())
-            ->method('redirect')
-            ->with('/plugins/tracker/?tracker=' . self::TRACKER_ID)
-            ->willThrowException(new \RuntimeException('Simulate Redirect exit()'));
-        $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR, self::anything());
+        $redirection = null;
+        try {
+            $this->process();
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
 
-        $this->expectException(\RuntimeException::class);
-        $this->process();
+        self::assertEquals(new LayoutInspectorRedirection('/plugins/tracker/?tracker=' . self::TRACKER_ID), $redirection);
+        self::assertTrue($this->global_response->feedbackHasErrors());
     }
 
     private function getRedirectUrl(): Tracker_Artifact_Redirect

@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_XMLFullStructureExporter;
 use EventManager;
-use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Controller;
 use Planning_RequestValidator;
@@ -46,6 +45,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -138,13 +138,13 @@ final class PlanningControllerTest extends TestCase
 
         $this->event_manager->expects($this->once())->method('dispatch');
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
-
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->withParam('planning_id', 42)
             ->build();
+
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/agiledashboard/?group_id=101&action=admin'));
         $this->getPlanningController($request)->delete();
     }
 
@@ -161,13 +161,13 @@ final class PlanningControllerTest extends TestCase
 
         $this->event_manager->expects($this->once())->method('dispatch');
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
-
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->withParam('planning_id', 42)
             ->build();
+
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/agiledashboard/?group_id=101&action=admin'));
         $this->getPlanningController($request)->delete();
     }
 
@@ -178,15 +178,14 @@ final class PlanningControllerTest extends TestCase
             ->withoutSiteAdministrator()
             ->build();
 
-        // redirect() is a never return method, but phpunit mock system cannot handle it, so replace the exit() call by an exception
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->willThrowException(new Exception());
-
-        $this->expectException(Exception::class);
-
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->build();
+
+        $GLOBALS['Language']->method('getText')->willReturn('');
+
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->getPlanningController($request)->delete();
     }
 
@@ -196,8 +195,6 @@ final class PlanningControllerTest extends TestCase
             ->withAdministratorOf($this->project)
             ->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
-
         $this->event_manager->expects($this->once())->method('processEvent');
         $this->event_manager->expects($this->once())->method('dispatch');
 
@@ -206,15 +203,19 @@ final class PlanningControllerTest extends TestCase
         $this->planning_factory->expects($this->once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
         $this->update_request_validator->expects($this->once())->method('getValidatedPlanning')->willReturn(null);
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         $this->planning_updater->expects($this->never())->method('update');
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->withParam('planning_id', 1)
             ->build();
-        $this->getPlanningController($request)->update();
+
+        try {
+            $this->expectException(LayoutInspectorRedirection::class);
+            $this->getPlanningController($request)->update();
+        } finally {
+            self::assertCount(1, $this->global_response->inspector->getFeedback());
+        }
     }
 
     public function testItOnlyUpdateCardWallConfigWhenRootPlanningCannotBeUpdated(): void
@@ -222,8 +223,6 @@ final class PlanningControllerTest extends TestCase
         $user = UserTestBuilder::anActiveUser()
             ->withAdministratorOf($this->project)
             ->build();
-
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
         $this->event_manager->expects($this->once())->method('processEvent');
         $this->event_manager->expects($this->once())->method('dispatch');
@@ -239,14 +238,18 @@ final class PlanningControllerTest extends TestCase
         $this->planning_updater->expects($this->never())->method('update');
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid');
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->withParams(['planning_id' => 1, 'planning' => []])
             ->build();
-        $this->getPlanningController($request)->update();
+
+        try {
+            $this->expectException(LayoutInspectorRedirection::class);
+            $this->getPlanningController($request)->update();
+        } finally {
+            self::assertCount(1, $this->global_response->inspector->getFeedback());
+        }
     }
 
     public function testItOnlyUpdateCardWallConfigWhenPlanningCannotBeUpdated(): void
@@ -254,8 +257,6 @@ final class PlanningControllerTest extends TestCase
         $user = UserTestBuilder::anActiveUser()
             ->withAdministratorOf($this->project)
             ->build();
-
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
         $this->event_manager->expects($this->once())->method('processEvent');
         $this->event_manager->expects($this->once())->method('dispatch');
@@ -272,14 +273,18 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_updater->expects($this->never())->method('update');
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->withParams(['planning_id' => 1, 'planning' => []])
             ->build();
-        $this->getPlanningController($request)->update();
+
+        try {
+            $this->expectException(LayoutInspectorRedirection::class);
+            $this->getPlanningController($request)->update();
+        } finally {
+            self::assertCount(1, $this->global_response->inspector->getFeedback());
+        }
     }
 
     public function testItUpdatesThePlanning(): void
@@ -289,8 +294,6 @@ final class PlanningControllerTest extends TestCase
             ->build();
 
         $planning_parameters = [];
-
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
         $this->event_manager->expects($this->once())->method('processEvent');
         $this->event_manager->expects($this->once())->method('dispatch');
@@ -308,14 +311,18 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_updater->expects($this->once())->method('update');
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->withParams(['planning_id' => 1, 'planning' => []])
             ->build();
-        $this->getPlanningController($request)->update();
+
+        try {
+            $this->expectException(LayoutInspectorRedirection::class);
+            $this->getPlanningController($request)->update();
+        } finally {
+            self::assertCount(1, $this->global_response->inspector->getFeedback());
+        }
     }
 
     public function testItShowsAnErrorMessageAndRedirectsBackToTheCreationForm(): void
@@ -328,14 +335,17 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_factory->expects($this->never())->method('createPlanning');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=new');
-
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->build();
-        $this->getPlanningController($request)->create();
+
+        try {
+            $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/agiledashboard/?group_id=101&action=new'));
+            $this->getPlanningController($request)->create();
+        } finally {
+            self::assertCount(1, $this->global_response->inspector->getFeedback());
+        }
     }
 
     public function testItCreatesThePlanningAndRedirectsToTheIndex(): void
@@ -357,19 +367,24 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_factory->expects($this->once())->method('createPlanning');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
-
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->withParam('planning', $planning_parameters)
             ->build();
-        $this->getPlanningController($request)->create();
+
+        try {
+            $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/agiledashboard/?group_id=101&action=admin'));
+            $this->getPlanningController($request)->create();
+        } finally {
+            self::assertCount(1, $this->global_response->inspector->getFeedback());
+        }
     }
 
     public function testItDoesntCreateAnythingIfTheUserIsNotAdmin(): void
     {
+        $GLOBALS['Language']->method('getText')->willReturn('');
+
         $user = UserTestBuilder::anActiveUser()
             ->withoutMemberOfProjects()
             ->withoutSiteAdministrator()
@@ -377,16 +392,16 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_factory->expects($this->never())->method('createPlanning');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
-        // redirect() is a never return method, but phpunit mock system cannot handle it, so replace the exit() call by an exception
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101')->willThrowException(new Exception());
-
-        $this->expectException(Exception::class);
-
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
             ->build();
-        $this->getPlanningController($request)->create();
+
+        try {
+            $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/agiledashboard/?group_id=101'));
+            $this->getPlanningController($request)->create();
+        } finally {
+            self::assertCount(1, $this->global_response->inspector->getFeedback());
+        }
     }
 }

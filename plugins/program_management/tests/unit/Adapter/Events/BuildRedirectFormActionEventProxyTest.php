@@ -56,38 +56,30 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
 
     public function testItInjectAndInformUserAboutUpdatingProgramItem(): void
     {
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::INFO,
-            $this->stringContains('update')
-        );
         $this->proxy->injectAndInformUserAboutUpdatingProgramItem();
         self::assertCount(1, $this->redirect->query_parameters);
         self::assertSame(
             ProgramRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION,
             $this->redirect->query_parameters[ProgramRedirectionParameters::FLAG]
         );
+
+        self::assertStringContainsString('update', $this->global_response->getRawFeedback());
     }
 
     public function testItInjectAndInformUserAboutCreatingProgramIncrement(): void
     {
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::INFO,
-            $this->stringContains('create')
-        );
         $this->proxy->injectAndInformUserAboutCreatingProgramIncrement();
         self::assertCount(1, $this->redirect->query_parameters);
         self::assertSame(
             ProgramRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
             $this->redirect->query_parameters[ProgramRedirectionParameters::FLAG]
         );
+
+        self::assertStringContainsString('create', $this->global_response->getRawFeedback());
     }
 
     public function testItInjectAndInformUserAboutCreatingIncrementIteration(): void
     {
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::INFO,
-            $this->stringContains('create')
-        );
         $increment_id = '100';
         $this->proxy->injectAndInformUserAboutCreatingIteration(
             IterationRedirectionParametersStub::withValues(
@@ -113,14 +105,12 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
             $this->redirect->query_parameters['link-type']
         );
         self::assertSame('true', $this->redirect->query_parameters['immediate']);
+
+        self::assertStringContainsString('create', $this->global_response->getRawFeedback());
     }
 
     public function testItInjectsAndInformsUserAboutUpdatingIteration(): void
     {
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::INFO,
-            $this->stringContains('update')
-        );
         $increment_id = '100';
         $this->proxy->injectAndInformUserAboutUpdatingIteration(
             IterationRedirectionParametersStub::withValues(
@@ -137,5 +127,6 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
             $increment_id,
             $this->redirect->query_parameters[IterationRedirectionParameters::PARAM_INCREMENT_ID]
         );
+        self::assertStringContainsString('update', $this->global_response->getRawFeedback());
     }
 }

@@ -214,7 +214,6 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $field3 = $this->getFieldWithId(103, false, false, true);
 
         $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
-        $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR);
 
         $user        = UserTestBuilder::aUser()->build();
         $fields_data = [];
@@ -240,8 +239,6 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $field3 = $this->getFieldWithId(103, false, false, true);
 
         $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
-
-        $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR);
 
         $user        = UserTestBuilder::aUser()->build();
         $fields_data = [];

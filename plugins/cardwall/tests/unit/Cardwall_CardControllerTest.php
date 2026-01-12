@@ -125,8 +125,8 @@ final class Cardwall_CardControllerTest extends TestCase // phpcs:ignore Squiz.C
             ],
         ];
 
-        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
-
         $card_controller->getCard();
+
+        self::assertEquals($expected, $this->global_response->inspector->json_content);
     }
 }

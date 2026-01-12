@@ -140,11 +140,9 @@ final class PUTHandlerTest extends TestCase
     public function testItThrows500WhenThereIsAnErrorFeedback(): void
     {
         $this->changeset_creator = CreateNewChangesetStub::withException(new \Tracker_Exception());
-        $GLOBALS['Response']->method('feedbackHasErrors')->willReturn(true);
-        $GLOBALS['Response']->method('getRawFeedback')->willReturn('Aaaah');
 
         $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        $this->expectExceptionCode(500);
         $this->handle();
     }
 

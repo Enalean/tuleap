@@ -136,7 +136,7 @@ class Response
         header('Content-type: ' . $content_type);
     }
 
-    public function sendJSON($content)
+    public function sendJSON(mixed $content): void
     {
         $this->setContentType('application/json');
         /**

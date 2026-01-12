@@ -28,7 +28,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;
 
@@ -76,11 +76,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->never())
             ->method('save');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::ERROR,
-            'An error occurred while updating the timeframe semantic'
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -88,6 +83,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->update($this->tracker, $request);
+
+        self::assertEquals(['An error occurred while updating the timeframe semantic'], $this->global_response->getFeedbackErrors());
     }
 
     public function testItDoesNotUpdateIfStartDateFieldIdIsMissing(): void
@@ -101,11 +98,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->never())
             ->method('save');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::ERROR,
-            'An error occurred while updating the timeframe semantic'
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -113,6 +105,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->update($this->tracker, $request);
+
+        self::assertEquals(['An error occurred while updating the timeframe semantic'], $this->global_response->getFeedbackErrors());
     }
 
     public function testItDoesNotUpdateIfDurationFieldIdIsMissing(): void
@@ -126,11 +120,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->never())
             ->method('save');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::ERROR,
-            'An error occurred while updating the timeframe semantic'
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -138,6 +127,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->update($this->tracker, $request);
+
+        self::assertEquals(['An error occurred while updating the timeframe semantic'], $this->global_response->getFeedbackErrors());
     }
 
     public function testItDoesNotUpdateIfAFieldCannotBeFoundInTheTracker(): void
@@ -152,11 +143,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->never())
             ->method('save');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::ERROR,
-            'An error occurred while updating the timeframe semantic'
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -164,6 +150,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->update($this->tracker, $request);
+
+        self::assertEquals(['An error occurred while updating the timeframe semantic'], $this->global_response->getFeedbackErrors());
     }
 
     public function testItUpdatesTheSemanticWithDuration(): void
@@ -198,11 +186,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 null
             )->willReturn(true);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::INFO,
-            'Semantic timeframe updated successfully'
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -210,6 +193,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->update($this->tracker, $request);
+
+        self::assertStringContainsString('info: Semantic timeframe updated successfully', $this->global_response->getRawFeedback());
     }
 
     public function testItUpdatesTheSemanticWithEndDate(): void
@@ -246,11 +231,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 null
             )->willReturn(true);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::INFO,
-            'Semantic timeframe updated successfully'
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -258,6 +238,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->update($this->tracker, $request);
+
+        self::assertStringContainsString('info: Semantic timeframe updated successfully', $this->global_response->getRawFeedback());
     }
 
     public function testItUpdatesTheSemanticWhenItIsImpliedFromAnotherTracker(): void
@@ -285,11 +267,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $sprints_tracker_id
             )->willReturn(true);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::INFO,
-            'Semantic timeframe updated successfully'
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -297,6 +274,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->update($this->tracker, $request);
+
+        self::assertStringContainsString('info: Semantic timeframe updated successfully', $this->global_response->getRawFeedback());
     }
 
     public function testItRejectsTheSemanticWhenItIsImpliedFromAnotherTrackerAndCalendarEventsAreUsed(): void
@@ -318,11 +297,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->never())
             ->method('save');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::ERROR,
-            dgettext('tuleap-tracker', 'An error occurred while updating the timeframe semantic')
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -330,6 +304,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
         );
         $updator->update($this->tracker, $request);
+
+        self::assertEquals(['An error occurred while updating the timeframe semantic'], $this->global_response->getFeedbackErrors());
     }
 
     public function testItRejectsIfBothDurationAndEndDateAreSent(): void
@@ -370,11 +346,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->never())
             ->method('save');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::ERROR,
-            dgettext('tuleap-tracker', 'An error occurred while updating the timeframe semantic')
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -382,6 +353,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->update($this->tracker, $request);
+
+        self::assertEquals(['An error occurred while updating the timeframe semantic'], $this->global_response->getFeedbackErrors());
     }
 
     public function testItDoesNotResetWhenSomeTimeframeConfigurationsRelyOnTheCurrentOne(): void
@@ -404,11 +377,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->never())
             ->method('deleteTimeframeSemantic');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::ERROR,
-            'You cannot reset this semantic because some trackers inherit their own semantic timeframe from this one.'
-        );
-
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -416,6 +384,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->reset($sprint_tracker);
+
+        self::assertEquals(['You cannot reset this semantic because some trackers inherit their own semantic timeframe from this one.'], $this->global_response->getFeedbackErrors());
     }
 
     #[\PHPUnit\Framework\Attributes\TestWith([null])]
@@ -436,10 +406,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('deleteTimeframeSemantic')
             ->with($sprint_tracker_id);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
-            \Feedback::INFO,
-            'Semantic timeframe reset successfully'
-        );
         $updator = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory,
@@ -447,5 +413,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
         $updator->reset($sprint_tracker);
+
+        self::assertStringContainsString('info: Semantic timeframe reset successfully', $this->global_response->getRawFeedback());
     }
 }

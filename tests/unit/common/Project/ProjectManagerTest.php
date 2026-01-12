@@ -244,7 +244,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_dao->expects($this->once())->method('updateStatus')->willReturn(false);
         $this->project_manager_test_version->expects($this->once())->method('removeProjectFromCache')->with($project);
 
-        $GLOBALS['Response']->method('addFeedback');
+        $GLOBALS['Language']->method('gettext')->willReturn('Something');
 
         $this->project_manager_test_version->updateStatus($project, 'A');
     }

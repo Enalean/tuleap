@@ -20,8 +20,6 @@
 
 namespace Tuleap\Project;
 
-require_once __DIR__ . '/../../../../src/www/include/exit.php';
-
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
@@ -142,6 +140,8 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects($this->never())->method('removeUserFromProjectUgroups');
         $this->project_history_dao->expects($this->never())->method('groupAddHistory');
         $this->event_manager->expects($this->never())->method('processEvent');
+
+        $GLOBALS['Language']->method('gettext')->willReturn('Something');
 
         $this->remover->removeUserFromProject($project_id, $user_id);
     }

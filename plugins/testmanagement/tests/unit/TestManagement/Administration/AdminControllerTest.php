@@ -227,16 +227,15 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID);
 
-        $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
-            function (string $level, string $message): void {
-                match (true) {
-                    $level === 'warning' && $message === 'The tracker id 999 does not have step definition field',
-                        $level === \Feedback::ERROR => true
-                };
-            }
-        );
-
         $this->getAdminController($request)->update();
+
+        self::assertEquals(
+            [
+                ['level' => \Feedback::WARN, 'message' => 'The tracker id 999 does not have step definition field'],
+                ['level' => \Feedback::ERROR, 'message' => 'The submitted administration configuration is not valid.'],
+            ],
+            $this->global_response->inspector->getFeedback()
+        );
     }
 
     public function testUpdateNotDoneWhenExecutionTrackerHasNoStepExecutionField(): void
@@ -272,16 +271,15 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
             ->willThrowException(new TrackerExecutionNotValidException());
 
-        $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
-            function (string $level, string $message): void {
-                match (true) {
-                    $level === 'warning' && $message === 'The tracker id 537 does not have step execution field',
-                        $level === \Feedback::ERROR => true
-                };
-            }
-        );
-
         $this->getAdminController($request)->update();
+
+        self::assertEquals(
+            [
+                ['level' => \Feedback::WARN, 'message' => 'The tracker id 537 does not have step execution field'],
+                ['level' => \Feedback::ERROR, 'message' => 'The submitted administration configuration is not valid.'],
+            ],
+            $this->global_response->inspector->getFeedback()
+        );
     }
 
     public function testUpdateNotDoneWhenATrackerHasNoArtifactLink(): void
@@ -325,16 +323,15 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID);
 
-        $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
-            function (string $level, string $message): void {
-                match (true) {
-                    $level === 'warning' && $message === 'The tracker id 535 does not have artifact links field',
-                        $level === \Feedback::ERROR => true
-                };
-            }
-        );
-
         $this->getAdminController($request)->update();
+
+        self::assertEquals(
+            [
+                ['level' => \Feedback::WARN, 'message' => 'The tracker id 535 does not have artifact links field'],
+                ['level' => \Feedback::ERROR, 'message' => 'The submitted administration configuration is not valid.'],
+            ],
+            $this->global_response->inspector->getFeedback()
+        );
     }
 
     public function testUpdateReturnWrongIdFeedbackIfTrackerIdIsInvalid(): void
@@ -370,9 +367,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_checker->expects($this->once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
         $this->getAdminController($request)->update();
-        $GLOBALS['Response']->method('addFeedback')->with(
-            'warning',
-            'The tracker id oui is not a valid id'
-        );
+
+        self::assertEquals([['level' => \Feedback::WARN, 'message' => 'The tracker id oui is not a valid id']], $this->global_response->inspector->getFeedback());
     }
 }

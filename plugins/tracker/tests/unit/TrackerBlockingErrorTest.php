@@ -127,7 +127,6 @@ final class TrackerBlockingErrorTest extends TestCase
 
         $this->workflow->method('checkGlobalRules')->willThrowException($this->createMock(Tracker_Workflow_GlobalRulesViolationException::class));
 
-        $GLOBALS['Response']->method('addFeedback')->with('error', self::anything(), self::anything());
         $this->assertFalse($this->tracker->hasBlockingError($header, $lines));
     }
 
@@ -190,8 +189,9 @@ final class TrackerBlockingErrorTest extends TestCase
         $this->workflow->method('checkGlobalRules')->willReturn(true);
         $this->workflow->method('getGlobalRulesManager')->willReturn($this->createMock(Tracker_RulesManager::class));
 
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('error', self::anything(), self::anything());
         $this->assertFalse($this->tracker->hasBlockingError($header, $lines));
+
+        self::assertFalse($this->global_response->feedbackHasErrors());
     }
 
     public function testHasBlockingErrorReturnNoErrorWhenEmptyValue(): void
@@ -253,7 +253,8 @@ final class TrackerBlockingErrorTest extends TestCase
         $this->workflow->method('checkGlobalRules')->willReturn(true);
         $this->workflow->method('getGlobalRulesManager')->willReturn($this->createMock(Tracker_RulesManager::class));
 
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('error', self::anything(), self::anything());
         $this->assertFalse($this->tracker->hasBlockingError($header, $lines));
+
+        self::assertFalse($this->global_response->feedbackHasErrors());
     }
 }

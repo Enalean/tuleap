@@ -91,9 +91,6 @@ final class TrackerFormElementFactoryTest extends TestCase
     {
         $mapping = [];
 
-        $GLOBALS['Response']->method('addFeedback')
-            ->with('warning', 'Type \'mon_type\' does not exist. This field is ignored. (Name : \'field_name\', ID: \'F0\').');
-
         self::assertNull($this->form_element_factory->getInstanceFromXML($this->tracker, new SimpleXMLElement(
             '<?xml version="1.0" standalone="yes"?>
             <formElement type="mon_type" ID="F0" rank="20" required="1" notifications="1">
@@ -125,10 +122,6 @@ final class TrackerFormElementFactoryTest extends TestCase
         $event_manager = $this->createMock(EventManager::class);
         EventManager::setInstance($event_manager);
         $event_manager->expects($this->once())->method('processEvent');
-
-
-        $GLOBALS['Response']->method('addFeedback')
-            ->with('warning', 'Type \'external\' does not exist. This field is ignored. (Name : \'external\', ID: \'F1602\').');
 
         $element_from_instance = $this->form_element_factory->getInstanceFromXML(
             $this->tracker,

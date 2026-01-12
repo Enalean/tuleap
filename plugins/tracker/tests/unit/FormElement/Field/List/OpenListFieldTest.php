@@ -302,13 +302,8 @@ final class OpenListFieldTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $field    = $this->aRequiredOpenListField();
 
-        $GLOBALS['Response']->method('addFeedback')
-            ->with(
-                'error',
-                self::callback(static fn(string $message) => $message === 'Invalid value dummytext for field My Open List (openlist).' || $message === 'The field My Open List (openlist) is required.'),
-            );
-
         self::assertFalse($field->isValidRegardingRequiredProperty($artifact, 'dummytext'));
+        self::assertEquals(['Invalid value dummytext for field My Open List (openlist).', 'The field My Open List (openlist) is required.'], $this->global_response->getFeedbackErrors());
     }
 
     public function testWhenFieldIsRequiredItDoesNotAcceptInvalidBindOrOpenValues(): void
@@ -316,11 +311,8 @@ final class OpenListFieldTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $field    = $this->aRequiredOpenListField();
 
-        $GLOBALS['Response']
-            ->method('addFeedback')
-            ->with('error', 'The field My Open List (openlist) is required.');
-
         self::assertFalse($field->isValidRegardingRequiredProperty($artifact, 'bdummy,otext'));
+        self::assertEquals(['The field My Open List (openlist) is required.'], $this->global_response->getFeedbackErrors());
     }
 
     #[\PHPUnit\Framework\Attributes\TestWith(['b102'])]

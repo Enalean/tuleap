@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
+use Feedback;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
@@ -73,12 +74,14 @@ final class ListFormElementTypeUpdaterTest extends TestCase
 
         $this->bind_default_value_dao->expects($this->never())->method('save');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
-
         $this->updater->updateFormElementType(
             $form_element,
             'msb'
         );
+
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(1, $feedbacks);
+        self::assertEquals(Feedback::INFO, $feedbacks[0]['level']);
     }
 
     public function testItClearsDefaultValuesWhenFieldIsChangedFromMultipleToSimpleList(): void
@@ -94,12 +97,14 @@ final class ListFormElementTypeUpdaterTest extends TestCase
 
         $this->bind_default_value_dao->expects($this->once())->method('save')->with(self::SIMPLE_LIST_ELEMENT_ID, []);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
-
         $this->updater->updateFormElementType(
             $form_element,
             'sb'
         );
+
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(1, $feedbacks);
+        self::assertEquals(Feedback::INFO, $feedbacks[0]['level']);
     }
 
     public function testItThrowsAnExceptionAndDoNotAskToUpdatesTargetFieldIfError(): void
@@ -149,12 +154,14 @@ final class ListFormElementTypeUpdaterTest extends TestCase
 
         $this->bind_default_value_dao->expects($this->never())->method('save');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
-
         $this->updater->updateFormElementType(
             $form_element,
             'msb'
         );
+
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(1, $feedbacks);
+        self::assertEquals(Feedback::INFO, $feedbacks[0]['level']);
     }
 
     public function testItStopsUpdatesOfTargetFieldIfOneIsInError(): void

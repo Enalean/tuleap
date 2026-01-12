@@ -89,9 +89,9 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
 
         $this->add_project_member->expects($this->once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::INFO);
-
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
+
+        self::assertStringContainsString('info: User added', $this->global_response->getRawFeedback());
     }
 
     public function testItAddsAndNotifyRestrictedUsers(): void
@@ -121,44 +121,48 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
 
         $this->add_project_member->expects($this->once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
-
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
+
+        self::assertCount(1, $this->global_response->getFeedbackErrors());
     }
 
     public function testItDoesntProceedWithSuspendedUsers(): void
     {
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_SUSPENDED, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
+        $GLOBALS['Language']->method('gettext')->willReturn('Something');
 
         $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project, $this->project_admin);
+
+        self::assertCount(1, $this->global_response->getFeedbackErrors());
     }
 
     public function testItDoesntProceedWithDeletedUsers(): void
     {
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_DELETED, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
+        $GLOBALS['Language']->method('gettext')->willReturn('Something');
 
         $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project, $this->project_admin);
+
+        self::assertCount(1, $this->global_response->getFeedbackErrors());
     }
 
     public function testItDisplaysAnErrorWhenRestrictedUserIsAddedToWoRestrictedProject(): void
     {
         $this->add_project_member->method('addProjectMember')->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($this->an_active_user, $this->an_active_project));
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
-
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
+
+        self::assertCount(1, $this->global_response->getFeedbackErrors());
     }
 
     public function testItDisplaysAnErrorWhenUserIsAlreadyMember(): void
     {
         $this->add_project_member->method('addProjectMember')->willThrowException(new AlreadyProjectMemberException());
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
-
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
+
+        self::assertCount(1, $this->global_response->getFeedbackErrors());
     }
 }

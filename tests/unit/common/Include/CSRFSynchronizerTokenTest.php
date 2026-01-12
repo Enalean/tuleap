@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 
@@ -95,8 +96,6 @@ final class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // php
 
     public function testItDoesNothingWhenAValidTokenIsChecked(): void
     {
-        $GLOBALS['Response']->expects($this->never())->method('redirect');
-
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
@@ -104,16 +103,18 @@ final class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // php
             new CSRFSessionKeyStorageStub(),
         );
 
-        $request = $this->createMock(\Tuleap\HTTPRequest::class);
-        $request->method('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->willReturn($csrf_token->getToken());
+        $request = \Tuleap\Test\Builders\HTTPRequestBuilder::get()->withParam(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME, $csrf_token->getToken())->build();
 
         $csrf_token->check('/path/to/url', $request);
+
+        $this->expectNotToPerformAssertions();
     }
 
     public function testItRedirectsWhenAnInvalidTokenIsChecked(): void
     {
         $uri = '/path/to/uri';
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with($uri);
+
+        $GLOBALS['Language']->method('gettext')->willReturn('Something');
 
         $csrf_token = new CSRFSynchronizerToken(
             $uri,
@@ -122,8 +123,9 @@ final class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // php
             new CSRFSessionKeyStorageStub(),
         );
 
-        $request = $this->createMock(\Tuleap\HTTPRequest::class);
-        $request->method('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->willReturn('invalid_token');
+        $request = \Tuleap\Test\Builders\HTTPRequestBuilder::get()->withParam(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME, 'invalid_token')->build();
+
+        $this->expectExceptionObject(new LayoutInspectorRedirection($uri));
 
         $csrf_token->check($uri, $request);
     }
@@ -131,7 +133,8 @@ final class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // php
     public function testItRedirectsWhenNoTokenIsProvidedInTheRequest(): void
     {
         $uri = '/path/to/uri';
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with($uri);
+
+        $GLOBALS['Language']->method('gettext')->willReturn('Something');
 
         $csrf_token = new CSRFSynchronizerToken(
             $uri,
@@ -140,8 +143,9 @@ final class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // php
             new CSRFSessionKeyStorageStub(),
         );
 
-        $request = $this->createMock(\Tuleap\HTTPRequest::class);
-        $request->method('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->willReturn(false);
+        $request = \Tuleap\Test\Builders\HTTPRequestBuilder::get()->build();
+
+        $this->expectExceptionObject(new LayoutInspectorRedirection($uri));
 
         $csrf_token->check($uri, $request);
     }
