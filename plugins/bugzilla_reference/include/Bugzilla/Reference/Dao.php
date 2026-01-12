@@ -22,26 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Bugzilla\Reference;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\UUID;
 
 /**
- * @psalm-type BugzillaReferenceRow = array{id:UUID, keyword:string, server:string, username:string, api_key:string, encrypted_api_key:string, has_api_key_always_been_encrypted:bool, are_followup_private:bool, rest_url:string}
+ * @psalm-type BugzillaReferenceRow = array{id:UUID, keyword:string, server:string, username:string, encrypted_api_key:ConcealedString, are_followup_private:bool, rest_url:string}
  */
 class Dao extends DataAccessObject
 {
-    public function save(string $keyword, string $server, string $username, string $encrypted_api_key, bool $are_followups_private, string $rest_api_url): void
+    public function save(string $keyword, string $server, string $username, ConcealedString $api_key, bool $are_followups_private, string $rest_api_url): void
     {
         $sql_save = "INSERT INTO plugin_bugzilla_reference(id, keyword, server, username, api_key, encrypted_api_key, are_followup_private, rest_url)
                       VALUES (?, ?, ?, ?, '', ?, ?, ?)";
 
+        $id = $this->uuid_factory->buildUUIDBytes();
+
         $this->getDB()->run(
             $sql_save,
-            $this->uuid_factory->buildUUIDBytes(),
+            $id,
             $keyword,
             $server,
             $username,
-            $encrypted_api_key,
+            $this->encryptDataToStoreInATableRow($api_key, $this->getAPIKeyEncryptionAdditionalData($id)),
             $are_followups_private,
             $rest_api_url
         );
@@ -60,8 +64,11 @@ class Dao extends DataAccessObject
         $rows = [];
 
         foreach ($result as $row) {
-            $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
-            $rows[]    = $row;
+            $row['id']      = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+            $row['api_key'] = $this->transformAndReEncryptAPIKey($row['id'], new ConcealedString($row['api_key']), new ConcealedString($row['encrypted_api_key']));
+            unset($row['encrypted_api_key']);
+
+            $rows[] = $row;
         }
 
         return $rows;
@@ -79,32 +86,40 @@ class Dao extends DataAccessObject
         if ($row === null) {
             return null;
         }
-        $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+        $row['id']      = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+        $row['api_key'] = $this->transformAndReEncryptAPIKey($row['id'], new ConcealedString($row['api_key']), new ConcealedString($row['encrypted_api_key']));
+        unset($row['encrypted_api_key']);
         return $row;
     }
 
-    public function edit(string $uuid_hex, string $server, string $username, string $encrypted_api_key, bool $has_api_key_always_been_encrypted, bool $are_followups_private, string $rest_api_url): void
+    public function edit(string $uuid_hex, string $server, string $username, ConcealedString $api_key, bool $are_followups_private, string $rest_api_url): void
     {
         $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)->apply(
-            fn(UUID $uuid) => $this->getDB()->tryFlatTransaction(function () use ($uuid, $server, $rest_api_url, $username, $encrypted_api_key, $has_api_key_always_been_encrypted, $are_followups_private): void {
+            fn(UUID $uuid) => $this->getDB()->tryFlatTransaction(function () use ($uuid, $server, $rest_api_url, $username, $api_key, $are_followups_private): void {
+                $id = $uuid->getBytes();
                 $this->getDB()->run(
                     'UPDATE plugin_bugzilla_reference SET
                     server = ?,
                     rest_url = ?,
                     username = ?,
-                    api_key = "",
-                    encrypted_api_key = ?,
-                    has_api_key_always_been_encrypted = ?,
                     are_followup_private = ?
                     WHERE id = ?',
                     $server,
                     $rest_api_url,
                     $username,
-                    $encrypted_api_key,
-                    $has_api_key_always_been_encrypted,
                     $are_followups_private,
-                    $uuid->getBytes()
+                    $id
                 );
+
+                if (! $api_key->isIdenticalTo(new ConcealedString(''))) {
+                    $this->getDB()->run(
+                        'UPDATE plugin_bugzilla_reference
+                        SET api_key = "", has_api_key_always_been_encrypted = true, encrypted_api_key = ?
+                        WHERE id = ?',
+                        $this->encryptDataToStoreInATableRow($api_key, $this->getAPIKeyEncryptionAdditionalData($id)),
+                        $id
+                    );
+                }
 
                 $link = $server . '/show_bug.cgi?id=$1';
 
@@ -124,28 +139,19 @@ class Dao extends DataAccessObject
         );
     }
 
-    /**
-     * @psalm-return BugzillaReferenceRow|null
-     */
-    public function getReferenceById(string $uuid_hex): ?array
+    private function transformAndReEncryptAPIKey(UUID $uuid, ConcealedString $api_key, ConcealedString $encrypted_api_key): ConcealedString
     {
-        return $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)
-            ->mapOr(
-                /** @return BugzillaReferenceRow|null */
-                function (UUID $uuid): ?array {
-                    $row = $this->getDB()->row(
-                        'SELECT id, keyword, server, username, api_key, encrypted_api_key, has_api_key_always_been_encrypted, are_followup_private, rest_url
-                       FROM plugin_bugzilla_reference WHERE id = ?',
-                        $uuid->getBytes()
-                    );
-                    if ($row === null) {
-                        return null;
-                    }
-                    $row['id'] = $uuid;
-                    return $row;
-                },
-                null
+        $id              = $uuid->getBytes();
+        $additional_data = $this->getAPIKeyEncryptionAdditionalData($id);
+        if (! $api_key->isIdenticalTo(new ConcealedString(''))) {
+            $this->getDB()->run(
+                'UPDATE plugin_bugzilla_reference SET api_key = "", encrypted_api_key = ? WHERE id = ?',
+                $this->encryptDataToStoreInATableRow($api_key, $additional_data),
+                $id,
             );
+            return $api_key;
+        }
+        return $this->decryptDataStoredInATableRow($encrypted_api_key->getString(), $additional_data);
     }
 
     public function delete(string $uuid_hex): void
@@ -174,5 +180,13 @@ class Dao extends DataAccessObject
                     $this->getDB()->run($sql, $uuid->getBytes());
                 }
             );
+    }
+
+    /**
+     * @param non-empty-string $id
+     */
+    private function getAPIKeyEncryptionAdditionalData(string $id): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData('plugin_bugzilla_reference', 'encrypted_api_key', $id);
     }
 }
