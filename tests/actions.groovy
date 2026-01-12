@@ -57,7 +57,7 @@ def runDBTests(String db, String php) {
 
 def runEndToEndTests(String flavor, String db) {
     dir ('sources') {
-        sh "tests/e2e/${flavor}/wrap.sh '${db}' '$WORKSPACE/results/e2e/${flavor}/'"
+        sh "tests/e2e/${flavor}/wrap.sh '${db}' '$WORKSPACE/results/e2e/${flavor}-${db}/'"
     }
 }
 
