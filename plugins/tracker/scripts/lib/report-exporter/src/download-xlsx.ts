@@ -34,22 +34,20 @@ import { generateAutofilterRange } from "./export/autofilter-generator";
 
 export function downloadXLSX(export_settings: ExportSettings, formatted_data: ReportSection): void {
     const book = utils.book_new();
-    const cells = buildContent(export_settings, formatted_data);
+    const cells = buildContent(formatted_data);
     const sheet = utils.aoa_to_sheet(cells);
     sheet["!cols"] = fitColumnWidthsToContent(cells);
     sheet["!rows"] = fitRowHeightsToContent(cells);
     sheet["!merges"] = createMergesForWholeRowLine(cells);
     generateAutofilterRange(formatted_data).apply((ref) => (sheet["!autofilter"] = { ref }));
     utils.book_append_sheet(book, sheet);
-    writeFile(book, generateFilename(export_settings), {
+    writeFile(book, generateFilename(export_settings, "xlsx"), {
         bookSST: true,
+        bookType: "xlsx",
     });
 }
 
-function buildContent(
-    export_settings: ExportSettings,
-    formatted_data: ReportSection,
-): Array<Array<CellObjectWithExtraInfo>> {
+function buildContent(formatted_data: ReportSection): Array<Array<CellObjectWithExtraInfo>> {
     const content: CellObjectWithExtraInfo[][] = [];
     const report_trackers_names: CellObjectWithExtraInfo[] = [];
     if (formatted_data.headers) {

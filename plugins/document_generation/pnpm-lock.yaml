@@ -17,9 +17,9 @@ dependencies:
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:*
     version: link:../tracker/scripts/lib/rest-api-types
-  '@tuleap/plugin-tracker-xlsx-report-exporter':
+  '@tuleap/plugin-tracker-report-exporter':
     specifier: workspace:*
-    version: link:../tracker/scripts/lib/xlsx-report-exporter
+    version: link:../tracker/scripts/lib/report-exporter
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-fetch

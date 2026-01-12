@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report;
 
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Report_Renderer_TableTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
@@ -36,8 +37,7 @@ final class Tracker_Report_Renderer_TableTest extends \Tuleap\Test\PHPUnit\TestC
     #[\Override]
     protected function setUp(): void
     {
-        $report     = $this->createMock(\Tracker_Report::class);
-        $report->id = 1;
+        $report = ReportTestBuilder::aPublicReport()->withId(1)->build();
 
         $this->renderer_table = new \Tracker_Report_Renderer_Table(0, $report, 'Name', 'Description', 1, 10, false);
     }

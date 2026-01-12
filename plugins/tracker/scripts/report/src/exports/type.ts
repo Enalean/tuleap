@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { downloadXLSXDocument } from "./export-document";
-export type { ExportSettings } from "./export-document";
-
-export { downloadXLSX } from "./download-xlsx";
+export interface Properties {
+    readonly current_tracker_name: string;
+    readonly current_report_id: number;
+    readonly current_report_name: string;
+    readonly current_renderer_id: number;
+}

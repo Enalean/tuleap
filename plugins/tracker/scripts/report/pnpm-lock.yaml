@@ -5,9 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/dom
   '@tuleap/plugin-tracker-tql-codemirror':
     specifier: workspace:*
     version: link:../lib/TQL-CodeMirror
+  '@tuleap/plugin-tracker-report-exporter':
+    specifier: workspace:*
+    version: link:../lib/report-exporter
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch

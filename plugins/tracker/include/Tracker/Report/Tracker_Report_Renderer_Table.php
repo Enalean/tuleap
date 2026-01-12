@@ -47,6 +47,7 @@ use Tuleap\Tracker\Report\Renderer\Table\ProcessExportEvent;
 use Tuleap\Tracker\Report\Renderer\Table\Sort\SortWithIntegrityChecked;
 use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 use Tuleap\Tracker\Tracker;
+use function Psl\Json\encode as json_encode;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable
@@ -566,6 +567,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             return parent::getOptionsMenuItems($current_user);
         }
 
+        $purifier          = Codendi_HTMLPurifier::instance();
+        $export_properties = $purifier->purify(json_encode([
+            'current_project_id'   => $this->report->getTracker()->getGroupId(),
+            'current_tracker_id'   => $this->report->getTracker()->getId(),
+            'current_tracker_name' => $this->report->getTracker()->getName(),
+            'current_report_id'    => $this->report->getId(),
+            'current_report_name'  => $this->report->getName(),
+            'current_renderer_id'  => $this->id,
+        ]));
+        $csv_separator     = $current_user->getPreference(PFUser::PREFERENCE_NAME_CSV_SEPARATOR);
+        $csv_separator     = $purifier->purify($csv_separator === false ? PFUser::DEFAULT_CSV_SEPARATOR : $csv_separator);
+
         $my_items            = ['export' => ''];
         $my_items['export'] .= '<div class="btn-group">';
         $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
@@ -578,7 +591,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items['export'] .= dgettext('tuleap-tracker', 'CSV');
         $my_items['export'] .= '</li>';
         $my_items['export'] .= '<li>';
-        $my_items['export'] .= '<a href="' . $this->getExportResultURL(self::EXPORT_LIGHT) . '">';
+        $my_items['export'] .= "<a href='#' id='tracker-report-csv-export-report-columns' data-properties='$export_properties' data-csv-separator='$csv_separator'>";
         $my_items['export'] .= dgettext('tuleap-tracker', 'Export all report columns');
         $my_items['export'] .= '</a>';
         $my_items['export'] .= '</li>';

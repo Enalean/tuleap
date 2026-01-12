@@ -19,7 +19,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import type { ExportSettings } from "./export-document";
-import { downloadXLSXDocument } from "./export-document";
+import { downloadDocument } from "./export-document";
 import * as data_formator from "./data/data-formator";
 import type { ReportSection } from "./data/data-formator";
 
@@ -30,7 +30,7 @@ describe("export-document", () => {
             .spyOn(data_formator, "formatData")
             .mockResolvedValue({} as ReportSection);
 
-        await downloadXLSXDocument(
+        await downloadDocument(
             { first_level: { report_id: 1 } } as ExportSettings,
             document_exporter,
         );

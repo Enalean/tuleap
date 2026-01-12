@@ -19,7 +19,7 @@
 
 import { describe, it, vi } from "vitest";
 import type { GlobalExportProperties } from "../type";
-import * as export_document from "@tuleap/plugin-tracker-xlsx-report-exporter";
+import * as export_document from "@tuleap/plugin-tracker-report-exporter";
 import ModalContent from "./ModalContent.vue";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "./global-options-for-test";
@@ -27,11 +27,9 @@ import { getGlobalTestOptions } from "./global-options-for-test";
 describe("ModalContent", () => {
     it("starts document export", () =>
         new Promise((done) => {
-            vi.spyOn(export_document, "downloadXLSXDocument").mockImplementation(
-                (): Promise<void> => {
-                    return new Promise(done);
-                },
-            );
+            vi.spyOn(export_document, "downloadDocument").mockImplementation((): Promise<void> => {
+                return new Promise(done);
+            });
             const wrapper = shallowMount(ModalContent, {
                 global: getGlobalTestOptions(),
                 props: {

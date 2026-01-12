@@ -1,6 +1,6 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-tracker-xlsx-report-exporter",
+  "name": "@tuleap/plugin-tracker-report-exporter",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
@@ -9,8 +9,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/plugin-tracker-xlsx-report-exporter.js",
-      "require": "./dist/plugin-tracker-xlsx-report-exporter.umd.cjs"
+      "import": "./dist/plugin-tracker-report-exporter.js",
+      "require": "./dist/plugin-tracker-report-exporter.umd.cjs"
     }
   },
   "dependencies": {

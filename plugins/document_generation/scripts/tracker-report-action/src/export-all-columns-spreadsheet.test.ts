@@ -18,13 +18,13 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import * as document_exporter from "@tuleap/plugin-tracker-xlsx-report-exporter";
+import * as document_exporter from "@tuleap/plugin-tracker-report-exporter";
 import { startDownloadExportAllColumnsSpreadsheet } from "./export-all-columns-spreadsheet";
 
 describe("export-all-columns-spreadsheet", () => {
     it("starts the download of the spreadsheet", async () => {
         const spy_start_download = vi
-            .spyOn(document_exporter, "downloadXLSXDocument")
+            .spyOn(document_exporter, "downloadDocument")
             .mockImplementation(async () => {
                 // Do nothing
             });
