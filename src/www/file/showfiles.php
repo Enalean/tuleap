@@ -157,11 +157,8 @@ $GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset(
 $hp = Codendi_HTMLPurifier::instance();
 
 $params =  [
-    'title' => $Language->getText(
-        'file_showfiles',
-        'file_p_for',
-        $hp->purify($project_manager->getProject($group_id)->getPublicName())
-    ), 'pv' => $pv,
+    'title' => sprintf(_('File packages for project "%s"'), $hp->purify($project->getPublicName())) ,
+    'pv' => $pv,
 ];
 $service->displayFRSHeader($project, $params['title'], new BreadCrumbCollection());
 
