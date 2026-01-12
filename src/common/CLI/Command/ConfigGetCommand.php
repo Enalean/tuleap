@@ -41,7 +41,7 @@ class ConfigGetCommand extends Command
     }
 
     #[\Override]
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Get configuration values')
             ->addOption('reveal-secret', '', InputOption::VALUE_NONE, 'If configuration variable hold a secret, this switch will decrypt it.')
@@ -52,9 +52,11 @@ class ConfigGetCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getArgument('key');
+        assert(is_string($key));
         if (! ForgeConfig::exists($key)) {
             throw new InvalidArgumentException("Invalid key $key");
         }
+        assert($key !== '');
 
         $config_keys  = $this->event_dispatcher->dispatch(new GetConfigKeys());
         $key_metadata = $config_keys->getKeyMetadata($key);

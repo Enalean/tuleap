@@ -24,7 +24,6 @@ namespace Tuleap\Mail\Transport\SmtpOptions;
 
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Mailer\Transport\Smtp\Stream\SocketStream;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -78,7 +77,7 @@ final class SmtpTransportBuilderTest extends TestCase
         \ForgeConfig::set('email_relayhost_smtp_use_implicit_tls', '1');
         \ForgeConfig::set('email_relayhost_smtp_auth_type', 'login');
         \ForgeConfig::set('email_relayhost_smtp_username', 'username');
-        \ForgeConfig::set('email_relayhost_smtp_password', \ForgeConfig::encryptValue(new ConcealedString('password')));
+        $this->setEncryptedValue('email_relayhost_smtp_password', 'password');
 
         $transport = SmtpTransportBuilder::buildSmtpTransportFromForgeConfig('smtp.example.com');
 

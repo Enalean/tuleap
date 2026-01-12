@@ -52,7 +52,7 @@ final class ConfigSet implements ConfigUpdater
             if ($key_metadata->secret_validator) {
                 $key_metadata->secret_validator->checkIsValid($secret);
             }
-            $value = \ForgeConfig::encryptValue($secret);
+            $value = \ForgeConfig::encryptValue($key, $secret);
         } elseif ($key_metadata->value_validator) {
             $key_metadata->value_validator->checkIsValid((string) $value);
         }

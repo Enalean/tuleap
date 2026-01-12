@@ -53,7 +53,7 @@ final class CSRFSigningKeyDBStorage implements CSRFSigningKeyStorage
             $signing_key = new ConcealedString(sodium_bin2base64(random_bytes(32), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING));
             $this->config_dao->save(
                 self::NAME,
-                \ForgeConfig::encryptValue($signing_key)
+                \ForgeConfig::encryptValue(self::NAME, $signing_key)
             );
         } else {
             $signing_key = \ForgeConfig::getSecretAsClearText(self::NAME);

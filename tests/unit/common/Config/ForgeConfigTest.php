@@ -66,7 +66,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         putenv('TULEAP_LOCAL_INC=' . $root . '/local.inc');
 
         // Prepare database
-        $dao = $this->createMock(ConfigDao::class);
+        $dao = $this->createStub(ConfigDao::class);
         $dao->method('searchAll')->willReturn($database);
         ForgeConfig::setDatabaseConfigDao($dao);
 
@@ -245,7 +245,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLoadsFromDatabase(): void
     {
-        $dao = $this->createMock(ConfigDao::class);
+        $dao = $this->createStub(ConfigDao::class);
         $dao->method('searchAll')->willReturn([['name' => 'a_var', 'value' => 'its_value']]);
 
         (new class extends ForgeConfig {
@@ -332,10 +332,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testEncryptedSecretIsRevealed(): void
     {
         ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
-        ForgeConfig::set(
-            MailTransportBuilder::RELAYHOST_SMTP_PASSWORD,
-            ForgeConfig::encryptValue(new \Tuleap\Cryptography\ConcealedString('a very good secret')),
-        );
+        $this->setEncryptedValue(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD, 'a very good secret');
 
         self::assertEquals('a very good secret', ForgeConfig::getSecretAsClearText(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD));
     }
