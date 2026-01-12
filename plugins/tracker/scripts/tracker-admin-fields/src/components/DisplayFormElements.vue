@@ -43,6 +43,7 @@
             v-bind:field="element.field"
         />
         <field-link v-else-if="isAnArtifactLinkField(element.field)" v-bind:field="element.field" />
+        <field-file v-else-if="isAFileField(element.field)" v-bind:field="element.field" />
         <line-separator v-else-if="isLineSeparator(element.field)" v-bind:field="element.field" />
         <line-break v-else-if="isLineBreak(element.field)" v-bind:field="element.field" />
         <field-cross-reference
@@ -77,6 +78,7 @@ import {
     SUBMISSION_DATE_FIELD,
     LAST_UPDATE_DATE_FIELD,
     CROSS_REFERENCE_FIELD,
+    FILE_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     IntFieldStructure,
@@ -90,6 +92,7 @@ import type {
     ListFieldStructure,
     StaticRichTextStructure,
     ArtifactLinkFieldStructure,
+    FileFieldStructure,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import ContainerFieldset from "./FormElements/ContainerFieldset.vue";
 import ContainerColumnWrapper from "./FormElements/ContainerColumnWrapper.vue";
@@ -110,6 +113,7 @@ import FieldLink from "./FormElements/FieldLink.vue";
 import FieldStaticUserText from "./FormElements/FieldStaticUserText.vue";
 import FieldStaticDateText from "./FormElements/FieldStaticDateText.vue";
 import FieldCrossReference from "./FormElements/FieldCrossReference.vue";
+import FieldFile from "./FormElements/FieldFile.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -187,5 +191,9 @@ function isStaticDateText(field: StructureFields): boolean {
 
 function isCrossReferenceField(field: StructureFields): boolean {
     return field.type === CROSS_REFERENCE_FIELD;
+}
+
+function isAFileField(field: StructureFields): field is FileFieldStructure {
+    return field.type === FILE_FIELD;
 }
 </script>

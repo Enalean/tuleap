@@ -44,6 +44,7 @@ import type {
     DefaultValueDateType,
     ShouldDisplayTime,
     CrossReferenceFieldIdentifier,
+    FileFieldIdentifier,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -169,6 +170,10 @@ export interface CrossReferenceStructure extends BaseFieldStructure {
     readonly type: CrossReferenceFieldIdentifier;
 }
 
+export interface FileFieldStructure extends BaseFieldStructure {
+    readonly type: FileFieldIdentifier;
+}
+
 type StaticField = LineBreakStructure | SeparatorStructure | StaticRichTextStructure;
 
 export type StructureFields =
@@ -184,7 +189,8 @@ export type StructureFields =
     | NumericFieldStructure
     | StaticField
     | UserFieldStructure
-    | CrossReferenceStructure;
+    | CrossReferenceStructure
+    | FileFieldStructure;
 
 export interface StructureFormat {
     readonly id: number;
