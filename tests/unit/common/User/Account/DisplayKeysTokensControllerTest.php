@@ -21,9 +21,8 @@
 
 namespace Tuleap\User\Account;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\TemporaryTestDirectory;
@@ -41,14 +40,8 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
     use GlobalLanguageMock;
 
     private DisplayKeysTokensController $controller;
-    /**
-     * @var MockObject&AccessKeyPresenterBuilder
-     */
-    private $access_keys_presenter_builder;
-    /**
-     * @var \SVN_TokenHandler&\PHPUnit\Framework\MockObject\Stub
-     */
-    private $svn_token_handler;
+    private AccessKeyPresenterBuilder&Stub $access_keys_presenter_builder;
+    private \SVN_TokenHandler&Stub $svn_token_handler;
 
     #[\Override]
     public function setUp(): void
@@ -61,11 +54,10 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             }
         };
         $csrf_token                          = new \CSRFSynchronizerToken('something', 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());
-        $this->access_keys_presenter_builder = $this->createMock(AccessKeyPresenterBuilder::class);
+        $this->access_keys_presenter_builder = $this->createStub(AccessKeyPresenterBuilder::class);
         $this->svn_token_handler             = $this->createStub(\SVN_TokenHandler::class);
         $svn_tokens_presenter_builder        = new SVNTokensPresenterBuilder(
             $this->svn_token_handler,
-            $this->createMock(KeyFactory::class)
         );
 
         $this->controller = new DisplayKeysTokensController(

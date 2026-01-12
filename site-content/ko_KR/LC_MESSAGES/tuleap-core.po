@@ -882,9 +882,6 @@ msgstr "연락처 (도움말 메뉴)"
 msgid "Content"
 msgstr "내용"
 
-msgid "Copy the SVN token"
-msgstr "SVN 토큰 복사"
-
 msgid "Copy the access key"
 msgstr "액세스 키 복사"
 
@@ -1451,11 +1448,6 @@ msgstr "안녕하세요,"
 
 msgid "Help"
 msgstr "도움말"
-
-msgid ""
-"Here is your new SVN token. Please make sure you copy it, you won't be able "
-"to see it again!"
-msgstr "새로운 SVN 토큰입니다. 다시 볼 수 없으니 복사하십시오!"
 
 msgid ""
 "Here is your new access key. Please make sure to copy it, you won't be able "
@@ -2828,9 +2820,6 @@ msgstr "SVN"
 
 msgid "SVN Commits"
 msgstr "SVN 커밋"
-
-msgid "SVN token copied!"
-msgstr "SVN 토큰이 복사되었습니다."
 
 msgid "SVN tokens"
 msgstr "SVN 토큰"
