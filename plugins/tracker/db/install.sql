@@ -216,7 +216,8 @@ CREATE TABLE tracker_field_openlist_value(
     field_id INT(11) UNSIGNED NOT NULL,
     label VARCHAR(255) NOT NULL DEFAULT '',
     is_hidden BOOL DEFAULT FALSE,
-    INDEX idx_search(field_id)
+    INDEX idx_search(field_id),
+    UNIQUE KEY idx_field_value(field_id, label)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS tracker_field_list_bind_users;

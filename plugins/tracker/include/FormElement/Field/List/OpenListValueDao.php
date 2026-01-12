@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\List;
 
+use RuntimeException;
 use Tuleap\DB\DataAccessObject;
 
 class OpenListValueDao extends DataAccessObject
@@ -58,10 +59,17 @@ class OpenListValueDao extends DataAccessObject
 
     public function create(int $field_id, string $label): int
     {
-        return (int) $this->getDB()->insertReturnId('tracker_field_openlist_value', [
-            'field_id' => $field_id,
-            'label'    => $label,
-        ]);
+        $sql = <<<SQL
+        INSERT INTO tracker_field_openlist_value (field_id, label) VALUES (?, ?)
+        ON DUPLICATE KEY UPDATE label=label;
+        SQL;
+        $this->getDB()->safeQuery($sql, [$field_id, $label]);
+
+        $row = $this->searchByExactLabel($field_id, $label);
+        if ($row === null) {
+            throw new RuntimeException('Failed to find openlist value even though it has just been added');
+        }
+        return $row['id'];
     }
 
     /**
