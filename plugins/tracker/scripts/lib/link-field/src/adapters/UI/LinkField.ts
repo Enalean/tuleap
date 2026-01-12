@@ -252,7 +252,8 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
 
 const createLazyBox = (host: HostElement): Lazybox & HTMLElement => {
     const link_selector = createLazybox(host.ownerDocument);
-    const options: LazyboxOptions = {
+    const options_create = host.controller.getLinkFieldOptions();
+    let options: LazyboxOptions = {
         is_multiple: false,
         placeholder: getLinkSelectorPlaceholderText(),
         search_input_placeholder: getLinkSelectorSearchPlaceholderText(),
@@ -266,15 +267,21 @@ const createLazyBox = (host: HostElement): Lazybox & HTMLElement => {
                 link_selector.clearSelection();
                 host.new_links = host.controller.addNewLink(artifact, host.current_link_type);
             }),
-        new_item_clicked_callback: (title: string): void => {
-            host.is_artifact_creator_shown = true;
-            host.new_artifact_title = title;
-        },
-        new_item_label_callback: (title: string) =>
-            title !== ""
-                ? sprintf(getCreateNewArtifactButtonInLinkWithNameLabel(), { title })
-                : getCreateNewArtifactButtonInLinkLabel(),
     };
+
+    if (options_create.can_create_artifact) {
+        options = {
+            ...options,
+            new_item_clicked_callback: (title: string): void => {
+                host.is_artifact_creator_shown = true;
+                host.new_artifact_title = title;
+            },
+            new_item_label_callback: (title: string): string =>
+                title !== ""
+                    ? sprintf(getCreateNewArtifactButtonInLinkWithNameLabel(), { title })
+                    : getCreateNewArtifactButtonInLinkLabel(),
+        };
+    }
     link_selector.options = options;
     return link_selector;
 };

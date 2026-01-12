@@ -45,7 +45,6 @@ import ErrorState from "./ErrorState.vue";
 const { $gettext } = useGettext();
 
 const props = defineProps<{
-    tracker_id: number;
     fields: ReadonlyArray<StructureFields>;
     structure: ReadonlyArray<StructureFormat>;
     has_error: boolean;

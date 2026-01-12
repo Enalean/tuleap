@@ -31,7 +31,13 @@ export default vite.defineAppConfig(
     {
         plugins: [
             POGettextPlugin.vite(),
-            vue(),
+            vue({
+                template: {
+                    compilerOptions: {
+                        isCustomElement: (tag) => tag === "tuleap-tracker-link-field",
+                    },
+                },
+            }),
             viteExternalsPlugin({
                 ckeditor4: "CKEDITOR",
                 jquery: "jQuery",
