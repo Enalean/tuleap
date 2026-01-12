@@ -21,6 +21,11 @@ import { getAttributeOrThrow } from "@tuleap/dom";
 import { showLoaderWhileProcessing } from "./exports/show-loader-processing";
 
 export function setupCSVExport(doc: Document): void {
+    setupExportReportColumn(doc);
+    setupExportAllColumn(doc);
+}
+
+function setupExportReportColumn(doc: Document): void {
     const export_report_columns_button = doc.getElementById(
         "tracker-report-csv-export-report-columns",
     );
@@ -41,6 +46,29 @@ export function setupCSVExport(doc: Document): void {
             );
 
             await startDownloadExportAllReportColumnsCSV(properties, separator);
+        });
+    });
+}
+
+function setupExportAllColumn(doc: Document): void {
+    const export_all_columns_button = doc.getElementById("tracker-report-csv-export-all-columns");
+    if (export_all_columns_button === null) {
+        return;
+    }
+    export_all_columns_button.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        const properties = JSON.parse(
+            getAttributeOrThrow(export_all_columns_button, "data-properties"),
+        );
+        const separator = getAttributeOrThrow(export_all_columns_button, "data-csv-separator");
+
+        await showLoaderWhileProcessing(doc, async () => {
+            const { startDownloadExportAllColumnsCSV } = await import(
+                "./exports/export-all-columns-csv"
+            );
+
+            await startDownloadExportAllColumnsCSV(properties, separator);
         });
     });
 }

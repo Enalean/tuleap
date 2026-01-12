@@ -596,7 +596,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items['export'] .= '</a>';
         $my_items['export'] .= '</li>';
         $my_items['export'] .= '<li>';
-        $my_items['export'] .= '<a href="' . $this->getExportResultURL(self::EXPORT_FULL) . '">';
+        $my_items['export'] .= "<a href='#' id='tracker-report-csv-export-all-columns' data-properties='$export_properties' data-csv-separator='$csv_separator'>";
         $my_items['export'] .= dgettext('tuleap-tracker', 'Export all columns');
         $my_items['export'] .= '</a>';
         $my_items['export'] .= '</li>';
