@@ -19,11 +19,11 @@
 
 import { describe, it, expect, vi } from "vitest";
 import * as report_field_label_extractor from "./report-fields-labels-extractor";
-import { formatTrackerNames } from "./tracker-names-formattor";
+import { formatTrackerNames } from "./tracker-names-formator";
 import type { OrganizedReportsData, ArtifactForCrossReportDocGen } from "../type";
 import { TextCellWithMerges } from "../type";
 
-describe("tracker-names-formattor", () => {
+describe("tracker-names-formator", () => {
     it("Formats tracker names", (): void => {
         const spy_extract_field_labels = vi.spyOn(
             report_field_label_extractor,

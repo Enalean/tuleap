@@ -23,39 +23,6 @@ import type {
     TrackerReportResponse,
     TrackerUsedArtifactLinkResponse,
 } from "@tuleap/plugin-tracker-rest-api-types";
-import type { LinkedArtifactsResponse, ArtifactForCrossReportDocGen } from "./type";
-
-export function getReportArtifacts(
-    report_id: number,
-    report_has_changed: boolean,
-    table_renderer_id: number | undefined,
-    all_columns: boolean,
-): Promise<ArtifactForCrossReportDocGen[]> {
-    const params: Record<string, number | string | boolean> = {
-        values: all_columns ? "all" : "from_table_renderer",
-        with_unsaved_changes: report_has_changed,
-        limit: 50,
-    };
-    if (table_renderer_id !== undefined) {
-        params.table_renderer_id = table_renderer_id;
-    }
-    return recursiveGet(`/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`, {
-        params,
-    });
-}
-
-export function getLinkedArtifacts(
-    artifact_id: number,
-    artifact_link_type: string,
-): Promise<LinkedArtifactsResponse[]> {
-    return recursiveGet(`/api/v1/artifacts/${encodeURIComponent(artifact_id)}/linked_artifacts`, {
-        params: {
-            direction: "forward",
-            nature: artifact_link_type,
-            limit: 10,
-        },
-    });
-}
 
 export function getTrackerReports(tracker_id: number): Promise<TrackerReportResponse[]> {
     return recursiveGet(`/api/v1/trackers/${encodeURIComponent(tracker_id)}/tracker_reports`);

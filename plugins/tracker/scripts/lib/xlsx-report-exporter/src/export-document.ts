@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ReportSection } from "./Data/data-formator";
-import { formatData } from "./Data/data-formator";
+import type { ReportSection } from "./data/data-formator";
+import { formatData } from "./data/data-formator";
 
 interface ExportLevelSetting {
     readonly tracker_name: string;

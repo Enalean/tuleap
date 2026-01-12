@@ -1,0 +1,34 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-xlsx-report-exporter",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/plugin-tracker-xlsx-report-exporter.js",
+      "require": "./dist/plugin-tracker-xlsx-report-exporter.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "@tuleap/concurrency-limit-pool": "workspace:*",
+    "@tuleap/option": "workspace:*",
+    "@tuleap/plugin-docgen-docx": "workspace:*",
+    "@tuleap/plugin-docgen-xlsx": "workspace:*",
+    "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*",
+    "xlsx": "git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#8a7cfd47bde8258c0d91df6a737bf0136699cdf8"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:^"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

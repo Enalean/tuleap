@@ -19,7 +19,7 @@
 
 import { describe, it, vi } from "vitest";
 import type { GlobalExportProperties } from "../type";
-import * as export_document from "../export-document";
+import * as export_document from "@tuleap/plugin-tracker-xlsx-report-exporter";
 import ModalContent from "./ModalContent.vue";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "./global-options-for-test";

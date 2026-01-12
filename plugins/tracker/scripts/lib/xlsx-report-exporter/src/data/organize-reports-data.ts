@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getLinkedArtifacts, getReportArtifacts } from "../rest-querier";
+import { getLinkedArtifacts, getReportArtifacts } from "../api/rest-querier";
 import type { ExportSettings } from "../export-document";
 import type {
     OrganizedReportsData,

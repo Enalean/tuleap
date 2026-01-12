@@ -18,7 +18,7 @@
  */
 
 import { utils, writeFile } from "xlsx";
-import type { ReportSection } from "../../Data/data-formator";
+import type { ReportSection } from "./data/data-formator";
 import type { CellObjectWithExtraInfo } from "@tuleap/plugin-docgen-xlsx";
 import {
     buildSheetEmptyCell,
@@ -28,9 +28,9 @@ import {
     fitRowHeightsToContent,
     transformReportCellIntoASheetCell,
 } from "@tuleap/plugin-docgen-xlsx";
-import type { ExportSettings } from "../../export-document";
-import { generateFilename } from "./file-name-generator";
-import { generateAutofilterRange } from "./autofilter-generator";
+import type { ExportSettings } from "./export-document";
+import { generateFilename } from "./export/file-name-generator";
+import { generateAutofilterRange } from "./export/autofilter-generator";
 
 export function downloadXLSX(export_settings: ExportSettings, formatted_data: ReportSection): void {
     const book = utils.book_new();

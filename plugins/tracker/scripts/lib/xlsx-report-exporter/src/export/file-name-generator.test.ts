@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type { ExportSettings } from "../../export-document";
+import type { ExportSettings } from "../export-document";
 import { generateFilename } from "./file-name-generator";
 
 describe("file-name-generator", () => {

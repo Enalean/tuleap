@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ExportSettings } from "../../export-document";
+import type { ExportSettings } from "../export-document";
 
 export function generateFilename(export_settings: ExportSettings): string {
     let filename: string =

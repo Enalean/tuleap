@@ -19,7 +19,7 @@
 
 import type { OrganizedReportsData } from "../type";
 import type { HeadersSection } from "./data-formator";
-import { formatTrackerNames } from "./tracker-names-formattor";
+import { formatTrackerNames } from "./tracker-names-formator";
 import { formatReportsFieldsLabels } from "./reports-fields-labels-formator";
 
 export function formatHeaders(organized_data: OrganizedReportsData): HeadersSection {

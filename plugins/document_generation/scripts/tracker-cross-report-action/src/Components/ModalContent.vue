@@ -103,7 +103,7 @@ import FirstLevelSelector from "./FirstLevelSelector.vue";
 import ExplanationsExport from "./ExplanationsExport.vue";
 import SecondLevelSelector from "./SecondLevelSelector.vue";
 import ThirdLevelSelector from "./ThirdLevelSelector.vue";
-import type { ExportSettings } from "../export-document";
+import type { ExportSettings } from "@tuleap/plugin-tracker-xlsx-report-exporter";
 import FakeWorksheet from "./FakeWorksheet.vue";
 import ExportGenerationErrorMessage from "./ExportGenerationErrorMessage.vue";
 
@@ -141,11 +141,9 @@ const export_has_failed = ref(false);
 async function startExport(): Promise<void> {
     export_is_ongoing.value = true;
     export_has_failed.value = false;
-    const export_document_module = import("../export-document");
-    const download_xlsx_module = import("../Exporter/XLSX/download-xlsx");
+    const xlsx_exporter = import("@tuleap/plugin-tracker-xlsx-report-exporter");
 
-    const { downloadXLSXDocument } = await export_document_module;
-    const { downloadXLSX } = await download_xlsx_module;
+    const { downloadXLSXDocument, downloadXLSX } = await xlsx_exporter;
     let export_settings: ExportSettings = {
         first_level: {
             tracker_name: props.properties.current_tracker_name,
