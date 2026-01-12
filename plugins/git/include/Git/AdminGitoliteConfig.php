@@ -19,8 +19,10 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Git\AsynchronousEvents\RefreshGitoliteProjectConfigurationTask;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Layout\JavascriptAssetGeneric;
+use Tuleap\Queue\EnqueueTaskInterface;
 
 class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
@@ -56,6 +58,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         CSRFSynchronizerToken $csrf,
         ProjectManager $project_manager,
         Git_SystemEventManager $system_event_manager,
+        private readonly EnqueueTaskInterface $enqueuer,
         AdminPageRenderer $admin_page_renderer,
         BigObjectAuthorizationManager $big_object_authorization_manager,
         JavascriptAssetGeneric $asset,
@@ -95,7 +98,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         return true;
     }
 
-    private function regenerateGitoliteConfigForAProject(\Tuleap\HTTPRequest $request)
+    private function regenerateGitoliteConfigForAProject(\Tuleap\HTTPRequest $request): void
     {
         $project = $this->getProject($request->get('gitolite_config_project'));
 
@@ -107,7 +110,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
             return;
         }
 
-        $this->system_event_manager->queueRegenerateGitoliteConfig($project->getID());
+        $this->enqueuer->enqueue(RefreshGitoliteProjectConfigurationTask::fromProject($project));
 
         $GLOBALS['Response']->addFeedback(
             'info',

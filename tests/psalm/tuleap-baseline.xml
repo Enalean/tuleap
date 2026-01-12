@@ -18323,13 +18323,6 @@
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidOperand>
   </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG.php">
-    <MissingReturnType>
-      <code><![CDATA[getProjectIdFromParameters]]></code>
-      <code><![CDATA[injectDependencies]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_DELETE.php">
     <MissingReturnType>
       <code><![CDATA[injectDependencies]]></code>

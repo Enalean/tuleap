@@ -30,6 +30,7 @@ use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Queue\EnqueueTaskInterface;
 
 /**
  * This routes site admin part of Git
@@ -86,6 +87,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         CSRFSynchronizerToken $csrf,
         ProjectManager $project_manager,
         Git_SystemEventManager $git_system_event_manager,
+        private readonly EnqueueTaskInterface $enqueuer,
         RegexpFineGrainedRetriever $regexp_retriever,
         RegexpFineGrainedEnabler $regexp_enabler,
         AdminPageRenderer $admin_page_renderer,
@@ -143,6 +145,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->csrf,
                 $this->project_manager,
                 $this->git_system_event_manager,
+                $this->enqueuer,
                 $this->admin_page_renderer,
                 $this->big_object_authorization_manager,
                 new JavascriptViteAsset($this->include_assets, 'src/gitolite.ts'),

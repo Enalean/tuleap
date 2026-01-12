@@ -168,16 +168,6 @@ class Git_SystemEventManager
         }
     }
 
-    public function queueRegenerateGitoliteConfig($project_id)
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
-            $project_id,
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        );
-    }
-
     public function queueProjectIsSuspended($project_id)
     {
         $this->system_event_manager->createEvent(
@@ -212,7 +202,7 @@ class Git_SystemEventManager
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME, $repository->getId());
     }
 
-    public function getTypes()
+    public function getTypes(): array
     {
         return [
             SystemEvent_GIT_REPO_UPDATE::NAME,
@@ -227,7 +217,6 @@ class Git_SystemEventManager
             SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
             SystemEvent_GIT_PROJECTS_UPDATE::NAME,
-            SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
             ProjectIsSuspended::NAME,
         ];
     }

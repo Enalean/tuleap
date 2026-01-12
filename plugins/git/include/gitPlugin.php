@@ -43,6 +43,7 @@ use Tuleap\Git\Account\AccountGerritController;
 use Tuleap\Git\Account\PushSSHKeysController;
 use Tuleap\Git\Account\ResynchronizeGroupsController;
 use Tuleap\Git\Artifact\Action\CreateBranchButtonFetcher;
+use Tuleap\Git\AsynchronousEvents\RefreshGitoliteProjectConfigurationTask;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
@@ -382,7 +383,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(AccessKeyScopeBuilderCollector::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
         $this->addHook(PendingDocumentsRetriever::NAME);
-        $this->addHook(WorkerEvent::NAME);
 
         if (defined('\trackerPlugin::TRACKER_BASE_URL')) {
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
@@ -665,13 +665,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     $this->getGitoliteDriver(),
                 ];
                 break;
-            case SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME:
-                $params['class']        = 'SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG';
-                $params['dependencies'] = [
-                    $this->getGitoliteDriver(),
-                    $this->getProjectManager(),
-                ];
-                break;
             case ProjectIsSuspended::NAME:
                 $params['class']        = ProjectIsSuspended::class;
                 $params['dependencies'] = [
@@ -883,6 +876,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             new CSRFSynchronizerToken(GIT_SITE_ADMIN_BASE_URL),
             $project_manager,
             $this->getGitSystemEventManager(),
+            new \Tuleap\Queue\EnqueueTask(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getAdminPageRenderer(),
@@ -1164,8 +1158,9 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
+        $enqueuer = new \Tuleap\Queue\EnqueueTask();
         match ($event->status) {
-            Project::STATUS_ACTIVE    => $this->getGitSystemEventManager()->queueRegenerateGitoliteConfig($event->project->getID()),
+            Project::STATUS_ACTIVE    => $enqueuer->enqueue(RefreshGitoliteProjectConfigurationTask::fromProject($event->project)),
             Project::STATUS_SUSPENDED => $this->getGitSystemEventManager()->queueProjectIsSuspended($event->project->getID()),
             Project::STATUS_DELETED   => $this->getRepositoryManager()->deleteProjectRepositories($event->project),
         };
@@ -2882,12 +2877,13 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
+    #[ListeningToEventClass]
     public function workerEvent(WorkerEvent $event): void
     {
         $logger        = $this->getLogger();
         $event_manager = \EventManager::instance();
 
-        $handler = new AsynchronousEventHandler(
+        $hook_handler = new AsynchronousEventHandler(
             $logger,
             new DefaultBranchPushParser(
                 \UserManager::instance(),
@@ -2898,7 +2894,13 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             new DefaultBranchPushProcessorBuilder(),
             $event_manager
         );
-        $handler->handle($event);
+        $hook_handler->handle($event);
+
+        new \Tuleap\Git\AsynchronousEvents\GitProjectAsynchronousEventHandler(
+            \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder(),
+            $this->getProjectManager(),
+            $this->getGitoliteDriver(),
+        )->handle($event);
     }
 
     #[ListeningToEventClass]
