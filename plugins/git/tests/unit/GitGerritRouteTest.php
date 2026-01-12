@@ -204,9 +204,10 @@ final class GitGerritRouteTest extends TestCase
                 $this->createMock(ConfigureAllowArtifactClosure::class),
                 $this->createMock(\User_ForgeUserGroupFactory::class),
             ])
-            ->onlyMethods(['addAction', 'addError', 'redirect'])
+            ->onlyMethods(['addAction', 'addError', 'redirect', 'checkSynchronizerToken'])
             ->getMock();
 
+        $git->method('checkSynchronizerToken')->willReturn('');
         $git->setRequest($request);
         $git->setUserManager($this->user_manager);
         $git->setFactory($factory);

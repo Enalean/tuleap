@@ -24,20 +24,18 @@ namespace Tuleap;
 
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\TestLayout;
 
 trait GlobalResponseMock
 {
+    private(set) TestLayout $global_response;
+
     #[Before]
-    protected function mockResponse(): void
+    protected function stubResponse(): void
     {
-         $response = $this->getMockBuilder(BaseLayout::class)
-             ->disableOriginalConstructor()
-             ->disableOriginalClone()
-             ->enableAutoReturnValueGeneration()
-             ->getMock();
-         $response->method('getCSPNonce')->willReturn('');
-         $GLOBALS['Response'] = $response;
+         $this->global_response = new TestLayout(new LayoutInspector());
+         $GLOBALS['Response']   = $this->global_response;
     }
 
     #[After]

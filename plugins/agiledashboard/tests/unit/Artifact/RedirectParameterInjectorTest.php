@@ -116,19 +116,6 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->user, 101)
             ->willReturn($artifact);
 
-        $GLOBALS['Response']
-            ->expects($this->once())
-            ->method('addFeedback')
-            ->with(
-                \Feedback::INFO,
-                self::callback(
-                    static function (string $content_to_display): bool {
-                        return strpos($content_to_display, 'Some milestone') !== false &&
-                            strpos($content_to_display, 'rel #42') !== false;
-                    }
-                ),
-                CODENDI_PURIFIER_FULL
-            );
         $redirect = new \Tracker_Artifact_Redirect();
 
         $this->injector->injectAndInformUserAboutBacklogItemWillBeLinked($request, $redirect);
@@ -136,6 +123,9 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertCount(2, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
         self::assertEquals(1, $redirect->query_parameters['link-to-milestone']);
+        $info_message = $this->global_response->inspector->getFeedback()[0]['message'];
+        self::assertStringContainsString('Some milestone', $info_message);
+        self::assertStringContainsString('rel #42', $info_message);
     }
 
     public function testInjectAndInformUserAboutBacklogItemWillBeLinkedInjectsTheChildMilestone(): void

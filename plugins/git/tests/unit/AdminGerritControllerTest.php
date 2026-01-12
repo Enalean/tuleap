@@ -32,6 +32,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use User_SSHKeyValidator;
@@ -107,6 +108,9 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('action', 'add-gerrit-server');
         $this->request->set('server', false);
         $this->factory->expects($this->never())->method('save');
+
+        $this->expectException(LayoutInspectorRedirection::class);
+
         $this->admin->process($this->request);
     }
 
@@ -123,6 +127,9 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
         $this->factory->expects($this->never())->method('save');
+
+        $this->expectException(LayoutInspectorRedirection::class);
+
         $this->admin->process($this->request);
     }
 
@@ -139,6 +146,9 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $this->factory->expects($this->never())->method('save');
+
+        $this->expectException(LayoutInspectorRedirection::class);
+
         $this->admin->process($this->request);
     }
 
@@ -155,6 +165,9 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
         $this->factory->expects($this->never())->method('save');
+
+        $this->expectException(LayoutInspectorRedirection::class);
+
         $this->admin->process($this->request);
     }
 
@@ -172,7 +185,11 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('replication_password', 'azerty');
         $this->factory->method('save');
         $this->factory->method('updateReplicationPassword');
-        $this->admin->process($this->request);
+
+        try {
+            $this->admin->process($this->request);
+        } catch (LayoutInspectorRedirection) {
+        }
         self::assertTrue($this->csrf->hasBeenChecked());
     }
 
@@ -191,13 +208,14 @@ final class AdminGerritControllerTest extends TestCase
         $s = $this->a_brand_new_server;
         $this->factory->expects($this->once())->method('save')->with($s);
         $this->factory->method('updateReplicationPassword');
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->admin->process($this->request);
     }
 
     public function testItRedirectsAfterSave(): void
     {
         $this->request->set('action', 'add-gerrit-server');
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->admin->process($this->request);
     }
 
@@ -215,6 +233,9 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $this->factory->expects($this->once())->method('save')->with($this->an_existing_server);
+
+        $this->expectException(LayoutInspectorRedirection::class);
+
         $this->admin->process($this->request);
     }
 
@@ -232,6 +253,7 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $this->factory->expects($this->once())->method('save')->with($this->an_existing_server);
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->admin->process($this->request);
     }
 
@@ -241,6 +263,7 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('gerrit_server_id', 1);
         $this->factory->expects($this->once())->method('delete')->with($this->an_existing_server);
         $this->factory->expects($this->never())->method('save')->with($this->an_existing_server);
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->admin->process($this->request);
     }
 }

@@ -40,6 +40,7 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
     #[\Override]
     protected function setUp(): void
     {
+        $GLOBALS['Language']->method('gettext')->willReturn('Something');
         $project           = ProjectTestBuilder::aProject()->withId(34)->build();
         $this->tracker     = TrackerTestBuilder::aTracker()
             ->withId($this->tracker_id)
@@ -138,10 +139,11 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
             Tracker::PERMISSION_FULL => 1,
         ];
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::WARN);
-
         $permission_setter = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
         $this->permission_manager->save($request, $permission_setter);
+
+        self::assertCount(1, $this->global_response->inspector->getFeedback());
+        self::assertEquals(Feedback::WARN, $this->global_response->inspector->getFeedback()[0]['level']);
     }
 
     public function testItGrantsProjectMembersSubmittedOnly(): void

@@ -151,16 +151,18 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     protected function processRequestAndExpectRedirection(\Tuleap\HTTPRequest $request): void
     {
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
         ob_start();
-        $this->action->process($this->layout, $request, $this->user);
-        $content = ob_get_clean();
-        $this->assertEquals('', $content);
+        try {
+            $this->expectException(\Tuleap\Test\Builders\LayoutInspectorRedirection::class);
+            $this->action->process($this->layout, $request, $this->user);
+        } finally {
+            $content = ob_get_clean();
+            $this->assertEquals('', $content);
+        }
     }
 
     protected function processRequestAndExpectFormOutput(\Tuleap\HTTPRequest $request): void
     {
-        $GLOBALS['Response']->expects($this->never())->method('redirect');
         ob_start();
         $this->action->process($this->layout, $request, $this->user);
         $content = ob_get_clean();
@@ -170,8 +172,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     public function testItDoesNotDisplayErrorsIfNoActions(): void
     {
         $request = new \Tuleap\HTTPRequest([], $this->createMock(ProjectManager::class));
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with(Feedback::ERROR);
         $this->processRequestAndExpectFormOutput($request);
+        self::assertEmpty($this->global_response->getFeedbackErrors());
     }
 
     public function testItDeletesARule(): void
@@ -227,9 +229,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             $this->createMock(ProjectManager::class)
         );
         $this->date_factory->method('deleteById')->willReturn(true);
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::SUCCESS);
         $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(1, $feedbacks);
+        self::assertEquals(Feedback::SUCCESS, $feedbacks[0]['level']);
     }
 
     public function testItDoesNotPrintSuccessfullFeebackIfTheDeleteFailed(): void
@@ -239,8 +243,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             $this->createMock(ProjectManager::class)
         );
         $this->date_factory->method('deleteById')->willReturn(false);
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::ERROR);
         $this->processRequestAndExpectRedirection($request);
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(1, $feedbacks);
+        self::assertEquals(Feedback::ERROR, $feedbacks[0]['level']);
     }
 
     private function processIndexRequest(): string
@@ -293,8 +299,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
 
         $this->date_factory->expects($this->never())->method('create');
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with(Feedback::SUCCESS);
         $this->processRequestAndExpectFormOutput($request);
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(0, $feedbacks);
     }
 
     public function testItDoesNotCreateTheRuleIfTheRequestDoesNotContainTheSourceField(): void
@@ -461,8 +468,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             $this->createMock(ProjectManager::class)
         );
         $this->date_factory->expects($this->never())->method('create');
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
         $this->processRequestAndExpectFormOutput($request);
+
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(1, $feedbacks);
+        self::assertEquals(Feedback::ERROR, $feedbacks[0]['level']);
     }
 
     public function testItProvidesFeedbackIfRuleSuccessfullyCreated(): void
@@ -477,10 +487,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             ],
             $this->createMock(ProjectManager::class)
         );
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::SUCCESS);
         $this->date_factory->method('create')->willReturn($this->rule_42);
         $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
+
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(1, $feedbacks);
+        self::assertEquals(Feedback::SUCCESS, $feedbacks[0]['level']);
     }
 
     public function testItDoesNotAddDateRuleIfTheSourceFieldIsNotADateOne(): void

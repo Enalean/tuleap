@@ -28,6 +28,7 @@ use Tracker_Report;
 use Tracker_Rule_List;
 use Tracker_RuleFactory;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
@@ -101,8 +102,12 @@ final class MasschangeUpdaterTest extends TestCase
             $event_manager,
             $this->changeset_creator
         );
-        $updater->updateArtifacts(UserTestBuilder::buildWithId(self::USER_ID), $request);
-        self::assertSame(1, $event_manager->getCallCount());
+        try {
+            $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/tracker/?tracker=123'));
+            $updater->updateArtifacts(UserTestBuilder::buildWithId(self::USER_ID), $request);
+        } finally {
+            self::assertSame(1, $event_manager->getCallCount());
+        }
     }
 
     public function testUpdateArtifactsWithoutBeenUnsubscribedFromNotifications(): void

@@ -181,22 +181,12 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->getRequest('bla,jdoe@example.com,_ugroup:Secret,Unknown (seraph)');
 
-        $GLOBALS['Response']->expects($this->exactly(3))->method('addFeedback')->willReturnCallback(
-            function (string $level, string $message): void {
-                if ($level !== \Feedback::WARN) {
-                    throw new \LogicException('Unexpected feedback level: ' . $level);
-                }
-                if (
-                    $message !== "The entered value 'bla' is invalid." &&
-                    $message !== "The entered value 'Secret' is invalid." &&
-                    $message !== "The entered value 'Unknown (seraph)' is invalid."
-                ) {
-                    throw new \LogicException('Unexpected message');
-                }
-            }
-        );
-
         $this->invalid_entries->generateWarningMessageForInvalidEntries();
+
+        self::assertEquals(
+            "warning: The entered value 'bla' is invalid.\nwarning: The entered value 'Secret' is invalid.\nwarning: The entered value 'Unknown (seraph)' is invalid.\n",
+            $this->global_response->getRawFeedback()
+        );
     }
 
     public function testItIgnoresEmptyStrings(): void
@@ -204,6 +194,7 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getRequest('');
 
         $this->invalid_entries->generateWarningMessageForInvalidEntries();
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
+
+        self::assertEmpty($this->global_response->getRawFeedback());
     }
 }

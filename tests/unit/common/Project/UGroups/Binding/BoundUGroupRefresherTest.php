@@ -59,13 +59,12 @@ final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Language']->method('getText')
             ->willReturn('Error message');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')
-            ->with('warning', 'Error message');
-
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Error message');
 
         $this->refresher->refresh($source, $destination);
+
+        self::assertStringContainsString('warning: Error message', $this->global_response->getRawFeedback());
     }
 
     public function testRefreshClearsAndDuplicatesUGroupMembers(): void

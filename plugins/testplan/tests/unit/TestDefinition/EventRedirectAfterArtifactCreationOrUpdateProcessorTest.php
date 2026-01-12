@@ -190,15 +190,11 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
                 '_covered_by'
             )
             ->willThrowException(new \Tracker_Exception());
-        $GLOBALS['Response']
-            ->expects($this->once())
-            ->method('addFeedback')
-            ->with('warning', 'Unable to link the backlog item to the new artifact');
-
         $this->processor->process($request, $redirect, $artifact);
 
         self::assertEquals('', $redirect->base_url);
         self::assertEquals([], $redirect->query_parameters);
+        self::assertStringContainsString('warning: Unable to link the backlog item to the new artifact', $this->global_response->getRawFeedback());
     }
 
     public function testItRedirectsToTestPlanOfTheMilestone(): void

@@ -66,6 +66,7 @@ final class ArtifactNotificationSubscriberTest extends \Tuleap\Test\PHPUnit\Test
             ->method('deleteUnsubscribeNotification')
             ->with(self::ARTIFACT_ID, self::USER_ID);
 
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection('/plugins/tracker/?aid=' . self::ARTIFACT_ID));
         $this->artifact_subscriber->subscribeUser($this->user, HTTPRequestBuilder::get()->build());
     }
 
@@ -75,6 +76,7 @@ final class ArtifactNotificationSubscriberTest extends \Tuleap\Test\PHPUnit\Test
             ->method('createUnsubscribeNotification')
             ->with(self::ARTIFACT_ID, self::USER_ID);
 
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection('/plugins/tracker/?aid=' . self::ARTIFACT_ID));
         $this->artifact_subscriber->unsubscribeUser($this->user, HTTPRequestBuilder::get()->build());
     }
 }

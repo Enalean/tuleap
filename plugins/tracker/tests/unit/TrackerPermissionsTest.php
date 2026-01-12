@@ -35,6 +35,7 @@ use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -225,10 +226,15 @@ final class TrackerPermissionsTest extends TestCase
         $this->tracker->method('getTrackerArtifactSubmissionPermission')->willReturn(VerifySubmissionPermissionStub::withoutSubmitPermission());
         $this->tracker->expects($this->never())->method('displaySubmit');
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->site_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
 
-        $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->site_admin_user);
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     // Tracker admin permissions
@@ -265,52 +271,72 @@ final class TrackerPermissionsTest extends TestCase
     {
         $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->tracker1->expects($this->once())->method('displayAdminFormElements');
         $this->tracker1->process($this->tracker_manager, $request_admin_tracker, $this->tracker1_admin_user);
         $this->tracker2->expects($this->never())->method('displayAdminFormElements');
-        $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->tracker1_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->tracker1_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminTrackerTracker2Admin(): void
     {
         $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->tracker1->expects($this->never())->method('displayAdminFormElements');
-        $this->tracker1->process($this->tracker_manager, $request_admin_tracker, $this->tracker2_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker1->process($this->tracker_manager, $request_admin_tracker, $this->tracker2_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
         $this->tracker2->expects($this->once())->method('displayAdminFormElements');
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->tracker2_admin_user);
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminTrackerProjectMember(): void
     {
         $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // project member can NOT access tracker admin part
         $this->tracker->expects($this->never())->method('displayAdminFormElements');
-        $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->project_member_user);
+        $redirection = null;
+        try {
+            $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->project_member_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminTrackerRegisteredUser(): void
     {
         $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // registered user can NOT access tracker admin part
         $this->tracker->expects($this->never())->method('displayAdminFormElements');
-        $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->registered_user);
+        $redirection = null;
+        try {
+            $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->registered_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testItCachesTrackerAdminPermission(): void
@@ -366,9 +392,6 @@ final class TrackerPermissionsTest extends TestCase
     {
         $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->tracker1->expects($this->once())->method('displayAdminOptions');
         $this->tracker1->process(
@@ -377,57 +400,80 @@ final class TrackerPermissionsTest extends TestCase
             $this->tracker1_admin_user
         );
         $this->tracker2->expects($this->never())->method('displayAdminOptions');
-        $this->tracker2->process(
-            $this->tracker_manager,
-            $request_admin_editoptions_tracker,
-            $this->tracker1_admin_user
-        );
+        $redirection = null;
+        try {
+            $this->tracker2->process(
+                $this->tracker_manager,
+                $request_admin_editoptions_tracker,
+                $this->tracker1_admin_user
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminEditOptionsTrackerTracker2Admin(): void
     {
         $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->tracker1->expects($this->never())->method('displayAdminOptions');
-        $this->tracker1->process(
-            $this->tracker_manager,
-            $request_admin_editoptions_tracker,
-            $this->tracker2_admin_user
-        );
+        $redirection = null;
+        try {
+            $this->tracker1->process(
+                $this->tracker_manager,
+                $request_admin_editoptions_tracker,
+                $this->tracker2_admin_user
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
         $this->tracker2->expects($this->once())->method('displayAdminOptions');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_editoptions_tracker,
             $this->tracker2_admin_user
         );
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminEditOptionsTrackerProjectMember(): void
     {
         $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // project member can NOT access tracker admin part
         $this->tracker->expects($this->never())->method('displayAdminOptions');
-        $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->project_member_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->project_member_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminEditOptionsTrackerRegisteredUser(): void
     {
         $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // registered user can NOT access tracker admin part
         $this->tracker->expects($this->never())->method('displayAdminOptions');
-        $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->registered_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->registered_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     // Tracker "admin perms" permissions
@@ -464,51 +510,72 @@ final class TrackerPermissionsTest extends TestCase
     {
         $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
         // tracker admin can access tracker admin part
         $this->permission_controller1->expects($this->once())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker1_admin_user);
         $this->permission_controller2->expects($this->never())->method('process');
-        $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker1_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker1_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminPermsTrackerTracker2Admin(): void
     {
         $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->permission_controller1->expects($this->never())->method('process');
-        $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker2_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker2_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
         $this->permission_controller2->expects($this->once())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker2_admin_user);
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminPermsTrackerProjectMember(): void
     {
         $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // project member can NOT access tracker admin part
         $this->permission_controller->expects($this->never())->method('process');
-        $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->project_member_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->project_member_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminPermsTrackerRegisteredUser(): void
     {
         $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // registered user can NOT access tracker admin part
         $this->permission_controller->expects($this->never())->method('process');
-        $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->registered_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->registered_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     // Tracker "admin perms tracker" permissions
@@ -557,9 +624,6 @@ final class TrackerPermissionsTest extends TestCase
     {
         $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->permission_controller1->expects($this->once())->method('process');
         $this->tracker1->process(
@@ -568,61 +632,84 @@ final class TrackerPermissionsTest extends TestCase
             $this->tracker1_admin_user
         );
         $this->permission_controller2->expects($this->never())->method('process');
-        $this->tracker2->process(
-            $this->tracker_manager,
-            $request_admin_perms_tracker_tracker,
-            $this->tracker1_admin_user
-        );
+        $redirection = null;
+        try {
+            $this->tracker2->process(
+                $this->tracker_manager,
+                $request_admin_perms_tracker_tracker,
+                $this->tracker1_admin_user
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminPermsTrackerTrackerTracker2Admin(): void
     {
         $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->permission_controller1->expects($this->never())->method('process');
-        $this->tracker1->process(
-            $this->tracker_manager,
-            $request_admin_perms_tracker_tracker,
-            $this->tracker2_admin_user
-        );
+        $redirection = null;
+        try {
+            $this->tracker1->process(
+                $this->tracker_manager,
+                $request_admin_perms_tracker_tracker,
+                $this->tracker2_admin_user
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
         $this->permission_controller2->expects($this->once())->method('process');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_perms_tracker_tracker,
             $this->tracker2_admin_user
         );
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminPermsTrackerTrackerProjectMember(): void
     {
         $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // project member can NOT access tracker admin part
         $this->permission_controller->expects($this->never())->method('process');
-        $this->tracker->process(
-            $this->tracker_manager,
-            $request_admin_perms_tracker_tracker,
-            $this->project_member_user
-        );
+        $redirection = null;
+        try {
+            $this->tracker->process(
+                $this->tracker_manager,
+                $request_admin_perms_tracker_tracker,
+                $this->project_member_user
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminPermsTrackerTrackerRegisteredUser(): void
     {
         $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // registered user can NOT access tracker admin part
         $this->permission_controller->expects($this->never())->method('process');
-        $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->registered_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->registered_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     // Tracker "admin form elements" permissions
@@ -667,9 +754,6 @@ final class TrackerPermissionsTest extends TestCase
     {
         $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->tracker1->expects($this->once())->method('displayAdminFormElements');
         $this->tracker1->process(
@@ -678,56 +762,80 @@ final class TrackerPermissionsTest extends TestCase
             $this->tracker1_admin_user
         );
         $this->tracker2->expects($this->never())->method('displayAdminFormElements');
-        $this->tracker2->process(
-            $this->tracker_manager,
-            $request_admin_formelement_tracker,
-            $this->tracker1_admin_user
-        );
+        $redirection = null;
+        try {
+            $this->tracker2->process(
+                $this->tracker_manager,
+                $request_admin_formelement_tracker,
+                $this->tracker1_admin_user
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminFormElementTrackerTracker2Admin(): void
     {
         $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
         // tracker admin can access tracker admin part
         $this->tracker1->expects($this->never())->method('displayAdminFormElements');
-        $this->tracker1->process(
-            $this->tracker_manager,
-            $request_admin_formelement_tracker,
-            $this->tracker2_admin_user
-        );
+        $redirection = null;
+        try {
+            $this->tracker1->process(
+                $this->tracker_manager,
+                $request_admin_formelement_tracker,
+                $this->tracker2_admin_user
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
         $this->tracker2->expects($this->once())->method('displayAdminFormElements');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_formelement_tracker,
             $this->tracker2_admin_user
         );
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminFormElementTrackerProjectMember(): void
     {
         $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // project member can NOT access tracker admin part
         $this->tracker->expects($this->never())->method('displayAdminFormElements');
-        $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->project_member_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->project_member_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminFormElementTrackerRegisteredUser(): void
     {
         $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // registered user can NOT access tracker admin part
         $this->tracker->expects($this->never())->method('displayAdminFormElements');
-        $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->registered_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->registered_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     // Tracker "admin semantic" permissions
@@ -771,50 +879,70 @@ final class TrackerPermissionsTest extends TestCase
     {
         $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->tracker_semantic_manager->expects($this->once())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker1_admin_user);
-        $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker1_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker1_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminSemanticTrackerTracker2Admin(): void
     {
         $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
-        $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
         $this->tracker_semantic_manager->expects($this->once())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminSemanticTrackerProjectMember(): void
     {
         $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // project member can NOT access tracker admin part
         $this->tracker_semantic_manager->expects($this->never())->method('process');
-        $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->project_member_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminSemanticTrackerRegisteredUser(): void
     {
         $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // registered user can NOT access tracker admin part
         $this->tracker_semantic_manager->expects($this->never())->method('process');
-        $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->registered_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     // Tracker "admin canned" permissions
@@ -850,50 +978,70 @@ final class TrackerPermissionsTest extends TestCase
     {
         $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->tracker_canned_response_manager->expects($this->once())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker1_admin_user);
-        $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker1_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker1_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminCannedTrackerTracker2Admin(): void
     {
         $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
-        $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker2_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker2_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
         $this->tracker_canned_response_manager->expects($this->once())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker2_admin_user);
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminCannedTrackerProjectMember(): void
     {
         $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // project member can NOT access tracker admin part
         $this->tracker_canned_response_manager->expects($this->never())->method('process');
-        $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->project_member_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->project_member_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminCannedTrackerRegisteredUser(): void
     {
         $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // registered user can NOT access tracker admin part
         $this->tracker_canned_response_manager->expects($this->never())->method('process');
-        $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->registered_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->registered_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     // Tracker "admin workflow" permissions
@@ -937,49 +1085,69 @@ final class TrackerPermissionsTest extends TestCase
     {
         $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
         $this->workflow_manager->expects($this->once())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
-        $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminWorkflowTrackerTracker2Admin(): void
     {
         $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // tracker admin can access tracker admin part
-        $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker2_admin_user);
+        $redirection = null;
+        try {
+            $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker2_admin_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
         $this->workflow_manager->expects($this->once())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker2_admin_user);
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminWorkflowTrackerProjectMember(): void
     {
         $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // project member can NOT access tracker admin part
         $this->workflow_manager->expects($this->never())->method('process');
-        $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_member_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_member_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 
     public function testPermsAdminWorkflowTrackerRegisteredUser(): void
     {
         $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
-
         // registered user can NOT access tracker admin part
         $this->workflow_manager->expects($this->never())->method('process');
-        $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->registered_user);
+        $redirection = null;
+        try {
+            $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->registered_user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirection = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirection);
     }
 }

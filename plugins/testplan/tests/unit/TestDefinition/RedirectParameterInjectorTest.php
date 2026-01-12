@@ -197,15 +197,6 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone_tracker->method('getColor')->willReturn(ColorName::default());
         $milestone->method('getTracker')->willReturn($milestone_tracker);
 
-        $this->response
-            ->expects($this->once())
-            ->method('addFeedback')
-            ->with(
-                \Feedback::INFO,
-                self::callback($has_expected_feedback_content),
-                CODENDI_PURIFIER_FULL
-            );
-
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
         self::assertEquals(
@@ -215,6 +206,8 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $redirect->query_parameters
         );
+
+        self::assertTrue($has_expected_feedback_content($this->global_response->getRawFeedback()));
     }
 
     public static function dataProviderInjectAndInformUserAboutBacklogItemBeingCovered(): array

@@ -98,7 +98,6 @@ final class NewChangesetValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->fields_validator->method('validate')->willReturn(false);
 
-        $GLOBALS['Response']->method('getFeedbackErrors')->willReturn([]);
         $this->expectException(FieldValidationException::class);
 
         $this->new_changeset_validator->validateNewChangeset(

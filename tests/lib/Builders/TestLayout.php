@@ -33,16 +33,12 @@ use Widget_Static;
 
 final class TestLayout extends BaseLayout
 {
-    /**
-     * @var LayoutInspector
-     */
-    private $inspector;
     private bool $header_has_been_written = false;
 
-    public function __construct(LayoutInspector $inspector)
+    public function __construct(readonly private(set) LayoutInspector $inspector)
     {
+        parent::__construct('');
         $this->css_assets = new CssAssetCollection([]);
-        $this->inspector  = $inspector;
     }
 
     #[\Override]
@@ -114,8 +110,9 @@ final class TestLayout extends BaseLayout
     }
 
     #[\Override]
-    public function addFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
+    public function addFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML): void
     {
+        parent::addFeedback($level, $message, $purify);
         $this->inspector->addFeedback($level, $message);
     }
 
@@ -128,5 +125,23 @@ final class TestLayout extends BaseLayout
     public function selectRank($id, $rank, $items, $html_options)
     {
         return '';
+    }
+
+    #[\Override]
+    public function getCSPNonce(): string
+    {
+        return '';
+    }
+
+    #[\Override]
+    public function sendJSON(mixed $content): void
+    {
+        $this->inspector->setSentJSONContent($content);
+    }
+
+    #[\Override]
+    public function sendStatusCode(mixed $code): void
+    {
+        $this->inspector->setSentStatusCode((int) $code);
     }
 }

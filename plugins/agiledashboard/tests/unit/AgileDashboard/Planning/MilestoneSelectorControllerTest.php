@@ -30,6 +30,7 @@ use Planning_MilestoneSelectorController;
 use Planning_NoMilestone;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -73,9 +74,10 @@ final class MilestoneSelectorControllerTest extends TestCase
 
     public function testItRedirectToTheCurrentMilestone(): void
     {
-        $GLOBALS['Response']->expects($this->once())->method('redirect')
-            ->with(self::matchesRegularExpression("/aid=$this->current_milestone_artifact_id/"));
         $controller = new Planning_MilestoneSelectorController($this->request, $this->milestone_factory);
+
+        $this->expectExceptionObject(new LayoutInspectorRedirection("/plugins/agiledashboard/?group_id=101&planning_id=321&action=show&aid=$this->current_milestone_artifact_id"));
+
         $controller->show();
     }
 
@@ -90,6 +92,9 @@ final class MilestoneSelectorControllerTest extends TestCase
         );
 
         $controller = new Planning_MilestoneSelectorController($this->request, $this->milestone_factory);
+
+        $this->expectException(LayoutInspectorRedirection::class);
+
         $controller->show();
     }
 
@@ -101,8 +106,9 @@ final class MilestoneSelectorControllerTest extends TestCase
             PlanningBuilder::aPlanning(1)->build(),
         ));
 
-        $GLOBALS['Response']->expects($this->never())->method('redirect');
         $controller = new Planning_MilestoneSelectorController($this->request, $milestone_factory);
         $controller->show();
+
+        $this->expectNotToPerformAssertions();
     }
 }

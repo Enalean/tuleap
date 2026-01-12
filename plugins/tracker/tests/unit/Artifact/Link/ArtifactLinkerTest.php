@@ -76,8 +76,8 @@ final class ArtifactLinkerTest extends TestCase
     {
         $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::withNoField();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
         self::assertFalse($this->linkArtifact());
+        self::assertTrue($this->global_response->feedbackHasErrors());
     }
 
     public function testItReturnsTrueAndCreateChangeset(): void
@@ -86,9 +86,9 @@ final class ArtifactLinkerTest extends TestCase
             ChangesetTestBuilder::aChangeset(45)->build()
         );
 
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('error');
         self::assertTrue($this->linkArtifact());
         self::assertSame(1, $this->changeset_creator->getCallsCount());
+        self::assertFalse($this->global_response->feedbackHasErrors());
     }
 
     public function testItReturnsFalseAndDisplayAnInfoWhenThereIsNoChange(): void
@@ -97,17 +97,17 @@ final class ArtifactLinkerTest extends TestCase
             new \Tracker_NoChangeException(self::CURRENT_ARTIFACT_ID, '#art 125')
         );
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
         self::assertFalse($this->linkArtifact());
         self::assertSame(1, $this->changeset_creator->getCallsCount());
+        self::assertStringContainsString('info: ', $this->global_response->getRawFeedback());
     }
 
     public function testItReturnsFalseAndDisplayAnInfoWhenThereIsAnErrorDuringTheChangesetCreation(): void
     {
         $this->changeset_creator = CreateNewChangesetStub::withException(new \Tracker_Exception());
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
         self::assertFalse($this->linkArtifact());
         self::assertSame(1, $this->changeset_creator->getCallsCount());
+        self::assertTrue($this->global_response->feedbackHasErrors());
     }
 }

@@ -79,13 +79,16 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
 
         $this->permissions_manager->expects($this->never())->method('addPermission');
         $this->permissions_manager->expects($this->never())->method('revokePermissionForUGroup');
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::ERROR);
 
         $this->permission_manager->save($request, $this->permission_setter);
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
     }
 
     public function testItDoesNotDisplayAFeedbackErrorIfAssignedToSemanticIsDefined(): void
     {
+        $GLOBALS['Language']->method('gettext')->willReturn('Something');
+
         $field = $this->createMock(TrackerField::class);
         $this->tracker->method('getContributorField')->willReturn($field);
         $request = new Tracker_Permission_PermissionRequest([
@@ -96,9 +99,10 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
 
         $this->permissions_manager->expects($this->once())->method('addPermission');
         $this->permissions_manager->method('addHistory');
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::INFO);
 
         $this->permission_manager->save($request, $this->permission_setter);
+
+        self::assertStringContainsString('info: ', $this->global_response->getRawFeedback());
     }
 
     public function testItDoesNotApplyPermissionsOnProjectAdmins(): void

@@ -42,8 +42,8 @@ final class GitTest extends TestCase
     #[\Override]
     protected function setup(): void
     {
-        $system_event_manager = $this->createMock(SystemEventManager::class);
-        $sys_dao              = $this->createMock(SystemEventDao::class);
+        $system_event_manager = $this->createStub(SystemEventManager::class);
+        $sys_dao              = $this->createStub(SystemEventDao::class);
         $sys_dao->method('searchWithParam')->willReturn([]);
         $system_event_manager->method('_getDao')->willReturn($sys_dao);
 
@@ -59,12 +59,13 @@ final class GitTest extends TestCase
 
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView(): void
     {
-        $usermanager = $this->createMock(UserManager::class);
+        $GLOBALS['Language']->method('gettext')->willReturn('Something');
+        $usermanager = $this->createStub(UserManager::class);
         $usermanager->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $request                   = new \Tuleap\HTTPRequest(['repo_id' => 1]);
 
-        $git = $this->createPartialMock(Git::class, ['addAction', 'definePermittedActions', 'addView']);
+        $git = $this->createPartialMock(Git::class, ['addAction', 'definePermittedActions', 'addView', 'checkSynchronizerToken']);
         $git->setRequest($request);
         $git->setUserManager($usermanager);
         $git->setAction('del');
@@ -76,6 +77,7 @@ final class GitTest extends TestCase
         $factory->method('getRepositoryById')->willReturn($repository);
         $git->setFactory($factory);
 
+        $git->method('checkSynchronizerToken');
         $git->expects($this->once())->method('addAction')->with('deleteRepository', self::anything());
         $git->expects($this->once())->method('definePermittedActions');
         $git->expects($this->once())->method('addView')->with('index');

@@ -309,8 +309,11 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PS
 
         $this->tracker->method('hasBlockingError')->willReturn(false);
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('warning');    // expected warning about wrong separator
         $this->tracker->isValidCSV($lines, $separator);
+
+        // expected warning about wrong separator
+        self::assertCount(1, $this->global_response->inspector->getFeedback());
+        self::assertEquals(Feedback::WARN, $this->global_response->inspector->getFeedback()[0]['level']);
     }
 
     public function testIsValidCSVGoodSeparator(): void
@@ -326,8 +329,9 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PS
 
         $this->tracker->method('hasBlockingError')->willReturn(false);
 
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
         $this->tracker->isValidCSV($lines, $separator);
+
+        self::assertEmpty($this->global_response->inspector->getFeedback());
     }
 
     public function testCreateFormElementDispatchesToOrdinaryFieldCreation(): void

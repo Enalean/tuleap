@@ -38,6 +38,7 @@ use Tracker_Report_InvalidRESTCriterionException;
 use Tracker_Report_REST;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
@@ -466,6 +467,8 @@ final class ListFieldTest extends TestCase
         $request->method('isPost')->willReturn(false);
 
         $this->bind->expects($this->never())->method('fetchFormattedForJson');
+
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/tracker/?func=admin-formElements'));
         $this->list_field->process($layout, $request, $user);
     }
 

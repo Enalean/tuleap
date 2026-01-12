@@ -26,7 +26,9 @@ namespace Tuleap\Test\Builders;
 final class LayoutInspector
 {
     /** @var list<array{level:string, message:string}> */
-    private array $feedbacks = [];
+    private array $feedbacks         = [];
+    private(set) mixed $json_content = null;
+    private(set) int $status_code;
 
     public function setRedirectUrl(string $redirect_url): never
     {
@@ -52,5 +54,15 @@ final class LayoutInspector
     public function setPermanentRedirectUrl(string $redirect_url): never
     {
         throw new LayoutInspectorPermanentRedirection($redirect_url);
+    }
+
+    public function setSentJSONContent(mixed $json_content): void
+    {
+        $this->json_content = $json_content;
+    }
+
+    public function setSentStatusCode(int $status_code): void
+    {
+        $this->status_code = $status_code;
     }
 }

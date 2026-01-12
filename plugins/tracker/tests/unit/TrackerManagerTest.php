@@ -31,6 +31,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -158,13 +159,20 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker->expects($this->never())->method('process'); //user can't view the tracker. so don't process the request in tracker
         $this->formElement->expects($this->never())->method('process');
         $this->tracker->expects($this->once())->method('userCanView')->willReturn(false);
-        $GLOBALS['Response']->expects($this->atLeastOnce())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         $request_artifact = HTTPRequestBuilder::get()->build();
 
         $this->url->method('getDispatchableFromRequest')->willReturn($this->tracker);
-        $this->tm->process($request_artifact, $this->user);
+
+        $redirect_exception = null;
+        try {
+            $this->tm->process($request_artifact, $this->user);
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_exception = $ex;
+        }
+
+        self::assertTrue($this->global_response->feedbackHasErrors());
+        self::assertNotNull($redirect_exception);
     }
 
     public function testProcessField(): void

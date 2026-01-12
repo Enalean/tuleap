@@ -99,8 +99,9 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \Tuleap\Test\PH
             ->method('getInstanceFromRow')
             ->willReturnCallback(static fn(array $row) => ArtifactTestBuilder::anArtifact((int) $row['id'])->build());
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::WARN);
 
         $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
+
+        self::assertTrue($this->global_response->feedbackHasWarningsOrErrors());
     }
 }

@@ -453,8 +453,6 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $workflow_checker->method('canFieldBeUpdated')->willReturn(true);
         $artifact->method('getWorkflowUpdateChecker')->willReturn($workflow_checker);
 
-        $GLOBALS['Response']->method('getFeedbackErrors')->willReturn([]);
-
         $art_factory->expects($this->once())->method('save')->willReturn(true);
 
         $workflow = $this->createMock(Workflow::class);
@@ -671,8 +669,6 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $artifact->method('getHierarchyFactory')->willReturn($hierarchy_factory);
         $artifact->method('getChangesetSaver')->willReturn($changeset_saver);
         $artifact->method('getActionsQueuer')->willReturn(PostCreationActionsQueuerStub::doNothing());
-
-        $GLOBALS['Response']->method('getFeedbackErrors')->willReturn([]);
 
         $art_factory->expects($this->once())->method('save')->willReturn(true);
 

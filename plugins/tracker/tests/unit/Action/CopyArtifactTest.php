@@ -193,6 +193,8 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->xml_updater->method('update');
         $this->file_updater->method('update');
 
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1'));
+
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
@@ -224,10 +226,10 @@ XML;
 
         $this->event_manager->expects($this->once())->method('dispatch');
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?aid=456');
-
         $this->xml_updater->method('update');
         $this->file_updater->method('update');
+
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?aid=456'));
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -238,7 +240,7 @@ XML;
 
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1'));
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -249,10 +251,10 @@ XML;
 
         $this->xml_exporter->method('exportSnapshotWithoutComments')->willReturn($this->default_xml);
 
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
-
         $this->xml_updater->method('update');
         $this->file_updater->method('update');
+
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1'));
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -272,6 +274,8 @@ XML;
         );
         $this->file_updater->method('update');
 
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1'));
+
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
@@ -284,6 +288,8 @@ XML;
         $this->file_updater->expects($this->once())->method('update');
 
         $this->xml_updater->method('update');
+
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1'));
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -298,13 +304,15 @@ XML;
                 'artifact' => $this->submitted_values,
             ])->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
-
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
         $this->xml_updater->expects($this->never())->method('update');
 
-        $this->action->process($this->layout, $this->request, $this->user);
+        try {
+            $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1'));
+            $this->action->process($this->layout, $this->request, $this->user);
+        } finally {
+            self::assertTrue($this->global_response->feedbackHasErrors());
+        }
     }
 
     public function testItErrorsIfNoChangesetIdInTheRequest(): void
@@ -317,13 +325,15 @@ XML;
                 'artifact' => $this->submitted_values,
             ])->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
-
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
         $this->xml_updater->expects($this->never())->method('update');
 
-        $this->action->process($this->layout, $this->request, $this->user);
+        try {
+            $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1'));
+            $this->action->process($this->layout, $this->request, $this->user);
+        } finally {
+            self::assertTrue($this->global_response->feedbackHasErrors());
+        }
     }
 
     public function testItErrorsIfNoSubmittedValuesInTheRequest(): void
@@ -337,13 +347,15 @@ XML;
                 'artifact' => $this->changeset_id,
             ])->build();
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
-
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
         $this->xml_updater->expects($this->never())->method('update');
 
-        $this->action->process($this->layout, $this->request, $this->user);
+        try {
+            $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1'));
+            $this->action->process($this->layout, $this->request, $this->user);
+        } finally {
+            self::assertTrue($this->global_response->feedbackHasErrors());
+        }
     }
 
     public function testItErrorsIfArtifactDoesNotBelongToTracker(): void
@@ -358,13 +370,15 @@ XML;
             ])->build();
 
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1');
-
         $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
         $this->xml_updater->expects($this->never())->method('update');
 
-        $this->action->process($this->layout, $this->request, $this->user);
+        try {
+            $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=1'));
+            $this->action->process($this->layout, $this->request, $this->user);
+        } finally {
+            self::assertTrue($this->global_response->feedbackHasErrors());
+        }
     }
 
     public function testItCreatesACommentChangesetContainingAllTheErrorRaisedDuringTheMigrationProcess(): void
@@ -399,6 +413,8 @@ XML;
 
         $this->xml_updater->method('update');
         $this->file_updater->method('update');
+
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?aid=444'));
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -496,6 +512,8 @@ XML;
 
         $this->xml_updater->method('update');
         $this->file_updater->method('update');
+
+        $this->expectExceptionObject(new \Tuleap\Test\Builders\LayoutInspectorRedirection(\trackerPlugin::TRACKER_BASE_URL . '/?aid=123'));
 
         $this->action->process($this->layout, $this->request, $this->user);
     }

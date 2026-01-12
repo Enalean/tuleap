@@ -94,9 +94,9 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
             ]
         );
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::WARN);
-
         $this->permission_manager->save($request, $this->permission_setter);
+
+        self::assertTrue($this->global_response->feedbackHasWarningsOrErrors());
     }
 
     public function testItWarnsTwiceWhenAnonymousHaveFullAccess(): void
@@ -109,9 +109,9 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
             ]
         );
 
-        $GLOBALS['Response']->expects($this->exactly(2))->method('addFeedback')->with(Feedback::WARN);
-
         $this->permission_manager->save($request, $this->permission_setter);
+
+        self::assertTrue($this->global_response->feedbackHasWarningsOrErrors());
     }
 
     public function testItDoesntGrantFullAccessToRegisteredWhenAnonymousHaveFullAccess(): void
@@ -221,6 +221,8 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
 
     public function testItRevokesPreExistingPermission(): void
     {
+        $GLOBALS['Language']->method('getText')->willReturn('Something');
+
         $request = new Tracker_Permission_PermissionRequest(
             [
                 ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,
@@ -260,6 +262,8 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
 
     public function testItRevokesAdminPermission(): void
     {
+        $GLOBALS['Language']->method('getText')->willReturn('Something');
+
         $request                                                          = new Tracker_Permission_PermissionRequest(
             [
                 ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,

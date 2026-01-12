@@ -114,14 +114,12 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
                 case 'R':
                     $field->expects($this->never())->method('isValid');
                     $field->method('setHasErrors')->willReturn([true]);
-                    $GLOBALS['Response']->method('addFeedback')->with('error');
                     $is_valid = false;
                     break;
                 // Error due to perms
                 case 'P':
                     $field->expects($this->never())->method('isValid');
                     $field->method('setHasErrors')->willReturn([true]);
-                    $GLOBALS['Response']->method('addFeedback')->with('error');
                     $is_valid = false;
                     break;
                 // Depends on field->isValid()

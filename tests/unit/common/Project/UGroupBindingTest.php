@@ -50,10 +50,10 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->ugroup_manager->expects($this->once())->method('updateUgroupBinding');
         $GLOBALS['Language']->method('getText')
-            ->with('project_ugroup_binding', 'binding_removed');
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
+            ->with('project_ugroup_binding', 'binding_removed')->willReturn('Something');
 
         self::assertTrue($this->binding->removeBinding(200));
+        self::assertNotEmpty($this->global_response->getRawFeedback());
     }
 
     public function testUpdateUGroupBinding(): void

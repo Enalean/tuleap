@@ -100,9 +100,10 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
             ]
         );
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::WARN);
-
         $this->permission_manager->save($request, $this->permission_setter);
+
+        self::assertCount(1, $this->global_response->inspector->getFeedback());
+        self::assertEquals(Feedback::WARN, $this->global_response->inspector->getFeedback()[0]['level']);
     }
 
     public function testItWarnsTwiceWhenRegisteredHaveFullAccess(): void
@@ -116,9 +117,12 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
             ]
         );
 
-        $GLOBALS['Response']->expects($this->exactly(2))->method('addFeedback')->with(Feedback::WARN);
-
         $this->permission_manager->save($request, $this->permission_setter);
+
+        $feedbacks = $this->global_response->inspector->getFeedback();
+        self::assertCount(2, $feedbacks);
+        self::assertEquals(Feedback::WARN, $feedbacks[0]['level']);
+        self::assertEquals(Feedback::WARN, $feedbacks[1]['level']);
     }
 
     public function testItDoesntGrantFullAccessToProjectMembersWhenAnonymousHaveFullAccess(): void
