@@ -29,35 +29,23 @@ use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
 /**
  * @template-implements ItemVisitor<void>
  */
-class Docman_CloneItemsVisitor implements ItemVisitor
+class Docman_CloneItemsVisitor implements ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public $dstGroupId;
-    public $_cacheMetadataUsage;
+    public $_cacheMetadataUsage; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     public $itemMapping;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var Docman_LinkVersionFactory
-     */
-    private $link_version_factory;
 
     public function __construct(
-        $dstGroupId,
-        ProjectManager $project_manager,
-        Docman_LinkVersionFactory $link_version_factory,
+        private $dstGroupId,
+        private readonly ProjectManager $project_manager,
+        private readonly Docman_LinkVersionFactory $link_version_factory,
         private readonly \Psr\EventDispatcher\EventDispatcherInterface $dispatcher,
     ) {
-        $this->dstGroupId           = $dstGroupId;
-        $this->_cacheMetadataUsage  = [];
-        $this->itemMapping          = [];
-        $this->project_manager      = $project_manager;
-        $this->link_version_factory = $link_version_factory;
+        $this->_cacheMetadataUsage = [];
+        $this->itemMapping         = [];
     }
 
     #[\Override]
-    public function visitFolder($item, $params = [])
+    public function visitFolder(Docman_Folder $item, array $params = [])
     {
         // Clone folder
         $newItemId = $this->_cloneItem($item, $params);
@@ -66,17 +54,8 @@ class Docman_CloneItemsVisitor implements ItemVisitor
 
             // Recurse
             $items = $item->getAllItems();
-            if ($items) {
-                $nb = $items->size();
-                if ($nb) {
-                    $iter = $items->iterator();
-                    $iter->rewind();
-                    while ($iter->valid()) {
-                        $child = $iter->current();
-                        $child->accept($this, $params);
-                        $iter->next();
-                    }
-                }
+            foreach ($items as $child) {
+                $child->accept($this, $params);
             }
         }
     }
@@ -142,7 +121,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     {
     }
 
-    public function _cloneFile($item, $params)
+    public function _cloneFile($item, $params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $newItemId = $this->_cloneItem($item, $params);
         if ($newItemId > 0) {
@@ -206,7 +185,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         );
     }
 
-    public function _cloneItem($item, $params)
+    public function _cloneItem($item, $params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $parentId        = $params['parentId'];
         $metadataMapping = $params['metadataMapping'];
@@ -247,7 +226,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         return $newItemId;
     }
 
-    public function _clonePermissions($item, $newItemId, $ugroupsMapping)
+    public function _clonePermissions($item, $newItemId, $ugroupsMapping): void //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $dpm = $this->_getPermissionsManager($item->getGroupId());
         if ($ugroupsMapping === false) {
@@ -259,7 +238,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    public function _cloneMetadataValues($item, $newItemId, $metadataMapping)
+    public function _cloneMetadataValues($item, $newItemId, $metadataMapping): void //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // List for current item all its metadata and
         // * change the itemId
@@ -317,7 +296,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    public function _metadataEnabled($srcGroupId, $mdLabel)
+    public function _metadataEnabled($srcGroupId, $mdLabel) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! isset($this->_cacheMetadataUsage[$mdLabel])) {
             $srcSettingsBo                       = $this->_getSettingsBo($srcGroupId);
@@ -338,37 +317,37 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     }
 
     // Factory methods mandatate by tests.
-    public function _getItemFactory()
+    public function _getItemFactory(): Docman_ItemFactory //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_ItemFactory();
     }
 
-    public function _getPermissionsManager($groupId)
+    public function _getPermissionsManager($groupId): Docman_PermissionsManager //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return Docman_PermissionsManager::instance($groupId);
     }
 
-    public function _getFileStorage($dataRoot)
+    public function _getFileStorage($dataRoot): Docman_FileStorage //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_FileStorage($dataRoot);
     }
 
-    public function _getVersionFactory()
+    public function _getVersionFactory(): Docman_VersionFactory //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_VersionFactory();
     }
 
-    public function _getMetadataValueFactory($groupId)
+    public function _getMetadataValueFactory($groupId): Docman_MetadataValueFactory //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_MetadataValueFactory($groupId);
     }
 
-    public function _getMetadataFactory($groupId)
+    public function _getMetadataFactory($groupId): Docman_MetadataFactory //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_MetadataFactory($groupId);
     }
 
-    public function _getSettingsBo($groupId)
+    public function _getSettingsBo($groupId) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return Docman_SettingsBo::instance($groupId);
     }
