@@ -15820,7 +15820,6 @@
       <code><![CDATA[queueEditSSHKey]]></code>
       <code><![CDATA[queueGerritReplicationKeyUpdate]]></code>
       <code><![CDATA[queueMigrateToGerrit]]></code>
-      <code><![CDATA[queueProjectIsSuspended]]></code>
       <code><![CDATA[queueProjectsConfigurationUpdate]]></code>
       <code><![CDATA[queueRegenerateGitoliteConfig]]></code>
       <code><![CDATA[queueRemoteProjectDeletion]]></code>
@@ -18222,13 +18221,6 @@
   </file>
   <file src="plugins/git/include/SystemEvents/ParseGitolite3Logs.php">
     <MissingReturnType>
-      <code><![CDATA[injectDependencies]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/SystemEvents/ProjectIsSuspended.php">
-    <MissingReturnType>
-      <code><![CDATA[getProjectIdFromParameters]]></code>
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
