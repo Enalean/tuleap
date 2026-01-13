@@ -22,27 +22,13 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\Secret;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 
-class SecretRetriever
+readonly class SecretRetriever
 {
-    /**
-     * @var WebhookDao
-     */
-    private $dao;
-
-    /**
-     * @var KeyFactory
-     */
-    private $key_factory;
-
-    public function __construct(WebhookDao $dao, KeyFactory $key_factory)
+    public function __construct(private WebhookDao $dao)
     {
-        $this->dao         = $dao;
-        $this->key_factory = $key_factory;
     }
 
     /**
@@ -50,14 +36,10 @@ class SecretRetriever
      */
     public function getWebhookSecretForRepository(GitlabRepositoryIntegration $gitlab_repository_integration): ConcealedString
     {
-        $row = $this->dao->getGitlabRepositoryWebhook($gitlab_repository_integration->getId());
-        if ($row === null) {
-            throw new SecretNotDefinedException($gitlab_repository_integration->getId());
-        }
-
-        return SymmetricCrypto::decrypt(
-            $row['webhook_secret'],
-            $this->key_factory->getLegacy2025EncryptionKey()
+        $integration_id = $gitlab_repository_integration->getId();
+        return $this->dao->getGitlabRepositoryWebhookSecret($integration_id)->match(
+            fn (ConcealedString $secret): ConcealedString => $secret,
+            fn (): never => throw new SecretNotDefinedException($integration_id)
         );
     }
 }

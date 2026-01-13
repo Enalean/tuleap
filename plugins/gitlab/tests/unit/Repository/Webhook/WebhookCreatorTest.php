@@ -23,9 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook;
 
 use ColinODell\PsrTestLogger\TestLogger;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
@@ -38,32 +36,15 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    /**
-     * @var WebhookCreator
-     */
-    private $creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&KeyFactory
-     */
-    private $key_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&WebhookDao
-     */
-    private $dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
-     */
-    private $gitlab_api_client;
+    private WebhookCreator $creator;
+    private WebhookDao&MockObject $dao;
+    private ClientWrapper&MockObject $gitlab_api_client;
     private TestLogger $logger;
-    /**
-     * @var WebhookDeletor
-     */
-    private $webhook_deletor;
+    private WebhookDeletor $webhook_deletor;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->key_factory       = $this->createMock(KeyFactory::class);
         $this->dao               = $this->createMock(WebhookDao::class);
         $this->gitlab_api_client = $this->createMock(ClientWrapper::class);
         $this->logger            = new TestLogger();
@@ -76,7 +57,6 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
 
         $this->creator = new WebhookCreator(
-            $this->key_factory,
             $this->dao,
             $this->webhook_deletor,
             $this->gitlab_api_client,
@@ -104,12 +84,6 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn([]);
-
-        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-        $this->key_factory
-            ->expects($this->once())
-            ->method('getLegacy2025EncryptionKey')
-            ->willReturn($encryption_key);
 
         $this->gitlab_api_client
             ->expects($this->once())
@@ -176,12 +150,6 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->once())
             ->method('deleteGitlabRepositoryWebhook')
             ->with(1);
-
-        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-        $this->key_factory
-            ->expects($this->once())
-            ->method('getLegacy2025EncryptionKey')
-            ->willReturn($encryption_key);
 
         $this->gitlab_api_client
             ->expects($this->once())
@@ -254,12 +222,6 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->once())
             ->method('deleteGitlabRepositoryWebhook')
             ->with(1);
-
-        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-        $this->key_factory
-            ->expects($this->once())
-            ->method('getLegacy2025EncryptionKey')
-            ->willReturn($encryption_key);
 
         $this->gitlab_api_client
             ->expects($this->once())
