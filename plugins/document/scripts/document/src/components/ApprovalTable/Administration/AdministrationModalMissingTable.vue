@@ -30,9 +30,7 @@
         }}
     </div>
     <div class="tlp-form-element">
-        <label class="tlp-label">
-            {{ $gettext("You can either:") }}
-        </label>
+        <p>{{ $gettext("You can either:") }}</p>
         <label class="tlp-label tlp-radio">
             <input
                 type="radio"
@@ -81,7 +79,7 @@
             {{ $gettext("Start over with a completly new approval table.") }}
         </p>
     </div>
-    <p class="tlp-text-info">
+    <p>
         {{ $gettext("In all cases, there is no automatic notification of the reviewers.") }}
     </p>
 </template>
