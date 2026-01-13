@@ -79,21 +79,29 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-white-color: #{common.$tlp-white-color};
     --tlp-main-color: #{$tlp-main-color};
     --tlp-dark-color: #{$tlp-dark-color};
-    --tlp-background-color: #{$tlp-background-color};
+    --tlp-background-color: light-dark(#{$tlp-background-color}, #{common.$tlp-black-color});
 
     // Do not use transparency for hover background or you will
     // have issue when two hovering elements are on top of each other.
     // (e.g. a sticky cell in a table row)
-    --tlp-main-color-hover-background: #{color.mix($tlp-main-color, common.$tlp-white-color, 7%)};
-    --tlp-fade-background-color: #{$fade-background-color};
-    --tlp-typo-default-text-color: #{$tlp-typo-default-text-color};
-    --tlp-table-row-background-odd: #{common.$tlp-white-color};
-    --tlp-table-row-background-even: #{color.mix(
-            $tlp-background-color,
-            common.$tlp-white-color,
-            50%
-        )};
-    --tlp-backdrop-color: #{color.adjust(#000000, $alpha: - 0.5)};
+    --tlp-main-color-hover-background: light-dark(
+        #{color.mix($tlp-main-color, common.$tlp-white-color, 7%)},
+        #{color.mix($tlp-main-color, common.$tlp-black-color, 17%)}
+    );
+    --tlp-fade-background-color: light-dark(
+        #{$fade-background-color},
+        #{color.mix($tlp-dark-color, common.$tlp-black-color, 50%)}
+    );
+    --tlp-typo-default-text-color: light-dark(
+        #{$tlp-typo-default-text-color},
+        var(--tlp-neutral-light-color)
+    );
+    --tlp-table-row-background-odd: light-dark(#{common.$tlp-white-color}, var(--tlp-dark-color));
+    --tlp-table-row-background-even: light-dark(
+        #{color.mix($tlp-background-color, common.$tlp-white-color, 50%)},
+        #{color.mix($tlp-dark-color, common.$tlp-black-color, 50%)}
+    );
+    --tlp-backdrop-color: #{color.adjust(common.$tlp-black-color, $alpha: - 0.5)};
     --tlp-theme-orange: #{common.$tlp-theme-orange};
     --tlp-background-color-lighter-02: #{color.adjust($tlp-background-color, $lightness: 2%)};
     --tlp-background-color-lighter-03: #{color.adjust($tlp-background-color, $lightness: 3%)};
@@ -113,16 +121,14 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-background-color-darker-20: #{color.adjust($tlp-background-color, $lightness: - 20%)};
     --tlp-background-color-transparent-50: #{color.adjust($tlp-background-color, $alpha: - 0.5)};
     --tlp-fade-background-color-darker-01: #{color.adjust($fade-background-color, $lightness: - 1%)};
-    --tlp-fade-background-color-hover-background: #{color.mix(
-            $tlp-background-color,
-            common.$tlp-white-color,
-            90%
-        )};
-    --tlp-fade-background-color-hover-border: #{color.mix(
-            $tlp-background-color,
-            common.$tlp-white-color,
-            90%
-        )};
+    --tlp-fade-background-color-hover-background: light-dark(
+        #{color.mix($tlp-background-color, common.$tlp-white-color, 90%)},
+        #{color.mix($tlp-dark-color, common.$tlp-black-color, 90%)}
+    );
+    --tlp-fade-background-color-hover-border: light-dark(
+        #{color.mix($tlp-background-color, common.$tlp-white-color, 90%)},
+        #{color.mix($tlp-dark-color, common.$tlp-black-color, 90%)}
+    );
     --tlp-main-color-darker-03: #{color.adjust($tlp-main-color, $lightness: - 3%)};
     --tlp-main-color-darker-05: #{color.adjust($tlp-main-color, $lightness: - 5%)};
     --tlp-main-color-darker-10: #{color.adjust($tlp-main-color, $lightness: - 10%)};
@@ -215,30 +221,84 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-white-color-transparent-90: #{color.adjust(common.$tlp-white-color, $alpha: - 0.9)};
 
     // Alerts
-    --tlp-alert-danger-background: #{color.mix($tlp-danger-color, common.$tlp-white-color, 15%)};
-    --tlp-alert-danger-color: var(--tlp-danger-dark-color);
-    --tlp-alert-danger-shadow: 0 2px 3px #{color.adjust($tlp-danger-dark-color, $alpha: - 0.97)},
-        0 1px 0 #{color.adjust($tlp-danger-color, $alpha: - 0.91)};
+    --tlp-alert-danger-background: light-dark(
+        #{color.mix($tlp-danger-color, common.$tlp-white-color, 15%)},
+        #{color.mix($tlp-danger-color, common.$tlp-black-color, 30%)}
+    );
+    --tlp-alert-danger-color: light-dark(var(--tlp-danger-dark-color), var(--tlp-danger-color));
+    --tlp-alert-danger-shadow-light: 0 2px 3px #{color.adjust($tlp-danger-dark-color, $alpha: -0.97)},
+        0 1px 0 #{color.adjust($tlp-danger-color, $alpha: -0.91)};
+    --tlp-alert-danger-shadow-dark: 0 2px 3px #{color.adjust($tlp-danger-color, $alpha: -0.97)},
+        0 1px 0 #{color.adjust($tlp-danger-color, $alpha: -0.91)};
+    --tlp-alert-danger-shadow: light-dark(
+        var(--tlp-alert-danger-shadow-light),
+        var(--tlp-alert-danger-shadow-dark)
+    );
     --tlp-alert-danger-border: 5px solid var(--tlp-danger-color);
-    --tlp-alert-info-background: #{color.mix($tlp-info-color, common.$tlp-white-color, 15%)};
-    --tlp-alert-info-color: var(--tlp-info-dark-color);
-    --tlp-alert-info-shadow: 0 2px 3px #{color.adjust($tlp-info-dark-color, $alpha: - 0.97)},
-        0 1px 0 #{color.adjust($tlp-info-color, $alpha: - 0.91)};
+    --tlp-alert-info-background: light-dark(
+        #{color.mix($tlp-info-color, common.$tlp-white-color, 15%)},
+        #{color.mix($tlp-info-color, common.$tlp-black-color, 30%)}
+    );
+    --tlp-alert-info-color: light-dark(var(--tlp-info-dark-color), var(--tlp-info-color));
+    --tlp-alert-info-shadow-light: 0 2px 3px #{color.adjust($tlp-info-dark-color, $alpha: -0.97)},
+        0 1px 0 #{color.adjust($tlp-info-color, $alpha: -0.91)};
+    --tlp-alert-info-shadow-dark: 0 2px 3px #{color.adjust($tlp-info-color, $alpha: -0.97)},
+        0 1px 0 #{color.adjust($tlp-info-color, $alpha: -0.91)};
+    --tlp-alert-info-shadow: light-dark(
+        var(--tlp-alert-info-shadow-light),
+        var(--tlp-alert-info-shadow-dark)
+    );
     --tlp-alert-info-border: 5px solid var(--tlp-info-color);
-    --tlp-alert-success-background: #{color.mix($tlp-success-color, common.$tlp-white-color, 15%)};
-    --tlp-alert-success-color: var(--tlp-success-dark-color);
-    --tlp-alert-success-shadow: 0 2px 3px #{color.adjust($tlp-success-dark-color, $alpha: - 0.97)},
-        0 1px 0 #{color.adjust($tlp-success-color, $alpha: - 0.91)};
+    --tlp-alert-success-background: light-dark(
+        #{color.mix($tlp-success-color, common.$tlp-white-color, 15%)},
+        #{color.mix($tlp-success-color, common.$tlp-black-color, 30%)}
+    );
+    --tlp-alert-success-color: light-dark(var(--tlp-success-dark-color), var(--tlp-success-color));
+    --tlp-alert-success-shadow-light: 0 2px 3px #{color.adjust(
+                $tlp-success-dark-color,
+                $alpha: -0.97
+            )},
+        0 1px 0 #{color.adjust($tlp-success-color, $alpha: -0.91)};
+    --tlp-alert-success-shadow-dark: 0 2px 3px #{color.adjust($tlp-success-color, $alpha: -0.97)},
+        0 1px 0 #{color.adjust($tlp-success-color, $alpha: -0.91)};
+    --tlp-alert-success-shadow: light-dark(
+        var(--tlp-alert-success-shadow-light),
+        var(--tlp-alert-success-shadow-dark)
+    );
     --tlp-alert-success-border: 5px solid var(--tlp-success-color);
-    --tlp-alert-warning-background: #{color.mix($tlp-warning-color, common.$tlp-white-color, 15%)};
-    --tlp-alert-warning-color: var(--tlp-warning-dark-color);
-    --tlp-alert-warning-shadow: 0 2px 3px #{color.adjust($tlp-warning-dark-color, $alpha: - 0.97)},
-        0 1px 0 #{color.adjust($tlp-warning-color, $alpha: - 0.91)};
+    --tlp-alert-warning-background: light-dark(
+        #{color.mix($tlp-warning-color, common.$tlp-white-color, 15%)},
+        #{color.mix($tlp-warning-color, common.$tlp-black-color, 30%)}
+    );
+    --tlp-alert-warning-color: light-dark(var(--tlp-warning-dark-color), var(--tlp-warning-color));
+    --tlp-alert-warning-shadow-light: 0 2px 3px #{color.adjust(
+                $tlp-warning-dark-color,
+                $alpha: -0.97
+            )},
+        0 1px 0 #{color.adjust($tlp-warning-color, $alpha: -0.91)};
+    --tlp-alert-warning-shadow-dark: 0 2px 3px #{color.adjust($tlp-warning-color, $alpha: -0.97)},
+        0 1px 0 #{color.adjust($tlp-warning-color, $alpha: -0.91)};
+    --tlp-alert-warning-shadow: light-dark(
+        var(--tlp-alert-warning-shadow-light),
+        var(--tlp-alert-warning-shadow-dark)
+    );
     --tlp-alert-warning-border: 5px solid var(--tlp-warning-color);
-    --tlp-badge-danger-background: #{color.mix($tlp-danger-color, common.$tlp-white-color, 15%)};
-    --tlp-badge-info-background: #{color.mix($tlp-info-color, common.$tlp-white-color, 15%)};
-    --tlp-badge-success-background: #{color.mix($tlp-success-color, common.$tlp-white-color, 15%)};
-    --tlp-badge-warning-background: #{color.mix($tlp-warning-color, common.$tlp-white-color, 15%)};
+    --tlp-badge-danger-background: light-dark(
+            #{color.mix($tlp-danger-color, common.$tlp-white-color, 15%)}
+        ),
+        #{color.mix($tlp-danger-color, $tlp-dark-color, 15%)};
+    --tlp-badge-info-background: light-dark(
+        #{color.mix($tlp-info-color, common.$tlp-white-color, 15%)},
+        #{color.mix($tlp-info-color, $tlp-dark-color, 15%)}
+    );
+    --tlp-badge-success-background: light-dark(
+        #{color.mix($tlp-success-color, common.$tlp-white-color, 15%)},
+        #{color.mix($tlp-success-color, common.$tlp-black-color, 15%)}
+    );
+    --tlp-badge-warning-background: light-dark(
+        #{color.mix($tlp-warning-color, common.$tlp-white-color, 15%)},
+        #{color.mix($tlp-warning-color, $tlp-dark-color, 15%)}
+    );
 
     // Dark
     --tlp-danger-color-on-dark-background: #{color.mix(
@@ -338,9 +398,15 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-code-line-height: 1.375rem;
 
     // illustrations
-    --tlp-illustration-main-color: #{color.mix($tlp-main-color, common.$tlp-white-color, 53%)};
+    --tlp-illustration-main-color: light-dark(
+        #{color.mix($tlp-main-color, common.$tlp-white-color, 53%)},
+        #{color.mix($tlp-main-color, $tlp-dark-color, 50%)}
+    );
     --tlp-illustration-grey-on-background: #{$tlp-illustration-grey-on-background};
-    --tlp-illustration-grey-on-white: #{$tlp-illustration-grey-on-white};
+    --tlp-illustration-grey-on-white: light-dark(
+        #{$tlp-illustration-grey-on-white},
+        #{color.mix($tlp-dark-color, common.$tlp-black-color, 50%)}
+    );
     --tlp-illustration-yellow: #fbe484;
     --tlp-illustration-red: #faaaa5;
     --tlp-illustration-green: #b8daaf;
@@ -364,7 +430,10 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-card-shadow: 0 3px 4px #{color.adjust($tlp-dark-color, $alpha: - 0.97)},
         0 1px 0 #{color.adjust($tlp-neutral-normal-color, $alpha: - 0.25)},
         0 0 0 1px #{color.adjust($tlp-dark-color, $alpha: - 0.95)};
-    --tlp-sticky-header-shadow: 0 2px 3px var(--tlp-dark-color-transparent-90);
+    --tlp-sticky-header-shadow: light-dark(
+        0 2px 3px var(--tlp-dark-color-transparent-90),
+        0 2px 3px var(--tlp-dark-color-lighter-10)
+    );
     --tlp-sticky-footer-shadow: 0 -2px 3px var(--tlp-dark-color-transparent-90);
     --tlp-button-shadow: 0 1px 2px rgb(0 0 0 / 8%), 0 1px 2px rgb(0 0 0 / 10%),
         0 -0.5px 0 rgb(0 0 0 / 3%);
@@ -400,13 +469,19 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     // Form elements
     --tlp-form-element-padding-horizontal: 12px;
     --tlp-form-element-border-transition-duration: 150ms;
-    --tlp-form-element-border-color: var(--tlp-neutral-dark-color-darker-05);
+    --tlp-form-element-border-color: light-dark(
+        var(--tlp-neutral-dark-color-darker-05),
+        var(--tlp-dark-color-lighter-10)
+    );
     --tlp-form-element-border-radius: var(--tlp-medium-radius);
-    --tlp-form-element-background: var(--tlp-white-color);
+    --tlp-form-element-background: light-dark(var(--tlp-white-color), var(--tlp-dark-color));
     --tlp-form-element-font-size: 0.875rem;
     --tlp-form-element-small-font-size: 0.8125rem;
     --tlp-form-element-height: 40px;
     --tlp-form-element-small-height: 32px;
     --tlp-form-element-select-background-size: 8px;
-    --tlp-form-element-placeholder-color: var(--tlp-neutral-dark-color-darker-10);
+    --tlp-form-element-placeholder-color: light-dark(
+        var(--tlp-neutral-dark-color-darker-10),
+        var(--tlp-dimmed-color-lighter-30)
+    );
 }
