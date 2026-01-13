@@ -93,6 +93,7 @@ export const loadDocumentWithAscendentHierarchy = async (
                 loading_current_folder_promise,
             );
         }
+        context.commit("updateCurrentlyPreviewedItem", item);
         return item;
     } catch (exception) {
         return handleErrorsForDocument(context, exception);
