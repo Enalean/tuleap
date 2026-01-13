@@ -8,15 +8,21 @@ dependencies:
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../../lib/frontend/dom
-  '@tuleap/plugin-tracker-tql-codemirror':
-    specifier: workspace:*
-    version: link:../lib/TQL-CodeMirror
   '@tuleap/plugin-tracker-report-exporter':
     specifier: workspace:*
     version: link:../lib/report-exporter
+  '@tuleap/plugin-tracker-tql-codemirror':
+    specifier: workspace:*
+    version: link:../lib/TQL-CodeMirror
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-date-picker
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-styles':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-styles
 
 devDependencies:
   '@tuleap/build-system-configurator':

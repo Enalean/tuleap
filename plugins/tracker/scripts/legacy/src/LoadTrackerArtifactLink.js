@@ -348,7 +348,6 @@ document.observe("dom:loaded", function () {
 
         function load_behavior_in_renderer_panel(renderer_panel) {
             codendi.Tooltip.load(renderer_panel);
-            tuleap.dateTimePicker.init();
 
             //pager links should load via ajax
             $$(".tracker_report_table_pager a").each(function (a) {

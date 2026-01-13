@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "pkg:@tuleap/tlp-styles/components/selects" with (
-    $assets-base-path: "@tuleap/tlp-styles/"
-);
 @use "pkg:@tuleap/tlp-styles/components/labels";
 @use "pkg:@tuleap/tlp-styles/components/inputs";
 @use "pkg:@tuleap/tlp-styles/components/buttons";
 @use "pkg:@tuleap/tlp-styles/components/alerts";
 @use "pkg:@tuleap/plugin-tracker-link-field";
+@use "pkg:@tuleap/tlp-date-picker";
+@use "pkg:@tuleap/tlp-styles/components/forms";
 
 .list-picker-circular-color {
     box-sizing: border-box;

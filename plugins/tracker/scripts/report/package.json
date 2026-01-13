@@ -9,7 +9,9 @@
     "@tuleap/dom": "workspace:*",
     "@tuleap/plugin-tracker-report-exporter": "workspace:*",
     "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
-    "@tuleap/tlp-fetch": "workspace:*"
+    "@tuleap/tlp-date-picker": "workspace:^",
+    "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-styles": "workspace:^"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

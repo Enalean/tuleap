@@ -17,11 +17,23 @@ dependencies:
   '@tuleap/plugin-tracker-rte-creator':
     specifier: workspace:*
     version: link:../lib/rte-creator
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-date-picker
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tooltip
+  jquery:
+    specifier: ^3.7.1
+    version: 3.7.1
 
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+
+packages:
+
+  /jquery@3.7.1:
+    resolution: {integrity: sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==}
+    dev: false

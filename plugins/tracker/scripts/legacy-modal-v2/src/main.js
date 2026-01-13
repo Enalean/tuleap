@@ -22,7 +22,7 @@ import CKEDITOR from "ckeditor4";
 import codendi from "codendi";
 import { initMentions } from "@tuleap/mention";
 import { loadTooltips } from "@tuleap/tooltip";
-
+import { createDatePicker, getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
@@ -243,11 +243,20 @@ tuleap.textarea = tuleap.textarea || {};
             const tuleap_modal = modal.getDOMElement();
             loadTooltips(tuleap_modal, true);
             codendi.Toggler.init(tuleap_modal);
-            tuleap.dateTimePicker.init();
             codendi.tracker.textboxlist.init();
             initMentions(
                 '.tuleap-modal input[type="text"].user-mention, .tuleap-modal textarea.user-mention',
             );
+
+            const user_locale = getLocaleWithDefault(document);
+
+            document.querySelectorAll(".datetime-picker").forEach((input_datetime) => {
+                if (!(input_datetime instanceof HTMLInputElement)) {
+                    return;
+                }
+
+                createDatePicker(input_datetime, user_locale);
+            });
         },
 
         beforeSubmit: function () {

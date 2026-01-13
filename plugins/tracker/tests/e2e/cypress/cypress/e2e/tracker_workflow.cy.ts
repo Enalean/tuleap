@@ -380,7 +380,10 @@ describe(`Tracker Workflow`, () => {
 
             cy.log("End date is set by workflow, and not by user");
             cy.get("[data-test=edit-field-start_date]").click();
-            cy.get('[data-test="date-time-start_date"]').clear().type("2024-06-01");
+            // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
+            cy.get('[data-test="date-time-start_date"]')
+                .clear({ force: true })
+                .type("2024-06-01", { force: true });
             selectLabelInListPickerDropdown("Closed");
             cy.get("[data-test=artifact-submit-and-stay]").click();
             cy.get("[data-test=tracker-artifact-value-close_date]").contains(today);

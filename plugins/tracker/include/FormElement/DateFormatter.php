@@ -170,7 +170,7 @@ class DateFormatter
 
     protected function getDatePicker($value, array $errors): string
     {
-        return $GLOBALS['HTML']->getBootstrapDatePicker(
+        return $this->field->getTLPDatePicker(
             'tracker_admin_field_' . $this->field->getId(),
             'artifact[' . $this->field->getId() . ']',
             $value,

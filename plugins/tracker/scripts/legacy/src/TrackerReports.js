@@ -380,7 +380,7 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
                             crit.down("img.tracker_report_criteria_advanced_toggle"),
                         );
 
-                        tuleap.dateTimePicker.init();
+                        document.dispatchEvent(new CustomEvent("add-criterion"));
                     },
                 });
             }
@@ -450,7 +450,7 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
                     codendi.tracker.report.loadAdvancedCriteria(
                         li.down("img.tracker_report_criteria_advanced_toggle"),
                     );
-                    tuleap.dateTimePicker.init();
+                    document.dispatchEvent(new CustomEvent("add-criterion"));
                 },
             });
             Event.stop(evt);

@@ -18,6 +18,8 @@
  */
 
 @use "pkg:@tuleap/plugin-tracker-tql-codemirror";
+@use "pkg:@tuleap/tlp-date-picker";
+@use "pkg:@tuleap/tlp-styles/components/forms";
 
 .tracker-report-expert-content {
     display: flex;

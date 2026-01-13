@@ -30,6 +30,7 @@ import {
     listenEnableDisableSubmitEvents,
 } from "../edition/artifact-edition-buttons-switcher/disable-submit-buttons";
 import { EventDispatcher } from "@tuleap/plugin-tracker-artifact-common";
+import { initDateTimeFields } from "../fields/date-time-fields";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_locale = getLocaleWithDefault(document);
@@ -41,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     creator.createTextFieldEditors();
     const event_dispatcher = EventDispatcher();
     listenEnableDisableSubmitEvents(document, event_dispatcher);
+    initDateTimeFields();
     initListFields();
     initLinkField(user_locale, event_dispatcher, null);
     disableSubmitAfterArtifactEdition(document);

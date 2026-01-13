@@ -64,7 +64,7 @@ class Tracker_Report_HeaderRenderer
                         __DIR__ . '/../../../scripts/report/frontend-assets',
                         '/assets/trackers/report'
                     ),
-                    'src/main.js'
+                    'src/report.ts'
                 )
             );
         }
