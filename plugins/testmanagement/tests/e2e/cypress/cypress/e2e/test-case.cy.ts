@@ -35,18 +35,21 @@ describe(`TestManagement test case`, function () {
             cy.visitProjectService(project_name, "Trackers");
             cy.getContains("[data-test=tracker-link]", "Test Cases").click();
             cy.get("[data-test=new-artifact]").click();
-            cy.get("[data-test=summary]").type("Modal should open");
+            cy.getContains("[data-test=artifact-form-element]", "Summary")
+                .find("[data-test-field-input]")
+                .type("Modal should open");
             cy.get("[data-test=step-definition-field]").get("[data-test=add-step]").click();
             cy.get("[data-test=editable-step]")
                 .first()
-                .within(() => {
-                    cy.get("[data-test=description-textarea]").type("Click on the button");
-                    cy.get("[data-test=expected-results-textarea]").type("The modal appears");
-                })
-                .parent()
-                .within(() => {
-                    // Button is visible only on hover
-                    cy.get("[data-test=add-step]").click({ force: true });
+                .then((step) => {
+                    cy.wrap(step)
+                        .find("[data-test=description-textarea]")
+                        .type("Click on the button");
+                    cy.wrap(step)
+                        .find("[data-test=expected-results-textarea]")
+                        .type("The modal appears");
+                    // eslint-disable-next-line cypress/no-force -- Button is visible only on hover
+                    cy.wrap(step).parent().find("[data-test=add-step]").click({ force: true });
                 });
             cy.get("[data-test=editable-step]")
                 .eq(1)
