@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
@@ -49,9 +52,13 @@ use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 use Tuleap\Tracker\Tracker;
 use function Psl\Json\encode as json_encode;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable
+#[ConfigKeyCategory('Tracker')]
+class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
+    #[FeatureFlagConfigKey('Switch between legacy csv export and new export which uses the API. 0 for no, other number for yes')]
+    #[ConfigKeyInt(0)]
+    public const string USE_LEGACY_CSV_EXPORT = 'use_legacy_csv_export';
+
     public const int EXPORT_LIGHT = 1;
     public const int EXPORT_FULL  = 0;
 
@@ -579,6 +586,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $csv_separator     = $current_user->getPreference(PFUser::PREFERENCE_NAME_CSV_SEPARATOR);
         $csv_separator     = $purifier->purify($csv_separator === false ? PFUser::DEFAULT_CSV_SEPARATOR : $csv_separator);
 
+        $use_legacy_export = (bool) ForgeConfig::getFeatureFlag(self::USE_LEGACY_CSV_EXPORT);
+
         $my_items            = ['export' => ''];
         $my_items['export'] .= '<div class="btn-group">';
         $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
@@ -591,12 +600,16 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items['export'] .= dgettext('tuleap-tracker', 'CSV');
         $my_items['export'] .= '</li>';
         $my_items['export'] .= '<li>';
-        $my_items['export'] .= "<a href='#' id='tracker-report-csv-export-report-columns' data-properties='$export_properties' data-csv-separator='$csv_separator'>";
+        $my_items['export'] .= $use_legacy_export
+            ? '<a href="' . $this->getExportResultURL(self::EXPORT_LIGHT) . '">'
+            : "<a href='#' id='tracker-report-csv-export-report-columns' data-properties='$export_properties' data-csv-separator='$csv_separator'>";
         $my_items['export'] .= dgettext('tuleap-tracker', 'Export all report columns');
         $my_items['export'] .= '</a>';
         $my_items['export'] .= '</li>';
         $my_items['export'] .= '<li>';
-        $my_items['export'] .= "<a href='#' id='tracker-report-csv-export-all-columns' data-properties='$export_properties' data-csv-separator='$csv_separator'>";
+        $my_items['export'] .= $use_legacy_export
+            ? '<a href="' . $this->getExportResultURL(self::EXPORT_FULL) . '">'
+            : "<a href='#' id='tracker-report-csv-export-all-columns' data-properties='$export_properties' data-csv-separator='$csv_separator'>";
         $my_items['export'] .= dgettext('tuleap-tracker', 'Export all columns');
         $my_items['export'] .= '</a>';
         $my_items['export'] .= '</li>';
