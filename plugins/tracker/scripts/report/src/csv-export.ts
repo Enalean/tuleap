@@ -39,13 +39,14 @@ function setupExportReportColumn(doc: Document): void {
             getAttributeOrThrow(export_report_columns_button, "data-properties"),
         );
         const separator = getAttributeOrThrow(export_report_columns_button, "data-csv-separator");
+        const date_format = getAttributeOrThrow(export_report_columns_button, "data-date-format");
 
         await showLoaderWhileProcessing(doc, async () => {
             const { startDownloadExportAllReportColumnsCSV } = await import(
                 "./exports/export-report-columns-csv"
             );
 
-            await startDownloadExportAllReportColumnsCSV(properties, separator);
+            await startDownloadExportAllReportColumnsCSV(properties, separator, date_format);
         });
     });
 }
@@ -62,13 +63,14 @@ function setupExportAllColumn(doc: Document): void {
             getAttributeOrThrow(export_all_columns_button, "data-properties"),
         );
         const separator = getAttributeOrThrow(export_all_columns_button, "data-csv-separator");
+        const date_format = getAttributeOrThrow(export_all_columns_button, "data-date-format");
 
         await showLoaderWhileProcessing(doc, async () => {
             const { startDownloadExportAllColumnsCSV } = await import(
                 "./exports/export-all-columns-csv"
             );
 
-            await startDownloadExportAllColumnsCSV(properties, separator);
+            await startDownloadExportAllColumnsCSV(properties, separator, date_format);
         });
     });
 }

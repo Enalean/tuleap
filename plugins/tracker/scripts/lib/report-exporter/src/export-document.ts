@@ -34,6 +34,7 @@ export interface ExportSettings {
     readonly second_level?: ExportLevelSetting;
     readonly third_level?: Omit<ExportLevelSetting, "artifact_link_types">;
     readonly csv_separator?: "comma" | "semicolon" | "tab" | undefined;
+    readonly date_format?: "month_day_year" | "day_month_year" | undefined;
 }
 
 export async function downloadDocument(

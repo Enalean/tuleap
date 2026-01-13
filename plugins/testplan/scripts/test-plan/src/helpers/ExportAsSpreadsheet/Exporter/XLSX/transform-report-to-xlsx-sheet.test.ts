@@ -142,7 +142,7 @@ describe("Transform an export report into a XSLX sheet", () => {
                 "character_width": 10,
                 "nb_lines": 1,
                 "t": "d",
-                "v": "2020-09-07T14:00:00",
+                "v": 2020-09-07T11:00:00.000Z,
               },
               "A7": {
                 "character_width": 12,
