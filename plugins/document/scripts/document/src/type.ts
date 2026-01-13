@@ -341,6 +341,7 @@ export interface ApprovalTable {
     state: string;
     is_closed: boolean;
     description: string;
+    post_processed_description: string;
     reviewers: ReadonlyArray<ApprovalTableReviewer>;
     reminder_occurence: number;
 }
@@ -351,6 +352,7 @@ export interface ApprovalTableReviewer {
     review_date: string | null;
     state: string;
     comment: string;
+    post_processed_comment: string;
     version_id: number | null;
     version_name: string | null;
     notification: boolean;

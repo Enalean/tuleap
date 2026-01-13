@@ -44,6 +44,7 @@ final readonly class ItemApprovalTableReviewerRepresentation
         public ?string $review_date,
         public string $state,
         public string $comment,
+        public string $post_processed_comment,
         public ?int $version_id,
         public ?string $version_name,
         public bool $notification,
@@ -58,6 +59,7 @@ final readonly class ItemApprovalTableReviewerRepresentation
         ProvideUserAvatarUrl $provide_user_avatar_url,
         Docman_VersionFactory $version_factory,
         Docman_NotificationsManager $notifications_manager,
+        \Codendi_HTMLPurifier $purifer,
     ): self {
         $user = $user_manager->getUserById((int) $reviewer->getId());
         if ($user === null) {
@@ -77,12 +79,15 @@ final readonly class ItemApprovalTableReviewerRepresentation
             $version_name .= dgettext('tuleap-document', 'version') . ' ' . $reviewer->getVersion();
         }
 
+        $comment                = $reviewer->getComment() ?? '';
+        $post_processed_comment = $purifer->purifyTextWithReferences($comment, $item->getGroupId());
         return new self(
             MinimalUserRepresentation::build($user, $provide_user_avatar_url),
             JsonCast::toInt($reviewer->getRank()),
             JsonCast::toDate($reviewer->getReviewDate()),
             $status_mapper->getStatusStringNotTranslatedFromStatusId((int) $reviewer->getState()),
-            $reviewer->getComment() ?? '',
+            $comment,
+            $post_processed_comment,
             $version_id,
             $version_name,
             $notifications_manager->userExists($user->getId(), $item->getId()),

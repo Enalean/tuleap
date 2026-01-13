@@ -43,72 +43,21 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ItemRepresentationBuilder
 {
-    /**
-     * @var Docman_ItemDao
-     */
-    private $dao;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Docman_ItemFactory
-     */
-    private $docman_item_factory;
-    /**
-     * @var \Docman_PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var \Docman_LockFactory
-     */
-    private $lock_factory;
-    /**
-     * @var MetadataRepresentationBuilder
-     */
-    private $metadata_representation_builder;
-    /**
-     * @var ApprovalTableStateMapper
-     */
-    private $approval_table_state_mapper;
-    /**
-     * @var ApprovalTableRetriever
-     */
-    private $approval_table_retriever;
-    /**
-     * @var DocmanItemPermissionsForGroupsBuilder
-     */
-    private $item_permissions_for_groups_builder;
-    /**
-     * @var Codendi_HTMLPurifier
-     */
-    private $purifier;
-
     public function __construct(
-        Docman_ItemDao $dao,
-        \UserManager $user_manager,
-        Docman_ItemFactory $docman_item_factory,
-        \Docman_PermissionsManager $permissions_manager,
-        \Docman_LockFactory $lock_factory,
-        ApprovalTableStateMapper $approval_table_state_mapper,
-        MetadataRepresentationBuilder $metadata_representation_builder,
-        ApprovalTableRetriever $approval_table_retriever,
-        DocmanItemPermissionsForGroupsBuilder $item_permissions_for_groups_builder,
-        Codendi_HTMLPurifier $purifier,
+        private readonly Docman_ItemDao $dao,
+        private readonly \UserManager $user_manager,
+        private readonly Docman_ItemFactory $docman_item_factory,
+        private readonly \Docman_PermissionsManager $permissions_manager,
+        private readonly \Docman_LockFactory $lock_factory,
+        private readonly ApprovalTableStateMapper $approval_table_state_mapper,
+        private readonly MetadataRepresentationBuilder $metadata_representation_builder,
+        private readonly ApprovalTableRetriever $approval_table_retriever,
+        private readonly DocmanItemPermissionsForGroupsBuilder $item_permissions_for_groups_builder,
+        private readonly Codendi_HTMLPurifier $purifier,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
         private readonly Docman_VersionFactory $version_factory,
         private readonly Docman_NotificationsManager $notifications_manager,
     ) {
-        $this->dao                                 = $dao;
-        $this->user_manager                        = $user_manager;
-        $this->docman_item_factory                 = $docman_item_factory;
-        $this->permissions_manager                 = $permissions_manager;
-        $this->lock_factory                        = $lock_factory;
-        $this->approval_table_state_mapper         = $approval_table_state_mapper;
-        $this->metadata_representation_builder     = $metadata_representation_builder;
-        $this->approval_table_retriever            = $approval_table_retriever;
-        $this->purifier                            = $purifier;
-        $this->item_permissions_for_groups_builder = $item_permissions_for_groups_builder;
     }
 
     /**
@@ -135,7 +84,6 @@ class ItemRepresentationBuilder
     }
 
     /**
-     * @return ItemRepresentation
      * @throws UnknownMetadataException
      */
     public function buildItemRepresentation(
@@ -148,7 +96,7 @@ class ItemRepresentationBuilder
         ?WikiPropertiesRepresentation $wiki_properties = null,
         ?FolderPropertiesRepresentation $folder_properties = null,
         ?OtherTypePropertiesRepresentation $other_type_properties = null,
-    ) {
+    ): ItemRepresentation {
         $owner                = $this->user_manager->getUserById($item->getOwnerId());
         $owner_representation = MinimalUserRepresentation::build($owner, $this->provide_user_avatar_url);
 
@@ -193,6 +141,7 @@ class ItemRepresentationBuilder
                     $this->provide_user_avatar_url,
                     $this->version_factory,
                     $this->notifications_manager,
+                    $this->purifier
                 ),
             $lock_info,
             $this->item_permissions_for_groups_builder->getRepresentation($current_user, $item),

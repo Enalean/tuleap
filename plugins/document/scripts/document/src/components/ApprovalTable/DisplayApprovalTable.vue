@@ -21,7 +21,7 @@
     <section v-if="item">
         <document-details-tabs v-bind:item="item" v-bind:active_tab="ApprovalTableTab" />
 
-        <div class="tlp-framed-horizontally">
+        <div class="display-approval-table-section">
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
                     <div class="tlp-pane-header approval-table-header">
@@ -133,5 +133,9 @@ async function refreshData(): Promise<void> {
 .approval-table-header {
     display: flex;
     justify-content: space-between;
+}
+
+.display-approval-table-section {
+    padding: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 }
 </style>

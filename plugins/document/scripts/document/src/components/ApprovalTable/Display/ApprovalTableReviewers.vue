@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <table class="tlp-table">
+    <table class="tlp-table document-approval-table">
         <thead>
             <tr>
                 <th>{{ $gettext("Name") }}</th>
@@ -39,7 +39,8 @@
                 v-for="reviewer in reviewers"
                 v-bind:key="reviewer.rank"
                 v-bind:class="{
-                    'reviewer-not-current': is_readonly || reviewer.user.id !== user_id,
+                    'tlp-table-row-danger': reviewer.state === 'rejected',
+                    'tlp-table-row-success': reviewer.state === 'approved',
                 }"
                 data-test="reviewer-row"
             >
@@ -47,25 +48,29 @@
                     <user-badge v-bind:user="reviewer.user" />
                 </td>
                 <td data-test="reviewer-state">
-                    <template v-if="is_readonly || reviewer.user.id !== user_id">
-                        {{ translateReviewStatus(reviewer.state, $gettext) }}
-                    </template>
+                    {{ translateReviewStatus(reviewer.state, $gettext) }}
                     <button
-                        v-else
+                        v-if="!is_readonly && reviewer.user.id === user_id"
                         ref="modal_trigger"
                         type="button"
-                        class="tlp-button-secondary tlp-button-mini"
+                        class="tlp-button-primary tlp-button-mini review-button"
                         data-test="review-modal-trigger-button"
                     >
-                        {{ translateReviewStatus(reviewer.state, $gettext) }}
+                        <i class="fa-solid fa-gavel tlp-button-icon" aria-hidden="true"></i>
+                        {{ $gettext("Review") }}
                     </button>
                 </td>
-                <td>{{ reviewer.comment }}</td>
+                <td>
+                    <p
+                        v-if="table.description !== ''"
+                        data-test="table-description"
+                        v-dompurify-html="reviewer.post_processed_comment"
+                    ></p>
+                </td>
                 <td>
                     <document-relative-date
                         v-if="reviewer.review_date"
                         v-bind:date="reviewer.review_date"
-                        relative_placement="right"
                     />
                 </td>
                 <td>
@@ -130,7 +135,14 @@ const current_reviewer = computed(() =>
 </script>
 
 <style scoped lang="scss">
-.reviewer-not-current {
-    font-style: italic;
+.review-button {
+    margin: 0 0 0 var(--tlp-small-spacing);
 }
+
+/* stylelint-disable selector-no-qualifying-type */
+.tlp-table > tbody > tr.tlp-table-row-danger:not(.tlp-table-cell-actions),
+.tlp-table > tbody > tr.tlp-table-row-danger > td:not(.tlp-table-cell-actions) {
+    text-decoration: none;
+}
+/* stylelint-enable selector-no-qualifying-type */
 </style>
