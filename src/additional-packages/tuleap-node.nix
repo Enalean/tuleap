@@ -4,7 +4,7 @@
 }:
 
 let
-  version = "22.19.0";
+  version = "22.22.0";
   fetchNodeBin =
     {
       url,
@@ -24,7 +24,7 @@ let
   nodeBin = fetchNodeBin rec {
     name = "node-v${version}-linux-x64";
     url = "https://nodejs.org/dist/v${version}/${name}.tar.xz";
-    hash = "sha256-++f2pb+izrgcKLpyJklv5wpBg2oB8+pfWW59BkNracE=";
+    hash = "sha256-51VLdrB7JvYNLol1fXx1eZfO/vqxfeZmvj5q0uNai1s=";
   };
   buildNodeRPM =
     { version, bin }:
