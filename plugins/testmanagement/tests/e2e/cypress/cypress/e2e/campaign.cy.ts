@@ -31,6 +31,10 @@ function assertFilterTestWithStatus(status: string): void {
     cy.get(`[data-test=status-filter-${status}]`).click();
 }
 
+function reloadInOrderToRemoveFlackinessDueToAngularDigestIssue(): void {
+    cy.reload();
+}
+
 describe("TTM campaign", () => {
     let ttm_project_name: string,
         comment_project_name: string,
@@ -374,6 +378,7 @@ describe("TTM campaign", () => {
             });
             cy.get("[data-test=artifact-modal-save-button]").click();
 
+            reloadInOrderToRemoveFlackinessDueToAngularDigestIssue();
             cy.log("Test is no longer displayed by default in campaign");
             cy.get("[data-test=test-title]").should("have.length", 0);
 
