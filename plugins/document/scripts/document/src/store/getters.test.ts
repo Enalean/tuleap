@@ -19,7 +19,7 @@
 
 import { describe, expect, it } from "vitest";
 import * as getters from "./getters";
-import type { FakeItem, Folder, Item, State } from "../type";
+import type { FakeItem, Folder, FolderContentItem, Item, State } from "../type";
 
 describe("Store getters", () => {
     describe("current_folder_title", () => {
@@ -38,7 +38,7 @@ describe("Store getters", () => {
                     } as Folder,
                 ],
                 root_title: "Documents",
-            } as State);
+            } as State)(false);
 
             expect(title).toBe("Current folder");
         });
@@ -48,9 +48,51 @@ describe("Store getters", () => {
             const title = getters.current_folder_title({
                 current_folder_ascendant_hierarchy: hierarchy,
                 root_title: "Documents",
-            } as State);
+            } as State)(false);
 
             expect(title).toBe("Documents");
+        });
+
+        it("returns the title of currently previewed item when show_document_in_title is true", () => {
+            const hierarchy: Array<Folder> = [];
+            const title = getters.current_folder_title({
+                current_folder_ascendant_hierarchy: hierarchy,
+                root_title: "Documents",
+                currently_previewed_item: {
+                    id: 10,
+                    title: "Previewed Item",
+                    last_update_date: "2023-01-01T10:00:00+00:00",
+                } as FolderContentItem,
+            } as State)(true);
+
+            expect(title).toBe("Previewed Item");
+        });
+
+        it("returns the root title when no hierarchy and currently previewed item is null", () => {
+            const hierarchy: Array<Folder> = [];
+            const title = getters.current_folder_title({
+                current_folder_ascendant_hierarchy: hierarchy,
+                root_title: "Documents",
+                currently_previewed_item: null,
+            } as State)(true);
+
+            expect(title).toBe("Documents");
+        });
+
+        it("returns the root title when show_document_in_title is true but hierarchy is defined", () => {
+            const title = getters.current_folder_title({
+                current_folder_ascendant_hierarchy: [
+                    {
+                        id: 1,
+                        title: "Folder A",
+                        last_update_date: "2018-08-07T16:42:49+02:00",
+                    } as Folder,
+                ],
+                root_title: "Documents",
+                currently_previewed_item: null,
+            } as State)(false);
+
+            expect(title).toBe("Folder A");
         });
     });
 

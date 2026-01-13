@@ -27,6 +27,8 @@ import PermissionError from "./Folder/Error/PermissionError.vue";
 import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
 import LoadingError from "./Folder/Error/LoadingError.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-test";
+import { SHOW_DOCUMENT_IN_TITLE } from "../injection-keys";
+import { ref } from "vue";
 
 describe("App", () => {
     let factory: () => VueWrapper<InstanceType<typeof App>>;
@@ -68,6 +70,7 @@ describe("App", () => {
                         },
                         getters: {
                             is_uploading: () => false,
+                            current_folder_title: () => () => "My folder title",
                         },
                         mutations: {
                             setRootTitle: set_root_title,
@@ -75,6 +78,9 @@ describe("App", () => {
                     }),
                     stubs: {
                         RouterView: RouterViewStub,
+                    },
+                    provide: {
+                        [SHOW_DOCUMENT_IN_TITLE.valueOf()]: ref(false),
                     },
                 },
             });

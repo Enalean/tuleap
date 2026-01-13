@@ -109,7 +109,8 @@ import { isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 import FileCreationModal from "./DropDown/NewDocument/FileCreationModal.vue";
 import type { Component } from "vue";
-import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
+import { provide, computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import type {
     ArchiveSizeWarningModalEvent,
     DeleteItemEvent,
@@ -126,6 +127,11 @@ import { useGetters, useState } from "vuex-composition-helpers";
 import type { Empty, Item, ItemType, RootState } from "../../type";
 import type { RootGetter } from "../../store/getters";
 import { getDocumentProperties } from "../../helpers/properties/document-properties";
+import { SHOW_DOCUMENT_IN_TITLE } from "../../injection-keys";
+
+const show_document_in_title = strictInject(SHOW_DOCUMENT_IN_TITLE);
+
+provide(SHOW_DOCUMENT_IN_TITLE, ref(false));
 
 const ModalConfirmDeletion = defineAsyncComponent(
     () => import("./DropDown/Delete/ModalConfirmDeletion.vue"),
@@ -171,7 +177,9 @@ const title_class = computed(() =>
     is_loading_ascendant_hierarchy.value ? "tlp-skeleton-text document-folder-title-loading" : "",
 );
 const folder_title = computed(() =>
-    is_loading_ascendant_hierarchy.value ? "" : current_folder_title.value,
+    is_loading_ascendant_hierarchy.value
+        ? ""
+        : current_folder_title.value(show_document_in_title.value),
 );
 const can_display_search_box = computed(
     () => current_folder.value !== null && !is_folder_empty.value,

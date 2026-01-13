@@ -35,6 +35,8 @@ import { PROJECT, USER_ID } from "../../configuration-keys";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 import * as display_preferences from "../../helpers/preferences/embedded-file-display-preferences";
 import { Option } from "@tuleap/option";
+import { SHOW_DOCUMENT_IN_TITLE } from "../../injection-keys";
+import { ref } from "vue";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
@@ -98,6 +100,7 @@ describe("DisplayEmbedded", () => {
                 provide: {
                     [USER_ID.valueOf()]: 254,
                     [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
+                    [SHOW_DOCUMENT_IN_TITLE.valueOf()]: ref(false),
                 },
             },
         });
@@ -131,6 +134,7 @@ describe("DisplayEmbedded", () => {
                 provide: {
                     [USER_ID.valueOf()]: 254,
                     [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
+                    [SHOW_DOCUMENT_IN_TITLE.valueOf()]: ref(false),
                 },
             },
         });

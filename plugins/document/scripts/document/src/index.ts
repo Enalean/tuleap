@@ -44,6 +44,7 @@ import {
     PROJECT_PROPERTIES,
     PROJECT_USER_GROUPS,
     SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
+    SHOW_DOCUMENT_IN_TITLE,
 } from "./injection-keys";
 import type { SearchCriterion, SearchListOption } from "./type";
 import {
@@ -241,12 +242,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(IS_FILENAME_PATTERN_ENFORCED, is_filename_pattern_enforced)
         .provide(PROJECT_PROPERTIES, ref(null))
         .provide(PROJECT_USER_GROUPS, ref(null))
-        .provide(CSRF_TOKEN, { name: csrf_token_name, value: csrf_token })
         .provide(ICON_LINK, icon_link)
         .provide(ICON_EMBEDDED, icon_embedded)
         .provide(ICON_WIKI, icon_wiki)
         .provide(ICON_EMPTY, icon_empty)
-        .provide(ICON_FOLDER, icon_folder);
+        .provide(ICON_FOLDER, icon_folder)
+        .provide(SHOW_DOCUMENT_IN_TITLE, ref(false))
+        .provide(CSRF_TOKEN, { name: csrf_token_name, value: csrf_token });
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

@@ -19,7 +19,7 @@
 
 export interface RootGetter {
     is_folder_empty: boolean;
-    current_folder_title: string;
+    current_folder_title: (show_document_in_title: boolean) => string;
     global_upload_progress: number;
     is_uploading: boolean;
 }
@@ -29,15 +29,21 @@ import { isFakeItem } from "../helpers/type-check-helper";
 
 export const is_folder_empty = (state: State): boolean => state.folder_content.length === 0;
 
-export const current_folder_title = (state: State): string => {
-    const hierarchy = state.current_folder_ascendant_hierarchy;
+export const current_folder_title =
+    (state: State): ((show_document_in_title: boolean) => string) =>
+    (show_document_in_title: boolean): string => {
+        if (show_document_in_title) {
+            return state.currently_previewed_item?.title ?? state.root_title;
+        }
 
-    if (hierarchy.length === 0) {
-        return state.root_title;
-    }
+        const hierarchy = state.current_folder_ascendant_hierarchy;
 
-    return hierarchy[hierarchy.length - 1] ? hierarchy[hierarchy.length - 1].title : "";
-};
+        if (hierarchy.length === 0) {
+            return state.root_title;
+        }
+
+        return hierarchy[hierarchy.length - 1] ? hierarchy[hierarchy.length - 1].title : "";
+    };
 
 export const global_upload_progress = (state: State): number => {
     const ongoing_uploads = state.folder_content.filter((item: Item | FakeItem) => {

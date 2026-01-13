@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
-import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
+import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch } from "vue";
 import type {
     Embedded,
     EmbeddedFileDisplayPreference,
@@ -54,6 +54,7 @@ import emitter from "../../helpers/emitter";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT, USER_ID } from "../../configuration-keys";
 import { getEmbeddedFileDisplayPreference } from "../../helpers/preferences/embedded-file-display-preferences";
+import { SHOW_DOCUMENT_IN_TITLE } from "../../injection-keys";
 
 const $store = useStore();
 
@@ -85,6 +86,12 @@ const has_loaded_without_error = computed((): boolean => !has_an_error.value && 
 
 const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
 const { updateCurrentlyPreviewedItem } = useMutations(["updateCurrentlyPreviewedItem"]);
+
+const show_document_in_title = strictInject(SHOW_DOCUMENT_IN_TITLE);
+
+onMounted(() => {
+    show_document_in_title.value = true;
+});
 
 watch(() => props.version_id, loadContent);
 

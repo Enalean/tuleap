@@ -30,7 +30,9 @@ import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import DocumentDetailsTabs from "./DocumentDetailsTabs.vue";
 import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
-describe("DocumentDetailsTabs", () => {
+import { SHOW_DOCUMENT_IN_TITLE } from "../../injection-keys";
+import { ref } from "vue";
+describe(DocumentDetailsTabs, () => {
     it.each([
         [TYPE_FOLDER, false],
         [TYPE_FILE, true],
@@ -45,6 +47,9 @@ describe("DocumentDetailsTabs", () => {
                 ...getGlobalTestOptions({}),
                 stubs: {
                     RouterLink: RouterLinkStub,
+                },
+                provide: {
+                    [SHOW_DOCUMENT_IN_TITLE.valueOf()]: ref(false),
                 },
             },
         });
