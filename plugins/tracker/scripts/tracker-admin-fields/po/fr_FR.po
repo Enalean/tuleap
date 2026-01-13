@@ -15,6 +15,9 @@ msgstr ""
 msgid "%{user} user's avatar"
 msgstr "Avatar de l'utilisateur %{user}"
 
+msgid "Add another file"
+msgstr "Ajouter un autre fichier"
+
 msgid "Add fields"
 msgstr "Ajouter des champs"
 
@@ -53,6 +56,9 @@ msgstr "Utilisation des champs"
 
 msgid "Fieldset"
 msgstr "Groupe de champs"
+
+msgid "File description"
+msgstr "Description du fichier"
 
 msgid "File upload"
 msgstr "Fichier à téléverser"
