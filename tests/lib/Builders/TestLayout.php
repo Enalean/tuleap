@@ -64,11 +64,6 @@ final class TestLayout extends BaseLayout
     }
 
     #[\Override]
-    public function includeCalendarScripts()
-    {
-    }
-
-    #[\Override]
     public function includeFooterJavascriptFile($file)
     {
     }

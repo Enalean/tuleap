@@ -440,7 +440,6 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
                     li.select("input", "select").each(function (el) {
                         if (el.id && $("fd-" + el.id)) {
                             delete $("fd-" + el.id).remove();
-                            //delete datePickerController.datePickers[el.id];
                         }
                     });
 
