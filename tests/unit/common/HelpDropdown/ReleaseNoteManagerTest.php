@@ -23,31 +23,23 @@ declare(strict_types=1);
 namespace Tuleap\HelpDropdown;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use UserPreferencesDao;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const BASE_URL = 'https://www.tuleap.org/resources/release-notes/tuleap-11-17/?utm_source=tuleap&utm_medium=forge&utm_campaign=tuleap-forge-icon-help-RN-link';
+    private const string BASE_URL = 'https://help.tuleap.com/docs/tuleap-11-17';
 
-    /**
-     * @var ReleaseNoteManager
-     */
-    private $release_note_manager;
-    /**
-     * @var ReleaseLinkDao&MockObject
-     */
-    private $release_note_dao;
-    /**
-     * @var UserPreferencesDao&MockObject
-     */
-    private $user_preferences_dao;
+    private ReleaseNoteManager $release_note_manager;
+    private ReleaseLinkDao&Stub $release_note_dao;
+    private UserPreferencesDao&MockObject $user_preferences_dao;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->release_note_dao     = $this->createMock(ReleaseLinkDao::class);
+        $this->release_note_dao     = $this->createStub(ReleaseLinkDao::class);
         $this->user_preferences_dao = $this->createMock(UserPreferencesDao::class);
         $this->release_note_manager = new ReleaseNoteManager(
             $this->release_note_dao,
@@ -105,7 +97,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'tuleap_version' => '11-16',
         ];
 
-        $this->release_note_dao->expects($this->once())->method('getReleaseLink')->willReturn($dao_old_links);
+        $this->release_note_dao->method('getReleaseLink')->willReturn($dao_old_links);
         $this->release_note_dao->method('updateReleaseNoteLink');
         $this->user_preferences_dao->expects($this->once())->method('deletePreferenceForAllUsers');
 
@@ -114,7 +106,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetReleaseNoteLinkIfNotLinkInDatabase(): void
     {
-        $this->release_note_dao->expects($this->once())->method('getReleaseLink')->willReturn(null);
+        $this->release_note_dao->method('getReleaseLink')->willReturn(null);
         $this->release_note_dao->method('createReleaseNoteLink');
         $this->user_preferences_dao->expects($this->once())->method('deletePreferenceForAllUsers');
 
