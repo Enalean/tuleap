@@ -155,10 +155,6 @@ class BurningParrotTheme extends BaseLayout
         return $this->request->getCurrentUser();
     }
 
-    public function includeCalendarScripts()
-    {
-    }
-
     public function header(HeaderConfiguration|array $params): void
     {
         $project = null;

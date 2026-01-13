@@ -22,8 +22,6 @@
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/project_admin_utils.php';
 require_once __DIR__ . '/../export/project_export_utils.php';
-$GLOBALS['HTML']->includeCalendarScripts();
-
 
 $request = \Tuleap\HTTPRequest::instance();
 

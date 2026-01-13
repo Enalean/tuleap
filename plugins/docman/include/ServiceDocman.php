@@ -28,8 +28,6 @@ class ServiceDocman extends \Service
     #[\Override]
     public function displayHeader(string $title, $breadcrumbs, array $toolbar, HeaderConfiguration|array $params = []): void
     {
-        $GLOBALS['HTML']->includeCalendarScripts();
-
         parent::displayHeader(
             $title,
             $breadcrumbs,

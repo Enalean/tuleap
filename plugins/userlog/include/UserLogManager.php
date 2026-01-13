@@ -28,7 +28,7 @@ use Tuleap\Userlog\UserlogAccess;
 use Tuleap\Userlog\UserLogBuilder;
 use Tuleap\Userlog\UserLogPresenter;
 
-class UserLogManager
+class UserLogManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var AdminPageRenderer
@@ -120,7 +120,5 @@ class UserLogManager
             'userlogs',
             $presenter
         );
-
-        $GLOBALS['Response']->includeCalendarScripts();
     }
 }

@@ -163,9 +163,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
      * Note: the order of call of include*Javascript method is very important.
      * The code will be included and executed in the same order the
      * includes are done. This allows (for instance) to define a var before
-     * including a script (eg. Layout::includeCalendarScripts).
+     * including a script.
      *
-     * @see   Layout::includeCalendarScripts
      * @param String $file Path (relative to URL root) the the javascript file
      *
      * @return void
@@ -205,13 +204,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     protected function getUser()
     {
         return UserManager::instance()->getCurrentUser();
-    }
-
-    #[\Override]
-    public function includeCalendarScripts()
-    {
-        $this->includeJavascriptFile('/scripts/datepicker/datepicker.js');
-        return $this;
     }
 
     public function _getFeedback(): string //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
@@ -527,7 +519,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $theme_color_variant = ThemeVariant::convertToFlamingParrotVariant($color);
         $user_locale         = $current_user->getLocale();
 
-        $this->includeCalendarScripts();
         echo '<!DOCTYPE html>
               <html>
               <head>
