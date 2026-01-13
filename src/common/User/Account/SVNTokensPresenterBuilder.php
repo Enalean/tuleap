@@ -24,39 +24,20 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use SVN_TokenHandler;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 
-final class SVNTokensPresenterBuilder
+final readonly class SVNTokensPresenterBuilder
 {
-    /**
-     * @var SVN_TokenHandler
-     */
-    private $token_handler;
-    /**
-     * @var KeyFactory
-     */
-    private $key_factory;
-
-    public function __construct(\SVN_TokenHandler $token_handler, KeyFactory $key_factory)
+    public function __construct(private \SVN_TokenHandler $token_handler)
     {
-        $this->token_handler = $token_handler;
-        $this->key_factory   = $key_factory;
     }
 
-    public function getForUser(\PFUser $user, array &$storage): SVNTokensPresenter
+    public function getForUser(\PFUser $user): SVNTokensPresenter
     {
-        $last_svn_token = null;
-        if (isset($storage['last_svn_token'])) {
-            $last_svn_token = SymmetricCrypto::decrypt($storage['last_svn_token'], $this->key_factory->getLegacy2025EncryptionKey());
-            sodium_memzero($storage['last_svn_token']);
-            unset($storage['last_svn_token']);
-        }
-        return new SVNTokensPresenter($this->token_handler->getSVNTokensForUser($user), $last_svn_token);
+        return new SVNTokensPresenter($this->token_handler->getSVNTokensForUser($user));
     }
 
     public static function build(): self
     {
-        return new self(SVN_TokenHandler::build(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem());
+        return new self(SVN_TokenHandler::build());
     }
 }

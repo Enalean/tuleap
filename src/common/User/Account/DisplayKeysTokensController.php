@@ -104,7 +104,7 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
                 $tabs,
                 SSHKeysPresenter::fromUser($user),
                 $this->access_key_presenter_builder->getForUser($user, $_SESSION),
-                $this->svn_tokens_presenter_builder->getForUser($user, $_SESSION),
+                $this->svn_tokens_presenter_builder->getForUser($user),
             )
         );
         $layout->footer([]);

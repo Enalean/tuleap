@@ -908,9 +908,6 @@ msgstr "Contato (menu de ajuda)"
 msgid "Content"
 msgstr "Conteúdo"
 
-msgid "Copy the SVN token"
-msgstr "Copiar o token do SVN"
-
 msgid "Copy the access key"
 msgstr "Copiar a chave de acesso"
 
@@ -1488,13 +1485,6 @@ msgstr "Olá,"
 
 msgid "Help"
 msgstr "Ajuda"
-
-msgid ""
-"Here is your new SVN token. Please make sure you copy it, you won't be able "
-"to see it again!"
-msgstr ""
-"Aqui está o seu novo token SVN. Por favor assegure-se de copiá-lo, ele não "
-"poderá ser consultado novamente!"
 
 msgid ""
 "Here is your new access key. Please make sure to copy it, you won't be able "
@@ -2890,9 +2880,6 @@ msgstr "SVN"
 
 msgid "SVN Commits"
 msgstr "SVN Commits"
-
-msgid "SVN token copied!"
-msgstr "Token SVN copiado!"
 
 msgid "SVN tokens"
 msgstr "SVN tokens"
