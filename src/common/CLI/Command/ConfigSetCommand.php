@@ -57,7 +57,7 @@ class ConfigSetCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getArgument('key');
-        assert(is_string($key));
+        assert(is_string($key) && $key !== '');
 
         $config_keys  = $this->event_dispatcher->dispatch(new GetConfigKeys());
         $key_metadata = $config_keys->getKeyMetadata($key);

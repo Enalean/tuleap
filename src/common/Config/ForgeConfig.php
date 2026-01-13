@@ -28,7 +28,7 @@ use Tuleap\Config\ConfigValueDefaultValueAttributeProvider;
 use Tuleap\Config\ConfigValueEnvironmentProvider;
 use Tuleap\Config\GetConfigKeys;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\ServerHostname;
 
@@ -221,6 +221,7 @@ class ForgeConfig
     }
 
     /**
+     * @param non-empty-string $name
      * @throws \Tuleap\Cryptography\Exception\InvalidCiphertextException
      * @throws \Tuleap\Config\UnknownConfigKeyException
      * @throws \Tuleap\Cryptography\Exception\CannotPerformIOOperationException
@@ -235,7 +236,7 @@ class ForgeConfig
             return new ConcealedString('');
         }
 
-        return self::decryptValue(self::get($name));
+        return self::decryptValue($name, self::get($name));
     }
 
     public static function exists($name): bool
@@ -355,19 +356,36 @@ class ForgeConfig
         unset(self::$conf_stack[0][self::FEATURE_FLAG_PREFIX . $name]);
     }
 
-    public static function encryptValue(ConcealedString $value): string
+    /**
+     * @param non-empty-string $key
+     */
+    public static function encryptValue(string $key, ConcealedString $value): string
     {
+        $encryption_key = new \Tuleap\Cryptography\KeyFactoryFromFileSystem()->getEncryptionKey();
         return \sodium_bin2base64(
-            SymmetricCrypto::encrypt($value, (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getLegacy2025EncryptionKey()),
+            SymmetricCrypto::encrypt($value, self::getValueEncryptionAdditionalData($key), $encryption_key),
             SODIUM_BASE64_VARIANT_ORIGINAL
         );
     }
 
-    private static function decryptValue(string $value): ConcealedString
+    /**
+     * @param non-empty-string $key
+     */
+    private static function decryptValue(
+        string $key,
+        #[\SensitiveParameter]
+        string $value,
+    ): ConcealedString {
+        $encryption_key = new \Tuleap\Cryptography\KeyFactoryFromFileSystem()->getEncryptionKey();
+
+        return SymmetricCrypto::decrypt(\sodium_base642bin($value, SODIUM_BASE64_VARIANT_ORIGINAL), self::getValueEncryptionAdditionalData($key), $encryption_key);
+    }
+
+    /**
+     * @param non-empty-string $key
+     */
+    private static function getValueEncryptionAdditionalData(string $key): \Tuleap\Cryptography\Symmetric\EncryptionAdditionalData
     {
-        return SymmetricCrypto::decrypt(
-            \sodium_base642bin($value, SODIUM_BASE64_VARIANT_ORIGINAL),
-            (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getLegacy2025EncryptionKey(),
-        );
+        return new \Tuleap\Cryptography\Symmetric\EncryptionAdditionalData('forgeconfig', 'value', $key);
     }
 }

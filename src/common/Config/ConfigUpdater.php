@@ -24,5 +24,8 @@ use Tuleap\Cryptography\ConcealedString;
 
 interface ConfigUpdater
 {
+    /**
+     * @param non-empty-string $key
+     */
     public function set(string $key, string|ConcealedString $value): void;
 }

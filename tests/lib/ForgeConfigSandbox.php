@@ -46,12 +46,15 @@ trait ForgeConfigSandbox
         ForgeConfig::restore();
     }
 
+    /**
+     * @param non-empty-string $name
+     */
     protected function setEncryptedValue(string $name, string $value): void
     {
         ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
         ForgeConfig::set(
             $name,
-            ForgeConfig::encryptValue(new \Tuleap\Cryptography\ConcealedString($value)),
+            ForgeConfig::encryptValue($name, new \Tuleap\Cryptography\ConcealedString($value)),
         );
     }
 }

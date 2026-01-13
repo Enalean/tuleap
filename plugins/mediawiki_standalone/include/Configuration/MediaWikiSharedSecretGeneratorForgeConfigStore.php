@@ -39,7 +39,7 @@ final class MediaWikiSharedSecretGeneratorForgeConfigStore implements MediaWikiS
 
         $this->config_dao->save(
             MediawikiHTTPClientFactory::SHARED_SECRET,
-            \ForgeConfig::encryptValue($secret)
+            \ForgeConfig::encryptValue(MediawikiHTTPClientFactory::SHARED_SECRET, $secret)
         );
 
         return $secret;

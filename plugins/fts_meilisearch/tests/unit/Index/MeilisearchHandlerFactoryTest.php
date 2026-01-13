@@ -24,7 +24,6 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\FullTextSearchCommon\Index\NullIndexHandler;
 use Tuleap\FullTextSearchMeilisearch\Server\LocalMeilisearchServer;
@@ -58,7 +57,7 @@ final class MeilisearchHandlerFactoryTest extends TestCase
         $root = vfsStream::setup('root', null, ['conf' => []])->url();
         \ForgeConfig::set('fts_meilisearch_server_url', 'https://example.com');
         \ForgeConfig::set('sys_custom_dir', $root);
-        \ForgeConfig::set('fts_meilisearch_api_key', \ForgeConfig::encryptValue(new ConcealedString('something')));
+        $this->setEncryptedValue('fts_meilisearch_api_key', 'something');
         \ForgeConfig::set('fts_meilisearch_index_name', 'index_name');
         $factory = $this->buildFactory($root . '/');
 
