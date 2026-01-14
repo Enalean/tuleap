@@ -63,8 +63,7 @@ final class LinkVersionRepresentation
         int $id,
         int $number,
         ?string $label,
-        int $group_id,
-        int $item_id,
+        string $link_href,
         UserRepresentation $author,
         string $date,
         string $changelog,
@@ -75,23 +74,14 @@ final class LinkVersionRepresentation
         $this->author    = $author;
         $this->date      = $date;
         $this->changelog = $changelog;
-        $this->link_href = '/plugins/docman/?'
-            . http_build_query(
-                [
-                    'group_id'       => $group_id,
-                    'action'         => 'show',
-                    'id'             => $item_id,
-                    'version_number' => $number,
-                ]
-            );
+        $this->link_href = $link_href;
     }
 
     public static function build(
         int $version_id,
         int $number,
         ?string $label,
-        int $group_id,
-        int $item_id,
+        string $link_href,
         \PFUser $author,
         \DateTimeInterface $date,
         string $changelog,
@@ -101,8 +91,7 @@ final class LinkVersionRepresentation
             $version_id,
             $number,
             $label,
-            $group_id,
-            $item_id,
+            $link_href,
             UserRepresentation::build($author, $provide_user_avatar_url),
             JsonCast::fromNotNullDateTimeToDate($date),
             $changelog,

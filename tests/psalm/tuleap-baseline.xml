@@ -2945,12 +2945,10 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[getReferenceByKeyword]]></code>
-      <code><![CDATA[instantiateFromRow]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/bugzilla_reference/include/Bugzilla/Reference/ReferenceSaver.php">
     <MissingParamType>
-      <code><![CDATA[$api_key]]></code>
       <code><![CDATA[$keyword]]></code>
       <code><![CDATA[$keyword]]></code>
       <code><![CDATA[$rest_api_url]]></code>
@@ -2962,9 +2960,6 @@
     <MissingReturnType>
       <code><![CDATA[checkFieldsValidity]]></code>
       <code><![CDATA[createReferenceForBugzillaServer]]></code>
-      <code><![CDATA[edit]]></code>
-      <code><![CDATA[getAPIKeyToStoreWithEncryptionStatus]]></code>
-      <code><![CDATA[save]]></code>
       <code><![CDATA[validateURLs]]></code>
     </MissingReturnType>
   </file>
@@ -13423,7 +13418,6 @@
       <code><![CDATA[allowProject]]></code>
       <code><![CDATA[display]]></code>
       <code><![CDATA[process]]></code>
-      <code><![CDATA[regenerateGitoliteConfigForAProject]]></code>
       <code><![CDATA[revokeProjects]]></code>
       <code><![CDATA[updateBigObjectAllowedProjects]]></code>
     </MissingReturnType>
@@ -15804,13 +15798,10 @@
       <code><![CDATA[$gerrit_template_id]]></code>
       <code><![CDATA[$old_user_name]]></code>
       <code><![CDATA[$original_keys]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$remote_server_id]]></code>
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getTypes]]></code>
       <code><![CDATA[isProjectDeletionOnGerritOnGoing]]></code>
       <code><![CDATA[isProjectSetReadOnlyOnGerritOnGoing]]></code>
       <code><![CDATA[isRepositoryMigrationToGerritOnGoing]]></code>
@@ -15820,7 +15811,6 @@
       <code><![CDATA[queueGerritReplicationKeyUpdate]]></code>
       <code><![CDATA[queueMigrateToGerrit]]></code>
       <code><![CDATA[queueProjectsConfigurationUpdate]]></code>
-      <code><![CDATA[queueRegenerateGitoliteConfig]]></code>
       <code><![CDATA[queueRemoteProjectDeletion]]></code>
       <code><![CDATA[queueRemoteProjectReadOnly]]></code>
       <code><![CDATA[queueRepositoryDeletion]]></code>
@@ -49896,11 +49886,6 @@
       <code><![CDATA[$bind_class]]></code>
     </ArgumentTypeCoercion>
   </file>
-  <file src="plugins/tracker/tests/unit/Admin/ArtifactDeletion/ArtifactsDeletionConfigTest.php">
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[expects]]></code>
-    </PossiblyUndefinedMethod>
-  </file>
   <file src="plugins/tracker/tests/unit/Admin/GlobalAdmin/Trackers/MarkTrackerAsDeletedControllerTest.php">
     <InternalMethod>
       <code><![CDATA[numberOfInvocations]]></code>
@@ -54467,9 +54452,6 @@
     </PropertyTypeCoercion>
   </file>
   <file src="plugins/tracker/tests/unit/XML/Updater/PermissionsByDuckTypingUpdaterTest.php">
-    <InternalClass>
-      <code><![CDATA[TestCase]]></code>
-    </InternalClass>
     <InvalidArgument>
       <code><![CDATA[[
                 ProjectUGroup::PROJECT_ADMIN,
@@ -58646,7 +58628,6 @@
       <code><![CDATA[getFooterSiteJs]]></code>
       <code><![CDATA[getImagePath]]></code>
       <code><![CDATA[getUser]]></code>
-      <code><![CDATA[includeCalendarScripts]]></code>
       <code><![CDATA[includeFooterJavascriptFile]]></code>
       <code><![CDATA[includeFooterJavascriptSnippet]]></code>
       <code><![CDATA[setRenderedThroughservice]]></code>
@@ -58744,10 +58725,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="src/common/Layout/Layout.php">
-    <InvalidParamDefault>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidParamDefault>
     <InvalidReturnStatement>
       <code><![CDATA[$this]]></code>
       <code><![CDATA[$this]]></code>
@@ -58771,8 +58748,6 @@
       <code><![CDATA[$rank]]></code>
       <code><![CDATA[$service_top_tab]]></code>
       <code><![CDATA[$url]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
       <code><![CDATA[$value_prefix]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -58789,7 +58764,6 @@
       <code><![CDATA[getNotificationPlaceholder]]></code>
       <code><![CDATA[getStylesheetTheme]]></code>
       <code><![CDATA[iframe]]></code>
-      <code><![CDATA[includeCalendarScripts]]></code>
       <code><![CDATA[includeJavascriptPolyfills]]></code>
       <code><![CDATA[includeSubsetOfCombined]]></code>
       <code><![CDATA[overlay_footer]]></code>
@@ -63635,7 +63609,6 @@
   </file>
   <file src="src/common/Request/FrontRouter.php">
     <MissingReturnType>
-      <code><![CDATA[getBurningParrotTheme]]></code>
       <code><![CDATA[getDispatcher]]></code>
       <code><![CDATA[getPluginHandler]]></code>
       <code><![CDATA[getRouteInfo]]></code>
@@ -70120,7 +70093,6 @@
   <file src="src/common/include/Response.php">
     <MissingParamType>
       <code><![CDATA[$code]]></code>
-      <code><![CDATA[$content]]></code>
       <code><![CDATA[$content_type]]></code>
       <code><![CDATA[$level]]></code>
       <code><![CDATA[$level]]></code>
@@ -70148,7 +70120,6 @@
       <code><![CDATA[permanentRedirect]]></code>
       <code><![CDATA[send400JSONErrors]]></code>
       <code><![CDATA[send401UnauthorizedHeader]]></code>
-      <code><![CDATA[sendJSON]]></code>
       <code><![CDATA[sendStatusCode]]></code>
       <code><![CDATA[sendXMLAttachementFile]]></code>
       <code><![CDATA[setContentType]]></code>
@@ -75159,10 +75130,8 @@
       <code><![CDATA[$redirect_url]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[addFeedback]]></code>
       <code><![CDATA[displayStaticWidget]]></code>
       <code><![CDATA[getUser]]></code>
-      <code><![CDATA[includeCalendarScripts]]></code>
       <code><![CDATA[includeFooterJavascriptFile]]></code>
       <code><![CDATA[selectRank]]></code>
     </MissingReturnType>
@@ -77295,11 +77264,6 @@
     <PossiblyFalseOperand>
       <code><![CDATA[fileperms($file_path)]]></code>
     </PossiblyFalseOperand>
-  </file>
-  <file src="tests/unit/common/HelpDropdown/ReleaseNoteManagerTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[BASE_URL = 'https://www.tuleap.org/resources/release-notes/tuleap-11-17/?utm_source=tuleap&utm_medium=forge&utm_campaign=tuleap-forge-icon-help-RN-link']]></code>
-    </MissingClassConstType>
   </file>
   <file src="tests/unit/common/Http/Client/FilteredOutboundHTTPResponseAlerterTest.php">
     <InvalidArgument>

@@ -96,7 +96,7 @@ final class DocmanServiceResource extends AuthenticatedResource
                 $html_purifier,
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 $version_factory,
-                new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
+                new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager()
             ),
             $permissions_manager,
             new DocmanServicePermissionsForGroupsBuilder(

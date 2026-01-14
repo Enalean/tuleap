@@ -53,12 +53,12 @@ defineProps<{
     loadVersions: () => void;
 }>();
 
-function isEmbeddedVersion(item: FileHistory | EmbeddedFileVersion): item is EmbeddedFileVersion {
-    return "open_href" in item;
+function isFileVersion(item: FileHistory | EmbeddedFileVersion): item is FileHistory {
+    return "download_href" in item;
 }
 
 function embeddedFileVersion(item: FileHistory | EmbeddedFileVersion): EmbeddedFileVersion {
-    if (isEmbeddedVersion(item)) {
+    if (!isFileVersion(item)) {
         return item;
     }
 
@@ -66,7 +66,7 @@ function embeddedFileVersion(item: FileHistory | EmbeddedFileVersion): EmbeddedF
 }
 
 function fileHistory(item: FileHistory | EmbeddedFileVersion): FileHistory {
-    if (!isEmbeddedVersion(item)) {
+    if (isFileVersion(item)) {
         return item;
     }
 

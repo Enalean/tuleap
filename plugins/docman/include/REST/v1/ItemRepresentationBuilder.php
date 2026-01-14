@@ -141,7 +141,7 @@ class ItemRepresentationBuilder
                     $this->provide_user_avatar_url,
                     $this->version_factory,
                     $this->notifications_manager,
-                    $this->purifier
+                    $this->purifier,
                 ),
             $lock_info,
             $this->item_permissions_for_groups_builder->getRepresentation($current_user, $item),
