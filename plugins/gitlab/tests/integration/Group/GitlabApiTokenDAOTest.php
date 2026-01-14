@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace integration\Group;
 
 use DateTimeImmutable;
-use ParagonIE\EasyDB\EasyDB;
-use Tuleap\DB\DBFactory;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Group\GroupLink;
 use Tuleap\Gitlab\Group\Token\GroupLinkApiTokenDAO;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -34,19 +33,14 @@ final class GitlabApiTokenDAOTest extends TestIntegrationTestCase
 {
     private GroupLinkApiTokenDAO $token_dao;
 
-    private const int GROUP_LINK_ID              = 1;
-    private const string ENCRYPTED_TOKEN         = 'Oxt0ken1';
-    private const string UPDATED_ENCRYPTED_TOKEN = 'Oxt0ken1_update';
+    private const int GROUP_LINK_ID    = 1;
+    private const string TOKEN         = 'Oxt0ken1';
+    private const string UPDATED_TOKEN = 'Oxt0ken1_update';
 
     #[\Override]
     protected function setUp(): void
     {
         $this->token_dao = new GroupLinkApiTokenDAO();
-    }
-
-    private function getDB(): EasyDB
-    {
-        return DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
     public function testCRUD(): void
@@ -57,25 +51,16 @@ final class GitlabApiTokenDAOTest extends TestIntegrationTestCase
 
     private function addTokenToGroupLink(): void
     {
-        $this->token_dao->storeToken(self::GROUP_LINK_ID, self::ENCRYPTED_TOKEN);
+        $this->token_dao->storeToken(self::GROUP_LINK_ID, new ConcealedString(self::TOKEN));
 
-        $row = $this->getGroupToken();
-        self::assertSame(self::GROUP_LINK_ID, $row['group_id']);
-        self::assertSame(self::ENCRYPTED_TOKEN, $row['token']);
+        self::assertTrue($this->token_dao->getTokenByGroupId(self::GROUP_LINK_ID)->isIdenticalTo(new ConcealedString(self::TOKEN)));
     }
 
     private function updateTokenOfGroupLink(): void
     {
-        $this->token_dao->updateGitlabTokenOfGroupLink($this->buildGroupLink(), self::UPDATED_ENCRYPTED_TOKEN);
-        $row = $this->getGroupToken();
-        self::assertSame(self::GROUP_LINK_ID, $row['group_id']);
-        self::assertSame(self::UPDATED_ENCRYPTED_TOKEN, $row['token']);
-    }
+        $this->token_dao->updateGitlabTokenOfGroupLink($this->buildGroupLink(), new ConcealedString(self::UPDATED_TOKEN));
 
-    private function getGroupToken(): mixed
-    {
-        $sql = 'SELECT * FROM plugin_gitlab_group_token';
-        return $this->getDB()->row($sql);
+        self::assertTrue($this->token_dao->getTokenByGroupId(self::GROUP_LINK_ID)->isIdenticalTo(new ConcealedString(self::UPDATED_TOKEN)));
     }
 
     private function buildGroupLink(): GroupLink

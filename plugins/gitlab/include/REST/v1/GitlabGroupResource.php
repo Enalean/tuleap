@@ -152,7 +152,6 @@ final class GitlabGroupResource
                         DBFactory::getMainTuleapDBConnection()
                     );
                     $integration_dao       = new GitlabRepositoryIntegrationDao();
-                    $key_factory           = new \Tuleap\Cryptography\KeyFactoryFromFileSystem();
                     $group_dao             = new GroupLinkDAO();
 
                     $gitlab_repository_creator = new GitlabRepositoryCreator(
@@ -172,7 +171,7 @@ final class GitlabGroupResource
                             $gitlab_api_client,
                             $gitlab_backend_logger,
                         ),
-                        new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), $key_factory)
+                        new IntegrationApiTokenInserter(new IntegrationApiTokenDao())
                     );
 
                     $create_branch_prefix_dao          = new CreateBranchPrefixDao();
@@ -194,7 +193,7 @@ final class GitlabGroupResource
                         new GitlabRepositoryGroupLinkHandler(
                             $transaction_executor,
                             new GroupLinkFactory($group_dao, $group_dao, $group_dao),
-                            new GroupLinkTokenInserter(new GroupLinkApiTokenDAO(), $key_factory),
+                            new GroupLinkTokenInserter(new GroupLinkApiTokenDAO()),
                             $gitlab_project_integrator
                         )
                     );
@@ -282,7 +281,7 @@ final class GitlabGroupResource
             new ProjectRetriever(\ProjectManager::instance()),
             new GitAdministratorChecker($this->getGitPermissionsManager()),
             new GroupLinkRetriever($group_dao),
-            new GroupLinkUpdater($group_dao, $group_dao, new GroupLinkTokenUpdater(new GroupLinkApiTokenDAO(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem()))
+            new GroupLinkUpdater($group_dao, $group_dao, new GroupLinkTokenUpdater(new GroupLinkApiTokenDAO()))
         );
         return $handler->handleGroupLinkUpdate(
             new UpdateGroupLinkCommand(
@@ -382,8 +381,6 @@ final class GitlabGroupResource
             DBFactory::getMainTuleapDBConnection()
         );
 
-        $key_factory = new \Tuleap\Cryptography\KeyFactoryFromFileSystem();
-
         $gitlab_api_client = new ClientWrapper(
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
@@ -411,7 +408,7 @@ final class GitlabGroupResource
                 $gitlab_api_client,
                 $gitlab_backend_logger,
             ),
-            new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), $key_factory)
+            new IntegrationApiTokenInserter(new IntegrationApiTokenDao())
         );
 
         $gitlab_project_integrator = new GitlabProjectIntegrator(
@@ -429,7 +426,7 @@ final class GitlabGroupResource
             new GroupLinkRetriever($group_dao),
             new GroupLinkCredentialsRetriever(
                 new GitlabServerURIDeducer(HTTPFactoryBuilder::URIFactory()),
-                new GroupLinkTokenRetriever($group_token_dao, $key_factory),
+                new GroupLinkTokenRetriever($group_token_dao),
             ),
             new GitlabProjectBuilder($gitlab_api_client),
             $group_dao,

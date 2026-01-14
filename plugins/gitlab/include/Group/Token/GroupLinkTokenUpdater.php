@@ -23,23 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Group\Token;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Gitlab\Group\GroupLink;
 
-final class GroupLinkTokenUpdater implements UpdateGroupLinkToken
+final readonly class GroupLinkTokenUpdater implements UpdateGroupLinkToken
 {
-    public function __construct(private GroupLinkApiTokenDAO $group_api_token_DAO, private KeyFactory $key_factory)
+    public function __construct(private GroupLinkApiTokenDAO $group_api_token_DAO)
     {
     }
 
     #[\Override]
     public function updateToken(GroupLink $group_link, ConcealedString $token): void
     {
-        $encrypted_secret = SymmetricCrypto::encrypt(
-            $token,
-            $this->key_factory->getLegacy2025EncryptionKey()
-        );
-        $this->group_api_token_DAO->updateGitlabTokenOfGroupLink($group_link, $encrypted_secret);
+        $this->group_api_token_DAO->updateGitlabTokenOfGroupLink($group_link, $token);
     }
 }

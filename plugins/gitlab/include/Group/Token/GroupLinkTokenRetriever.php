@@ -22,13 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group\Token;
 
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Gitlab\Group\GroupLink;
 
-final class GroupLinkTokenRetriever
+final readonly class GroupLinkTokenRetriever
 {
-    public function __construct(private GetTokenByGroupLinkId $get_token_by_group_id, private KeyFactory $key_factory)
+    public function __construct(private GetTokenByGroupLinkId $get_token_by_group_id)
     {
     }
 
@@ -36,11 +34,6 @@ final class GroupLinkTokenRetriever
     {
         $token = $this->get_token_by_group_id->getTokenByGroupId($gitlab_group->id);
 
-        $concealed_secret = SymmetricCrypto::decrypt(
-            $token,
-            $this->key_factory->getLegacy2025EncryptionKey()
-        );
-
-        return GroupLinkApiToken::buildNewGroupToken($concealed_secret);
+        return GroupLinkApiToken::buildNewGroupToken($token);
     }
 }

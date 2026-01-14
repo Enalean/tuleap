@@ -20,17 +20,19 @@
 
 namespace Tuleap\Gitlab\Repository\Token;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
 
 class IntegrationApiTokenDao extends DataAccessObject
 {
-    public function storeToken(int $integration_id, string $encrypted_token): void
+    public function storeToken(int $integration_id, ConcealedString $token): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_repository_integration_token',
             [
                 'integration_id'                          => $integration_id,
-                'token'                                   => $encrypted_token,
+                'token'                                   => $this->encryptDataToStoreInATableRow($token, $this->getTokenEncryptionAdditionalData($integration_id)),
                 'is_email_already_send_for_invalid_token' => false,
             ],
             [
@@ -54,15 +56,26 @@ class IntegrationApiTokenDao extends DataAccessObject
     }
 
     /**
-     * @return array{token: string, is_email_already_send_for_invalid_token: bool}|null
+     * @return array{token: ConcealedString, is_email_already_send_for_invalid_token: bool}|null
      */
     public function searchIntegrationAPIToken(int $integration_id): ?array
     {
-        $sql = 'SELECT *
+        $sql = 'SELECT token, is_email_already_send_for_invalid_token
                 FROM plugin_gitlab_repository_integration_token
                 WHERE integration_id = ?';
 
-        return $this->getDB()->row($sql, $integration_id);
+        $row = $this->getDB()->row($sql, $integration_id);
+        if ($row === null) {
+            return null;
+        }
+        $row['token'] = $this->decryptDataStoredInATableRow($row['token'], $this->getTokenEncryptionAdditionalData($integration_id));
+
+        return $row;
+    }
+
+    private function getTokenEncryptionAdditionalData(int $integration_id): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData('plugin_gitlab_repository_integration_token', 'token', (string) $integration_id);
     }
 
     public function deleteIntegrationToken(int $integration_id): void

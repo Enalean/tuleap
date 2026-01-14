@@ -162,7 +162,7 @@ final class GitlabRepositoryResource
                     $gitlab_api_client,
                     BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER),
                 ),
-                new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())
+                new IntegrationApiTokenInserter(new IntegrationApiTokenDao())
             );
 
             if (isset($gitlab_repository->allow_artifact_closure) && $gitlab_repository->allow_artifact_closure === true) {
@@ -278,7 +278,7 @@ final class GitlabRepositoryResource
             new MergeRequestTuleapReferenceDao(),
             new TagInfoDao(),
             new BranchInfoDao(),
-            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())),
+            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao())),
             new CreateBranchPrefixDao()
         );
 
@@ -378,7 +378,6 @@ final class GitlabRepositoryResource
                 $this->getGitPermissionsManager(),
                 new IntegrationApiTokenInserter(
                     new IntegrationApiTokenDao(),
-                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 ),
                 new WebhookCreator(
                     new WebhookDao(),
@@ -414,7 +413,6 @@ final class GitlabRepositoryResource
                 new CredentialsRetriever(
                     new IntegrationApiTokenRetriever(
                         new IntegrationApiTokenDao(),
-                        new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                     ),
                 ),
                 new WebhookCreator(
@@ -527,7 +525,7 @@ final class GitlabRepositoryResource
                 new GitlabRepositoryIntegrationDao(),
                 ProjectManager::instance()
             ),
-            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())),
+            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao())),
             new GitlabProjectBuilder(
                 new ClientWrapper(
                     HTTPFactoryBuilder::requestFactory(),

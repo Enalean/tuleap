@@ -22,36 +22,18 @@ namespace Tuleap\Gitlab\Repository\Token;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 
-class IntegrationApiTokenInserter
+readonly class IntegrationApiTokenInserter
 {
-    /**
-     * @var IntegrationApiTokenDao
-     */
-    private $dao;
-    /**
-     * @var KeyFactory
-     */
-    private $key_factory;
-
-    public function __construct(IntegrationApiTokenDao $dao, KeyFactory $key_factory)
+    public function __construct(private IntegrationApiTokenDao $dao)
     {
-        $this->dao         = $dao;
-        $this->key_factory = $key_factory;
     }
 
     public function insertToken(GitlabRepositoryIntegration $repository_integration, ConcealedString $token): void
     {
-        $encrypted_secret = SymmetricCrypto::encrypt(
-            $token,
-            $this->key_factory->getLegacy2025EncryptionKey()
-        );
-
         $this->dao->storeToken(
             $repository_integration->getId(),
-            $encrypted_secret
+            $token
         );
     }
 }

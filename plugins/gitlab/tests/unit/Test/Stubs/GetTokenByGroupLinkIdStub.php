@@ -22,32 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Test\Stubs;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Gitlab\Group\Token\GetTokenByGroupLinkId;
 
-final class GetTokenByGroupLinkIdStub implements GetTokenByGroupLinkId
+final readonly class GetTokenByGroupLinkIdStub implements GetTokenByGroupLinkId
 {
-    /**
-     * @param KeyFactory&MockObject $key_factory
-     */
-    private function __construct(private ConcealedString $token, private $key_factory)
+    private function __construct(private ConcealedString $token)
     {
     }
 
     #[\Override]
-    public function getTokenByGroupId(int $group_id): string
+    public function getTokenByGroupId(int $group_id): ConcealedString
     {
-        return SymmetricCrypto::encrypt($this->token, $this->key_factory->getLegacy2025EncryptionKey());
+        return $this->token;
     }
 
-    /**
-     * @param KeyFactory&MockObject $key_factory
-     */
-    public static function withStoredToken(string $token, $key_factory): self
+    public static function withStoredToken(string $token): self
     {
-        return new self(new ConcealedString($token), $key_factory);
+        return new self(new ConcealedString($token));
     }
 }

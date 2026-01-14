@@ -21,24 +21,11 @@
 namespace Tuleap\Gitlab\Repository\Token;
 
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 
-class IntegrationApiTokenRetriever
+readonly class IntegrationApiTokenRetriever
 {
-    /**
-     * @var IntegrationApiTokenDao
-     */
-    private $dao;
-    /**
-     * @var KeyFactory
-     */
-    private $key_factory;
-
-    public function __construct(IntegrationApiTokenDao $dao, KeyFactory $key_factory)
+    public function __construct(private IntegrationApiTokenDao $dao)
     {
-        $this->dao         = $dao;
-        $this->key_factory = $key_factory;
     }
 
     public function getIntegrationAPIToken(GitlabRepositoryIntegration $repository_integration): ?IntegrationApiToken
@@ -50,10 +37,7 @@ class IntegrationApiTokenRetriever
         }
 
         return IntegrationApiToken::buildAlreadyKnownToken(
-            SymmetricCrypto::decrypt(
-                $row['token'],
-                $this->key_factory->getLegacy2025EncryptionKey()
-            ),
+            $row['token'],
             $row['is_email_already_send_for_invalid_token'],
         );
     }

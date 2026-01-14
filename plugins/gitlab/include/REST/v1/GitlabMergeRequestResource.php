@@ -113,7 +113,6 @@ final class GitlabMergeRequestResource
             new CredentialsRetriever(
                 new IntegrationApiTokenRetriever(
                     new IntegrationApiTokenDao(),
-                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 )
             ),
             new GitlabProjectBuilder($gitlab_api_client),

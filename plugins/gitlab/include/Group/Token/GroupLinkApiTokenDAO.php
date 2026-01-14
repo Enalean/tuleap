@@ -22,18 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group\Token;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Gitlab\Group\GroupLink;
 
 final class GroupLinkApiTokenDAO extends DataAccessObject implements GetTokenByGroupLinkId
 {
-    public function storeToken(int $group_id, string $encrypted_token): void
+    public function storeToken(int $group_id, ConcealedString $token): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_group_token',
             [
                 'group_id' => $group_id,
-                'token'    => $encrypted_token,
+                'token'    => $this->encryptDataToStoreInATableRow($token, $this->getTokenEncryptionAdditionalData($group_id)),
             ],
             [
                 'token',
@@ -41,21 +43,28 @@ final class GroupLinkApiTokenDAO extends DataAccessObject implements GetTokenByG
         );
     }
 
-    public function updateGitlabTokenOfGroupLink(GroupLink $group_link, string $gitlab_token): void
+    public function updateGitlabTokenOfGroupLink(GroupLink $group_link, ConcealedString $gitlab_token): void
     {
         $this->getDB()->update(
             'plugin_gitlab_group_token',
-            ['token' => $gitlab_token],
+            ['token' => $this->encryptDataToStoreInATableRow($gitlab_token, $this->getTokenEncryptionAdditionalData($group_link->id))],
             ['group_id' => $group_link->id]
         );
     }
 
     #[\Override]
-    public function getTokenByGroupId(int $group_id): string
+    public function getTokenByGroupId(int $group_id): ConcealedString
     {
-        return $this->getDB()->cell(
+        $encrypted_token = $this->getDB()->cell(
             'SELECT token FROM plugin_gitlab_group_token WHERE group_id = ?',
             $group_id
         );
+
+        return $this->decryptDataStoredInATableRow($encrypted_token, $this->getTokenEncryptionAdditionalData($group_id));
+    }
+
+    public function getTokenEncryptionAdditionalData(int $group_id): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData('plugin_gitlab_group_token', 'token', (string) $group_id);
     }
 }

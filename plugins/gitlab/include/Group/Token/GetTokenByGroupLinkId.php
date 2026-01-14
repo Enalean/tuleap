@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group\Token;
 
+use Tuleap\Cryptography\ConcealedString;
+
 interface GetTokenByGroupLinkId
 {
-    public function getTokenByGroupId(int $group_id): string;
+    public function getTokenByGroupId(int $group_id): ConcealedString;
 }
