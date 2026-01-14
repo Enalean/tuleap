@@ -55,6 +55,7 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
                 . ' --dbname plugin_mediawiki_standalone_farm'
                 . ' --dbuser "${:DBUSER}"'
                 . ' --dbpass "${:DBPASS}"'
+                . (DBConfig::isSSLEnabled() ? ' --dbssl' : '')
                 . ' --pass "${:PASS}"'
                 . ' TuleapFarmManagement tuleap_mediawikifarm_admin',
             [
