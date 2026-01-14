@@ -34,7 +34,8 @@ export default vite.defineAppConfig(
             vue({
                 template: {
                     compilerOptions: {
-                        isCustomElement: (tag) => tag === "tuleap-tracker-link-field",
+                        isCustomElement: (tag) =>
+                            tag === "tuleap-tracker-link-field" || tag === "tuleap-lazybox",
                     },
                 },
             }),

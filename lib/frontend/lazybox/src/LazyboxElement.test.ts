@@ -69,6 +69,9 @@ describe(`LazyboxElement`, () => {
                         }
                     },
                 },
+                search_input_element: {
+                    focus: noop,
+                },
             } as HostElement;
         };
 

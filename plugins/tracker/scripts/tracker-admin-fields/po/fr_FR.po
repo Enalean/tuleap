@@ -15,6 +15,9 @@ msgstr ""
 msgid "%{user} user's avatar"
 msgstr "Avatar de l'utilisateur %{user}"
 
+msgid "Add a value"
+msgstr "Ajouter une valeur"
+
 msgid "Add another file"
 msgstr "Ajouter un autre fichier"
 
@@ -96,6 +99,9 @@ msgstr "Liste à choix multiple"
 msgid "No fields"
 msgstr "Aucun champ"
 
+msgid "No value"
+msgstr "Aucune valeur"
+
 msgid "None"
 msgstr "Aucun"
 
@@ -132,6 +138,9 @@ msgstr "Champ partagé"
 msgid "Static text"
 msgstr "Texte statique"
 
+msgid "Static values"
+msgstr "Valeurs statiques"
+
 msgid "String"
 msgstr "Chaîne de caractères"
 
@@ -155,3 +164,9 @@ msgstr "Agencement sur trois colonnes"
 
 msgid "Two columns layout"
 msgstr "Agencement sur deux colonnes"
+
+msgid "→ Create a new value %{ name }…"
+msgstr "→ Créer une nouvelle valeur %{ name } …"
+
+msgid "→ Create a new value…"
+msgstr "→ Créer une nouvelle valeur …"

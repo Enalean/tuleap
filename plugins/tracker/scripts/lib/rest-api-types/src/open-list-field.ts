@@ -23,6 +23,7 @@ import type {
     StaticBindIdentifier,
     UserGroupsBindIdentifier,
     UsersBindIdentifier,
+    ColorName,
 } from "@tuleap/plugin-tracker-constants";
 import type { RegisteredUserWithEmailAndStatus } from "./users";
 import type { BaseFieldStructure } from "./trackers";
@@ -31,6 +32,7 @@ export type StaticOpenListItem = {
     readonly id: number;
     readonly label: string;
     readonly is_hidden: boolean;
+    readonly value_color: ColorName | "";
 };
 
 type UserGroupOpenListItem = {
