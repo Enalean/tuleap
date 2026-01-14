@@ -98,15 +98,9 @@ export function buildSheetEmptyCell(): CellObjectWithExtraInfo {
 }
 
 function buildSheetDateCell(date: string): CellObjectWithExtraInfo {
-    const regex_no_tz = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/;
-    let date_with_no_tz = date;
-    const regex_matches = date_with_no_tz.match(regex_no_tz);
-    if (regex_matches !== null) {
-        date_with_no_tz = regex_matches[0];
-    }
     return {
         t: "d",
-        v: date_with_no_tz,
+        v: new Date(date),
         character_width: CELL_BASE_CHARACTER_WIDTH,
         nb_lines: 1,
     };

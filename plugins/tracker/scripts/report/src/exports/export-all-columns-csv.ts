@@ -23,6 +23,7 @@ import { downloadCSV, downloadDocument } from "@tuleap/plugin-tracker-report-exp
 export async function startDownloadExportAllColumnsCSV(
     properties: Properties,
     separator: "comma" | "semicolon" | "tab",
+    date_format: "month_day_year" | "day_month_year",
 ): Promise<void> {
     await downloadDocument(
         {
@@ -35,6 +36,7 @@ export async function startDownloadExportAllColumnsCSV(
                 all_columns: true,
             },
             csv_separator: separator,
+            date_format,
         },
         downloadCSV,
     );

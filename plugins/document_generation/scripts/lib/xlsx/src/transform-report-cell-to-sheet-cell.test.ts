@@ -31,7 +31,7 @@ describe("Transform report cell into a sheet cell", () => {
             character_width: 10,
             nb_lines: 1,
             t: "d",
-            v: "2024-07-05T10:11:00",
+            v: new Date("2024-07-05T10:11:00+02:00"),
         });
     });
 });

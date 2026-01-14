@@ -31,7 +31,7 @@ import { generateFilename } from "./export/file-name-generator";
 
 export function downloadCSV(export_settings: ExportSettings, formatted_data: ReportSection): void {
     const book = utils.book_new();
-    const cells = buildContent(formatted_data);
+    const cells = buildContent(export_settings, formatted_data);
     const sheet = utils.aoa_to_sheet(cells);
     sheet["!cols"] = fitColumnWidthsToContent(cells);
     sheet["!rows"] = fitRowHeightsToContent(cells);
@@ -45,7 +45,10 @@ export function downloadCSV(export_settings: ExportSettings, formatted_data: Rep
     });
 }
 
-function buildContent(formatted_data: ReportSection): Array<Array<CellObjectWithExtraInfo>> {
+function buildContent(
+    export_settings: ExportSettings,
+    formatted_data: ReportSection,
+): Array<Array<CellObjectWithExtraInfo>> {
     const content: CellObjectWithExtraInfo[][] = [];
     if (formatted_data.headers) {
         const report_columns_label: CellObjectWithExtraInfo[] = [];
@@ -65,7 +68,19 @@ function buildContent(formatted_data: ReportSection): Array<Array<CellObjectWith
         for (const row of formatted_data.artifacts_rows) {
             artifact_value_rows = [];
             for (const cell of row) {
-                artifact_value_rows.push(transformReportCellIntoASheetCell(cell));
+                const sheet_cell = transformReportCellIntoASheetCell(cell);
+                if (sheet_cell.t === "d") {
+                    switch (export_settings.date_format) {
+                        case "day_month_year":
+                            sheet_cell.z = "dd/mm/yyyy hh:mm";
+                            break;
+                        case "month_day_year":
+                        default:
+                            sheet_cell.z = "mm/dd/yyyy hh:mm";
+                            break;
+                    }
+                }
+                artifact_value_rows.push(sheet_cell);
             }
             content.push(artifact_value_rows);
         }
