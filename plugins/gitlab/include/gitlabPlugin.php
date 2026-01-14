@@ -380,7 +380,6 @@ class gitlabPlugin extends Plugin
             new SecretChecker(
                 new SecretRetriever(
                     new WebhookDao(),
-                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 )
             ),
             new WebhookActions(
@@ -616,7 +615,6 @@ class gitlabPlugin extends Plugin
             new SecretChecker(
                 new SecretRetriever(
                     new WebhookDao(),
-                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 )
             ),
             new WebhookActions(

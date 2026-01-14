@@ -163,7 +163,6 @@ final class GitlabGroupResource
                         ),
                         $integration_dao,
                         new WebhookCreator(
-                            $key_factory,
                             new WebhookDao(),
                             new WebhookDeletor(
                                 new WebhookDao(),
@@ -403,7 +402,6 @@ final class GitlabGroupResource
             ),
             $integration_dao,
             new WebhookCreator(
-                $key_factory,
                 new WebhookDao(),
                 new WebhookDeletor(
                     new WebhookDao(),

@@ -153,7 +153,6 @@ final class GitlabRepositoryResource
                 ),
                 new GitlabRepositoryIntegrationDao(),
                 new WebhookCreator(
-                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                     new WebhookDao(),
                     new WebhookDeletor(
                         new WebhookDao(),
@@ -382,7 +381,6 @@ final class GitlabRepositoryResource
                     new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 ),
                 new WebhookCreator(
-                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                     new WebhookDao(),
                     new WebhookDeletor(
                         new WebhookDao(),
@@ -420,7 +418,6 @@ final class GitlabRepositoryResource
                     ),
                 ),
                 new WebhookCreator(
-                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                     new WebhookDao(),
                     new WebhookDeletor(
                         new WebhookDao(),

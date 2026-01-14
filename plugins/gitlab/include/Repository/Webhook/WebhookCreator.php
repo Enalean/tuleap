@@ -23,48 +23,19 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\ServerHostname;
 
-class WebhookCreator
+readonly class WebhookCreator
 {
-    /**
-     * @var ClientWrapper
-     */
-    private $gitlab_api_client;
-    /**
-     * @var KeyFactory
-     */
-    private $key_factory;
-    /**
-     * @var WebhookDao
-     */
-    private $dao;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var WebhookDeletor
-     */
-    private $webhook_deletor;
-
     public function __construct(
-        KeyFactory $key_factory,
-        WebhookDao $dao,
-        WebhookDeletor $webhook_deletor,
-        ClientWrapper $gitlab_api_client,
-        LoggerInterface $logger,
+        private WebhookDao $dao,
+        private WebhookDeletor $webhook_deletor,
+        private ClientWrapper $gitlab_api_client,
+        private LoggerInterface $logger,
     ) {
-        $this->gitlab_api_client = $gitlab_api_client;
-        $this->key_factory       = $key_factory;
-        $this->dao               = $dao;
-        $this->webhook_deletor   = $webhook_deletor;
-        $this->logger            = $logger;
     }
 
     /**
@@ -96,7 +67,7 @@ class WebhookCreator
         $this->dao->storeWebhook(
             $gitlab_repository_integration->getId(),
             $webhook_id,
-            SymmetricCrypto::encrypt($secret, $this->key_factory->getLegacy2025EncryptionKey())
+            $secret
         );
     }
 

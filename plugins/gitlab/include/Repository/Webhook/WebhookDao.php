@@ -21,20 +21,46 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Option\Option;
 
 class WebhookDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{integration_id:int, webhook_secret:string, gitlab_webhook_id: int}
+     * @psalm-return array{integration_id:int, gitlab_webhook_id: int}
      */
     public function getGitlabRepositoryWebhook(int $integration_id): ?array
     {
-        $sql = 'SELECT *
+        $sql = 'SELECT integration_id, gitlab_webhook_id
                 FROM plugin_gitlab_repository_integration_webhook
                 WHERE integration_id = ?';
 
         return $this->getDB()->row($sql, $integration_id);
+    }
+
+    /**
+     * @return Option<ConcealedString>
+     */
+    public function getGitlabRepositoryWebhookSecret(int $integration_id): Option
+    {
+        $row = $this->getDB()->row(
+            'SELECT webhook_secret FROM plugin_gitlab_repository_integration_webhook WHERE integration_id = ?',
+            $integration_id
+        );
+
+        if ($row === null) {
+            return Option::nothing(ConcealedString::class);
+        }
+
+        $secret = $this->decryptDataStoredInATableRow(
+            $row['webhook_secret'],
+            $this->getWebhookSecretEncryptionAdditionalData($integration_id)
+        );
+        \sodium_memzero($row['webhook_secret']);
+
+        return Option::fromValue($secret);
     }
 
     public function isIntegrationWebhookUsedByIntegrations(int $gitlab_webhook_id): bool
@@ -44,20 +70,6 @@ class WebhookDao extends DataAccessObject
                 WHERE gitlab_webhook_id = ?';
 
         $rows = $this->getDB()->run($sql, $gitlab_webhook_id);
-
-        return count($rows) > 0;
-    }
-
-    public function projectHasIntegrationsWithSecretConfigured(int $project_id): bool
-    {
-        $sql = 'SELECT NULL
-                FROM plugin_gitlab_repository_integration
-                    LEFT JOIN plugin_gitlab_repository_integration_webhook
-                        ON (plugin_gitlab_repository_integration.id = plugin_gitlab_repository_integration_webhook.integration_id)
-                WHERE plugin_gitlab_repository_integration_webhook.integration_id IS NOT NULL
-                    AND plugin_gitlab_repository_integration.project_id = ?';
-
-        $rows = $this->getDB()->run($sql, $project_id);
 
         return count($rows) > 0;
     }
@@ -78,13 +90,13 @@ class WebhookDao extends DataAccessObject
         );
     }
 
-    public function storeWebhook(int $integration_id, int $webhook_id, string $encrypted_secret): void
+    public function storeWebhook(int $integration_id, int $webhook_id, ConcealedString $secret): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_repository_integration_webhook',
             [
                 'integration_id'    => $integration_id,
-                'webhook_secret'    => $encrypted_secret,
+                'webhook_secret'    => $this->encryptDataToStoreInATableRow($secret, $this->getWebhookSecretEncryptionAdditionalData($integration_id)),
                 'gitlab_webhook_id' => $webhook_id,
             ],
             [
@@ -92,5 +104,10 @@ class WebhookDao extends DataAccessObject
                 'gitlab_webhook_id',
             ]
         );
+    }
+
+    private function getWebhookSecretEncryptionAdditionalData(int $integration_id): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData('plugin_gitlab_repository_integration_webhook', 'webhook_secret', (string) $integration_id);
     }
 }
