@@ -234,6 +234,6 @@ function updateCustomProperty(event: UpdateCustomEvent): void {
 }
 
 function updateObsolescenceDateProperty(event: string): void {
-    item_to_update.value.obsolescence_date = parseInt(event, 10);
+    item_to_update.value.obsolescence_date = event;
 }
 </script>

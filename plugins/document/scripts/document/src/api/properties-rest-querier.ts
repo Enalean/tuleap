@@ -29,7 +29,7 @@ export function putFileProperties(
     description: string,
     owner_id: number,
     status: string | null,
-    obsolescence_date: number | null,
+    obsolescence_date: string | null,
     properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_files/${encodeURIComponent(id)}/metadata`, {
@@ -53,7 +53,7 @@ export function putEmbeddedFileProperties(
     description: string,
     owner_id: number,
     status: string | null,
-    obsolescence_date: number | null,
+    obsolescence_date: string | null,
     properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_embedded_files/${encodeURIComponent(id)}/metadata`, {
@@ -77,7 +77,7 @@ export function putLinkProperties(
     description: string,
     owner_id: number,
     status: string | null,
-    obsolescence_date: number | null,
+    obsolescence_date: string | null,
     properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_links/${encodeURIComponent(id)}/metadata`, {
@@ -101,7 +101,7 @@ export function putWikiProperties(
     description: string,
     owner_id: number,
     status: string | null,
-    obsolescence_date: number | null,
+    obsolescence_date: sring | null,
     properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_wikis/${encodeURIComponent(id)}/metadata`, {
@@ -125,7 +125,7 @@ export function putEmptyDocumentProperties(
     description: string,
     owner_id: number,
     status: string | null,
-    obsolescence_date: number | null,
+    obsolescence_date: string | null,
     properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_empty_documents/${encodeURIComponent(id)}/metadata`, {
@@ -149,7 +149,7 @@ export function putOtherTypeDocumentProperties(
     description: string,
     owner_id: number,
     status: string,
-    obsolescence_date: number | null,
+    obsolescence_date: string | null,
     properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_other_type_documents/${encodeURIComponent(id)}/metadata`, {
@@ -173,7 +173,7 @@ export function putFolderDocumentProperties(
     description: string,
     owner_id: number,
     status: FolderStatus | null,
-    obsolescence_date: number | null,
+    obsolescence_date: string | null,
     properties: Array<Property> | null,
 ): Promise<Response> {
     return put(`/api/docman_folders/${encodeURIComponent(id)}/metadata`, {
