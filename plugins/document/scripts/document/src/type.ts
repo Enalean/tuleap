@@ -146,7 +146,7 @@ export interface Item extends MinimalItem {
     type: string;
     status: string | FolderStatus;
     created?: boolean;
-    obsolescence_date: null | number;
+    obsolescence_date: null | string;
     updated?: boolean;
     properties: Array<Property>;
     readonly move_uri: string;
