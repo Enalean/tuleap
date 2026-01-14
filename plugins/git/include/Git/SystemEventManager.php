@@ -24,7 +24,6 @@
 
 use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
-use Tuleap\Git\SystemEvents\ProjectIsSuspended;
 
 /**
  * I'm responsible to create system events with the right parameters
@@ -168,17 +167,6 @@ class Git_SystemEventManager
         }
     }
 
-    public function queueProjectIsSuspended($project_id)
-    {
-        $this->system_event_manager->createEvent(
-            ProjectIsSuspended::NAME,
-            $project_id,
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP,
-            ProjectIsSuspended::class
-        );
-    }
-
     public function isRepositoryUpdateAlreadyQueued(GitRepository $repository)
     {
         return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
@@ -217,7 +205,6 @@ class Git_SystemEventManager
             SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
             SystemEvent_GIT_PROJECTS_UPDATE::NAME,
-            ProjectIsSuspended::NAME,
         ];
     }
 

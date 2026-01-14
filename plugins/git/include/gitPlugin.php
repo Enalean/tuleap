@@ -175,7 +175,6 @@ use Tuleap\Git\RouterLink;
 use Tuleap\Git\SystemCheck;
 use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
-use Tuleap\Git\SystemEvents\ProjectIsSuspended;
 use Tuleap\Git\User\AccessKey\Scope\GitRepositoryAccessKeyScope;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
@@ -663,13 +662,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     $this->getLogger(),
                     $this->getProjectManager(),
                     $this->getGitoliteDriver(),
-                ];
-                break;
-            case ProjectIsSuspended::NAME:
-                $params['class']        = ProjectIsSuspended::class;
-                $params['dependencies'] = [
-                    $this->getGitoliteDriver(),
-                    $this->getProjectManager(),
                 ];
                 break;
             case ParseGitolite3Logs::NAME:
@@ -1160,8 +1152,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     {
         $enqueuer = new \Tuleap\Queue\EnqueueTask();
         match ($event->status) {
-            Project::STATUS_ACTIVE    => $enqueuer->enqueue(RefreshGitoliteProjectConfigurationTask::fromProject($event->project)),
-            Project::STATUS_SUSPENDED => $this->getGitSystemEventManager()->queueProjectIsSuspended($event->project->getID()),
+            Project::STATUS_ACTIVE, Project::STATUS_SUSPENDED => $enqueuer->enqueue(RefreshGitoliteProjectConfigurationTask::fromProject($event->project)),
             Project::STATUS_DELETED   => $this->getRepositoryManager()->deleteProjectRepositories($event->project),
         };
     }
