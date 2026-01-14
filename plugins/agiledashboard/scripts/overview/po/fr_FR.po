@@ -1,0 +1,37 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Kevin Traini <kevin.traini@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.3\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "An error occurred while loading the content of the milestone: %s"
+msgstr "Une erreur est survenue lors du chargement du contenu du jalon : %s"
+
+msgid "Import them in the backlog"
+msgstr "Les importer dans le backlog"
+
+msgid "Item"
+msgstr "Élément"
+
+msgid "Item is not linked to this milestone"
+msgstr "L'élément n'est pas lié à ce jalon"
+
+msgid "Parent item"
+msgstr "Parent"
+
+msgid "Some items are not linked to this milestone."
+msgstr "Certains éléments n'ont pas été liés à ce jalon."
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "There is no item yet"
+msgstr "Il n’y a aucun élément pour l'instant"

@@ -49,7 +49,6 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectAccessSuspendedException;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
-use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -168,7 +167,6 @@ class ProjectMilestonesPresenterBuilder
                 new BacklogItemBuilder(),
                 new RemainingEffortValueRetriever(Tracker_FormElementFactory::instance()),
                 new ArtifactsInExplicitBacklogDao(),
-                new PriorityDao(),
                 \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
                 CachedSemanticTitleFieldRetriever::instance(),
                 CachedSemanticStatusFieldRetriever::instance(),

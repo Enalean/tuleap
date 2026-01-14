@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,23 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-import POGettextPlugin from "@tuleap/po-gettext-plugin";
+export type ParentArtifact = {
+    readonly id: number;
+    readonly label: string;
+};
 
-export default vite.defineAppConfig(
-    {
-        plugin_name: path.basename(path.resolve(__dirname, "../..")),
-        sub_app_name: path.basename(__dirname),
-    },
-    {
-        plugins: [POGettextPlugin.vite()],
-        build: {
-            rollupOptions: {
-                input: {
-                    overview: path.resolve(__dirname, "src/main.ts"),
-                },
-            },
-        },
-    },
-);
+export type StatusValue = {
+    readonly value: string;
+    readonly color: string | null;
+};
+
+export type Artifact = {
+    readonly id: number;
+    readonly label: string;
+    readonly short_type: string;
+    readonly status: string;
+    readonly full_status: StatusValue;
+    readonly color: string;
+    readonly parent: ParentArtifact | null;
+};

@@ -26,6 +26,7 @@ use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPane;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPresenterBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Pane;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
@@ -51,7 +52,7 @@ class PlanningMilestonePaneFactory
     public function __construct(
         private readonly \Tuleap\HTTPRequest $request,
         private readonly Planning_MilestoneFactory $milestone_factory,
-        private readonly PanePresenterBuilderFactory $pane_presenter_builder_factory,
+        private readonly DetailsPresenterBuilder $details_presenter_builder,
         private readonly SubmilestoneFinder $submilestone_finder,
         private readonly PaneInfoFactory $pane_info_factory,
         private readonly EventManager $event_manager,
@@ -125,7 +126,7 @@ class PlanningMilestonePaneFactory
     {
         return new DetailsPane(
             $pane_info,
-            $this->getDetailsPresenterBuilder()->getMilestoneDetailsPresenter($this->request->getCurrentUser(), $milestone)
+            $this->details_presenter_builder->getMilestoneDetailsPresenter($this->request->getCurrentUser(), $milestone),
         );
     }
 
@@ -198,10 +199,5 @@ class PlanningMilestonePaneFactory
             $this->list_of_pane_info[$milestone->getArtifactId() ?? 0] = $collector->getPanes();
             $this->active_pane[$milestone->getArtifactId() ?? 0]       = $collector->getActivePane();
         }
-    }
-
-    private function getDetailsPresenterBuilder(): Details\DetailsPresenterBuilder
-    {
-        return $this->pane_presenter_builder_factory->getDetailsPresenterBuilder();
     }
 }

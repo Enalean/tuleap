@@ -8,6 +8,10 @@
         "burnup-chart": {
             "src": "scripts/burnup-chart/src",
             "po": "scripts/burnup-chart/po"
+        },
+        "overview": {
+            "src": "scripts/overview/src",
+            "po": "scripts/overview/po"
         }
     },
     "gettext-angularjs": {

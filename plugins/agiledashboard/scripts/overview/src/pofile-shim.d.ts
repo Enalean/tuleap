@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,23 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-import POGettextPlugin from "@tuleap/po-gettext-plugin";
-
-export default vite.defineAppConfig(
-    {
-        plugin_name: path.basename(path.resolve(__dirname, "../..")),
-        sub_app_name: path.basename(__dirname),
-    },
-    {
-        plugins: [POGettextPlugin.vite()],
-        build: {
-            rollupOptions: {
-                input: {
-                    overview: path.resolve(__dirname, "src/main.ts"),
-                },
-            },
-        },
-    },
-);
+declare module "*.po" {
+    import type { GettextParserPoFile } from "@tuleap/gettext";
+    const content: GettextParserPoFile;
+    export default content;
+}

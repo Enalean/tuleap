@@ -28,7 +28,6 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
@@ -238,7 +237,6 @@ class Cardwall_Pane extends AgileDashboardPane // phpcs:ignore PSR1.Classes.Clas
                 $this->tracker_form_element_factory
             ),
             new ArtifactsInExplicitBacklogDao(),
-            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             CachedSemanticTitleFieldRetriever::instance(),
             CachedSemanticStatusFieldRetriever::instance(),

@@ -22,53 +22,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
 use EventManager;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneController;
+use Planning_MilestoneFactory;
 use Planning_MilestoneRedirectParameter;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
-use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 
-class DetailsPresenterBuilder
+final readonly class DetailsPresenterBuilder
 {
     public function __construct(
-        private readonly MilestoneBacklogFactory $backlog_factory,
-        private readonly BacklogItemCollectionFactory $collection_factory,
-        private readonly BurnupFieldRetriever $field_retriever,
-        private readonly EventManager $event_manager,
+        private Planning_MilestoneFactory $milestone_factory,
+        private MilestoneBacklogFactory $backlog_factory,
+        private BurnupFieldRetriever $field_retriever,
+        private EventManager $event_manager,
     ) {
     }
 
     public function getMilestoneDetailsPresenter(PFUser $user, Planning_Milestone $milestone): DetailsPresenter
     {
-        $redirect_parameter = new Planning_MilestoneRedirectParameter();
-        $backlog            = $this->backlog_factory->getBacklog($user, $milestone);
-        $redirect_to_self   = $redirect_parameter->getPlanningRedirectToSelf($milestone, DetailsPaneInfo::IDENTIFIER);
-
+        $redirect_parameter  = new Planning_MilestoneRedirectParameter();
+        $redirect_to_self    = $redirect_parameter->getPlanningRedirectToSelf($milestone, DetailsPaneInfo::IDENTIFIER);
+        $backlog             = $this->backlog_factory->getBacklog($user, $milestone);
         $descendant_trackers = $backlog->getDescendantTrackers();
-
-        $chart_presenter = $this->getChartPresenter($milestone, $user);
+        $chart_presenter     = $this->getChartPresenter($milestone, $user);
+        $sub_milestones_ids  = $this->milestone_factory->getSubMilestoneIds($user, $milestone);
 
         $solve_inconsistencies_URL = Planning_MilestoneController::getSolveInconsistenciesUrl(
             $milestone,
             $redirect_to_self
         );
+
         return new DetailsPresenter(
-            $this->collection_factory->getOpenClosedAndInconsistentCollection(
-                $user,
-                $milestone,
-                $backlog,
-                $redirect_to_self
-            ),
-            $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
-            $descendant_trackers,
+            $milestone->getArtifactId() ?? 0,
+            $chart_presenter,
             $solve_inconsistencies_URL,
+            array_values($descendant_trackers),
+            $sub_milestones_ids,
             new \CSRFSynchronizerToken($solve_inconsistencies_URL),
-            $chart_presenter
         );
     }
 

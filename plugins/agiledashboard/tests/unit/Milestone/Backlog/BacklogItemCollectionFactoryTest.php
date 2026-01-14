@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use Override;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
@@ -36,7 +37,6 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -44,10 +44,9 @@ use Tuleap\Tracker\Test\Stub\Permission\TrackersPermissionsPassthroughRetriever;
 use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class BacklogItemCollectionFactoryTest extends TestCase
 {
-    private PriorityDao&MockObject $artifact_priority_dao;
     private BacklogItemCollectionFactory&MockObject $collection_factory;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
     private Planning_MilestoneFactory&MockObject $milestone_factory;
@@ -69,7 +68,6 @@ final class BacklogItemCollectionFactoryTest extends TestCase
         );
         $this->remaining_effort_value_retriever  = $this->createMock(RemainingEffortValueRetriever::class);
         $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
-        $this->artifact_priority_dao             = $this->createMock(PriorityDao::class);
 
         $this->collection_factory = $this->getMockBuilder(BacklogItemCollectionFactory::class)
             ->setConstructorArgs([
@@ -80,7 +78,6 @@ final class BacklogItemCollectionFactoryTest extends TestCase
                 $this->backlog_item_builder,
                 $this->remaining_effort_value_retriever,
                 $this->artifacts_in_explicit_backlog_dao,
-                $this->artifact_priority_dao,
                 new TrackersPermissionsPassthroughRetriever(),
                 RetrieveSemanticTitleFieldStub::build(),
                 RetrieveSemanticStatusFieldStub::build(),
@@ -124,15 +121,12 @@ final class BacklogItemCollectionFactoryTest extends TestCase
 
         $this->backlog_item_builder->method('getCollection')->willReturnOnConsecutiveCalls(
             $open_and_closed_collection,
-            new BacklogItemCollection(),
             $todo_collection,
             $done_collection,
-            new BacklogItemCollection(),
         );
 
         $this->artifact_factory->expects($this->once())->method('getParents')->willReturn([]);
         $this->dao->expects($this->once())->method('getArtifactsSemantics')->willReturn([]);
-        $this->milestone_factory->expects($this->once())->method('getSubMilestoneIds')->willReturn([]);
 
         $open_and_closed_content = $this->collection_factory->getOpenAndClosedCollection(
             $user,
@@ -160,71 +154,6 @@ final class BacklogItemCollectionFactoryTest extends TestCase
         );
 
         self::assertEquals([10], $done_content->getItemIds());
-    }
-
-    public function testSortedCollectionsAreProperlyInit(): void
-    {
-        $user      = UserTestBuilder::buildWithDefaults();
-        $milestone = $this->createMock(Planning_Milestone::class);
-        $milestone->method('getArtifactId')->willReturn(42);
-
-        $backlog                     = $this->createMock(MilestoneBacklog::class);
-        $descendant_items_collection = new DescendantItemsCollection();
-
-        $artifact = ArtifactTestBuilder::anArtifact(10)->build();
-        $descendant_items_collection->push($artifact);
-        $descendant_items_collection->setTotalAvaialableSize(1);
-
-        $backlog->expects($this->once())->method('getArtifacts')->willReturn($descendant_items_collection);
-
-        $open_closed_and_inconsistent_collection = new BacklogItemCollection();
-        $open_closed_inconsistent_item           = new BacklogItem(ArtifactTestBuilder::anArtifact(9)->build(), true);
-        $open_closed_and_inconsistent_collection->push($open_closed_inconsistent_item);
-
-        $inconsistent_collection = new BacklogItemCollection();
-        $inconsistent_item       = new BacklogItem(ArtifactTestBuilder::anArtifact(9)->build(), true);
-        $inconsistent_collection->push($inconsistent_item);
-        $inconsistent_collection->setTotalAvaialableSize(1);
-
-        $sorted_collection = new BacklogItemCollection();
-
-        $this->backlog_item_builder->method('getCollection')->willReturnOnConsecutiveCalls(
-            new BacklogItemCollection(),
-            $open_closed_and_inconsistent_collection,
-            new BacklogItemCollection(),
-            new BacklogItemCollection(),
-            $inconsistent_collection,
-            $sorted_collection
-        );
-
-        $this->artifact_factory->expects($this->once())->method('getParents')->willReturn([]);
-        $this->dao->expects($this->once())->method('getArtifactsSemantics')->willReturn([]);
-        $this->milestone_factory->expects($this->once())->method('getSubMilestoneIds')->willReturn([]);
-
-        $this->artifact_priority_dao->expects($this->once())->method('getGlobalRanks')->willReturn([
-            [
-                'artifact_id' => 9,
-                'rank'        => 1,
-            ],
-        ]);
-
-        $open_inconsistent_collection = $this->collection_factory->getOpenClosedAndInconsistentCollection(
-            $user,
-            $milestone,
-            $backlog,
-            null,
-        );
-
-        self::assertEquals([9], $open_inconsistent_collection->getItemIds());
-
-        $open_inconsistent_collection = $this->collection_factory->getInconsistentCollection(
-            $user,
-            $milestone,
-            $backlog,
-            null,
-        );
-
-        self::assertEquals([9], $open_inconsistent_collection->getItemIds());
     }
 
     public function testItRetrievesUnplannedArtifacts(): void
@@ -449,7 +378,7 @@ final class BacklogItemCollectionFactoryTest extends TestCase
             ->userCannotView($user)
             ->build();
 
-        $this->backlog_item_builder->expects($this->exactly(6))->method('getCollection')->willReturn($backlog_item_collection);
+        $this->backlog_item_builder->expects($this->exactly(4))->method('getCollection')->willReturn($backlog_item_collection);
 
         $this->remaining_effort_value_retriever->expects($this->exactly(4))->method('getRemainingEffortValue')->willReturn(12.6);
 
@@ -493,7 +422,7 @@ final class BacklogItemCollectionFactoryTest extends TestCase
         $this->collection_factory->expects($this->exactly(4))->method('userCanReadBacklogStatusField')->willReturn(true);
         $this->collection_factory->expects($this->exactly(4))->method('userCanReadInitialEffortField')->willReturn(true);
 
-        $this->milestone_factory->expects($this->exactly(2))->method('getSubMilestoneIds')->willReturn([]);
+        $this->milestone_factory->expects($this->exactly(1))->method('getSubMilestoneIds')->willReturn([]);
 
         $collection = $this->collection_factory->getOpenAndClosedCollection(
             $user,

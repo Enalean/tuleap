@@ -81,8 +81,8 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * Instanciates a new milestone factory.
      *
-     * @param PlanningFactory            $planning_factory    The factory to delegate planning retrieval.
-     * @param Tracker_ArtifactFactory    $artifact_factory    The factory to delegate artifacts retrieval.
+     * @param PlanningFactory $planning_factory The factory to delegate planning retrieval.
+     * @param Tracker_ArtifactFactory $artifact_factory The factory to delegate artifacts retrieval.
      * @param Tracker_FormElementFactory $formelement_factory The factory to delegate artifacts retrieval.
      */
     public function __construct(
@@ -286,7 +286,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * Adds $parent_node children according to $artifact ones.
      *
-     * @param array $parents     The list of parents to prevent infinite recursion
+     * @param array $parents The list of parents to prevent infinite recursion
      */
     private function addChildrenPlannedArtifacts(
         PFUser $user,
@@ -334,10 +334,9 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * Retrieve the sub-milestones of the given milestone.
      *
-     *
-     * @return Planning_Milestone[]
+     * @return list<int>
      */
-    public function getSubMilestoneIds(PFUser $user, Planning_Milestone $milestone)
+    public function getSubMilestoneIds(PFUser $user, Planning_Milestone $milestone): array
     {
         if ($milestone instanceof Planning_VirtualTopMilestone) {
             return $this->getTopSubMilestoneIds($user, $milestone);
@@ -359,7 +358,10 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return $sub_milestones;
     }
 
-    private function getRegularSubMilestoneIds(PFUser $user, Planning_Milestone $milestone)
+    /**
+     * @return list<int>
+     */
+    private function getRegularSubMilestoneIds(PFUser $user, Planning_Milestone $milestone): array
     {
         $milestone_artifact = $milestone->getArtifact();
         $sub_milestones_ids = [];
@@ -567,7 +569,10 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return $milestones;
     }
 
-    private function getTopSubMilestoneIds(PFUser $user, Planning_VirtualTopMilestone $top_milestone)
+    /**
+     * @return list<int>
+     */
+    private function getTopSubMilestoneIds(PFUser $user, Planning_VirtualTopMilestone $top_milestone): array
     {
         $milestone_ids = [];
 
@@ -819,13 +824,13 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     private function isMilestoneCurrent(Artifact $milestone_artifact, PFUser $user)
     {
         return $milestone_artifact->isOpen() && ! $this->getMilestoneDatePeriod($milestone_artifact, $user)
-            ->isTodayBeforeDatePeriod();
+                ->isTodayBeforeDatePeriod();
     }
 
     private function isMilestoneFuture(Artifact $milestone_artifact, PFUser $user)
     {
         return $milestone_artifact->isOpen() && $this->getMilestoneDatePeriod($milestone_artifact, $user)
-            ->isTodayBeforeDatePeriod();
+                ->isTodayBeforeDatePeriod();
     }
 
     /**

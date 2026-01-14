@@ -36,8 +36,8 @@ use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
@@ -58,10 +58,8 @@ class BacklogItemCollectionFactory
 
     private array $cache_read_initial_effort = [];
     private array $open_and_closed_collection;
-    private array $open_closed_and_inconsistent_collection;
     private array $todo_collection;
     private array $done_collection;
-    private array $inconsistent_collection;
 
     public function __construct(
         private readonly BacklogItemDao $dao,
@@ -71,15 +69,13 @@ class BacklogItemCollectionFactory
         private readonly IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder,
         private readonly RemainingEffortValueRetriever $remaining_effort_value_retriever,
         private readonly ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        private readonly PriorityDao $artifact_priority_dao,
         private readonly RetrieveUserPermissionOnArtifacts $user_permission_on_artifacts_retriever,
         private readonly RetrieveSemanticTitleField $retrieve_semantic_title_field,
         private readonly RetrieveSemanticStatusField $retrieve_semantic_status_field,
     ) {
-        $this->open_and_closed_collection              = [];
-        $this->open_closed_and_inconsistent_collection = [];
-        $this->todo_collection                         = [];
-        $this->done_collection                         = [];
+        $this->open_and_closed_collection = [];
+        $this->todo_collection            = [];
+        $this->done_collection            = [];
     }
 
     public function getTodoCollection(
@@ -173,7 +169,7 @@ class BacklogItemCollectionFactory
         $permissions_on_items = $this->user_permission_on_artifacts_retriever->retrieveUserPermissionOnArtifacts(
             $user,
             iterator_to_array($item_collection),
-            \Tuleap\Tracker\Permission\ArtifactPermissionType::PERMISSION_VIEW
+            ArtifactPermissionType::PERMISSION_VIEW,
         );
 
         $artifacts        = [];
@@ -185,7 +181,7 @@ class BacklogItemCollectionFactory
         }
 
         $parents   = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
-        $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $artifacts);
+        $semantics = $this->getArtifactsSemantics($user, $backlog_item_ids, $artifacts);
 
         $collection = $this->backlog_item_builder->getCollection();
         foreach ($artifacts as $artifact) {
@@ -243,32 +239,6 @@ class BacklogItemCollectionFactory
         return $collection;
     }
 
-    public function getInconsistentCollection(
-        PFUser $user,
-        Planning_Milestone $milestone,
-        MilestoneBacklog $backlog,
-        ?string $redirect_to_self,
-    ): IBacklogItemCollection {
-        $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
-
-        return $this->inconsistent_collection[$milestone->getArtifactId() ?? 0];
-    }
-
-    public function getOpenClosedAndInconsistentCollection(
-        PFUser $user,
-        Planning_Milestone $milestone,
-        MilestoneBacklog $backlog,
-        ?string $redirect_to_self,
-    ): IBacklogItemCollection {
-        $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
-
-        if ($this->inconsistent_collection[$milestone->getArtifactId() ?? 0]->getTotalAvaialableSize() === 0) {
-            return $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0];
-        }
-
-        return $this->reorderOpenClosedAndInconsistentCollection($milestone);
-    }
-
     public function getOpenAndClosedCollection(
         PFUser $user,
         Planning_Milestone $milestone,
@@ -292,13 +262,11 @@ class BacklogItemCollectionFactory
 
         $id = $milestone->getArtifactId() ?? 0;
 
-        $this->open_and_closed_collection[$id]              = $this->backlog_item_builder->getCollection();
-        $this->open_closed_and_inconsistent_collection[$id] = $this->backlog_item_builder->getCollection();
-        $this->todo_collection[$id]                         = $this->backlog_item_builder->getCollection();
-        $this->done_collection[$id]                         = $this->backlog_item_builder->getCollection();
-        $this->inconsistent_collection[$id]                 = $this->backlog_item_builder->getCollection();
-        $artifacts                                          = [];
-        $backlog_item_ids                                   = [];
+        $this->open_and_closed_collection[$id] = $this->backlog_item_builder->getCollection();
+        $this->todo_collection[$id]            = $this->backlog_item_builder->getCollection();
+        $this->done_collection[$id]            = $this->backlog_item_builder->getCollection();
+        $artifacts                             = [];
+        $backlog_item_ids                      = [];
 
         $items_collection = $backlog->getArtifacts($user);
         foreach ($items_collection as $artifact) {
@@ -307,8 +275,7 @@ class BacklogItemCollectionFactory
         }
 
         $parents   = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
-        $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $artifacts);
-        $planned   = $this->getPlannedArtifactIds($user, $milestone);
+        $semantics = $this->getArtifactsSemantics($user, $backlog_item_ids, $artifacts);
 
         foreach ($artifacts as $artifact) {
             $this->pushItem(
@@ -322,11 +289,6 @@ class BacklogItemCollectionFactory
         }
 
         $this->open_and_closed_collection[$id]->setTotalAvaialableSize($items_collection->getTotalAvaialableSize());
-        $this->open_closed_and_inconsistent_collection[$id]->setTotalAvaialableSize(
-            $items_collection->getTotalAvaialableSize()
-        );
-
-        $this->initInconsistentItems($user, $milestone, $redirect_to_self, $planned);
     }
 
     /**
@@ -379,7 +341,7 @@ class BacklogItemCollectionFactory
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function getArtifactsSemantics(PFUser $user, Planning_Milestone $milestone, array $backlog_item_ids, array $artifacts): array
+    private function getArtifactsSemantics(PFUser $user, array $backlog_item_ids, array $artifacts): array
     {
         if (! $backlog_item_ids) {
             return [];
@@ -397,7 +359,7 @@ class BacklogItemCollectionFactory
 
             $this->setTitleSemantic($user, $artifact, $tracker, $row, $semantics);
             $this->setStatusSemantic($user, $artifact, $tracker, $row, $semantics);
-            $this->setInitialEffortSemantic($user, $artifact, $tracker, $row, $semantics);
+            $this->setInitialEffortSemantic($user, $artifact, $tracker, $semantics);
         }
 
         return $semantics;
@@ -429,7 +391,7 @@ class BacklogItemCollectionFactory
     /**
      * @param array<int, array<string, mixed>> $semantics
      */
-    private function setInitialEffortSemantic(PFUser $user, Artifact $artifact, Tracker $tracker, array $row, array &$semantics): void
+    private function setInitialEffortSemantic(PFUser $user, Artifact $artifact, Tracker $tracker, array &$semantics): void
     {
         $semantics[$artifact->getId()][AgileDashBoard_Semantic_InitialEffort::NAME] = '';
         if ($this->userCanReadInitialEffortField($user, $tracker)) {
@@ -536,7 +498,6 @@ class BacklogItemCollectionFactory
         $this->pushItemInOpenCollections($milestone, $artifact, $semantics, $backlog_item, $user);
         $this->pushItemInDoneCollection($milestone, $artifact, $semantics, $backlog_item, $user);
         $this->open_and_closed_collection[$milestone->getArtifactId() ?? 0]->push($backlog_item);
-        $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0]->push($backlog_item);
     }
 
     private function pushItemInOpenCollections(
@@ -575,15 +536,6 @@ class BacklogItemCollectionFactory
             $backlog_item->setStatus($artifact->getStatus(), TrackerSemanticStatus::CLOSED);
             $this->done_collection[$milestone->getArtifactId() ?? 0]->push($backlog_item);
         }
-    }
-
-    private function getPlannedArtifactIds(PFUser $user, Planning_Milestone $milestone): array
-    {
-        $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
-        if (! $sub_milestone_ids) {
-            return [];
-        }
-        return $this->dao->getPlannedItemIds($sub_milestone_ids);
     }
 
     private function getSubmilestoneIds(PFUser $user, Planning_Milestone $milestone): array
@@ -654,55 +606,6 @@ class BacklogItemCollectionFactory
         return $ids;
     }
 
-    private function initInconsistentItems(
-        PFUser $user,
-        Planning_Milestone $milestone,
-        ?string $redirection_url,
-        array $planned,
-    ): void {
-        foreach ($planned as $planned_artifact_id) {
-            if (! $this->open_and_closed_collection[$milestone->getArtifactId() ?? 0]->containsId($planned_artifact_id)) {
-                $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $planned_artifact_id);
-
-                if ($artifact) {
-                    $item = $this->backlog_item_builder->getItem($artifact, $redirection_url, true);
-                    $item->setStatus($artifact->getStatus(), $artifact->getSemanticStatusValue());
-                    $this->inconsistent_collection[$milestone->getArtifactId() ?? 0]->push($item);
-                    $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0]->push($item);
-                }
-            }
-        }
-    }
-
-    private function reorderOpenClosedAndInconsistentCollection(Planning_Milestone $milestone): IBacklogItemCollection
-    {
-        $order_artifacts = [];
-        $indexed_rank    = [];
-        $sort_collection = $this->backlog_item_builder->getCollection();
-
-        $item_ids = $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0]->getItemIds();
-        if (count($item_ids) === 0) {
-            return $sort_collection;
-        }
-
-        $ranks = $this->artifact_priority_dao->getGlobalRanks($item_ids);
-        foreach ($ranks as $rank) {
-            $indexed_rank[$rank['artifact_id']] = $rank['rank'];
-        }
-
-        foreach ($this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0] as $artifact) {
-            $order_artifacts[$indexed_rank[$artifact->id()]] = $artifact;
-        }
-
-        ksort($order_artifacts);
-
-        foreach ($order_artifacts as $artifact) {
-            $sort_collection->push($artifact);
-        }
-
-        return $sort_collection;
-    }
-
     public function getExplicitTopBacklogItems(
         PFUser $user,
         Planning_Milestone $milestone,
@@ -749,7 +652,7 @@ class BacklogItemCollectionFactory
         $permissions_on_items = $this->user_permission_on_artifacts_retriever->retrieveUserPermissionOnArtifacts(
             $user,
             $open_artifacts,
-            \Tuleap\Tracker\Permission\ArtifactPermissionType::PERMISSION_VIEW,
+            ArtifactPermissionType::PERMISSION_VIEW,
         );
 
         $backlog_item_ids = [];
@@ -758,7 +661,7 @@ class BacklogItemCollectionFactory
         }
 
         $parents   = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
-        $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $open_artifacts);
+        $semantics = $this->getArtifactsSemantics($user, $backlog_item_ids, $open_artifacts);
 
         if (empty($backlog_item_ids)) {
             $children = 0;

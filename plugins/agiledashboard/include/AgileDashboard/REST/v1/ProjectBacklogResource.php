@@ -64,6 +64,7 @@ use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use UserManager;
 
@@ -123,7 +124,6 @@ class ProjectBacklogResource
                 $tracker_form_element_factory
             ),
             new ArtifactsInExplicitBacklogDao(),
-            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             CachedSemanticTitleFieldRetriever::instance(),
             CachedSemanticStatusFieldRetriever::instance(),
@@ -158,6 +158,7 @@ class ProjectBacklogResource
             $user_manager,
             new ProjectBackgroundConfiguration(new ProjectBackgroundDao()),
             SubmissionPermissionVerifier::instance(),
+            CachedSemanticStatusRetriever::instance(),
         );
 
         $this->paginated_backlog_item_representation_builder = new PaginatedBacklogItemsRepresentationsBuilder(

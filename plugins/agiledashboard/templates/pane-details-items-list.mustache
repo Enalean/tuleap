@@ -4,67 +4,39 @@
             <h1 class="tlp-pane-title">{{ backlog_item_type }}</h1>
         </div>
         <section class="tlp-pane-section">
-            {{# has_something_inconsistent }}
-                <form method="POST" action="{{ solve_inconsistencies_url }}" class="tlp-alert-warning">
-                    {{# csrf_token }}
-                        {{> csrf_token_input }}
-                    {{/ csrf_token }}
-                    {{# inconsistent_collection }}
-                        <input type="hidden" name="inconsistent-artifacts-ids[]" value="{{id}}"/>
-                    {{/ inconsistent_collection }}
-
-                    {{ inconsistent_items_intro }}
-                    <input type="submit"
-                           class="tlp-button-warning tlp-button-small agiledashboard-milestone-details-items-inconsistent-button"
-                           value="{{ solve_inconsistencies_button }}"/>
-                </form>
-            {{/ has_something_inconsistent }}
-
-            <table class="tlp-table" data-test="release-overview">
-                <thead>
-                <tr>
-                    <th>{{# dgettext }} tuleap-agiledashboard | Item {{/ dgettext }}</th>
-                        {{# has_something_inconsistent }}
-                            <th></th>
-                        {{/ has_something_inconsistent }}
-                        <th>{{ status_title }}</th>
+            <div id="overview-mount-point"
+                 data-milestone-id="{{ milestone_id }}"
+                 data-submilestones-ids="{{ submilestones_ids }}"
+                 data-solve-inconsistencies-url="{{ solve_inconsistencies_url }}"
+                 data-csrf-synchronizer-token="{{ csrf_token_data }}"
+            >
+                <table class="tlp-table" id="my-table">
+                    <thead>
+                    <tr>
+                        <th>{{# dgettext }} tuleap-agiledashboard | Item {{/ dgettext }}</th>
+                        <th>{{# dgettext }} tuleap-agiledashboard | Status {{/ dgettext }}</th>
                         <th>{{# dgettext }} tuleap-agiledashboard | Parent item {{/ dgettext }}</th>
                     </tr>
-                </thead>
-                <tbody>
-                {{# has_something }}
-                    {{# items_collection }}
-                        <tr data-artifact-id="{{ id }}">
-                            <td {{^ isOpen }} class="agiledashboard-milestone-details-items-list-is-closed" {{/ isOpen }}>
-                                <a href="{{ url }}">
-                                    <span class="agiledashboard-milestone-details-items-list-badge badge cross-ref-badge tlp-swatch-{{color}}">
-                                        {{ xRef }}
-                                    </span>{{ title }}
-                                </a>
-                            </td>
-                            {{# has_something_inconsistent }}
-                                <td {{^ isOpen }} class="agiledashboard-milestone-details-items-list-is-closed" {{/ isOpen }}>
-                                    {{# isInconsistent }}
-                                        <span class="tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ item_is_inconsistent_label }}">
-                                            <i class="tlp-text-warning fa-solid fa-triangle-exclamation" aria-label="{{ item_is_inconsistent_label }}"></i>
-                                        </span>
-                                    {{/ isInconsistent }}
-                                </td>
-                            {{/ has_something_inconsistent }}
-                            <td {{^ isOpen }} class="agiledashboard-milestone-details-items-list-is-closed" {{/ isOpen }}>{{ getStatus }}</td>
-                            <td class="milestone-element-parent {{^ isOpen }} agiledashboard-milestone-details-items-list-is-closed {{/ isOpen }}" >
-                                <a href="{{ parent_url }}">{{ parent_title }}</a>
-                            </td>
-                        </tr>
-                    {{/ items_collection }}
-                {{/ has_something }}
-                {{^ has_something }}
+                    </thead>
+                    <tbody>
                     <tr>
-                        <td colspan="3" class="tlp-table-cell-empty">{{ no_items_label }}</td>
+                        <td><span class="tlp-skeleton-text"></span></td>
+                        <td><span class="tlp-skeleton-text"></span></td>
+                        <td><span class="tlp-skeleton-text"></span></td>
                     </tr>
-                {{/ has_something}}
-                </tbody>
-            </table>
+                    <tr>
+                        <td><span class="tlp-skeleton-text"></span></td>
+                        <td><span class="tlp-skeleton-text"></span></td>
+                        <td><span class="tlp-skeleton-text"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="tlp-skeleton-text"></span></td>
+                        <td><span class="tlp-skeleton-text"></span></td>
+                        <td><span class="tlp-skeleton-text"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </div>
 </section>

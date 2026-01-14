@@ -40,7 +40,6 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\Header;
-use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
@@ -96,7 +95,6 @@ class ProjectBacklogResource
                 $tracker_form_element_factory
             ),
             new ArtifactsInExplicitBacklogDao(),
-            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             CachedSemanticTitleFieldRetriever::instance(),
             CachedSemanticStatusFieldRetriever::instance(),
