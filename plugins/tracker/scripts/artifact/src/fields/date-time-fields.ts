@@ -27,6 +27,14 @@ export function initDateTimeFields(): void {
             return;
         }
 
-        createDatePicker(input_datetime, user_locale);
+        createDatePicker(input_datetime, user_locale, {
+            onOpen: [
+                (selectedDates, dateStr, instance): void => {
+                    if (instance.selectedDates.length === 0) {
+                        instance.setDate(new Date(), false);
+                    }
+                },
+            ],
+        });
     });
 }
