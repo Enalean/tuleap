@@ -21,7 +21,7 @@ Tuleap:
 -   Understand Tuleap internals
 
 You can also find help for your dev related questions on the [chat in
-the #general channel](https://chat.tuleap.org/).
+the #general channel](https://chat.tuleap.com/).
 
 ## Disclaimer
 

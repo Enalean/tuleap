@@ -1,7 +1,7 @@
 {
   "author": "Enalean Team",
   "name": "@tuleap/plugin-kanban",
-  "homepage": "https://www.tuleap.org",
+  "homepage": "https://www.tuleap.com",
   "license": "MIT",
   "private": true,
   "dependencies": {

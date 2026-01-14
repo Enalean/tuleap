@@ -23,7 +23,7 @@
 <p class="footer-paragraph">
     <a class="footer-link" href="/help/" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-life-ring"></i> Documentation</a>
     <br>
-    <a class="footer-link" href="https://www.tuleap.org" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-users"></i> Tuleap community</a>
+    <a class="footer-link" href="https://www.tuleap.com" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-users"></i> Tuleap community</a>
     <br>
-    <a class="footer-link" href="https://www.tuleap.org/tuleap-community/professional-partners" target="_blank" rel="noreferrer"><i class="fas fa-fw fa-ticket-alt"></i> Professional support</a>
+    <a class="footer-link" href="https://www.tuleap.com/partners/" target="_blank" rel="noreferrer"><i class="fas fa-fw fa-ticket-alt"></i> Professional support</a>
 </p>

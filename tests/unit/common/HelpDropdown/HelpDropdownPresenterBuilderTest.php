@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\HelpDropdown;
 
 use ForgeConfig;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
@@ -38,16 +38,16 @@ final class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     use ForgeConfigSandbox;
 
     private HelpDropdownPresenterBuilder $help_dropdown_builder;
-    private ReleaseNoteManager&MockObject $release_note_manager;
+    private ReleaseNoteManager&Stub $release_note_manager;
     private URISanitizer $uri_sanitizer;
 
     #[\Override]
     protected function setUp(): void
     {
-        $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $event_dispatcher = $this->createStub(EventDispatcherInterface::class);
         $event_dispatcher->method('dispatch')->willReturn(new ExplorerEndpointAvailableEvent());
 
-        $this->release_note_manager = $this->createMock(ReleaseNoteManager::class);
+        $this->release_note_manager = $this->createStub(ReleaseNoteManager::class);
         $this->uri_sanitizer        = new URISanitizer(new \Valid_LocalURI(), new \Valid_HTTPSURI());
 
         ForgeConfig::set('display_tuleap_review_link', '1');
@@ -84,7 +84,7 @@ final class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             null,
             HelpLinkPresenter::build(
                 'Release Note',
-                'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
+                'https://help.tuleap.com/help/docs/tuleap-17-2',
                 'fa-star',
                 $this->uri_sanitizer,
                 'release-note-link'
@@ -95,9 +95,9 @@ final class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->release_note_manager
             ->method('getReleaseNoteLink')
-            ->willReturn('https://www.tuleap.org/resources/release-notes/tuleap-11-17');
+            ->willReturn('https://help.tuleap.com/help/docs/tuleap-17-2');
 
-        self::assertEquals($expected_result, $this->help_dropdown_builder->build($user, '11.17'));
+        self::assertEquals($expected_result, $this->help_dropdown_builder->build($user, '17.2'));
     }
 
     public function testBuildPresenterWithAnonymousUser(): void
@@ -125,7 +125,7 @@ final class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             null,
             HelpLinkPresenter::build(
                 'Release Note',
-                'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
+                'https://help.tuleap.com/help/docs/tuleap-17-2',
                 'fa-star',
                 $this->uri_sanitizer,
                 'release-note-link'
@@ -135,7 +135,7 @@ final class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         );
 
         $this->release_note_manager->method('getReleaseNoteLink')
-            ->willReturn('https://www.tuleap.org/resources/release-notes/tuleap-11-17');
-        self::assertEquals($expected_result, $this->help_dropdown_builder->build($user, '11.17'));
+            ->willReturn('https://help.tuleap.com/help/docs/tuleap-17-2');
+        self::assertEquals($expected_result, $this->help_dropdown_builder->build($user, '17.2'));
     }
 }

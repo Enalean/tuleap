@@ -1,7 +1,7 @@
 {
   "author": "Enalean Team",
   "name": "@tuleap/plugin-mediawiki-standalone-siteadmin",
-  "homepage": "https://tuleap.org",
+  "homepage": "https://www.tuleap.com",
   "license": "GPL-2.0-or-later",
   "type": "module",
   "private": true,

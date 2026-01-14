@@ -1,7 +1,7 @@
 {
   "author": "Enalean Team",
   "name": "viewvc-theme-tuleap",
-  "homepage": "https://tuleap.org",
+  "homepage": "https://www.tuleap.com",
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false"

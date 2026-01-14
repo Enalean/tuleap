@@ -1,7 +1,7 @@
 {
   "author": "Enalean Team",
   "name": "@tuleap/build-system-configurator",
-  "homepage": "https://tuleap.org",
+  "homepage": "https://www.tuleap.com",
   "license": "GPL-2.0-or-later",
   "private": true,
   "main": "./dist/main.js",
