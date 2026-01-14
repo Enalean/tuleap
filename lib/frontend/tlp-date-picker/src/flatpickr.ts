@@ -31,6 +31,7 @@ export function datePicker(
     if (isNaN(Date.parse(element.value))) {
         element.value = "";
     }
+    options.allowInput = true;
     options.weekNumbers = true;
     options.dateFormat = "Y-m-d";
     options.time_24hr = true;
