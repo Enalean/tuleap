@@ -29,10 +29,15 @@ use Tuleap\Queue\QueueTask;
 final class EnqueueTaskStub implements EnqueueTaskInterface
 {
     public ?QueueTask $queue_task = null;
+    /**
+     * @psalm-param list<QueueTask>
+     */
+    private(set) array $queued_tasks = [];
 
     #[\Override]
     public function enqueue(QueueTask $event): void
     {
-        $this->queue_task = $event;
+        $this->queue_task     = $event;
+        $this->queued_tasks[] = $event;
     }
 }

@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Git\AsynchronousEvents\RefreshGitoliteProjectConfigurationTask;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\VerifyUserIsGitAdministrator;
@@ -39,11 +40,6 @@ class GitPermissionsManager implements VerifyUserIsGitAdministrator
     private $fine_grained_dao;
 
     /**
-     * @var Git_SystemEventManager
-     */
-    private $git_system_event_manager;
-
-    /**
      * @var Git_PermissionsDao
      */
     private $git_permission_dao;
@@ -55,15 +51,14 @@ class GitPermissionsManager implements VerifyUserIsGitAdministrator
 
     public function __construct(
         Git_PermissionsDao $git_permission_dao,
-        Git_SystemEventManager $git_system_event_manager,
+        private readonly \Tuleap\Queue\EnqueueTaskInterface $enqueuer,
         FineGrainedDao $fine_grained_dao,
         FineGrainedRetriever $fine_grained_retriever,
     ) {
-        $this->permissions_manager      = PermissionsManager::instance();
-        $this->git_permission_dao       = $git_permission_dao;
-        $this->git_system_event_manager = $git_system_event_manager;
-        $this->fine_grained_dao         = $fine_grained_dao;
-        $this->fine_grained_retriever   = $fine_grained_retriever;
+        $this->permissions_manager    = PermissionsManager::instance();
+        $this->git_permission_dao     = $git_permission_dao;
+        $this->fine_grained_dao       = $fine_grained_dao;
+        $this->fine_grained_retriever = $fine_grained_retriever;
     }
 
     #[\Override]
@@ -103,48 +98,46 @@ class GitPermissionsManager implements VerifyUserIsGitAdministrator
         return $this->permissions_manager->getAuthorizedUgroupIds($project_id, Git::PERM_ADMIN);
     }
 
-    public function updateProjectAccess(Project $project, $old_access, $new_access)
+    public function updateProjectAccess(Project $project, $old_access, $new_access): void
     {
         if ($new_access === Project::ACCESS_PRIVATE || $new_access === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             $this->git_permission_dao->disableAnonymousRegisteredAuthenticated($project->getID());
             $this->fine_grained_dao->disableAnonymousRegisteredAuthenticated($project->getID());
-            $this->git_system_event_manager->queueProjectsConfigurationUpdate([$project->getID()]);
+            $this->enqueuer->enqueue(RefreshGitoliteProjectConfigurationTask::fromProject($project));
         }
         if ($new_access === Project::ACCESS_PUBLIC && $old_access === Project::ACCESS_PUBLIC_UNRESTRICTED) {
             $this->git_permission_dao->disableAuthenticated($project->getID());
             $this->fine_grained_dao->disableAuthenticated($project->getID());
-            $this->git_system_event_manager->queueProjectsConfigurationUpdate([$project->getID()]);
+            $this->enqueuer->enqueue(RefreshGitoliteProjectConfigurationTask::fromProject($project));
         }
     }
 
-    public function updateSiteAccess($old_value, $new_value)
+    public function updateSiteAccess($old_value, $new_value): void
     {
         if ($old_value == ForgeAccess::ANONYMOUS) {
-            $project_ids = $this->queueProjectsConfigurationUpdate($this->git_permission_dao->getAllProjectsWithAnonymousRepositories());
-            if (count($project_ids)) {
-                $this->git_permission_dao->updateAllAnonymousAccessToRegistered();
-                $this->fine_grained_dao->updateAllAnonymousAccessToRegistered();
+            $project_rows = $this->git_permission_dao->getAllProjectsWithAnonymousRepositories();
+            if (count($project_rows) === 0) {
+                return;
+            }
+            $this->git_permission_dao->updateAllAnonymousAccessToRegistered();
+            $this->fine_grained_dao->updateAllAnonymousAccessToRegistered();
+
+            foreach ($project_rows as $project_row) {
+                $this->enqueuer->enqueue(new RefreshGitoliteProjectConfigurationTask((int) $project_row['group_id']));
             }
         }
         if ($old_value == ForgeAccess::RESTRICTED) {
-            $project_ids = $this->queueProjectsConfigurationUpdate($this->git_permission_dao->getAllProjectsWithUnrestrictedRepositories());
-            if (count($project_ids)) {
-                $this->git_permission_dao->updateAllAuthenticatedAccessToRegistered();
-                $this->fine_grained_dao->updateAllAuthenticatedAccessToRegistered();
+            $project_rows = $this->git_permission_dao->getAllProjectsWithUnrestrictedRepositories();
+            if (count($project_rows) === 0) {
+                return;
             }
-        }
-    }
+            $this->git_permission_dao->updateAllAuthenticatedAccessToRegistered();
+            $this->fine_grained_dao->updateAllAuthenticatedAccessToRegistered();
 
-    private function queueProjectsConfigurationUpdate(array $dar)
-    {
-        $projects_ids = [];
-        if (count($dar) > 0) {
-            foreach ($dar as $row) {
-                $projects_ids[] = $row['group_id'];
+            foreach ($project_rows as $project_row) {
+                $this->enqueuer->enqueue(new RefreshGitoliteProjectConfigurationTask((int) $project_row['group_id']));
             }
-            $this->git_system_event_manager->queueProjectsConfigurationUpdate($projects_ids);
         }
-        return $projects_ids;
     }
 
     /**

@@ -32,7 +32,6 @@ use Git_RemoteServer_GerritServerFactory;
 use Git_SystemEventManager;
 use GitDao;
 use GitPermissionsManager;
-use GitRepositoryFactory;
 use Plugin;
 use ProjectManager;
 use SystemEventManager;
@@ -50,6 +49,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Queue\EnqueueTask;
 use URLVerification;
 
 class GitRepositoryHeaderDisplayerBuilder
@@ -94,24 +94,19 @@ class GitRepositoryHeaderDisplayerBuilder
         );
     }
 
-    private function getGitPermissionsManager()
+    private function getGitPermissionsManager(): GitPermissionsManager
     {
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $this->getGitSystemEventManager(),
+            new EnqueueTask(),
             $this->getFineGrainedDao(),
             $this->getFineGrainedRetriever()
         );
     }
 
-    private function getGitSystemEventManager()
+    private function getGitSystemEventManager(): Git_SystemEventManager
     {
         return new Git_SystemEventManager(SystemEventManager::instance());
-    }
-
-    private function getRepositoryFactory()
-    {
-        return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
     }
 
     private function getGitDao()

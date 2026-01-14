@@ -61,6 +61,7 @@ use System_Command;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
+use Tuleap\Git\AsynchronousEvents\RefreshGitoliteProjectConfigurationTask;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
@@ -82,6 +83,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 use UGroupDao;
 use UGroupManager;
 use UserManager;
@@ -110,6 +112,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
     private FineGrainedPermissionFactory&Stub $fine_grained_factory;
     private FineGrainedPermissionSaver&MockObject $fine_grained_saver;
     private Project $project;
+    private EnqueueTaskStub $enqueuer;
 
     #[\Override]
     protected function setUp(): void
@@ -198,13 +201,15 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
 
         $this->configure_artifact_closure = $this->createMock(ConfigureAllowArtifactClosure::class);
 
+        $this->enqueuer = new EnqueueTaskStub();
+
         $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, $this->createStub(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateExecutorStub(), $this->logger);
         $this->importer = new GitXmlImporter(
             $this->logger,
             $git_manager,
             $git_factory,
             $gitolite,
-            $this->git_systemeventmanager,
+            $this->enqueuer,
             $permissions_manager,
             $this->event_manager,
             $this->fine_grained_updater,
@@ -234,7 +239,6 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             ['group_id' => 123, 'unix_group_name' => 'test_project', 'access' => Project::ACCESS_PUBLIC]
         );
         $this->git_systemeventmanager->method('queueRepositoryUpdate');
-        $this->git_systemeventmanager->method('queueProjectsConfigurationUpdate');
         $this->event_manager->method('processEvent');
     }
 
@@ -506,7 +510,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
-    public function testItShouldUpdateConfViaSystemEvents(): void
+    public function testItShouldTriggerAGitoliteProjectUpdate(): void
     {
         $this->expectsNoFineGrainedPermissionsActivation();
         $this->expectsNoArtifactClosureChanges();
@@ -518,8 +522,9 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $this->git_systemeventmanager->method('queueProjectsConfigurationUpdate')->with([123]);
         $this->import(new SimpleXMLElement($xml));
+
+        self::assertEquals([new RefreshGitoliteProjectConfigurationTask(123)], $this->enqueuer->queued_tasks);
     }
 
     public function testItShouldImportDescription(): void

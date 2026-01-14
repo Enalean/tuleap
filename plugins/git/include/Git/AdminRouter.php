@@ -46,9 +46,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
     /** @var ProjectManager */
     private $project_manager;
 
-    /** @var Git_SystemEventManager */
-    private $git_system_event_manager;
-
     /**
      * @var RegexpFineGrainedRetriever
      */
@@ -86,7 +83,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         CSRFSynchronizerToken $csrf,
         ProjectManager $project_manager,
-        Git_SystemEventManager $git_system_event_manager,
         private readonly EnqueueTaskInterface $enqueuer,
         RegexpFineGrainedRetriever $regexp_retriever,
         RegexpFineGrainedEnabler $regexp_enabler,
@@ -100,7 +96,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         $this->gerrit_server_factory            = $gerrit_server_factory;
         $this->csrf                             = $csrf;
         $this->project_manager                  = $project_manager;
-        $this->git_system_event_manager         = $git_system_event_manager;
         $this->regexp_retriever                 = $regexp_retriever;
         $this->regexp_enabler                   = $regexp_enabler;
         $this->admin_page_renderer              = $admin_page_renderer;
@@ -144,7 +139,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
             return new Git_AdminGitoliteConfig(
                 $this->csrf,
                 $this->project_manager,
-                $this->git_system_event_manager,
                 $this->enqueuer,
                 $this->admin_page_renderer,
                 $this->big_object_authorization_manager,

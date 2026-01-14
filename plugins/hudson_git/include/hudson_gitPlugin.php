@@ -246,16 +246,12 @@ class hudson_gitPlugin extends Plugin
 
     private static function getGitPermissionsManager(): GitPermissionsManager
     {
-        $git_system_event_manager = new Git_SystemEventManager(
-            SystemEventManager::instance(),
-        );
-
         $fine_grained_dao       = new FineGrainedDao();
         $fine_grained_retriever = new FineGrainedRetriever($fine_grained_dao);
 
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $git_system_event_manager,
+            new \Tuleap\Queue\EnqueueTask(),
             $fine_grained_dao,
             $fine_grained_retriever
         );
