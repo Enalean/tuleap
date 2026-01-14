@@ -1,7 +1,7 @@
 {
   "author": "Enalean Team",
   "name": "@tuleap/plugin-kanban-e2e",
-  "homepage": "https://www.tuleap.org",
+  "homepage": "https://www.tuleap.com",
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {

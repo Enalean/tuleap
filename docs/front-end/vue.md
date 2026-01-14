@@ -104,7 +104,7 @@ Once you have a Vite config, you will need a `package.json` in
 {
   "author": "Enalean Team",             // or yourself
   "name": "@tuleap/plugin-my-plugin-my-vue-app",
-  "homepage": "https://tuleap.org",     // or your plugin's homepage
+  "homepage": "https://www.tuleap.com",     // or your plugin's homepage
   "license": "GPL-2.0-or-later",        // or your license
   "private": true,
   "type": "module",

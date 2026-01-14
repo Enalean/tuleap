@@ -122,7 +122,7 @@ Once you have a Vite config, you will need a `package.json` in `my-lib-name/`.
 {
   "author": "Enalean Team",                   // or yourself
   "name": "@tuleap/my-lib-name",
-  "homepage": "https://tuleap.org",           // or your lib's homepage
+  "homepage": "https://www.tuleap.com",           // or your lib's homepage
   "license": "GPL-2.0-or-later",              // or your license
   "private": true,                            // to avoid accidentally publishing on NPM registry
   "type": "module",                           // Allow import/export instead of require()

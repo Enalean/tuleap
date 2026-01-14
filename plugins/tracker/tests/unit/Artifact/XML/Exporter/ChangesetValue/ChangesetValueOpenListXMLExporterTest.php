@@ -76,7 +76,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
     {
         $bind = $this->createMock(ListFieldUserBind::class);
         $bind->method('getType')->willReturn('users');
-        $open_value = OpenListValueBuilder::anOpenListValue('email@tuleap.org')->build();
+        $open_value = OpenListValueBuilder::anOpenListValue('email@example.com')->build();
 
         $this->field = $this->createMock(OpenListField::class);
         $this->field->method('getBind')->willReturn($bind);
@@ -106,7 +106,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $field_change = $this->changeset_xml->field_change;
         $this->assertEquals('open_list', (string) $field_change['type']);
         $this->assertEquals('users', (string) $field_change['bind']);
-        $this->assertEquals('email@tuleap.org', (string) $field_change->value[0]);
+        $this->assertEquals('email@example.com', (string) $field_change->value[0]);
         $this->assertEquals('label', (string) $field_change->value[0]['format']);
         $this->assertEquals('ldap_01', (string) $field_change->value[1]);
         $this->assertEquals('ldap', (string) $field_change->value[1]['format']);

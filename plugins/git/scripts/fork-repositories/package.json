@@ -1,6 +1,6 @@
 {
   "name": "@tuleap/plugin-git-fork-repositories",
-  "homepage": "https://tuleap.org",
+  "homepage": "https://www.tuleap.com",
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",

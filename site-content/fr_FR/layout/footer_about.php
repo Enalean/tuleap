@@ -21,10 +21,10 @@
 ?>
 <h3 class="footer-section-title">Tuleap</h3>
 <p class="footer-paragraph">
-    Tuleap, outil de développement logiciel agile 100% open source. <a href="https://www.tuleap.org?utm_source=forge&utm_medium=forge&utm_campaign=forge">www.tuleap.org</a>.
+    Tuleap, outil de développement logiciel agile 100% open source. <a href="https://www.tuleap.com?utm_source=forge&utm_medium=forge&utm_campaign=forge">www.tuleap.com</a>.
 </p>
 <p class="footer-paragraph">
-    <a href="https://www.tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge">
+    <a href="https://www.tuleap.com?utm_source=forge&utm_medium=forge&utm_campaign=forge">
         <?php echo $version ?>
     </a>
     <?php if ($GLOBALS['Language']->hasText('global', 'copyright')) { ?>

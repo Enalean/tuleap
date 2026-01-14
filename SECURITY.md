@@ -19,7 +19,7 @@ Tuleap community. If you want your disclosure will be publicly acknowledged in t
 requesting compensation for reporting vulnerabilities. At this time the Tuleap project does not deliver bounties.
 
 Issues not affecting the security of the Tuleap software but of one of the services managed for the Tuleap community
-(such as issues affecting the tuleap.org website) can be reported under the same guidelines but do not warrant a public
+(such as issues affecting the tuleap.com website) can be reported under the same guidelines but do not warrant a public
 acknowledgment. SPF, DKIM, or DMARC issues in one of the services managed for the Tuleap community must not be reported.
 
 ## Coordinated Disclosure Guidelines

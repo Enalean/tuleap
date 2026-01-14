@@ -22,7 +22,7 @@
 
 <template>
     <a
-        href="https://www.tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge"
+        href="https://www.tuleap.com/?utm_source=forge&utm_medium=forge&utm_campaign=forge"
         class="sidebar-about"
         v-if="config"
     >

@@ -6,18 +6,18 @@ Development occurs in realtime on [https://tuleap.net](https://tuleap.net).
 Sources are available in a [Git repository on Tuleap.net](https://tuleap.net/plugins/git/tuleap/tuleap/stable).
 You can find a mirror on [GitHub](https://github.com/Enalean/tuleap).
 
-Use case, screen shots & more on [https://tuleap.org](https://www.tuleap.org/what-is-tuleap).
+Use case, screen shots & more on [https://tuleap.com](https://www.tuleap.com/discover-tuleap/).
 
 # How to use it?
 
 
 You should first [install it](https://docs.tuleap.com/install.html), it can be either with [Rocky Linux/Alma Linux/RHEL packages](https://docs.tuleap.com/installation-guide/step-by-step/introduction.html)
-or [Docker image](https://docs.tuleap.com/installation-guide/docker/introduction.html) and then you can find on tuleap.org a
-bunch of [documentation](https://docs.tuleap.com/) and [tutorials](https://www.tuleap.org/resources).
+or [Docker image](https://docs.tuleap.com/installation-guide/docker/introduction.html) and then you can find on tuleap.com a
+bunch of [documentation](https://help.tuleap.com/) and [tutorials](https://www.tuleap.com/resources/).
 
 # I need help!
 
-Join the [chat](https://chat.tuleap.org) and ask your questions.
+Join the [chat](https://chat.tuleap.com) and ask your questions.
 
 # I want to contribute!
 
