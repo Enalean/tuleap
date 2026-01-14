@@ -29,9 +29,9 @@ let
       '';
     };
   mediawikiCurrent = buildMediawikiTarball {
-    version = "1.43.4";
+    version = "1.43.6";
     tuleapUsage = "current-lts";
-    srcHash = "sha256-Z79EWbC+Y31zV5DEP3Oio4OwothhXDPB7rnESz7UAlU=";
+    srcHash = "sha256-S6YDacFNxGyLIa4UbD6l+LtWhXskSKEkbkRny2XKPJU=";
   };
   mediawiki135 = buildMediawikiTarball {
     version = "1.35.13";
