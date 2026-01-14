@@ -48,8 +48,7 @@ function updateSpecificPropertyField(field_name: string, field_value: string): v
         .contains(field_name)
         .parent()
         .find("[data-test=string-specific-properties-input]")
-        .clear()
-        .type(field_value);
+        .type("{selectAll}" + field_value);
 }
 
 function assertFieldDefaultValue(field_name: string, default_value: string): void {
@@ -284,7 +283,7 @@ describe("Tracker artifacts", function () {
             cy.get("[data-test=platform-administration-link]").click();
             cy.get("[data-test=admin-tracker]").click();
             cy.get("[data-test=artifact-deletion]").click();
-            cy.get("[data-test=input-artifacts-limit]").clear().type("50");
+            cy.get("[data-test=input-artifacts-limit]").type("{selectAll}50");
             cy.get("[data-test=artifact-deletion-button]").click();
             cy.get("[data-test=feedback]").contains("Limit successfully updated.");
         });
@@ -409,7 +408,7 @@ describe("Tracker artifacts", function () {
                 selectFormElementWithName("Date");
                 cy.get("[data-test=formElement_label]").type("Date");
                 cy.get("[data-test=input-type-radio]").last().check();
-                cy.get("[data-test=date-picker]").type("2021-01-01");
+                cy.get("[data-test=date-picker]").setDatepickerValue("2021-01-01");
                 cy.get("[data-test=formElement-submit]").click();
                 cy.get("[data-test=date-time-date]").invoke("val").should("equal", "2021-01-01");
 
@@ -516,7 +515,7 @@ describe("Tracker artifacts", function () {
                     cy.get("[data-test=feedback]").contains("No changes for artifact");
 
                     cy.log("Edit the artifact and add a comment");
-                    editSimpleField("Title").clear().type("My edited bug");
+                    editSimpleField("Title").type("{selectAll}My edited bug");
 
                     cy.log("Add some Markdown content to a text field at artifact edition");
 
@@ -524,7 +523,7 @@ describe("Tracker artifacts", function () {
                         .find("[data-test=textarea-value]")
                         .should("have.html", "<p><strong>Some markdown</strong></p>\n");
 
-                    editSimpleField("Description").clear().type("_Other text_");
+                    editSimpleField("Description").type("{selectAll}_Other text_");
                     cy.getContains("[data-test-artifact-form-element]", "Description")
                         .find("[data-test=preview-edit-button]")
                         .should("contain", "Preview")
@@ -554,8 +553,7 @@ describe("Tracker artifacts", function () {
                             cy.wrap(comment_panel).find("[data-test=edit-comment]").click();
                             cy.wrap(comment_panel)
                                 .find("[data-test=edit-comment-textarea]")
-                                .clear()
-                                .type("Edited the comment");
+                                .type("{selectAll}Edited the comment");
                             cy.wrap(comment_panel).find("[data-test=edit-comment-submit]").click();
                         },
                     );
@@ -580,7 +578,7 @@ describe("Tracker artifacts", function () {
 
                     cy.get("[data-test=tracker-artifact-actions]").click();
                     cy.get("[data-test=artifact-copy-button]").click();
-                    editSimpleField("Title").clear().type("My updated summary");
+                    editSimpleField("Title").type("{selectAll}My updated summary");
 
                     cy.get("[data-test=artifact-copy]").click();
 
@@ -622,7 +620,7 @@ describe("Tracker artifacts", function () {
                             cy.visit("https://tuleap/plugins/tracker/?&aid=" + artifact_id);
                         });
 
-                    editSimpleField("remaining_effort").clear().type("20");
+                    editSimpleField("remaining_effort").type("{selectAll}20");
 
                     // submit and check
                     submitAndStay();

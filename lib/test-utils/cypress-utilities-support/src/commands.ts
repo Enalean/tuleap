@@ -298,4 +298,11 @@ Cypress.Commands.add("generateLargeFile", (file_size_in_mb: number, file_name: s
     });
 });
 
+Cypress.Commands.add("setDatepickerValue", { prevSubject: "element" }, (subject, date: string) => {
+    cy.wrap(subject).type("{selectAll}" + date);
+    // close the datepicker by clicking elsewhere
+    cy.get("body").click();
+    return cy.wrap(subject);
+});
+
 export {};

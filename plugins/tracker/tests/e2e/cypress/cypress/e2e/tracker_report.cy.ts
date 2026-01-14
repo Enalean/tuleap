@@ -45,11 +45,10 @@ function createArtifactWithValues(now: number): void {
     cy.getFieldWithLabel("Text").find("[data-test-cypress=text-area]").type("Description A");
     cy.getFieldWithLabel("Integer").find("[data-test-field-input]").type("12");
     cy.getFieldWithLabel("Float").find("[data-test-field-input]").type("5.12");
-    cy.getFieldWithLabel("Date").find("[data-test=date-time-date]").clear().type("2025-02-01");
+    cy.getFieldWithLabel("Date").get("[data-test=date-time-date]").setDatepickerValue("2025-02-01");
     cy.getFieldWithLabel("Datetime")
-        .find("[data-test=date-time-datetime]")
-        .clear()
-        .type("2025-02-01 02:23");
+        .get("[data-test=date-time-datetime]")
+        .setDatepickerValue("2025-02-01 02:23");
     cy.getFieldWithLabel("Computed").find("[data-test-field-input]").type("13.5");
 
     cy.getFieldWithLabel("Attachments").then(($field) => {
@@ -149,8 +148,7 @@ function updateTrackerReportCriterias(now: number): void {
     cy.log("Update criteria Title");
     getCriterionBlock("Title")
         .find("[data-test=alphanum-report-criteria]")
-        .clear()
-        .type(`Title ${now}`);
+        .type(`{selectAll}Title ${now}`);
 
     cy.log("Update criteria Description");
     getCriterionBlock("Description")
@@ -204,8 +202,7 @@ function updateTrackerReportListCriterias(now: number): void {
     cy.log("Update criteria Title");
     getCriterionBlock("Title")
         .find("[data-test=alphanum-report-criteria]")
-        .clear()
-        .type(`Title ${now}`);
+        .type(`{selectAll}Title ${now}`);
 
     cy.log("Update criteria Selectbox static");
     getCriterionBlock("Selectbox static").find("[data-test=list-report-criteria]").select("Dos");
