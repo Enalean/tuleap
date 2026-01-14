@@ -23,7 +23,6 @@ import { TYPE_FILE } from "../../constants";
 import QuickLookGlobal from "./QuickLookGlobal.vue";
 import type { ItemFile, RootState } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { OTHER_ITEM_TYPES } from "../../injection-keys";
 
 describe("QuickLookGlobal", () => {
     it(`Displays the description of the item observed in the QuickLook`, () => {
@@ -46,9 +45,6 @@ describe("QuickLookGlobal", () => {
                 }),
                 directives: {
                     "dompurify-html": vi.fn(),
-                },
-                provide: {
-                    [OTHER_ITEM_TYPES.valueOf()]: {},
                 },
             },
         });

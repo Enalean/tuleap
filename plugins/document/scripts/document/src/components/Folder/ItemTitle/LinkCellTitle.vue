@@ -22,7 +22,7 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa-fw document-folder-content-icon" v-bind:class="ICON_LINK"></i>
+        <i class="fa-fw document-folder-content-icon" v-bind:class="item.item_icon"></i>
         <a
             v-bind:href="item.link_properties.link_url"
             class="document-folder-subitem-link"
@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
-import { ICON_LINK, ACTION_ICON_LINK } from "../../../constants";
+import { ACTION_ICON_LINK } from "../../../constants";
 import type { Link } from "../../../type";
 
 defineProps<{ item: Link }>();

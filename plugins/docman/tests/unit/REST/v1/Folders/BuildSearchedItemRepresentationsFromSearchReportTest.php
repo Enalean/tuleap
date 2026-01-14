@@ -37,6 +37,9 @@ use Docman_Version;
 use Override;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Docman\Item\Icon\ItemIconPresenter;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterEvent;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
@@ -64,16 +67,28 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
     private BuildSearchedItemRepresentationsFromSearchReport $representation_builder;
     private ItemStatusMapper $status_mapper;
     private ItemRepresentationVisitor&MockObject $item_representation_visitor;
+    private \Docman_VersionFactory&\PHPUnit\Framework\MockObject\Stub $version_factory;
 
     #[Override]
     protected function setUp(): void
     {
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
         $docman_settings->method('getMetadataUsage')->with('status')->willReturn('1');
-        $item_dao            = $this->createMock(Docman_ItemDao::class);
-        $this->status_mapper = new ItemStatusMapper($docman_settings);
-        $this->user_manager  = $this->createMock(UserManager::class);
-        $permissions_manager = $this->createMock(Docman_PermissionsManager::class);
+        $item_dao               = $this->createMock(Docman_ItemDao::class);
+        $this->status_mapper    = new ItemStatusMapper($docman_settings);
+        $this->user_manager     = $this->createMock(UserManager::class);
+        $permissions_manager    = $this->createMock(Docman_PermissionsManager::class);
+        $event_manager          =  EventDispatcherStub::withCallback(
+            static function (object $event): object {
+                if ($event instanceof ItemIconPresenterEvent) {
+                    $event->setPresenter(new ItemIconPresenter('fa-solid fa-rocket', 'fiesta-red'));
+                }
+
+                return $event;
+            }
+        );
+        $this->version_factory  = $this->createStub(\Docman_VersionFactory::class);
+        $icon_presenter_builder = new ItemIconPresenterBuilder($event_manager, $this->version_factory);
 
         $this->item_factory                = $this->createMock(Docman_ItemFactory::class);
         $this->item_representation_visitor = $this->createMock(ItemRepresentationVisitor::class);
@@ -91,6 +106,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             new ListOfCustomPropertyRepresentationBuilder(),
             ProvideUserAvatarUrlStub::build(),
             $this->item_representation_visitor,
+            $icon_presenter_builder
         );
 
         UserManager::setInstance($this->user_manager);
@@ -148,6 +164,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
                 true,
                 true,
                 ItemRepresentation::TYPE_FILE,
+                new ItemIconPresenter('file-icon', 'gold'),
                 false,
                 true,
                 [],
@@ -191,6 +208,8 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
                 ]
             )
             ->willReturn(new ArrayIterator([$item_one, $item_two]));
+
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn(new Docman_Version(['number' => 12]));
 
         $wanted_custom_properties = new SearchColumnCollection();
         $wanted_custom_properties->add(SearchColumn::buildForSingleValueCustomProperty('field_23', 'Comments'));

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Folders;
 
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\ItemRepresentationVisitor;
@@ -44,6 +45,7 @@ final readonly class BuildSearchedItemRepresentationsFromSearchReport
         private ListOfCustomPropertyRepresentationBuilder $custom_property_builder,
         private ProvideUserAvatarUrl $provide_user_avatar_url,
         private ItemRepresentationVisitor $item_representation_visitor,
+        private ItemIconPresenterBuilder $presenter_builder,
     ) {
     }
 
@@ -88,6 +90,7 @@ final readonly class BuildSearchedItemRepresentationsFromSearchReport
                 $item_representation?->link_properties,
                 $this->custom_property_builder->getCustomProperties($item, $wanted_custom_properties),
                 $this->provide_user_avatar_url,
+                $this->presenter_builder->buildForItem($item)
             );
         }
 

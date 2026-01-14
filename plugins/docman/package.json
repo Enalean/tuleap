@@ -11,6 +11,7 @@
     "@tuleap/html-escaper": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
+    "@tuleap/tlp-swatch-colors": "workspace:^",
     "@tuleap/user-and-ugroup-autocompleter": "workspace:*"
   },
   "scripts": {

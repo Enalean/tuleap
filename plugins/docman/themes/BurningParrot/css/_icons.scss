@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+@use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors/tlp-swatch-colors" as colors;
 
-namespace Tuleap\Docman\Reference;
+.document-other-type-badge {
+    color: var(--text-color);
+}
 
-/**
- * @psalm-immutable
- */
-final class DocumentIconPresenter
-{
-    /**
-     * @var string
-     */
-    public $icon;
-    /**
-     * @var string
-     */
-    public $color;
-
-    public function __construct(string $icon, string $color)
-    {
-        $this->icon  = $icon;
-        $this->color = $color;
-    }
+.item-icon-color {
+    color: var(--primary-color);
 }

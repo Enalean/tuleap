@@ -43,3 +43,9 @@ export const PROJECT_PROPERTIES: StrictInjectionKey<Ref<Property[] | null>> =
 
 export const PROJECT_USER_GROUPS: StrictInjectionKey<Ref<ReadonlyArray<UserGroup> | null>> =
     Symbol("project-user-groups");
+
+export const ICON_LINK: StrictInjectionKey<string> = Symbol("icon_link");
+export const ICON_EMBEDDED: StrictInjectionKey<string> = Symbol("icon_embedded");
+export const ICON_WIKI: StrictInjectionKey<string> = Symbol("icon_wiki");
+export const ICON_EMPTY: StrictInjectionKey<string> = Symbol("icon_empty");
+export const ICON_FOLDER: StrictInjectionKey<string> = Symbol("icon_folder");

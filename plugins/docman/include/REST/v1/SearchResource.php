@@ -30,12 +30,14 @@ use Docman_ItemFactory;
 use Docman_PermissionsManager;
 use Docman_ReportColumnFactory;
 use Docman_SettingsBo;
+use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use PermissionsManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\ResponseFeedbackWrapper;
@@ -292,7 +294,8 @@ final class SearchResource extends AuthenticatedResource
             $html_purifier,
             $provide_user_avatar_url,
             $version_factory,
-            new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager()
+            new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
+            new ItemIconPresenterBuilder($event_manager, $version_factory),
         );
 
 
@@ -320,6 +323,7 @@ final class SearchResource extends AuthenticatedResource
             new ListOfCustomPropertyRepresentationBuilder(),
             $provide_user_avatar_url,
             $visitor,
+            new ItemIconPresenterBuilder($event_manager, new Docman_VersionFactory())
         );
 
         $wanted_custom_properties = (new SearchColumnCollectionBuilder())

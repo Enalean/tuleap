@@ -31,7 +31,7 @@
         <div class="document-search-result-title">
             <i
                 class="fa-fw document-search-result-icon"
-                v-bind:class="icon_classes"
+                v-bind:class="item.item_icon"
                 aria-hidden="true"
                 data-test="icon"
             ></i>
@@ -71,11 +71,6 @@
 import type { Folder, ItemSearchResult } from "../../../../type";
 import { computed, ref } from "vue";
 import {
-    ICON_EMBEDDED,
-    ICON_EMPTY,
-    ICON_FOLDER_ICON,
-    ICON_LINK,
-    ICON_WIKI,
     ACTION_ICON_FOLDER,
     ACTION_ICON_FILE,
     ACTION_ICON_LINK,
@@ -88,11 +83,9 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
 } from "../../../../constants";
-import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 import type { Route } from "vue-router/types/router";
 import { useState } from "vuex-composition-helpers";
 import SearchItemDropdown from "./SearchItemDropdown.vue";
-import { OTHER_ITEM_TYPES } from "../../../../injection-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT } from "../../../../configuration-keys";
 
@@ -119,31 +112,6 @@ const action_icon_classes = computed((): string => {
             return ACTION_ICON_WIKI;
         default:
             return "";
-    }
-});
-
-const other_item_types = strictInject(OTHER_ITEM_TYPES);
-
-const icon_classes = computed((): string => {
-    switch (props.item.type) {
-        case TYPE_FILE:
-            if (!props.item.file_properties) {
-                return ICON_EMPTY;
-            }
-
-            return iconForMimeType(props.item.file_properties.file_type);
-        case TYPE_EMBEDDED:
-            return ICON_EMBEDDED;
-        case TYPE_FOLDER:
-            return ICON_FOLDER_ICON;
-        case TYPE_LINK:
-            return ICON_LINK;
-        case TYPE_WIKI:
-            return ICON_WIKI;
-        default:
-            return props.item.type in other_item_types
-                ? other_item_types[props.item.type].icon
-                : ICON_EMPTY;
     }
 });
 

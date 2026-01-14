@@ -20,7 +20,7 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa-fw document-folder-content-icon" v-bind:class="ICON_EMBEDDED"></i>
+        <i class="fa-fw document-folder-content-icon" v-bind:class="item.item_icon"></i>
         <a v-bind:href="document_link_url" class="document-folder-subitem-link" draggable="false">
             {{ item.title
             }}<i
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ICON_EMBEDDED, ACTION_ICON_EMBEDDED } from "../../../constants";
+import { ACTION_ICON_EMBEDDED } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 import type { Embedded, Folder } from "../../../type";
 import { useState } from "vuex-composition-helpers";

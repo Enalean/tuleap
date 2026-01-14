@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Document\Tree\DocumentItemUrlBuilder;
 
 class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
@@ -56,6 +57,9 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
         $GLOBALS['Response']->addCssAsset(
             new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'admin-style')
         );
+        $GLOBALS['Response']->addCssAsset(
+            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'icons-style')
+        );
     }
 
     #[\Override]
@@ -83,7 +87,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
         print $html;
     }
 
-    private function getTable($params)
+    private function getTable($params): string
     {
         $document_url_builder = new DocumentItemUrlBuilder(ProjectManager::instance());
 
@@ -110,7 +114,6 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
         $table = '<table class="tlp-table">
             <thead>
                 <tr>
-                    <th class="document-icon"></th>
                     <th>' . dgettext('tuleap-docman', 'Title') . '</th>
                     <th>' . dgettext('tuleap-docman', 'Obsolete date') . '</th>
                 </tr>
@@ -128,20 +131,27 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
             ';
         }
 
+        $event_manager          = EventManager::instance();
+        $icon_presenter_builder = new ItemIconPresenterBuilder($event_manager, new Docman_VersionFactory());
+
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $itemIterator->rewind();
         while ($itemIterator->valid()) {
             $item = $itemIterator->current();
-            $type = $itemFactory->getItemTypeForItem($item);
+
+            if ($item === null) {
+                $itemIterator->next();
+                continue;
+            }
+
+            $item_icon = $icon_presenter_builder->buildForItem($item);
+            $type      = $itemFactory->getItemTypeForItem($item);
             if ($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
                 $table .= '<tr>';
 
-                $table      .= '<td class="document-icon">';
-                $docmanIcons = new Docman_Icons('/plugins/docman/themes/default/images/ic/', EventManager::instance());
-                $icon_src    = $docmanIcons->getIconForItem($item, $params);
-                $table      .= '<img src="' . $icon_src . '" width="16" />';
-                $table      .= '</td>';
-
-                $table .= '<td>';
+                $table .= '<td >';
+                $table .=     '<i class="' . $purifier->purify($item_icon->getIconWithColor()) . '"></i>&nbsp;';
                 $table .= '<span style="white-space: nowrap;">';
                 $url    = $document_url_builder->getUrl($item);
                 $table .= '<a data-help-window href="' . $url . '">';
@@ -152,7 +162,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
 
                 // Obsolete date
                 $table .= '<td>';
-                $table .= format_date('Y-m-j', $item->getObsolescenceDate());
+                $table .= format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $item->getObsolescenceDate());
                 $table .= "</td>\n";
 
                 $table .= "</tr>\n";
@@ -162,8 +172,6 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
 
         $table .= '</tbody></table>';
 
-        $html = $table;
-
-        return $html;
+        return $table;
     }
 }

@@ -41,6 +41,7 @@ use Tuleap\Docman\Log\LogEntry;
 use Tuleap\Docman\Log\LogRetriever;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\ResponseFeedbackWrapper;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Log\LogEntryRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
@@ -380,7 +381,8 @@ final class DocmanItemsResource extends AuthenticatedResource
             $html_purifier,
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             $version_factory,
-            new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager()
+            new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
+            new ItemIconPresenterBuilder($this->event_manager, $version_factory),
         );
     }
 }

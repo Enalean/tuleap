@@ -27,7 +27,7 @@
             data-test="document-new-folder-creation-button"
             data-shortcut-create-folder
         >
-            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_FOLDER_ICON"></i>
+            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="icon_folder"></i>
             {{ $gettext("Folder") }}
         </button>
         <button
@@ -61,7 +61,7 @@
             v-on:click.prevent="showNewDocumentModal(TYPE_EMBEDDED)"
             v-if="embedded_are_allowed"
         >
-            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_EMBEDDED"></i>
+            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="icon_embedded"></i>
             {{ $gettext("Embedded") }}
         </button>
         <button
@@ -72,7 +72,7 @@
             v-on:click.prevent="showNewDocumentModal(TYPE_WIKI)"
             v-if="user_can_create_wiki"
         >
-            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_WIKI"></i>
+            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="icon_wiki"></i>
             {{ $gettext("Wiki page") }}
         </button>
         <template v-for="section in create_new_item_alternatives" v-bind:key="section.title">
@@ -89,7 +89,7 @@
             >
                 <i
                     class="fa fa-fw tlp-dropdown-menu-item-icon"
-                    v-bind:class="iconForMimeType(alternative.mime_type)"
+                    v-bind:class="alternative.item_icon"
                 ></i>
                 {{ alternative.title }}
             </button>
@@ -106,7 +106,7 @@
             data-test="document-new-link-creation-button"
             v-on:click.prevent="showNewDocumentModal(TYPE_LINK)"
         >
-            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_LINK"></i>
+            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="icon_link"></i>
             {{ $gettext("Link") }}
         </button>
         <button
@@ -116,7 +116,7 @@
             data-test="document-new-empty-creation-button"
             v-on:click.prevent="showNewDocumentModal(TYPE_EMPTY)"
         >
-            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_EMPTY"></i>
+            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="icon_empty"></i>
             {{ $gettext("Empty") }}
         </button>
     </div>
@@ -124,28 +124,29 @@
 
 <script setup lang="ts">
 import type { Item, ItemType, NewItemAlternative } from "../../../../type";
+import { TYPE_FILE, TYPE_EMBEDDED, TYPE_EMPTY, TYPE_LINK, TYPE_WIKI } from "../../../../constants";
+import emitter from "../../../../helpers/emitter";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     ICON_EMBEDDED,
-    TYPE_FILE,
-    TYPE_EMBEDDED,
-    TYPE_EMPTY,
-    TYPE_LINK,
     ICON_EMPTY,
+    ICON_FOLDER,
     ICON_LINK,
-    TYPE_WIKI,
     ICON_WIKI,
-    ICON_FOLDER_ICON,
-} from "../../../../constants";
-import emitter from "../../../../helpers/emitter";
-import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { NEW_ITEMS_ALTERNATIVES, OTHER_ITEM_TYPES } from "../../../../injection-keys";
+    NEW_ITEMS_ALTERNATIVES,
+    OTHER_ITEM_TYPES,
+} from "../../../../injection-keys";
 import { EMBEDDED_ARE_ALLOWED, USER_CAN_CREATE_WIKI } from "../../../../configuration-keys";
 
 const create_new_item_alternatives = strictInject(NEW_ITEMS_ALTERNATIVES);
 const other_item_types = strictInject(OTHER_ITEM_TYPES);
 const user_can_create_wiki = strictInject(USER_CAN_CREATE_WIKI);
 const embedded_are_allowed = strictInject(EMBEDDED_ARE_ALLOWED);
+const icon_link = strictInject(ICON_LINK);
+const icon_wiki = strictInject(ICON_WIKI);
+const icon_embedded = strictInject(ICON_EMBEDDED);
+const icon_folder = strictInject(ICON_FOLDER);
+const icon_empty = strictInject(ICON_EMPTY);
 
 const props = defineProps<{ item: Item }>();
 function showNewDocumentModal(type: ItemType): void {

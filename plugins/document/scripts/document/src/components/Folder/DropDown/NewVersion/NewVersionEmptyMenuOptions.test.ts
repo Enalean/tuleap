@@ -32,6 +32,7 @@ import {
     USER_CAN_CREATE_WIKI,
     USER_LOCALE,
 } from "../../../../configuration-keys";
+import { ICON_EMBEDDED, ICON_LINK, ICON_WIKI } from "../../../../injection-keys";
 
 vi.useFakeTimers();
 
@@ -76,6 +77,9 @@ describe("NewVersionEmptyMenuOptions", function () {
                     [USER_CAN_CREATE_WIKI.valueOf()]: user_can_create_wiki,
                     [EMBEDDED_ARE_ALLOWED.valueOf()]: embedded_are_allowed,
                     [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
+                    [ICON_LINK.valueOf()]: "icon-for-link",
+                    [ICON_WIKI.valueOf()]: "icon-for-wiki",
+                    [ICON_EMBEDDED.valueOf()]: "icon-for-embedded",
                 },
             },
         });

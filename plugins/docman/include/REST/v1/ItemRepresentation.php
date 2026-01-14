@@ -21,6 +21,7 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Codendi_HTMLPurifier;
+use Tuleap\Docman\Item\Icon\ItemIconPresenter;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\IEmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
@@ -169,6 +170,8 @@ class ItemRepresentation
      */
     public $other_type_properties;
 
+    public string $item_icon;
+
     /**
      * @param ItemMetadataRepresentation[] $metadata
      */
@@ -184,6 +187,7 @@ class ItemRepresentation
         bool $user_can_delete,
         bool $can_user_manage,
         ?string $type,
+        string $item_icon,
         ?FilePropertiesRepresentation $file_properties,
         ?IEmbeddedFilePropertiesRepresentation $embedded_file_properties,
         ?LinkPropertiesRepresentation $link_properties,
@@ -211,6 +215,7 @@ class ItemRepresentation
         $this->user_can_delete            = $user_can_delete;
         $this->can_user_manage            = $can_user_manage;
         $this->type                       = $type;
+        $this->item_icon                  = $item_icon;
         $this->file_properties            = $file_properties;
         $this->embedded_file_properties   = $embedded_file_properties;
         $this->link_properties            = $link_properties;
@@ -237,6 +242,7 @@ class ItemRepresentation
         bool $user_can_write,
         bool $user_can_delete,
         ?string $type,
+        ItemIconPresenter $icon_presenter,
         bool $is_expanded,
         bool $can_user_manage,
         array $metadata_representations,
@@ -266,6 +272,7 @@ class ItemRepresentation
             $user_can_delete,
             $can_user_manage,
             $type,
+            $icon_presenter->getIconWithColor(),
             $file_properties,
             $embedded_file_properties,
             $link_properties,

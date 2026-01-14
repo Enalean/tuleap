@@ -21,7 +21,7 @@
     <div class="document-file-upload-cell-title document-file-upload-fake-item-cell-title">
         <span>
             <fake-caret v-bind:item="item" />
-            <i class="fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
+            <i class="fa-fw document-folder-content-icon" v-bind:class="item.item_icon"></i>
             {{ item.title }}
         </span>
         <upload-progress-bar v-bind:item="item" />
@@ -30,18 +30,8 @@
 
 <script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
-import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
 import UploadProgressBar from "../ProgressBar/UploadProgressBar.vue";
-import { computed } from "vue";
-import { ICON_EMPTY } from "../../../constants";
 import type { FakeItem } from "../../../type";
 
-const props = defineProps<{ item: FakeItem }>();
-
-const icon_class = computed((): string => {
-    if (!props.item.file_type) {
-        return ICON_EMPTY;
-    }
-    return iconForMimeType(props.item.file_type);
-});
+defineProps<{ item: FakeItem }>();
 </script>

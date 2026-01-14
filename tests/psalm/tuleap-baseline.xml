@@ -6556,21 +6556,6 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="plugins/docman/include/Docman_Icons.php">
-    <MissingParamType>
-      <code><![CDATA[$icon]]></code>
-      <code><![CDATA[$icon]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$mime_type]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getIcon]]></code>
-      <code><![CDATA[getIconForItem]]></code>
-      <code><![CDATA[getIconForMimeType]]></code>
-      <code><![CDATA[getThemeIcon]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/Docman_Item.php">
     <MissingParamType>
       <code><![CDATA[$data]]></code>
@@ -10306,23 +10291,14 @@
       <code><![CDATA[$lockInfos]]></code>
       <code><![CDATA[$lockInfos]]></code>
     </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$params]]></code>
-    </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$defaultUrl]]></code>
     </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getTable]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_Obsolete.php">
     <MissingParamType>
       <code><![CDATA[$params]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getTable]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_AjaxReferenceTooltip.php">
     <MissingParamType>
@@ -12115,19 +12091,6 @@
       <code><![CDATA[method]]></code>
     </PossiblyUndefinedMethod>
   </file>
-  <file src="plugins/docman/tests/unit/REST/v1/ItemRepresentationBuilderTest.php">
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$representation->approval_table->approval_request_date]]></code>
-      <code><![CDATA[$representation->approval_table->approval_state]]></code>
-      <code><![CDATA[$representation->approval_table->has_been_approved]]></code>
-      <code><![CDATA[$representation->approval_table->id]]></code>
-      <code><![CDATA[$representation->approval_table->table_owner]]></code>
-      <code><![CDATA[$representation->approval_table->table_owner->id]]></code>
-      <code><![CDATA[$representation->lock_info->lock_date]]></code>
-      <code><![CDATA[$representation->lock_info->locked_by]]></code>
-      <code><![CDATA[$representation->lock_info->locked_by->id]]></code>
-    </PossiblyNullPropertyFetch>
-  </file>
   <file src="plugins/docman/tests/unit/REST/v1/ItemRepresentationCollectionBuilderTest.php">
     <MissingClosureParamType>
       <code><![CDATA[$id]]></code>
@@ -12606,11 +12569,6 @@
       <code><![CDATA[$item->getId()]]></code>
       <code><![CDATA[$item->getId()]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/document/include/Tree/DocumentTreeController.php">
-    <MissingReturnType>
-      <code><![CDATA[includeHeaderAndNavigationBar]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/document/include/Tree/DocumentTreePresenter.php">
     <PossiblyInvalidArgument>
@@ -13415,10 +13373,8 @@
       <code><![CDATA[$project_name_from_autocomplete]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[allowProject]]></code>
       <code><![CDATA[display]]></code>
       <code><![CDATA[process]]></code>
-      <code><![CDATA[revokeProjects]]></code>
       <code><![CDATA[updateBigObjectAllowedProjects]]></code>
     </MissingReturnType>
   </file>
@@ -15521,12 +15477,9 @@
       <code><![CDATA[getGerritDriverFactory]]></code>
       <code><![CDATA[getGerritServerFactory]]></code>
       <code><![CDATA[getGitDao]]></code>
-      <code><![CDATA[getGitPermissionsManager]]></code>
       <code><![CDATA[getGitRepositoryUrlManager]]></code>
-      <code><![CDATA[getGitSystemEventManager]]></code>
       <code><![CDATA[getHeaderRenderer]]></code>
       <code><![CDATA[getProjectCreatorStatus]]></code>
-      <code><![CDATA[getRepositoryFactory]]></code>
       <code><![CDATA[getRepositoryHeaderPresenterBuilder]]></code>
     </MissingReturnType>
   </file>
@@ -15810,7 +15763,6 @@
       <code><![CDATA[queueEditSSHKey]]></code>
       <code><![CDATA[queueGerritReplicationKeyUpdate]]></code>
       <code><![CDATA[queueMigrateToGerrit]]></code>
-      <code><![CDATA[queueProjectsConfigurationUpdate]]></code>
       <code><![CDATA[queueRemoteProjectDeletion]]></code>
       <code><![CDATA[queueRemoteProjectReadOnly]]></code>
       <code><![CDATA[queueRepositoryDeletion]]></code>
@@ -17142,9 +17094,6 @@
       <code><![CDATA[getDefaultGitAdminPermissions]]></code>
       <code><![CDATA[getDefaultPermission]]></code>
       <code><![CDATA[getGlobalPermission]]></code>
-      <code><![CDATA[queueProjectsConfigurationUpdate]]></code>
-      <code><![CDATA[updateProjectAccess]]></code>
-      <code><![CDATA[updateSiteAccess]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitPresenters/AccessControlPresenter.php">
@@ -18275,16 +18224,6 @@
       <code><![CDATA[process]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_PROJECTS_UPDATE.php">
-    <MissingReturnType>
-      <code><![CDATA[getProjectIdsFromParameters]]></code>
-      <code><![CDATA[injectDependencies]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$project->getID()]]></code>
-    </PossiblyInvalidOperand>
-  </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_DELETE.php">
     <MissingReturnType>
       <code><![CDATA[injectDependencies]]></code>
@@ -18516,7 +18455,6 @@
       <code><![CDATA[file_exists_in_data_dir]]></code>
       <code><![CDATA[fill_project_history_sub_events]]></code>
       <code><![CDATA[getAdminPageRenderer]]></code>
-      <code><![CDATA[getAdminRouter]]></code>
       <code><![CDATA[getBackendGitolite]]></code>
       <code><![CDATA[getBigObjectAuthorizationManager]]></code>
       <code><![CDATA[getCITokenRouter]]></code>
@@ -18536,8 +18474,6 @@
       <code><![CDATA[getGerritUmbrellaProjectManager]]></code>
       <code><![CDATA[getGerritUserFinder]]></code>
       <code><![CDATA[getGitController]]></code>
-      <code><![CDATA[getGitPermissionsManager]]></code>
-      <code><![CDATA[getGitSystemEventManager]]></code>
       <code><![CDATA[getGitolite3Parser]]></code>
       <code><![CDATA[getHistoryValueFormatter]]></code>
       <code><![CDATA[getHooksAndCallbacks]]></code>
@@ -42249,7 +42185,6 @@
     </InvalidReturnType>
     <LessSpecificReturnStatement>
       <code><![CDATA[$form_element]]></code>
-      <code><![CDATA[$this->getCachedInstanceFromRow($row)]]></code>
     </LessSpecificReturnStatement>
     <MissingParamType>
       <code><![CDATA[$description]]></code>
@@ -42349,7 +42284,6 @@
       <code><![CDATA[getUsedTextFieldById]]></code>
       <code><![CDATA[getUsedUserClosedListFieldById]]></code>
       <code><![CDATA[getValueMappingFromFieldMapping]]></code>
-      <code><![CDATA[isFieldASimpleListField]]></code>
       <code><![CDATA[isFieldUniqueAndAlreadyUsed]]></code>
       <code><![CDATA[originalFieldIsInTemplateProject]]></code>
       <code><![CDATA[removeFormElement]]></code>
@@ -42361,7 +42295,6 @@
       <code><![CDATA[TrackerFormElement]]></code>
     </MoreSpecificReturnType>
     <NullableReturnStatement>
-      <code><![CDATA[$this->formElements[$form_element_id]]]></code>
       <code><![CDATA[$this->formElements_by_name[$tracker_id][$name]]]></code>
       <code><![CDATA[$this->used_formElements[$id]]]></code>
       <code><![CDATA[null]]></code>
@@ -42381,7 +42314,6 @@
     <UndefinedMethod>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[fieldHasDefineWorkflow]]></code>
-      <code><![CDATA[getWorkflow]]></code>
     </UndefinedMethod>
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->formElements_by_formElementcomponent]]></code>
@@ -46152,10 +46084,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$rule->isUsedInRule($field->getId())]]></code>
     </RiskyTruthyFalsyComparison>
-    <TypeDoesNotContainType>
-      <code><![CDATA[! $source_field]]></code>
-      <code><![CDATA[$source_field]]></code>
-    </TypeDoesNotContainType>
     <UndefinedMethod>
       <code><![CDATA[getVisibleValuesPlusNoneIfAny]]></code>
       <code><![CDATA[getVisibleValuesPlusNoneIfAny]]></code>
@@ -49645,27 +49573,10 @@
       <code><![CDATA[getStaticSelectboxFieldId]]></code>
       <code><![CDATA[getUserSelectboxFieldId]]></code>
       <code><![CDATA[testOPTIONSId]]></code>
-      <code><![CDATA[testPATCHAddsNewValuesInRadiobuttonBindToStaticValues]]></code>
-      <code><![CDATA[testPATCHAddsNewValuesInSelectboxBindToStaticValues]]></code>
-      <code><![CDATA[testPATCHThrowsAnExceptionIfFieldIsNotASimpleList]]></code>
-      <code><![CDATA[testPATCHThrowsAnExceptionIfFieldIsNotBoundToStaticValues]]></code>
     </MissingReturnType>
     <NullableReturnStatement>
       <code><![CDATA[$field_id]]></code>
     </NullableReturnStatement>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$body]]></code>
-      <code><![CDATA[$body]]></code>
-      <code><![CDATA[$body]]></code>
-      <code><![CDATA[$body]]></code>
-      <code><![CDATA[json_encode($payload)]]></code>
-      <code><![CDATA[json_encode($query)]]></code>
-      <code><![CDATA[json_encode($query)]]></code>
-      <code><![CDATA[json_encode($query)]]></code>
-      <code><![CDATA[json_encode($query)]]></code>
-      <code><![CDATA[json_encode($query)]]></code>
-      <code><![CDATA[json_encode($query)]]></code>
-    </PossiblyFalseArgument>
     <PossiblyNullArrayAccess>
       <code><![CDATA[$field['field_id']]]></code>
       <code><![CDATA[$field['file_creation_uri']]]></code>
@@ -57844,9 +57755,6 @@
     <InvalidReturnType>
       <code><![CDATA[process]]></code>
     </InvalidReturnType>
-    <MissingReturnType>
-      <code><![CDATA[getCSRFTokenSynchronizer]]></code>
-    </MissingReturnType>
   </file>
   <file src="src/common/FRS/LicenseAgreement/Admin/SetDefaultLicenseAgreementController.php">
     <InvalidReturnType>
@@ -76496,7 +76404,6 @@
   <file src="tests/unit/common/Backend/BackendAliasesTest.php">
     <MissingPropertyType>
       <code><![CDATA[$alias_file]]></code>
-      <code><![CDATA[$backend]]></code>
     </MissingPropertyType>
     <PossiblyFalseArgument>
       <code><![CDATA[$aliases]]></code>
@@ -76962,7 +76869,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[createDeletedReleaseDir]]></code>
-      <code><![CDATA[createReleaseDir]]></code>
       <code><![CDATA[testCompareMd5ChecksumsFail]]></code>
       <code><![CDATA[testCompareMd5ChecksumsSucceedeEmptyComputed]]></code>
       <code><![CDATA[testCompareMd5ChecksumsSucceedeEmptyHashes]]></code>
@@ -76984,37 +76890,23 @@
       <code><![CDATA[testDeleteProjectFRSReleasesFail]]></code>
       <code><![CDATA[testDeleteProjectFRSSuccess]]></code>
       <code><![CDATA[testGetUploadSubDirectory]]></code>
-      <code><![CDATA[testMoveDeletedFileToStagingArea]]></code>
-      <code><![CDATA[testMoveDeletedFileToStagingAreaButFileDoesntExist]]></code>
-      <code><![CDATA[testMoveDeletedFileToStagingAreaReleaseNotEmpty]]></code>
-      <code><![CDATA[testMoveDeletedFilesToStagingAreaFail]]></code>
       <code><![CDATA[testMoveDeletedFilesToStagingAreaWithNoFiles]]></code>
       <code><![CDATA[testMoveDeletedFilesToStagingAreaWithOneFile]]></code>
       <code><![CDATA[testMoveFileforgeFileExist]]></code>
       <code><![CDATA[testMoveFileforgeFileExistWithSpaces]]></code>
       <code><![CDATA[testMoveFileforgeOk]]></code>
       <code><![CDATA[testMoveFilesCatchesExceptionAndLogThem]]></code>
-      <code><![CDATA[testMoveFilesCleanStagingError]]></code>
-      <code><![CDATA[testMoveFilesMoveStagingError]]></code>
       <code><![CDATA[testMoveFilesPurgeError]]></code>
       <code><![CDATA[testMoveFilesRestoreDeletedError]]></code>
-      <code><![CDATA[testPurgeDeletedFiles]]></code>
-      <code><![CDATA[testPurgeFileDBUpdateFails]]></code>
       <code><![CDATA[testPurgeFileSucceed]]></code>
       <code><![CDATA[testPurgeFileSystemCopyFails]]></code>
-      <code><![CDATA[testPurgeFileWithFileNotFoundInFS]]></code>
       <code><![CDATA[testPurgeFilesWithNoFiles]]></code>
-      <code><![CDATA[testPurgeFilesWithOneFile]]></code>
       <code><![CDATA[testRemoveStagingEmptyDirectories]]></code>
       <code><![CDATA[testRestoreDeletedFiles]]></code>
       <code><![CDATA[testRestoreDeletedFilesDBError]]></code>
       <code><![CDATA[testRestoreDeletedFilesNoFiles]]></code>
       <code><![CDATA[testRestoreDeletedFilesReturnFalse]]></code>
-      <code><![CDATA[testRestoreFileDBUpdateFails]]></code>
       <code><![CDATA[testRestoreFileInDeletedRelease]]></code>
-      <code><![CDATA[testRestoreFileLocationNotExists]]></code>
-      <code><![CDATA[testRestoreFileNotExists]]></code>
-      <code><![CDATA[testRestoreFileSucceed]]></code>
     </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
@@ -77376,12 +77268,6 @@
     </MissingPropertyType>
   </file>
   <file src="tests/unit/common/Include/UrlVerification/URLVerificationPermissionsOverriderAnonymousPlatformTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$server]]></code>
-      <code><![CDATA[$url_verification]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="tests/unit/common/Include/UrlVerification/URLVerificationPermissionsOverriderRegularPlatformTest.php">
     <MissingPropertyType>
       <code><![CDATA[$server]]></code>
       <code><![CDATA[$url_verification]]></code>
@@ -77937,29 +77823,6 @@
       <code><![CDATA[testItRemovesFromUserGroupOnlyWithError]]></code>
     </MissingReturnType>
   </file>
-  <file src="tests/unit/common/Project/Admin/Reference/Creation/CreateReferencePresenterBuilderTest.php">
-    <ImpureMethodCall>
-      <code><![CDATA[addNature]]></code>
-      <code><![CDATA[addNature]]></code>
-      <code><![CDATA[addNature]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[buildReferencePresenter]]></code>
-      <code><![CDATA[buildReferencePresenter]]></code>
-      <code><![CDATA[buildWithId]]></code>
-      <code><![CDATA[buildWithId]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturn]]></code>
-    </ImpureMethodCall>
-  </file>
   <file src="tests/unit/common/Project/Admin/Reference/Edition/EditReferencePresenterBuilderTest.php">
     <ImpureMethodCall>
       <code><![CDATA[aUser]]></code>
@@ -78170,20 +78033,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['Project_NotFoundException']]></code>
     </ArgumentTypeCoercion>
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
@@ -78579,14 +78428,6 @@
     </PossiblyNullPropertyFetch>
   </file>
   <file src="tests/unit/common/Reference/Presenters/CrossReferenceByNaturePresenterBuilderTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
     <PossiblyNullPropertyFetch>
       <code><![CDATA[$presenter->cross_reference_link_list]]></code>
       <code><![CDATA[$presenter->cross_reference_link_list]]></code>
@@ -78623,15 +78464,6 @@
                 'is_active'          => 1,
             ])]]></code>
     </TooManyArguments>
-  </file>
-  <file src="tests/unit/common/Request/ProjectRetrieverTest.php">
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-    </PossiblyUndefinedMethod>
   </file>
   <file src="tests/unit/common/Request/RequestTimeTest.php">
     <PossiblyNullPropertyAssignmentValue>
@@ -79228,14 +79060,6 @@
       <code><![CDATA[$xml_object->user]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="tests/unit/common/User/XML/UserXMLExporterTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$base_xml]]></code>
-      <code><![CDATA[$collection]]></code>
-      <code><![CDATA[$user_manager]]></code>
-      <code><![CDATA[$user_xml_exporter]]></code>
-    </MissingPropertyType>
-  </file>
   <file src="tests/unit/common/WebAssembly/WASMCallerStub.php">
     <ImplementedReturnTypeMismatch>
       <code><![CDATA[Option<Result<string, Fault>>]]></code>
@@ -79354,7 +79178,6 @@
   </file>
   <file src="tests/unit/common/permission/PermissionsManagerSavePermissionsFeebackOverlapingTest.php">
     <MissingParamType>
-      <code><![CDATA[$ugroup]]></code>
       <code><![CDATA[$ugroups]]></code>
     </MissingParamType>
   </file>

@@ -22,7 +22,11 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa-fw document-folder-content-icon" v-bind:class="icon" data-test="icon"></i>
+        <i
+            class="fa-fw document-folder-content-icon"
+            v-bind:class="item.item_icon"
+            data-test="icon"
+        ></i>
         <a
             v-bind:href="url"
             class="document-folder-subitem-link"
@@ -43,17 +47,13 @@
 </template>
 
 <script setup lang="ts">
-import { ACTION_ICON_OTHER_TYPE, ICON_EMPTY } from "../../../constants";
+import { ACTION_ICON_OTHER_TYPE } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 import type { OtherTypeItem } from "../../../type";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { OTHER_ITEM_TYPES } from "../../../injection-keys";
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ item: OtherTypeItem }>();
-
-const other_item_types = strictInject(OTHER_ITEM_TYPES);
 
 const { $gettext } = useGettext();
 
@@ -67,8 +67,4 @@ const url = computed((): string => {
     }
     return props.item.other_type_properties.open_href;
 });
-
-const icon = computed((): string =>
-    props.item.type in other_item_types ? other_item_types[props.item.type].icon : ICON_EMPTY,
-);
 </script>

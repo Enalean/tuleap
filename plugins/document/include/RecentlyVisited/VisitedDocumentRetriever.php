@@ -24,7 +24,7 @@ namespace Tuleap\Document\RecentlyVisited;
 
 use Docman_ItemFactory;
 use Docman_PermissionsManager;
-use Tuleap\Docman\Reference\DocumentIconPresenterBuilder;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectNotFoundException;
 use Tuleap\QuickLink\SwitchToQuickLink;
@@ -38,7 +38,7 @@ final readonly class VisitedDocumentRetriever
     public function __construct(
         private RecentlyVisitedDocumentDao $dao,
         private ProjectByIDFactory $project_factory,
-        private DocumentIconPresenterBuilder $icon_presenter_builder,
+        private ItemIconPresenterBuilder $icon_presenter_builder,
         private VisitedDocumentHrefVisitor $href_visitor,
     ) {
     }
@@ -92,12 +92,12 @@ final readonly class VisitedDocumentRetriever
                 null,
                 $item->accept($this->href_visitor, ['project' => $project]),
                 $item->getTitle(),
-                $icon_presenter->color,
+                $icon_presenter->getColor(),
                 self::TYPE,
                 (int) $item->getId(),
                 null,
                 null,
-                $icon_presenter->icon,
+                $icon_presenter->getIcon(),
                 $project,
                 [
                     new SwitchToQuickLink(

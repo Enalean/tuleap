@@ -22,7 +22,7 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
+        <i class="fa-fw document-folder-content-icon" v-bind:class="item.item_icon"></i>
         <a
             v-bind:href="file_url"
             class="document-folder-subitem-link"
@@ -39,8 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
-import { ICON_EMPTY, ACTION_ICON_FILE, ACTION_ICON_ONLYOFFICE } from "../../../constants";
+import { ACTION_ICON_FILE, ACTION_ICON_ONLYOFFICE } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 import type { ItemFile } from "../../../type";
 import { computed } from "vue";
@@ -52,14 +51,6 @@ const { $gettext } = useGettext();
 
 const is_corrupted = computed((): boolean => {
     return !("file_properties" in props.item) || props.item.file_properties === null;
-});
-
-const icon_class = computed((): string => {
-    if (is_corrupted.value || !props.item.file_properties) {
-        return ICON_EMPTY;
-    }
-
-    return iconForMimeType(props.item.file_properties.file_type);
 });
 
 const file_url = computed((): string => {

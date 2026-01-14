@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Document\Tree\Create;
+namespace Tuleap\Docman\Item\Icon;
 
-/**
- * @psalm-immutable
- */
-final class NewItemAlternative
+use Docman_Item;
+use Tuleap\Event\Dispatchable;
+
+final class ItemIconPresenterEvent implements Dispatchable
 {
-    public function __construct(
-        public string $mime_type,
-        public string $title,
-        public string $item_icon,
-    ) {
+    public function __construct(private ItemIconPresenter $icon_presenter, private Docman_Item $item)
+    {
+    }
+
+    public function getPresenter(): ItemIconPresenter
+    {
+        return $this->icon_presenter;
+    }
+
+    public function setPresenter(ItemIconPresenter $presenter): void
+    {
+        $this->icon_presenter = $presenter;
+    }
+
+    public function getItem(): Docman_Item
+    {
+        return $this->item;
     }
 }
