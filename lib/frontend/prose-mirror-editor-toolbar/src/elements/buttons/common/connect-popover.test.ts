@@ -32,18 +32,17 @@ describe("connect-popover", () => {
     let doc: Document;
 
     beforeAll(() => {
-        // Good enough mock for the tests
-        global.ResizeObserver = class ResizeObserver {
-            observe(): void {
-                // do nothing
-            }
-            unobserve(): void {
-                // do nothing
-            }
-            disconnect(): void {
-                // do nothing
-            }
-        };
+        const noop = (): void => {};
+        vi.stubGlobal(
+            "ResizeObserver",
+            vi.fn(
+                class {
+                    observe = noop;
+                    unobserve = noop;
+                    disconnect = noop;
+                },
+            ),
+        );
     });
 
     beforeEach(() => {

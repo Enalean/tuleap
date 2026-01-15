@@ -18,7 +18,7 @@
  */
 
 import type { MockInstance } from "vitest";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DropdownManager } from "./DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import type { ScrollingManager } from "../events/ScrollingManager";
@@ -34,17 +34,18 @@ describe("dropdown-manager", () => {
         dropdown_manager: DropdownManager,
         scroll_manager: ScrollingManager,
         field_focus_manager: FieldFocusManager,
-        ResizeObserverSpy: MockInstance,
+        ResizeObserverSpy: unknown,
         disconnect: MockInstance;
 
     beforeEach(() => {
         disconnect = vi.fn();
-        window.ResizeObserver = ResizeObserverSpy = vi.fn().mockImplementation(() => {
-            return {
-                observe: vi.fn(),
-                disconnect,
-            };
-        });
+        ResizeObserverSpy = vi.fn(
+            class {
+                observe = vi.fn();
+                disconnect = disconnect;
+            },
+        );
+        vi.stubGlobal("ResizeObserver", ResizeObserverSpy);
     });
 
     beforeEach(() => {

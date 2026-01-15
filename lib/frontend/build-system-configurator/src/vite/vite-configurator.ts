@@ -19,13 +19,12 @@
 
 import path from "node:path";
 import process from "node:process";
-import type { UserConfigExport } from "vitest/config";
 import {
     configDefaults as config_defaults_vitest,
     defineConfig as viteDefineConfig,
 } from "vitest/config";
-import type { BuildOptions, CSSOptions, ServerOptions, UserConfig } from "vite";
-import type { CoverageOptions } from "vitest";
+import type { BuildOptions, CSSOptions, ServerOptions, UserConfig, UserConfigExport } from "vite";
+import type { CoverageOptions } from "vitest/node";
 import { browserlist_config, esbuild_target } from "../browserslist_config";
 import autoprefixer from "autoprefixer";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -153,7 +152,8 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
         test: {
             watch: false,
             restoreMocks: true,
-            css: true,
+            unstubGlobals: true,
+            mockReset: true,
             environment: "jsdom",
             include: ["**/?(*.)+(test).{js,ts}"],
             exclude: [

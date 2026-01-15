@@ -41,18 +41,18 @@ describe(`TuleapAPIClient`, () => {
             const fetchStub = (): Promise<Response> =>
                 Promise.resolve({ text: () => Promise.resolve(expected_comment_html) } as Response);
             const fetcher = {
-                fetch: fetchStub as typeof global.fetch,
+                fetch: fetchStub as typeof fetch,
             };
-            const fetch = jest.spyOn(fetcher, "fetch");
+            const fetchMock = jest.spyOn(fetcher, "fetch");
             const client = TuleapAPIClient(doc, fetcher);
 
             const changeset_id = "690";
             const comment_format = TEXT_FORMAT_COMMONMARK;
             const result = await client.postComment(changeset_id, comment_body, comment_format);
 
-            expect(fetch).toHaveBeenCalled();
-            const url = fetch.mock.calls[0][0];
-            const request_init = fetch.mock.calls[0][1];
+            expect(fetchMock).toHaveBeenCalled();
+            const url = fetchMock.mock.calls[0][0];
+            const request_init = fetchMock.mock.calls[0][1];
             expect(url.toString()).toBe("https://example.com/plugins/tracker/?aid=806");
             expect(request_init?.method).toBe("POST");
             expect(request_init?.body?.toString()).toStrictEqual(

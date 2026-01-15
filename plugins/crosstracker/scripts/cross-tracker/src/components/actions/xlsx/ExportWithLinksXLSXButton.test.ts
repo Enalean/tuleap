@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -32,41 +33,31 @@ import mitt from "mitt";
 import { Fault } from "@tuleap/fault";
 import ExportWithLinksXLSXButton from "./ExportWithLinksXLSXButton.vue";
 import { TableDataStoreTestBuilder } from "../../../../tests/builders/TableDataStoreTestBuilder";
+import * as export_document from "../../../helpers/exporter/export-document";
+import * as download_xlsx from "../../../helpers/exporter/xlsx/download-xlsx";
 
 vi.useFakeTimers();
-
-const downloadXLSXWithLinkDocument = vi.fn();
-vi.mock("../../../helpers/exporter/export-document", () => {
-    return {
-        downloadXLSXWithLinkDocument: downloadXLSXWithLinkDocument,
-    };
-});
-
-const downloadXLSX = vi.fn();
-vi.mock("../../../helpers/exporter/xlsx/download-xlsx", () => {
-    return {
-        downloadXLSX: downloadXLSX,
-    };
-});
 
 describe("ExportWithLinksXLSXButton", () => {
     let emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
+    let downloadXLSXWithLinkDocument: MockInstance;
 
     const registerFaultEvents = (event: NotifyFaultEvent): void => {
         dispatched_fault_events.push(event);
     };
 
     beforeEach(() => {
-        downloadXLSXWithLinkDocument.mockReset();
-        downloadXLSX.mockReset();
         emitter = mitt<Events>();
         dispatched_fault_events = [];
         emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvents);
+        downloadXLSXWithLinkDocument = vi.spyOn(export_document, "downloadXLSXWithLinkDocument");
+        vi.spyOn(download_xlsx, "downloadXLSX");
     });
 
     afterEach(() => {
         emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvents);
+        vi.resetAllMocks();
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof ExportWithLinksXLSXButton>> {

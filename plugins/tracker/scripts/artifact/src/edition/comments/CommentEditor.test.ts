@@ -99,7 +99,7 @@ describe(`CommentEditor`, () => {
                     text: () => Promise.resolve(fetch_text_response),
                 } as Response);
             const fetcher = {
-                fetch: fetchStub as typeof global.fetch,
+                fetch: fetchStub as typeof fetch,
             };
             api_client = TuleapAPIClient(doc, fetcher);
 

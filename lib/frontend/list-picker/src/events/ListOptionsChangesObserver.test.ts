@@ -19,7 +19,6 @@
 
 import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import process from "node:process";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import type { SelectionManager } from "../type";
@@ -29,6 +28,8 @@ import {
     appendGroupedOptionsToSourceSelectBox,
     appendSimpleOptionsToSourceSelectBox,
 } from "../test-helpers/select-box-options-generator";
+
+vi.useFakeTimers();
 
 describe("ListOptionsChangesObserver", () => {
     let source_select_box: HTMLSelectElement,
@@ -71,7 +72,7 @@ describe("ListOptionsChangesObserver", () => {
         list_options_changes_observer.startWatchingChanges();
         appendGroupedOptionsToSourceSelectBox(source_select_box);
 
-        await new Promise(process.nextTick);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
@@ -84,7 +85,7 @@ describe("ListOptionsChangesObserver", () => {
         list_options_changes_observer.startWatchingChanges();
 
         source_select_box.innerHTML = "";
-        await new Promise(process.nextTick);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
@@ -97,7 +98,7 @@ describe("ListOptionsChangesObserver", () => {
         list_options_changes_observer.startWatchingChanges();
 
         source_select_box.options[0].disabled = true;
-        await new Promise(process.nextTick);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
@@ -110,7 +111,7 @@ describe("ListOptionsChangesObserver", () => {
         list_options_changes_observer.startWatchingChanges();
 
         source_select_box.options[0].value = "new_value";
-        await new Promise(process.nextTick);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();

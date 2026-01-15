@@ -118,6 +118,7 @@ describe("GroupTemplate", () => {
         let item: LazyboxItem;
 
         beforeEach(() => {
+            vi.resetAllMocks();
             item = LazyboxItemStub.withDefaults({ value: { id: 1 } });
         });
 

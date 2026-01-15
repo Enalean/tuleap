@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import type { MockInstance } from "vitest";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
@@ -53,6 +53,10 @@ describe("CommonmarkPopoverController", () => {
                 destroy: destroyPopoverInstance,
                 hide: hidePopover,
             } as unknown as Popover);
+        });
+
+        afterEach(() => {
+            vi.resetAllMocks();
         });
 
         it("initPopover() should create a Popover instance", () => {

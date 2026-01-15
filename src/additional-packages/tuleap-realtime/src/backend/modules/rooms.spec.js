@@ -14,6 +14,7 @@ describe("Module Rooms", function() {
     var groups, user_id, room_id, socket, socket_bis, socket_in_room;
 
     beforeEach(function() {
+        vi.resetAllMocks();
         groups  = [ '@site_active', '@ug_101', '@ug_159'];
         user_id = 165;
         room_id = 20;

@@ -31,7 +31,7 @@ export type AsyncCrossReference = {
 };
 
 export type InternalAsyncCrossReference = AsyncCrossReference & {
-    timeout_id: NodeJS.Timeout | undefined;
+    timeout_id: number | undefined;
 };
 
 export type HostElement = InternalAsyncCrossReference & HTMLElement;

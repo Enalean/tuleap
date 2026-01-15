@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { UserConfig } from "vitest/config";
+import type { UserConfig } from "vite";
 import { beforeEach, describe, it, expect } from "vitest";
 import type { TuleapSpecificConfiguration } from "./vite-configurator";
 import { defineAppConfig } from "./vite-configurator";

@@ -28,10 +28,11 @@ import type { User } from "@tuleap/core-rest-api-types";
 import * as rest_querier from "../api/rest-querier";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import process from "node:process";
 import NoMoreViewableUsersWarning from "./NoMoreViewableUsersWarning.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import ErrorMessage from "./ErrorMessage.vue";
+
+vi.useFakeTimers();
 
 describe("Given a People Timetracking Widget", () => {
     function getPeopleTimetrackingWidgetInstance(
@@ -145,7 +146,7 @@ describe("Given a People Timetracking Widget", () => {
             QueryStub.withDefaults([alice, bobby, alyssa]),
         );
 
-        await new Promise(process.nextTick);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(
             wrapper
@@ -183,7 +184,7 @@ describe("Given a People Timetracking Widget", () => {
 
             wrapper.findComponent(WidgetQueryEditor).props("save")(QueryStub.withDefaults([]));
 
-            await new Promise(process.nextTick);
+            await vi.runOnlyPendingTimersAsync();
         });
 
         it("Then the editor should stay and the error message should be displayed", () => {
@@ -197,7 +198,7 @@ describe("Given a People Timetracking Widget", () => {
         it("Then the error message is not displayed anymore if the user decides to close the editor", async () => {
             wrapper.findComponent(WidgetQueryEditor).props("close")();
 
-            await new Promise(process.nextTick);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBe(true);
             expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBe(false);
