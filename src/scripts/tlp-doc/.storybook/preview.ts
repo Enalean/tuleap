@@ -136,17 +136,34 @@ const preview: Preview = {
                 ],
             },
         },
+        mode: {
+            description: "Light or Dark mode",
+            toolbar: {
+                title: "Mode",
+                icon: "mirror",
+                items: [
+                    { value: "system", title: "System", icon: "mirror" },
+                    { value: "light", title: "Light", icon: "sun" },
+                    { value: "dark", title: "Dark", icon: "moon" },
+                ],
+            },
+        },
     },
     initialGlobals: {
         backgrounds: { value: grey_background.key },
         theme: orange_theme_entry.value,
+        mode: "light",
     },
     decorators: [
         (Story, context): HTMLTemplateResult => {
             const selected_theme = context.globals.theme;
             const defaulted_theme =
                 selected_theme === "" ? orange_theme_entry.value : selected_theme;
+            const selected_mode = context.globals.mode ?? "light";
+
             const doc = context.canvasElement.ownerDocument;
+            doc.body.setAttribute("data-user-dark-mode", selected_mode);
+
             const colors_stylesheet = new CSSStyleSheet();
             const theme_style = getTheme(defaulted_theme);
             colors_stylesheet.replaceSync(theme_style);
