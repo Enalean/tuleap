@@ -315,11 +315,8 @@ describe("Project admin", function () {
             cy.get("[data-test=access-log]").click({ force: true });
 
             const download_folder = Cypress.config("downloadsFolder");
-            cy.get("[data-test=export-access-log]")
-                .click()
-                .then(() => {
-                    cy.readFile(`${download_folder}/access_logs.csv`).should("exist");
-                });
+            cy.get("[data-test=export-access-log]").click();
+            cy.readFile(`${download_folder}/access_logs.csv`).should("exist");
 
             cy.log("Download project history");
             cy.visitProjectAdministration(project_access_log);
@@ -328,20 +325,14 @@ describe("Project admin", function () {
             cy.get("[data-test=events_box]").select("Permissions", { force: true });
             cy.get("[data-test=filter-history-submit]").click();
             // button is outside of viewport
-            cy.get("[data-test=export-history-button]")
-                .click({ force: true })
-                .then(() => {
-                    cy.readFile(`${download_folder}/project_history.csv`).should("exist");
-                });
+            cy.get("[data-test=export-history-button]").click({ force: true });
+            cy.readFile(`${download_folder}/project_history.csv`).should("exist");
 
             cy.log("Download project structure");
             cy.visitProjectAdministration(project_access_log);
             cy.get("[data-test=project-structure-export]").click({ force: true });
-            cy.get("[data-test=export-project-structure]")
-                .click()
-                .then(() => {
-                    cy.readFile(`${download_folder}/${project_access_log}.zip`).should("exist");
-                });
+            cy.get("[data-test=export-project-structure]").click();
+            cy.readFile(`${download_folder}/${project_access_log}.zip`).should("exist");
         });
         describe("project reference", function () {
             before(function () {

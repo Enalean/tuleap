@@ -46,28 +46,18 @@ describe("Project flag", function () {
         cy.get("[data-test=add-trove-cat-submit-button]").click();
 
         cy.log("Edit the created flag");
-        cy.get("[data-test=trove-cat-row]")
-            .contains("div:visible", flag_name)
-            .parentsUntil("[data-test=trove-cat-row]")
-            .parent()
-            .within(() => {
-                cy.get("[data-test=trove-cat-edit-button]")
-                    .click()
-                    .then((modal) => {
-                        cy.wrap(modal)
-                            .get("[data-test=trove-cats-nb-max-values-input]")
-                            .clear()
-                            .type("1");
-                        cy.wrap(modal).get("[data-test=trove-cats-modal-is-project-flag]").check();
-                        cy.wrap(modal).get("[data-test=add-trove-cat-update-button]").click();
-                    });
-            });
-        cy.contains("div:visible", flag_name)
-            .parentsUntil("[data-test=trove-cat-row]")
-            .parent()
-            .within(() => {
-                cy.get("[data-test=trove-cats-project-flag-checked]").should("exist");
-            });
+        cy.getContains("[data-test=trove-cat-row]", flag_name)
+            .find("[data-test=trove-cat-edit-button]")
+            .click();
+        cy.get("[data-test=edit-category-modal]:visible").then((modal) => {
+            cy.wrap(modal).find("[data-test=trove-cats-nb-max-values-input]").type("{selectAll}1");
+            cy.wrap(modal).find("[data-test=trove-cats-modal-is-project-flag]").check();
+            cy.wrap(modal).find("[data-test=add-trove-cat-update-button]").click();
+        });
+
+        cy.getContains("[data-test=trove-cat-row]", flag_name)
+            .find("[data-test=trove-cats-project-flag-checked]")
+            .should("exist");
 
         cy.log("Connect as Project admin to add the created flag");
         cy.projectAdministratorSession();

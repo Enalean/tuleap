@@ -48,7 +48,7 @@ describe("Frs", function () {
 
                 cy.get("[data-test=update-package]").first().click();
                 const edited_package = "edited" + getAntiCollisionNamePart();
-                cy.get("[data-test=frs-create-package]").clear().type(edited_package);
+                cy.get("[data-test=frs-create-package]").type("{selectAll}" + edited_package);
                 cy.get("[data-test=frs-create-package-button]").click({
                     timeout: 60000,
                 });

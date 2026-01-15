@@ -302,14 +302,14 @@ const config_for_typescript_tests = {
 const config_for_cypress_globals = {
     files: [
         "lib/test-utils/cypress-utilities-support/**/*.ts",
-        "tests/e2e/**/*.ts",
+        "tests/e2e/full/cypress/**/*.ts",
         "plugins/**/tests/e2e/**/**/*.ts",
     ],
     extends: [plugin_cypress.configs.recommended],
 };
 
 const config_for_cypress = {
-    files: ["tests/e2e/**/*.ts", "plugins/**/tests/e2e/**/**/*.ts"],
+    files: ["tests/e2e/full/cypress/**/*.ts", "plugins/*/tests/e2e/**/*.ts"],
     plugins: {
         "no-only-tests": plugin_no_only_tests,
     },
@@ -324,6 +324,7 @@ const config_for_cypress = {
 };
 
 const config_to_temporarily_disable_cypress_unsafe_chain = {
+    files: ["plugins/*/tests/e2e/**/*.ts"],
     rules: {
         "cypress/unsafe-to-chain-command": "off", // We should fix this in a dedicated issue
     },
