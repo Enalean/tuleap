@@ -23,12 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Psr\Log\LoggerInterface;
-use SodiumException;
 use Tracker_Exception;
-use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
-use Tuleap\Cryptography\Exception\InvalidCiphertextException;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
+use Tuleap\DB\UUID;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
@@ -45,7 +41,6 @@ class JiraRunner
     public function __construct(
         private LoggerInterface $logger,
         private QueueFactory $queue_factory,
-        private KeyFactory $key_factory,
         private FromJiraTrackerCreator $tracker_creator,
         private PendingJiraImportDao $dao,
         private JiraSuccessImportNotifier $success_notifier,
@@ -56,13 +51,13 @@ class JiraRunner
     ) {
     }
 
-    public function queueJiraImportEvent(int $pending_jira_import_id): void
+    public function queueJiraImportEvent(UUID $pending_jira_import_id): void
     {
         $queue = $this->getPersistentQueue();
         $queue->pushSinglePersistentMessage(
             AsynchronousJiraRunner::TOPIC,
             [
-                'pending_jira_import_id' => $pending_jira_import_id,
+                'pending_jira_import_id' => $pending_jira_import_id->toString(),
             ]
         );
     }
@@ -75,7 +70,7 @@ class JiraRunner
     public function processAsyncJiraImport(PendingJiraImport $pending_import): void
     {
         try {
-            $this->dao->deleteById($pending_import->getId());
+            $this->dao->deleteById($pending_import->id);
 
             $user = $this->user_manager->forceLogin($pending_import->getUser()->getUserName());
             if (! $user->isAlive()) {
@@ -83,15 +78,10 @@ class JiraRunner
                 return;
             }
 
-            $token = SymmetricCrypto::decrypt(
-                $pending_import->getEncryptedJiraToken(),
-                $this->key_factory->getLegacy2025EncryptionKey()
-            );
-
             $jira_credentials = new JiraCredentials(
                 $pending_import->getJiraServer(),
                 $pending_import->getJiraUser(),
-                $token
+                $pending_import->jira_token
             );
 
             $jira_client = $this->jira_client_builder->build($jira_credentials, $this->logger);
@@ -109,12 +99,6 @@ class JiraRunner
                 $pending_import->getUser()
             );
             $this->success_notifier->warnUserAboutSuccess($pending_import, $tracker, $this->jira_user_on_tuleap_cache);
-        } catch (InvalidCiphertextException | CannotPerformIOOperationException | SodiumException $exception) {
-            $message = $exception->getMessage();
-            if ($message) {
-                $this->logger->error($message);
-            }
-            $this->logError($pending_import, 'Unable to access to the token to do the import.');
         } catch (XML_ParseException $exception) {
             $this->logError($pending_import, 'Unable to parse the XML used to import from Jira.');
         } catch (JiraConnectionException $exception) {

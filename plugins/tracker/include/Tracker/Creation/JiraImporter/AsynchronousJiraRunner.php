@@ -22,30 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Tuleap\DB\DatabaseUUIDFactory;
+use Tuleap\DB\UUID;
 use Tuleap\Queue\WorkerEvent;
 
-class AsynchronousJiraRunner
+readonly class AsynchronousJiraRunner
 {
     public const string TOPIC = 'tuleap.tracker.creation.jira';
 
-    /**
-     * @var JiraRunner
-     */
-    private $jira_runner;
-    /**
-     * @var PendingJiraImportDao
-     */
-    private $dao;
-    /**
-     * @var PendingJiraImportBuilder
-     */
-    private $builder;
-
-    public function __construct(JiraRunner $jira_runner, PendingJiraImportDao $dao, PendingJiraImportBuilder $builder)
-    {
-        $this->jira_runner = $jira_runner;
-        $this->dao         = $dao;
-        $this->builder     = $builder;
+    public function __construct(
+        private JiraRunner $jira_runner,
+        private PendingJiraImportDao $dao,
+        private PendingJiraImportBuilder $builder,
+        private DatabaseUUIDFactory $uuid_factory,
+    ) {
     }
 
     public static function addListener(
@@ -53,6 +43,7 @@ class AsynchronousJiraRunner
         PendingJiraImportDao $dao,
         PendingJiraImportBuilder $builder,
         JiraRunner $jira_runner,
+        DatabaseUUIDFactory $uuid_factory,
     ): void {
         if ($event->getEventName() !== self::TOPIC) {
             return;
@@ -61,7 +52,8 @@ class AsynchronousJiraRunner
         $async_runner = new self(
             $jira_runner,
             $dao,
-            $builder
+            $builder,
+            $uuid_factory,
         );
         $async_runner->process($event);
     }
@@ -77,26 +69,31 @@ class AsynchronousJiraRunner
             return;
         }
 
-        $pending_import_row = $this->dao->searchById((int) $message['pending_jira_import_id']);
-        if (! $pending_import_row) {
-            $event->getLogger()->error(
-                'Not able to process an event ' . $event->getEventName(
-                ) . ', the pending jira import #' . $message['pending_jira_import_id'] . ' ' .
-                'can not be found.'
-            );
+        $this->uuid_factory->buildUUIDFromHexadecimalString($message['pending_jira_import_id'])->apply(
+            function (UUID $id) use ($event): void {
+                $pending_import_row = $this->dao->searchById($id);
+                if (! $pending_import_row) {
+                    $event->getLogger()->error(
+                        'Not able to process an event ' . $event->getEventName(
+                        ) . ', the pending jira import #' . $id->toString() . ' ' .
+                        'can not be found.'
+                    );
 
-            return;
-        }
+                    return;
+                }
 
-        try {
-            $pending_import = $this->builder->buildFromRow($pending_import_row);
-            $this->jira_runner->processAsyncJiraImport($pending_import);
-        } catch (UnableToBuildPendingJiraImportException $exception) {
-            $event->getLogger()->error(
-                'Not able to process an event ' . $event->getEventName(
-                ) . ', the pending jira import #' . $message['pending_jira_import_id'] . ' ' .
-                'can not be built: ' . $exception->getMessage()
-            );
-        }
+                try {
+                    $pending_import = $this->builder->buildFromRow($pending_import_row);
+                    $this->jira_runner->processAsyncJiraImport($pending_import);
+                } catch (UnableToBuildPendingJiraImportException $exception) {
+                    $event->getLogger()->error(
+                        'Not able to process an event ' . $event->getEventName(
+                        ) . ', the pending jira import #' . $id->toString() . ' ' .
+                        'can not be built: ' . $exception->getMessage(),
+                        ['exception' => $exception]
+                    );
+                }
+            }
+        );
     }
 }

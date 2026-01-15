@@ -908,7 +908,7 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets_
 
 DROP TABLE IF EXISTS plugin_tracker_pending_jira_import;
 CREATE TABLE IF NOT EXISTS plugin_tracker_pending_jira_import (
-    id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id BINARY(16) NOT NULL PRIMARY KEY,
     created_on INT(11) UNSIGNED NOT NULL,
     project_id INT(11) NOT NULL,
     user_id INT(11) NOT NULL,

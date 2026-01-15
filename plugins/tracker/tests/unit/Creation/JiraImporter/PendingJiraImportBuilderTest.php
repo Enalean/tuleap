@@ -26,8 +26,10 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
@@ -76,17 +78,17 @@ final class PendingJiraImportBuilderTest extends TestCase
 
     public function testItReturnsAPendingJiraImport(): void
     {
-        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->withId(42)->build());
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::anActiveUser()->build());
 
         $pending_import = $this->builder->buildFromRow($this->aPendingImportRow());
-        self::assertEquals(12, $pending_import->getId());
+        self::assertEquals(42, $pending_import->getProject()->getID());
     }
 
     private function aPendingImportRow(): array
     {
         return [
-            'id'                   => 12,
+            'id'                   => new UUIDTestContext(),
             'created_on'           => 0,
             'jira_server'          => '',
             'jira_issue_type_name' => '',
@@ -97,7 +99,7 @@ final class PendingJiraImportBuilderTest extends TestCase
             'user_id'              => 103,
             'jira_project_id'      => '',
             'jira_user_email'      => '',
-            'encrypted_jira_token' => '',
+            'jira_token'           => new ConcealedString('token'),
             'tracker_color'        => '',
             'tracker_description'  => '',
         ];

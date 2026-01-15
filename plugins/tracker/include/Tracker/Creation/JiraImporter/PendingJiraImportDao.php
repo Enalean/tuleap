@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\UUID;
 
 class PendingJiraImportDao extends DataAccessObject
 {
@@ -31,7 +34,7 @@ class PendingJiraImportDao extends DataAccessObject
         int $user_id,
         string $jira_server,
         string $jira_user_email,
-        string $encrypted_jira_token,
+        ConcealedString $jira_token,
         string $jira_project_id,
         string $jira_issue_type_name,
         string $jira_issue_type_id,
@@ -39,16 +42,22 @@ class PendingJiraImportDao extends DataAccessObject
         string $tracker_shortname,
         string $tracker_color,
         string $tracker_description,
-    ): int {
-        return (int) $this->getDB()->insertReturnId(
+    ): UUID {
+        $uuid_bytes = $this->uuid_factory->buildUUIDBytes();
+        $id         = $this->uuid_factory->buildUUIDFromBytesData($uuid_bytes);
+        $this->getDB()->insert(
             'plugin_tracker_pending_jira_import',
             [
+                'id' => $uuid_bytes,
                 'created_on'           => (new \DateTimeImmutable())->getTimestamp(),
                 'project_id'           => $project_id,
                 'user_id'              => $user_id,
                 'jira_server'          => $jira_server,
                 'jira_user_email'      => $jira_user_email,
-                'encrypted_jira_token' => $encrypted_jira_token,
+                'encrypted_jira_token' => $this->encryptDataToStoreInATableRow(
+                    $jira_token,
+                    $this->getJIRATokenEncryptionAdditionalData($id)
+                ),
                 'jira_project_id'      => $jira_project_id,
                 'jira_issue_type_name' => $jira_issue_type_name,
                 'jira_issue_type_id'   => $jira_issue_type_id,
@@ -58,25 +67,49 @@ class PendingJiraImportDao extends DataAccessObject
                 'tracker_description'  => $tracker_description,
             ]
         );
+        return $id;
     }
 
+    /**
+     * @return list<array{tracker_name:string,tracker_shortname:string}>
+     */
     public function searchByProjectId(int $project_id): array
     {
         return $this->getDB()->run(
-            'SELECT * FROM plugin_tracker_pending_jira_import WHERE project_id = ?',
+            'SELECT tracker_name, tracker_shortname FROM plugin_tracker_pending_jira_import WHERE project_id = ?',
             $project_id
         );
     }
 
     /**
-     * @return mixed
+     * @return ?array{id: UUID, project_id: int, user_id: int, created_on: int, jira_server: string, jira_user_email: string, jira_token:ConcealedString, jira_project_id: string, jira_issue_type_name: string, jira_issue_type_id: string, tracker_name: string, tracker_shortname: string, tracker_color: string, tracker_description: string}
      */
-    public function searchById(int $id)
+    public function searchById(UUID $id): ?array
     {
-        return $this->getDB()->row(
-            'SELECT * FROM plugin_tracker_pending_jira_import WHERE id = ?',
-            $id
+        $row = $this->getDB()->row(
+            '
+            SELECT project_id, user_id, created_on, jira_server, jira_user_email, encrypted_jira_token, jira_project_id,
+                   jira_issue_type_name, jira_issue_type_id, tracker_name, tracker_shortname, tracker_color, tracker_description
+            FROM plugin_tracker_pending_jira_import WHERE id = ?',
+            $id->getBytes()
         );
+        if ($row === null) {
+            return null;
+        }
+        $row['id'] = $id;
+
+        $row['jira_token'] = $this->decryptDataStoredInATableRow(
+            $row['encrypted_jira_token'],
+            $this->getJIRATokenEncryptionAdditionalData($id)
+        );
+        sodium_memzero($row['encrypted_jira_token']);
+
+        return $row;
+    }
+
+    public function getJIRATokenEncryptionAdditionalData(UUID $id): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData('plugin_tracker_pending_jira_import', 'encrypted_jira_token', $id->getBytes());
     }
 
     public function doesTrackerShortNameExist(string $shortname, int $project_id): bool
@@ -113,20 +146,39 @@ class PendingJiraImportDao extends DataAccessObject
         );
     }
 
+    /**
+     * @return list<array{id: UUID, project_id: int, user_id: int, created_on: int, jira_server: string, jira_user_email: string, jira_token:ConcealedString, jira_project_id: string, jira_issue_type_name: string, jira_issue_type_id: string, tracker_name: string, tracker_shortname: string, tracker_color: string, tracker_description: string}>
+     */
     public function searchExpiredImports(int $expiration_timestamp): array
     {
-        return $this->getDB()->run(
-            'SELECT *
+        $retrieved_rows = $this->getDB()->run(
+            'SELECT id, project_id, user_id, created_on, jira_server, jira_user_email, encrypted_jira_token, jira_project_id,
+                   jira_issue_type_name, jira_issue_type_id, tracker_name, tracker_shortname, tracker_color, tracker_description
                 FROM plugin_tracker_pending_jira_import
                 WHERE created_on <= ?',
             $expiration_timestamp
         );
+
+        $rows = [];
+
+        foreach ($retrieved_rows as $row) {
+            $id        = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+            $row['id'] = $id;
+
+            $row['jira_token'] = $this->decryptDataStoredInATableRow(
+                $row['encrypted_jira_token'],
+                $this->getJIRATokenEncryptionAdditionalData($id)
+            );
+            sodium_memzero($row['encrypted_jira_token']);
+        }
+
+        return $rows;
     }
 
-    public function deleteById(int $id): void
+    public function deleteById(UUID $id): void
     {
         $this->getDB()->delete('plugin_tracker_pending_jira_import', [
-            'id' => $id,
+            'id' => $id->getBytes(),
         ]);
     }
 }

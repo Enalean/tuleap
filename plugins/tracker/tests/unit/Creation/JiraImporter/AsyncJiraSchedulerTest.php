@@ -25,35 +25,26 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use ColinODell\PsrTestLogger\TestLogger;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class AsyncJiraSchedulerTest extends TestCase
 {
     public function testScheduleCreationStoreJiraInformationWithEncryptedToken(): void
     {
-        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-
-        $key_factory = $this->createMock(KeyFactory::class);
-        $key_factory->method('getLegacy2025EncryptionKey')->willReturn($encryption_key);
-
         $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
+        $uuid                    = new UUIDTestContext();
         $pending_jira_import_dao->expects($this->once())->method('create')
             ->with(
                 142,
                 101,
                 'https://jira.example.com',
                 'user@example.com',
-                self::callback(
-                    static fn(string $encrypted_jira_token) => SymmetricCrypto::decrypt($encrypted_jira_token, $encryption_key)->getString() === 'very_secret'
-                ),
+                new ConcealedString('very_secret'),
                 'jira project id',
                 'jira issue type name',
                 '10003',
@@ -62,14 +53,14 @@ final class AsyncJiraSchedulerTest extends TestCase
                 'inca-silver',
                 'All bugs'
             )
-            ->willReturn(1001);
+            ->willReturn($uuid);
 
         $jira_runner = $this->createMock(JiraRunner::class);
-        $jira_runner->expects($this->once())->method('queueJiraImportEvent')->with(1001);
+        $jira_runner->expects($this->once())->method('queueJiraImportEvent')->with($uuid);
 
         $logger = new TestLogger();
 
-        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
+        $scheduler = new AsyncJiraScheduler($pending_jira_import_dao, $jira_runner, new DBTransactionExecutorPassthrough());
         $scheduler->scheduleCreation(
             ProjectTestBuilder::aProject()->withId(142)->build(),
             UserTestBuilder::buildWithId(101),
@@ -85,88 +76,5 @@ final class AsyncJiraSchedulerTest extends TestCase
             'All bugs'
         );
         self::assertFalse($logger->hasErrorRecords());
-    }
-
-    public function testItThrowsExceptionIfCreationFailed(): void
-    {
-        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-
-        $key_factory = $this->createMock(KeyFactory::class);
-        $key_factory->method('getLegacy2025EncryptionKey')->willReturn($encryption_key);
-
-        $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
-        $pending_jira_import_dao->expects($this->once())->method('create')
-            ->with(
-                142,
-                101,
-                'https://jira.example.com',
-                'user@example.com',
-                self::callback(
-                    static fn(string $encrypted_jira_token) => SymmetricCrypto::decrypt($encrypted_jira_token, $encryption_key)->getString() === 'very_secret'
-                ),
-                'jira project id',
-                'jira issue type name',
-                '10003',
-                'Bugs',
-                'bug',
-                'inca-silver',
-                'All bugs'
-            )
-            ->willReturn(0);
-
-        $jira_runner = $this->createMock(JiraRunner::class);
-        $jira_runner->expects($this->never())->method('queueJiraImportEvent');
-
-        $logger = new TestLogger();
-
-        $this->expectException(TrackerCreationHasFailedException::class);
-        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
-        $scheduler->scheduleCreation(
-            ProjectTestBuilder::aProject()->withId(142)->build(),
-            UserTestBuilder::buildWithId(101),
-            'https://jira.example.com',
-            'user@example.com',
-            new ConcealedString('very_secret'),
-            'jira project id',
-            'jira issue type name',
-            '10003',
-            'Bugs',
-            'bug',
-            'inca-silver',
-            'All bugs'
-        );
-        self::assertTrue($logger->hasErrorThatContains('Unable to schedule the import of Jira: the pending jira import cannot be saved in DB.'));
-    }
-
-    public function testItThrowsExceptionIfTokenCannotBeEncrypted(): void
-    {
-        $key_factory = $this->createMock(KeyFactory::class);
-        $key_factory->method('getLegacy2025EncryptionKey')->willThrowException(new CannotPerformIOOperationException('Cannot read encryption key', new \RuntimeException('Test')));
-
-        $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
-        $pending_jira_import_dao->expects($this->never())->method('create');
-
-        $jira_runner = $this->createMock(JiraRunner::class);
-        $jira_runner->expects($this->never())->method('queueJiraImportEvent');
-
-        $logger = new TestLogger();
-
-        $this->expectException(TrackerCreationHasFailedException::class);
-        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
-        $scheduler->scheduleCreation(
-            ProjectTestBuilder::aProject()->withId(142)->build(),
-            UserTestBuilder::buildWithId(101),
-            'https://jira.example.com',
-            'user@example.com',
-            new ConcealedString('very_secret'),
-            'jira project id',
-            'jira issue type name',
-            '10003',
-            'Bugs',
-            'bug',
-            'inca-silver',
-            'All bugs'
-        );
-        self::assertTrue($logger->hasErrorThatContains('Unable to schedule the import of Jira: Cannot read encryption key'));
     }
 }

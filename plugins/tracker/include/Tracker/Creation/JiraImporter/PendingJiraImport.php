@@ -25,6 +25,8 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use DateTimeImmutable;
 use PFUser;
 use Project;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\UUID;
 
 class PendingJiraImport
 {
@@ -73,27 +75,19 @@ class PendingJiraImport
      */
     private $jira_user;
     /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $encrypted_jira_token;
-    /**
      * @var string
      */
     private $tracker_description;
 
 
     public function __construct(
-        int $id,
+        public readonly UUID $id,
         Project $project,
         PFUser $user,
         DateTimeImmutable $created_on,
         string $jira_server,
         string $jira_user,
-        string $encrypted_jira_token,
+        public readonly ConcealedString $jira_token,
         string $jira_project_id,
         string $jira_issue_type_name,
         string $jira_issue_type_id,
@@ -102,7 +96,6 @@ class PendingJiraImport
         string $tracker_color,
         string $tracker_description,
     ) {
-        $this->id                   = $id;
         $this->project              = $project;
         $this->user                 = $user;
         $this->created_on           = $created_on;
@@ -114,7 +107,6 @@ class PendingJiraImport
         $this->tracker_name         = $tracker_name;
         $this->tracker_shortname    = $tracker_shortname;
         $this->tracker_color        = $tracker_color;
-        $this->encrypted_jira_token = $encrypted_jira_token;
         $this->tracker_description  = $tracker_description;
     }
 
@@ -171,16 +163,6 @@ class PendingJiraImport
     public function getJiraUser(): string
     {
         return $this->jira_user;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getEncryptedJiraToken(): string
-    {
-        return $this->encrypted_jira_token;
     }
 
     public function getTrackerDescription(): string
