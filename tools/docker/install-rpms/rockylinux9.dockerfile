@@ -15,6 +15,7 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/*;\
     rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
     rm -f /lib/systemd/system/basic.target.wants/*;\
     rm -f /lib/systemd/system/anaconda.target.wants/* && \
+    dnf module enable -y mysql:8.4 && \
     dnf install -y --setopt install_weak_deps=false --nodocs \
         openssh-server \
         createrepo \
