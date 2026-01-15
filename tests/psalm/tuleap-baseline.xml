@@ -6090,6 +6090,9 @@
     </TooFewArguments>
   </file>
   <file src="plugins/docman/include/Docman_CloneItemsVisitor.php">
+    <DeprecatedMethod>
+      <code><![CDATA[create]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$dataRoot]]></code>
       <code><![CDATA[$dstGroupId]]></code>
@@ -6097,7 +6100,6 @@
       <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$groupId]]></code>
-      <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
@@ -6115,34 +6117,36 @@
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
       <code><![CDATA[$srcGroupId]]></code>
       <code><![CDATA[$ugroupsMapping]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$_cacheMetadataUsage]]></code>
-      <code><![CDATA[$dstGroupId]]></code>
       <code><![CDATA[$itemMapping]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[_cloneFile]]></code>
       <code><![CDATA[_cloneItem]]></code>
-      <code><![CDATA[_cloneMetadataValues]]></code>
-      <code><![CDATA[_clonePermissions]]></code>
-      <code><![CDATA[_getFileStorage]]></code>
-      <code><![CDATA[_getItemFactory]]></code>
-      <code><![CDATA[_getMetadataFactory]]></code>
-      <code><![CDATA[_getMetadataValueFactory]]></code>
-      <code><![CDATA[_getPermissionsManager]]></code>
       <code><![CDATA[_getSettingsBo]]></code>
-      <code><![CDATA[_getVersionFactory]]></code>
       <code><![CDATA[_metadataEnabled]]></code>
       <code><![CDATA[getItemMapping]]></code>
       <code><![CDATA[visitDocument]]></code>
     </MissingReturnType>
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[current]]></code>
+      <code><![CDATA[next]]></code>
+      <code><![CDATA[rewind]]></code>
+      <code><![CDATA[valid]]></code>
+    </PossiblyInvalidMethodCall>
     <PossiblyNullArgument>
       <code><![CDATA[$original_item->getId()]]></code>
     </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[current]]></code>
+      <code><![CDATA[next]]></code>
+      <code><![CDATA[rewind]]></code>
+      <code><![CDATA[valid]]></code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/docman/include/Docman_Controller.php">
     <DeprecatedMethod>
@@ -14168,7 +14172,6 @@
       <code><![CDATA[formatSpecificPermission]]></code>
       <code><![CDATA[getFineGrainedFormattedPermissions]]></code>
       <code><![CDATA[getForRepository]]></code>
-      <code><![CDATA[getGitoliteDotConf]]></code>
       <code><![CDATA[getPatternConfiguration]]></code>
       <code><![CDATA[getPatternInGitoliteFormat]]></code>
       <code><![CDATA[grantUgroupsForPattern]]></code>
@@ -14284,10 +14287,6 @@
       <code><![CDATA[$unix_name]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[dumpProjectRepoConf]]></code>
-      <code><![CDATA[dumpSuspendedProjectRepositoriesConfiguration]]></code>
-      <code><![CDATA[fetchReposConfig]]></code>
-      <code><![CDATA[fetchSuspendedRepositoryConfiguration]]></code>
       <code><![CDATA[repoFullName]]></code>
     </MissingReturnType>
   </file>
@@ -16231,7 +16230,6 @@
       <code><![CDATA[getUGroupsByRepositoryPermissions]]></code>
       <code><![CDATA[hydrateRepositoryObject]]></code>
       <code><![CDATA[isRepositoryExisting]]></code>
-      <code><![CDATA[save]]></code>
       <code><![CDATA[searchAllGerritRepositoriesOfProject]]></code>
       <code><![CDATA[searchDeletedRepositoryById]]></code>
       <code><![CDATA[searchGerritRepositoriesWithPermissionsForUGroupAndProject]]></code>
@@ -16248,7 +16246,6 @@
     </PossiblyInvalidArgument>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$projectId]]></code>
-      <code><![CDATA[empty($parentId)]]></code>
       <code><![CDATA[empty($userId)]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedDocblockClass>
@@ -17323,7 +17320,6 @@
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$force]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$initialized]]></code>
       <code><![CDATA[$mailPrefix]]></code>
       <code><![CDATA[$mails]]></code>
@@ -17341,7 +17337,6 @@
       <code><![CDATA[$dao]]></code>
       <code><![CDATA[$deletionDate]]></code>
       <code><![CDATA[$description]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$isInitialized]]></code>
       <code><![CDATA[$last_push_date]]></code>
       <code><![CDATA[$loaded]]></code>
@@ -17376,7 +17371,6 @@
       <code><![CDATA[getDeletionDate]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getDiffLink]]></code>
-      <code><![CDATA[getId]]></code>
       <code><![CDATA[getIsInitialized]]></code>
       <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getLastPushDate]]></code>
@@ -17401,7 +17395,6 @@
       <code><![CDATA[setCreationDate]]></code>
       <code><![CDATA[setDeletionDate]]></code>
       <code><![CDATA[setDescription]]></code>
-      <code><![CDATA[setId]]></code>
       <code><![CDATA[setIsInitialized]]></code>
       <code><![CDATA[setLastPushDate]]></code>
       <code><![CDATA[setMailPrefix]]></code>
@@ -17492,7 +17485,6 @@
       <code><![CDATA[$scope]]></code>
       <code><![CDATA[$tmp_git_import_folder]]></code>
       <code><![CDATA[$tmp_git_import_folder]]></code>
-      <code><![CDATA[$tmp_git_import_folder]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[assertRepositoryNameNotAlreadyUsed]]></code>
@@ -17504,12 +17496,10 @@
       <code><![CDATA[fork]]></code>
       <code><![CDATA[forkUniqueRepository]]></code>
       <code><![CDATA[getTmpPath]]></code>
-      <code><![CDATA[initRepository]]></code>
       <code><![CDATA[isNamespaceValid]]></code>
       <code><![CDATA[nameAlreadyExistsAsPath]]></code>
       <code><![CDATA[nameIsSubPathOfExistingRepository]]></code>
       <code><![CDATA[purgeArchivedRepositories]]></code>
-      <code><![CDATA[removeTemporaryWorkingDir]]></code>
       <code><![CDATA[stripFinalDotGit]]></code>
     </MissingReturnType>
     <PossiblyFalseArgument>
@@ -17519,9 +17509,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$to_project->getID()]]></code>
     </PossiblyInvalidArgument>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$tmp_git_import_folder]]></code>
-    </PossiblyUndefinedVariable>
     <UndefinedInterfaceMethod>
       <code><![CDATA[deletePermissions]]></code>
       <code><![CDATA[fork]]></code>
@@ -17700,10 +17687,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/git/include/GitXmlImporter.php">
-    <InvalidArgument>
-      <code><![CDATA[$project->getId()]]></code>
-      <code><![CDATA[Git::PERM_ADMIN]]></code>
-    </InvalidArgument>
     <InvalidOperand>
       <code><![CDATA[$fine_grained_permissions_enabled]]></code>
       <code><![CDATA[$regexp_permissions_enabled]]></code>
@@ -18166,9 +18149,6 @@
     <InvalidReturnStatement>
       <code><![CDATA[(new DateTime($repository->getCreationDate()))->getTimestamp()]]></code>
     </InvalidReturnStatement>
-    <MissingClosureReturnType>
-      <code><![CDATA[function (GitRepository $repository) {]]></code>
-    </MissingClosureReturnType>
     <MissingParamType>
       <code><![CDATA[$fields]]></code>
     </MissingParamType>
@@ -31589,10 +31569,6 @@
       <code><![CDATA[$permissions]]></code>
       <code><![CDATA[$permissions]]></code>
     </DeprecatedMethod>
-    <InvalidArgument>
-      <code><![CDATA[$project->getId()]]></code>
-      <code><![CDATA[self::PERMISSION_ADMIN]]></code>
-    </InvalidArgument>
     <MissingReturnType>
       <code><![CDATA[save]]></code>
     </MissingReturnType>
@@ -57277,9 +57253,6 @@
     <DeprecatedFunction>
       <code><![CDATA[db_fetch_array($package_ugroups)]]></code>
     </DeprecatedFunction>
-    <InvalidArgument>
-      <code><![CDATA[FRSPackage::PERM_READ]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$object_id]]></code>
       <code><![CDATA[$object_id]]></code>
@@ -68280,8 +68253,6 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
@@ -68297,8 +68268,6 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
       <code><![CDATA[quoteSmartImplode]]></code>
@@ -68311,7 +68280,6 @@
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
@@ -68338,7 +68306,6 @@
       <code><![CDATA[$object_id]]></code>
       <code><![CDATA[$object_id]]></code>
       <code><![CDATA[$object_id]]></code>
-      <code><![CDATA[$object_id]]></code>
       <code><![CDATA[$permission_type]]></code>
       <code><![CDATA[$permission_type]]></code>
       <code><![CDATA[$permission_type]]></code>
@@ -68356,7 +68323,6 @@
       <code><![CDATA[addHistory]]></code>
       <code><![CDATA[addPermission]]></code>
       <code><![CDATA[disableRestrictedAccess]]></code>
-      <code><![CDATA[disableRestrictedAccessForObjectId]]></code>
       <code><![CDATA[doAllWikiServiceItemsHaveExplicitPermissions]]></code>
       <code><![CDATA[isThereADefaultWikiServicePermissionThatUsesUgroup]]></code>
       <code><![CDATA[isThereAnExplicitWikiServicePermission]]></code>
@@ -70695,13 +70661,11 @@
       <code><![CDATA[$_ugroups_for_user]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[addHistory]]></code>
       <code><![CDATA[addPermission]]></code>
       <code><![CDATA[buildPermissionsCache]]></code>
       <code><![CDATA[clearInstance]]></code>
       <code><![CDATA[clonePermissions]]></code>
       <code><![CDATA[disableRestrictedAccess]]></code>
-      <code><![CDATA[disableRestrictedAccessForObjectId]]></code>
       <code><![CDATA[doSavePermissions]]></code>
       <code><![CDATA[getUgroupIdByObjectIdAndPermissionType]]></code>
       <code><![CDATA[isPermissionExist]]></code>
@@ -70711,10 +70675,6 @@
       <code><![CDATA[savePermissionsWithoutHistory]]></code>
       <code><![CDATA[setInstance]]></code>
     </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[type]]></code>
-      <code><![CDATA[type]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/permission/PermissionsNormalizer.php">
     <MissingParamType>
@@ -78675,14 +78635,6 @@
     </PossiblyNullPropertyFetch>
   </file>
   <file src="tests/unit/common/Reference/Presenters/CrossReferenceLinkPresenterCollectionBuilderTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
@@ -79427,10 +79379,6 @@
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
     </InternalMethod>
-    <InvalidArgument>
-      <code><![CDATA[$this->object_id]]></code>
-      <code><![CDATA[$this->permission_type]]></code>
-    </InvalidArgument>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
@@ -79441,10 +79389,6 @@
     </MissingParamType>
   </file>
   <file src="tests/unit/common/permission/PermissionsManagerSavePermissionsFeebackOverlapingTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$this->object_id]]></code>
-      <code><![CDATA[$this->permission_type]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$ugroup]]></code>
       <code><![CDATA[$ugroups]]></code>
@@ -79455,10 +79399,6 @@
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
     </InternalMethod>
-    <InvalidArgument>
-      <code><![CDATA[$this->object_id]]></code>
-      <code><![CDATA[$this->permission_type]]></code>
-    </InvalidArgument>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
@@ -79477,10 +79417,6 @@
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
     </InternalMethod>
-    <InvalidArgument>
-      <code><![CDATA[$this->object_id]]></code>
-      <code><![CDATA[$this->permission_type]]></code>
-    </InvalidArgument>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
@@ -79492,10 +79428,6 @@
     </MissingParamType>
   </file>
   <file src="tests/unit/common/permission/PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$this->object_id]]></code>
-      <code><![CDATA[$this->permission_type]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$ugroup]]></code>
       <code><![CDATA[$ugroups]]></code>
@@ -79511,10 +79443,6 @@
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
     </InternalMethod>
-    <InvalidArgument>
-      <code><![CDATA[$this->object_id]]></code>
-      <code><![CDATA[$this->permission_type]]></code>
-    </InvalidArgument>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
@@ -79535,10 +79463,6 @@
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
     </InternalMethod>
-    <InvalidArgument>
-      <code><![CDATA[$this->object_id]]></code>
-      <code><![CDATA[$this->permission_type]]></code>
-    </InvalidArgument>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
@@ -79554,10 +79478,6 @@
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
     </InternalMethod>
-    <InvalidArgument>
-      <code><![CDATA[$this->object_id]]></code>
-      <code><![CDATA[$this->permission_type]]></code>
-    </InvalidArgument>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
@@ -79567,10 +79487,6 @@
     </MissingParamType>
   </file>
   <file src="tests/unit/common/permission/PermissionsManagerSavePermissionsSaveDaoTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$this->object_id]]></code>
-      <code><![CDATA[$this->permission_type]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$ugroups]]></code>
     </MissingParamType>
