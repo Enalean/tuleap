@@ -182,7 +182,7 @@ fn compile_and_exec(
     config.epoch_interruption(true);
 
     if let Some(cache_config_file) = possible_cache_config_file {
-        Cache::from_file(Some(&Path::new(cache_config_file)))
+        Cache::from_file(Some(Path::new(cache_config_file)))
             .map(|cache| config.cache(Some(cache)))?;
         config.cranelift_opt_level(OptLevel::Speed);
     }
