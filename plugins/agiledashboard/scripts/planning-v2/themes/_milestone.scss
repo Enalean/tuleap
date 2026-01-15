@@ -23,7 +23,7 @@ $milestone-background: var(--project-color-background-gradient-light, var(--tlp-
 
 .milestone {
     margin: 0 0 var(--tlp-small-spacing);
-    border: 1px solid var(--project-color-border, var(--tlp-neutral-normal-color));
+    border: 1px solid var(--project-color-border, var(--tlp-border-color));
     background: $milestone-background;
 
     &:last-child {
@@ -145,7 +145,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-white
 .milestone-backlog-items {
     min-height: 70px;
     padding: var(--tlp-medium-spacing);
-    border: 1px solid var(--tlp-neutral-normal-color);
+    border: 1px solid var(--tlp-border-color);
     border-radius: var(--tlp-medium-radius);
     background: var(--tlp-background-color-lighter-02);
 }

@@ -31,7 +31,7 @@ $caret-width: 20px;
     position: relative;
     margin: roadmap-variables.$today-pin-head-empty-room 0 0;
     padding: $padding-for-time-units 0 0;
-    border-right: 2px solid var(--tlp-neutral-normal-color);
+    border-right: 2px solid var(--tlp-border-color);
 
     &.roadmap-gantt-header-with-1-ribbons {
         padding: $padding-for-time-units + roadmap-variables.$iteration-height 0 0;
@@ -63,7 +63,7 @@ $caret-width: 20px;
     height: roadmap-variables.$task-height;
     padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-medium-spacing)
         calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-border-color);
     color: var(--tlp-typo-default-text-color);
     white-space: nowrap;
 

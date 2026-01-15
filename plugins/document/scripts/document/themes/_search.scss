@@ -136,8 +136,8 @@
 .document-search-table-container {
     flex: 0 1 auto;
     overflow: auto;
-    border-top: 1px solid var(--tlp-neutral-normal-color);
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-top: 1px solid var(--tlp-border-color);
+    border-bottom: 1px solid var(--tlp-border-color);
 
     + .tlp-pagination {
         padding: 0 0 var(--tlp-medium-spacing);
@@ -344,7 +344,7 @@ tr:focus-within {
     }
 
     .document-search-table-container {
-        border: 1px solid var(--tlp-neutral-normal-color);
+        border: 1px solid var(--tlp-border-color);
         border-radius: var(--tlp-large-radius);
 
         + .tlp-pagination {

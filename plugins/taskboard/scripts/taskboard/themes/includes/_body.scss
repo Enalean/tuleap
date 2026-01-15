@@ -55,8 +55,8 @@
     min-width: 250px;
     min-height: 40px;
     padding: var(--tlp-small-spacing);
-    border-right: 1px solid var(--tlp-neutral-normal-color);
-    border-bottom: 3px solid var(--tlp-neutral-normal-color);
+    border-right: 1px solid var(--tlp-border-color);
+    border-bottom: 3px solid var(--tlp-border-color);
     vertical-align: top;
 
     &.taskboard-drop-not-accepted {

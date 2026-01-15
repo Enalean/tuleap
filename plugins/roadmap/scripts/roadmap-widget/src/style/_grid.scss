@@ -18,7 +18,7 @@
  */
 
 @mixin alternate-background() {
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-border-color);
     background: var(--tlp-white-color);
 
     &.even,

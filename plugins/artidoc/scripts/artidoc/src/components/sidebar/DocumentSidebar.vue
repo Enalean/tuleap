@@ -177,7 +177,7 @@ $button-width: var(--artidoc-sidebar-button-width);
     aside {
         order: -1;
         height: fit-content;
-        border-bottom: 1px solid var(--tlp-neutral-normal-color);
+        border-bottom: 1px solid var(--tlp-border-color);
     }
 
     .sidebar-button {

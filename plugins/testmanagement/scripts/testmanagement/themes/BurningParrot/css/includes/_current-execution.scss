@@ -147,9 +147,9 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 }
 
 .current-test-header-container {
-    border-top: 1px solid var(--tlp-neutral-normal-color);
-    border-right: 1px solid var(--tlp-neutral-normal-color);
-    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-top: 1px solid var(--tlp-border-color);
+    border-right: 1px solid var(--tlp-border-color);
+    border-left: 1px solid var(--tlp-border-color);
     border-top-left-radius: var(--tlp-large-radius);
     border-top-right-radius: var(--tlp-large-radius);
 }
@@ -331,9 +331,9 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 .current-test-content {
     flex: 1 1 50%;
     overflow-y: auto;
-    border-right: 1px solid var(--tlp-neutral-normal-color);
+    border-right: 1px solid var(--tlp-border-color);
     border-bottom: 0;
-    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-left: 1px solid var(--tlp-border-color);
 
     p,
     ul,
@@ -348,16 +348,16 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 
     &.current-test-footer-top {
         border-top: 1px solid var(--tlp-neutral-light-color);
-        border-right: 1px solid var(--tlp-neutral-normal-color);
+        border-right: 1px solid var(--tlp-border-color);
         border-bottom: 0;
-        border-left: 1px solid var(--tlp-neutral-normal-color);
+        border-left: 1px solid var(--tlp-border-color);
     }
 
     &.current-test-footer-bottom {
         border-top: 1px solid var(--tlp-neutral-light-color);
-        border-right: 1px solid var(--tlp-neutral-normal-color);
-        border-bottom: 1px solid var(--tlp-neutral-normal-color);
-        border-left: 1px solid var(--tlp-neutral-normal-color);
+        border-right: 1px solid var(--tlp-border-color);
+        border-bottom: 1px solid var(--tlp-border-color);
+        border-left: 1px solid var(--tlp-border-color);
         border-bottom-right-radius: var(--tlp-large-radius);
         border-bottom-left-radius: var(--tlp-large-radius);
     }
@@ -462,7 +462,7 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     padding: var(--tlp-small-spacing) 12px;
     overflow-y: auto;
     transition: border-color ease-out 150ms;
-    border: 1px solid var(--tlp-neutral-normal-color);
+    border: 1px solid var(--tlp-border-color);
     border-radius: var(--tlp-medium-radius);
     background: var(--tlp-white-color);
 
@@ -767,9 +767,9 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 .current-test-empty-pane {
     flex: 1;
     border-top: 1px solid var(--tlp-neutral-light-color);
-    border-right: 1px solid var(--tlp-neutral-normal-color);
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
-    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-right: 1px solid var(--tlp-border-color);
+    border-bottom: 1px solid var(--tlp-border-color);
+    border-left: 1px solid var(--tlp-border-color);
     border-bottom-right-radius: var(--tlp-large-radius);
     border-bottom-left-radius: var(--tlp-large-radius);
 }

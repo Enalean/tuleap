@@ -303,6 +303,6 @@ html {
     flex: 1 1 auto;
     height: var(--artidoc-container-height);
     overflow: auto;
-    border-top: 1px solid var(--tlp-neutral-normal-color);
+    border-top: 1px solid var(--tlp-border-color);
 }
 </style>

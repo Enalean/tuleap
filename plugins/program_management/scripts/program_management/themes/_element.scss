@@ -173,8 +173,8 @@ $accessibility-pattern-right-margin: 6px;
 
 .backlog-items-children-container {
     padding: var(--tlp-small-spacing);
-    border-right: 1px solid var(--tlp-neutral-normal-color);
-    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-right: 1px solid var(--tlp-border-color);
+    border-left: 1px solid var(--tlp-border-color);
 
     .element-card {
         margin: 0 0 var(--tlp-small-spacing);
@@ -188,7 +188,7 @@ $accessibility-pattern-right-margin: 6px;
 .backlog-items-children-container-handle {
     position: relative;
     height: 20px;
-    border: 1px solid var(--tlp-neutral-normal-color);
+    border: 1px solid var(--tlp-border-color);
     border-top: 0;
     border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
     background: var(--tlp-fade-background-color);
@@ -200,7 +200,7 @@ $accessibility-pattern-right-margin: 6px;
     }
 
     &:only-child {
-        border-top: 1px solid var(--tlp-neutral-normal-color);
+        border-top: 1px solid var(--tlp-border-color);
     }
 }
 

@@ -87,7 +87,7 @@ div {
     width: 100%;
     min-height: var(--tlp-jumbo-spacing);
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-border-color);
     background: var(--tlp-white-color);
     color: var(--tlp-info-color);
     gap: var(--tlp-small-spacing);

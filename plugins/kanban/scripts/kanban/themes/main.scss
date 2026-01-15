@@ -161,8 +161,8 @@ $kanban-column-footer-height: 50px;
     flex-direction: column;
     align-items: center;
     transition: background 100ms;
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
-    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-border-color);
+    border-left: 1px solid var(--tlp-border-color);
     background: var(--tlp-background-color);
 
     &:hover,
@@ -174,7 +174,7 @@ $kanban-column-footer-height: 50px;
     }
 
     &.archive {
-        border-right: 1px solid var(--tlp-neutral-normal-color);
+        border-right: 1px solid var(--tlp-border-color);
     }
 
     &.kanban-column-open {
@@ -262,7 +262,7 @@ $kanban-column-footer-height: 50px;
     padding: 10px;
     transition: background 100ms;
     border-top: 2px solid var(--tlp-main-color);
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-border-color);
     background: var(--tlp-white-color);
 }
 

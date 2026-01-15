@@ -122,7 +122,7 @@ function getLabelAndIcon(project: LinkedArtifactProject): string {
     }
 
     > .artidoc-link-field-row {
-        border: 1px solid var(--tlp-neutral-normal-color);
+        border: 1px solid var(--tlp-border-color);
 
         &.parent-artifact-link:has(+ :not(.parent-artifact-link)) {
             border-bottom-width: 3px;
