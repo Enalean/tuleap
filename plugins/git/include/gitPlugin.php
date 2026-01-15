@@ -656,14 +656,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     $this->getRepositoryFactory(),
                 ];
                 break;
-            case SystemEvent_GIT_PROJECTS_UPDATE::NAME:
-                $params['class']        = 'SystemEvent_GIT_PROJECTS_UPDATE';
-                $params['dependencies'] = [
-                    $this->getLogger(),
-                    $this->getProjectManager(),
-                    $this->getGitoliteDriver(),
-                ];
-                break;
             case ParseGitolite3Logs::NAME:
                 $params['class']        = '\\Tuleap\\Git\\SystemEvents\\ParseGitolite3Logs';
                 $params['dependencies'] = [
@@ -858,7 +850,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    public function getAdminRouter()
+    public function getAdminRouter(): Git_AdminRouter
     {
         $project_manager             = ProjectManager::instance();
         $gerrit_ressource_restrictor = new GerritServerResourceRestrictor(new RestrictedGerritServerDao());
@@ -867,7 +859,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getGerritServerFactory(),
             new CSRFSynchronizerToken(GIT_SITE_ADMIN_BASE_URL),
             $project_manager,
-            $this->getGitSystemEventManager(),
             new \Tuleap\Queue\EnqueueTask(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
@@ -1359,7 +1350,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->getFineGrainedUpdater()->deleteUgroupPermissions($ugroup, $project_id);
         $this->getUgroupsToNotifyDao()->deleteByUgroupId($project_id, $ugroup->getId());
 
-        $this->getGitSystemEventManager()->queueProjectsConfigurationUpdate([$project_id]);
+        (new \Tuleap\Queue\EnqueueTask())->enqueue(new RefreshGitoliteProjectConfigurationTask((int) $project_id));
     }
 
     public function project_admin_add_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1785,7 +1776,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    public function getGitSystemEventManager()
+    public function getGitSystemEventManager(): Git_SystemEventManager
     {
         return new Git_SystemEventManager(SystemEventManager::instance());
     }
@@ -1840,11 +1831,11 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return PermissionsManager::instance();
     }
 
-    protected function getGitPermissionsManager()
+    protected function getGitPermissionsManager(): GitPermissionsManager
     {
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $this->getGitSystemEventManager(),
+            new \Tuleap\Queue\EnqueueTask(),
             $this->getFineGrainedDao(),
             $this->getFineGrainedRetriever()
         );
@@ -2166,7 +2157,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getRepositoryManager(),
             $this->getRepositoryFactory(),
             $this->getBackendGitolite(),
-            $this->getGitSystemEventManager(),
+            new \Tuleap\Queue\EnqueueTask(),
             PermissionsManager::instance(),
             EventManager::instance(),
             $this->getFineGrainedUpdater(),
@@ -2742,7 +2733,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             function (): RegenerateConfigurationCommand {
                 return new RegenerateConfigurationCommand(
                     ProjectManager::instance(),
-                    $this->getGitSystemEventManager()
+                    new \Tuleap\Queue\EnqueueTask(),
                 );
             }
         );

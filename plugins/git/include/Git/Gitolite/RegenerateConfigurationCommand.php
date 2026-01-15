@@ -22,33 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Gitolite;
 
-use Git_SystemEventManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\Git\AsynchronousEvents\RefreshGitoliteProjectConfigurationTask;
+use Tuleap\Queue\EnqueueTaskInterface;
 
 class RegenerateConfigurationCommand extends Command
 {
     public const string NAME = 'git:regenerate-gitolite-configuration';
 
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var Git_SystemEventManager
-     */
-    private $system_event_manager;
-
-    public function __construct(\ProjectManager $project_manager, Git_SystemEventManager $system_event_manager)
+    public function __construct(private readonly \ProjectManager $project_manager, private readonly EnqueueTaskInterface $enqueuer)
     {
         parent::__construct(self::NAME);
-
-        $this->project_manager      = $project_manager;
-        $this->system_event_manager = $system_event_manager;
     }
 
     #[\Override]
@@ -81,12 +70,10 @@ class RegenerateConfigurationCommand extends Command
 
     private function regenerateAllConfigurations(OutputInterface $output): int
     {
-        $projects    = $this->project_manager->getProjectsByStatus(\Project::STATUS_ACTIVE);
-        $project_ids = [];
+        $projects = $this->project_manager->getProjectsByStatus(\Project::STATUS_ACTIVE);
         foreach ($projects as $project) {
-            $project_ids[] = $project->getID();
+            $this->enqueuer->enqueue(RefreshGitoliteProjectConfigurationTask::fromProject($project));
         }
-        $this->system_event_manager->queueProjectsConfigurationUpdate($project_ids);
 
         $output->writeln('<info>Gitolite configuration for all active projects will shortly be re-generated</info>');
         return 0;
@@ -106,6 +93,7 @@ class RegenerateConfigurationCommand extends Command
                     continue;
                 }
                 $verified_project_ids[] = $project_id;
+                $this->enqueuer->enqueue(RefreshGitoliteProjectConfigurationTask::fromProject($project));
             } catch (\Project_NotFoundException $exception) {
                 $output->writeln('<error>Project #' . OutputFormatter::escape($project_id) . ' can not be found</error>');
                 return 1;
@@ -121,7 +109,6 @@ class RegenerateConfigurationCommand extends Command
             return 0;
         }
 
-        $this->system_event_manager->queueProjectsConfigurationUpdate($verified_project_ids);
         $output->writeln('<info>Gitolite configuration will shortly be re-generated</info>');
 
         return 0;

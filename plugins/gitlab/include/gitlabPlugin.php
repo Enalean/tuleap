@@ -998,9 +998,7 @@ class gitlabPlugin extends Plugin
             $git_plugin->getHeaderRenderer(),
             new GitPermissionsManager(
                 new Git_PermissionsDao(),
-                new Git_SystemEventManager(
-                    SystemEventManager::instance(),
-                ),
+                new \Tuleap\Queue\EnqueueTask(),
                 $fine_grained_dao,
                 new FineGrainedRetriever($fine_grained_dao)
             ),

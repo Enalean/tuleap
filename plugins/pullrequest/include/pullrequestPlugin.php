@@ -613,7 +613,7 @@ class pullrequestPlugin extends Plugin
             $repository_factory,
             new GitPermissionsManager(
                 new Git_PermissionsDao(),
-                new Git_SystemEventManager(SystemEventManager::instance()),
+                new \Tuleap\Queue\EnqueueTask(),
                 $fine_grained_dao,
                 new FineGrainedRetriever($fine_grained_dao)
             )
@@ -628,7 +628,7 @@ class pullrequestPlugin extends Plugin
             new ProjectHistoryDao(),
             new GitPermissionsManager(
                 new Git_PermissionsDao(),
-                new Git_SystemEventManager(SystemEventManager::instance()),
+                new \Tuleap\Queue\EnqueueTask(),
                 $fine_grained_dao,
                 new FineGrainedRetriever($fine_grained_dao)
             ),

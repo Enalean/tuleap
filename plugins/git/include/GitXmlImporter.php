@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\AsynchronousEvents\RefreshGitoliteProjectConfigurationTask;
 use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutor;
 use Tuleap\Git\Events\XMLImportExternalContentEvent;
@@ -50,7 +51,7 @@ class GitXmlImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         private readonly GitRepositoryManager $repository_manager,
         private readonly GitRepositoryFactory $repository_factory,
         private readonly Git_Backend_Gitolite $gitolite_backend,
-        private readonly Git_SystemEventManager $system_event_manager,
+        private readonly \Tuleap\Queue\EnqueueTaskInterface $enqueuer,
         private readonly PermissionsManager $permission_manager,
         private readonly EventManager $event_manager,
         private readonly FineGrainedUpdater $fine_grained_updater,
@@ -169,7 +170,7 @@ class GitXmlImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $this->importLastPushDate($repository_xmlnode, $repository);
 
-        $this->system_event_manager->queueProjectsConfigurationUpdate([$project->getGroupId()]);
+        $this->enqueuer->enqueue(RefreshGitoliteProjectConfigurationTask::fromProject($project));
     }
 
     private function importAllowArtifactClosure(GitRepository $repository, SimpleXMLElement $repository_xmlnode): void

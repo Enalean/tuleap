@@ -34,16 +34,6 @@ class Git_SystemEventManager
     {
     }
 
-    public function queueProjectsConfigurationUpdate(array $project_ids)
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_PROJECTS_UPDATE::NAME,
-            implode(SystemEvent::PARAMETER_SEPARATOR, $project_ids),
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        );
-    }
-
     public function queueRepositoryUpdate(GitRepository $repository, ?BranchName $default_branch = null): void
     {
         if (
@@ -204,7 +194,6 @@ class Git_SystemEventManager
             SystemEvent_GIT_USER_RENAME::NAME,
             SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
-            SystemEvent_GIT_PROJECTS_UPDATE::NAME,
         ];
     }
 

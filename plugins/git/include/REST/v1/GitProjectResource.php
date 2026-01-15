@@ -35,6 +35,7 @@ use SystemEventManager;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Queue\EnqueueTask;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Exceptions\InvalidJsonException;
 use Tuleap\REST\Header;
@@ -269,7 +270,7 @@ final class GitProjectResource extends AuthenticatedResource
         $repository_resource_builder = new RepositoryRepresentationBuilder(
             new GitPermissionsManager(
                 new Git_PermissionsDao(),
-                $git_system_event_manager,
+                new EnqueueTask(),
                 $fine_grained_dao,
                 new FineGrainedRetriever($fine_grained_dao)
             ),

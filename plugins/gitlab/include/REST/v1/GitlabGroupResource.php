@@ -24,12 +24,10 @@ namespace Tuleap\Gitlab\REST\v1;
 
 use BackendLogger;
 use Git_PermissionsDao;
-use Git_SystemEventManager;
 use gitlabPlugin;
 use GitPermissionsManager;
 use Luracast\Restler\RestException;
 use ProjectManager;
-use SystemEventManager;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -80,6 +78,7 @@ use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Queue\EnqueueTask;
 use Tuleap\REST\Header;
 use UserManager;
 
@@ -443,16 +442,12 @@ final class GitlabGroupResource
 
     private function getGitPermissionsManager(): GitPermissionsManager
     {
-        $git_system_event_manager = new Git_SystemEventManager(
-            SystemEventManager::instance(),
-        );
-
         $fine_grained_dao       = new FineGrainedDao();
         $fine_grained_retriever = new FineGrainedRetriever($fine_grained_dao);
 
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $git_system_event_manager,
+            new EnqueueTask(),
             $fine_grained_dao,
             $fine_grained_retriever
         );

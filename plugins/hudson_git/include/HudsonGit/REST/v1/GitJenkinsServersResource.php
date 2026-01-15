@@ -20,17 +20,15 @@
 namespace Tuleap\HudsonGit\REST\v1;
 
 use Git_PermissionsDao;
-use Git_SystemEventManager;
-use GitDao;
 use GitPermissionsManager;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use ProjectManager;
-use SystemEventManager;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerDao;
+use Tuleap\Queue\EnqueueTask;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -64,20 +62,15 @@ final class GitJenkinsServersResource extends AuthenticatedResource
     {
         $this->jenkins_server_dao = new JenkinsServerDao();
 
-        $git_dao               = new GitDao();
         $this->project_manager = ProjectManager::instance();
         $this->user_manager    = UserManager::instance();
-
-        $git_system_event_manager = new Git_SystemEventManager(
-            SystemEventManager::instance(),
-        );
 
         $fine_grained_dao       = new FineGrainedDao();
         $fine_grained_retriever = new FineGrainedRetriever($fine_grained_dao);
 
         $this->git_permission_manager = new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $git_system_event_manager,
+            new EnqueueTask(),
             $fine_grained_dao,
             $fine_grained_retriever
         );

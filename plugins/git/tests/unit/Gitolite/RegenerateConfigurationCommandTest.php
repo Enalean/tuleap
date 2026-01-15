@@ -22,45 +22,47 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Gitolite;
 
-use Git_SystemEventManager;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Project_NotFoundException;
 use ProjectManager;
 use Symfony\Component\Console\Tester\CommandTester;
+use Tuleap\Git\AsynchronousEvents\RefreshGitoliteProjectConfigurationTask;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RegenerateConfigurationCommandTest extends TestCase
 {
-    private ProjectManager&MockObject $project_manager;
-    private Git_SystemEventManager&MockObject $event_manager;
+    private ProjectManager&Stub $project_manager;
+    private EnqueueTaskStub $enqueuer;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->project_manager = $this->createMock(ProjectManager::class);
-        $this->event_manager   = $this->createMock(Git_SystemEventManager::class);
+        $this->project_manager = $this->createStub(ProjectManager::class);
+        $this->enqueuer        = new EnqueueTaskStub();
     }
 
     public function testConfigurationForAllProjectsCanBeRegenerated(): void
     {
-        $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
+        $command        = new RegenerateConfigurationCommand($this->project_manager, $this->enqueuer);
         $command_tester = new CommandTester($command);
 
         $project_1 = ProjectTestBuilder::aProject()->withId(999)->build();
         $project_2 = ProjectTestBuilder::aProject()->withId(888)->build();
         $this->project_manager->method('getProjectsByStatus')->with(Project::STATUS_ACTIVE)->willReturn([$project_1, $project_2]);
-        $this->event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with(['999', '888']);
 
         $command_tester->execute(['--all' => true, 'project_ids' => ['102', '103']]);
         self::assertSame(0, $command_tester->getStatusCode());
+
+        self::assertEquals([new RefreshGitoliteProjectConfigurationTask(999), new RefreshGitoliteProjectConfigurationTask(888)], $this->enqueuer->queued_tasks);
     }
 
     public function testConfigurationForSomeProjectsCanBeRegenerated(): void
     {
-        $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
+        $command        = new RegenerateConfigurationCommand($this->project_manager, $this->enqueuer);
         $command_tester = new CommandTester($command);
 
         $project_1 = ProjectTestBuilder::aProject()->withId(102)->withStatusActive()->build();
@@ -72,32 +74,34 @@ final class RegenerateConfigurationCommandTest extends TestCase
                 103 => $project_2,
                 104 => $project_3,
             });
-        $this->event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with(['102', '103']);
 
         $command_tester->execute(['project_ids' => ['102', '103']]);
         self::assertSame(0, $command_tester->getStatusCode());
+
+        self::assertEquals([new RefreshGitoliteProjectConfigurationTask(102), new RefreshGitoliteProjectConfigurationTask(103)], $this->enqueuer->queued_tasks);
     }
 
     public function testInvalidProjectIDIsRejected(): void
     {
-        $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
+        $command        = new RegenerateConfigurationCommand($this->project_manager, $this->enqueuer);
         $command_tester = new CommandTester($command);
 
         $this->project_manager->method('getValidProject')->willThrowException(new Project_NotFoundException());
-        $this->event_manager->expects($this->never())->method('queueProjectsConfigurationUpdate');
 
         $command_tester->execute(['project_ids' => ['999999999999999999', '103']]);
         self::assertSame(1, $command_tester->getStatusCode());
+
+        self::assertEmpty($this->enqueuer->queued_tasks);
     }
 
     public function testNoUnnecessaryWorkIsDoneWhenNoProjectIDIsProvided(): void
     {
-        $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
+        $command        = new RegenerateConfigurationCommand($this->project_manager, $this->enqueuer);
         $command_tester = new CommandTester($command);
-
-        $this->event_manager->expects($this->never())->method('queueProjectsConfigurationUpdate');
 
         $command_tester->execute(['project_ids' => []]);
         self::assertSame(0, $command_tester->getStatusCode());
+
+        self::assertEmpty($this->enqueuer->queued_tasks);
     }
 }
