@@ -25,18 +25,15 @@ use Project;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
+use Tuleap\Markdown\ContentInterpretor;
 
 class GitlabRepositoryRepresentationFactory
 {
-    private GitlabRepositoryIntegrationFactory $repository_integration_factory;
-    private WebhookDao $webhook_dao;
-
     public function __construct(
-        GitlabRepositoryIntegrationFactory $repository_integration_factory,
-        WebhookDao $webhook_dao,
+        private readonly GitlabRepositoryIntegrationFactory $repository_integration_factory,
+        private readonly WebhookDao $webhook_dao,
+        private readonly ContentInterpretor $content_interpretor,
     ) {
-        $this->repository_integration_factory = $repository_integration_factory;
-        $this->webhook_dao                    = $webhook_dao;
     }
 
     /**
@@ -59,7 +56,7 @@ class GitlabRepositoryRepresentationFactory
                 $gitlab_repository->getId(),
                 $gitlab_repository->getGitlabRepositoryId(),
                 $gitlab_repository->getName(),
-                $gitlab_repository->getDescription(),
+                $this->content_interpretor->getInterpretedContent($gitlab_repository->getDescription()),
                 $gitlab_repository->getGitlabRepositoryUrl(),
                 $gitlab_repository->getLastPushDate()->getTimestamp(),
                 $gitlab_repository->getProject(),

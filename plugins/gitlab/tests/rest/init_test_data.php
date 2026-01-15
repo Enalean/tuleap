@@ -20,7 +20,7 @@
 
 require_once __DIR__ . '/../../../../src/www/include/pre.php';
 require_once __DIR__ . '/../../../../tests/rest/vendor/autoload.php';
-require_once __DIR__ . '/GitLabDataBuilder.php';
+require_once __DIR__ . '/REST/GitLabDataBuilder.php';
 
 $data_builder = new \Tuleap\Gitlab\REST\GitLabDataBuilder();
 $data_builder->setUp();

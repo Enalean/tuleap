@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once __DIR__ . '/GitLabDataBuilder.php';
-require_once __DIR__ . '/TestBase.php';
+require_once __DIR__ . '/REST/GitLabDataBuilder.php';
+require_once __DIR__ . '/REST/TestBase.php';

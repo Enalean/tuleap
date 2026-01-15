@@ -48,7 +48,7 @@ class ProjectTest extends TestBase
     {
         self::assertSame(200, $response->getStatusCode());
 
-        self::assertEquals(1, (int) $response->getHeaderLine('X-Pagination-Size'));
+        self::assertSame(1, (int) $response->getHeaderLine('X-Pagination-Size'));
 
         $gitlab_repositories = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(1, $gitlab_repositories);
@@ -56,11 +56,16 @@ class ProjectTest extends TestBase
         $gitlab_repository = $gitlab_repositories[0];
         self::assertArrayHasKey('id', $gitlab_repository);
         self::assertArrayHasKey('gitlab_repository_id', $gitlab_repository);
-        self::assertEquals('path/repo01', $gitlab_repository['name']);
-        self::assertEquals('desc', $gitlab_repository['description']);
-        self::assertEquals('https://example.com/path/repo01', $gitlab_repository['gitlab_repository_url']);
-        self::assertEquals(15412, $gitlab_repository['gitlab_repository_id']);
-        self::assertEquals($this->gitlab_repository_id, $gitlab_repository['id']);
+        self::assertSame('path/repo01', $gitlab_repository['name']);
+        self::assertSame(
+            <<<EOF
+            <p>desc</p>\n
+            EOF,
+            $gitlab_repository['description'],
+        );
+        self::assertSame('https://example.com/path/repo01', $gitlab_repository['gitlab_repository_url']);
+        self::assertSame(15412, $gitlab_repository['gitlab_repository_id']);
+        self::assertSame($this->gitlab_repository_id, $gitlab_repository['id']);
         self::assertFalse($gitlab_repository['allow_artifact_closure']);
         self::assertFalse($gitlab_repository['is_webhook_configured']);
         self::assertSame('', $gitlab_repository['create_branch_prefix']);

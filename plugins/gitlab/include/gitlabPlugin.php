@@ -109,6 +109,7 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresenter;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresentersCollector;
@@ -937,7 +938,8 @@ class gitlabPlugin extends Plugin
             $this->getGitlabIntegrationAvailabilityChecker(),
             new GitlabRepositoryRepresentationFactory(
                 $this->getGitlabRepositoryIntegrationFactory(),
-                new WebhookDao()
+                new WebhookDao(),
+                CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance()),
             ),
             new \Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact(
                 new \Cocur\Slugify\Slugify(),
