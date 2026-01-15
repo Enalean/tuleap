@@ -42,7 +42,7 @@ final class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->integrators_ugroup_id  = 103;
 
         $this->project = ProjectTestBuilder::aProject()->withId(123)->build();
-        $dao           = $this->createMock(\UGroupDao::class);
+        $dao           = $this->createStub(\UGroupDao::class);
 
         $ugroup_definitions = [
             ['ugroup_id' => '1', 'name' => 'ugroup_anonymous_users_name_key', 'description' => 'ugroup_anonymous_users_desc_key', 'group_id' => '100'],

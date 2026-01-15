@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Grant;
 
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -30,32 +30,21 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
 use Tuleap\OAuth2ServerCore\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var AccessTokenGrantController
-     */
-    private $controller;
-    /**
-     * @var \Psr\Http\Message\ResponseFactoryInterface
-     */
-    private $response_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2GrantAccessTokenFromAuthorizationCode
-     */
-    private $grant_access_token_from_auth_code;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2GrantAccessTokenFromRefreshToken
-     */
-    private $grant_access_token_from_refresh_token;
+    private AccessTokenGrantController $controller;
+    private \Psr\Http\Message\ResponseFactoryInterface $response_factory;
+    private OAuth2GrantAccessTokenFromAuthorizationCode&Stub $grant_access_token_from_auth_code;
+    private OAuth2GrantAccessTokenFromRefreshToken&Stub $grant_access_token_from_refresh_token;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->grant_access_token_from_auth_code     = $this->createMock(OAuth2GrantAccessTokenFromAuthorizationCode::class);
-        $this->grant_access_token_from_refresh_token = $this->createMock(OAuth2GrantAccessTokenFromRefreshToken::class);
+        $this->grant_access_token_from_auth_code     = $this->createStub(OAuth2GrantAccessTokenFromAuthorizationCode::class);
+        $this->grant_access_token_from_refresh_token = $this->createStub(OAuth2GrantAccessTokenFromRefreshToken::class);
 
         $this->response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory         = HTTPFactoryBuilder::streamFactory();
@@ -65,7 +54,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->grant_access_token_from_auth_code,
             $this->grant_access_token_from_refresh_token,
             new NullLogger(),
-            $this->createMock(EmitterInterface::class)
+            new NoopSapiEmitter(),
         );
     }
 
@@ -73,9 +62,9 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_response = $this->response_factory->createResponse();
 
-        $this->grant_access_token_from_auth_code->expects($this->once())->method('grantAccessToken')->willReturn($expected_response);
+        $this->grant_access_token_from_auth_code->method('grantAccessToken')->willReturn($expected_response);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $app     = $this->buildOAuth2App();
         $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn($app);
         $request->method('getParsedBody')->willReturn(
@@ -90,9 +79,9 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_response = $this->response_factory->createResponse();
 
-        $this->grant_access_token_from_refresh_token->expects($this->once())->method('grantAccessToken')->willReturn($expected_response);
+        $this->grant_access_token_from_refresh_token->method('grantAccessToken')->willReturn($expected_response);
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $app     = $this->buildOAuth2App();
         $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn($app);
         $request->method('getParsedBody')->willReturn(
@@ -105,7 +94,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRejectsRequestThatDoesNotHaveAnExplicitGrantType(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn($this->buildOAuth2App());
         $request->method('getParsedBody')->willReturn(null);
 
@@ -117,7 +106,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRejectsRequestWithAnUnsupportedGrantType(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn($this->buildOAuth2App());
         $request->method('getParsedBody')->willReturn(['grant_type' => 'password']);
 
@@ -129,7 +118,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRejectsRequestWhereTheClientHasNotBeenAuthenticated(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn(null);
 
         $response = $this->controller->handle($request);

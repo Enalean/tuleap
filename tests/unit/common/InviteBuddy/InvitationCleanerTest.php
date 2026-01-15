@@ -78,7 +78,7 @@ final class InvitationCleanerTest extends TestCase
             ->build();
 
         // needed for \Codendi_Mail internals
-        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager = $this->createStub(\UserManager::class);
         $user_manager->method('getAllUsersByEmail')->willReturnMap(
             [
                 [$this->jane->getEmail(), [$this->jane]],

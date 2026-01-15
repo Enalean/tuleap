@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Label\REST;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use ProjectHistoryDao;
 use Tuleap\Label\Labelable;
 use Tuleap\Label\LabelableDao;
@@ -40,22 +41,22 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private LabelableDao&MockObject $item_label_dao;
 
-    private ProjectHistoryDao&MockObject $history_dao;
+    private ProjectHistoryDao&Stub $history_dao;
 
-    private Labelable&MockObject $item;
+    private Labelable&Stub $item;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->item = $this->createMock(\Tuleap\Label\Labelable::class);
+        $this->item = $this->createStub(\Tuleap\Label\Labelable::class);
         $this->item->method('getId')->willReturn(101);
         $this->item_label_dao    = $this->createMock(\Tuleap\Label\LabelableDao::class);
         $this->project_label_dao = $this->createMock(\Tuleap\Project\Label\LabelDao::class);
-        $this->history_dao       = $this->createMock(ProjectHistoryDao::class);
+        $this->history_dao       = $this->createStub(ProjectHistoryDao::class);
         $this->updater           = new LabelsUpdater($this->project_label_dao, $this->item_label_dao, $this->history_dao);
         $this->project_id        = 66;
 
-        $this->project_label_dao->method('startTransaction');
+        $this->project_label_dao->expects($this->once())->method('startTransaction');
         $this->project_label_dao->method('rollBack');
         $this->project_label_dao->method('commit');
         $this->project_label_dao->method('checkThatAllLabelIdsExistInProjectInTransaction');
@@ -92,6 +93,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project_label_dao->expects($this->once())->method('startTransaction');
         $this->project_label_dao->expects($this->once())->method('commit');
+        $this->item_label_dao->expects($this->once())->method('addLabelsInTransaction');
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -187,6 +189,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->project_label_dao->expects($this->once())->method('createIfNeededInTransaction')->with(66, 'Emergency Fix', self::anything());
+        $this->item_label_dao->expects($this->once())->method('addLabelsInTransaction');
 
         $this->updater->update($this->project_id, $this->item, $body);
     }

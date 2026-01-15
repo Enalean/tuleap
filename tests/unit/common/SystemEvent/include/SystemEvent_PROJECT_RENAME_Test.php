@@ -69,7 +69,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $evt->method('updateDB')->willReturn(true);
 
         // Event
-        $em = $this->createMock(EventManager::class);
+        $em = $this->createStub(EventManager::class);
         $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->method('getEventManager')->willReturn($em);
         $evt->expects($this->once())->method('addProjectHistory')->with('rename_done', 'TestProj :: FooBar', $project->getId());
@@ -123,7 +123,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $evt->method('updateDB')->willReturn(true);
 
         // Event
-        $em = $this->createMock(EventManager::class);
+        $em = $this->createStub(EventManager::class);
         $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->method('getEventManager')->willReturn($em);
 
@@ -175,7 +175,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $evt->method('updateDB')->willReturn(false);
 
         // Event
-        $em = $this->createMock(EventManager::class);
+        $em = $this->createStub(EventManager::class);
         $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->method('getEventManager')->willReturn($em);
 

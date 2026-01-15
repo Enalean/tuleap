@@ -25,6 +25,8 @@ namespace Tuleap\admin\HelpDropdown;
 
 use CSRFSynchronizerToken;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\Layout\BaseLayout;
@@ -34,19 +36,10 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AdminPageRenderer
-     */
-    private $admin_page_renderer;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ReleaseNoteManager
-     */
-    private $release_note_manager;
+    private AdminPageRenderer&Stub $admin_page_renderer;
+    private ReleaseNoteManager&MockObject $release_note_manager;
     private AdminReleaseNoteLinkController $admin_release_note_controller;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&BaseLayout
-     */
-    private $layout;
+    private BaseLayout&Stub $layout;
     private PFUser $admin_user;
 
     #[\Override]
@@ -54,10 +47,10 @@ final class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\Test
     {
         $this->admin_user = UserTestBuilder::buildSiteAdministrator();
 
-        $this->layout               = $this->createMock(BaseLayout::class);
-        $this->admin_page_renderer  = $this->createMock(AdminPageRenderer::class);
+        $this->layout               = $this->createStub(BaseLayout::class);
+        $this->admin_page_renderer  = $this->createStub(AdminPageRenderer::class);
         $this->release_note_manager = $this->createMock(ReleaseNoteManager::class);
-        $csrf_token                 = $this->createMock(CSRFSynchronizerToken::class);
+        $csrf_token                 = $this->createStub(CSRFSynchronizerToken::class);
 
         $this->admin_release_note_controller = new AdminReleaseNoteLinkController(
             $this->admin_page_renderer,
@@ -72,7 +65,7 @@ final class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItDisplaysTheAdminPage(): void
     {
-        $request = $this->createMock(\Tuleap\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn($this->admin_user);
 
         $this->release_note_manager->expects($this->atLeastOnce())->method('getReleaseNoteLink');
@@ -85,14 +78,14 @@ final class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\Test
     {
         $user = UserTestBuilder::anActiveUser()->withoutSiteAdministrator()->build();
 
-        $request = $this->createMock(\Tuleap\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn($user);
 
-        $this->expectException(ForbiddenException::class);
 
-        $this->release_note_manager->method('getReleaseNoteLink');
+        $this->release_note_manager->expects($this->never())->method('getReleaseNoteLink');
         $this->admin_page_renderer->method('renderANoFramedPresenter');
 
+        $this->expectException(ForbiddenException::class);
         $this->admin_release_note_controller->process($request, $this->layout, []);
     }
 }

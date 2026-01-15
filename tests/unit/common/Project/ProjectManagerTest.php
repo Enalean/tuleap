@@ -25,6 +25,7 @@ namespace Tuleap\Project;
 use ForgeAccess;
 use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Project_AccessException;
 use ProjectDao;
@@ -46,7 +47,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    private UserManager&MockObject $user_manager;
+    private UserManager&Stub $user_manager;
     private ProjectManager&MockObject $project_manager_test_version;
     private ProjectDao&MockObject $project_dao;
 
@@ -55,7 +56,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->user_manager = $this->createMock(UserManager::class);
+        $this->user_manager = $this->createStub(UserManager::class);
 
         $this->project_dao = $this->createMock(ProjectDao::class);
 

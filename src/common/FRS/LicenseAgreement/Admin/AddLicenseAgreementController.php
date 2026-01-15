@@ -30,51 +30,21 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeAssetsGeneric;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ProjectRetriever;
 
-class AddLicenseAgreementController implements DispatchableWithRequest, DispatchableWithBurningParrot
+readonly class AddLicenseAgreementController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * @var ProjectRetriever
-     * @psalm-readonly
-     */
-    private $project_retriever;
-    /**
-     * @var \TemplateRenderer
-     * @psalm-readonly
-     */
-    private $content_renderer;
-    /**
-     * @var \CSRFSynchronizerToken
-     * @psalm-readonly
-     */
-    private $csrf_token;
-    /**
-     * @var IncludeAssets
-     * @psalm-readonly
-     */
-    private $assets;
-    /**
-     * @var LicenseAgreementControllersHelper
-     * @psalm-readonly
-     */
-    private $helper;
-
     public function __construct(
-        ProjectRetriever $project_retriever,
-        LicenseAgreementControllersHelper $helper,
-        \TemplateRenderer $content_renderer,
-        \CSRFSynchronizerToken $csrf_token,
-        IncludeAssets $assets,
-        private readonly IncludeAssetsGeneric $ckeditor_assets,
+        private ProjectRetriever $project_retriever,
+        private LicenseAgreementControllersHelper $helper,
+        private \TemplateRenderer $content_renderer,
+        private CSRFSynchronizerTokenInterface $csrf_token,
+        private IncludeAssets $assets,
+        private IncludeAssetsGeneric $ckeditor_assets,
     ) {
-        $this->project_retriever = $project_retriever;
-        $this->helper            = $helper;
-        $this->content_renderer  = $content_renderer;
-        $this->csrf_token        = $csrf_token;
-        $this->assets            = $assets;
     }
 
     public static function buildSelf(): self

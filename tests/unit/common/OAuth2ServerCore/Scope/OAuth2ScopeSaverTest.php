@@ -22,21 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Scope;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeIdentifierSaverDAO
-     */
-    private $dao;
-
-    /**
-     * @var OAuth2ScopeSaver
-     */
-    private $saver;
+    private OAuth2ScopeIdentifierSaverDAO&MockObject $dao;
+    private OAuth2ScopeSaver $saver;
 
     #[\Override]
     protected function setUp(): void
@@ -51,13 +45,16 @@ final class OAuth2ScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $identifier_a = OAuth2ScopeIdentifier::fromIdentifierKey('foobar');
         $identifier_b = OAuth2ScopeIdentifier::fromIdentifierKey('barbaz');
 
-        $scope_a = $this->createMock(AuthenticationScope::class);
+        $scope_a = $this->createStub(AuthenticationScope::class);
         $scope_a->method('getIdentifier')->willReturn($identifier_a);
-        $scope_b = $this->createMock(AuthenticationScope::class);
+        $scope_b = $this->createStub(AuthenticationScope::class);
         $scope_b->method('getIdentifier')->willReturn($identifier_b);
 
         $this->dao->expects($this->once())->method('saveScopeKeysByID')->with(12, 'foobar', 'barbaz');
 
-        $this->saver->saveScopes(12, [$scope_a, $scope_b]);
+        /** @var non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes */
+        $scopes = [$scope_a, $scope_b];
+
+        $this->saver->saveScopes(12, $scopes);
     }
 }

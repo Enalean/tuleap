@@ -37,7 +37,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const EXPECTED_EXPIRATION_DELAY_SECONDS = 30;
+    private const int EXPECTED_EXPIRATION_DELAY_SECONDS = 30;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenDAO
@@ -47,10 +47,7 @@ final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeSaver
      */
     private $scope_saver;
-    /**
-     * @var OAuth2RefreshTokenCreator
-     */
-    private $refresh_token_creator;
+    private OAuth2RefreshTokenCreator $refresh_token_creator;
 
     #[\Override]
     protected function setUp(): void
@@ -118,8 +115,8 @@ final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $current_time = new \DateTimeImmutable('@10');
 
-        $this->refresh_token_dao->method('create')->willReturn(1);
-        $this->scope_saver->method('saveScopes');
+        $this->refresh_token_dao->expects($this->exactly(2))->method('create')->willReturn(1);
+        $this->scope_saver->expects($this->exactly(2))->method('saveScopes');
 
         $refresh_token_1 = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));
         $refresh_token_2 = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));
@@ -132,9 +129,12 @@ final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDoesNotIssueRefreshTokenWhenAuthorizationCodeDoesNotHaveOfflineScope(): void
     {
         $current_time = new \DateTimeImmutable('@10');
-        $scope        = $this->createMock(AuthenticationScope::class);
+        $scope        = $this->createStub(AuthenticationScope::class);
         $scope->method('getIdentifier')->willReturn(OAuth2ScopeIdentifier::fromIdentifierKey('notoffline'));
         $auth_code = $this->getAuthorizationCode([$scope]);
+
+        $this->refresh_token_dao->expects($this->never())->method('create');
+        $this->scope_saver->expects($this->never())->method('saveScopes');
 
         $refresh_token = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode(
             $current_time,

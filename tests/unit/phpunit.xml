@@ -3,6 +3,7 @@
          colors="true"
          failOnRisky="true"
          failOnWarning="true"
+         failOnAllIssues="false"
          backupGlobals="true"
          beStrictAboutChangesToGlobalState="true"
          beStrictAboutTestsThatDoNotTestAnything="true"

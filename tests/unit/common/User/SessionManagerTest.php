@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -31,26 +31,17 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const int SESSION_LIFETIME_2_WEEKS = 1209600;
     private const int CURRENT_TIME             = 1481202269;
 
-    /**
-     * @var \UserManager&MockObject
-     */
-    private $user_manager;
-    /**
-     * @var \RandomNumberGenerator&MockObject
-     */
-    private $random_number_generator;
-    /**
-     * @var \SessionDao&MockObject
-     */
-    private $session_dao;
+    private \UserManager&Stub $user_manager;
+    private \RandomNumberGenerator&Stub $random_number_generator;
+    private \SessionDao&Stub $session_dao;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user_manager            = $this->createMock(\UserManager::class);
-        $this->random_number_generator = $this->createMock(\RandomNumberGenerator::class);
-        $this->session_dao             = $this->createMock(\SessionDao::class);
+        $this->user_manager            = $this->createStub(\UserManager::class);
+        $this->random_number_generator = $this->createStub(\RandomNumberGenerator::class);
+        $this->session_dao             = $this->createStub(\SessionDao::class);
     }
 
     public function testItThrowsAnExceptionWhenTheSessionIdentifierIsMalformed(): void
@@ -113,7 +104,8 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGetsTheUserFromTheSessionIdentifier(): void
     {
-        $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
+        $session_dao     = $this->createMock(\SessionDao::class);
+        $session_manager = new SessionManager($this->user_manager, $session_dao, $this->random_number_generator);
 
         $session_id           = '1';
         $session_token        = 'token';
@@ -121,13 +113,13 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $session_identifier   = "$session_id.$session_token";
         $user_id              = '101';
 
-        $this->session_dao->method('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->willReturn([
+        $session_dao->method('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->willReturn([
             'session_hash' => $hashed_session_token,
             'user_id'      => $user_id,
             'user_agent'   => 'old_user_agent',
         ]);
 
-        $this->session_dao->expects($this->once())->method('updateUserAgentByID');
+        $session_dao->expects($this->once())->method('updateUserAgentByID');
         $user = $this->createMock(\PFUser::class);
         $this->user_manager->method('getUserById')->with($user_id)->willReturn($user);
 
@@ -145,7 +137,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             new \RuntimeException('Something really bad happened, could not create the session in the DB')
         );
         $user    = UserTestBuilder::aUser()->build();
-        $request = $this->createMock(\Tuleap\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
 
         $this->random_number_generator->method('getNumber')->willReturn('1');
 
@@ -160,7 +152,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $session_id   = 1;
         $user         = $this->createMock(\PFUser::class);
-        $request      = $this->createMock(\Tuleap\HTTPRequest::class);
+        $request      = $this->createStub(\Tuleap\HTTPRequest::class);
         $random_token = 'random_token';
         $this->session_dao->method('create')->willReturn($session_id);
         $this->random_number_generator->method('getNumber')->willReturn($random_token);

@@ -37,7 +37,7 @@ class PaneCollectorTest extends TestCase
             $package_builder
         );
 
-        $project = $this->createConfiguredMock(Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
+        $project = $this->createConfiguredStub(Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
         $project->method('usesFile')->willReturn(false);
 
         $selected_ugroup_id = null;

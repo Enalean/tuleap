@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Luracast\Restler\Data\ApiMethodInfo;
 use Luracast\Restler\InvalidAuthCredentials;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\MockObject\Stub;
 use Rest_Exception_InvalidTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\User\AccessKey\AccessKeyException;
@@ -34,25 +35,16 @@ use User_LoginException;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
-     */
-    private $logger;
+    private UserManager&Stub $user_manager;
+    private TestLogger $logger;
 
-    /**
-     * @var RESTAuthenticationFlowIsAllowed
-     */
-    private $rest_authentication_flow;
+    private RESTAuthenticationFlowIsAllowed $rest_authentication_flow;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->user_manager = $this->createMock(UserManager::class);
-        $this->logger       = $this->createMock(LoggerInterface::class);
+        $this->user_manager = $this->createStub(UserManager::class);
+        $this->logger       = new TestLogger();
 
         $this->rest_authentication_flow = new RESTAuthenticationFlowIsAllowed($this->user_manager, $this->logger);
     }
@@ -69,7 +61,7 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
         $this->user_manager->method('getCurrentUser')->willReturn(
             new \PFUser(['user_id' => 102, 'language_id' => 'en'])
         );
-        $this->assertTrue($this->rest_authentication_flow->isAllowed($this->createMock(ApiMethodInfo::class)));
+        $this->assertTrue($this->rest_authentication_flow->isAllowed($this->createStub(ApiMethodInfo::class)));
     }
 
     public function testAnonymousUserIsNotAllowed(): void
@@ -78,7 +70,7 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
         $anonymous_user            = new \PFUser(['language_id' => 'en']);
         $this->user_manager->method('getCurrentUser')->willReturn($anonymous_user);
 
-        $this->assertFalse($this->rest_authentication_flow->isAllowed($this->createMock(ApiMethodInfo::class)));
+        $this->assertFalse($this->rest_authentication_flow->isAllowed($this->createStub(ApiMethodInfo::class)));
     }
 
     public function testCallingAnOptionRouteIsAllowed(): void
@@ -87,7 +79,7 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
         $anonymous_user            = new \PFUser(['language_id' => 'en']);
         $this->user_manager->method('getCurrentUser')->willReturn($anonymous_user);
 
-        $this->assertTrue($this->rest_authentication_flow->isAllowed($this->createMock(ApiMethodInfo::class)));
+        $this->assertTrue($this->rest_authentication_flow->isAllowed($this->createStub(ApiMethodInfo::class)));
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderExceptionsAuthentication')]
@@ -95,11 +87,12 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $this->user_manager->method('getCurrentUser')->willThrowException($exception);
-        $this->logger->expects($this->once())->method('debug');
 
         $this->expectException(InvalidAuthCredentials::class);
         $this->expectExceptionCode($expected_code);
-        $this->rest_authentication_flow->isAllowed($this->createMock(ApiMethodInfo::class));
+        $this->rest_authentication_flow->isAllowed($this->createStub(ApiMethodInfo::class));
+
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public static function dataProviderExceptionsAuthentication(): array
@@ -138,6 +131,6 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
         $this->user_manager->method('getCurrentUser')->willThrowException(new \LogicException());
 
         $this->expectException(\LogicException::class);
-        $this->rest_authentication_flow->isAllowed($this->createMock(ApiMethodInfo::class));
+        $this->rest_authentication_flow->isAllowed($this->createStub(ApiMethodInfo::class));
     }
 }

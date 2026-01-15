@@ -33,7 +33,7 @@ class GlyphFinderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenTheGlyphCanNotBeFound(): void
     {
-        $event_manager = $this->createMock(EventManager::class);
+        $event_manager = $this->createStub(EventManager::class);
         $event_manager->method('processEvent');
         $glyph_finder = new GlyphFinder($event_manager);
 

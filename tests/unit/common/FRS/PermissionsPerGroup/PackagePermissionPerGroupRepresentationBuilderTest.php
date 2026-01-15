@@ -87,10 +87,10 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
     {
         parent::setUp();
 
-        $this->permission_ugroup_retriever    = $this->createMock(PermissionPerGroupUGroupRetriever::class);
-        $this->package_factory                = $this->createMock(FRSPackageFactory::class);
-        $this->ugroup_representation_builder  = $this->createMock(PermissionPerGroupUGroupRepresentationBuilder::class);
-        $this->release_factory                = $this->createMock(FRSReleaseFactory::class);
+        $this->permission_ugroup_retriever    = $this->createStub(PermissionPerGroupUGroupRetriever::class);
+        $this->package_factory                = $this->createStub(FRSPackageFactory::class);
+        $this->ugroup_representation_builder  = $this->createStub(PermissionPerGroupUGroupRepresentationBuilder::class);
+        $this->release_factory                = $this->createStub(FRSReleaseFactory::class);
         $this->release_representation_builder = new PackagePermissionPerGroupReleaseRepresentationBuilder(
             $this->release_factory,
             $this->permission_ugroup_retriever,
@@ -104,7 +104,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             $this->release_representation_builder
         );
 
-        $this->project = $this->createMock(Project::class);
+        $this->project = $this->createStub(Project::class);
         $this->project->method('getId')->willReturn(101);
 
         $this->project_member_representation = new PermissionPerGroupUGroupRepresentation(

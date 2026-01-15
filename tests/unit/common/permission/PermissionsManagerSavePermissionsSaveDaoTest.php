@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
@@ -35,7 +35,7 @@ class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\
     protected Project $project;
     protected string $permission_type;
     protected string $object_id;
-    protected PermissionsDao&MockObject $permissions_dao;
+    protected PermissionsDao&Stub $permissions_dao;
     protected int $project_id;
 
     #[\Override]
@@ -44,11 +44,11 @@ class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\
         parent::setUp();
         $this->project_id          = 404;
         $this->project             = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
-        $this->permissions_dao     = $this->createMock(\PermissionsDao::class);
+        $this->permissions_dao     = $this->createStub(\PermissionsDao::class);
         $this->permission_type     = 'FOO';
         $this->object_id           = 'BAR';
         $this->permissions_manager = new PermissionsManager($this->permissions_dao);
-        $ldai                      = $this->createMock(LegacyDataAccessInterface::class);
+        $ldai                      = $this->createStub(LegacyDataAccessInterface::class);
         $this->permissions_dao->method('getDa')->willReturn($ldai);
         $ldai->method('getErrorMessage');
     }

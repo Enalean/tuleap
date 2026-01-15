@@ -100,7 +100,7 @@ final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesAnExceptionIfSectionNameIsUnknown(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
-        $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
+        $entries   = $this->createStub(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
         $this->expectException(\RuntimeException::class);
 

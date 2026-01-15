@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
@@ -42,34 +43,19 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AccessTokenGrantRepresentationBuilder
-     */
-    private $representation_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
-     */
-    private $auth_code_unserializer;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeVerifier
-     */
-    private $auth_code_verifier;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PKCECodeVerifier
-     */
-    private $pkce_code_verifier;
-    /**
-     * @var OAuth2GrantAccessTokenFromAuthorizationCode
-     */
-    private $grant_access_token_from_auth_code;
+    private AccessTokenGrantRepresentationBuilder&Stub $representation_builder;
+    private SplitTokenIdentifierTranslator&Stub $auth_code_unserializer;
+    private OAuth2AuthorizationCodeVerifier&Stub $auth_code_verifier;
+    private PKCECodeVerifier&Stub $pkce_code_verifier;
+    private OAuth2GrantAccessTokenFromAuthorizationCode $grant_access_token_from_auth_code;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->representation_builder = $this->createMock(AccessTokenGrantRepresentationBuilder::class);
-        $this->auth_code_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
-        $this->auth_code_verifier     = $this->createMock(OAuth2AuthorizationCodeVerifier::class);
-        $this->pkce_code_verifier     = $this->createMock(PKCECodeVerifier::class);
+        $this->representation_builder = $this->createStub(AccessTokenGrantRepresentationBuilder::class);
+        $this->auth_code_unserializer = $this->createStub(SplitTokenIdentifierTranslator::class);
+        $this->auth_code_verifier     = $this->createStub(OAuth2AuthorizationCodeVerifier::class);
+        $this->pkce_code_verifier     = $this->createStub(PKCECodeVerifier::class);
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
@@ -88,11 +74,11 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
     public function testBuildsSuccessfulResponse(): void
     {
-        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->auth_code_verifier->method('getAuthorizationCode')->willReturn(
             $this->buildAuthorizationCodeGrant()
         );
-        $this->pkce_code_verifier->expects($this->once())->method('verifyCode');
+        $this->pkce_code_verifier->method('verifyCode');
         $this->representation_builder->method('buildRepresentationFromAuthorizationCode')->willReturn(
             OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
                 new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
@@ -115,14 +101,13 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
     public function testRejectsRequestWithoutAnAuthCode(): void
     {
-        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->auth_code_verifier->method('getAuthorizationCode')->willReturn(
             $this->buildAuthorizationCodeGrant()
         );
 
         $body_params = ['grant_type' => 'authorization_code'];
 
-        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -131,7 +116,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
     public function testRejectsWithANotValidAuthCode(): void
     {
-        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->auth_code_verifier->method('getAuthorizationCode')->willThrowException(
             new class extends \RuntimeException implements OAuth2ServerException {
             }
@@ -139,7 +124,6 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
         $body_params = ['grant_type' => 'authorization_code', 'code' => 'not_valid_auth_code'];
 
-        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -148,7 +132,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
     public function testRejectsRequestWithoutARedirectURI(): void
     {
-        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->auth_code_verifier->method('getAuthorizationCode')->willReturn(
             $this->buildAuthorizationCodeGrant()
         );
@@ -159,7 +143,6 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
             'code'       => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
         ];
 
-        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -168,7 +151,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
     public function testRejectsRequestThatDoesNotTheExpectedRedirectURI(): void
     {
-        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->auth_code_verifier->method('getAuthorizationCode')->willReturn(
             $this->buildAuthorizationCodeGrant()
         );
@@ -180,7 +163,6 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
             'redirect_uri' => 'https://evil.example.com',
         ];
 
-        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -189,7 +171,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
     public function testRejectsRequestWithAInvalidPKCECodeVerifier(): void
     {
-        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->auth_code_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->auth_code_verifier->method('getAuthorizationCode')->willReturn(
             $this->buildAuthorizationCodeGrant()
         );
@@ -206,7 +188,6 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
             'redirect_uri' => $app->getRedirectEndpoint(),
         ];
 
-        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($app, $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\REST\v1;
 
 use PFUser;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectManager;
 use Psr\Log\NullLogger;
@@ -43,37 +44,22 @@ use Tuleap\Test\Stubs\Project\Registration\Template\VerifyProjectCreationFromArc
 final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
 {
     private ProjectCreationDataPOSTProjectBuilder $builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TemplateFactory
-     */
-    private $template_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&XMLFileContentRetriever
-     */
-    private $xml_file_content_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ServiceManager
-     */
-    private $service_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectCreationDataServiceFromXmlInheritor
-     */
-    private $from_xml_inheritor;
+    private ProjectManager&Stub $project_manager;
+    private TemplateFactory&Stub $template_factory;
+    private XMLFileContentRetriever&Stub $xml_file_content_retriever;
+    private ServiceManager&Stub $service_manager;
+    private ProjectCreationDataServiceFromXmlInheritor&Stub $from_xml_inheritor;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->project_manager            = $this->createMock(ProjectManager::class);
-        $this->template_factory           = $this->createMock(TemplateFactory::class);
-        $this->xml_file_content_retriever = $this->createMock(XMLFileContentRetriever::class);
-        $this->service_manager            = $this->createMock(ServiceManager::class);
-        $this->from_xml_inheritor         = $this->createMock(ProjectCreationDataServiceFromXmlInheritor::class);
+        $this->project_manager            = $this->createStub(ProjectManager::class);
+        $this->template_factory           = $this->createStub(TemplateFactory::class);
+        $this->xml_file_content_retriever = $this->createStub(XMLFileContentRetriever::class);
+        $this->service_manager            = $this->createStub(ServiceManager::class);
+        $this->from_xml_inheritor         = $this->createStub(ProjectCreationDataServiceFromXmlInheritor::class);
 
         $this->builder = new ProjectCreationDataPOSTProjectBuilder(
             $this->project_manager,
@@ -98,7 +84,6 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         $post_representation->xml_template_name = null;
 
         $this->project_manager
-            ->expects($this->once())
             ->method('getProject')
             ->with(101)
             ->willReturn(
@@ -145,7 +130,6 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->template_factory
-            ->expects($this->once())
             ->method('getTemplate')
             ->with('template')
             ->willReturn(
@@ -203,13 +187,11 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         ');
 
         $this->xml_file_content_retriever
-            ->expects($this->once())
             ->method('getSimpleXMLElementFromFilePath')
             ->with('path/to/xml/template')
             ->willReturn(Result::ok($xml_content));
 
         $this->from_xml_inheritor
-            ->expects($this->once())
             ->method('markUsedServicesFromXML');
 
         $creation_data = $this->builder->buildProjectCreationDataFromPOSTRepresentation(

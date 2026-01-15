@@ -25,11 +25,11 @@ namespace Tuleap\Layout\NewDropdown;
 use Tuleap\Option\Option;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCreatesANewSection(): void
     {
-        $link = $this->createMock(NewDropdownLinkPresenter::class);
+        $link = $this->createStub(NewDropdownLinkPresenter::class);
 
         $section = (new CurrentContextSectionToHeaderOptionsInserter())
             ->addLinkToCurrentContextSection('Section label', $link, Option::nothing(NewDropdownLinkSectionPresenter::class))
@@ -41,8 +41,8 @@ class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPU
 
     public function testItAddsLinkToAlreadyExistingSection(): void
     {
-        $link          = $this->createMock(NewDropdownLinkPresenter::class);
-        $existing_link = $this->createMock(NewDropdownLinkPresenter::class);
+        $link          = $this->createStub(NewDropdownLinkPresenter::class);
+        $existing_link = $this->createStub(NewDropdownLinkPresenter::class);
 
         $existing = Option::fromValue(
             new NewDropdownLinkSectionPresenter(

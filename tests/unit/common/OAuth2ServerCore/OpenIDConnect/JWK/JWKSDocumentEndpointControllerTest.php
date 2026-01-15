@@ -37,7 +37,7 @@ final class JWKSDocumentEndpointControllerTest extends \Tuleap\Test\PHPUnit\Test
             new OpenIDConnectSigningKeyFactoryStaticForTestPurposes(),
             new \DateInterval('PT30S'),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            $this->createMock(EmitterInterface::class)
+            $this->createStub(EmitterInterface::class)
         );
 
         $response = $controller->handle(new NullServerRequest());

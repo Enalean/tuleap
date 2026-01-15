@@ -266,7 +266,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     public function testItReturnsTrueWhenTheKeyIsPresent(): void
     {
         $user         = UserTestBuilder::anActiveUser()->withLocale('en_US')->build();
-        $user_manager = $this->createMock(UserManager::class);
+        $user_manager = $this->createStub(UserManager::class);
         $user_manager->method('getCurrentUser')->willReturn($user);
         UserManager::setInstance($user_manager);
 
@@ -277,7 +277,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     public function testItReturnsFalseWhenTheKeyIsNotPresent(): void
     {
         $user         = UserTestBuilder::anActiveUser()->withLocale('en_US')->build();
-        $user_manager = $this->createMock(UserManager::class);
+        $user_manager = $this->createStub(UserManager::class);
         $user_manager->method('getCurrentUser')->willReturn($user);
         UserManager::setInstance($user_manager);
 

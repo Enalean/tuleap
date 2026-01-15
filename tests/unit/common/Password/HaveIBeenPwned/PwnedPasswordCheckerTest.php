@@ -38,7 +38,7 @@ EOF;
     #[\PHPUnit\Framework\Attributes\DataProvider('passwordProvider')]
     public function testCompromisedPasswordIsRightlyIdentified(string $password, bool $expected): void
     {
-        $retriever = $this->createMock(PwnedPasswordRangeRetriever::class);
+        $retriever = $this->createStub(PwnedPasswordRangeRetriever::class);
         $retriever->method('getHashSuffixesMatchingPrefix')->willReturn(self::API_RESPONSE_EXAMPLE);
 
         $pwned_password_checker = new PwnedPasswordChecker($retriever);
@@ -57,7 +57,7 @@ EOF;
 
     public function testAPICallEmptyResponseIsNotConsideredAsACompromisedPassword(): void
     {
-        $retriever = $this->createMock(PwnedPasswordRangeRetriever::class);
+        $retriever = $this->createStub(PwnedPasswordRangeRetriever::class);
         $retriever->method('getHashSuffixesMatchingPrefix')->willReturn('');
 
         $pwned_password_checker = new PwnedPasswordChecker($retriever);

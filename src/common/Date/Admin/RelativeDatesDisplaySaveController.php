@@ -27,41 +27,18 @@ use Tuleap\Date\DateHelper;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
-class RelativeDatesDisplaySaveController implements DispatchableWithRequest
+readonly class RelativeDatesDisplaySaveController implements DispatchableWithRequest
 {
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    private $csrf_token;
-
-    /**
-     * @var SelectedDateDisplayPreferenceValidator
-     */
-    private $date_display_preference_validator;
-
-    /**
-     * @var \Tuleap\Config\ConfigDao
-     */
-    private $config_dao;
-
-    /**
-     * @var \UserPreferencesDao
-     */
-    private $preferences_dao;
-
     public function __construct(
-        \CSRFSynchronizerToken $csrf_token,
-        SelectedDateDisplayPreferenceValidator $date_display_preference_validator,
-        \Tuleap\Config\ConfigDao $config_dao,
-        \UserPreferencesDao $preferences_dao,
+        private CSRFSynchronizerTokenInterface $csrf_token,
+        private SelectedDateDisplayPreferenceValidator $date_display_preference_validator,
+        private \Tuleap\Config\ConfigDao $config_dao,
+        private \UserPreferencesDao $preferences_dao,
     ) {
-        $this->csrf_token                        = $csrf_token;
-        $this->date_display_preference_validator = $date_display_preference_validator;
-        $this->config_dao                        = $config_dao;
-        $this->preferences_dao                   = $preferences_dao;
     }
 
     /**

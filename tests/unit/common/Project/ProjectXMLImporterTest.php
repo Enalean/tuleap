@@ -26,6 +26,7 @@ namespace Tuleap\Project;
 
 use Event;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project_NotFoundException;
 use ProjectCreator;
 use ProjectXMLImporter;
@@ -57,60 +58,60 @@ use XMLImportHelper;
 final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \EventManager&MockObject $event_manager;
-    private \ProjectManager&MockObject $project_manager;
+    private \ProjectManager&Stub $project_manager;
     private \Project $project;
-    private \UGroupManager&MockObject $ugroup_manager;
+    private \UGroupManager&Stub $ugroup_manager;
     private string $xml_file_path              = __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project.xml';
     private string $xml_file_path_with_ugroups = __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project_with_ugroups.xml';
-    private \UserManager&MockObject $user_manager;
+    private \UserManager&Stub $user_manager;
     private LoggerInterface $logger;
     private Import\ImportConfig $configuration;
     private ProjectXMLImporter $xml_importer;
     private XMLImportHelper $user_finder;
-    private UgroupDuplicator&MockObject $ugroup_duplicator;
+    private UgroupDuplicator&Stub $ugroup_duplicator;
     private string $xml_file_path_with_members = __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project_with_project_members.xml';
-    private SynchronizedProjectMembershipDao&MockObject $sync_members;
+    private SynchronizedProjectMembershipDao&Stub $sync_members;
 
     #[\Override]
     protected function setUp(): void
     {
         $this->event_manager   = $this->createMock(\EventManager::class);
-        $this->project_manager = $this->createMock(\ProjectManager::class);
+        $this->project_manager = $this->createStub(\ProjectManager::class);
         $this->project         = ProjectTestBuilder::aProject()->withId(122)->build();
-        $this->ugroup_manager  = $this->createMock(\UGroupManager::class);
-        $this->user_manager    = $this->createMock(\UserManager::class);
+        $this->ugroup_manager  = $this->createStub(\UGroupManager::class);
+        $this->user_manager    = $this->createStub(\UserManager::class);
         $this->user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $this->user_finder       = new XMLImportHelper($this->user_manager);
         $this->logger            = new NullLogger();
-        $this->ugroup_duplicator = $this->createMock(\Tuleap\Project\UgroupDuplicator::class);
-        $this->sync_members      = $this->createMock(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDao::class);
-        $frs_permissions_creator = $this->createMock(\Tuleap\FRS\FRSPermissionCreator::class);
-        $user_removal            = $this->createMock(\Tuleap\Project\UserRemover::class);
+        $this->ugroup_duplicator = $this->createStub(\Tuleap\Project\UgroupDuplicator::class);
+        $this->sync_members      = $this->createStub(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDao::class);
+        $frs_permissions_creator = $this->createStub(\Tuleap\FRS\FRSPermissionCreator::class);
+        $user_removal            = $this->createStub(\Tuleap\Project\UserRemover::class);
 
         $project_creator = new ProjectCreator(
             $this->project_manager,
-            $this->createMock(\ReferenceManager::class),
+            $this->createStub(\ReferenceManager::class),
             $this->user_manager,
             $this->ugroup_duplicator,
             false,
             $frs_permissions_creator,
-            $this->createMock(\Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory::class),
-            $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardDuplicator::class),
-            $this->createMock(\Tuleap\Project\Label\LabelDao::class),
-            $this->createMock(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator::class),
+            $this->createStub(\Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory::class),
+            $this->createStub(\Tuleap\Dashboard\Project\ProjectDashboardDuplicator::class),
+            $this->createStub(\Tuleap\Project\Label\LabelDao::class),
+            $this->createStub(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator::class),
             $this->event_manager,
-            $this->createMock(\Tuleap\Project\Admin\DescriptionFields\FieldUpdator::class),
-            $this->createMock(ProjectServiceActivator::class),
-            $this->createMock(ProjectRegistrationChecker::class),
-            $this->createMock(ProjectCategoriesUpdater::class),
+            $this->createStub(\Tuleap\Project\Admin\DescriptionFields\FieldUpdator::class),
+            $this->createStub(ProjectServiceActivator::class),
+            $this->createStub(ProjectRegistrationChecker::class),
+            $this->createStub(ProjectCategoriesUpdater::class),
             $this->createStub(EmailCopier::class),
             StoreProjectInformationStub::build(),
-            $this->createMock(BannerRetriever::class),
-            $this->createMock(BannerCreator::class),
+            $this->createStub(BannerRetriever::class),
+            $this->createStub(BannerCreator::class),
             false
         );
 
-        $dashboard_importer = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardXMLImporter::class);
+        $dashboard_importer = $this->createStub(\Tuleap\Dashboard\Project\ProjectDashboardXMLImporter::class);
         $dashboard_importer->method('import');
         $this->xml_importer = new ProjectXMLImporter(
             $this->event_manager,
@@ -119,21 +120,21 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new XML_RNGValidator(),
             $this->ugroup_manager,
             $this->user_finder,
-            $this->createMock(\ServiceManager::class),
+            $this->createStub(\ServiceManager::class),
             $this->logger,
             $frs_permissions_creator,
             $user_removal,
-            $this->createMock(ProjectMemberAdder::class),
+            $this->createStub(ProjectMemberAdder::class),
             $project_creator,
-            $this->createMock(\Tuleap\FRS\UploadedLinksUpdater::class),
+            $this->createStub(\Tuleap\FRS\UploadedLinksUpdater::class),
             $dashboard_importer,
             $this->sync_members,
             new XMLFileContentRetriever(),
-            $this->createMock(DescriptionFieldsFactory::class),
-            $this->createMock(ReconnectAfterALongRunningProcess::class),
-            $this->createMock(ServiceDao::class),
-            $this->createMock(ServiceLinkDataBuilder::class),
-            $this->createMock(BannerCreator::class),
+            $this->createStub(DescriptionFieldsFactory::class),
+            $this->createStub(ReconnectAfterALongRunningProcess::class),
+            $this->createStub(ServiceDao::class),
+            $this->createStub(ServiceLinkDataBuilder::class),
+            $this->createStub(BannerCreator::class),
         );
 
         $this->configuration = new Import\ImportConfig();
@@ -158,8 +159,8 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAsksProjectManagerForTheProject(): void
     {
-        $this->project_manager->expects($this->once())->method('getValidProjectByShortNameOrId')->with(122)->willReturn($this->project);
-        $this->event_manager->method('processEvent');
+        $this->project_manager->method('getValidProjectByShortNameOrId')->with(122)->willReturn($this->project);
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path);
     }
@@ -167,6 +168,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItStopsIfNoProjectIsFound(): void
     {
         $this->project_manager->method('getValidProjectByShortNameOrId')->willThrowException(new Project_NotFoundException());
+        $this->event_manager->expects($this->never())->method('processEvent');
         $this->expectException('Project_NotFoundException');
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path);
@@ -181,68 +183,46 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_02 = UserTestBuilder::aUser()->withLdapId('ldap_02')->withUserName('user_02')->withId(102)->build();
         $user_03 = UserTestBuilder::aUser()->withLdapId('ldap_03')->withUserName('user_03')->withId(103)->build();
         $user_04 = UserTestBuilder::aUser()->withUserName('user_04')->withId(104)->build();
-        $matcher = $this->exactly(4);
 
-        $this->user_manager->expects($matcher)->method('getUserByIdentifier')->willReturnCallback(function (...$parameters) use ($matcher, $user_01, $user_02, $user_03, $user_04) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame('ldapId:ldap_01', $parameters[0]);
-                return $user_01;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('ldapId:ldap_02', $parameters[0]);
-                return $user_02;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame('user_04', $parameters[0]);
-                return $user_04;
-            }
-            if ($matcher->numberOfInvocations() === 4) {
-                self::assertSame('ldapId:ldap_03', $parameters[0]);
-                return $user_03;
-            }
-        });
-        $matcher = $this->exactly(3);
+        $this->user_manager->method('getUserByIdentifier')
+            ->willReturnCallback(function (...$parameters) use ($user_01, $user_02, $user_03, $user_04) {
+                switch ($parameters[0]) {
+                    case 'ldapId:ldap_01':
+                        return $user_01;
+                    case 'ldapId:ldap_02':
+                        return $user_02;
+                    case 'ldapId:ldap_03':
+                        return $user_03;
+                    case 'user_04':
+                        return $user_04;
+                }
+                throw new \RuntimeException('Unexpected arguments');
+            });
+        $this->ugroup_manager->method('createEmptyUgroup')->willReturnCallback(
+            function (int|string $project_id, string $ugroup_name, string $ugroup_description): int {
+                if ($project_id === '122' && $ugroup_name === 'ug01' && $ugroup_description === 'descr01') {
+                    return 555;
+                }
+                if ($project_id === '122' && $ugroup_name === 'ug02' && $ugroup_description === 'descr02') {
+                    return 556;
+                }
+                if ($project_id === '122' && $ugroup_name === 'ug03' && $ugroup_description === 'descr03') {
+                    return 557;
+                }
 
-        $this->ugroup_manager->expects($matcher)->method('createEmptyUgroup')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(122, (int) $parameters[0]);
-                self::assertSame('ug01', $parameters[1]);
-                self::assertSame('descr01', $parameters[2]);
-                return 555;
+                throw new \RuntimeException('Unexpected arguments');
             }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(122, (int) $parameters[0]);
-                self::assertSame('ug02', $parameters[1]);
-                self::assertSame('descr02', $parameters[2]);
-                return 556;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame(122, (int) $parameters[0]);
-                self::assertSame('ug03', $parameters[1]);
-                self::assertSame('descr03', $parameters[2]);
-                return 557;
-            }
-        });
+        );
 
-        $ug01    = $this->createMock(\ProjectUGroup::class);
-        $ug02    = $this->createMock(\ProjectUGroup::class);
-        $ug03    = $this->createMock(\ProjectUGroup::class);
-        $matcher = $this->exactly(3);
+        $ug01 = $this->createMock(\ProjectUGroup::class);
+        $ug02 = $this->createMock(\ProjectUGroup::class);
+        $ug03 = $this->createMock(\ProjectUGroup::class);
 
-        $this->ugroup_manager->expects($matcher)->method('getById')->willReturnCallback(function (...$parameters) use ($matcher, $ug01, $ug02, $ug03) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(555, $parameters[0]);
-                return $ug01;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(556, $parameters[0]);
-                return $ug02;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame(557, $parameters[0]);
-                return $ug03;
-            }
-        });
+        $this->ugroup_manager->method('getById')->willReturnMap([
+            [555, $ug01],
+            [556, $ug02],
+            [557, $ug03],
+        ]);
         $this->ugroup_manager->method('getDynamicUGoupIdByName');
         $this->ugroup_manager->method('getDynamicUGoupByName');
 
@@ -253,7 +233,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ug03->expects($this->never())->method('addUser');
         $ug03->method('getId')->willReturn(557);
 
-        $this->event_manager->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path_with_ugroups);
     }
@@ -282,22 +262,18 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ['user_04', $user_04],
             ]);
 
-        $matcher = $this->exactly(2);
+        $this->ugroup_manager->method('createEmptyUgroup')->willReturnCallback(
+            function (int|string $project_id, string $ugroup_name, string $ugroup_description): int {
+                if ($project_id === '122' && $ugroup_name === 'ug01' && $ugroup_description === 'descr01') {
+                    return 555;
+                }
+                if ($project_id === '122' && $ugroup_name === 'ug03' && $ugroup_description === 'descr03') {
+                    return 557;
+                }
+                throw new \RuntimeException('Unexpected arguments');
+            }
+        );
 
-        $this->ugroup_manager->expects($matcher)->method('createEmptyUgroup')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(122, (int) $parameters[0]);
-                self::assertSame('ug01', $parameters[1]);
-                self::assertSame('descr01', $parameters[2]);
-                return 555;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(122, (int) $parameters[0]);
-                self::assertSame('ug03', $parameters[1]);
-                self::assertSame('descr03', $parameters[2]);
-                return 557;
-            }
-        });
         $ug01 = $this->createMock(\ProjectUGroup::class);
         $ug02 = $this->createMock(\ProjectUGroup::class);
         $ug03 = $this->createMock(\ProjectUGroup::class);
@@ -318,7 +294,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ug03->expects($this->never())->method('addUser');
         $ug03->method('getId')->willReturn(557);
 
-        $this->event_manager->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path_with_ugroups);
     }
@@ -340,9 +316,9 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ug01->expects($this->once())->method('addUser');
         $ug01->method('getId')->willReturn(555);
 
-        $this->sync_members->expects($this->once())->method('enable')->with($this->project);
+        $this->sync_members->method('enable')->with($this->project);
 
-        $this->event_manager->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->xml_importer->import($this->configuration, 122, __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project_with_ugroups_synchronized.xml');
     }
@@ -364,10 +340,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getValidProjectByShortNameOrId')->willReturn($this->project);
         $this->user_manager->method('getUserByIdentifier')->with('ldapId:ldap_01')->willReturn($user);
 
-        $this->event_manager->method('processEvent');
-
-        //No exception must be raised --> nothing to assert
-        self::expectNotToPerformAssertions();
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path_with_members);
     }

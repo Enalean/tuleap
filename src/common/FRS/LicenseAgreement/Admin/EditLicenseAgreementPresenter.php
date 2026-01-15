@@ -25,6 +25,7 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 class EditLicenseAgreementPresenter
 {
@@ -54,11 +55,6 @@ class EditLicenseAgreementPresenter
      */
     public $content;
     /**
-     * @var \CSRFSynchronizerToken
-     * @psalm-readonly
-     */
-    public $csrf_token;
-    /**
      * @var bool
      * @psalm-readonly
      */
@@ -79,14 +75,13 @@ class EditLicenseAgreementPresenter
      */
     public $used_by;
 
-    public function __construct(\Project $project, LicenseAgreementInterface $license_agreement, \CSRFSynchronizerToken $csrf_token, bool $can_be_deleted, UsedByPresenter ...$used_by)
+    public function __construct(\Project $project, LicenseAgreementInterface $license_agreement, public readonly CSRFSynchronizerTokenInterface $csrf_token, bool $can_be_deleted, UsedByPresenter ...$used_by)
     {
-        $this->id         = $license_agreement->getId();
-        $this->title      = $license_agreement->getTitle();
-        $this->content    = $license_agreement->getContent();
-        $this->list_url   = ListLicenseAgreementsController::getUrl($project);
-        $this->save_url   = SaveLicenseAgreementController::getUrl($project);
-        $this->csrf_token = $csrf_token;
+        $this->id       = $license_agreement->getId();
+        $this->title    = $license_agreement->getTitle();
+        $this->content  = $license_agreement->getContent();
+        $this->list_url = ListLicenseAgreementsController::getUrl($project);
+        $this->save_url = SaveLicenseAgreementController::getUrl($project);
         if ($license_agreement instanceof NewLicenseAgreement) {
             $this->is_update = false;
         }

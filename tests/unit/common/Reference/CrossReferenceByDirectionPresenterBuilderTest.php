@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Reference;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
@@ -32,8 +33,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
 {
-    private EventDispatcherInterface&MockObject $event_dispatcher;
-    private \ReferenceManager&MockObject $reference_manager;
+    private EventDispatcherInterface&Stub $event_dispatcher;
+    private \ReferenceManager&Stub $reference_manager;
     private CrossReferencePresenterFactory&MockObject $factory;
     private CrossReferenceByNatureInCoreOrganizer&MockObject $core_organizer;
     private CrossReferenceByDirectionPresenterBuilder $builder;
@@ -41,18 +42,18 @@ final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->event_dispatcher  = $this->createMock(EventDispatcherInterface::class);
-        $this->reference_manager = $this->createMock(\ReferenceManager::class);
+        $this->event_dispatcher  = $this->createStub(EventDispatcherInterface::class);
+        $this->reference_manager = $this->createStub(\ReferenceManager::class);
         $this->factory           = $this->createMock(CrossReferencePresenterFactory::class);
         $this->core_organizer    = $this->createMock(CrossReferenceByNatureInCoreOrganizer::class);
-        $project_manager         = $this->createMock(\ProjectManager::class);
+        $project_manager         = $this->createStub(\ProjectManager::class);
 
         $this->builder = new CrossReferenceByDirectionPresenterBuilder(
             $this->event_dispatcher,
             $this->reference_manager,
             $this->factory,
             $project_manager,
-            $this->createMock(ProjectAccessChecker::class),
+            $this->createStub(ProjectAccessChecker::class),
             $this->core_organizer,
         );
     }

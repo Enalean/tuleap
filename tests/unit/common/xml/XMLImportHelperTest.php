@@ -34,7 +34,7 @@ class XMLImportHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItImportsAnonymousUser(): void
     {
-        $user_manager  = $this->createMock(\UserManager::class);
+        $user_manager  = $this->createStub(\UserManager::class);
         $import_helper = new XMLImportHelper($user_manager);
         $user_manager->method('getUserByIdentifier')->willReturn(null);
         $user_manager->method('getUserAnonymous')->willReturn(new PFUser());

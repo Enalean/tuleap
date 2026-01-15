@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupManagerGetUGroupWithMembersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private int $ugroup_id;
     private \Project $project;
-    private \UGroupManager&MockObject $ugroup_manager;
+    private \UGroupManager&Stub $ugroup_manager;
 
     #[\Override]
     protected function setUp(): void
@@ -39,9 +39,9 @@ final class UGroupManagerGetUGroupWithMembersTest extends \Tuleap\Test\PHPUnit\T
         $this->ugroup_id = 112;
         $this->project   = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
-        $this->ugroup_manager = $this->createPartialMock(\UGroupManager::class, [
-            'getUGroup',
-        ]);
+        $this->ugroup_manager = $this->getStubBuilder(\UGroupManager::class)
+            ->onlyMethods(['getUGroup'])
+            ->getStub();
     }
 
     public function testItReturnsAUGroupWithMembers(): void

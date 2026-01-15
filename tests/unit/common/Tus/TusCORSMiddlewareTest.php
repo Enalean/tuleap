@@ -33,12 +33,12 @@ final class TusCORSMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request_handler_response = $response_factory->createResponse(200);
 
-        $request_handler = $this->createMock(RequestHandlerInterface::class);
+        $request_handler = $this->createStub(RequestHandlerInterface::class);
         $request_handler->method('handle')->willReturn($request_handler_response);
 
         $middleware = new TusCORSMiddleware();
 
-        $response = $middleware->process($this->createMock(ServerRequestInterface::class), $request_handler);
+        $response = $middleware->process($this->createStub(ServerRequestInterface::class), $request_handler);
 
         self::assertTrue($response->hasHeader('Access-Control-Allow-Methods'));
         self::assertTrue($response->hasHeader('Access-Control-Allow-Headers'));
@@ -53,12 +53,12 @@ final class TusCORSMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withHeader('Access-Control-Allow-Headers', 'MyAllowedHeader')
             ->withHeader('Access-Control-Expose-Headers', 'MyExposedHeader');
 
-        $request_handler = $this->createMock(RequestHandlerInterface::class);
+        $request_handler = $this->createStub(RequestHandlerInterface::class);
         $request_handler->method('handle')->willReturn($request_handler_response);
 
         $middleware = new TusCORSMiddleware();
 
-        $response = $middleware->process($this->createMock(ServerRequestInterface::class), $request_handler);
+        $response = $middleware->process($this->createStub(ServerRequestInterface::class), $request_handler);
 
         self::assertContains('MyAllowedHeader', $response->getHeader('Access-Control-Allow-Headers'));
         self::assertContains('MyExposedHeader', $response->getHeader('Access-Control-Expose-Headers'));

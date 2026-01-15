@@ -22,11 +22,11 @@
 namespace Tuleap\User\Account;
 
 use Codendi_Mail_Interface;
-use CSRFSynchronizerToken;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -38,10 +38,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
      * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
-    /**
-     * @var CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $csrf_token;
+    private CSRFSynchronizerTokenStub $csrf_token;
 
     #[\Override]
     public function setUp(): void
@@ -49,16 +46,19 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->user = $this->createMock(\PFUser::class);
         $this->user->method('getId')->willReturn(120);
         $this->user->method('isAnonymous')->willReturn(false);
-        $this->user->preferencesdao = $this->createMock(\UserPreferencesDao::class);
+        $this->user->preferencesdao = $this->createStub(\UserPreferencesDao::class);
 
         $this->user_manager = $this->createMock(UserManager::class);
-        $this->csrf_token   = $this->createMock(CSRFSynchronizerToken::class);
+        $this->csrf_token   = CSRFSynchronizerTokenStub::buildSelf();
         $this->controller   = new UpdateNotificationsPreferences($this->csrf_token, $this->user_manager);
     }
 
     public function testItCannotUpdateWhenUserIsAnonymous(): void
     {
         $this->expectException(ForbiddenException::class);
+
+        $this->user->expects($this->never())->method('setMailSiteUpdates');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withAnonymousUser()->build(),
@@ -69,8 +69,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItChecksCSRFToken(): void
     {
-        $this->csrf_token->expects($this->once())->method('check')->with('/account/notifications');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -82,7 +80,8 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
-        $this->user_manager->method('updateDb');
+        $this->user->expects($this->never())->method('setMailSiteUpdates');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -90,12 +89,12 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             LayoutBuilder::build(),
             []
         );
+
+        self::assertTrue($this->csrf_token->hasBeenChecked());
     }
 
     public function testItRedirects(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -107,7 +106,8 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
-        $this->user_manager->method('updateDb');
+        $this->user->expects($this->never())->method('setMailSiteUpdates');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectExceptionObject(new LayoutInspectorRedirection('/account/notifications'));
         $this->controller->process(
@@ -119,8 +119,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItActivatesMailSiteUpdate(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -148,8 +146,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDeactivatesMailSiteUpdate(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(1);
@@ -177,8 +173,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesntUpdateUserWhenMailSiteUpdateAlreadyActive(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(1);
@@ -190,6 +184,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
+        $this->user->expects($this->never())->method('setMailSiteUpdates');
         $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
@@ -202,8 +197,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesntUpdateUserWhenMailSiteUpdateAlreadyInActive(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -215,6 +208,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
+        $this->user->expects($this->never())->method('setMailSiteUpdates');
         $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
@@ -227,8 +221,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItActivatesMailAdditionalCommunityMailing(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -256,8 +248,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDeactivatesMailAdditionalCommunityMailing(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -285,8 +275,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesntUpdateUserWhenMailAdditionalCommunityAlreadyInActive(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -298,6 +286,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
+        $this->user->expects($this->never())->method('setMailSiteUpdates');
         $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
@@ -310,8 +299,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItUpdatesEmailFormatPreferenceToHtml(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -322,6 +309,9 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->method('getPreference')
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
+
+        $this->user->expects($this->never())->method('setMailSiteUpdates');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -333,8 +323,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItUpdatesEmailFormatPreferenceToText(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -346,6 +334,9 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_TEXT);
 
+        $this->user->expects($this->never())->method('setMailSiteUpdates');
+        $this->user_manager->expects($this->never())->method('updateDb');
+
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email_format', 'text')->build(),
@@ -356,8 +347,6 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesntUpdateMailFormatPreferenceWhenPreferenceDoesntChange(): void
     {
-        $this->csrf_token->method('check');
-
         $this->user
             ->method('getMailSiteUpdates')
             ->willReturn(0);
@@ -368,6 +357,9 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->method('getPreference')
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
+
+        $this->user->expects($this->never())->method('setMailSiteUpdates');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(

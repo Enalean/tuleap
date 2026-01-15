@@ -23,16 +23,16 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use CSRFSynchronizerToken;
 use Feedback;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use UserManager;
 
-class UpdateNotificationsPreferences implements DispatchableWithRequest
+readonly class UpdateNotificationsPreferences implements DispatchableWithRequest
 {
-    public function __construct(private CSRFSynchronizerToken $csrf_token, private UserManager $user_manager)
+    public function __construct(private CSRFSynchronizerTokenInterface $csrf_token, private UserManager $user_manager)
     {
     }
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Scope;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
@@ -31,24 +32,15 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeIdentifierSearcherDAO
-     */
-    private $scope_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AuthenticationScopeBuilder
-     */
-    private $scope_builder;
-    /**
-     * @var OAuth2ScopeRetriever
-     */
-    private $retriever;
+    private OAuth2ScopeIdentifierSearcherDAO&Stub $scope_dao;
+    private AuthenticationScopeBuilder&Stub $scope_builder;
+    private OAuth2ScopeRetriever $retriever;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->scope_dao     = $this->createMock(OAuth2ScopeIdentifierSearcherDAO::class);
-        $this->scope_builder = $this->createMock(AuthenticationScopeBuilder::class);
+        $this->scope_dao     = $this->createStub(OAuth2ScopeIdentifierSearcherDAO::class);
+        $this->scope_builder = $this->createStub(AuthenticationScopeBuilder::class);
 
         $this->retriever = new OAuth2ScopeRetriever($this->scope_dao, $this->scope_builder);
     }
@@ -60,8 +52,8 @@ final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ['scope_key' => 'somethingspecific:read'],
         ]);
 
-        $auth_scope = $this->createMock(AuthenticationScope::class);
-        $this->scope_builder->expects($this->exactly(2))->method('buildAuthenticationScopeFromScopeIdentifier')
+        $auth_scope = $this->createStub(AuthenticationScope::class);
+        $this->scope_builder->method('buildAuthenticationScopeFromScopeIdentifier')
             ->willReturnCallback(
                 static function (AuthenticationScopeIdentifier $scope_identifier) use ($auth_scope): AuthenticationScope {
                     $raw_scope_identifier = $scope_identifier->toString();

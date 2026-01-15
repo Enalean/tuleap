@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -51,7 +52,7 @@ final class RejectNonSiteAdministratorMiddlewareTest extends \Tuleap\Test\PHPUni
         $handler->expects($this->once())->method('handle')->willReturnCallback(function (ServerRequestInterface $enriched_request) use ($user): ResponseInterface {
             self::assertSame($user, $enriched_request->getAttribute(\PFUser::class));
 
-            return $this->createMock(ResponseInterface::class);
+            return HTTPFactoryBuilder::responseFactory()->createResponse();
         });
         $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn($user);
 

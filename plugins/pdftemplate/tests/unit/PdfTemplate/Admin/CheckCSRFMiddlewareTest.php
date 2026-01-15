@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin;
 
-use Psr\Http\Message\ResponseInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\PdfTemplate\Stubs\CSRFTokenProviderStub;
 use Tuleap\Request\CaptureRequestHandler;
@@ -38,7 +38,7 @@ final class CheckCSRFMiddlewareTest extends TestCase
 
         $middleware = new CheckCSRFMiddleware(CSRFTokenProviderStub::withToken($csrf));
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse();
 
         $handler = CaptureRequestHandler::withResponse($response);
 

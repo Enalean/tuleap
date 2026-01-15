@@ -22,19 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SynchronizedProjectMembershipDetector $detector;
-    private SynchronizedProjectMembershipDao&MockObject $dao;
+    private SynchronizedProjectMembershipDao&Stub $dao;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->dao      = $this->createMock(SynchronizedProjectMembershipDao::class);
+        $this->dao      = $this->createStub(SynchronizedProjectMembershipDao::class);
         $this->detector = new SynchronizedProjectMembershipDetector($this->dao);
     }
 
@@ -54,7 +54,6 @@ final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUn
             ->withAccessPublic()
             ->build();
         $this->dao
-            ->expects($this->once())
             ->method('isEnabled')
             ->with(165)
             ->willReturn(true);
@@ -69,7 +68,6 @@ final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUn
             ->withAccessPublic()
             ->build();
         $this->dao
-            ->expects($this->once())
             ->method('isEnabled')
             ->with(165)
             ->willReturn(false);

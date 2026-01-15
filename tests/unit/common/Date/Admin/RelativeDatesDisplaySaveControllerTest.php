@@ -29,33 +29,24 @@ use Tuleap\Date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RelativeDatesDisplaySaveController $controller;
-
-    /**
-     * @var \UserPreferencesDao&MockObject
-     */
-    private $preferences_dao;
-
-    /**
-     * @var \Tuleap\Config\ConfigDao&MockObject
-     */
-    private $config_dao;
+    private \UserPreferencesDao&MockObject $preferences_dao;
+    private \Tuleap\Config\ConfigDao&MockObject $config_dao;
 
     #[\Override]
     protected function setUp(): void
     {
-        $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
-        $csrf_token->method('check');
         $date_display_preference_validator = new SelectedDateDisplayPreferenceValidator();
         $this->config_dao                  = $this->createMock(\Tuleap\Config\ConfigDao::class);
         $this->preferences_dao             = $this->createMock(\UserPreferencesDao::class);
 
         $this->controller = new RelativeDatesDisplaySaveController(
-            $csrf_token,
+            CSRFSynchronizerTokenStub::buildSelf(),
             $date_display_preference_validator,
             $this->config_dao,
             $this->preferences_dao

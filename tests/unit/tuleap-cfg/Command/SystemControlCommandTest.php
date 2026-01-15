@@ -26,16 +26,14 @@ namespace TuleapCfg\Command;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Process\Process;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var MockObject&Process
-     */
-    private $process;
+    private Process&Stub $process;
     /**
      * @var MockObject&ProcessFactory
      */
@@ -56,10 +54,10 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->root = vfsStream::setup('slash');
 
-        $this->process = $this->getMockBuilder(Process::class)
+        $this->process = $this->getStubBuilder(Process::class)
             ->onlyMethods(['isSuccessful', 'getExitCode', 'run', 'getOutput', 'getErrorOutput', 'getCommandLine'])
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getStub();
 
         $this->process_factory = $this->createMock(ProcessFactory::class);
         $this->control_command = new SystemControlCommand($this->process_factory, $this->root->url());
@@ -68,11 +66,11 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStartsNginxWithSystemD(): void
     {
-        $this->process->expects($this->once())->method('run');
+        $this->process->method('run');
         $this->process->method('isSuccessful')->willReturn(true);
         $this->process->method('getExitCode')->willReturn(0);
 
-        $this->process_factory->method('getProcess')->with(['/usr/bin/systemctl', 'start', 'nginx'])->willReturn(
+        $this->process_factory->expects($this->once())->method('getProcess')->with(['/usr/bin/systemctl', 'start', 'nginx'])->willReturn(
             $this->process
         );
 
@@ -92,7 +90,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process->method('getErrorOutput')->willReturn('');
         $this->process->method('getCommandLine')->willReturn('/usr/bin/stuff');
 
-        $this->process_factory->method('getProcess')->willReturn($this->process);
+        $this->process_factory->expects($this->once())->method('getProcess')->willReturn($this->process);
 
         $this->command_tester->execute(['action' => 'start', 'targets'  => ['nginx']], ['capture_stderr_separately' => true]);
 
@@ -110,7 +108,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process->method('getErrorOutput')->willReturn('');
         $this->process->method('getCommandLine')->willReturn('/usr/bin/stuff');
 
-        $this->process_factory->method('getProcess')->willReturn($this->process);
+        $this->process_factory->expects($this->once())->method('getProcess')->willReturn($this->process);
 
         $this->command_tester->execute(['action' => 'start', 'targets'  => ['nginx']], ['capture_stderr_separately' => true]);
 
@@ -128,7 +126,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process->method('getErrorOutput')->willReturn('');
         $this->process->method('getCommandLine')->willReturn('/usr/bin/stuff');
 
-        $this->process_factory->method('getProcess')->willReturn($this->process);
+        $this->process_factory->expects($this->once())->method('getProcess')->willReturn($this->process);
 
         $this->command_tester->execute(['action' => 'start', 'targets'  => ['nginx']], ['capture_stderr_separately' => true]);
 
@@ -146,7 +144,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process->method('getErrorOutput')->willReturn('foo');
         $this->process->method('getCommandLine')->willReturn('/usr/bin/stuff');
 
-        $this->process_factory->method('getProcess')->willReturn($this->process);
+        $this->process_factory->expects($this->once())->method('getProcess')->willReturn($this->process);
 
         $this->command_tester->execute(['action' => 'start', 'targets'  => ['nginx']], ['capture_stderr_separately' => true]);
 
@@ -164,7 +162,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process->method('getErrorOutput')->willReturn('another foo');
         $this->process->method('getCommandLine')->willReturn('/usr/bin/stuff');
 
-        $this->process_factory->method('getProcess')->willReturn($this->process);
+        $this->process_factory->expects($this->once())->method('getProcess')->willReturn($this->process);
 
         $this->command_tester->execute(['action' => 'start', 'targets'  => ['nginx']], ['capture_stderr_separately' => true]);
 
@@ -175,11 +173,11 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStopsApache(): void
     {
-        $this->process->expects($this->once())->method('run');
+        $this->process->method('run');
         $this->process->method('isSuccessful')->willReturn(true);
         $this->process->method('getExitCode')->willReturn(0);
 
-        $this->process_factory->method('getProcess')->with(['/usr/bin/systemctl', 'stop', 'httpd'])->willReturn(
+        $this->process_factory->expects($this->once())->method('getProcess')->with(['/usr/bin/systemctl', 'stop', 'httpd'])->willReturn(
             $this->process
         );
 
@@ -211,6 +209,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process->method('getExitCode')->willReturn(0);
 
         $this->process_factory
+            ->expects($this->once())
             ->method('getProcess')
             ->with(['/usr/bin/systemctl', '--quiet', $action, 'httpd'])
             ->willReturn($this->process);

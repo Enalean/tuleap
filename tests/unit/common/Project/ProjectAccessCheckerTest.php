@@ -25,7 +25,7 @@ namespace Tuleap\Project;
 use EventManager;
 use ForgeAccess;
 use ForgeConfig;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Project_AccessDeletedException;
 use Project_AccessPrivateException;
@@ -42,15 +42,15 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
-    private RestrictedUserCanAccessVerifier&MockObject $verifier;
-    private EventManager&MockObject $event_manager;
+    private RestrictedUserCanAccessVerifier&Stub $verifier;
+    private EventManager&Stub $event_manager;
     private ProjectAccessChecker $checker;
 
     #[\PHPUnit\Framework\Attributes\Before]
     public function createInstance(): void
     {
-        $this->verifier      = $this->createMock(RestrictedUserCanAccessUrlOrProjectVerifier::class);
-        $this->event_manager = $this->createMock(EventManager::class);
+        $this->verifier      = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+        $this->event_manager = $this->createStub(EventManager::class);
 
         $this->checker = new ProjectAccessChecker($this->verifier, $this->event_manager);
     }
@@ -307,7 +307,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getID')->willReturn(110);
         $project->method('isError')->willReturn(true);
         $project->method('isPublic')->willReturn(true);

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Routing;
 
-use Psr\Http\Message\ResponseInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\CaptureRequestHandler;
 use Tuleap\Request\ProjectRetriever;
@@ -33,7 +33,7 @@ final class ProjectByNameRetrieverMiddlewareTest extends \Tuleap\Test\PHPUnit\Te
 {
     public function testProcessAttachesProjectToRequest(): void
     {
-        $project_retriever = $this->createMock(ProjectRetriever::class);
+        $project_retriever = $this->createStub(ProjectRetriever::class);
         $middleware        = new ProjectByNameRetrieverMiddleware($project_retriever);
 
         $project = ProjectTestBuilder::aProject()
@@ -44,7 +44,7 @@ final class ProjectByNameRetrieverMiddlewareTest extends \Tuleap\Test\PHPUnit\Te
             ->with('acme')
             ->willReturn($project);
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse();
 
         $handler = CaptureRequestHandler::withResponse($response);
 

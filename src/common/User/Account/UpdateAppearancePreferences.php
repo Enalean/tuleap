@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use BaseLanguage;
-use CSRFSynchronizerToken;
 use Feedback;
 use PFUser;
 use ThemeVariant;
@@ -32,6 +31,7 @@ use Tuleap\Date\DateHelper;
 use Tuleap\Date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ThemeVariantColor;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\Appearance\FaviconVariant;
@@ -41,10 +41,6 @@ use UserManager;
 
 class UpdateAppearancePreferences implements DispatchableWithRequest
 {
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
     /**
      * @var UserManager
      */
@@ -63,13 +59,12 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
     private $date_display_preference_validator;
 
     public function __construct(
-        CSRFSynchronizerToken $csrf_token,
+        private readonly CSRFSynchronizerTokenInterface $csrf_token,
         UserManager $user_manager,
         BaseLanguage $language,
         ThemeVariant $variant,
         SelectedDateDisplayPreferenceValidator $date_display_preference_validator,
     ) {
-        $this->csrf_token                        = $csrf_token;
         $this->user_manager                      = $user_manager;
         $this->language                          = $language;
         $this->variant                           = $variant;

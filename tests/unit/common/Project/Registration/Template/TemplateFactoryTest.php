@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template;
 
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project_AccessPrivateException;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
@@ -40,23 +40,11 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     use ForgeConfigSandbox;
 
     private TemplateFactory $factory;
-    /**
-     * @var MockObject&ConsistencyChecker
-     */
-    private $consistency_checker;
-    /**
-     * @var MockObject&\ProjectManager
-     */
-    private $project_manager;
+    private ConsistencyChecker&Stub $consistency_checker;
+    private \ProjectManager&Stub $project_manager;
 
-    /**
-     * @var UserManager&MockObject
-     */
-    private $user_manager;
-    /**
-     * @var URLVerification&MockObject
-     */
-    private $url_verification;
+    private UserManager&Stub $user_manager;
+    private URLVerification&Stub $url_verification;
     private \PFUser $user;
 
     #[\Override]
@@ -66,16 +54,16 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user = UserTestBuilder::aUser()->build();
 
-        $this->consistency_checker = $this->createMock(ConsistencyChecker::class);
-        $this->project_manager     = $this->createMock(\ProjectManager::class);
-        $this->user_manager        = $this->createMock(UserManager::class);
-        $this->url_verification    = $this->createMock(URLVerification::class);
+        $this->consistency_checker = $this->createStub(ConsistencyChecker::class);
+        $this->project_manager     = $this->createStub(\ProjectManager::class);
+        $this->user_manager        = $this->createStub(UserManager::class);
+        $this->url_verification    = $this->createStub(URLVerification::class);
 
         $this->factory = new TemplateFactory(
             new GlyphFinder(new \EventManager()),
             new ProjectXMLMerger(),
             $this->consistency_checker,
-            $this->createMock(TemplateDao::class),
+            $this->createStub(TemplateDao::class),
             $this->project_manager,
             new \EventManager(),
             $this->user_manager,
@@ -135,7 +123,7 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->consistency_checker->method('areAllServicesAvailable')->willReturn(false);
 
-        $glyph_finder   = new GlyphFinder($this->createMock(\EventManager::class));
+        $glyph_finder   = new GlyphFinder($this->createStub(\EventManager::class));
         $empty_template = new EmptyTemplate($glyph_finder);
 
         $available_templates = $this->factory->getValidTemplates();
@@ -181,7 +169,7 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $site_templates = [$template100, $template110, $template120];
         $this->project_manager->method('getSiteTemplates')->willReturn($site_templates);
 
-        $glyph_finder      = new GlyphFinder($this->createMock(\EventManager::class));
+        $glyph_finder      = new GlyphFinder($this->createStub(\EventManager::class));
         $hustler_template  = new CompanyTemplate($template110, $glyph_finder);
         $invalidy_template = new CompanyTemplate($template120, $glyph_finder);
 

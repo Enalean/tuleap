@@ -24,7 +24,7 @@ namespace User\XML\Import;
 
 use org\bovigo\vfs\vfsStream;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MappingFileOptimusPrimeTransformerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -33,10 +33,7 @@ final class MappingFileOptimusPrimeTransformerTest extends \Tuleap\Test\PHPUnit\
     protected UsersToBeImportedCollection $collection;
 
     protected string $filename;
-    /**
-     * @var \UserManager&MockObject
-     */
-    private $user_manager;
+    private \UserManager&Stub $user_manager;
 
     #[\Override]
     protected function setUp(): void
@@ -44,7 +41,7 @@ final class MappingFileOptimusPrimeTransformerTest extends \Tuleap\Test\PHPUnit\
         parent::setUp();
         $this->filename = vfsStream::setup()->url() . '/users.csv';
 
-        $this->user_manager = $this->createMock(\UserManager::class);
+        $this->user_manager = $this->createStub(\UserManager::class);
 
         $cstevens         = $this->buildUser('cstevens');
         $to_be_activated  = $this->buildUser('to.be.activated');

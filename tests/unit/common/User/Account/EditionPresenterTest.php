@@ -30,7 +30,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItChecksTheCommonMarkFormatByDefault(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, false],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, 'huhu'],
@@ -38,8 +38,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertTrue($edition_presenter->user_text_default_format_commonmark);
@@ -47,7 +47,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksTheCommonMarkFormatIfTheUserSelectedIt(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, PFUser::PREFERENCE_EDITION_COMMONMARK],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, 'hoho'],
@@ -55,8 +55,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertTrue($edition_presenter->user_text_default_format_commonmark);
@@ -65,7 +65,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksTheHTMLFormatIfTheUserSelectedIt(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, PFUser::PREFERENCE_EDITION_HTML],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, 'haha'],
@@ -73,8 +73,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertFalse($edition_presenter->user_text_default_format_commonmark);
@@ -83,7 +83,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksTheCommaSeparatorByDefault(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, 'any_pref'],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, false],
@@ -91,8 +91,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertTrue($edition_presenter->user_csv_separator_comma);
@@ -102,7 +102,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksTheCommaSeparatorIfTheUserSelectedIt(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, 'pref_any'],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, PFUser::PREFERENCE_CSV_COMMA],
@@ -110,8 +110,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertTrue($edition_presenter->user_csv_separator_comma);
@@ -121,7 +121,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksTheSemicolonSeparatorIfTheUserSelectedIt(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, 'anypref_'],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, PFUser::PREFERENCE_CSV_SEMICOLON],
@@ -129,8 +129,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertFalse($edition_presenter->user_csv_separator_comma);
@@ -140,7 +140,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksTheTabSeparatorIfTheUserSelectedIt(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, 'petit_blagueur'],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, PFUser::PREFERENCE_CSV_TAB],
@@ -148,8 +148,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertFalse($edition_presenter->user_csv_separator_comma);
@@ -159,7 +159,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksTheMonthDayYearDateFormatByDefault(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, 'poti_blagueur'],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, 'poti_blagueur'],
@@ -167,8 +167,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertTrue($edition_presenter->user_csv_dateformat_mmddyyyy);
@@ -177,7 +177,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksTheMonthDayYearDateFormatIfTheUserSelectedIt(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, 'no_pref_idea'],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, 'no_pref_idea'],
@@ -185,8 +185,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertTrue($edition_presenter->user_csv_dateformat_mmddyyyy);
@@ -195,7 +195,7 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksTheDayMonthYearDateFormatIfTheUserSelectedIt(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturnMap([
             [PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, 'same'],
             [PFUser::PREFERENCE_NAME_CSV_SEPARATOR, 'same'],
@@ -203,8 +203,8 @@ final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $edition_presenter = new EditionPresenter(
-            $this->createMock(\CSRFSynchronizerToken::class),
-            $this->createMock(AccountTabPresenterCollection::class),
+            $this->createStub(\CSRFSynchronizerToken::class),
+            $this->createStub(AccountTabPresenterCollection::class),
             $user
         );
         self::assertFalse($edition_presenter->user_csv_dateformat_mmddyyyy);

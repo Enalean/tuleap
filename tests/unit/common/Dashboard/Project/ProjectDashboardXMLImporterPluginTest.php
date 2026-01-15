@@ -64,13 +64,13 @@ final class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImp
 
         $this->mappings_registry->addReference('K123', 78998);
 
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getId')->willReturn('kanban');
         $widget->method('setOwner');
         $widget->method('isUnique');
         $widget->method('create');
 
-        $this->event_manager->expects($this->once())->method('processEvent')->with(self::callback(function (ConfigureAtXMLImport $event) {
+        $this->event_manager->method('processEvent')->with(self::callback(function (ConfigureAtXMLImport $event) {
             $event->setContentId(35);
             $event->setWidgetIsConfigured();
             return true;

@@ -25,6 +25,7 @@ namespace Tuleap;
 
 use ForgeAccess;
 use ForgeConfig;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
@@ -34,21 +35,20 @@ final class URLVerificationPermissionsOverriderRegularPlatformTest extends \Tule
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    private $url_verification;
-    private $server;
+    private \URLVerification&Stub $url_verification;
+    private array $server;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        $event_manager = $this->createMock(\EventManager::class);
+        $event_manager = $this->createStub(\EventManager::class);
         $event_manager->method('processEvent');
 
-        $this->url_verification = $this->createPartialMock(\URLVerification::class, [
-            'getEventManager',
-            'getCurrentUser',
-        ]);
+        $this->url_verification = $this->getStubBuilder(\URLVerification::class)
+            ->onlyMethods(['getEventManager', 'getCurrentUser'])
+            ->getStub();
         $this->url_verification->method('getEventManager')->willReturn($event_manager);
         $this->url_verification->method('getCurrentUser')->willReturn(CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider()));
         $fixtures = dirname(__FILE__) . '/_fixtures';

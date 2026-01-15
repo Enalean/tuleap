@@ -24,26 +24,26 @@ declare(strict_types=1);
 namespace Tuleap\Project\REST;
 
 use Codendi_Mail;
-use PHPUnit\Framework\MockObject\MockObject;
+use ColinODell\PsrTestLogger\TestLogger;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
-use Psr\Log\LoggerInterface;
 use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use TuleapRegisterMail;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private LoggerInterface&MockObject $logger;
+    private TestLogger $logger;
     private ProjectCreationNotifier $project_creation_notifier;
     private Project $project;
-    private TuleapRegisterMail&MockObject $register_mail;
+    private TuleapRegisterMail&Stub $register_mail;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->register_mail = $this->createMock(TuleapRegisterMail::class);
-        $this->logger        = $this->createMock(LoggerInterface::class);
+        $this->register_mail = $this->createStub(TuleapRegisterMail::class);
+        $this->logger        = new TestLogger();
 
         $this->project_creation_notifier = new ProjectCreationNotifier($this->register_mail, $this->logger);
 
@@ -52,7 +52,7 @@ class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNotifySiteAdmin(): void
     {
-        $mail = $this->createMock(Codendi_Mail::class);
+        $mail = $this->createStub(Codendi_Mail::class);
         $mail->method('send')->willReturn(true);
 
         $this->register_mail
@@ -64,14 +64,14 @@ class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->project
             )->willReturn($mail);
 
-        $this->logger->expects($this->never())->method('Warning');
-
         $this->project_creation_notifier->notifySiteAdmin($this->project);
+
+        self::assertFalse($this->logger->hasWarningRecords());
     }
 
-    public function testNotifySiteAdminLoggerWaringIfMailNotSend(): void
+    public function testNotifySiteAdminLoggerWarningIfMailNotSend(): void
     {
-        $mail = $this->createMock(Codendi_Mail::class);
+        $mail = $this->createStub(Codendi_Mail::class);
         $mail->method('send')->willReturn(false);
 
         $this->register_mail
@@ -83,8 +83,8 @@ class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->project
             )->willReturn($mail);
 
-        $this->logger->expects($this->once())->method('Warning');
-
         $this->project_creation_notifier->notifySiteAdmin($this->project);
+
+        self::assertTrue($this->logger->hasWarningRecords());
     }
 }

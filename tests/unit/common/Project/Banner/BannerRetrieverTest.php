@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Banner;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -30,14 +30,14 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private BannerDao&MockObject $banner_dao;
+    private BannerDao&Stub $banner_dao;
     private BannerRetriever $banner_retriever;
     private Project $project;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->banner_dao       = $this->createMock(BannerDao::class);
+        $this->banner_dao       = $this->createStub(BannerDao::class);
         $this->banner_retriever = new BannerRetriever($this->banner_dao);
 
         $this->project = ProjectTestBuilder::aProject()->withId(102)->build();

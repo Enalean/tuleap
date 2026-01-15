@@ -54,14 +54,14 @@ final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = new \Project(['group_id' => 101]);
 
-        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProject')->willReturn($project);
         $ugroup->method('getId')->willReturn(202);
         $ugroup->method('isBound')->willReturn(false);
         $ugroup->method('isStatic')->willReturn(false);
 
         $this->static_member_remover->expects($this->never())->method('removeUser');
-        $this->dynamic_ugroup_members_updater->method('removeUser')->with(
+        $this->dynamic_ugroup_members_updater->expects($this->once())->method('removeUser')->with(
             $project,
             $ugroup,
             $this->user_to_remove,
@@ -75,13 +75,13 @@ final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = new \Project(['group_id' => 101]);
 
-        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProject')->willReturn($project);
         $ugroup->method('getId')->willReturn(202);
         $ugroup->method('isBound')->willReturn(false);
         $ugroup->method('isStatic')->willReturn(true);
 
-        $this->static_member_remover->method('removeUser')->with($ugroup, $this->user_to_remove);
+        $this->static_member_remover->expects($this->once())->method('removeUser')->with($ugroup, $this->user_to_remove);
         $this->dynamic_ugroup_members_updater->expects($this->never())->method('removeUser');
 
         $this->member_remover->removeMember($this->user_to_remove, $this->project_administrator, $ugroup);
@@ -89,7 +89,7 @@ final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRemovesNothingFromBoundGroup(): void
     {
-        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getId')->willReturn(202);
         $ugroup->method('isBound')->willReturn(true);
 

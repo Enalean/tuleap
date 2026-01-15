@@ -27,10 +27,10 @@ final class URISanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNotTouchValidURI(): void
     {
-        $validator_local_uri = $this->createMock(\Valid_LocalURI::class);
+        $validator_local_uri = $this->createStub(\Valid_LocalURI::class);
         $validator_local_uri->method('validate')->willReturn(true);
 
-        $validator_ftp_uri = $this->createMock(\Valid_FTPURI::class);
+        $validator_ftp_uri = $this->createStub(\Valid_FTPURI::class);
         $validator_ftp_uri->method('validate')->willReturn(false);
 
         $uri_sanitizer = new URISanitizer($validator_local_uri, $validator_ftp_uri);
@@ -42,10 +42,10 @@ final class URISanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotTouchValidFTPURI(): void
     {
-        $validator_local_uri = $this->createMock(\Valid_LocalURI::class);
+        $validator_local_uri = $this->createStub(\Valid_LocalURI::class);
         $validator_local_uri->method('validate')->willReturn(false);
 
-        $validator_ftp_uri = $this->createMock(\Valid_FTPURI::class);
+        $validator_ftp_uri = $this->createStub(\Valid_FTPURI::class);
         $validator_ftp_uri->method('validate')->willReturn(true);
 
         $uri_sanitizer = new URISanitizer($validator_local_uri, $validator_ftp_uri);
@@ -57,10 +57,10 @@ final class URISanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItManglesInvalidURI(): void
     {
-        $validator_local_uri = $this->createMock(\Valid_LocalURI::class);
+        $validator_local_uri = $this->createStub(\Valid_LocalURI::class);
         $validator_local_uri->method('validate')->willReturn(false);
 
-        $validator_ftp_uri = $this->createMock(\Valid_FTPURI::class);
+        $validator_ftp_uri = $this->createStub(\Valid_FTPURI::class);
         $validator_ftp_uri->method('validate')->willReturn(false);
 
         $uri_sanitizer = new URISanitizer($validator_local_uri, $validator_ftp_uri);

@@ -62,7 +62,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         );
 
         $this->dao->method('save')->willReturn(10001);
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getId')->willReturn('projectmembers');
         $widget->method('getInstanceId')->willReturn(null);
         $widget->method('setOwner');
@@ -100,7 +100,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 
         $this->dao->method('save')->willReturn(10001);
 
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getId')->willReturn('projectmembers');
         $widget->method('setOwner');
         $widget->method('isUnique');
@@ -179,7 +179,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->method('createLine')->willReturn(12);
         $this->widget_dao->method('createColumn')->willReturn(122);
         $this->dao->method('save');
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getId')->willReturn('projectmembers');
         $widget->method('setOwner');
         $widget->method('isUnique');
@@ -247,7 +247,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->expects($this->never())->method('createLine');
         $this->widget_dao->expects($this->never())->method('createColumn');
         $this->dao->method('save');
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getInstanceId')->willReturn(false);
         $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
@@ -281,7 +281,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->expects($this->never())->method('createLine');
         $this->widget_dao->expects($this->never())->method('createColumn');
         $this->dao->method('save');
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getInstanceId')->willReturn(false);
         $widget->method('setOwner');
         $widget->method('isUnique');
@@ -321,27 +321,24 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->method('createLine')->willReturn(12);
         $this->widget_dao->method('createColumn')->willReturn(122);
         $this->dao->method('save');
-        $widget_members = $this->createMock(\Widget::class);
+        $widget_members = $this->createStub(\Widget::class);
         $widget_members->method('getId')->willReturn('projectmembers');
         $widget_members->method('setOwner');
         $widget_members->method('isUnique');
         $widget_members->method('getId');
         $widget_members->method('create');
-        $widget_heartbeat = $this->createMock(\Widget::class);
+        $widget_heartbeat = $this->createStub(\Widget::class);
         $widget_heartbeat->method('getId')->willReturn('projectheartbeat');
         $widget_heartbeat->method('setOwner');
         $widget_heartbeat->method('isUnique');
         $widget_heartbeat->method('getId');
         $widget_heartbeat->method('create');
-        $matcher = $this->exactly(2);
-        $this->widget_factory->expects($matcher)->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($matcher, $widget_members, $widget_heartbeat) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame('projectmembers', $parameters[0]);
-                return $widget_members;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('projectheartbeat', $parameters[0]);
-                return $widget_heartbeat;
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($widget_members, $widget_heartbeat) {
+            switch ($parameters[0]) {
+                case 'projectmembers':
+                    return $widget_members;
+                case 'projectheartbeat':
+                    return $widget_heartbeat;
             }
         });
         $matcher = self::exactly(2);
@@ -396,7 +393,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->method('createLine')->willReturn(12);
         $this->widget_dao->method('createColumn')->willReturn(122);
         $this->dao->method('save');
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getId')->willReturn('projectheartbeat');
         $widget->method('isUnique')->willReturn(true);
         $widget->method('setOwner');
@@ -442,7 +439,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->method('createColumn')->willReturnOnConsecutiveCalls(122, 222);
         $this->widget_dao->method('createLine');
         $this->dao->method('save');
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getId')->willReturn('projectheartbeat');
         $widget->method('isUnique')->willReturn(true);
         $widget->method('setOwner');
@@ -525,7 +522,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->expects($this->never())->method('createLine');
         $this->widget_dao->expects($this->never())->method('createColumn');
         $this->dao->method('save');
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getId')->willReturn('myprojects');
         $widget->method('isUnique');
         $widget->method('setOwner');
@@ -567,25 +564,22 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->method('createLine')->willReturn(12);
         $this->widget_dao->method('createColumn')->willReturnOnConsecutiveCalls(122, 124);
         $this->dao->method('save');
-        $widget_members = $this->createMock(\Widget::class);
+        $widget_members = $this->createStub(\Widget::class);
         $widget_members->method('getId')->willReturn('projectmembers');
         $widget_members->method('isUnique');
         $widget_members->method('setOwner');
         $widget_members->method('create');
-        $widget_heartbeat = $this->createMock(\Widget::class);
+        $widget_heartbeat = $this->createStub(\Widget::class);
         $widget_heartbeat->method('getId')->willReturn('projectheartbeat');
         $widget_heartbeat->method('isUnique');
         $widget_heartbeat->method('setOwner');
         $widget_heartbeat->method('create');
-        $matcher = $this->exactly(2);
-        $this->widget_factory->expects($matcher)->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($matcher, $widget_members, $widget_heartbeat) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame('projectmembers', $parameters[0]);
-                return $widget_members;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('projectheartbeat', $parameters[0]);
-                return $widget_heartbeat;
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($widget_members, $widget_heartbeat) {
+            switch ($parameters[0]) {
+                case 'projectmembers':
+                    return $widget_members;
+                case 'projectheartbeat':
+                    return $widget_heartbeat;
             }
         });
         $matcher = self::exactly(2);
@@ -641,25 +635,22 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 
         $this->widget_dao->method('createLine')->willReturn(12);
         $this->widget_dao->method('createColumn')->willReturnOnConsecutiveCalls(122, 124);
-        $widget_members = $this->createMock(\Widget::class);
+        $widget_members = $this->createStub(\Widget::class);
         $widget_members->method('getId')->willReturn('projectmembers');
         $widget_members->method('isUnique');
         $widget_members->method('setOwner');
         $widget_members->method('create');
-        $widget_heartbeat = $this->createMock(\Widget::class);
+        $widget_heartbeat = $this->createStub(\Widget::class);
         $widget_heartbeat->method('getId')->willReturn('projectheartbeat');
         $widget_heartbeat->method('isUnique');
         $widget_heartbeat->method('setOwner');
         $widget_heartbeat->method('create');
-        $matcher = $this->exactly(2);
-        $this->widget_factory->expects($matcher)->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($matcher, $widget_members, $widget_heartbeat) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame('projectmembers', $parameters[0]);
-                return $widget_members;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('projectheartbeat', $parameters[0]);
-                return $widget_heartbeat;
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($widget_members, $widget_heartbeat) {
+            switch ($parameters[0]) {
+                case 'projectmembers':
+                    return $widget_members;
+                case 'projectheartbeat':
+                    return $widget_heartbeat;
             }
         });
         $matcher = self::exactly(2);
@@ -714,25 +705,22 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->method('createLine')->willReturn(12);
         $this->widget_dao->method('createColumn')->willReturnOnConsecutiveCalls(122, 124);
         $this->dao->method('save');
-        $widget_members = $this->createMock(\Widget::class);
+        $widget_members = $this->createStub(\Widget::class);
         $widget_members->method('getId')->willReturn('projectmembers');
         $widget_members->method('isUnique');
         $widget_members->method('setOwner');
         $widget_members->method('create');
-        $widget_heartbeat = $this->createMock(\Widget::class);
+        $widget_heartbeat = $this->createStub(\Widget::class);
         $widget_heartbeat->method('getId')->willReturn('projectheartbeat');
         $widget_heartbeat->method('isUnique');
         $widget_heartbeat->method('setOwner');
         $widget_heartbeat->method('create');
-        $matcher = $this->exactly(2);
-        $this->widget_factory->expects($matcher)->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($matcher, $widget_members, $widget_heartbeat) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame('projectmembers', $parameters[0]);
-                return $widget_members;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame('projectheartbeat', $parameters[0]);
-                return $widget_heartbeat;
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturnCallback(function (...$parameters) use ($widget_members, $widget_heartbeat) {
+            switch ($parameters[0]) {
+                case 'projectmembers':
+                    return $widget_members;
+                case 'projectheartbeat':
+                    return $widget_heartbeat;
             }
         });
         $matcher = self::exactly(2);
@@ -848,7 +836,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 
         $this->mappings_registry->addReference('K123', 78998);
 
-        $widget = $this->createMock(\Widget::class);
+        $widget = $this->createStub(\Widget::class);
         $widget->method('getId')->willReturn('projectimageviewer');
         $widget->method('create')->willThrowException(new \Exception('foo'));
 

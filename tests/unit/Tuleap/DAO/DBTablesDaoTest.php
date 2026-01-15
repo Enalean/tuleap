@@ -24,13 +24,14 @@ namespace Tuleap\DAO;
 
 use org\bovigo\vfs\vfsStream;
 use ParagonIE\EasyDB\EasyDB;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\DB\DBConnection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DBTablesDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var EasyDB&\PHPUnit\Framework\MockObject\MockObject
+     * @var EasyDB&Stub
      */
     private $easy_db;
     /**
@@ -41,8 +42,8 @@ final class DBTablesDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $db_connection = $this->createMock(DBConnection::class);
-        $this->easy_db = $this->createMock(EasyDB::class);
+        $db_connection = $this->createStub(DBConnection::class);
+        $this->easy_db = $this->createStub(EasyDB::class);
         $db_connection->method('getDB')->willReturn($this->easy_db);
         $this->db_tables_dao = new DBTablesDao($db_connection);
     }

@@ -48,7 +48,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
         };
 
         $emitter      = $this->createMock(EmitterInterface::class);
-        $base_layout  = $this->createMock(BaseLayout::class);
+        $base_layout  = $this->createStub(BaseLayout::class);
         $dispatchable = new class ($emitter, $base_layout, $middleware) extends DispatchablePSR15Compatible {
             /**
              * @var BaseLayout
@@ -83,7 +83,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
         ))->willReturn(true);
 
         $dispatchable->process(
-            $this->createMock(\Tuleap\HTTPRequest::class),
+            $this->createStub(\Tuleap\HTTPRequest::class),
             $base_layout,
             ['front_controller_attribute' => 'front_controller_param']
         );
@@ -91,7 +91,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testResponseEmissionFailureThrowsAnException(): void
     {
-        $emitter = $this->createMock(EmitterInterface::class);
+        $emitter = $this->createStub(EmitterInterface::class);
         $emitter->method('emit')->willReturn(false);
 
         $dispatchable = new class ($emitter) extends DispatchablePSR15Compatible {
@@ -104,8 +104,8 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(PSR15PipelineResponseEmissionException::class);
         $dispatchable->process(
-            $this->createMock(\Tuleap\HTTPRequest::class),
-            $this->createMock(BaseLayout::class),
+            $this->createStub(\Tuleap\HTTPRequest::class),
+            $this->createStub(BaseLayout::class),
             []
         );
     }

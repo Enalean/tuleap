@@ -67,7 +67,7 @@ class UpdateVisibilityCheckerTest extends TestCase
     public function testVisibilitySwitchIsAllowedIfPlatformAllowRestrictedUsersVisibilityIsPrivateWithoutRestrictedWithActiveAdminsAndExternalPluginsAllowTheChange(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getAdmins')->willReturn([
             UserTestBuilder::anActiveUser()->build(),
         ]);
@@ -93,7 +93,7 @@ class UpdateVisibilityCheckerTest extends TestCase
     public function testVisibilitySwitchIsNotAllowedIfPlatformAllowRestrictedUsersVisibilityIsPrivateWithoutRestrictedWithActiveAdminsAndExternalPluginsDoesNotAllowTheChange(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getAdmins')->willReturn([
             UserTestBuilder::anActiveUser()->build(),
         ]);
@@ -124,7 +124,7 @@ class UpdateVisibilityCheckerTest extends TestCase
     public function testVisibilitySwitchIsNotAllowedIfPlatformAllowRestrictedUsersVisibilityIsPrivateWithoutRestrictedWithoutActiveAdmins(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getAdmins')->willReturn([
             UserTestBuilder::aRestrictedUser()->build(),
         ]);

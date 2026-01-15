@@ -31,7 +31,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNameCorrect(): void
     {
-        $file = $this->createMock(SplFileInfo::class);
+        $file = $this->createStub(SplFileInfo::class);
         $file->method('getPathname')->willReturn('201004231055_add_system_event_table.php');
 
         $filter = new BucketFilter(new ArrayIterator([$file]));
@@ -41,7 +41,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBadNameWrongExtension(): void
     {
-        $file = $this->createMock(SplFileInfo::class);
+        $file = $this->createStub(SplFileInfo::class);
         $file->method('getPathname')->willReturn('201004231055_add_system_event_table.pl');
 
         $filter = new BucketFilter(new ArrayIterator([$file]));
@@ -51,7 +51,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBadNameWrongSeparator(): void
     {
-        $file = $this->createMock(SplFileInfo::class);
+        $file = $this->createStub(SplFileInfo::class);
         $file->method('getPathname')->willReturn('201004231055-add_system_event_table.php');
 
         $filter = new BucketFilter(new ArrayIterator([$file]));

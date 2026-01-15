@@ -28,7 +28,7 @@ use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
@@ -36,9 +36,9 @@ use UserManager;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private UserManager&MockObject $user_manager;
+    private UserManager&Stub $user_manager;
 
-    private UGroupLiteralizer&MockObject $ugroup_literalizer;
+    private UGroupLiteralizer&Stub $ugroup_literalizer;
 
     private JWTGenerator $jwt_generator;
 
@@ -53,12 +53,12 @@ final class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withId(9)
             ->build();
 
-        $this->user_manager = $this->createMock(UserManager::class);
+        $this->user_manager = $this->createStub(UserManager::class);
         $this->user_manager->method('getCurrentUser')->willReturn($user);
 
         $u_groups = ['@site_active'];
 
-        $this->ugroup_literalizer = $this->createMock(UGroupLiteralizer::class);
+        $this->ugroup_literalizer = $this->createStub(UGroupLiteralizer::class);
         $this->ugroup_literalizer->method('getUserGroupsForUserWithArobase')->willReturn($u_groups);
 
         $this->jwt_configuration = Configuration::forSymmetricSigner(new Sha512(), Key\InMemory::plainText(str_repeat('a', 64)));

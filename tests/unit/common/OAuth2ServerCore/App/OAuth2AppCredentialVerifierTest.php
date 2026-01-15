@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\App;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -30,29 +31,17 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AppFactory
-     */
-    private $app_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AppDao
-     */
-    private $app_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
-     */
-    private $hasher;
-    /**
-     * @var OAuth2AppCredentialVerifier
-     */
-    private $verifier;
+    private AppFactory&Stub $app_factory;
+    private AppDao&Stub $app_dao;
+    private SplitTokenVerificationStringHasher&Stub $hasher;
+    private OAuth2AppCredentialVerifier $verifier;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->app_factory = $this->createMock(AppFactory::class);
-        $this->app_dao     = $this->createMock(AppDao::class);
-        $this->hasher      = $this->createMock(SplitTokenVerificationStringHasher::class);
+        $this->app_factory = $this->createStub(AppFactory::class);
+        $this->app_dao     = $this->createStub(AppDao::class);
+        $this->hasher      = $this->createStub(SplitTokenVerificationStringHasher::class);
         $this->verifier    = new OAuth2AppCredentialVerifier(
             $this->app_factory,
             $this->app_dao,

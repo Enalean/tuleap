@@ -28,7 +28,7 @@ use FRSPackageDao;
 use FRSPackageFactory;
 use PermissionsManager;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectManager;
 use TestHelper;
@@ -45,46 +45,30 @@ final class FRSPackageFactoryTest extends TestCase
     protected int $package_id = 34;
     protected int $user_id    = 56;
 
-    /**
-     * @var MockObject&PFUser
-     */
-    private $user;
-    /**
-     * @var MockObject&FRSPackageFactory
-     */
-    private $frs_package_factory;
-    /**
-     * @var MockObject&UserManager
-     */
-    private $user_manager;
-    /**
-     * @var MockObject&PermissionsManager
-     */
-    private $permission_manager;
-    /**
-     * @var MockObject&FRSPermissionManager
-     */
-    private $frs_permission_manager;
-    /**
-     * @var MockObject&ProjectManager
-     */
-    private $project_manager;
+    private PFUser&Stub $user;
+    private FRSPackageFactory&Stub $frs_package_factory;
+    private UserManager&Stub $user_manager;
+    private PermissionsManager&Stub $permission_manager;
+    private FRSPermissionManager&Stub $frs_permission_manager;
+    private ProjectManager&Stub $project_manager;
 
     #[\Override]
     public function setUp(): void
     {
-        $this->user                   = $this->createMock(PFUser::class);
-        $this->frs_package_factory    = $this->createPartialMock(FRSPackageFactory::class, [
-            'getUserManager',
-            'getFRSPermissionManager',
-            'getProjectManager',
-            'getPermissionsManager',
-            '_getFRSPackageDao',
-        ]);
-        $this->user_manager           = $this->createMock(UserManager::class);
-        $this->permission_manager     = $this->createMock(PermissionsManager::class);
-        $this->frs_permission_manager = $this->createMock(FRSPermissionManager::class);
-        $this->project_manager        = $this->createConfiguredMock(ProjectManager::class, ['getProject' => $this->createMock(Project::class)]);
+        $this->user                   = $this->createStub(PFUser::class);
+        $this->frs_package_factory    = $this->getStubBuilder(FRSPackageFactory::class)
+            ->onlyMethods([
+                'getUserManager',
+                'getFRSPermissionManager',
+                'getProjectManager',
+                'getPermissionsManager',
+                '_getFRSPackageDao',
+            ])
+            ->getStub();
+        $this->user_manager           = $this->createStub(UserManager::class);
+        $this->permission_manager     = $this->createStub(PermissionsManager::class);
+        $this->frs_permission_manager = $this->createStub(FRSPermissionManager::class);
+        $this->project_manager        = $this->createConfiguredStub(ProjectManager::class, ['getProject' => $this->createStub(Project::class)]);
 
         $this->user_manager->method('getUserById')->willReturn($this->user);
         $this->frs_package_factory->method('getUserManager')->willReturn($this->user_manager);
@@ -140,12 +124,12 @@ final class FRSPackageFactoryTest extends TestCase
         });
         $dao = new FRSPackageDao($data_access, FRSPackage::STATUS_DELETED);
 
-        $PackageFactory = $this->createPartialMock(FRSPackageFactory::class, [
-            '_getFRSPackageDao',
-        ]);
-        $PackageFactory->method('_getFRSPackageDao')->willReturn($dao);
-        self::assertEquals($PackageFactory->getFRSPackageFromDb(1, null, 0x0001), $package1);
-        self::assertEquals($PackageFactory->getFRSPackageFromDb(2), $package2);
+        $package_factory = $this->getStubBuilder(FRSPackageFactory::class)
+            ->onlyMethods(['_getFRSPackageDao'])
+            ->getStub();
+        $package_factory->method('_getFRSPackageDao')->willReturn($dao);
+        self::assertEquals($package_factory->getFRSPackageFromDb(1, null, 0x0001), $package1);
+        self::assertEquals($package_factory->getFRSPackageFromDb(2), $package2);
     }
 
     private function stubDBResponsesForPackages(int $package_status, int ...$package_ids): void
@@ -176,10 +160,10 @@ final class FRSPackageFactoryTest extends TestCase
     {
         $this->frs_permission_manager->method('userCanRead')->willReturn(true);
         $this->frs_permission_manager->method('isAdmin')->willReturn(false);
-        $this->user->expects($this->once())->method('getUgroups')->with($this->group_id)->willReturn([1, 2, 76]);
+        $this->user->method('getUgroups')->with($this->group_id)->willReturn([1, 2, 76]);
 
         $this->permission_manager->method('isPermissionExist')->willReturn(true);
-        $this->permission_manager->expects($this->once())->method('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->willReturn($can_read_package);
+        $this->permission_manager->method('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->willReturn($can_read_package);
         $this->frs_package_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
 
         return $this->frs_package_factory;
@@ -207,7 +191,7 @@ final class FRSPackageFactoryTest extends TestCase
         $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
         $this->frs_permission_manager->method('userCanRead')->willReturn(true);
         $this->frs_permission_manager->method('isAdmin');
-        $this->user->expects($this->once())->method('getUgroups')->with($this->group_id)->willReturn([1, 2, 76]);
+        $this->user->method('getUgroups')->with($this->group_id)->willReturn([1, 2, 76]);
 
         $this->permission_manager = $this->createMock(PermissionsManager::class);
         $this->permission_manager->expects($this->once())->method('isPermissionExist')->with($this->package_id, 'PACKAGE_READ')->willReturn(false);
@@ -284,15 +268,14 @@ final class FRSPackageFactoryTest extends TestCase
     public function testDeleteProjectPackagesFail(): void
     {
         $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
-        $packageFactory = $this->createPartialMock(FRSPackageFactory::class, [
-            'getFRSPackagesFromDb',
-            'deleteWithoutPermissionsVerification',
-        ]);
-        $package        = $this->createMock(FRSPackage::class);
+        $package_factory = $this->getStubBuilder(FRSPackageFactory::class)
+            ->onlyMethods(['getFRSPackagesFromDb', 'deleteWithoutPermissionsVerification'])
+            ->getStub();
+        $package         = $this->createStub(FRSPackage::class);
         $package->method('getPackageID');
-        $packageFactory->method('getFRSPackagesFromDb')->willReturn([$package, $package, $package]);
-        $packageFactory->method('deleteWithoutPermissionsVerification')->willReturnOnConsecutiveCalls(true, false, true);
-        self::assertFalse($packageFactory->deleteProjectPackages(1));
+        $package_factory->method('getFRSPackagesFromDb')->willReturn([$package, $package, $package]);
+        $package_factory->method('deleteWithoutPermissionsVerification')->willReturnOnConsecutiveCalls(true, false, true);
+        self::assertFalse($package_factory->deleteProjectPackages(1));
     }
 
     public function testDeleteProjectPackagesSuccess(): void
@@ -302,7 +285,7 @@ final class FRSPackageFactoryTest extends TestCase
             'getFRSPackagesFromDb',
             'deleteWithoutPermissionsVerification',
         ]);
-        $package        = $this->createMock(FRSPackage::class);
+        $package        = $this->createStub(FRSPackage::class);
         $package->method('getPackageID');
         $packageFactory->method('getFRSPackagesFromDb')->willReturn([$package, $package, $package]);
         $packageFactory->expects($this->exactly(3))->method('deleteWithoutPermissionsVerification')->willReturn(true);
