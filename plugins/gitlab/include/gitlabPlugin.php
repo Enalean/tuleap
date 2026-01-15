@@ -286,7 +286,7 @@ class gitlabPlugin extends Plugin
         );
 
         $credentials_retriever          = new CredentialsRetriever(
-            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())
+            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao())
         );
         $commenter                      = new PostPushCommitBotCommenter(
             $comment_sender,
@@ -520,7 +520,7 @@ class gitlabPlugin extends Plugin
         );
 
         $credentials_retriever = new CredentialsRetriever(
-            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())
+            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao())
         );
         $commenter             = new PostPushCommitBotCommenter(
             $comment_sender,

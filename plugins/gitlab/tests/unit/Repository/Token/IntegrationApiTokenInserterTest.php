@@ -22,27 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Token;
 
-use Tuleap\Cryptography\KeyFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var IntegrationApiTokenInserter
-     */
-    private $inserter;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&IntegrationApiTokenDao
-     */
-    private $integration_api_token_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&KeyFactory
-     */
-    private $key_factory;
+    private IntegrationApiTokenInserter $inserter;
+    private IntegrationApiTokenDao&MockObject $integration_api_token_dao;
 
     #[\Override]
     protected function setUp(): void
@@ -50,11 +38,9 @@ final class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCas
         parent::setUp();
 
         $this->integration_api_token_dao = $this->createMock(IntegrationApiTokenDao::class);
-        $this->key_factory               = $this->createMock(KeyFactory::class);
 
         $this->inserter = new IntegrationApiTokenInserter(
             $this->integration_api_token_dao,
-            $this->key_factory
         );
     }
 
@@ -65,16 +51,12 @@ final class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $token = new ConcealedString('myToken123');
 
-        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-
-        $this->key_factory->expects($this->once())->method('getLegacy2025EncryptionKey')->willReturn($encryption_key);
-
         $this->integration_api_token_dao
             ->expects($this->once())
             ->method('storeToken')
             ->willReturnCallback(
-                function (int $integration_id, string $encrypted_token) use ($encryption_key): void {
-                    if ($integration_id !== 123 || SymmetricCrypto::decrypt($encrypted_token, $encryption_key)->getString() !== 'myToken123') {
+                function (int $integration_id, ConcealedString $token): void {
+                    if ($integration_id !== 123 || ! $token->isIdenticalTo(new ConcealedString('myToken123'))) {
                         throw new \RuntimeException('Received unexpected values to store');
                     }
                 }

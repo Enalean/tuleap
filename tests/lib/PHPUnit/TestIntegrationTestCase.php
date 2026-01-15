@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\PHPUnit;
 
+use org\bovigo\vfs\vfsStream;
 use PermissionsManager;
 use PluginManager;
 use ProjectManager;
@@ -49,6 +50,11 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set(DBConfig::CONF_DBUSER, $stored_db_user);
         \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, $stored_db_password);
         \ForgeConfig::set(DBConfig::CONF_DBNAME, $stored_db_name);
+
+        // Needed for DAO dealing with encrypted data
+        $sys_custom_dir = vfsStream::setup()->url();
+        \ForgeConfig::set('sys_custom_dir', $sys_custom_dir);
+        mkdir($sys_custom_dir . '/conf');
 
         $this->savepoint_id = 'save' . random_int(0, 99999999999);
         $db                 = DBFactory::getMainTuleapDBConnection()->getDB();

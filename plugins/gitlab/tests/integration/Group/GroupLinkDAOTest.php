@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBFactory;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Group\Token\GroupLinkApiTokenDAO;
@@ -41,7 +42,7 @@ final class GroupLinkDAOTest extends TestIntegrationTestCase
     private const string BRANCH_PREFIX               = 'dev-';
     private const int FIRST_REPOSITORY_ID            = 117;
     private const int SECOND_REPOSITORY_ID           = 267;
-    private const string ENCRYPTED_TOKEN             = 'OxFA97D2DFD016C0E9E42E';
+    private const string TOKEN                       = 'OxFA97D2DFD016C0E9E42E';
 
     private GroupLinkDAO $group_dao;
     private GroupLinkRepositoryIntegrationDAO $integrations_dao;
@@ -121,7 +122,7 @@ final class GroupLinkDAOTest extends TestIntegrationTestCase
 
     private function addTokenToGroupLink(GroupLink $group_link): void
     {
-        $this->token_dao->storeToken($group_link->id, self::ENCRYPTED_TOKEN);
+        $this->token_dao->storeToken($group_link->id, new ConcealedString(self::TOKEN));
     }
 
     private function addRepositoryIntegrationsToGroupLink(GroupLink $group_link): void

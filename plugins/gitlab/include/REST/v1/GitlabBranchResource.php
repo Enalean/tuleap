@@ -114,7 +114,6 @@ class GitlabBranchResource
             new CredentialsRetriever(
                 new IntegrationApiTokenRetriever(
                     new IntegrationApiTokenDao(),
-                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 )
             ),
             $gitlab_api_client,
