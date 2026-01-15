@@ -20,10 +20,7 @@
 .tlp-pane {
     display: flex;
     margin: 0 0 var(--tlp-medium-spacing);
-    border: light-dark(
-        1px solid var(--tlp-neutral-normal-color),
-        1px solid var(--tlp-dark-color-lighter-10)
-    );
+    border: 1px solid var(--tlp-border-color);
     border-radius: var(--tlp-large-radius);
     background: var(--tlp-pane-background-color);
     box-shadow: var(--tlp-pane-shadow);
