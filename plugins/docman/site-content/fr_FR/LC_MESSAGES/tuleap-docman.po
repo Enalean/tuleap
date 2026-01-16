@@ -25,8 +25,8 @@ msgid ""
 "%1$s locked this page. You cannot modify it until the lock owner or a "
 "document manager release the lock."
 msgstr ""
-"Cette page wiki est réservée par %1$s. Vous ne pouvez pas la modifier tant "
-"que le propriétaire du verrou ou un gestionnaire du document ne l'a pas "
+"Cette page wiki est verrouillée par %1$s. Vous ne pouvez pas la modifier "
+"tant que le propriétaire du verrou ou un gestionnaire du document ne l'a pas "
 "retiré."
 
 #, php-format
@@ -467,7 +467,7 @@ msgid "Document details"
 msgstr "Détails du document"
 
 msgid "Document is locked by another user."
-msgstr "Le document est reservé par un autre utilisateur."
+msgstr "Le document est verrouillé par un autre utilisateur."
 
 msgid "Document link"
 msgstr "Lien vers le document"
@@ -735,7 +735,7 @@ msgid "Links"
 msgstr "Liens"
 
 msgid "List of locked documents."
-msgstr "Afficher la liste des documents réservés."
+msgstr "Afficher la liste des documents verrouillés."
 
 msgid "List of values"
 msgstr "Liste de valeurs"
@@ -753,10 +753,10 @@ msgid "Locations:"
 msgstr "Chemins:"
 
 msgid "Locked Documents"
-msgstr "Documents Réservés"
+msgstr "Documents Verrouillés"
 
 msgid "Locked document"
-msgstr "Document réservé"
+msgstr "Document verrouillé"
 
 msgid "Maximum files size (in Bytes)"
 msgstr "Taille maximum des fichiers  (en Octets)"
@@ -958,7 +958,7 @@ msgid "Project Documentation"
 msgstr "Documentation du projet"
 
 msgid "Project has no locked documents"
-msgstr "Le projet n'a pas de document réservé"
+msgstr "Le projet n'a pas de document verrouillé"
 
 msgid "Project has no obsolete documents"
 msgstr "Le projet n'a pas de documents obsolètes"
@@ -998,7 +998,7 @@ msgid "Rejected"
 msgstr "Rejeté"
 
 msgid "Released lock"
-msgstr "Réservation annulée"
+msgstr "Verrou déverrouillé"
 
 #, php-format
 msgid "Removed monitoring for group(s) '%1$s'"
@@ -1301,7 +1301,8 @@ msgstr ""
 "document où vous pourrez le rendre à nouveau disponible."
 
 msgid "This is the list of all locked documents in project."
-msgstr "Ceci est la liste de tous les documents du projet qui sont réservés."
+msgstr ""
+"Ceci est la liste de tous les documents du projet qui sont verrouillés."
 
 msgid "This limit prevents a user to upload a file which size exceed x Bytes."
 msgstr ""
