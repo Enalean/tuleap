@@ -911,16 +911,16 @@ button[name="tracker_query_submit"] {
 .tracker_artifact_fieldset legend {
     margin-bottom: 0;
     padding: 0 14px 0 34px;
-    border-top: 1px solid var(--tlp-neutral-normal-color);
-    border-right: 1px solid var(--tlp-neutral-normal-color);
-    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-top: 1px solid var(--tlp-border-color);
+    border-right: 1px solid var(--tlp-border-color);
+    border-left: 1px solid var(--tlp-border-color);
     background-color: var(--tlp-white-color);
     background-position: 13px center;
     font-size: 1.2em;
     white-space: nowrap;
 
     &.toggler-noajax {
-        border-bottom: 2px solid var(--tlp-neutral-normal-color);
+        border-bottom: 2px solid var(--tlp-border-color);
         border-top-left-radius: var(--tlp-large-radius);
         border-top-right-radius: var(--tlp-large-radius);
         background-image: url("../../../../../../src/www/themes/common/images/toggle-fontawesome-minus.png");

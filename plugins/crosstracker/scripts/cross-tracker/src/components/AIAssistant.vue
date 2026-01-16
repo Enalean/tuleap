@@ -187,7 +187,7 @@ function applyAssistantTQLQuery(message: AssistantMessage): void {
     display: flex;
     width: 50%;
     margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-left: 1px solid var(--tlp-border-color);
 }
 
 .tlp-pane-section {

@@ -51,7 +51,7 @@ $thread-border-width: 2px;
             transform: translate(-100%, -50%);
             border-width: 7px $arrow-width 7px 0;
             border-style: solid;
-            border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
+            border-color: transparent var(--tlp-border-color) transparent transparent;
             background: none;
         }
 
@@ -65,7 +65,7 @@ $thread-border-width: 2px;
 .pull-request-comment-content {
     position: relative;
     flex: 1;
-    border: 1px solid var(--tlp-neutral-normal-color);
+    border: 1px solid var(--tlp-border-color);
     border-radius: var(--tlp-medium-radius);
     background: var(--tlp-white-color);
     box-shadow: var(--tlp-pane-shadow);
@@ -80,7 +80,7 @@ $thread-border-width: 2px;
         transform: translate(-100%, -50%);
         border-width: 7px $arrow-width 7px 0;
         border-style: solid;
-        border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
+        border-color: transparent var(--tlp-border-color) transparent transparent;
     }
 
     &::after {
@@ -138,7 +138,7 @@ $thread-border-width: 2px;
     overflow-wrap: anywhere;
 
     pre:not([class*="language-"]) {
-        border-color: var(--tlp-neutral-normal-color);
+        border-color: var(--tlp-border-color);
         background-color: var(--tlp-fade-background-color);
         white-space: pre-wrap;
 
@@ -148,7 +148,7 @@ $thread-border-width: 2px;
     }
 
     pre[class*="language-"] {
-        border-color: var(--tlp-neutral-normal-color);
+        border-color: var(--tlp-border-color);
         background-color: var(--tlp-fade-background-color);
         white-space: pre-wrap;
 
@@ -205,7 +205,7 @@ $thread-border-width: 2px;
 
 .pull-request-comment-follow-up {
     margin: 0 0 0 calc($follow-up-base-margin-left + $tlp-avatar-width);
-    border-left: $thread-border-width solid var(--tlp-neutral-normal-color);
+    border-left: $thread-border-width solid var(--tlp-border-color);
 
     > .pull-request-comment-follow-up-content {
         $left-offset: calc($tlp-avatar-width / 2) + calc($thread-border-width / 2);

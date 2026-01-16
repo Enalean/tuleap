@@ -274,6 +274,6 @@ section {
 }
 
 .section-header-with-border {
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-border-color);
 }
 </style>

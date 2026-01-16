@@ -164,7 +164,7 @@ artidoc-section-description {
 
 .artidoc-section-level-1 artidoc-section-title {
     padding: 0 0 var(--tlp-small-spacing);
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-border-color);
     color: var(--tlp-dark-color);
     font-size: 36px;
     font-weight: 600;

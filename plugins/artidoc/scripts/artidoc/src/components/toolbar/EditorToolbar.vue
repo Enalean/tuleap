@@ -123,7 +123,7 @@ onBeforeUnmount(() => {
     top: var(--artidoc-sticky-top-position);
     justify-content: center;
     width: 100%;
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-border-color);
     background: var(--tlp-white-color);
 }
 

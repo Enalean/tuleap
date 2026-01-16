@@ -34,7 +34,7 @@ $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $track
     width: 100%;
     margin-top: 30px;
     padding: 30px 12px $tracker-artifact-submit-buttons-height;
-    border-top: 1px solid var(--tlp-neutral-normal-color);
+    border-top: 1px solid var(--tlp-border-color);
     background: var(--tlp-fade-background-color);
 
     &.tracker-artifact-in-concurrent-edition {

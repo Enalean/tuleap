@@ -86,15 +86,15 @@
 
 .backlog-item-children {
     padding: var(--tlp-small-spacing);
-    border-right: 1px solid var(--tlp-neutral-normal-color);
-    border-left: 1px solid var(--tlp-neutral-normal-color);
+    border-right: 1px solid var(--tlp-border-color);
+    border-left: 1px solid var(--tlp-border-color);
     background: var(--tlp-fade-background-color);
 }
 
 .backlog-item-show-children-handle {
     position: relative;
     height: 20px;
-    border: 1px solid var(--tlp-neutral-normal-color);
+    border: 1px solid var(--tlp-border-color);
     border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
     background: var(--tlp-fade-background-color);
     cursor: pointer;
