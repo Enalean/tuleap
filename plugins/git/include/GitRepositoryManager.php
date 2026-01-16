@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Branch\BranchName;
+use Tuleap\Git\AsynchronousEvents\GitRepositoryChangeTask;
 use Tuleap\Git\Events\AfterRepositoryForked;
 use Tuleap\Git\Exceptions\GitRepositoryInDeletionException;
 use Tuleap\Git\PathJoinUtil;
@@ -26,7 +26,6 @@ use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
-use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -60,11 +59,6 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     private $repository_factory;
 
     /**
-     * @var Git_SystemEventManager
-     */
-    private $git_system_event_manager;
-
-    /**
      * @var GitDao
      */
     private $dao;
@@ -89,35 +83,34 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     public function __construct(
         GitRepositoryFactory $repository_factory,
         Git_SystemEventManager $git_system_event_manager,
+        private readonly \Tuleap\Queue\EnqueueTaskInterface $enqueuer,
         GitDao $dao,
         $backup_directory,
         FineGrainedPermissionReplicator $fine_grained_replicator,
         ProjectHistoryDao $history_dao,
         HistoryValueFormatter $history_value_formatter,
         EventManager $event_manager,
-        private readonly OngoingDeletionDAO $ongoing_deletion_dao,
     ) {
-        $this->repository_factory       = $repository_factory;
-        $this->git_system_event_manager = $git_system_event_manager;
-        $this->dao                      = $dao;
-        $this->backup_directory         = $backup_directory;
-        $this->system_command           = new System_Command();
-        $this->fine_grained_replicator  = $fine_grained_replicator;
-        $this->history_dao              = $history_dao;
-        $this->history_value_formatter  = $history_value_formatter;
-        $this->event_manager            = $event_manager;
+        $this->repository_factory      = $repository_factory;
+        $this->dao                     = $dao;
+        $this->backup_directory        = $backup_directory;
+        $this->system_command          = new System_Command();
+        $this->fine_grained_replicator = $fine_grained_replicator;
+        $this->history_dao             = $history_dao;
+        $this->history_value_formatter = $history_value_formatter;
+        $this->event_manager           = $event_manager;
     }
 
     /**
      * Delete all project repositories (on project deletion).
      *
      */
-    public function deleteProjectRepositories(Project $project)
+    public function deleteProjectRepositories(Project $project): void
     {
         $repositories = $this->repository_factory->getAllRepositories($project);
         foreach ($repositories as $repository) {
             $repository->forceMarkAsDeleted();
-            $this->git_system_event_manager->queueRepositoryDeletion($repository);
+            $this->enqueuer->enqueue(GitRepositoryChangeTask::fromRepository($repository));
         }
     }
 
@@ -150,11 +143,11 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
      * @throws GitRepositoryNameIsInvalidException
      * @throws GitRepositoryInDeletionException
      */
-    public function create(GitRepository $repository, GitRepositoryCreator $creator, BranchName $default_branch): void
+    public function create(GitRepository $repository, GitRepositoryCreator $creator): void
     {
         $this->initRepository($repository, $creator);
 
-        $this->git_system_event_manager->queueRepositoryUpdate($repository, $default_branch);
+        $this->enqueuer->enqueue(GitRepositoryChangeTask::fromRepository($repository));
     }
 
     /**
@@ -175,7 +168,7 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                 "sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-clone-bundle.sh $tmp_path_arg $repository_full_path_arg"
             );
 
-            $this->git_system_event_manager->queueRepositoryUpdate($repository);
+            $this->enqueuer->enqueue(GitRepositoryChangeTask::fromRepository($repository));
 
             $this->event_manager->processEvent(new PostInitGitRepositoryWithDataEvent($repository));
         } finally {
@@ -271,7 +264,7 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                 [$clone->getName()]
             );
 
-            $this->git_system_event_manager->queueRepositoryFork($repository, $clone);
+            $this->enqueuer->enqueue(\Tuleap\Git\AsynchronousEvents\GitRepositoryForkTask::fromRepository($clone));
         } else {
             throw new Exception(dgettext('tuleap-git', 'No repository has been forked.'));
         }
@@ -301,7 +294,7 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
      */
     private function assertRepositoryNotInDeletion(GitRepository $repository): void
     {
-        if ($this->isAnotherRepositoryWithSamePathWaitingForDeletion($repository)) {
+        if (\Psl\Filesystem\exists($repository->getFullPath())) {
             throw new GitRepositoryInDeletionException(
                 sprintf(
                     dgettext('tuleap-git', 'Another repository with the same path (%s) is waiting for deletion.'),
@@ -309,14 +302,6 @@ class GitRepositoryManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                 )
             );
         }
-    }
-
-    private function isAnotherRepositoryWithSamePathWaitingForDeletion(GitRepository $repository): bool
-    {
-        return $this->ongoing_deletion_dao->isADeletionForPathOngoingInProject(
-            $repository->getProjectId(),
-            $repository->getPath(),
-        );
     }
 
     /**

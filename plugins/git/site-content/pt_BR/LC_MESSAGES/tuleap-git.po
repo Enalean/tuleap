@@ -1135,23 +1135,6 @@ msgid ""
 msgstr ""
 
 #, php-format
-msgid ""
-"There is an event in queue for a repository creation (%1$s), it will be "
-"processed in one minute or two. Please be patient!"
-msgstr ""
-
-msgid ""
-"There is an event in queue for a repository permissions change, it will be "
-"processed in one minute or two. Please be patient!"
-msgstr ""
-
-#, php-format
-msgid ""
-"There is an event in queue for repository '%1$s' deletion, it will be "
-"processed in one minute or two. Please be patient!"
-msgstr ""
-
-#, php-format
 msgid "There is no logged pushes in the last %1$s week(s)"
 msgstr ""
 

@@ -557,6 +557,7 @@ class GitRepository //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
 
     /**
      * Return the full absolute path to the repository
+     * @return non-empty-string
      */
     public function getFullPath(): string
     {
@@ -571,9 +572,9 @@ class GitRepository //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     /**
      * Return path on the filesystem where the repositories are stored.
      *
-     * @return String
+     * @return non-empty-string
      */
-    public function getGitRootPath()
+    public function getGitRootPath(): string
     {
         return $this->getBackend()->getGitRootPath();
     }

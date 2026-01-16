@@ -20,6 +20,7 @@
   */
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Git\AsynchronousEvents\GitRepositoryChangeTask;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\LegacyConfigInc;
@@ -46,8 +47,8 @@ class GitActions extends PluginActions // phpcs:ignore PSR1.Classes.ClassDeclara
     public function __construct(
         Git $controller,
         private readonly Git_SystemEventManager $git_system_event_manager,
+        private readonly \Tuleap\Queue\EnqueueTaskInterface $enqueuer,
         private readonly GitRepositoryFactory $factory,
-        private readonly GitRepositoryManager $manager,
         private readonly Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         private readonly Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         private readonly Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
@@ -106,7 +107,7 @@ class GitActions extends PluginActions // phpcs:ignore PSR1.Classes.ClassDeclara
     private function markAsDeleted(GitRepository $repository)
     {
         $repository->markAsDeleted();
-        $this->git_system_event_manager->queueRepositoryDeletion($repository);
+        $this->enqueuer->enqueue(GitRepositoryChangeTask::fromRepository($repository));
 
         $this->history_dao->groupAddHistory(
             'git_repo_delete',
@@ -444,7 +445,7 @@ class GitActions extends PluginActions // phpcs:ignore PSR1.Classes.ClassDeclara
             $controller->addInfo(dgettext('tuleap-git', 'Mail prefix updated'));
             $this->addData(['repository' => $repository]);
 
-            $this->git_system_event_manager->queueRepositoryUpdate($repository);
+            $this->enqueuer->enqueue(GitRepositoryChangeTask::fromRepository($repository));
 
             $this->history_dao->groupAddHistory(
                 'git_repo_update',
@@ -885,7 +886,7 @@ class GitActions extends PluginActions // phpcs:ignore PSR1.Classes.ClassDeclara
             );
         }
 
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+        $this->enqueuer->enqueue(GitRepositoryChangeTask::fromRepository($repository));
 
         $controller->addInfo(dgettext('tuleap-git', 'Repository informations have been saved'));
         $this->redirectToRepoManagement($projectId, $repoId, $pane);

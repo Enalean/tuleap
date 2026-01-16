@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Git;
 
 use EventManager;
+use Git_Backend_Interface;
 use Git_SystemEventManager;
 use GitDao;
 use GitRepository;
@@ -33,23 +34,22 @@ use GitRepositoryManager;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
-use Tuleap\Git\Branch\BranchName;
+use Tuleap\Git\AsynchronousEvents\GitRepositoryChangeTask;
 use Tuleap\Git\Exceptions\GitRepositoryInDeletionException;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
-use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRepositoryManagerCreateTest extends TestCase
 {
     private GitRepositoryCreator&MockObject $creator;
     private GitDao&MockObject $dao;
-    private Git_SystemEventManager&MockObject $git_system_event_manager;
     private GitRepositoryManager&MockObject $manager;
     private GitRepository $repository;
-    private OngoingDeletionDAO&MockObject $ongoing_dao;
+    private EnqueueTaskStub $enqueuer;
 
     #[\Override]
     protected function setUp(): void
@@ -58,21 +58,25 @@ final class GitRepositoryManagerCreateTest extends TestCase
         $this->repository = new GitRepository();
         $this->repository->setPath('whatever/repo.git');
 
-        $this->git_system_event_manager = $this->createMock(Git_SystemEventManager::class);
-        $this->dao                      = $this->createMock(GitDao::class);
-        $this->ongoing_dao              = $this->createMock(OngoingDeletionDAO::class);
+        $backend   = $this->createStub(Git_Backend_Interface::class);
+        $root_path = vfsStream::setup()->url();
+        $backend->method('getGitRootPath')->willReturn($root_path);
+        $this->repository->setBackend($backend);
+
+        $this->enqueuer = new EnqueueTaskStub();
+        $this->dao      = $this->createMock(GitDao::class);
 
         $this->manager = $this->getMockBuilder(GitRepositoryManager::class)
             ->setConstructorArgs([
-                $this->createMock(GitRepositoryFactory::class),
-                $this->git_system_event_manager,
+                $this->createStub(GitRepositoryFactory::class),
+                $this->createStub(Git_SystemEventManager::class),
+                $this->enqueuer,
                 $this->dao,
-                vfsStream::setup()->url(),
-                $this->createMock(FineGrainedPermissionReplicator::class),
-                $this->createMock(ProjectHistoryDao::class),
-                $this->createMock(HistoryValueFormatter::class),
-                $this->createMock(EventManager::class),
-                $this->ongoing_dao,
+                $root_path,
+                $this->createStub(FineGrainedPermissionReplicator::class),
+                $this->createStub(ProjectHistoryDao::class),
+                $this->createStub(HistoryValueFormatter::class),
+                $this->createStub(EventManager::class),
             ])
             ->onlyMethods(['isRepositoryNameAlreadyUsed'])
             ->getMock();
@@ -84,7 +88,7 @@ final class GitRepositoryManagerCreateTest extends TestCase
         $this->creator->method('isNameValid')->willReturn(true);
 
         $this->expectException(GitRepositoryAlreadyExistsException::class);
-        $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
+        $this->manager->create($this->repository, $this->creator);
     }
 
     public function testItThrowsAnExceptionIfNameIsNotCompliantToBackendStandards(): void
@@ -94,17 +98,18 @@ final class GitRepositoryManagerCreateTest extends TestCase
         $this->creator->method('getAllowedCharsInNamePattern');
 
         $this->expectException(GitRepositoryNameIsInvalidException::class);
-        $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
+        $this->manager->create($this->repository, $this->creator);
     }
 
     public function testItThrowsAnExceptionIfNThereIsAnOngoingDeletion(): void
     {
         $this->manager->method('isRepositoryNameAlreadyUsed')->with($this->repository)->willReturn(false);
         $this->creator->method('isNameValid')->willReturn(true);
-        $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(true);
+
+        \Psl\Filesystem\create_directory($this->repository->getFullPath());
 
         $this->expectException(GitRepositoryInDeletionException::class);
-        $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
+        $this->manager->create($this->repository, $this->creator);
     }
 
     public function testItCreatesOnRepositoryBackendIfEverythingIsClean(): void
@@ -113,10 +118,10 @@ final class GitRepositoryManagerCreateTest extends TestCase
         $this->creator->method('isNameValid')->willReturn(true);
 
         $this->dao->expects($this->once())->method('save')->with($this->repository);
-        $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
-        $this->git_system_event_manager->method('queueRepositoryUpdate');
 
-        $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
+        $this->manager->create($this->repository, $this->creator);
+
+        self::assertEquals([GitRepositoryChangeTask::fromRepository($this->repository)], $this->enqueuer->queued_tasks);
     }
 
     public function testItScheduleAnEventToCreateTheRepositoryInGitolite(): void
@@ -126,10 +131,9 @@ final class GitRepositoryManagerCreateTest extends TestCase
 
         $this->dao->method('save')->willReturn(54);
 
-        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate')->with($this->repository, self::anything());
-        $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
+        $this->manager->create($this->repository, $this->creator);
 
-        $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
+        self::assertEquals([GitRepositoryChangeTask::fromRepository($this->repository)], $this->enqueuer->queued_tasks);
     }
 
     public function testItSetRepositoryIdOnceSavedInDatabase(): void
@@ -138,10 +142,8 @@ final class GitRepositoryManagerCreateTest extends TestCase
         $this->creator->method('isNameValid')->willReturn(true);
 
         $this->dao->method('save')->willReturn(54);
-        $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
-        $this->git_system_event_manager->method('queueRepositoryUpdate');
 
-        $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());
+        $this->manager->create($this->repository, $this->creator);
         $this->assertEquals(54, $this->repository->getId());
     }
 }

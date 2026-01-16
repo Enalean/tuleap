@@ -19,7 +19,6 @@
  */
 
 use Tuleap\Git\AsynchronousEvents\RefreshGitoliteProjectConfigurationTask;
-use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutor;
 use Tuleap\Git\Events\XMLImportExternalContentEvent;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
@@ -158,7 +157,7 @@ class GitXmlImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 );
             }
         } else {
-            $this->repository_manager->create($repository, $this->gitolite_backend, BranchName::defaultBranchName());
+            $this->repository_manager->create($repository, $this->gitolite_backend);
         }
         $this->importAllowArtifactClosure($repository, $repository_xmlnode);
         if ($this->hasLegacyPermissions($repository_xmlnode)) {

@@ -36,9 +36,9 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectHistoryDao;
+use Tuleap\Git\AsynchronousEvents\GitRepositoryForkTask;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
-use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\GlobalResponseMock;
 use Tuleap\NeverThrow\Err;
@@ -48,6 +48,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRepositoryManagerForkTest extends TestCase
@@ -65,6 +66,7 @@ final class GitRepositoryManagerForkTest extends TestCase
     private HistoryValueFormatter&MockObject $history_value_formatter;
     private ProjectHistoryDao&MockObject $project_history_dao;
     private EventManager&MockObject $event_manager;
+    private EnqueueTaskStub $enqueuer;
 
     #[\Override]
     protected function setUp(): void
@@ -82,17 +84,19 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->history_value_formatter            = $this->createMock(HistoryValueFormatter::class);
         $this->project_history_dao                = $this->createMock(ProjectHistoryDao::class);
 
+        $this->enqueuer = new EnqueueTaskStub();
+
         $this->manager = $this->getMockBuilder(GitRepositoryManager::class)
             ->setConstructorArgs([
                 $this->createMock(GitRepositoryFactory::class),
                 $this->git_system_event_manager,
-                $this->createMock(GitDao::class),
+                $this->enqueuer,
+                $this->createStub(GitDao::class),
                 vfsStream::setup()->url(),
                 $this->fine_grained_permission_replicator,
                 $this->project_history_dao,
                 $this->history_value_formatter,
                 $this->event_manager,
-                $this->createMock(OngoingDeletionDAO::class),
             ])
             ->onlyMethods(['isRepositoryNameAlreadyUsed'])
             ->getMock();
@@ -124,9 +128,10 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->history_value_formatter->method('formatValueForRepository');
         $this->project_history_dao->method('groupAddHistory');
         $this->event_manager->method('processEvent');
-        $this->git_system_event_manager->method('queueRepositoryFork');
 
         $this->manager->fork($this->repository, $this->project, $this->user, 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+
+        self::assertEquals([new GitRepositoryForkTask(667)], $this->enqueuer->queued_tasks);
     }
 
     public function testItScheduleAndEventToApplyForkOnFilesystem(): void
@@ -139,10 +144,9 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->project_history_dao->method('groupAddHistory');
         $this->event_manager->method('processEvent');
 
-        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryFork')
-            ->with($this->repository, self::callback(static fn(GitRepository $repository) => $repository->getId() === 667));
-
         $this->manager->fork($this->repository, $this->project, $this->user, 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+
+        self::assertEquals([new GitRepositoryForkTask(667)], $this->enqueuer->queued_tasks);
     }
 
     public function testItAsksForExternalPluginsAfterForkingTheRepository(): void
@@ -155,9 +159,10 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->project_history_dao->method('groupAddHistory');
 
         $this->event_manager->expects($this->once())->method('processEvent');
-        $this->git_system_event_manager->method('queueRepositoryFork');
 
         $this->manager->fork($this->repository, $this->project, $this->user, 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+
+        self::assertEquals([new GitRepositoryForkTask(667)], $this->enqueuer->queued_tasks);
     }
 
     public function testItDoesntScheduleAnEventIfAnExceptionIsThrownByBackend(): void
@@ -166,9 +171,9 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->backend->method('fork')->willThrowException(new Exception('whatever'));
 
         $this->expectException(Exception::class);
-        $this->git_system_event_manager->expects($this->never())->method('queueRepositoryFork');
-
         $this->manager->fork($this->repository, $this->project, $this->user, 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+
+        self::assertEmpty($this->enqueuer->queued_tasks);
     }
 
     public function testItDoesntScheduleAnEventWhenBackendReturnsNoId(): void
@@ -177,9 +182,9 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->backend->method('fork')->willReturn(false);
 
         $this->expectException(Exception::class);
-        $this->git_system_event_manager->expects($this->never())->method('queueRepositoryFork');
-
         $this->manager->fork($this->repository, $this->project, $this->user, 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+
+        self::assertEmpty($this->enqueuer->queued_tasks);
     }
 
     public function testItThrowsAnExceptionWhenBackendReturnsNoId(): void
@@ -226,7 +231,6 @@ final class GitRepositoryManagerForkTest extends TestCase
         }
 
         $this->event_manager->method('processEvent');
-        $this->git_system_event_manager->method('queueRepositoryFork');
         $this->backend->expects($this->exactly(count($repo_ids)))->method('userCanRead')->with($this->user)->willReturn(true);
         $this->backend->method('isNameValid')->with($namespace)->willReturn(true);
         $this->backend->method('fork')->willReturnOnConsecutiveCalls(667, 668, 669);
@@ -235,6 +239,8 @@ final class GitRepositoryManagerForkTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         self::assertCount(0, $result->value);
+
+        self::assertEquals([new GitRepositoryForkTask(667), new GitRepositoryForkTask(668), new GitRepositoryForkTask(669)], $this->enqueuer->queued_tasks);
     }
 
     public function testCloneManyCrossProjectRepositories(): void
@@ -360,7 +366,6 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->event_manager->method('processEvent');
         $this->history_value_formatter->method('formatValueForRepository')->willReturn('');
         $this->project_history_dao->method('groupAddHistory');
-        $this->git_system_event_manager->method('queueRepositoryFork');
 
         $repo1 = $this->givenARepository(123);
         $repo2 = $this->givenARepository(456);

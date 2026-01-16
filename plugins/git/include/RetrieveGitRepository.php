@@ -24,11 +24,17 @@ namespace Tuleap\Git;
 
 use GitRepository;
 use PFUser;
+use Tuleap\Option\Option;
 use Tuleap\Project\ProjectAccessSuspendedException;
 
 interface RetrieveGitRepository
 {
     public function getRepositoryById(int $id): ?GitRepository;
+
+    /**
+     * @return Option<GitRepository>
+     */
+    public function getExistingRepositoryByIdAndLockItForChange(int $id): Option;
 
     /**
      * @throws \GitRepoNotFoundException

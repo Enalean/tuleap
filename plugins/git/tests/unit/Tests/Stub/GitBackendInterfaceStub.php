@@ -32,6 +32,9 @@ final class GitBackendInterfaceStub implements Git_Backend_Interface
      */
     private array $users_with_read_permission;
 
+    private(set) bool $has_been_deleted = false;
+    private(set) bool $has_been_forked  = false;
+
     private function __construct()
     {
     }
@@ -132,7 +135,7 @@ final class GitBackendInterfaceStub implements Git_Backend_Interface
     #[\Override]
     public function delete(GitRepository $repository): void
     {
-        throw new \Exception('GitBackendInterfaceStub::delete() called while not implemented.');
+        $this->has_been_deleted = true;
     }
 
     #[\Override]
@@ -145,5 +148,11 @@ final class GitBackendInterfaceStub implements Git_Backend_Interface
     public function archiveBeforePurge(GitRepository $repository): bool
     {
         throw new \Exception('GitBackendInterfaceStub::archiveBeforePurge() called while not implemented.');
+    }
+
+    #[\Override]
+    public function forkOnFilesystem(GitRepository $old, GitRepository $new): void
+    {
+        $this->has_been_forked = true;
     }
 }

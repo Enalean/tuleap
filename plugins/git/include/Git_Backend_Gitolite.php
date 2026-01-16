@@ -95,7 +95,9 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     #[\Override]
     public function getGitRootPath(): string
     {
-        return ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/';
+        $root_path = ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/';
+        assert($root_path !== '');
+        return $root_path;
     }
 
     /**
@@ -283,7 +285,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     #[\Override]
     public function delete(GitRepository $repository): void
     {
-        $this->updateRepoConf($repository);
         $this->logger->debug('Backuping ' . $repository->getPath());
         $backup_dir = \ForgeConfig::get(\Tuleap\Git\LegacyConfigInc::BACKUP_DIR);
         if ($backup_dir && is_dir($backup_dir)) {
@@ -353,7 +354,8 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         }
     }
 
-    public function forkOnFilesystem(GitRepository $old, GitRepository $new)
+    #[\Override]
+    public function forkOnFilesystem(GitRepository $old, GitRepository $new): void
     {
         $name = $old->getName();
         //TODO use $old->getRootPath() (good luck for Unit Tests!)
@@ -361,7 +363,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $new_namespace = $new->getProject()->getUnixName() . '/' . $new->getNamespace();
 
         $this->getDriver()->fork($name, $old_namespace, $new_namespace);
-        $this->updateRepoConf($new);
 
         $default_branch = Git_Exec::buildFromRepository($old)->getDefaultBranch();
         if ($default_branch !== null) {

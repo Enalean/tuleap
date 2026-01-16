@@ -22,7 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
 
 /**
@@ -32,37 +31,6 @@ class Git_SystemEventManager
 {
     public function __construct(private readonly SystemEventManager $system_event_manager)
     {
-    }
-
-    public function queueRepositoryUpdate(GitRepository $repository, ?BranchName $default_branch = null): void
-    {
-        if (
-            $repository->getBackend() instanceof Git_Backend_Gitolite &&
-            ! $this->isRepositoryUpdateAlreadyQueued($repository)
-        ) {
-            $parameters = $repository->getId();
-            if ($default_branch !== null) {
-                $parameters .= SystemEvent::PARAMETER_SEPARATOR . $default_branch->name;
-            }
-            $this->system_event_manager->createEvent(
-                SystemEvent_GIT_REPO_UPDATE::NAME,
-                $parameters,
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::OWNER_APP
-            );
-        }
-    }
-
-    public function queueRepositoryDeletion(GitRepository $repository)
-    {
-        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-            $this->system_event_manager->createEvent(
-                SystemEvent_GIT_REPO_DELETE::NAME,
-                $repository->getProjectId() . SystemEvent::PARAMETER_SEPARATOR . $repository->getId(),
-                SystemEvent::PRIORITY_MEDIUM,
-                SystemEvent::OWNER_APP
-            );
-        }
     }
 
     public function queueRemoteProjectDeletion(GitRepository $repository)
@@ -81,16 +49,6 @@ class Git_SystemEventManager
             SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME,
             $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $repository->getRemoteServerId(),
             SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        );
-    }
-
-    public function queueRepositoryFork(GitRepository $old_repository, GitRepository $new_repository)
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_REPO_FORK::NAME,
-            $old_repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $new_repository->getId(),
-            SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
         );
     }
@@ -157,14 +115,6 @@ class Git_SystemEventManager
         }
     }
 
-    public function isRepositoryUpdateAlreadyQueued(GitRepository $repository)
-    {
-        return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
-            SystemEvent_GIT_REPO_UPDATE::NAME,
-            $repository->getId()
-        );
-    }
-
     public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository)
     {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
@@ -183,9 +133,6 @@ class Git_SystemEventManager
     public function getTypes(): array
     {
         return [
-            SystemEvent_GIT_REPO_UPDATE::NAME,
-            SystemEvent_GIT_REPO_DELETE::NAME,
-            SystemEvent_GIT_REPO_FORK::NAME,
             SystemEvent_GIT_REPO_RESTORE::NAME,
             SystemEvent_GIT_GERRIT_MIGRATION::NAME,
             SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,

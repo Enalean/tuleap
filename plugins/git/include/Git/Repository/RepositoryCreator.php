@@ -28,7 +28,6 @@ use GitRepositoryManager;
 use PFUser;
 use Project;
 use ProjectHistoryDao;
-use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\CIBuilds\CITokenManager;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Exceptions\GitRepositoryInDeletionException;
@@ -113,7 +112,7 @@ class RepositoryCreator
             $this->backend_gitolite
         );
 
-        $this->manager->create($repository, $this->backend_gitolite, BranchName::defaultBranchName());
+        $this->manager->create($repository, $this->backend_gitolite);
 
         $this->backend_gitolite->savePermissions(
             $repository,

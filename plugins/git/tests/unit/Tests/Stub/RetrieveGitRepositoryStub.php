@@ -26,6 +26,7 @@ use GitRepoNotFoundException;
 use GitRepository;
 use PFUser;
 use Tuleap\Git\RetrieveGitRepository;
+use Tuleap\Option\Option;
 
 final class RetrieveGitRepositoryStub implements RetrieveGitRepository
 {
@@ -40,6 +41,12 @@ final class RetrieveGitRepositoryStub implements RetrieveGitRepository
     public function getRepositoryById(int $id): ?GitRepository
     {
         return $this->git_repositories[$id] ?? null;
+    }
+
+    #[\Override]
+    public function getExistingRepositoryByIdAndLockItForChange(int $id): \Tuleap\Option\Option
+    {
+        return Option::fromNullable($this->getRepositoryById($id));
     }
 
     #[\Override]

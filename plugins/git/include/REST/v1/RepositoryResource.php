@@ -94,7 +94,6 @@ use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 use Tuleap\Git\Repository\RepositoryCreator;
 use Tuleap\Git\REST\v1\Branch\BranchCreator;
-use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Process\SymfonyProcessFactory;
@@ -183,9 +182,11 @@ class RepositoryResource extends AuthenticatedResource
         $fine_grained_dao       = new FineGrainedDao();
         $fine_grained_retriever = new FineGrainedRetriever($fine_grained_dao);
 
+        $enqueue_task = new EnqueueTask();
+
         $this->git_permission_manager = new GitPermissionsManager(
             new Git_PermissionsDao(),
-            new EnqueueTask(),
+            $enqueue_task,
             $fine_grained_dao,
             $fine_grained_retriever
         );
@@ -205,6 +206,7 @@ class RepositoryResource extends AuthenticatedResource
         $project_history_dao     = new ProjectHistoryDao();
         $this->migration_handler = new MigrationHandler(
             $this->git_system_event_manager,
+            $enqueue_task,
             $this->gerrit_server_factory,
             new Git_Driver_Gerrit_GerritDriverFactory(
                 new \Tuleap\Git\Driver\GerritHTTPClientFactory(HttpClientFactory::createClient()),
@@ -306,13 +308,13 @@ class RepositoryResource extends AuthenticatedResource
             new \GitRepositoryManager(
                 $this->repository_factory,
                 $this->git_system_event_manager,
+                $enqueue_task,
                 $git_dao,
                 '',
                 $fine_grained_replicator,
                 $project_history_dao,
                 $history_value_formatter,
                 $event_manager,
-                new OngoingDeletionDAO(),
             ),
             $this->git_permission_manager,
             $fine_grained_replicator,

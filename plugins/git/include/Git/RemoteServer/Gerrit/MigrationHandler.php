@@ -30,6 +30,7 @@ use Git_SystemEventManager;
 use GitRepository;
 use PFUser;
 use ProjectHistoryDao;
+use Tuleap\Git\AsynchronousEvents\GitRepositoryChangeTask;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RemoteServerDoesNotExistException;
 use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
@@ -37,6 +38,7 @@ use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
+use Tuleap\Queue\EnqueueTaskInterface;
 
 class MigrationHandler
 {
@@ -71,6 +73,7 @@ class MigrationHandler
 
     public function __construct(
         Git_SystemEventManager $git_system_event_manager,
+        private readonly EnqueueTaskInterface $enqueuer,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         ProjectHistoryDao $history_dao,
@@ -179,10 +182,10 @@ class MigrationHandler
         }
     }
 
-    private function disconnectFromGerrit(GitRepository $repository)
+    private function disconnectFromGerrit(GitRepository $repository): void
     {
         $repository->getBackend()->disconnectFromGerrit($repository);
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+        $this->enqueuer->enqueue(GitRepositoryChangeTask::fromRepository($repository));
     }
 
     private function getRepositoryServer(GitRepository $repository)
