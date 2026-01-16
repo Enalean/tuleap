@@ -47,7 +47,7 @@ final class RedisInitializerTest extends TestCase
     {
         $initializer = new RedisInitializer('', 6379, new ConcealedString(''));
 
-        $redis = $this->createPartialMock(\Redis::class, []);
+        $redis = $this->createStub(\Redis::class);
 
         $this->expectException(RedisConnectionException::class);
 
@@ -58,8 +58,7 @@ final class RedisInitializerTest extends TestCase
     {
         $initializer = new RedisInitializer('redis', 6379, new ConcealedString(''));
 
-        $redis = $this->createPartialMock(\Redis::class, ['connect']);
-        $redis->method('connect')->willReturn(false);
+        $redis = $this->createConfiguredStub(\Redis::class, ['connect' => false]);
 
         $this->expectException(RedisConnectionException::class);
 

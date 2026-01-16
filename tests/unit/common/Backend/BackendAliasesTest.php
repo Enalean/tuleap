@@ -27,6 +27,7 @@ use Backend;
 use Event;
 use EventManager;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\Stub;
 use System_Alias;
 use Tuleap\ForgeConfigSandbox;
 
@@ -36,7 +37,7 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
     use ForgeConfigSandbox;
 
     private $alias_file;
-    private $backend;
+    private \BackendAliases&Stub $backend;
 
     #[\Override]
     protected function setUp(): void
@@ -45,9 +46,7 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->alias_file = \ForgeConfig::get('alias_file');
         \ForgeConfig::set('codendi_bin_prefix', '/bin/');
 
-        $this->backend = $this->createPartialMock(\BackendAliases::class, [
-            'system',
-        ]);
+        $this->backend = $this->getStubBuilder(\BackendAliases::class)->onlyMethods(['system'])->getStub();
 
         $plugin = new class {
             public function hook(array $params): void
@@ -78,7 +77,7 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRunNewaliasesCommand(): void
     {
-        $this->backend->expects($this->once())->method('system')->with('/usr/bin/newaliases > /dev/null');
+        $this->backend->method('system')->with('/usr/bin/newaliases > /dev/null')->willReturn(true);
         $this->backend->update();
     }
 

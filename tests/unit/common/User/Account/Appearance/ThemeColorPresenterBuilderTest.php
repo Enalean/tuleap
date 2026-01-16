@@ -31,7 +31,7 @@ final class ThemeColorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetColorPresenterCollection(): void
     {
         $user          = UserTestBuilder::buildWithDefaults();
-        $theme_variant = $this->createMock(\ThemeVariant::class);
+        $theme_variant = $this->createStub(\ThemeVariant::class);
 
         $theme_variant
             ->method('getAllowedVariantColors')

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2ServerCore\AccessToken;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
@@ -44,34 +45,19 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AccessTokenDAO
-     */
-    private $dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeRetriever
-     */
-    private $scope_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
-     */
-    private $hasher;
-    /**
-     * @var OAuth2AccessTokenVerifier
-     */
-    private $verifier;
+    private OAuth2AccessTokenDAO&Stub $dao;
+    private OAuth2ScopeRetriever&Stub $scope_retriever;
+    private \UserManager&Stub $user_manager;
+    private SplitTokenVerificationStringHasher&Stub $hasher;
+    private OAuth2AccessTokenVerifier $verifier;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->dao             = $this->createMock(OAuth2AccessTokenDAO::class);
-        $this->scope_retriever = $this->createMock(OAuth2ScopeRetriever::class);
-        $this->user_manager    = $this->createMock(\UserManager::class);
-        $this->hasher          = $this->createMock(SplitTokenVerificationStringHasher::class);
+        $this->dao             = $this->createStub(OAuth2AccessTokenDAO::class);
+        $this->scope_retriever = $this->createStub(OAuth2ScopeRetriever::class);
+        $this->user_manager    = $this->createStub(\UserManager::class);
+        $this->hasher          = $this->createStub(SplitTokenVerificationStringHasher::class);
 
         $this->verifier = new OAuth2AccessTokenVerifier($this->dao, $this->scope_retriever, $this->user_manager, $this->hasher);
     }
@@ -104,7 +90,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testVerificationFailsWhenTokenCanNotBeFound(): void
     {
-        $access_token = $this->createMock(SplitToken::class);
+        $access_token = $this->createStub(SplitToken::class);
         $access_token->method('getID')->willReturn(404);
 
         $this->dao->method('searchAccessToken')->with($access_token->getID())->willReturn(null);

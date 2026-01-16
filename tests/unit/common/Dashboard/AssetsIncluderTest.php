@@ -21,6 +21,7 @@
 namespace Tuleap\Dashboard;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Dashboard\Project\ProjectDashboardPresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumnPresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetLinePresenter;
@@ -44,10 +45,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var CssAssetCollection */
     private $css_asset_collection;
 
-    /**
-     * @var \Tuleap\HTTPRequest&MockObject
-     */
-    private $request;
+    private \Tuleap\HTTPRequest&Stub $request;
 
     #[\Override]
     protected function setUp(): void
@@ -56,15 +54,15 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->layout = $this->createMock(BaseLayout::class);
 
-        $include_assets = $this->createMock(IncludeAssets::class);
+        $include_assets = $this->createStub(IncludeAssets::class);
         $include_assets->method('getFileUrl')->willReturnArgument(0);
-        $css_include_assets = $this->createMock(IncludeAssets::class);
+        $css_include_assets = $this->createStub(IncludeAssets::class);
         $css_include_assets->method('getPath');
         $this->css_asset_collection = new CssAssetCollection(
             [new CssAssetWithoutVariantDeclinaisons($css_include_assets, 'dashboards-style')]
         );
 
-        $this->request = $this->createMock(\Tuleap\HTTPRequest::class);
+        $this->request = $this->createStub(\Tuleap\HTTPRequest::class);
         $this->request->method('getFromServer');
 
         $this->includer = new AssetsIncluder(
@@ -92,7 +90,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotIncludeDependenciesIfCurrentDashboardDoesNotHaveAnyWidgets(): void
     {
-        $empty_dashboard               = $this->createMock(ProjectDashboardPresenter::class);
+        $empty_dashboard               = $this->createStub(ProjectDashboardPresenter::class);
         $empty_dashboard->is_active    = true;
         $empty_dashboard->widget_lines = [];
 
@@ -166,11 +164,11 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
             'widget_without_dependencies' => [],
         ];
 
-        $first_collection = $this->createMock(CssAssetCollection::class);
+        $first_collection = $this->createStub(CssAssetCollection::class);
         $first_collection->method('getDeduplicatedAssets')->willReturn([]);
-        $second_collection = $this->createMock(CssAssetCollection::class);
+        $second_collection = $this->createStub(CssAssetCollection::class);
         $second_collection->method('getDeduplicatedAssets')->willReturn([]);
-        $empty_collection = $this->createMock(CssAssetCollection::class);
+        $empty_collection = $this->createStub(CssAssetCollection::class);
         $empty_collection->method('getDeduplicatedAssets')->willReturn([]);
 
         $stylesheet_dependencies = [
@@ -181,18 +179,18 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $widget_presenters = [];
         foreach ($widget_names as $widget_name) {
-            $widget_presenter                          = $this->createMock(DashboardWidgetPresenter::class);
+            $widget_presenter                          = $this->createStub(DashboardWidgetPresenter::class);
             $widget_presenter->javascript_dependencies = $javascript_dependencies[$widget_name];
             $widget_presenter->stylesheet_dependencies = $stylesheet_dependencies[$widget_name];
             $widget_presenters[]                       = $widget_presenter;
         }
 
-        $widget_column               = $this->createMock(DashboardWidgetColumnPresenter::class);
+        $widget_column               = $this->createStub(DashboardWidgetColumnPresenter::class);
         $widget_column->widgets      = $widget_presenters;
-        $widget_line                 = $this->createMock(DashboardWidgetLinePresenter::class);
+        $widget_line                 = $this->createStub(DashboardWidgetLinePresenter::class);
         $widget_line->widget_columns = [$widget_column];
 
-        $dashboard               = $this->createMock(ProjectDashboardPresenter::class);
+        $dashboard               = $this->createStub(ProjectDashboardPresenter::class);
         $dashboard->widget_lines = [$widget_line];
         $dashboard->is_active    = true;
 

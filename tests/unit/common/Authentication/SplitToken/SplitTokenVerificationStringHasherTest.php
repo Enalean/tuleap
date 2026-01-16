@@ -27,7 +27,7 @@ final class SplitTokenVerificationStringHasherTest extends \Tuleap\Test\PHPUnit\
 {
     public function testVerificationStringCanBeHashed(): void
     {
-        $access_key_verification_string = $this->createMock(SplitTokenVerificationString::class);
+        $access_key_verification_string = $this->createStub(SplitTokenVerificationString::class);
         $access_key_verification_string->method('getString')
             ->willReturn(new ConcealedString('random_string'));
 
@@ -40,7 +40,7 @@ final class SplitTokenVerificationStringHasherTest extends \Tuleap\Test\PHPUnit\
 
     public function testVerificationStringCanBeVerified(): void
     {
-        $access_key_verification_string = $this->createMock(SplitTokenVerificationString::class);
+        $access_key_verification_string = $this->createStub(SplitTokenVerificationString::class);
         $access_key_verification_string->method('getString')
             ->willReturn(new ConcealedString('random_string'));
         $precomputed_hash_value = '528b36022f3bc7b1de66f30bbd011bb84fce3067c5eb593400d1b39055c32891';

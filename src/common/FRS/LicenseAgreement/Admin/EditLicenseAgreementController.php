@@ -32,54 +32,24 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeAssetsGeneric;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
 
-class EditLicenseAgreementController implements DispatchableWithRequest, DispatchableWithBurningParrot
+readonly class EditLicenseAgreementController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * @var ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var LicenseAgreementFactory
-     */
-    private $factory;
-    /**
-     * @var \TemplateRendererFactory
-     */
-    private $renderer_factory;
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var IncludeAssets
-     */
-    private $assets;
-    /**
-     * @var LicenseAgreementControllersHelper
-     */
-    private $helper;
-
     public function __construct(
-        ProjectRetriever $project_retriever,
-        LicenseAgreementControllersHelper $helper,
-        \TemplateRendererFactory $renderer_factory,
-        LicenseAgreementFactory $factory,
-        \CSRFSynchronizerToken $csrf_token,
-        IncludeAssets $assets,
-        private readonly IncludeAssetsGeneric $ckeditor_assets,
+        private ProjectRetriever $project_retriever,
+        private LicenseAgreementControllersHelper $helper,
+        private \TemplateRendererFactory $renderer_factory,
+        private LicenseAgreementFactory $factory,
+        private CSRFSynchronizerTokenInterface $csrf_token,
+        private IncludeAssets $assets,
+        private IncludeAssetsGeneric $ckeditor_assets,
     ) {
-        $this->project_retriever = $project_retriever;
-        $this->helper            = $helper;
-        $this->renderer_factory  = $renderer_factory;
-        $this->factory           = $factory;
-        $this->csrf_token        = $csrf_token;
-        $this->assets            = $assets;
     }
 
     public static function buildSelf(): self

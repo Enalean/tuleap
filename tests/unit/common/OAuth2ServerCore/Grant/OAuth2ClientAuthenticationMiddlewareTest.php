@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Grant;
 
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,28 +44,16 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
-     */
-    private $client_secret_unserializer;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AppCredentialVerifier
-     */
-    private $verifier;
-    /**
-     * @var TestLogger
-     */
-    private $logger;
-    /**
-     * @var OAuth2ClientAuthenticationMiddleware
-     */
-    private $middleware;
+    private SplitTokenIdentifierTranslator&Stub $client_secret_unserializer;
+    private OAuth2AppCredentialVerifier&Stub $verifier;
+    private TestLogger $logger;
+    private OAuth2ClientAuthenticationMiddleware $middleware;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->client_secret_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
-        $this->verifier                   = $this->createMock(OAuth2AppCredentialVerifier::class);
+        $this->client_secret_unserializer = $this->createStub(SplitTokenIdentifierTranslator::class);
+        $this->verifier                   = $this->createStub(OAuth2AppCredentialVerifier::class);
         $this->logger                     = new TestLogger();
         $this->middleware                 = new OAuth2ClientAuthenticationMiddleware(
             $this->client_secret_unserializer,

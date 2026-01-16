@@ -23,49 +23,41 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use PFUser;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&EventDispatcherInterface
-     */
-    private $event_dispatcher;
-    /**
-     * @var UserWellKnownChangePasswordController
-     */
-    private $controller;
+    private \UserManager&Stub $user_manager;
+    private EventDispatcherInterface&Stub $event_dispatcher;
+    private UserWellKnownChangePasswordController $controller;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->user_manager     = $this->createMock(\UserManager::class);
-        $this->event_dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->user_manager     = $this->createStub(\UserManager::class);
+        $this->event_dispatcher = $this->createStub(EventDispatcherInterface::class);
         $this->controller       = new UserWellKnownChangePasswordController(
             $this->user_manager,
             $this->event_dispatcher,
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            $this->createMock(EmitterInterface::class)
+            new NoopSapiEmitter(),
         );
     }
 
     public function testRedirectsUserToChangePasswordPage(): void
     {
-        $current_user = $this->createMock(PFUser::class);
+        $current_user = $this->createStub(PFUser::class);
         $current_user->method('isAnonymous')->willReturn(false);
         $current_user->method('getUserPw')->willReturn('some_password_hash');
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Process\Process;
 use Tuleap\Config\ConfigDao;
@@ -39,7 +40,7 @@ final class SetupTuleapCommandTest extends TestCase
 
     private string $base_dir;
     private CommandTester $command_tester;
-    private \PHPUnit\Framework\MockObject\MockObject|ProcessFactory $process_factory;
+    private Stub|ProcessFactory $process_factory;
     private KeyFactoryStub $key_factory;
 
     #[\Override]
@@ -48,10 +49,10 @@ final class SetupTuleapCommandTest extends TestCase
         parent::setUp();
         $this->base_dir = vfsStream::setup()->url();
         mkdir($this->base_dir . '/etc/tuleap/conf', 0750, true);
-        $this->process_factory = $this->createMock(ProcessFactory::class);
+        $this->process_factory = $this->createStub(ProcessFactory::class);
         $this->process_factory->method('getProcessWithoutTimeout')->willReturn(new Process(['/usr/bin/env', 'true']));
 
-        $dao = $this->createMock(ConfigDao::class);
+        $dao = $this->createStub(ConfigDao::class);
         $dao->method('searchAll')->willReturn([]);
         \ForgeConfig::setDatabaseConfigDao($dao);
 

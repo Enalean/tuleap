@@ -58,7 +58,7 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRequestIsRejectedIfTheMethodToOverrideIsNotAllowed(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('PATCH');
         $request->method('getMethod')->willReturn('GET');
 
@@ -72,7 +72,7 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRequestIsRejectedIfTheRequestedOverrideMethodIsNotAllowed(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('LOCK');
         $request->method('getMethod')->willReturn('PATCH');
 

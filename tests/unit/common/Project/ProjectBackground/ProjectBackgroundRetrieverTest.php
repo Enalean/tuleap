@@ -31,7 +31,7 @@ final class ProjectBackgroundRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->build();
 
-        $configuration = $this->createMock(ProjectBackgroundConfiguration::class);
+        $configuration = $this->createStub(ProjectBackgroundConfiguration::class);
         $configuration->method('getBackground')->willReturn(null);
 
         $retriever   = new ProjectBackgroundRetriever($configuration);
@@ -49,7 +49,7 @@ final class ProjectBackgroundRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->build();
 
-        $configuration = $this->createMock(ProjectBackgroundConfiguration::class);
+        $configuration = $this->createStub(ProjectBackgroundConfiguration::class);
         $configuration->method('getBackground')->willReturn(ProjectBackgroundName::fromIdentifier('beach-daytime'));
 
         $retriever   = new ProjectBackgroundRetriever($configuration);

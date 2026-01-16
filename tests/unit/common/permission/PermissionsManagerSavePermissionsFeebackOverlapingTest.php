@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -34,10 +34,7 @@ class PermissionsManagerSavePermissionsFeebackOverlapingTest extends \Tuleap\Tes
     protected Project $project;
     protected string $permission_type;
     protected string $object_id;
-    /**
-     * @var PermissionsDao&MockObject
-     */
-    protected $permissions_dao;
+    protected PermissionsDao&Stub $permissions_dao;
     protected int $project_id;
     private PermissionsNormalizer $normalizer;
 
@@ -50,21 +47,13 @@ class PermissionsManagerSavePermissionsFeebackOverlapingTest extends \Tuleap\Tes
             ->withId($this->project_id)
             ->withAccessPublic()
             ->build();
-        $this->permissions_dao     = $this->createMock(\PermissionsDao::class);
+        $this->permissions_dao     = $this->createStub(\PermissionsDao::class);
         $this->permission_type     = 'FOO';
         $this->object_id           = 'BAR';
         $this->permissions_manager = new PermissionsManager($this->permissions_dao);
         $this->normalizer          = new PermissionsNormalizer();
         $this->permissions_dao->method('clearPermission')->willReturn(true);
         $this->permissions_dao->method('addPermission')->willReturn(true);
-    }
-
-    protected function expectPermissionsOnce($ugroup): void
-    {
-        $this->permissions_dao
-            ->expects($this->once())
-            ->method('addPermission')
-            ->with($this->permission_type, $this->object_id, $ugroup);
     }
 
     protected function savePermissions($ugroups): void

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Grant;
 
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -32,23 +32,15 @@ use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenRevoker;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenRevoker;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\User\OAuth2\OAuth2Exception;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var TokenRevocationController
-     */
-    private $controller;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenRevoker
-     */
-    private $refresh_token_revoker;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AccessTokenRevoker
-     */
-    private $access_token_revoker;
+    private TokenRevocationController $controller;
+    private OAuth2RefreshTokenRevoker&MockObject $refresh_token_revoker;
+    private OAuth2AccessTokenRevoker&MockObject $access_token_revoker;
 
     #[\Override]
     protected function setUp(): void
@@ -60,7 +52,7 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             HTTPFactoryBuilder::streamFactory(),
             $this->refresh_token_revoker,
             $this->access_token_revoker,
-            $this->createMock(EmitterInterface::class)
+            new NoopSapiEmitter(),
         );
     }
 

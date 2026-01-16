@@ -35,48 +35,24 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectUGroup $ugroup_project_member;
     private ProjectUGroup $ugroup_project_admin;
-    /**
-     * @var array
-     */
-    private $formatted_project_admin;
-    /**
-     * @var array
-     */
-    private $formatted_project_member;
-    /**
-     * @var \UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var FRSPermissionPerGroupURLBuilder
-     */
-    private $url_builder;
-    /**
-     * @var \Project
-     */
-    private $project;
-    /**
-     * @var PermissionPerTypeExtractor
-     */
-    private $extractor;
-    /**
-     * @var FRSPermissionFactory
-     */
-    private $permission_factory;
-    /**
-     * @var PermissionPerGroupUGroupFormatter
-     */
-    private $formatter;
+    private array $formatted_project_admin;
+    private array $formatted_project_member;
+    private \UGroupManager $ugroup_manager;
+    private FRSPermissionPerGroupURLBuilder $url_builder;
+    private \Project $project;
+    private PermissionPerTypeExtractor $extractor;
+    private FRSPermissionFactory $permission_factory;
+    private PermissionPerGroupUGroupFormatter $formatter;
 
     #[\Override]
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->permission_factory = $this->createMock(FRSPermissionFactory::class);
-        $this->formatter          = $this->createMock(PermissionPerGroupUGroupFormatter::class);
-        $this->url_builder        = $this->createMock(FRSPermissionPerGroupURLBuilder::class);
-        $this->ugroup_manager     = $this->createMock(UGroupManager::class);
+        $this->permission_factory = $this->createStub(FRSPermissionFactory::class);
+        $this->formatter          = $this->createStub(PermissionPerGroupUGroupFormatter::class);
+        $this->url_builder        = $this->createStub(FRSPermissionPerGroupURLBuilder::class);
+        $this->ugroup_manager     = $this->createStub(UGroupManager::class);
 
         $this->extractor = new PermissionPerTypeExtractor(
             $this->permission_factory,

@@ -25,15 +25,13 @@ namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Console\Tester\CommandTester;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProcessFactory
-     */
-    private $process_factory;
+    private ProcessFactory&Stub $process_factory;
     private $control_command;
     /**
      * @var CommandTester
@@ -49,7 +47,7 @@ class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCas
     protected function setUp(): void
     {
         $this->root            = vfsStream::setup('slash');
-        $this->process_factory = $this->createMock(ProcessFactory::class);
+        $this->process_factory = $this->createStub(ProcessFactory::class);
         $this->control_command = new SystemControlCommand($this->process_factory, $this->root->url());
         $this->command_tester  = new CommandTester($this->control_command);
 

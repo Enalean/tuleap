@@ -27,7 +27,7 @@ class PasswordCompromiseValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testPasswordAcceptation()
     {
-        $pwned_password_checker = $this->createMock(PwnedPasswordChecker::class);
+        $pwned_password_checker = $this->createStub(PwnedPasswordChecker::class);
         $pwned_password_checker->method('isPasswordCompromised')->willReturn(false);
 
         $password_validator = new PasswordCompromiseValidator($pwned_password_checker);
@@ -36,7 +36,7 @@ class PasswordCompromiseValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testPasswordRejection()
     {
-        $pwned_password_checker = $this->createMock(PwnedPasswordChecker::class);
+        $pwned_password_checker = $this->createStub(PwnedPasswordChecker::class);
         $pwned_password_checker->method('isPasswordCompromised')->willReturn(true);
 
         $password_validator = new PasswordCompromiseValidator($pwned_password_checker);

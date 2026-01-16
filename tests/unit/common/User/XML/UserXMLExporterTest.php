@@ -23,24 +23,27 @@ declare(strict_types=1);
 namespace Tuleap\User\XML;
 
 use PFUser;
+use PHPUnit\Framework\MockObject\Stub;
 use SimpleXMLElement;
 use UserXMLExporter;
+use XML_RNGValidator;
+use XML_SimpleXMLCDATAFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private $collection;
-    private $user_xml_exporter;
-    private $user_manager;
-    private $base_xml;
+    private \UserXMLExportedCollection $collection;
+    private UserXMLExporter $user_xml_exporter;
+    private \UserManager&Stub $user_manager;
+    private SimpleXMLElement $base_xml;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user_manager      = $this->createMock(\UserManager::class);
-        $this->collection        = $this->createMock(\UserXMLExportedCollection::class);
+        $this->user_manager      = $this->createStub(\UserManager::class);
+        $this->collection        = new \UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory());
         $this->user_xml_exporter = new UserXMLExporter($this->user_manager, $this->collection);
         $this->base_xml          = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -52,8 +55,6 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
 
-        $this->collection->method('add');
-
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
 
         self::assertEquals('ldap', (string) $this->base_xml->user['format']);
@@ -63,8 +64,6 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsUserInXMLWithTheDefinedChildName(): void
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
-
-        $this->collection->method('add');
 
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'mychildname');
 
@@ -76,8 +75,6 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'language_id' => 'en']);
 
-        $this->collection->method('add');
-
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
 
         self::assertEquals('username', (string) $this->base_xml->user['format']);
@@ -88,7 +85,6 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
 
-        $this->collection->method('add');
         $this->user_manager->method('getUserById')->with(101)->willReturn($user);
 
         $this->user_xml_exporter->exportUserByUserId(101, $this->base_xml, 'user');
@@ -109,9 +105,11 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'language_id' => 'en']);
 
-        $this->collection->expects($this->once())->method('add')->with($user);
-
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
+
+        $users_xml_element = new SimpleXMLElement($this->collection->toXML())->xpath('/users');
+        self::assertNotNull($users_xml_element);
+        self::assertSame(1, $users_xml_element[0]->count());
     }
 
     public function testItCollectsUserById(): void
@@ -119,15 +117,19 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
         $this->user_manager->method('getUserById')->with(101)->willReturn($user);
 
-        $this->collection->expects($this->once())->method('add')->with($user);
-
         $this->user_xml_exporter->exportUserByUserId(101, $this->base_xml, 'user');
+
+        $users_xml_element = new SimpleXMLElement($this->collection->toXML())->xpath('/users');
+        self::assertNotNull($users_xml_element);
+        self::assertSame(1, $users_xml_element[0]->count());
     }
 
     public function testItDoesNotCollectUserByMail(): void
     {
-        $this->collection->expects($this->never())->method('add');
-
         $this->user_xml_exporter->exportUserByMail('email@example.com', $this->base_xml, 'user');
+
+        $users_xml_element = new SimpleXMLElement($this->collection->toXML())->xpath('/users');
+        self::assertNotNull($users_xml_element);
+        self::assertSame(0, $users_xml_element[0]->count());
     }
 }

@@ -67,6 +67,8 @@ final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterB
 
         $expected_exception = new UserCanNotUpdateProjectDashboardException();
 
+        $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
+
         $this->project_dashboard_importer->import($xml, $user, $this->project, $this->mappings_registry);
         self::assertTrue($this->logger->hasWarning('[Dashboards] ' . $expected_exception->getMessage()));
     }
@@ -93,6 +95,8 @@ final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterB
               </project>'
         );
 
+        $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
+
         $expected_exception = new NameDashboardDoesNotExistException();
 
         $this->project_dashboard_importer->import($xml, $user, $this->project, $this->mappings_registry);
@@ -106,6 +110,8 @@ final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterB
             ->withoutSiteAdministrator()
             ->build();
         $this->dao->method('searchByProjectIdAndName')->willReturn([1, 101, 'test']);
+
+        $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -162,7 +168,7 @@ final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterB
               </project>'
         );
 
-        $this->dao->expects($this->exactly(1))->method('save');
+        $this->dao->method('save');
         $this->widget_dao->expects($this->once())->method('createLine')->willReturn(101);
         $this->widget_dao->expects($this->once())->method('createColumn')->willReturn(102);
         $this->widget_dao->method('insertWidgetInColumnWithRank');

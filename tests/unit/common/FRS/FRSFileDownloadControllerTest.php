@@ -25,7 +25,7 @@ namespace Tuleap\FRS;
 use FRSFile;
 use FRSFileFactory;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Project_AccessException;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -41,20 +41,14 @@ use URLVerification;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FRSFileDownloadControllerTest extends TestCase
 {
-    /**
-     * @var MockObject&URLVerification
-     */
-    private $url_verification;
-    /**
-     * @var MockObject&FRSFileFactory
-     */
-    private $file_factory;
+    private URLVerification&Stub $url_verification;
+    private FRSFileFactory&Stub $file_factory;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->url_verification = $this->createMock(URLVerification::class);
-        $this->file_factory     = $this->createMock(FRSFileFactory::class);
+        $this->url_verification = $this->createStub(URLVerification::class);
+        $this->file_factory     = $this->createStub(FRSFileFactory::class);
     }
 
     public function testFileCanBeDownloaded(): void
@@ -73,7 +67,7 @@ final class FRSFileDownloadControllerTest extends TestCase
 
         $frs_file = $this->createMock(FRSFile::class);
         $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
-        $frs_file->method('getGroup')->willReturn($this->createMock(Project::class));
+        $frs_file->method('getGroup')->willReturn($this->createStub(Project::class));
         $frs_file->method('userCanDownload')->willReturn(true);
         $frs_file->method('isActive')->willReturn(true);
         $frs_file->method('fileExists')->willReturn(true);
@@ -124,12 +118,12 @@ final class FRSFileDownloadControllerTest extends TestCase
 
         $server_request = (new NullServerRequest())->withAttribute('file_id', '12');
 
-        $frs_file = $this->createMock(FRSFile::class);
+        $frs_file = $this->createStub(FRSFile::class);
         $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
-        $frs_file->method('getGroup')->willReturn($this->createMock(Project::class));
+        $frs_file->method('getGroup')->willReturn($this->createStub(Project::class));
 
         $this->url_verification->method('userCanAccessProject')
-            ->willThrowException($this->createMock(Project_AccessException::class));
+            ->willThrowException($this->createStub(Project_AccessException::class));
 
         $this->expectException(NotFoundException::class);
         $controller->handle($server_request);
@@ -148,9 +142,9 @@ final class FRSFileDownloadControllerTest extends TestCase
 
         $server_request = (new NullServerRequest())->withAttribute('file_id', '12');
 
-        $frs_file = $this->createMock(FRSFile::class);
+        $frs_file = $this->createStub(FRSFile::class);
         $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
-        $frs_file->method('getGroup')->willReturn($this->createMock(Project::class));
+        $frs_file->method('getGroup')->willReturn($this->createStub(Project::class));
         $frs_file->method('userCanDownload')->willReturn(true);
         $frs_file->method('isActive')->willReturn(false);
 
@@ -173,9 +167,9 @@ final class FRSFileDownloadControllerTest extends TestCase
 
         $server_request = (new NullServerRequest())->withAttribute('file_id', '12');
 
-        $frs_file = $this->createMock(FRSFile::class);
+        $frs_file = $this->createStub(FRSFile::class);
         $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
-        $frs_file->method('getGroup')->willReturn($this->createMock(Project::class));
+        $frs_file->method('getGroup')->willReturn($this->createStub(Project::class));
         $frs_file->method('userCanDownload')->willReturn(true);
         $frs_file->method('isActive')->willReturn(true);
         $frs_file->method('fileExists')->willReturn(false);

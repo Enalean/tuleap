@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnChallengeDaoStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
 use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
@@ -47,7 +48,7 @@ use Webauthn\PublicKeyCredentialRpEntity;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \CSRFSynchronizerToken&MockObject $csrf_token;
+    private CSRFSynchronizerTokenStub $csrf_token;
     private \UserManager&MockObject $user_manager;
     private WebAuthnCredentialSourceDaoStub $source_dao;
     private SSHKeyCreateController $controller;
@@ -55,7 +56,7 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->csrf_token              = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->csrf_token              = CSRFSynchronizerTokenStub::buildSelf();
         $this->user_manager            = $this->createMock(\UserManager::class);
         $this->source_dao              = WebAuthnCredentialSourceDaoStub::withoutCredentialSources();
         $attestation_statement_manager = new AttestationStatementSupportManager();
@@ -90,6 +91,8 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItForbidsAnonymousUsers(): void
     {
+        $this->user_manager->expects($this->never())->method('addSSHKeys');
+
         $this->expectException(ForbiddenException::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withAnonymousUser()->build(),
@@ -101,17 +104,20 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesUserSSHKey(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->csrf_token->expects($this->once())->method('check')->with('/account/keys-tokens');
 
         $this->user_manager->expects($this->once())->method('addSSHKeys')->with($user, 'ssh-rsa blabla');
 
         $this->expectExceptionObject(new LayoutInspectorRedirection('/account/keys-tokens'));
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)
-                ->withParam('ssh-key', 'ssh-rsa blabla')
-                ->withParam('webauthn_result', '{}')->build(),
-            LayoutBuilder::build(),
-            []
-        );
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($user)
+                    ->withParam('ssh-key', 'ssh-rsa blabla')
+                    ->withParam('webauthn_result', '{}')->build(),
+                LayoutBuilder::build(),
+                []
+            );
+        } finally {
+            self::assertTrue($this->csrf_token->hasBeenChecked());
+        }
     }
 }

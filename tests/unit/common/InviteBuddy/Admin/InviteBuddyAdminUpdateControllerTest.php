@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy\Admin;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -34,14 +35,14 @@ use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private InviteBuddyAdminUpdateController $controller;
-    private \PHPUnit\Framework\MockObject\MockObject&InviteBuddyConfiguration $configuration;
+    private InviteBuddyConfiguration&Stub $configuration;
     private CSRFSynchronizerTokenStub $csrf_token;
     private \Tuleap\Config\ConfigDao&\PHPUnit\Framework\MockObject\MockObject $config_dao;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->configuration = $this->createMock(InviteBuddyConfiguration::class);
+        $this->configuration = $this->createStub(InviteBuddyConfiguration::class);
         $this->csrf_token    = CSRFSynchronizerTokenStub::buildSelf();
         $this->config_dao    = $this->createMock(\Tuleap\Config\ConfigDao::class);
 
@@ -55,6 +56,10 @@ final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\Te
     public function testItThrowsExceptionIfUserIsNotSuperUser(): void
     {
         $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
+
+        $this->config_dao
+            ->expects($this->never())
+            ->method('save');
 
         $this->expectException(ForbiddenException::class);
 

@@ -37,8 +37,8 @@ final class ForceRegenerationDefaultAvatarCommandTest extends \Tuleap\Test\PHPUn
     {
         \ForgeConfig::set('sys_avatar_path', vfsStream::setup()->url());
 
-        $user_manager = $this->createMock(\UserManager::class);
-        $user_dao     = $this->createMock(\UserDao::class);
+        $user_manager = $this->createStub(\UserManager::class);
+        $user_dao     = $this->createStub(\UserDao::class);
         $storage      = AvatarHashStorageDeletorStub::build();
 
         $user_dao->method('searchUsersWithDefaultAvatar')->willReturn([['user_id' => 102], ['user_id' => 103]]);

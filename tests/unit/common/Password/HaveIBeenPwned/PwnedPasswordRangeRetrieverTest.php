@@ -80,7 +80,7 @@ class PwnedPasswordRangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAPICallErrorGivesEmptyResult(): void
     {
         $http_client = new Client();
-        $http_client->addException($this->createMock(Exception\RequestException::class));
+        $http_client->addException($this->createStub(Exception\RequestException::class));
 
         $retriever = new PwnedPasswordRangeRetriever(
             $http_client,

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\User;
 
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
@@ -31,6 +30,7 @@ use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 use Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware;
 
@@ -39,10 +39,7 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    /**
-     * @var UserInfoController
-     */
-    private $controller;
+    private UserInfoController $controller;
 
     #[\Override]
     protected function setUp(): void
@@ -50,7 +47,7 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
         $this->controller = new UserInfoController(
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            $this->createMock(EmitterInterface::class)
+            new NoopSapiEmitter(),
         );
     }
 

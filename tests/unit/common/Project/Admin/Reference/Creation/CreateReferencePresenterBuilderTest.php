@@ -30,9 +30,6 @@ use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-/**
- * @psalm-immutable
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CreateReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -40,7 +37,7 @@ final class CreateReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItShouldBuildAPresenterForPlatformAdministrator(): void
     {
-        $service_dao = $this->createMock(ServiceDao::class);
+        $service_dao = $this->createStub(ServiceDao::class);
         $service_dao->method('searchByProjectId')->willReturn([['label' => 'Tracker from DB', 'short_name' => 'tracker']]);
 
         $nature_list = new NatureCollection();
@@ -51,7 +48,7 @@ final class CreateReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $url = '/project/admin/reference.php?group_id=101';
 
         $builder   = new CreateReferencePresenterBuilder($service_dao);
-        $presenter = $builder->buildReferencePresenter(101, $nature_list->getNatures(), true, $url, $this->createMock(CSRFSynchronizerToken::class), UserTestBuilder::buildWithId(103));
+        $presenter = $builder->buildReferencePresenter(101, $nature_list->getNatures(), true, $url, $this->createStub(CSRFSynchronizerToken::class), UserTestBuilder::buildWithId(103));
 
         self::assertEquals([new ServiceReferencePresenter('tracker', 'Tracker from DB')], $presenter->services_reference);
         self::assertEquals([new NatureReferencePresenter('git', $git_nature), new NatureReferencePresenter('tracker', $tracker_nature)], $presenter->natures);
@@ -59,7 +56,7 @@ final class CreateReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItShouldBuildAPresenter(): void
     {
-        $service_dao = $this->createMock(ServiceDao::class);
+        $service_dao = $this->createStub(ServiceDao::class);
         $service_dao->method('searchById')->willReturn([
             ['label' => 'Tracker from DB', 'short_name' => 'tracker'],
         ]);
@@ -70,7 +67,7 @@ final class CreateReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $url = '/project/admin/reference.php?group_id=101';
 
         $builder   = new CreateReferencePresenterBuilder($service_dao);
-        $presenter = $builder->buildReferencePresenter(101, $nature_list->getNatures(), false, $url, $this->createMock(CSRFSynchronizerToken::class), UserTestBuilder::buildWithId(103));
+        $presenter = $builder->buildReferencePresenter(101, $nature_list->getNatures(), false, $url, $this->createStub(CSRFSynchronizerToken::class), UserTestBuilder::buildWithId(103));
 
         self::assertEquals([ ], $presenter->services_reference);
         self::assertEquals([], $presenter->natures);

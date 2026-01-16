@@ -30,9 +30,9 @@ final class StatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row_1              = ['webhook_id' => 1, 'created_on' => 1489595500, 'status' => 'Operation timed out after 5000 milliseconds with 0 bytes received'];
         $row_2              = ['webhook_id' => 1, 'created_on' => 1489595525, 'status' => '200 OK'];
         $data_access_result = \TestHelper::arrayToDar($row_1, $row_2);
-        $dao                = $this->createMock(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
+        $dao                = $this->createStub(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
         $dao->method('searchLogsByWebhookId')->willReturn($data_access_result);
-        $webhook = $this->createMock(\Tuleap\Project\Webhook\Webhook::class);
+        $webhook = $this->createStub(\Tuleap\Project\Webhook\Webhook::class);
         $webhook->method('getId');
 
         $retriever = new StatusRetriever($dao);
@@ -44,9 +44,9 @@ final class StatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItFailsWhenStatusCanNotBeRetrieved(): void
     {
-        $dao = $this->createMock(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
+        $dao = $this->createStub(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
         $dao->method('searchLogsByWebhookId')->willReturn(false);
-        $webhook = $this->createMock(\Tuleap\Project\Webhook\Webhook::class);
+        $webhook = $this->createStub(\Tuleap\Project\Webhook\Webhook::class);
         $webhook->method('getId');
 
         $retriever = new StatusRetriever($dao);

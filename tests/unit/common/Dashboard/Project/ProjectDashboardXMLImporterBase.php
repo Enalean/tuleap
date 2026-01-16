@@ -25,6 +25,7 @@ namespace Tuleap\Dashboard\Project;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -35,31 +36,31 @@ use Tuleap\XML\MappingsRegistry;
 class ProjectDashboardXMLImporterBase extends \Tuleap\Test\PHPUnit\TestCase
 {
     protected ProjectDashboardSaver $project_dashboard_saver;
-    protected ProjectDashboardDao&MockObject $dao;
+    protected ProjectDashboardDao&Stub $dao;
     protected TestLogger $logger;
     protected \Project $project;
     protected ProjectDashboardXMLImporter $project_dashboard_importer;
-    protected WidgetCreator&MockObject $widget_creator;
-    protected WidgetFactory&MockObject $widget_factory;
+    protected WidgetCreator&Stub $widget_creator;
+    protected WidgetFactory&Stub $widget_factory;
     protected DashboardWidgetDao&MockObject $widget_dao;
     protected MappingsRegistry $mappings_registry;
-    protected \EventManager&MockObject $event_manager;
-    protected DisabledProjectWidgetsChecker&MockObject $disabled_widgets_checker;
+    protected \EventManager&Stub $event_manager;
+    protected DisabledProjectWidgetsChecker&Stub $disabled_widgets_checker;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->dao                      = $this->createMock(ProjectDashboardDao::class);
+        $this->dao                      = $this->createStub(ProjectDashboardDao::class);
         $this->project_dashboard_saver  = new ProjectDashboardSaver(
             $this->dao,
             $this->createStub(DeleteVisitByDashboardId::class),
             new DBTransactionExecutorPassthrough()
         );
-        $this->widget_creator           = $this->createMock(WidgetCreator::class);
-        $this->widget_factory           = $this->createMock(WidgetFactory::class);
+        $this->widget_creator           = $this->createStub(WidgetCreator::class);
+        $this->widget_factory           = $this->createStub(WidgetFactory::class);
         $this->widget_dao               = $this->createMock(DashboardWidgetDao::class);
-        $this->event_manager            = $this->createMock(\EventManager::class);
-        $this->disabled_widgets_checker = $this->createMock(DisabledProjectWidgetsChecker::class);
+        $this->event_manager            = $this->createStub(\EventManager::class);
+        $this->disabled_widgets_checker = $this->createStub(DisabledProjectWidgetsChecker::class);
 
         $this->logger                     = new TestLogger();
         $this->project_dashboard_importer = new ProjectDashboardXMLImporter(

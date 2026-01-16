@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\PHPWiki\WikiPage;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -29,25 +29,25 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class Wiki_PermissionsManagerTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Wiki_PermissionsManager $wiki_permissions_manager;
-    private PermissionsManager&MockObject $permission_manager;
-    private WikiPage&MockObject $wiki_page;
-    private Project&MockObject $project;
+    private PermissionsManager&Stub $permission_manager;
+    private WikiPage&Stub $wiki_page;
+    private Project&Stub $project;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->project = $this->createMock(Project::class);
+        $this->project = $this->createStub(Project::class);
         $this->project->method('getUnixName')->willReturn('perceval');
         $this->project->method('getId')->willReturn(200);
 
-        $this->wiki_page = $this->createMock(WikiPage::class);
+        $this->wiki_page = $this->createStub(WikiPage::class);
         $this->wiki_page->method('getId')->willReturn(101);
         $this->wiki_page->method('getGid')->willReturn(200);
 
-        $this->permission_manager = $this->createMock(PermissionsManager::class);
-        $project_manager          = $this->createMock(ProjectManager::class);
+        $this->permission_manager = $this->createStub(PermissionsManager::class);
+        $project_manager          = $this->createStub(ProjectManager::class);
         $project_manager->method('getProject')->with(200)->willReturn($this->project);
 
         $this->wiki_permissions_manager = new Wiki_PermissionsManager(

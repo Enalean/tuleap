@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-use CSRFSynchronizerToken;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ServiceFile;
 use Tuleap\FRS\FRSPermissionManager;
@@ -37,81 +37,57 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
+use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SaveLicenseAgreementControllerTest extends TestCase
 {
     private SaveLicenseAgreementController $controller;
-    /**
-     * @var MockObject&ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var MockObject&Project
-     */
-    private $project;
-    /**
-     * @var MockObject&ServiceFile
-     */
-    private $service_file;
-    /**
-     * @var MockObject&FRSPermissionManager
-     */
-    private $permissions_manager;
+    private ProjectRetriever&MockObject $project_retriever;
+    private Project&Stub $project;
+    private ServiceFile&Stub $service_file;
+    private FRSPermissionManager&Stub $permissions_manager;
     private \Tuleap\HTTPRequest $request;
     private PFUser $current_user;
-    /**
-     * @var MockObject&LicenseAgreementFactory
-     */
-    private $factory;
-    /**
-     * @var MockObject&CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var MockObject&LicenseAgreementControllersHelper
-     */
-    private $helper;
-    /**
-     * @var MockObject&BaseLayout
-     */
-    private $layout;
+    private LicenseAgreementFactory&MockObject $factory;
+    private LicenseAgreementControllersHelper&Stub $helper;
+    private TestLayout $layout;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->layout = $this->createMock(BaseLayout::class);
+        $this->layout = new TestLayout(new LayoutInspector());
 
         $this->current_user = new PFUser(['language_id' => 'en_US']);
 
         $this->request = new \Tuleap\HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->service_file = $this->createMock(\ServiceFile::class);
-        $this->project      = $this->createConfiguredMock(Project::class, ['getID' => '101']);
+        $this->service_file = $this->createStub(\ServiceFile::class);
+        $this->project      = $this->createConfiguredStub(Project::class, ['getID' => '101']);
         $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
         $this->project_retriever->expects($this->once())->method('getProjectFromId')
             ->with('101')
             ->willReturn($this->project);
 
-        $this->permissions_manager = $this->createMock(FRSPermissionManager::class);
+        $this->permissions_manager = $this->createStub(FRSPermissionManager::class);
         $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(true);
 
         $this->factory = $this->createMock(LicenseAgreementFactory::class);
 
-        $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);
-        $this->csrf_token->method('check');
-
-        $this->helper = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->helper = $this->createStub(LicenseAgreementControllersHelper::class);
         $this->helper->method('assertCanAccess')->with($this->project, $this->current_user);
 
         $this->controller = new SaveLicenseAgreementController(
             $this->project_retriever,
             $this->helper,
             $this->factory,
-            $this->csrf_token,
+            CSRFSynchronizerTokenStub::buildSelf(),
         );
     }
 
@@ -130,7 +106,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
                 $agreement->getContent() === 'updated content';
         }));
 
-        $this->layout->expects($this->once())->method('redirect');
+        $this->expectException(LayoutInspectorRedirection::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -146,7 +122,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
                 $agreement->getContent() === 'updated content';
         }));
 
-        $this->layout->expects($this->once())->method('redirect');
+        $this->expectException(LayoutInspectorRedirection::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -164,7 +140,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, $this->createMock(BaseLayout::class), ['project_id' => '101']);
+        $this->controller->process($this->request, $this->createStub(BaseLayout::class), ['project_id' => '101']);
     }
 
     public function testItAbortsWhenLicenseIsSiteDefault(): void
@@ -180,7 +156,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process($this->request, $this->createMock(BaseLayout::class), ['project_id' => '101']);
+        $this->controller->process($this->request, $this->createStub(BaseLayout::class), ['project_id' => '101']);
     }
 
     public function testItDeletesAnUnusedCustomLicenseAgreement(): void
@@ -192,10 +168,13 @@ final class SaveLicenseAgreementControllerTest extends TestCase
         $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn($license);
         $this->factory->expects($this->once())->method('delete')->with($this->project, $license);
 
-        $this->layout->expects($this->once())->method('redirect');
-        $this->layout->expects($this->once())->method('addFeedback');
+        $this->expectException(LayoutInspectorRedirection::class);
 
-        $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
+        try {
+            $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
+        } finally {
+            self::assertCount(1, $this->layout->inspector->getFeedback());
+        }
     }
 
     public function testItRaisesAnExceptionWhenTryingToDeleteUnknownCustomLicense(): void
@@ -203,7 +182,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
         $this->request->set('id', '1');
         $this->request->set('delete', '');
 
-        $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(null);
+        $this->factory->expects($this->once())->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(null);
 
         $this->expectException(NotFoundException::class);
 
@@ -214,6 +193,8 @@ final class SaveLicenseAgreementControllerTest extends TestCase
     {
         $this->request->set('id', '');
         $this->request->set('delete', '');
+
+        $this->factory->expects($this->never())->method('delete');
 
         $this->expectException(NotFoundException::class);
 

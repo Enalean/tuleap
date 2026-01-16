@@ -33,24 +33,15 @@ use URLVerification;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TemplateFromProjectForCreationTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var PFUser&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $user;
-    /**
-     * @var URLVerification&Stub
-     */
-    private $url_verification;
+    private ProjectManager&Stub $project_manager;
+    private PFUser&Stub $user;
+    private URLVerification&Stub $url_verification;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->project_manager  = $this->createMock(ProjectManager::class);
-        $this->user             = $this->createMock(PFUser::class);
+        $this->project_manager  = $this->createStub(ProjectManager::class);
+        $this->user             = $this->createStub(PFUser::class);
         $this->url_verification = $this->createStub(URLVerification::class);
     }
 
@@ -72,7 +63,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
     private function mockForSuccessfulValidation(int $project_id): Project
     {
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getID')->willReturn($project_id);
         $project->method('isError')->willReturn(false);
         $project->method('isActive')->willReturn(true);
@@ -94,7 +85,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
     {
         $representation = ProjectPostRepresentation::build(404);
 
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getID')->willReturn($representation->template_id);
         $project->method('isError')->willReturn(true);
 
@@ -113,7 +104,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
     {
         $representation = ProjectPostRepresentation::build(124);
 
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getID')->willReturn($representation->template_id);
         $project->method('isError')->willReturn(false);
         $project->method('isActive')->willReturn(false);
@@ -134,7 +125,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
     {
         $representation = ProjectPostRepresentation::build(125);
 
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getID')->willReturn($representation->template_id);
         $project->method('isError')->willReturn(false);
         $project->method('isActive')->willReturn(true);
@@ -157,7 +148,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
     {
         $representation = ProjectPostRepresentation::build(125);
 
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getID')->willReturn($representation->template_id);
         $project->method('isError')->willReturn(false);
         $project->method('isActive')->willReturn(true);

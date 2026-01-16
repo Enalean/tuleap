@@ -31,42 +31,22 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
 
-class SaveLicenseAgreementController implements DispatchableWithRequest
+readonly class SaveLicenseAgreementController implements DispatchableWithRequest
 {
     private const string CSRF_TOKEN = 'frs_edit_license_agreement';
 
-    /**
-     * @var LicenseAgreementFactory
-     */
-    private $factory;
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var LicenseAgreementControllersHelper
-     */
-    private $helper;
-    /**
-     * @var ProjectRetriever
-     */
-    private $project_retriever;
-
     public function __construct(
-        ProjectRetriever $project_retriever,
-        LicenseAgreementControllersHelper $helper,
-        LicenseAgreementFactory $factory,
-        \CSRFSynchronizerToken $csrf_token,
+        private ProjectRetriever $project_retriever,
+        private LicenseAgreementControllersHelper $helper,
+        private LicenseAgreementFactory $factory,
+        private CSRFSynchronizerTokenInterface $csrf_token,
     ) {
-        $this->project_retriever = $project_retriever;
-        $this->helper            = $helper;
-        $this->factory           = $factory;
-        $this->csrf_token        = $csrf_token;
     }
 
     public static function buildSelf(): self
@@ -130,7 +110,7 @@ class SaveLicenseAgreementController implements DispatchableWithRequest
         return sprintf('/file/%d/admin/license-agreements/save', $project->getID());
     }
 
-    public static function getCSRFTokenSynchronizer()
+    public static function getCSRFTokenSynchronizer(): CSRFSynchronizerTokenInterface
     {
         return new \CSRFSynchronizerToken(self::CSRF_TOKEN);
     }

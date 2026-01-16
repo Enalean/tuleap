@@ -81,10 +81,10 @@ final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $password_sanity_checker = $this->createMock(PasswordSanityChecker::class);
+        $password_sanity_checker = $this->createStub(PasswordSanityChecker::class);
         $password_sanity_checker->method('getValidators')->willReturn([]);
 
-        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager = $this->createStub(\UserManager::class);
         $user_manager->method('getUserAccessInfo')->willReturn(['last_auth_success' => 1, 'last_auth_failure' => 1, 'nb_auth_failure' => 1, 'prev_auth_success' => 1]);
 
         $this->csrf_token = new CSRFSynchronizerToken('some_url', 'token_name', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());

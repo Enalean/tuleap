@@ -85,6 +85,9 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project_admin = UserTestBuilder::anActiveUser()->withAdministratorOf($this->an_active_project)->build();
 
+        $this->event_manager->expects($this->never())->method('processEvent');
+        $this->history_dao->expects($this->never())->method('addHistory');
+        $this->ugroup_binding->expects($this->never())->method('reloadUgroupBindingInProject');
         $this->user_permissions_dao->method('isUserPartOfProjectMembers')->with($this->an_active_project_id, $this->an_active_user_id)->willReturn(true);
         $this->user_permissions_dao->expects($this->never())->method('addUserAsProjectMember');
 
@@ -102,6 +105,9 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_admin = UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build();
 
+        $this->event_manager->expects($this->never())->method('processEvent');
+        $this->history_dao->expects($this->never())->method('addHistory');
+        $this->ugroup_binding->expects($this->never())->method('reloadUgroupBindingInProject');
         $this->user_permissions_dao->expects($this->never())->method('addUserAsProjectMember');
 
         $this->expectException(CannotAddRestrictedUserToProjectNotAllowingRestricted::class);

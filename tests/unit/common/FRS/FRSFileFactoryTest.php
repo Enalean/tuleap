@@ -41,8 +41,8 @@ use FRSPackageFactory;
 use FRSRelease;
 use FRSReleaseFactory;
 use Project;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Psr\Log\NullLogger;
 use RuntimeException;
 use TestHelper;
 use Tuleap\ForgeConfigSandbox;
@@ -54,7 +54,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FRSFileFactoryTest extends TestCase
+final class FRSFileFactoryTest extends TestCase
 {
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
@@ -84,7 +84,7 @@ class FRSFileFactoryTest extends TestCase
         self::assertEquals($sub_dir, 'p' . $package_id . '_r' . $release_id);
     }
 
-    public function testPurgeDeletedFiles()
+    public function testPurgeDeletedFiles(): void
     {
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             'moveDeletedFilesToStagingArea',
@@ -92,8 +92,8 @@ class FRSFileFactoryTest extends TestCase
             'cleanStaging',
             'restoreDeletedFiles',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
-        $backend = $this->createMock(BackendSystem::class);
+        $ff->setLogger(new NullLogger());
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
         $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
         $ff->expects($this->once())->method('cleanStaging')->willReturn(true);
@@ -102,7 +102,7 @@ class FRSFileFactoryTest extends TestCase
         self::assertTrue($ff->moveFiles(1287504083, $backend));
     }
 
-    public function testMoveFilesMoveStagingError()
+    public function testMoveFilesMoveStagingError(): void
     {
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             'moveDeletedFilesToStagingArea',
@@ -110,8 +110,8 @@ class FRSFileFactoryTest extends TestCase
             'cleanStaging',
             'restoreDeletedFiles',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
-        $backend = $this->createMock(BackendSystem::class);
+        $ff->setLogger(new NullLogger());
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(false);
         $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
         $ff->expects($this->once())->method('cleanStaging')->willReturn(true);
@@ -128,8 +128,8 @@ class FRSFileFactoryTest extends TestCase
             'cleanStaging',
             'restoreDeletedFiles',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
-        $backend = $this->createMock(BackendSystem::class);
+        $ff->setLogger(new NullLogger());
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
         $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(false);
         $ff->expects($this->once())->method('cleanStaging')->willReturn(true);
@@ -138,7 +138,7 @@ class FRSFileFactoryTest extends TestCase
         self::assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-    public function testMoveFilesCleanStagingError()
+    public function testMoveFilesCleanStagingError(): void
     {
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             'moveDeletedFilesToStagingArea',
@@ -146,8 +146,8 @@ class FRSFileFactoryTest extends TestCase
             'cleanStaging',
             'restoreDeletedFiles',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
-        $backend = $this->createMock(BackendSystem::class);
+        $ff->setLogger(new NullLogger());
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
         $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
         $ff->expects($this->once())->method('cleanStaging')->willReturn(false);
@@ -164,8 +164,8 @@ class FRSFileFactoryTest extends TestCase
             'cleanStaging',
             'restoreDeletedFiles',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
-        $backend = $this->createMock(BackendSystem::class);
+        $ff->setLogger(new NullLogger());
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
         $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
         $ff->expects($this->once())->method('cleanStaging')->willReturn(true);
@@ -176,13 +176,13 @@ class FRSFileFactoryTest extends TestCase
 
     public function testMoveFilesCatchesExceptionAndLogThem()
     {
-        $ff = $this->createPartialMock(FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'purgeFiles',
             'moveDeletedFilesToStagingArea',
             'cleanStaging',
             'restoreDeletedFiles',
-        ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        ])->getStub();
+        $ff->setLogger(new NullLogger());
         $ff->method('purgeFiles')->willThrowException(new RuntimeException('Error while doing things'));
         $ff->method('moveDeletedFilesToStagingArea')->willReturn(true);
         $ff->method('cleanStaging')->willReturn(true);
@@ -200,19 +200,19 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSFileDao',
             'moveDeletedFileToStagingArea',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
 
-        $dao = $this->createMock(FRSFileDao::class);
+        $dao = $this->createStub(FRSFileDao::class);
         $dao->method('searchStagingCandidates')->willReturn(TestHelper::emptyDar());
         $ff->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
 
         $ff->expects($this->never())->method('moveDeletedFileToStagingArea');
 
         self::assertTrue($ff->moveDeletedFilesToStagingArea($backend));
     }
 
-    private function createReleaseDir($release_name, $dir_name)
+    private function createReleaseDir($release_name, $dir_name): void
     {
         // Create temp file in a fake release
         if (! is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . "/$release_name/$dir_name")) {
@@ -220,25 +220,25 @@ class FRSFileFactoryTest extends TestCase
         }
     }
 
-    public function testMoveDeletedFileToStagingArea()
+    public function testMoveDeletedFileToStagingArea(): void
     {
-        $ff = $this->createPartialMock(FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getFRSFileDao',
-        ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        ])->getStub();
+        $ff->setLogger(new NullLogger());
 
         $this->createReleaseDir('prj', 'p1_r1');
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls';
         touch($filepath);
         self::assertTrue(is_file($filepath));
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getFileLocation')->willReturn($filepath);
 
         $dao = $this->createMock(FRSFileDao::class);
         $dao->expects($this->once())->method('setFileInDeletedList')->with(12)->willReturn(true);
         $ff->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
 
         self::assertTrue($ff->moveDeletedFileToStagingArea($file, $backend));
 
@@ -252,18 +252,18 @@ class FRSFileFactoryTest extends TestCase
      * deleted and purged at the very same date
      *
      */
-    public function testMoveDeletedFileToStagingAreaButFileDoesntExist()
+    public function testMoveDeletedFileToStagingAreaButFileDoesntExist(): void
     {
-        $ff = $this->createPartialMock(FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getFRSFileDao',
-        ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        ])->getStub();
+        $ff->setLogger(new NullLogger());
 
         // Create temp file in a fake release
         $this->createReleaseDir('prj', 'p1_r1');
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls';
         self::assertFalse(is_file($filepath), "The file shouldn't exist, this is the base of the test!");
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getFileLocation')->willReturn($filepath);
 
@@ -289,19 +289,19 @@ class FRSFileFactoryTest extends TestCase
         self::assertFalse(is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1'));
     }
 
-    public function testMoveDeletedFileToStagingAreaReleaseNotEmpty()
+    public function testMoveDeletedFileToStagingAreaReleaseNotEmpty(): void
     {
-        $ff = $this->createPartialMock(FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getFRSFileDao',
-        ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        ])->getStub();
+        $ff->setLogger(new NullLogger());
 
         // Create temp file in a fake release
         $this->createReleaseDir('prj', 'p1_r1');
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls';
         touch($filepath);
         self::assertTrue(is_file($filepath));
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getFileLocation')->willReturn($filepath);
         // Second file, not deleted
@@ -310,7 +310,7 @@ class FRSFileFactoryTest extends TestCase
         $dao = $this->createMock(FRSFileDao::class);
         $dao->expects($this->once())->method('setFileInDeletedList')->with(12)->willReturn(true);
         $ff->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
 
         self::assertTrue($ff->moveDeletedFileToStagingArea($file, $backend));
 
@@ -319,19 +319,19 @@ class FRSFileFactoryTest extends TestCase
         self::assertTrue(is_file(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/barfoo.doc'), 'The other file in the release must not be deleted');
     }
 
-    public function testMoveDeletedFilesToStagingAreaFail()
+    public function testMoveDeletedFilesToStagingAreaFail(): void
     {
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             '_getFRSFileDao',
             'moveDeletedFileToStagingArea',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
 
-        $dao = $this->createMock(FRSFileDao::class);
+        $dao = $this->createStub(FRSFileDao::class);
         $dao->method('searchStagingCandidates')->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->once())->method('moveDeletedFileToStagingArea')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
@@ -348,13 +348,13 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSFileDao',
             'moveDeletedFileToStagingArea',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
 
         $dao = $this->createMock(FRSFileDao::class);
         $dao->expects($this->once())->method('searchStagingCandidates')->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->once())->method('moveDeletedFileToStagingArea')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
@@ -374,15 +374,15 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSFileDao',
             'purgeFile',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
         $ff->expects($this->never())->method('purgeFile');
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         self::assertTrue($ff->purgeFiles(1287504083, $backend));
     }
 
-    public function testPurgeFilesWithOneFile()
+    public function testPurgeFilesWithOneFile(): void
     {
         $dao = $this->createMock(FRSFileDao::class);
         $dao->expects($this->once())->method('searchFilesToPurge')->with(1287504083)->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
@@ -391,10 +391,10 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSFileDao',
             'purgeFile',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->once())->method('purgeFile')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
@@ -411,7 +411,7 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSFileDao',
             'archiveBeforePurge',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
 
         // Create temp file
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj/p1_r1/foobar.xls.12';
@@ -419,7 +419,7 @@ class FRSFileFactoryTest extends TestCase
         touch($filepath);
 
         self::assertTrue(is_file($filepath));
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getFileName')->willReturn('p1_r1/foobar.xls');
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls');
@@ -442,20 +442,20 @@ class FRSFileFactoryTest extends TestCase
         self::assertFalse(is_file($filepath), 'File should be deleted');
     }
 
-    public function testPurgeFileDBUpdateFails()
+    public function testPurgeFileDBUpdateFails(): void
     {
-        $ff = $this->createPartialMock(FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getFRSFileDao',
             'archiveBeforePurge',
-        ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        ])->getStub();
+        $ff->setLogger(new NullLogger());
 
         // Create temp file
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj/p1_r1/foobar.xls.12';
         mkdir(dirname($filepath), 0750, true);
         touch($filepath);
         self::assertTrue(is_file($filepath));
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getFileName')->willReturn('p1_r1/foobar.xls');
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls');
@@ -474,17 +474,17 @@ class FRSFileFactoryTest extends TestCase
 
     public function testPurgeFileSystemCopyFails()
     {
-        $ff = $this->createPartialMock(FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'archiveBeforePurge',
-        ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        ])->getStub();
+        $ff->setLogger(new NullLogger());
 
         // Create temp file
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj/p1_r1/foobar.xls.12';
         mkdir(dirname($filepath), 0750, true);
         touch($filepath);
         self::assertTrue(is_file($filepath));
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getFileName')->willReturn('p1_r1/foobar.xls');
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls');
@@ -498,18 +498,18 @@ class FRSFileFactoryTest extends TestCase
         self::assertFalse($ff->purgeFile($file, $backend));
     }
 
-    public function testPurgeFileWithFileNotFoundInFS()
+    public function testPurgeFileWithFileNotFoundInFS(): void
     {
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             '_getFRSFileDao',
             'archiveBeforePurge',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
 
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj/p1_r1/foobar.xls.12';
 
         self::assertFalse(is_file($filepath));
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getFileName')->willReturn('p1_r1/foobar.xls');
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls');
@@ -535,7 +535,7 @@ class FRSFileFactoryTest extends TestCase
     public function testRemoveStagingEmptyDirectories()
     {
         $ff      = new FRSFileFactory();
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
 
         $this->createDeletedReleaseDir('prj', 'p1_r1');
         $this->createDeletedReleaseDir('prj2', 'p2_r5');
@@ -552,15 +552,15 @@ class FRSFileFactoryTest extends TestCase
         self::assertTrue(is_file(ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj3/p9_r10/foo.txt.12'));
     }
 
-    public function testRestoreFileSucceed()
+    public function testRestoreFileSucceed(): void
     {
-        $fileFactory = $this->createPartialMock(FRSFileFactory::class, [
-            '_getFRSFileDao',
+        $fileFactory = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getUserManager',
             '_getEventManager',
             '_getFRSReleaseFactory',
-        ]);
-        $fileFactory->setLogger($this->createMock(LoggerInterface::class));
+            '_getFRSFileDao',
+        ])->getStub();
+        $fileFactory->setLogger(new NullLogger());
 
         // Create temp file
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj/p1_r1/toto.xls.12';
@@ -568,7 +568,7 @@ class FRSFileFactoryTest extends TestCase
         touch($filepath);
         self::assertTrue(is_dir(dirname($filepath)));
 
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getReleaseID')->willReturn(123);
         $file->method('getFileName')->willReturn('p1_r1/toto.xls');
@@ -581,31 +581,31 @@ class FRSFileFactoryTest extends TestCase
         $dao = $this->createMock(FRSFileDao::class);
         $dao->expects($this->once())->method('restoreFile')->willReturn(true);
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
 
         $user = UserTestBuilder::buildWithDefaults();
-        $um   = $this->createMock(UserManager::class);
+        $um   = $this->createStub(UserManager::class);
         $um->method('getCurrentUser')->willReturn($user);
         $fileFactory->method('_getUserManager')->willReturn($um);
-        $em = $this->createMock(EventManager::class);
+        $em = $this->createStub(EventManager::class);
         $em->method('processEvent');
         $fileFactory->method('_getEventManager')->willReturn($em);
-        $release = $this->createMock(FRSRelease::class);
+        $release = $this->createStub(FRSRelease::class);
         $release->method('isDeleted')->willReturn(false);
-        $releaseFactory = $this->createMock(FRSReleaseFactory::class);
+        $releaseFactory = $this->createStub(FRSReleaseFactory::class);
         $releaseFactory->method('getFRSReleaseFromDb')->willReturn($release);
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
         self::assertTrue($fileFactory->restoreFile($file, $backend));
     }
 
-    public function testRestoreFileNotExists()
+    public function testRestoreFileNotExists(): void
     {
-        $fileFactory = $this->createPartialMock(FRSFileFactory::class, [
-            '_getFRSFileDao',
+        $fileFactory = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getFRSReleaseFactory',
-        ]);
-        $fileFactory->setLogger($this->createMock(LoggerInterface::class));
+            '_getFRSFileDao',
+        ])->getStub();
+        $fileFactory->setLogger(new NullLogger());
 
         // Create temp file
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj/p1_r1/toto.xls.5';
@@ -613,7 +613,7 @@ class FRSFileFactoryTest extends TestCase
         $this->createReleaseDir('prj', 'p1_r1');
         self::assertFalse(file_exists($filepath));
 
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(5);
         $file->method('getReleaseID')->willReturn(123);
         $file->method('getFileName')->willReturn('p1_r1/toto.xls');
@@ -623,28 +623,28 @@ class FRSFileFactoryTest extends TestCase
         $dao = $this->createMock(FRSFileDao::class);
         $dao->expects($this->never())->method('restoreFile');
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $backend->method('chgrp')->willReturn(true);
         $backend->method('log');
 
-        $release = $this->createMock(FRSRelease::class);
+        $release = $this->createStub(FRSRelease::class);
         $release->method('isDeleted')->willReturn(false);
-        $releaseFactory = $this->createMock(FRSReleaseFactory::class);
+        $releaseFactory = $this->createStub(FRSReleaseFactory::class);
         $releaseFactory->method('getFRSReleaseFromDb')->willReturn($release);
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
         self::assertFalse($fileFactory->restoreFile($file, $backend));
     }
 
-    public function testRestoreFileLocationNotExists()
+    public function testRestoreFileLocationNotExists(): void
     {
-        $fileFactory = $this->createPartialMock(FRSFileFactory::class, [
+        $fileFactory = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getFRSFileDao',
             '_getUserManager',
             '_getEventManager',
             '_getFRSReleaseFactory',
-        ]);
-        $fileFactory->setLogger($this->createMock(LoggerInterface::class));
+        ])->getStub();
+        $fileFactory->setLogger(new NullLogger());
 
         // Create temp file
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj/p2_r1/toto.xls.12';
@@ -652,8 +652,8 @@ class FRSFileFactoryTest extends TestCase
         $this->createDeletedReleaseDir('prj', 'p2_r1');
         touch($filepath);
         self::assertTrue(is_dir(dirname($filepath)));
-        $backend = $this->createMock(BackendSystem::class);
-        $file    = $this->createMock(FRSFile::class);
+        $backend = $this->createStub(BackendSystem::class);
+        $file    = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getReleaseID')->willReturn(123);
         $file->method('getFileName')->willReturn('p2_r1/toto.xls');
@@ -666,31 +666,31 @@ class FRSFileFactoryTest extends TestCase
         $dao->expects($this->once())->method('restoreFile')->willReturn(true);
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
 
-        $user = $this->createMock(\PFUser::class);
-        $um   = $this->createMock(UserManager::class);
+        $user = $this->createStub(\PFUser::class);
+        $um   = $this->createStub(UserManager::class);
         $um->method('getCurrentUser')->willReturn($user);
         $fileFactory->method('_getUserManager')->willReturn($um);
-        $em = $this->createMock(EventManager::class);
+        $em = $this->createStub(EventManager::class);
         $fileFactory->method('_getEventManager')->willReturn($em);
         $em->method('processEvent');
-        $release = $this->createMock(FRSRelease::class);
+        $release = $this->createStub(FRSRelease::class);
         $release->method('isDeleted')->willReturn(false);
-        $releaseFactory = $this->createMock(FRSReleaseFactory::class);
+        $releaseFactory = $this->createStub(FRSReleaseFactory::class);
         $releaseFactory->method('getFRSReleaseFromDb')->willReturn($release);
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
         self::assertTrue($fileFactory->restoreFile($file, $backend));
     }
 
-    public function testRestoreFileDBUpdateFails()
+    public function testRestoreFileDBUpdateFails(): void
     {
-        $fileFactory = $this->createPartialMock(FRSFileFactory::class, [
+        $fileFactory = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getUserManager',
             '_getEventManager',
             '_getFRSReleaseFactory',
             '_getFRSFileDao',
-        ]);
-        $fileFactory->setLogger($this->createMock(LoggerInterface::class));
+        ])->getStub();
+        $fileFactory->setLogger(new NullLogger());
 
         // Create temp file
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj/p3_r1/toto.xls.12';
@@ -699,7 +699,7 @@ class FRSFileFactoryTest extends TestCase
         touch($filepath);
         self::assertTrue(is_dir(dirname($filepath)));
 
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getFileID')->willReturn(12);
         $file->method('getReleaseID')->willReturn(123);
         $file->method('getFileName')->willReturn('p3_r1/toto.xls');
@@ -711,18 +711,18 @@ class FRSFileFactoryTest extends TestCase
         $dao = $this->createMock(FRSFileDao::class);
         $dao->expects($this->once())->method('restoreFile')->willReturn(false);
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $backend->method('chgrp')->willReturn(true);
         $backend->method('log');
 
-        $user = $this->createMock(\PFUser::class);
-        $um   = $this->createMock(UserManager::class);
+        $user = $this->createStub(\PFUser::class);
+        $um   = $this->createStub(UserManager::class);
         $um->method('getCurrentUser')->willReturn($user);
         $fileFactory->method('_getUserManager')->willReturn($um);
-        $fileFactory->method('_getEventManager')->willReturn($this->createMock(EventManager::class));
-        $release = $this->createMock(FRSRelease::class);
+        $fileFactory->method('_getEventManager')->willReturn($this->createStub(EventManager::class));
+        $release = $this->createStub(FRSRelease::class);
         $release->method('isDeleted')->willReturn(false);
-        $releaseFactory = $this->createMock(FRSReleaseFactory::class);
+        $releaseFactory = $this->createStub(FRSReleaseFactory::class);
         $releaseFactory->method('getFRSReleaseFromDb')->willReturn($release);
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
@@ -731,11 +731,11 @@ class FRSFileFactoryTest extends TestCase
 
     public function testRestoreFileInDeletedRelease()
     {
-        $fileFactory = $this->createPartialMock(FRSFileFactory::class, [
-            '_getFRSReleaseFactory',
+        $fileFactory = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getFRSFileDao',
-        ]);
-        $fileFactory->setLogger($this->createMock(LoggerInterface::class));
+            '_getFRSReleaseFactory',
+        ])->getStub();
+        $fileFactory->setLogger(new NullLogger());
 
         // Create temp file
         $filepath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/prj/p3_r1/toto.xls.12';
@@ -743,21 +743,21 @@ class FRSFileFactoryTest extends TestCase
         touch($filepath);
         self::assertTrue(is_dir(dirname($filepath)));
 
-        $release = $this->createMock(FRSRelease::class);
+        $release = $this->createStub(FRSRelease::class);
         $release->method('isDeleted')->willReturn(true);
         $release->method('getName');
         $release->method('getReleaseID');
-        $releaseFactory = $this->createMock(FRSReleaseFactory::class);
+        $releaseFactory = $this->createStub(FRSReleaseFactory::class);
         $releaseFactory->method('getFRSReleaseFromDb')->willReturn($release);
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
         $dao = $this->createMock(FRSFileDao::class);
         $dao->expects($this->once())->method('cancelRestore');
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
-        $file = $this->createMock(FRSFile::class);
+        $file = $this->createStub(FRSFile::class);
         $file->method('getReleaseID');
         $file->method('getFileID');
         $file->method('getFileLocation');
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $backend->method('log');
 
         self::assertFalse($fileFactory->restoreFile($file, $backend));
@@ -768,8 +768,6 @@ class FRSFileFactoryTest extends TestCase
 
     public function testRestoreDeletedFiles()
     {
-        $refFile = new FRSFile(['file_id' => 12]);
-
         $dao = $this->createMock(FRSFileDao::class);
         $dao->expects($this->once())->method('searchFilesToRestore')->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
 
@@ -777,9 +775,9 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSFileDao',
             'restoreFile',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
         $ff->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->once())->method('restoreFile')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
@@ -792,16 +790,16 @@ class FRSFileFactoryTest extends TestCase
 
     public function testRestoreDeletedFilesReturnFalse()
     {
-        $dao = $this->createMock(FRSFileDao::class);
+        $dao = $this->createStub(FRSFileDao::class);
         $dao->method('searchFilesToRestore')->willReturn(TestHelper::arrayToDar(['file_id' => 12], ['file_id' => 13]));
 
-        $ff = $this->createPartialMock(FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             '_getFRSFileDao',
             'restoreFile',
-        ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        ])->getStub();
+        $ff->setLogger(new NullLogger());
         $ff->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $ff->method('restoreFile')->willReturnOnConsecutiveCalls(false, true);
 
         self::assertFalse($ff->restoreDeletedFiles($backend));
@@ -809,18 +807,16 @@ class FRSFileFactoryTest extends TestCase
 
     public function testRestoreDeletedFilesDBError()
     {
-        $refFile = new FRSFile(['file_id' => 12]);
-
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects($this->once())->method('searchFilesToRestore')->willReturn($this->createConfiguredMock(DataAccessResult::class, ['isError' => true]));
+        $dao->expects($this->once())->method('searchFilesToRestore')->willReturn($this->createConfiguredStub(DataAccessResult::class, ['isError' => true]));
 
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             '_getFRSFileDao',
             'restoreFile',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
         $ff->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->never())->method('restoreFile');
 
         self::assertFalse($ff->restoreDeletedFiles($backend));
@@ -837,9 +833,9 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSFileDao',
             'restoreFile',
         ]);
-        $ff->setLogger($this->createMock(LoggerInterface::class));
+        $ff->setLogger(new NullLogger());
         $ff->method('_getFRSFileDao')->willReturn($dao);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         $ff->expects($this->never())->method('restoreFile');
 
         self::assertTrue($ff->restoreDeletedFiles($backend));
@@ -968,7 +964,7 @@ class FRSFileFactoryTest extends TestCase
 
     public function testCreateFileSetReleaseTime()
     {
-        $p = $this->createMock(Project::class);
+        $p = $this->createStub(Project::class);
         $p->method('getUnixName')->willReturn('prj');
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -981,21 +977,20 @@ class FRSFileFactoryTest extends TestCase
         $f->setGroup($p);
         $f->setFileName('file_sample');
 
-        $dao = $this->createMock(FRSFileDao::class);
+        $dao = $this->createStub(FRSFileDao::class);
         $dao->method('searchFileByName')->willReturn(TestHelper::emptyDar());
         $dao->method('isMarkedToBeRestored');
-        $ff     = $this->createPartialMock(FRSFileFactory::class, [
+        $ff     = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'create',
             'moveFileForge',
-        ]);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        ])->getStub();
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('create')->willReturn(55);
         $ff->method('moveFileForge')->willReturn(true);
         $ff->dao = $dao;
 
-        $rf = $this->createMock(FRSReleaseFactory::class);
+        $rf = $this->createStub(FRSReleaseFactory::class);
         $rf->method('getFRSReleaseFromDb')->willReturn($r);
         $ff->release_factory = $rf;
 
@@ -1009,7 +1004,7 @@ class FRSFileFactoryTest extends TestCase
 
     public function testCreateFileDoNotSetReleaseTimeIfAlreadySet()
     {
-        $p = $this->createMock(Project::class);
+        $p = $this->createStub(Project::class);
         $p->method('getUnixName')->willReturn('prj');
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -1024,27 +1019,24 @@ class FRSFileFactoryTest extends TestCase
         $f->setReleaseTime(3125);
         $f->setPostDate(3125);
 
-        $dao = $this->createMock(FRSFileDao::class);
+        $dao = $this->createStub(FRSFileDao::class);
         $dao->method('searchFileByName')->willReturn(TestHelper::emptyDar());
         $dao->method('isMarkedToBeRestored');
-        $ff     = $this->createPartialMock(FRSFileFactory::class, [
+        $ff     = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'create',
             'moveFileForge',
-        ]);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        ])->getStub();
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('create')->willReturn(55);
         $ff->method('moveFileForge')->willReturn(true);
         $ff->dao = $dao;
 
-        $rf = $this->createMock(FRSReleaseFactory::class);
+        $rf = $this->createStub(FRSReleaseFactory::class);
         $rf->method('getFRSReleaseFromDb')->willReturn($r);
         $ff->release_factory = $rf;
 
-        $before = time();
         $ff->createFile($f);
-        $after = time();
 
         self::assertTrue($f->getPostDate() == 3125);
         self::assertTrue($f->getReleaseTime() == 3125);
@@ -1060,7 +1052,7 @@ class FRSFileFactoryTest extends TestCase
         $this->createReleaseDir('prj', 'p123_r456');
         touch(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p123_r456/toto.txt_1299584197');
 
-        $p = $this->createMock(Project::class);
+        $p = $this->createStub(Project::class);
         $p->method('getUnixName')->willReturn('prj');
 
         $r = new FRSRelease();
@@ -1073,12 +1065,11 @@ class FRSFileFactoryTest extends TestCase
         $f->setFileName('toto.txt_1299584219');
         $f->setRelease($r);
 
-        $ff     = $this->createPartialMock(FRSFileFactory::class, [
+        $ff     = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'getSrcDir',
             'isFileBaseNameExists',
-        ]);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        ])->getStub();
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('getSrcDir')->willReturn(ForgeConfig::get('ftp_incoming_dir'));
         $ff->method('isFileBaseNameExists')->willReturn(true);
@@ -1100,7 +1091,7 @@ class FRSFileFactoryTest extends TestCase
         // toto.txt_1299584187 is the file having been deleted but not yet moved
         touch(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p123_r456/toto.txt_1299584187');
 
-        $p = $this->createMock(Project::class);
+        $p = $this->createStub(Project::class);
         $p->method('getUnixName')->willReturn('prj');
 
         $r = new FRSRelease();
@@ -1116,15 +1107,14 @@ class FRSFileFactoryTest extends TestCase
         $f->setFileID(15225);
         $f->setFileLocation(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p123_r456');
 
-        $ff     = $this->createPartialMock(FRSFileFactory::class, [
+        $ff     = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'getSrcDir',
             'isFileBaseNameExists',
             'isSameFileMarkedToBeRestored',
             'moveFileForge',
             'create',
-        ]);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        ])->getStub();
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('getSrcDir')->willReturn(ForgeConfig::get('ftp_incoming_dir'));
         $ff->method('isFileBaseNameExists')->willReturn(false);
@@ -1149,7 +1139,7 @@ class FRSFileFactoryTest extends TestCase
         touch(ForgeConfig::get('ftp_incoming_dir') . '/toto.txt');
         $this->createReleaseDir('prj', 'p123_r456');
 
-        $p = $this->createMock(Project::class);
+        $p = $this->createStub(Project::class);
         $p->method('getUnixName')->willReturn('prj');
 
         $r = new FRSRelease();
@@ -1164,13 +1154,12 @@ class FRSFileFactoryTest extends TestCase
         $f->setRelease($r);
         $f->setFileLocation(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p123_r456');
 
-        $ff     = $this->createPartialMock(FRSFileFactory::class, [
+        $ff     = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'getSrcDir',
             'isFileBaseNameExists',
             'isSameFileMarkedToBeRestored',
-        ]);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        ])->getStub();
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('getSrcDir')->willReturn(ForgeConfig::get('ftp_incoming_dir'));
         $ff->method('isFileBaseNameExists')->willReturn(false);
@@ -1183,7 +1172,7 @@ class FRSFileFactoryTest extends TestCase
 
     public function testCreateFileNotYetIncoming()
     {
-        $p = $this->createMock(Project::class);
+        $p = $this->createStub(Project::class);
         $p->method('getID');
 
         $r = new FRSRelease();
@@ -1194,15 +1183,14 @@ class FRSFileFactoryTest extends TestCase
         $f = new FRSFile();
         $f->setFileName('toto.txt');
         $f->setRelease($r);
-        $ff = $this->createPartialMock(FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'isFileBaseNameExists',
             'isSameFileMarkedToBeRestored',
             'getSrcDir',
-        ]);
+        ])->getStub();
         $ff->method('isFileBaseNameExists')->willReturn(false);
         $ff->method('isSameFileMarkedToBeRestored')->willReturn(false);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('getSrcDir')->willReturn(ForgeConfig::get('ftp_incoming_dir'));
         self::assertFalse(is_file(ForgeConfig::get('ftp_incoming_dir') . '/toto.txt'));
@@ -1214,7 +1202,7 @@ class FRSFileFactoryTest extends TestCase
 
     public function testCreateFileSkipCompareMD5Checksums()
     {
-        $p = $this->createMock(Project::class);
+        $p = $this->createStub(Project::class);
         $p->method('getUnixName')->willReturn('prj');
 
         $r = new FRSRelease();
@@ -1237,8 +1225,7 @@ class FRSFileFactoryTest extends TestCase
         ]);
         $ff->method('isFileBaseNameExists')->willReturn(false);
         $ff->method('isSameFileMarkedToBeRestored')->willReturn(false);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('getSrcDir')->willReturn(ForgeConfig::get('ftp_incoming_dir'));
 
@@ -1257,25 +1244,22 @@ class FRSFileFactoryTest extends TestCase
     {
         $project = new Project(['group_id' => 111]);
 
-        $r = $this->createPartialMock(FRSRelease::class, [
-            'getProject',
-        ]);
+        $r = $this->getStubBuilder(FRSRelease::class)->onlyMethods(['getProject'])->getStub();
         $r->method('getProject')->willReturn($project);
         $r->setReleaseID(456);
         $r->setPackageID(123);
         $r->setGroupID(111);
 
-        $ff = $this->createPartialMock(\FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'isFileBaseNameExists',
             'isSameFileMarkedToBeRestored',
             'compareMd5Checksums',
             'getSrcDir',
-        ]);
+        ])->getStub();
         $ff->method('isFileBaseNameExists')->willReturn(false);
         $ff->method('isSameFileMarkedToBeRestored')->willReturn(false);
         $ff->method('compareMd5Checksums')->willReturn(false);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('getSrcDir')->willReturn(ForgeConfig::get('ftp_incoming_dir'));
 
@@ -1305,24 +1289,21 @@ class FRSFileFactoryTest extends TestCase
     {
         $project = new Project(['group_id' => 111]);
 
-        $r = $this->createPartialMock(FRSRelease::class, [
-            'getProject',
-        ]);
+        $r = $this->getStubBuilder(FRSRelease::class)->onlyMethods(['getProject'])->getStub();
         $r->method('getProject')->willReturn($project);
         $r->setReleaseID(456);
         $r->setPackageID(123);
         $r->setGroupID(111);
 
-        $ff = $this->createPartialMock(FRSFileFactory::class, [
+        $ff = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'isFileBaseNameExists',
             'isSameFileMarkedToBeRestored',
             'getSrcDir',
             'moveFileForge',
-        ]);
+        ])->getStub();
         $ff->method('isFileBaseNameExists')->willReturn(false);
         $ff->method('isSameFileMarkedToBeRestored')->willReturn(false);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('getSrcDir')->willReturn(ForgeConfig::get('ftp_incoming_dir'));
 
@@ -1343,7 +1324,7 @@ class FRSFileFactoryTest extends TestCase
         touch(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p123_r456/toto.txt');
         touch(ForgeConfig::get('ftp_incoming_dir') . '/toto.txt');
 
-        $p = $this->createMock(Project::class);
+        $p = $this->createStub(Project::class);
         $p->method('getUnixName')->willReturn('prj');
         $p->method('getID');
 
@@ -1357,15 +1338,14 @@ class FRSFileFactoryTest extends TestCase
         $f->setRelease($r);
         $f->setFileLocation(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p123_r456');
 
-        $ff     = $this->createPartialMock(FRSFileFactory::class, [
+        $ff     = $this->getStubBuilder(FRSFileFactory::class)->onlyMethods([
             'isFileBaseNameExists',
             'isSameFileMarkedToBeRestored',
             'getSrcDir',
             'moveFileForge',
             'create',
-        ]);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('log');
+        ])->getStub();
+        $logger = new NullLogger();
         $ff->setLogger($logger);
         $ff->method('isFileBaseNameExists')->willReturn(false);
         $ff->method('isSameFileMarkedToBeRestored')->willReturn(false);
@@ -1389,13 +1369,13 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSReleaseFactory',
             'moveDeletedFilesToStagingArea',
         ]);
-        $fileFactory->setLogger($this->createMock(LoggerInterface::class));
+        $fileFactory->setLogger(new NullLogger());
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
         $fileFactory->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
         $releaseFactory->expects($this->once())->method('deleteProjectReleases')->willReturn(true);
         $packageFactory->expects($this->once())->method('deleteProjectPackages')->willReturn(false);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         self::assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
 
@@ -1410,13 +1390,13 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSReleaseFactory',
             'moveDeletedFilesToStagingArea',
         ]);
-        $fileFactory->setLogger($this->createMock(LoggerInterface::class));
+        $fileFactory->setLogger(new NullLogger());
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
         $fileFactory->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
         $releaseFactory->expects($this->once())->method('deleteProjectReleases')->willReturn(false);
         $packageFactory->expects($this->once())->method('deleteProjectPackages')->willReturn(true);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         self::assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
 
@@ -1431,13 +1411,13 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSReleaseFactory',
             'moveDeletedFilesToStagingArea',
         ]);
-        $fileFactory->setLogger($this->createMock(LoggerInterface::class));
+        $fileFactory->setLogger(new NullLogger());
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
         $fileFactory->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(false);
         $releaseFactory->expects($this->once())->method('deleteProjectReleases')->willReturn(true);
         $packageFactory->expects($this->once())->method('deleteProjectPackages')->willReturn(true);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         self::assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
 
@@ -1452,13 +1432,13 @@ class FRSFileFactoryTest extends TestCase
             '_getFRSReleaseFactory',
             'moveDeletedFilesToStagingArea',
         ]);
-        $fileFactory->setLogger($this->createMock(LoggerInterface::class));
+        $fileFactory->setLogger(new NullLogger());
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
         $fileFactory->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
         $releaseFactory->expects($this->once())->method('deleteProjectReleases')->willReturn(true);
         $packageFactory->expects($this->once())->method('deleteProjectPackages')->willReturn(true);
-        $backend = $this->createMock(BackendSystem::class);
+        $backend = $this->createStub(BackendSystem::class);
         self::assertTrue($fileFactory->deleteProjectFRS(1, $backend));
     }
 }

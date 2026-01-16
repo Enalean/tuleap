@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -31,12 +32,12 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var ProjectRetriever */
     private $project_retriever;
-    private ProjectManager|\PHPUnit\Framework\MockObject\MockObject $project_manager;
+    private ProjectManager&Stub $project_manager;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->project_manager   = $this->createMock(ProjectManager::class);
+        $this->project_manager   = $this->createStub(ProjectManager::class);
         $this->project_retriever = new ProjectRetriever($this->project_manager);
     }
 
@@ -55,7 +56,7 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetProjectFromIdThrowsWhenProjectIsInError(): void
     {
         $project_id    = '104';
-        $error_project = $this->createMock(Project::class);
+        $error_project = $this->createStub(Project::class);
         $error_project->method('isError')
             ->willReturn(true);
         $this->project_manager
@@ -70,7 +71,7 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetProjectFromIdReturnsValidProject(): void
     {
         $project_id = '104';
-        $project    = $this->createMock(Project::class);
+        $project    = $this->createStub(Project::class);
         $project->method('isError')
             ->willReturn(false);
         $this->project_manager

@@ -31,7 +31,7 @@ final class ProjectBackgroundConfigurationTest extends \Tuleap\Test\PHPUnit\Test
     {
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $dao = $this->createMock(ProjectBackgroundDao::class);
+        $dao = $this->createStub(ProjectBackgroundDao::class);
         $dao->method('getBackground')->willReturn('beach-daytime');
 
         $configuration = new ProjectBackgroundConfiguration($dao);
@@ -43,7 +43,7 @@ final class ProjectBackgroundConfigurationTest extends \Tuleap\Test\PHPUnit\Test
     {
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $dao = $this->createMock(ProjectBackgroundDao::class);
+        $dao = $this->createStub(ProjectBackgroundDao::class);
         $dao->method('getBackground')->willReturn(null);
 
         $configuration = new ProjectBackgroundConfiguration($dao);
@@ -55,7 +55,7 @@ final class ProjectBackgroundConfigurationTest extends \Tuleap\Test\PHPUnit\Test
     {
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $dao = $this->createMock(ProjectBackgroundDao::class);
+        $dao = $this->createStub(ProjectBackgroundDao::class);
         $dao->method('getBackground')->willReturn('invalid-project-background-identifier');
 
         $configuration = new ProjectBackgroundConfiguration($dao);

@@ -22,16 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Massmail;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RecipientUsersRetrieverTest extends TestCase
 {
     private RecipientUsersRetriever $retriever;
-    /**
-     * @var RecipientUserDAO&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $dao;
+    private RecipientUserDAO&MockObject $dao;
 
     #[\Override]
     protected function setUp(): void
@@ -168,6 +166,8 @@ final class RecipientUsersRetrieverTest extends TestCase
 
     public function testItReturnsEmptyRecipientsWhenUnknown(): void
     {
+        $this->dao->expects($this->never())
+            ->method('searchRecipientsWithProjectDevelopers');
         self::assertEmpty($this->retriever->getRecipientUsers('whatever'));
     }
 }

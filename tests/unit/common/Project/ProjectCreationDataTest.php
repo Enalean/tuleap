@@ -26,7 +26,7 @@ namespace Tuleap\Project;
 
 use ForgeAccess;
 use ForgeConfig;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectManager;
 use Service;
@@ -42,9 +42,9 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    private ProjectManager&MockObject $project_manager;
-    private XML_RNGValidator&MockObject $xml_rngvalidator;
-    private ServiceManager&MockObject $service_manager;
+    private ProjectManager&Stub $project_manager;
+    private XML_RNGValidator&Stub $xml_rngvalidator;
+    private ServiceManager&Stub $service_manager;
     private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
 
     #[\Override]
@@ -52,20 +52,20 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->default_project_visibility_retriever = new DefaultProjectVisibilityRetriever();
 
-        $this->xml_rngvalidator = $this->createMock(XML_RNGValidator::class);
+        $this->xml_rngvalidator = $this->createStub(XML_RNGValidator::class);
         $this->xml_rngvalidator->method('validate');
 
-        $admin_service = $this->createMock(Service::class);
+        $admin_service = $this->createStub(Service::class);
         $admin_service->method('getShortName')->willReturn('admin');
         $admin_service->method('getId')->willReturn(1);
-        $git_service = $this->createMock(Service::class);
+        $git_service = $this->createStub(Service::class);
         $git_service->method('getShortName')->willReturn('plugin_git');
         $git_service->method('getId')->willReturn(10);
 
-        $this->service_manager = $this->createMock(ServiceManager::class);
+        $this->service_manager = $this->createStub(ServiceManager::class);
         $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $git_service,]);
 
-        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->project_manager = $this->createStub(ProjectManager::class);
         $this->project_manager->method('getProject')->with(100)->willReturn(ProjectTestBuilder::aProject()->build());
     }
 
@@ -84,7 +84,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml                      = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access']            = 'private';
-        $external_field_extractor = $this->createMock(ExternalFieldsExtractor::class);
+        $external_field_extractor = $this->createStub(ExternalFieldsExtractor::class);
         $external_field_extractor->method('extractExternalFieldFromProjectElement');
 
         $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager, null, null, $external_field_extractor);

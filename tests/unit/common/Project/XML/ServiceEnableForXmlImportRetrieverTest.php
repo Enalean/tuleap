@@ -23,26 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\XML;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PluginFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceEnableForXmlImportRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ServiceEnableForXmlImportRetriever $retriever;
-    private PluginFactory&MockObject $plugin_factory;
+    private PluginFactory&Stub $plugin_factory;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->plugin_factory = $this->createMock(PluginFactory::class);
+        $this->plugin_factory = $this->createStub(PluginFactory::class);
         $this->plugin_factory->method('getEnabledPlugins');
         $this->retriever = new ServiceEnableForXmlImportRetriever($this->plugin_factory);
     }
 
     public function testServiceIsDisabledIfPluginIsRestricted(): void
     {
-        $plugin = $this->createMock(\Plugin::class);
+        $plugin = $this->createStub(\Plugin::class);
         $this->plugin_factory->method('isProjectPluginRestricted')->willReturn(true);
 
         $this->retriever->addServiceIfPluginIsNotRestricted($plugin, 'plugin_name');
@@ -52,7 +52,7 @@ final class ServiceEnableForXmlImportRetrieverTest extends \Tuleap\Test\PHPUnit\
 
     public function testItStoreNotRestrictedServices(): void
     {
-        $plugin = $this->createMock(\Plugin::class);
+        $plugin = $this->createStub(\Plugin::class);
         $this->plugin_factory->method('isProjectPluginRestricted')->willReturn(false);
 
         $this->retriever->addServiceIfPluginIsNotRestricted($plugin, 'plugin_name');

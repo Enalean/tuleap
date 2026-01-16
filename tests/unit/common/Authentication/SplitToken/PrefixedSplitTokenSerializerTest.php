@@ -28,7 +28,7 @@ use Tuleap\Cryptography\ConcealedString;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TEST_PREFIX = 'foo.prefix-';
+    private const string TEST_PREFIX = 'foo.prefix-';
 
     public function testIdentifierPrefixIsPresent(): void
     {
@@ -42,7 +42,7 @@ final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     private function buildIdentifier(): ConcealedString
     {
-        $verification_string = $this->createMock(SplitTokenVerificationString::class);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
         $verification_string->method('getString')->willReturn(new ConcealedString('random_string'));
         $access_key = new SplitToken(1, $verification_string);
 

@@ -22,27 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\App;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var AppFactory
-     */
-    private $app_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&RetrieveAppMatchingClientID
-     */
-    private $app_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
-     */
-    private $project_manager;
+    private AppFactory $app_factory;
+    private RetrieveAppMatchingClientID&MockObject $app_retriever;
+    private \ProjectManager&Stub $project_manager;
 
     #[\Override]
     protected function setUp(): void
     {
         $this->app_retriever   = $this->createMock(RetrieveAppMatchingClientID::class);
-        $this->project_manager = $this->createMock(\ProjectManager::class);
+        $this->project_manager = $this->createStub(\ProjectManager::class);
         $this->app_factory     = new AppFactory($this->app_retriever, $this->project_manager);
     }
 
@@ -62,7 +57,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => 404, 'redirect_endpoint' => 'https://jenkins.example.com']
             );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
-        $this->project_manager->expects($this->once())->method('getValidProject')
+        $this->project_manager->method('getValidProject')
             ->with(404)
             ->willThrowException(new \Project_NotFoundException());
 
@@ -77,8 +72,8 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => 102, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
             );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
-        $project   = $this->createMock(\Project::class);
-        $this->project_manager->expects($this->once())->method('getValidProject')
+        $project   = ProjectTestBuilder::aProject()->build();
+        $this->project_manager->method('getValidProject')
             ->with(102)
             ->willReturn($project);
 

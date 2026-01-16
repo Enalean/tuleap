@@ -37,7 +37,7 @@ final class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager = $this->createStub(\UserManager::class);
         UserManager::setInstance($user_manager);
 
         $garfield = new \PFUser($this->garfield_incomplete_row);
@@ -60,7 +60,7 @@ final class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
         $id     = 333;
         $row    = ['ugroup_id' => $id, 'group_id' => 105];
         $ugroup = new ProjectUGroup($row);
-        $dao    = $this->createMock(\UGroupUserDao::class);
+        $dao    = $this->createStub(\UGroupUserDao::class);
         $dao->method('searchUserByStaticUGroupId')->with($id)->willReturn(\TestHelper::emptyDar());
         $ugroup->setUGroupUserDao($dao);
         self::assertEquals([], $ugroup->getUsers()->getNames());
@@ -71,7 +71,7 @@ final class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
         $id     = 333;
         $row    = ['ugroup_id' => $id, 'group_id' => 105];
         $ugroup = new ProjectUGroup($row);
-        $dao    = $this->createMock(\UGroupUserDao::class);
+        $dao    = $this->createStub(\UGroupUserDao::class);
         $dao->method('searchUserByStaticUGroupId')->with($id)->willReturn(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         $ugroup->setUGroupUserDao($dao);
 
@@ -84,7 +84,7 @@ final class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
         $group_id = 555;
         $row      = ['ugroup_id' => $id, 'group_id' => $group_id];
         $ugroup   = new ProjectUGroup($row);
-        $dao      = $this->createMock(\UGroupUserDao::class);
+        $dao      = $this->createStub(\UGroupUserDao::class);
         $dao->method('searchUserByDynamicUGroupId')->with($id, $group_id)->willReturn(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         $ugroup->setUGroupUserDao($dao);
 

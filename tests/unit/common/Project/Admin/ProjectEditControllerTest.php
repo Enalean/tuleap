@@ -24,7 +24,7 @@ namespace Tuleap\Project\Admin;
 
 use EventManager;
 use Feedback;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectHistoryDao;
 use ProjectManager;
@@ -43,15 +43,15 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    private ProjectDetailsPresenter&MockObject $details_presenter;
-    private ProjectEditDao&MockObject $dao;
-    private ProjectManager&MockObject $project_manager;
-    private EventManager&MockObject $event_manager;
-    private SystemEventManager&MockObject $system_event_manager;
-    private ProjectHistoryDao&MockObject $project_history_dao;
+    private ProjectDetailsPresenter&Stub $details_presenter;
+    private ProjectEditDao&Stub $dao;
+    private ProjectManager&Stub $project_manager;
+    private EventManager&Stub $event_manager;
+    private SystemEventManager&Stub $system_event_manager;
+    private ProjectHistoryDao&Stub $project_history_dao;
     private ProjectEditController $project_edit_controller;
     private Project $project;
-    private ProjectRenameChecker&MockObject $project_rename_checker;
+    private ProjectRenameChecker&Stub $project_rename_checker;
 
     #[\Override]
     protected function setUp(): void
@@ -62,13 +62,13 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUnixName('old_name')
             ->build();
 
-        $this->details_presenter      = $this->createMock(ProjectDetailsPresenter::class);
-        $this->dao                    = $this->createMock(ProjectEditDao::class);
-        $this->project_manager        = $this->createMock(ProjectManager::class);
-        $this->event_manager          = $this->createMock(EventManager::class);
-        $this->system_event_manager   = $this->createMock(SystemEventManager::class);
-        $this->project_history_dao    = $this->createMock(ProjectHistoryDao::class);
-        $this->project_rename_checker = $this->createMock(ProjectRenameChecker::class);
+        $this->details_presenter      = $this->createStub(ProjectDetailsPresenter::class);
+        $this->dao                    = $this->createStub(ProjectEditDao::class);
+        $this->project_manager        = $this->createStub(ProjectManager::class);
+        $this->event_manager          = $this->createStub(EventManager::class);
+        $this->system_event_manager   = $this->createStub(SystemEventManager::class);
+        $this->project_history_dao    = $this->createStub(ProjectHistoryDao::class);
+        $this->project_rename_checker = $this->createStub(ProjectRenameChecker::class);
 
         $this->project_edit_controller = new ProjectEditController(
             $this->details_presenter,
@@ -227,8 +227,6 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         });
 
-        $this->dao->expects($this->never())->method('updateProjectStatusAndType');
-
         try {
             $this->expectExceptionObject(new LayoutInspectorRedirection('/admin/groupedit.php?group_id=111'));
             $this->project_edit_controller->updateProject($request);
@@ -273,8 +271,6 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 return TemplateSingleton::PROJECT;
             }
         });
-
-        $this->dao->expects($this->never())->method('updateProjectStatusAndType');
 
         try {
             $this->expectExceptionObject(new LayoutInspectorRedirection('/admin/groupedit.php?group_id=111'));

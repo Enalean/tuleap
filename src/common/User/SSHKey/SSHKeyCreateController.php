@@ -23,35 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\User\SSHKey;
 
-use CSRFSynchronizerToken;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 use UserManager;
 
-final class SSHKeyCreateController implements DispatchableWithRequest
+final readonly class SSHKeyCreateController implements DispatchableWithRequest
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
-
     public function __construct(
-        CSRFSynchronizerToken $csrf_token,
-        UserManager $user_manager,
-        private readonly WebAuthnAuthentication $web_authn_authentication,
+        private CSRFSynchronizerTokenInterface $csrf_token,
+        private UserManager $user_manager,
+        private WebAuthnAuthentication $web_authn_authentication,
     ) {
-        $this->user_manager = $user_manager;
-        $this->csrf_token   = $csrf_token;
     }
-
     /**
      * @inheritDoc
      */

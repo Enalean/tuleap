@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
@@ -35,20 +36,11 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AuthorizationCodeCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const EXPECTED_EXPIRATION_DELAY_SECONDS = 30;
+    private const int EXPECTED_EXPIRATION_DELAY_SECONDS = 30;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeDAO
-     */
-    private $dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeSaver
-     */
-    private $scope_saver;
-    /**
-     * @var OAuth2AuthorizationCodeCreator
-     */
-    private $auth_code_creator;
+    private OAuth2AuthorizationCodeDAO&MockObject $dao;
+    private OAuth2ScopeSaver&MockObject $scope_saver;
+    private OAuth2AuthorizationCodeCreator $auth_code_creator;
 
 
     #[\Override]
@@ -85,10 +77,13 @@ final class OAuth2AuthorizationCodeCreatorTest extends \Tuleap\Test\PHPUnit\Test
             ->willReturn(1);
         $this->scope_saver->expects($this->once())->method('saveScopes');
 
+        /** @var non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $auth_scopes */
+        $auth_scopes = [$this->createStub(AuthenticationScope::class)];
+
         $auth_code = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,
             $this->buildOAuth2App(),
-            [$this->createMock(AuthenticationScope::class)],
+            $auth_scopes,
             new \PFUser(['language_id' => 'en', 'user_id' => '102']),
             'pkce_code_chall',
             'oidc_nonce'
@@ -100,10 +95,11 @@ final class OAuth2AuthorizationCodeCreatorTest extends \Tuleap\Test\PHPUnit\Test
     public function testAuthCodeIdentifierIsDifferentEachTimeAuAuthorizationCodeIsCreated(): void
     {
         $current_time = new \DateTimeImmutable('@10');
-        $auth_scopes  = [$this->createMock(AuthenticationScope::class)];
+        /** @var non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $auth_scopes */
+        $auth_scopes = [$this->createStub(AuthenticationScope::class)];
 
-        $this->dao->method('create')->willReturn(2, 3);
-        $this->scope_saver->method('saveScopes');
+        $this->dao->expects($this->atLeast(2))->method('create')->willReturn(2, 3);
+        $this->scope_saver->expects($this->atLeast(2))->method('saveScopes');
 
         $auth_code_1 = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,

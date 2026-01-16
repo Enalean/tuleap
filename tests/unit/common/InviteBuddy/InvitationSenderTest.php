@@ -66,7 +66,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
-            $this->createMock(ProjectMemberAdder::class),
+            $this->createStub(ProjectMemberAdder::class),
         );
         $sender->send($current_user, ['john@example.com'], null, null, null);
         self::assertTrue($one_recipient_sender->hasBeenCalled());
@@ -78,7 +78,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withId(123)
             ->build();
 
-        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper = $this->createStub(InvitationSenderGateKeeper::class);
         $gate_keeper
             ->method('checkNotificationsCanBeSent')
             ->willThrowException(new InvitationSenderGateKeeperException());
@@ -93,7 +93,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
-            $this->createMock(ProjectMemberAdder::class),
+            $this->createStub(ProjectMemberAdder::class),
         );
         $sender->send($current_user, ['john@example.com'], null, null, null);
         self::assertFalse($one_recipient_sender->hasBeenCalled());
@@ -121,7 +121,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
-            $this->createMock(ProjectMemberAdder::class),
+            $this->createStub(ProjectMemberAdder::class),
         );
 
         self::assertEmpty(
@@ -297,10 +297,6 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExceptionWhenInvitationForAProjectAndUserIsNotProjectAdminAndHasNoDelegation(): void
     {
-        $current_user = UserTestBuilder::aUser()
-            ->withId(123)
-            ->build();
-
         $project_id = 111;
         $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
 
@@ -310,7 +306,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withMemberOf($project)
             ->build();
 
-        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper = $this->createStub(InvitationSenderGateKeeper::class);
 
         $this->expectException(UserIsNotAllowedToManageProjectMembersException::class);
 
@@ -322,7 +318,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
-            $this->createMock(ProjectMemberAdder::class),
+            $this->createStub(ProjectMemberAdder::class),
         );
         $sender->send($current_user, ['john@example.com', 'doe@example.com'], $project, 'A custom message', null);
         self::assertFalse($one_recipient_sender->hasBeenCalled());
@@ -345,7 +341,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
-            $this->createMock(ProjectMemberAdder::class),
+            $this->createStub(ProjectMemberAdder::class),
         );
         self::assertEmpty(
             $sender
@@ -395,7 +391,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger,
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
-            $this->createMock(ProjectMemberAdder::class),
+            $this->createStub(ProjectMemberAdder::class),
         );
 
         self::assertEquals(
@@ -438,7 +434,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger,
             EnsureUserCanManageProjectMembersStub::canManageMembers(),
             $one_recipient_sender,
-            $this->createMock(ProjectMemberAdder::class),
+            $this->createStub(ProjectMemberAdder::class),
         );
 
         self::assertEquals(
@@ -485,7 +481,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger,
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
-            $this->createMock(ProjectMemberAdder::class),
+            $this->createStub(ProjectMemberAdder::class),
         );
         $sender->send($current_user, ['john@example.com', 'doe@example.com'], null, null, null);
 

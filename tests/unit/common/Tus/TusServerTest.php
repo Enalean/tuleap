@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tus;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -31,15 +32,15 @@ use Tuleap\Http\HTTPFactoryBuilder;
 final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ResponseFactoryInterface $response_factory;
-    private TusDataStore&\PHPUnit\Framework\MockObject\MockObject $data_store;
-    private TusFileInformationProvider&\PHPUnit\Framework\MockObject\MockObject $file_information_provider;
+    private TusDataStore&Stub $data_store;
+    private TusFileInformationProvider&Stub $file_information_provider;
 
     #[\Override]
     protected function setUp(): void
     {
         $this->response_factory          = HTTPFactoryBuilder::responseFactory();
-        $this->data_store                = $this->createMock(TusDataStore::class);
-        $this->file_information_provider = $this->createMock(TusFileInformationProvider::class);
+        $this->data_store                = $this->createStub(TusDataStore::class);
+        $this->file_information_provider = $this->createStub(TusFileInformationProvider::class);
         $this->data_store->method('getFileInformationProvider')->willReturn($this->file_information_provider);
     }
 
@@ -48,7 +49,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->data_store->method('getTerminater')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('OPTIONS');
 
         $response = $server->handle($incoming_request);
@@ -60,10 +61,10 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testInformationAboutExtensionsAreGivenIfThereIsAnAvailableExtension(): void
     {
-        $this->data_store->method('getTerminater')->willReturn($this->createMock(TusTerminaterDataStore::class));
+        $this->data_store->method('getTerminater')->willReturn($this->createStub(TusTerminaterDataStore::class));
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('OPTIONS');
 
         $response = $server->handle($incoming_request);
@@ -76,11 +77,11 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('HEAD');
         $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('1.0.0');
 
-        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information = $this->createStub(TusFileInformation::class);
         $file_information->method('getLength')->willReturn(123456);
         $file_information->method('getOffset')->willReturn(123);
         $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
@@ -99,17 +100,16 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $data_writer = $this->createMock(TusWriter::class);
         $this->data_store->method('getWriter')->willReturn($data_writer);
-        $finisher_data_store = $this->createMock(TusFinisherDataStore::class);
+        $finisher_data_store = null;
         if ($has_finisher) {
-            $this->data_store->method('getFinisher')->willReturn($finisher_data_store);
-        } else {
-            $this->data_store->method('getFinisher')->willReturn(null);
+            $finisher_data_store = $this->createMock(TusFinisherDataStore::class);
         }
+        $this->data_store->method('getFinisher')->willReturn($finisher_data_store);
         $locker = $this->createMock(TusLocker::class);
         $this->data_store->method('getLocker')->willReturn($locker);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $upload_request = $this->createMock(ServerRequestInterface::class);
+        $upload_request = $this->createStub(ServerRequestInterface::class);
         $upload_request->method('getMethod')->willReturn('PATCH');
         $upload_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
 
@@ -119,14 +119,14 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['Content-Type', $content_type],
         ]);
 
-        $request_body        = $this->createMock(StreamInterface::class);
+        $request_body        = $this->createStub(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
         fwrite($request_body_stream, $body_content);
         rewind($request_body_stream);
         $request_body->method('detach')->willReturn($request_body_stream);
         $upload_request->method('getBody')->willReturn($request_body);
 
-        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information = $this->createStub(TusFileInformation::class);
         $file_information->method('getLength')->willReturn(strlen($body_content));
         $file_information->method('getOffset')->willReturn($upload_offset);
         $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
@@ -141,7 +141,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
                     }
                 )
             )->willReturn(strlen($body_content));
-        if ($has_finisher) {
+        if ($finisher_data_store !== null) {
             $finisher_data_store->expects($this->once())->method('finishUpload')->with($upload_request, $file_information);
         }
         $locker->expects($this->once())->method('lock')->willReturn(true);
@@ -171,7 +171,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('HEAD');
         $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('0.2.2');
 
@@ -186,7 +186,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->data_store->method('getLocker')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
         $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
 
@@ -196,12 +196,12 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['Content-Type', 'application/offset+octet-stream'],
         ]);
 
-        $request_body        = $this->createMock(StreamInterface::class);
+        $request_body        = $this->createStub(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
         $request_body->method('detach')->willReturn($request_body_stream);
         $incoming_request->method('getBody')->willReturn($request_body);
 
-        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information = $this->createStub(TusFileInformation::class);
         $file_information->method('getOffset')->willReturn(20);
         $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
 
@@ -214,7 +214,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
         $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(false);
 
@@ -223,7 +223,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['Content-Type', 'application/offset+octet-stream'],
         ]);
 
-        $this->file_information_provider->method('getFileInformation')->willReturn($this->createMock(TusFileInformation::class));
+        $this->file_information_provider->method('getFileInformation')->willReturn($this->createStub(TusFileInformation::class));
 
         $response = $server->handle($incoming_request);
 
@@ -234,7 +234,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
 
         $incoming_request->method('getHeaderLine')->willReturnMap([
@@ -242,7 +242,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['Content-Type', 'image/png'],
         ]);
 
-        $this->file_information_provider->method('getFileInformation')->willReturn($this->createMock(TusFileInformation::class));
+        $this->file_information_provider->method('getFileInformation')->willReturn($this->createStub(TusFileInformation::class));
 
         $response = $server->handle($incoming_request);
 
@@ -251,12 +251,12 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAnErrorIsGivenWhenTheIncomingRequestBodyCannotBeRead(): void
     {
-        $data_writer = $this->createMock(TusWriter::class);
+        $data_writer = $this->createStub(TusWriter::class);
         $this->data_store->method('getWriter')->willReturn($data_writer);
         $this->data_store->method('getLocker')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
         $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
 
@@ -266,11 +266,11 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['Content-Type', 'application/offset+octet-stream'],
         ]);
 
-        $request_body = $this->createMock(StreamInterface::class);
+        $request_body = $this->createStub(StreamInterface::class);
         $request_body->method('detach')->willReturn(null);
         $incoming_request->method('getBody')->willReturn($request_body);
 
-        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information = $this->createStub(TusFileInformation::class);
         $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
 
         $response = $server->handle($incoming_request);
@@ -279,12 +279,12 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAnErrorIsGivenWhenTheFileCanNotBeSaved(): void
     {
-        $data_writer = $this->createMock(TusWriter::class);
+        $data_writer = $this->createStub(TusWriter::class);
         $this->data_store->method('getWriter')->willReturn($data_writer);
         $this->data_store->method('getLocker')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
         $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
 
@@ -294,12 +294,12 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['Content-Type', 'application/offset+octet-stream'],
         ]);
 
-        $request_body        = $this->createMock(StreamInterface::class);
+        $request_body        = $this->createStub(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
         $request_body->method('detach')->willReturn($request_body_stream);
         $incoming_request->method('getBody')->willReturn($request_body);
 
-        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information = $this->createStub(TusFileInformation::class);
         $file_information->method('getLength')->willReturn(123456);
         $file_information->method('getOffset')->willReturn(0);
         $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
@@ -315,7 +315,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
 
         $incoming_request->method('getHeaderLine')->willReturnMap([
@@ -336,11 +336,11 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->data_store->method('getTerminater')->willReturn($terminater);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('DELETE');
         $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('1.0.0');
 
-        $this->file_information_provider->method('getFileInformation')->willReturn($this->createMock(TusFileInformation::class));
+        $this->file_information_provider->method('getFileInformation')->willReturn($this->createStub(TusFileInformation::class));
 
         $terminater->expects($this->once())->method('terminateUpload');
 
@@ -354,7 +354,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->data_store->method('getTerminater')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('DELETE');
         $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('1.0.0');
 
@@ -365,14 +365,14 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAnUploadIsNotFinishedWhenAllDataHasNotBeenCopied(): void
     {
-        $data_writer = $this->createMock(TusWriter::class);
+        $data_writer = $this->createStub(TusWriter::class);
         $this->data_store->method('getWriter')->willReturn($data_writer);
         $finisher = $this->createMock(TusFinisherDataStore::class);
         $this->data_store->method('getFinisher')->willReturn($finisher);
         $this->data_store->method('getLocker')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incomplete_upload_request = $this->createMock(ServerRequestInterface::class);
+        $incomplete_upload_request = $this->createStub(ServerRequestInterface::class);
         $incomplete_upload_request->method('getMethod')->willReturn('PATCH');
         $incomplete_upload_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
 
@@ -382,12 +382,12 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['Content-Type', 'application/offset+octet-stream'],
         ]);
 
-        $request_body = $this->createMock(StreamInterface::class);
+        $request_body = $this->createStub(StreamInterface::class);
         $body_size    = 12;
         $request_body->method('detach')->willReturn(fopen('php://memory', 'rb+'));
         $incomplete_upload_request->method('getBody')->willReturn($request_body);
 
-        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information = $this->createStub(TusFileInformation::class);
         $file_information->method('getLength')->willReturn($body_size * 100);
         $file_information->method('getOffset')->willReturn(0);
         $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
@@ -401,11 +401,11 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testALockedUploadIsNotOverwritten(): void
     {
-        $locker = $this->createMock(TusLocker::class);
+        $locker = $this->createStub(TusLocker::class);
         $this->data_store->method('getLocker')->willReturn($locker);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
         $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
 
@@ -415,22 +415,21 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['Content-Type', 'application/offset+octet-stream'],
         ]);
 
-        $request_body        = $this->createMock(StreamInterface::class);
+        $request_body        = $this->createStub(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
         $request_body->method('detach')->willReturn($request_body_stream);
         $incoming_request->method('getBody')->willReturn($request_body);
 
-        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information = $this->createStub(TusFileInformation::class);
         $file_information->method('getLength')->willReturn(123456);
         $file_information->method('getOffset')->willReturn(0);
         $this->file_information_provider->method('getFileInformation')->willReturnOnConsecutiveCalls(
             $file_information,
-            $this->createMock(TusFileInformation::class)
+            $this->createStub(TusFileInformation::class)
         );
 
         $locker->method('lock')->willReturn(false);
         $locker->method('unlock');
-        $this->data_store->expects($this->never())->method('getWriter');
 
         $response = $server->handle($incoming_request);
 

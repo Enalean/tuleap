@@ -30,11 +30,12 @@ use ForgeAccess;
 use ForgeConfig;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectHistoryDao;
 use ProjectManager;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsController;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
@@ -50,34 +51,35 @@ use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
+    use GlobalResponseMock;
 
-    private ProjectVisibilityUserConfigurationPermissions&MockObject $project_visibility_configuration;
+    private ProjectVisibilityUserConfigurationPermissions&Stub $project_visibility_configuration;
     private EventManager&MockObject $event_manager;
     private CSRFSynchronizerToken&MockObject $csrf_token;
     private ProjectDetailsController $controller;
     private ProjectHistoryDao&MockObject $project_history_dao;
     private ProjectDetailsDAO&MockObject $project_details_dao;
-    private Project&MockObject $current_project;
-    private DescriptionFieldsFactory&MockObject $description_fields_factory;
+    private Project&Stub $current_project;
+    private DescriptionFieldsFactory&Stub $description_fields_factory;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->description_fields_factory       = $this->createMock(DescriptionFieldsFactory::class);
-        $this->current_project                  = $this->createMock(Project::class);
+        $this->description_fields_factory       = $this->createStub(DescriptionFieldsFactory::class);
+        $this->current_project                  = $this->createStub(Project::class);
         $this->project_details_dao              = $this->createMock(ProjectDetailsDAO::class);
-        $project_manager                        = $this->createMock(ProjectManager::class);
+        $project_manager                        = $this->createStub(ProjectManager::class);
         $this->event_manager                    = $this->createMock(EventManager::class);
         $this->project_history_dao              = $this->createMock(ProjectHistoryDao::class);
-        $project_visibility_presenter_builder   = $this->createMock(ProjectVisibilityPresenterBuilder::class);
-        $this->project_visibility_configuration = $this->createMock(ProjectVisibilityUserConfigurationPermissions::class);
-        $ugroup_binding                         = $this->createMock(UGroupBinding::class);
-        $trove_cat_link_dao                     = $this->createMock(TroveCatLinkDao::class);
+        $project_visibility_presenter_builder   = $this->createStub(ProjectVisibilityPresenterBuilder::class);
+        $this->project_visibility_configuration = $this->createStub(ProjectVisibilityUserConfigurationPermissions::class);
+        $ugroup_binding                         = $this->createStub(UGroupBinding::class);
+        $trove_cat_link_dao                     = $this->createStub(TroveCatLinkDao::class);
         $this->csrf_token                       = $this->createMock(CSRFSynchronizerToken::class);
 
         $this->controller = new ProjectDetailsController(
@@ -92,23 +94,13 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $ugroup_binding,
             $trove_cat_link_dao,
             $this->csrf_token,
-            $this->createMock(TemplateFactory::class),
+            $this->createStub(TemplateFactory::class),
             RetrieveUploadedArchiveForProjectStub::withoutArchive(),
             new ProjectIconRetriever(),
             new UpdateVisibilityChecker($this->event_manager),
         );
 
         $this->csrf_token->expects($this->once())->method('check');
-
-        $GLOBALS['Response'] = $this->createMock(BaseLayout::class);
-    }
-
-    #[\Override]
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Response']);
-
-        parent::tearDown();
     }
 
     public function testUpdateIsInvalidWhenProjectNameIsNotProvided(): void
@@ -128,9 +120,13 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             });
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
+        $this->project_details_dao->expects($this->never())->method('updateGroupNameAndDescription');
+        $this->project_history_dao->expects($this->never())->method('groupAddHistory');
+        $this->event_manager->expects($this->never())->method('processEvent');
 
         $this->controller->update($request);
+
+        self::assertCount(1, $this->global_response->inspector->getFeedback());
     }
 
     public function testUpdateIsInvalidWhenDescriptionIsNotProvidedAndFlagIsNotProvided(): void
@@ -150,9 +146,13 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             });
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
+        $this->project_details_dao->expects($this->never())->method('updateGroupNameAndDescription');
+        $this->project_history_dao->expects($this->never())->method('groupAddHistory');
+        $this->event_manager->expects($this->never())->method('processEvent');
 
         $this->controller->update($request);
+
+        self::assertCount(1, $this->global_response->inspector->getFeedback());
     }
 
     public function testUpdateIsInvalidWhenDescriptionIsNotProvidedAndDescriptionIsMandatoryForProject(): void
@@ -174,9 +174,13 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             });
 
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
+        $this->project_details_dao->expects($this->never())->method('updateGroupNameAndDescription');
+        $this->project_history_dao->expects($this->never())->method('groupAddHistory');
+        $this->event_manager->expects($this->never())->method('processEvent');
 
         $this->controller->update($request);
+
+        self::assertCount(1, $this->global_response->inspector->getFeedback());
     }
 
     public function testUpdateIsValidWhenDescriptionIsNotProvidedAndDescriptionIsNOTMandatoryForProject(): void
@@ -226,19 +230,19 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $request->expects($this->atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
         $request->expects($this->exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->description_fields_factory->expects($this->exactly(2))->method('getAllDescriptionFields')->willReturn([]);
+        $this->description_fields_factory->method('getAllDescriptionFields')->willReturn([]);
 
-        $this->current_project->expects($this->once())->method('getProjectsDescFieldsValue')->willReturn([]);
+        $this->current_project->method('getProjectsDescFieldsValue')->willReturn([]);
 
         $this->project_details_dao->expects($this->once())->method('updateGroupNameAndDescription');
         $this->project_history_dao->expects($this->once())->method('groupAddHistory');
         $this->event_manager->expects($this->once())->method('processEvent');
-        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureProjectVisibility')->willReturn(false);
-        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureTruncatedMail')->willReturn(false);
-
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::INFO, _('Update successful'));
+        $this->project_visibility_configuration->method('canUserConfigureProjectVisibility')->willReturn(false);
+        $this->project_visibility_configuration->method('canUserConfigureTruncatedMail')->willReturn(false);
 
         $this->controller->update($request);
+
+        self::assertEquals([['level' => Feedback::INFO, 'message' => 'Update successful']], $this->global_response->inspector->getFeedback());
     }
 
     public function testVisibilityUpdateIsNotValidWhenNotMatchingRestrictedUsersConstraints(): void
@@ -300,11 +304,11 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     return Project::ACCESS_PRIVATE_WO_RESTRICTED;
                 }
             });
-        $current_user = $this->createMock(PFUser::class);
+        $current_user = $this->createStub(PFUser::class);
         $request->expects($this->atLeastOnce())->method('getCurrentUser')->willReturn($current_user);
         $request->expects($this->atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
 
-        $project = $this->createMock(Project::class);
+        $project = $this->createStub(Project::class);
         $project->method('getAdmins')->willReturn([
             UserTestBuilder::aRestrictedUser()->build(),
         ]);
@@ -313,29 +317,25 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user->method('isAdmin')->with(101)->willReturn(true);
         $request->expects($this->exactly(2))->method('getProject')->willReturn($project);
 
-        $this->description_fields_factory->expects($this->exactly(2))->method('getAllDescriptionFields')->willReturn([]);
+        $this->description_fields_factory->method('getAllDescriptionFields')->willReturn([]);
 
-        $this->current_project->expects($this->once())->method('getProjectsDescFieldsValue')->willReturn([]);
+        $this->current_project->method('getProjectsDescFieldsValue')->willReturn([]);
 
         $this->project_details_dao->expects($this->once())->method('updateGroupNameAndDescription');
         $this->project_history_dao->expects($this->once())->method('groupAddHistory');
         $this->event_manager->expects($this->once())->method('processEvent');
-        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureProjectVisibility')->willReturn(true);
-        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureTruncatedMail')->willReturn(false);
-        $matcher = self::exactly(2);
-
-        $GLOBALS['Response']->expects($matcher)->method('addFeedback')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(Feedback::INFO, $parameters[0]);
-                self::assertSame(_('Update successful'), $parameters[1]);
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(Feedback::ERROR, $parameters[0]);
-                self::assertSame(_('Cannot switch the project visibility because it will remove every restricted users from the project, and after that no administrator will be left.'), $parameters[1]);
-            }
-        });
+        $this->project_visibility_configuration->method('canUserConfigureProjectVisibility')->willReturn(true);
+        $this->project_visibility_configuration->method('canUserConfigureTruncatedMail')->willReturn(false);
 
         $this->controller->update($request);
+
+        self::assertEquals(
+            [
+                ['level' => Feedback::INFO, 'message' => 'Update successful'],
+                ['level' => Feedback::ERROR, 'message' => 'Cannot switch the project visibility because it will remove every restricted users from the project, and after that no administrator will be left.'],
+            ],
+            $this->global_response->inspector->getFeedback()
+        );
     }
 
     public function testItUpdatesProject(): void
@@ -388,18 +388,18 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $request->expects($this->atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
         $request->expects($this->exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->description_fields_factory->expects($this->exactly(2))->method('getAllDescriptionFields')->willReturn([]);
+        $this->description_fields_factory->method('getAllDescriptionFields')->willReturn([]);
 
-        $this->current_project->expects($this->once())->method('getProjectsDescFieldsValue')->willReturn([]);
+        $this->current_project->method('getProjectsDescFieldsValue')->willReturn([]);
 
         $this->project_details_dao->expects($this->once())->method('updateGroupNameAndDescription');
         $this->project_history_dao->expects($this->once())->method('groupAddHistory');
         $this->event_manager->expects($this->once())->method('processEvent');
-        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureProjectVisibility')->willReturn(false);
-        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureTruncatedMail')->willReturn(false);
-
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::INFO, _('Update successful'));
+        $this->project_visibility_configuration->method('canUserConfigureProjectVisibility')->willReturn(false);
+        $this->project_visibility_configuration->method('canUserConfigureTruncatedMail')->willReturn(false);
 
         $this->controller->update($request);
+
+        self::assertEquals([['level' => Feedback::INFO, 'message' => 'Update successful']], $this->global_response->inspector->getFeedback());
     }
 }

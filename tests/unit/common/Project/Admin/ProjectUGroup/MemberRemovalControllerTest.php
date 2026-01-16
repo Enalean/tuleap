@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Layout\BaseLayout;
@@ -42,12 +43,12 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private ProjectRetriever&MockObject $project_retriever;
     private ProjectAdministratorChecker&MockObject $administrator_checker;
-    private \UGroupManager&MockObject $ugroup_manager;
-    private \UserManager&MockObject $user_manager;
+    private \UGroupManager&Stub $ugroup_manager;
+    private \UserManager&Stub $user_manager;
     private MemberRemovalController $controller;
     private \Tuleap\HTTPRequest&MockObject $http_request;
-    private BaseLayout&MockObject $layout;
-    private MemberRemover&MockObject $member_remover;
+    private BaseLayout&Stub $layout;
+    private MemberRemover&Stub $member_remover;
     private ProjectMemberRemover&MockObject $project_member_remover;
     private \CSRFSynchronizerToken&MockObject $csrf;
 
@@ -56,11 +57,11 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->project_retriever      = $this->createMock(ProjectRetriever::class);
         $this->administrator_checker  = $this->createMock(ProjectAdministratorChecker::class);
-        $this->ugroup_manager         = $this->createMock(\UGroupManager::class);
-        $this->user_manager           = $this->createMock(\UserManager::class);
-        $this->member_remover         = $this->createMock(MemberRemover::class);
+        $this->ugroup_manager         = $this->createStub(\UGroupManager::class);
+        $this->user_manager           = $this->createStub(\UserManager::class);
+        $this->member_remover         = $this->createStub(MemberRemover::class);
         $this->http_request           = $this->createMock(\Tuleap\HTTPRequest::class);
-        $this->layout                 = $this->createMock(BaseLayout::class);
+        $this->layout                 = $this->createStub(BaseLayout::class);
         $this->project_member_remover = $this->createMock(ProjectMemberRemover::class);
         $this->csrf                   = $this->createMock(\CSRFSynchronizerToken::class);
         $this->csrf->expects($this->once())->method('check');
@@ -98,7 +99,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_admin = $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProjectId')->willReturn(101);
         $ugroup->method('getId')->willReturn(202);
         $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
@@ -119,6 +120,8 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->member_remover->method('removeMember')->with($user_to_remove, $project_admin, $ugroup);
 
+        $this->project_member_remover->expects($this->never())->method('removeUserFromProject');
+
         $this->layout->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
         $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
@@ -135,7 +138,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_admin = $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProjectId')->willReturn(101);
         $ugroup->method('getId')->willReturn(202);
         $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
@@ -156,6 +159,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->member_remover->method('removeMember')->with($user_to_remove, $project_admin, $ugroup)
             ->willThrowException(new CannotModifyBoundGroupException());
+        $this->project_member_remover->expects($this->never())->method('removeUserFromProject');
 
         $this->layout->method('addFeedback')->with(\Feedback::ERROR, self::anything());
 
@@ -175,7 +179,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProjectId')->willReturn(101);
         $ugroup->method('getId')->willReturn(202);
         $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
@@ -216,7 +220,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProjectId')->willReturn(101);
         $ugroup->method('getId')->willReturn(202);
         $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
@@ -239,7 +243,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         });
         $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
 
-        $this->project_member_remover->method('removeUserFromProject');
+        $this->project_member_remover->expects($this->never())->method('removeUserFromProject');
 
         $this->layout->method('addFeedback')->with(\Feedback::ERROR, self::anything());
         $exception_stop_exec_redirect = new \Exception('Redirect');

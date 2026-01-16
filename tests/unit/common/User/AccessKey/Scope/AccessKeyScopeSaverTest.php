@@ -48,9 +48,9 @@ final class AccessKeyScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $identifier = AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar');
 
-        $scope_a = $this->createMock(AuthenticationScope::class);
+        $scope_a = $this->createStub(AuthenticationScope::class);
         $scope_a->method('getIdentifier')->willReturn($identifier);
-        $scope_b = $this->createMock(AuthenticationScope::class);
+        $scope_b = $this->createStub(AuthenticationScope::class);
         $scope_b->method('getIdentifier')->willReturn($identifier);
 
         $this->dao->expects($this->once())->method('saveScopeKeysByAccessKeyID')->with(11, 'foo:bar');
@@ -60,6 +60,8 @@ final class AccessKeyScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAtLeastOneScopeMustBeGiven(): void
     {
+        $this->dao->expects($this->never())->method('saveScopeKeysByAccessKeyID');
+
         $this->expectException(NoValidAccessKeyScopeException::class);
 
         $this->saver->saveKeyScopes(14);
