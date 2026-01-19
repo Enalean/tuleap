@@ -201,7 +201,7 @@ async function startExport(): Promise<void> {
     grid-auto-columns: 1fr;
     grid-auto-flow: column;
     grid-gap: 1px;
-    border-top: 1px solid var(--tlp-neutral-light-color);
+    border-top: 1px solid var(--tlp-border-light-color);
     background-color: var(--tlp-neutral-light-color);
 }
 </style>

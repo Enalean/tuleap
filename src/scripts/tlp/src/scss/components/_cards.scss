@@ -97,8 +97,7 @@
     > .tlp-card {
         margin: 0;
         border: 0;
-        border-bottom: 1px solid
-            light-dark(var(--tlp-neutral-light-color), var(--tlp-dark-color-lighter-10));
+        border-bottom: 1px solid var(--tlp-border-light-color);
         border-radius: 0;
         box-shadow: none;
 

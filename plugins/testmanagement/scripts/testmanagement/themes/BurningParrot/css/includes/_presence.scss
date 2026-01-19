@@ -9,7 +9,7 @@
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     overflow: hidden;
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
+    border-bottom: 1px solid var(--tlp-border-light-color);
 }
 
 .step {
@@ -123,7 +123,7 @@
     display: flex;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
+    border-bottom: 1px solid var(--tlp-border-light-color);
 
     &:last-child {
         border: 0;
