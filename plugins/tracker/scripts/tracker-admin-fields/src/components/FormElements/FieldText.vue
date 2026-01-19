@@ -19,10 +19,10 @@
 
 <template>
     <div class="tlp-form-element">
-        <label-for-field v-bind:id="id" v-bind:field="field" />
+        <label-for-field v-bind:field="field" />
         <textarea
             class="tlp-textarea"
-            v-bind:id="id"
+            v-bind:id="`textarea_${field.field_id}`"
             v-bind:rows="field.specific_properties.rows"
             v-bind:value="field.specific_properties.default_value"
             v-bind:data-project-id="project_id"
@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import type { TextFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import LabelForField from "./LabelForField.vue";
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
@@ -42,11 +42,9 @@ import { getLocaleWithDefault } from "@tuleap/locale";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT_ID } from "../../type";
 
-const props = defineProps<{
+defineProps<{
     field: TextFieldStructure;
 }>();
-
-const id = computed(() => "textarea_" + props.field.field_id);
 
 const project_id = strictInject(PROJECT_ID);
 

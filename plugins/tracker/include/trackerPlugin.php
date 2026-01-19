@@ -891,7 +891,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                             ->getTrackerSemanticManager()
                             ->getSemantics();
                         if (isset($semantics['title'])) {
-                            if ($field = Tracker_FormElementFactory::instance()->getFormElementById($semantics['title']->getFieldId())) {
+                            if ($field = Tracker_FormElementFactory::instance()->getFieldById($semantics['title']->getFieldId())) {
                                 $value = $a->getValue($field);
                                 if ($value) {
                                     $ret .= ' - ' . $value->getText();

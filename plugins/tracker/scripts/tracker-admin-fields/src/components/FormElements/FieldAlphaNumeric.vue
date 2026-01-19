@@ -19,11 +19,10 @@
 
 <template>
     <div class="tlp-form-element">
-        <label-for-field v-bind:id="id" v-bind:field="field" />
+        <label-for-field v-bind:field="field" />
         <input
             type="text"
             class="tlp-input"
-            v-bind:id="id"
             v-bind:size="
                 field.specific_properties.size > 0 ? field.specific_properties.size : undefined
             "
@@ -48,6 +47,5 @@ import LabelForField from "./LabelForField.vue";
 
 defineProps<{
     field: FloatFieldStructure | IntFieldStructure | StringFieldStructure;
-    id: string;
 }>();
 </script>

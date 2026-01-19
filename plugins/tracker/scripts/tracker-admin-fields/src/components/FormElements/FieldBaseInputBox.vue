@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label-for-field v-bind:id="buildFieldId()" v-bind:field="field" />
+        <label-for-field v-bind:field="field" />
         <label
             class="tlp-label"
             v-bind:class="[
@@ -79,13 +79,6 @@ function getInputType(): string {
         return `checkbox`;
     }
     return `radio`;
-}
-
-function buildFieldId(): string {
-    if (props.input_box_type === CHECKBOX_FIELD) {
-        return `checkbox-${props.field.field_id}`;
-    }
-    return `radio-${props.field.field_id}`;
 }
 
 function buildValueId(value: ListFieldItem): string {

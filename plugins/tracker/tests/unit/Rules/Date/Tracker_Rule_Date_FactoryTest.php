@@ -57,7 +57,7 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase 
 
         $this->element_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $this->element_factory
-            ->method('getFormElementById')
+            ->method('getFieldById')
             ->willReturnCallback(fn (int $id) => match ($id) {
                 $this->source_field_id => $this->source_field,
                 $this->target_field_id => $this->target_field,

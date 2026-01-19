@@ -19,10 +19,12 @@
 
 <template>
     <div class="tlp-form-element">
+        <label-for-field v-bind:field="field" />
         <tuleap-tracker-link-field
+            class="tracker-admin-fields-link-field"
             v-bind:controller="
                 link_field_creator?.createLinkFieldController(
-                    field,
+                    labeled_field,
                     allowed_link_types,
                     field_option,
                 )
@@ -69,6 +71,7 @@ import {
 } from "../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT_ID } from "../../type";
+import LabelForField from "./LabelForField.vue";
 
 const props = defineProps<{
     field: ArtifactLinkFieldStructure;
@@ -76,7 +79,7 @@ const props = defineProps<{
 
 const link_field_creator = ref<LinkFieldCreator | null>(null);
 
-const field = { field_id: props.field.field_id, label: props.field.label };
+const labeled_field = { field_id: props.field.field_id, label: props.field.label };
 const field_option = {
     can_create_artifact: false,
 };
@@ -123,7 +126,10 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.field-link {
-    pointer-events: none;
+// link field is displaying its own label, we need to hide it
+// so that we can do what we want with the lable in field usage (e.g edit inline)
+// stylelint-disable-next-line selector-class-pattern
+.tracker-admin-fields-link-field .tracker_formelement_label {
+    display: none;
 }
 </style>

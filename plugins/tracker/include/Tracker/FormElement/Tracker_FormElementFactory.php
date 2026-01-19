@@ -265,9 +265,8 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * Get a formElement by id
      * @param int $form_element_id the id of the formElement to retrieve
-     * @return TrackerField
      */
-    public function getFormElementById($form_element_id)
+    public function getFormElementById($form_element_id): ?TrackerFormElement
     {
         if (! array_key_exists($form_element_id, $this->formElements)) {
             if ($form_element_id && ($row = $this->getDao()->searchById($form_element_id)->getRow())) {
@@ -916,18 +915,13 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
                 $created_form_element = $this->getFormElementById($id);
                 if ($created_form_element) {
                     $element_duplicator = $created_form_element->duplicate((int) $from_row['id']);
-                    if ($has_workflow) {
-                        $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
-                    }
-                    $mapping[] = [
+                    $mapping[]          = [
                         'from'    => (int) $from_row['id'],
                         'to'      => $id,
                         'values'  => $element_duplicator->getMapping(),
                         'workflow' => $has_workflow,
                     ];
-                    $type      = $this->getType($created_form_element);
                 }
-                $tracker = TrackerFactory::instance()->getTrackerByid($to_tracker_id);
             }
         }
         $this->getDao()->mapNewParentsAfterDuplication($to_tracker_id, $mapping);
@@ -1721,7 +1715,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         }
     }
 
-    public function isFieldASimpleListField(TrackerField $field)
+    public function isFieldASimpleListField(TrackerFormElement $field): bool
     {
         return in_array($this->getType($field), ['sb', 'rb']);
     }

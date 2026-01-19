@@ -18,17 +18,14 @@
   -->
 
 <template>
-    <field-alpha-numeric v-bind:id="id" v-bind:field="field" />
+    <field-alpha-numeric v-bind:field="field" />
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import type { FloatFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import FieldAlphaNumeric from "./FieldAlphaNumeric.vue";
 
-const props = defineProps<{
+defineProps<{
     field: FloatFieldStructure;
 }>();
-
-const id = computed(() => "float-" + props.field.field_id);
 </script>

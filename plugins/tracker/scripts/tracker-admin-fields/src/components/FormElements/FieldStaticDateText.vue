@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-property">
-        <label-for-field v-bind:id="'static-date-' + field.field_id" v-bind:field="field" />
+        <label-for-field v-bind:field="field" />
         <p>{{ getFormattedCurrentDate() }}</p>
     </div>
 </template>

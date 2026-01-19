@@ -316,12 +316,15 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      * Retrieves the field from the given PostAction database row.
      *
      * @param array $row
-     *
-     * @return TrackerField
      */
-    private function getFieldFromRow($row)
+    private function getFieldFromRow($row): TrackerField
     {
-        return $this->element_factory->getFormElementById((int) $row['field_id']);
+        $field = $this->element_factory->getFieldById((int) $row['field_id']);
+        if (! $field) {
+            throw new RuntimeException('Field not found');
+        }
+
+        return $field;
     }
 
     /**

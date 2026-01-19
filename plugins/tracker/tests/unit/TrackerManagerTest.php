@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -80,9 +81,9 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tf->method('getTrackerById')->with(3)->willReturn($this->tracker);
         $tf->method('getTrackersByGroupId')->willReturn($trackers);
 
-        $this->formElement = $this->createMock(\Tracker_FormElement_Interface::class);
+        $this->formElement = $this->createMock(TrackerField::class);
         $ff                = $this->createMock(\Tracker_FormElementFactory::class);
-        $ff->method('getFormElementById')->with('4')->willReturn($this->formElement);
+        $ff->method('getFieldById')->with('4')->willReturn($this->formElement);
 
         $this->artifact->method('getTracker')->willReturn($this->tracker);
         $this->report->method('getTracker')->willReturn($this->tracker);

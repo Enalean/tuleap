@@ -89,7 +89,7 @@ final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_rule_date2->method('getSourceFieldId')->willReturn(12);
         $tracker_rule_date2->method('getTargetFieldId')->willReturn(13);
         $tracker_rule_date2->method('getComparator')->willReturn($comparator);
-        $this->formelement_factory->method('getFormElementById')->willReturnCallback(static fn (int $id) => match ($id) {
+        $this->formelement_factory->method('getFieldById')->willReturnCallback(static fn (int $id) => match ($id) {
             12 => $source_field,
             13 => $target_field,
         });
@@ -130,7 +130,7 @@ final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_rule_date2->method('getSourceFieldId')->willReturn(12);
         $tracker_rule_date2->method('getTargetFieldId')->willReturn(13);
         $tracker_rule_date2->method('getComparator')->willReturn($comparator);
-        $this->formelement_factory->method('getFormElementById')->willReturnCallback(static fn (int $id) => match ($id) {
+        $this->formelement_factory->method('getFieldById')->willReturnCallback(static fn (int $id) => match ($id) {
             12 => $source_field,
             13 => $target_field,
         });

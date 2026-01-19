@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label-for-field v-bind:field="field" v-bind:id="'file-' + field.field_id" />
+        <label-for-field v-bind:field="field" />
         <input type="file" />
         <input
             type="text"

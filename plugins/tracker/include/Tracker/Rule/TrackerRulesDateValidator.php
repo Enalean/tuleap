@@ -94,6 +94,11 @@ class TrackerRulesDateValidator
 
     private function getFieldById($field_id): TrackerField
     {
-        return $this->form_element_factory->getFormElementById($field_id);
+        $field = $this->form_element_factory->getFieldById($field_id);
+        if (! $field) {
+            throw new \RuntimeException('Field not found');
+        }
+
+        return $field;
     }
 }

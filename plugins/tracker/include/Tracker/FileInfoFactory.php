@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-class Tracker_FileInfoFactory
+class Tracker_FileInfoFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Tracker_FileInfoDao
@@ -62,7 +62,7 @@ class Tracker_FileInfoFactory
             return null;
         }
 
-        $field = $this->formelement_factory->getFormElementById($field_id);
+        $field = $this->formelement_factory->getFieldById($field_id);
         if (! $field) {
             return null;
         }
