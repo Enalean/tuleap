@@ -44,7 +44,7 @@ $tlp-pagination-margin: 2px;
 
 .tlp-pagination-number {
     margin: 0 $tlp-pagination-margin;
-    color: #444444;
+    color: var(--tlp-typo-default-text-color);
     font-size: 0.875rem;
     font-weight: 600;
 }
