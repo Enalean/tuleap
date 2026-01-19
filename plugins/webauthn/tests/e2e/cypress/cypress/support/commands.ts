@@ -27,26 +27,26 @@ declare global {
     }
 }
 
-Cypress.Commands.add("createAuthenticator", () =>
-    Cypress.automation("remote:debugger:protocol", {
-        command: "WebAuthn.enable",
-        params: {},
-    })
-        .then(() =>
-            Cypress.automation("remote:debugger:protocol", {
-                command: "WebAuthn.addVirtualAuthenticator",
-                params: {
-                    options: {
-                        protocol: "ctap2",
-                        transport: "internal",
-                        hasResidentKey: true,
-                        hasUserVerification: true,
-                        isUserVerified: true,
+export function registerWebAuthnCommands(): void {
+    Cypress.Commands.add("createAuthenticator", () =>
+        Cypress.automation("remote:debugger:protocol", {
+            command: "WebAuthn.enable",
+            params: {},
+        })
+            .then(() =>
+                Cypress.automation("remote:debugger:protocol", {
+                    command: "WebAuthn.addVirtualAuthenticator",
+                    params: {
+                        options: {
+                            protocol: "ctap2",
+                            transport: "internal",
+                            hasResidentKey: true,
+                            hasUserVerification: true,
+                            isUserVerified: true,
+                        },
                     },
-                },
-            }),
-        )
-        .then((result) => result.authenticatorId),
-);
-
-export {};
+                }),
+            )
+            .then((result) => result.authenticatorId),
+    );
+}

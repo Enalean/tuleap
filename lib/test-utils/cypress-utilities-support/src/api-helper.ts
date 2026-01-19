@@ -18,54 +18,56 @@
  *
  */
 
-Cypress.Commands.add("getFromTuleapAPI", <TypeOfPayload>(url: string) => {
-    return cy.request<TypeOfPayload>({
-        url,
-        headers: {
-            accept: "application/json",
-            referer: Cypress.config("baseUrl"),
-        },
-    });
-});
-
-Cypress.Commands.add(
-    "postFromTuleapApi",
-    <TypeOfPayload>(url: string, payload: Record<string, unknown>) => {
+export function registerAPICommands(): void {
+    Cypress.Commands.add("getFromTuleapAPI", <TypeOfPayload>(url: string) => {
         return cy.request<TypeOfPayload>({
-            method: "POST",
-            url: url,
+            url,
+            headers: {
+                accept: "application/json",
+                referer: Cypress.config("baseUrl"),
+            },
+        });
+    });
+
+    Cypress.Commands.add(
+        "postFromTuleapApi",
+        <TypeOfPayload>(url: string, payload: Record<string, unknown>) => {
+            return cy.request<TypeOfPayload>({
+                method: "POST",
+                url: url,
+                body: payload,
+                headers: {
+                    accept: "application/json",
+                    referer: Cypress.config("baseUrl"),
+                },
+            });
+        },
+    );
+
+    Cypress.Commands.add(
+        "putFromTuleapApi",
+        <TypeOfPayload>(url: string, payload: Cypress.RequestBody) => {
+            return cy.request<TypeOfPayload>({
+                method: "PUT",
+                url: url,
+                body: payload,
+                headers: {
+                    accept: "application/json",
+                    referer: Cypress.config("baseUrl"),
+                },
+            });
+        },
+    );
+
+    Cypress.Commands.add("patchFromTuleapAPI", (url: string, payload: Record<string, unknown>) => {
+        cy.request({
+            method: "PATCH",
+            url,
             body: payload,
             headers: {
                 accept: "application/json",
                 referer: Cypress.config("baseUrl"),
             },
         });
-    },
-);
-
-Cypress.Commands.add(
-    "putFromTuleapApi",
-    <TypeOfPayload>(url: string, payload: Cypress.RequestBody) => {
-        return cy.request<TypeOfPayload>({
-            method: "PUT",
-            url: url,
-            body: payload,
-            headers: {
-                accept: "application/json",
-                referer: Cypress.config("baseUrl"),
-            },
-        });
-    },
-);
-
-Cypress.Commands.add("patchFromTuleapAPI", (url: string, payload: Record<string, unknown>) => {
-    cy.request({
-        method: "PATCH",
-        url,
-        body: payload,
-        headers: {
-            accept: "application/json",
-            referer: Cypress.config("baseUrl"),
-        },
     });
-});
+}

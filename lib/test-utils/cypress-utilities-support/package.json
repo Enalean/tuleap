@@ -3,10 +3,9 @@
   "name": "@tuleap/cypress-utilities-support",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "main": "./dist/index.js",
   "types": "./src/commands-type-definitions.d.ts",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/main.js"
   },
   "dependencies": {
     "quoted-printable": "^1.0.1"

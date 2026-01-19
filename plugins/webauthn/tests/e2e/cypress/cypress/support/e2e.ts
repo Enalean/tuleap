@@ -18,5 +18,7 @@
  *
  */
 
-import "@tuleap/cypress-utilities-support";
-import "./commands";
+import { registerCommands } from "@tuleap/cypress-utilities-support";
+import { registerWebAuthnCommands } from "./commands";
+registerCommands();
+registerWebAuthnCommands();

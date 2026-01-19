@@ -17,10 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./api-helper";
-import "./commands";
-import "./email";
-import "./trackers";
-import "./site-admin-actions";
-import "./project-admin-actions";
+import { registerAPICommands } from "./api-helper";
+import { registerGeneralCommands } from "./commands";
+import { registerEmailCommands } from "./email";
+import { registerTrackerCommands } from "./trackers";
+import { registerSiteAdminCommands } from "./site-admin-actions";
+import { registerProjectAdminCommands } from "./project-admin-actions";
+
 export { WEB_UI_SESSION } from "./commands";
+export function registerCommands(): void {
+    registerAPICommands();
+    registerGeneralCommands();
+    registerEmailCommands();
+    registerTrackerCommands();
+    registerSiteAdminCommands();
+    registerProjectAdminCommands();
+}

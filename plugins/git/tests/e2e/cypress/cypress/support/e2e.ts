@@ -18,5 +18,7 @@
  *
  */
 
-import "./commands";
-import "@tuleap/cypress-utilities-support";
+import { registerCommands } from "@tuleap/cypress-utilities-support";
+import { registerGitCommands } from "./commands";
+registerCommands();
+registerGitCommands();

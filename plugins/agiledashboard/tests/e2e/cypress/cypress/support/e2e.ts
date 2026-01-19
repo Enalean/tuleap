@@ -18,5 +18,7 @@
  *
  */
 
-import "@tuleap/cypress-utilities-support";
-import "./command";
+import { registerCommands } from "@tuleap/cypress-utilities-support";
+import { registerBacklogCommands } from "./commands";
+registerCommands();
+registerBacklogCommands();

@@ -29,14 +29,14 @@ declare global {
     }
 }
 
-Cypress.Commands.add(
-    "getFieldWithLabel",
-    (label: string): Cypress.Chainable<JQuery<HTMLElement>> => {
-        return cy
-            .get("[data-test=artifact-form-element] [data-test=field-label]")
-            .contains(label)
-            .parents("[data-test=artifact-form-element]");
-    },
-);
-
-export {};
+export function registerTrackerCommands(): void {
+    Cypress.Commands.add(
+        "getFieldWithLabel",
+        (label: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+            return cy
+                .get("[data-test=artifact-form-element] [data-test=field-label]")
+                .contains(label)
+                .parents("[data-test=artifact-form-element]");
+        },
+    );
+}
