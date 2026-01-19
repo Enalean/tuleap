@@ -340,6 +340,10 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
         var(--tlp-neutral-normal-color),
         var(--tlp-dark-color-lighter-10)
     );
+    --tlp-border-light-color: light-dark(
+        var(--tlp-neutral-light-color),
+        var(--tlp-dark-color-lighter-05)
+    );
     --tlp-neutral-light-color: #{$tlp-neutral-light-color};
     --tlp-neutral-normal-color: #{$tlp-neutral-normal-color};
     --tlp-neutral-dark-color: #{$tlp-neutral-dark-color};

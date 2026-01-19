@@ -32,7 +32,7 @@ $inactive-tab-right-margin: calc(
     align-items: center;
     margin: 0 0 var(--tlp-medium-spacing);
     padding: 0 var(--tlp-medium-spacing);
-    box-shadow: inset 0 -1px 0 var(--tlp-neutral-normal-color);
+    box-shadow: inset 0 -1px 0 var(--tlp-border-color);
 }
 
 .tlp-tabs-vertical {
@@ -46,7 +46,7 @@ $inactive-tab-right-margin: calc(
 .tlp-pane > .tlp-pane-container > .tlp-tabs {
     margin: 0;
     padding: 0;
-    box-shadow: inset 0 -1px 0 var(--tlp-neutral-normal-color);
+    box-shadow: inset 0 -1px 0 var(--tlp-border-color);
 }
 
 .tlp-tab-menu {
@@ -67,7 +67,7 @@ $inactive-tab-right-margin: calc(
     border-bottom: 0;
     border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
     opacity: 0;
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     box-shadow: none;
     pointer-events: none;
 }
@@ -75,8 +75,8 @@ $inactive-tab-right-margin: calc(
 .tlp-tab-menu-title {
     margin: calc(var(--tlp-medium-spacing) / 2) 0 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) / 2);
-    border-top: 1px solid var(--tlp-neutral-light-color);
-    color: var(--tlp-dimmed-color);
+    border-top: 1px solid var(--tlp-border-light-color);
+    color: light-dark(var(--tlp-dimmed-color), var(--tlp-dimmed-color-lighter-30));
     font-size: 0.625rem;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -92,7 +92,7 @@ $inactive-tab-right-margin: calc(
 
 .tlp-tab-menu-item {
     padding: calc(var(--tlp-medium-spacing) / 2) var(--tlp-medium-spacing);
-    color: var(--tlp-dark-color);
+    color: var(--tlp-typo-default-text-color);
     font-size: 0.8125rem;
     font-weight: 500;
     letter-spacing: normal;
@@ -125,7 +125,7 @@ $inactive-tab-right-margin: calc(
 
 .tlp-tab-menu-separator {
     width: 100%;
-    border-top: 1px solid var(--tlp-neutral-light-color);
+    border-top: 1px solid var(--tlp-border-light-color);
 }
 
 button:where(.tlp-tab) {
@@ -150,7 +150,7 @@ button:where(.tlp-tab) {
         color $tlp-tabs-transition,
         border-bottom-color $tlp-tabs-transition;
     border-bottom: $active-tab-border-width solid transparent;
-    color: var(--tlp-dimmed-color);
+    color: light-dark(var(--tlp-dimmed-color), var(--tlp-dimmed-color-lighter-30));
     font-size: 0.85rem;
     font-weight: 500;
     text-decoration: none;
@@ -168,7 +168,7 @@ button:where(.tlp-tab) {
     &[disabled],
     &[disabled]:hover {
         border-bottom-color: transparent;
-        color: var(--tlp-dimmed-color-lighter-50);
+        color: light-dark(var(--tlp-dimmed-color-lighter-50), var(--tlp-dimmed-color-darker-10));
         cursor: not-allowed;
 
         > .tlp-tab-badge-append {
@@ -221,7 +221,7 @@ button:where(.tlp-tab) {
             var(--tlp-medium-spacing);
         border-right: $inactive-tab-right-border-width solid
             var(--tlp-neutral-dark-color-transparent-50);
-        color: var(--tlp-dimmed-color-lighter-50);
+        color: light-dark(var(--tlp-dimmed-color-lighter-50), var(--tlp-dimmed-color-darker-10));
 
         > .tlp-tab-badge-append {
             opacity: 0.25;
