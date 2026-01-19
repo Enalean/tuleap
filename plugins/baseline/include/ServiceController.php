@@ -30,10 +30,10 @@ use Tuleap\Baseline\Adapter\ProjectProxy;
 use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
@@ -43,7 +43,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class ServiceController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
+final readonly class ServiceController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
     public const string PROJECT_NAME_VARIABLE_NAME = 'project_name';
 
@@ -58,24 +58,14 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
 
     private function includeJavascriptFiles(BaseLayout $layout): void
     {
-        $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('baseline.js'));
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->getAssets(), 'src/index.js'));
     }
 
-    private function includeCssFiles(BaseLayout $layout): void
+    private function getAssets(): IncludeViteAssets
     {
-        $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                $this->getAssets(),
-                'baseline-style'
-            )
-        );
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/baseline'
+        return new IncludeViteAssets(
+            __DIR__ . '/../scripts/baseline/frontend-assets',
+            '/assets/baseline/baseline',
         );
     }
 
@@ -118,7 +108,6 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
             $layout->redirect('/projects/' . $project_name);
         }
 
-        $this->includeCssFiles($layout);
         $this->includeJavascriptFiles($layout);
 
         $layout->header(

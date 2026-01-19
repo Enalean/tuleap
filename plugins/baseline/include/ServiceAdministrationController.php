@@ -31,22 +31,22 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Plugin\IsProjectAllowedToUsePlugin;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\ForbiddenException;
 
-class ServiceAdministrationController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
+final class ServiceAdministrationController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
 {
     public function __construct(
-        private ResponseFactoryInterface $response_factory,
-        private StreamFactoryInterface $stream_factory,
-        private IsProjectAllowedToUsePlugin $plugin,
-        private \TemplateRendererFactory $renderer_factory,
-        private AdminPermissionsPresenterBuilder $presenter_builder,
-        private CSRFSynchronizerTokenProvider $token_provider,
+        private readonly ResponseFactoryInterface $response_factory,
+        private readonly StreamFactoryInterface $stream_factory,
+        private readonly IsProjectAllowedToUsePlugin $plugin,
+        private readonly \TemplateRendererFactory $renderer_factory,
+        private readonly AdminPermissionsPresenterBuilder $presenter_builder,
+        private readonly CSRFSynchronizerTokenProvider $token_provider,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -72,12 +72,12 @@ class ServiceAdministrationController extends DispatchablePSR15Compatible implem
         assert($layout instanceof BaseLayout);
 
         $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                new IncludeAssets(
-                    __DIR__ . '/../frontend-assets',
-                    '/assets/baseline'
+            CssViteAsset::fromFileName(
+                new IncludeViteAssets(
+                    __DIR__ . '/../scripts/baseline/frontend-assets',
+                    '/assets/baseline/baseline',
                 ),
-                'baseline-style'
+                'styles/baseline.scss',
             )
         );
 

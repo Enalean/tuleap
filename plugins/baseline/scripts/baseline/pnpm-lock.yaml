@@ -7,37 +7,37 @@ settings:
 dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:^
-    version: link:../../src/themes/BurningParrot
+    version: link:../../../../src/themes/BurningParrot
   '@tuleap/core-constants':
     specifier: workspace:^
-    version: link:../../lib/frontend/constants
+    version: link:../../../../lib/frontend/constants
   '@tuleap/date-helper':
     specifier: workspace:*
-    version: link:../../lib/frontend/date-helper
+    version: link:../../../../lib/frontend/date-helper
   '@tuleap/project-background':
     specifier: workspace:*
-    version: link:../../lib/frontend/project-background
+    version: link:../../../../lib/frontend/project-background
   '@tuleap/tlp':
     specifier: workspace:*
-    version: link:../../src/scripts/tlp
+    version: link:../../../../src/scripts/tlp
   '@tuleap/tlp-date-picker':
     specifier: workspace:^
-    version: link:../../lib/frontend/tlp-date-picker
+    version: link:../../../../lib/frontend/tlp-date-picker
   '@tuleap/tlp-fetch':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-fetch
+    version: link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-modal
+    version: link:../../../../lib/frontend/tlp-modal
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-swatch-colors
+    version: link:../../../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue3-breadcrumb-privacy':
     specifier: workspace:^
-    version: link:../../lib/frontend/vue3-breadcrumb-privacy
+    version: link:../../../../lib/frontend/vue3-breadcrumb-privacy
   '@tuleap/vue3-gettext-init':
     specifier: workspace:^
-    version: link:../../lib/frontend/vue3-gettext-init
+    version: link:../../../../lib/frontend/vue3-gettext-init
   '@vue/compat':
     specifier: ^3.4.38
     version: 3.4.38(vue@3.4.38)
@@ -75,16 +75,16 @@ dependencies:
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../lib/frontend/build-system-configurator
+    version: link:../../../../lib/frontend/build-system-configurator
   '@tuleap/po-gettext-plugin':
     specifier: workspace:^
-    version: link:../../lib/frontend/po-gettext-plugin
+    version: link:../../../../lib/frontend/po-gettext-plugin
+  '@vitejs/plugin-vue':
+    specifier: ^6.0.3
+    version: 6.0.3(vue@3.4.38)
   '@vue/test-utils':
     specifier: ^2.4.6
     version: 2.4.6
-  vue-loader:
-    specifier: ^17.2.2
-    version: 17.2.2(vue@3.4.38)
 
 packages:
 
@@ -145,6 +145,10 @@ packages:
     dev: true
     optional: true
 
+  /@rolldown/pluginutils@1.0.0-beta.53:
+    resolution: {integrity: sha512-vENRlFU4YbrwVqNDZ7fLvy+JR1CRkyr01jhSiDpE1u6py3OMzQfztQU2jxykW3ALNxO4kSlqIDeYyD0Y9RcQeQ==}
+    dev: true
+
   /@types/glob@7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
@@ -178,6 +182,17 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /@vitejs/plugin-vue@6.0.3(vue@3.4.38):
+    resolution: {integrity: sha512-TlGPkLFLVOY3T7fZrwdvKpjprR3s4fxRln0ORDo1VQ7HHyxJwTlrjKU3kpVWTlaAjIEuCTokmjkZnr8Tpc925w==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    peerDependencies:
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+      vue: ^3.2.25
+    dependencies:
+      '@rolldown/pluginutils': 1.0.0-beta.53
+      vue: 3.4.38
+    dev: true
 
   /@vue/compat@3.4.38(vue@3.4.38):
     resolution: {integrity: sha512-CdX4/3I8hkodU6rG6r8uTi112gsKYVrZcTTEpmG7wP3G1n/lpHKbvl3wBzTc6ClTIqRyHABrYnFyTofiSommQA==}
@@ -323,6 +338,7 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
+    dev: false
 
   /color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -460,10 +476,6 @@ packages:
       typescript: 5.9.2
     dev: false
 
-  /glob-to-regexp@0.4.1:
-    resolution: {integrity: sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==}
-    dev: true
-
   /glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
     hasBin: true
@@ -488,17 +500,10 @@ packages:
       path-is-absolute: 1.0.1
     dev: false
 
-  /graceful-fs@4.2.11:
-    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
-    dev: true
-
   /has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
-
-  /hash-sum@2.0.0:
-    resolution: {integrity: sha512-WdZTbAByD+pHfl/g9QSsBIIwy8IT+EsPiKDs0KNX+zSHhdDLFKdZu0BQHljvO+0QI/BasbMSUa8wYNCZTvhslg==}
-    dev: true
+    dev: false
 
   /import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -803,6 +808,7 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       has-flag: 4.0.0
+    dev: false
 
   /tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -835,24 +841,6 @@ packages:
       dompurify: 3.2.6
       vue: 3.4.38
     dev: false
-
-  /vue-loader@17.2.2(vue@3.4.38):
-    resolution: {integrity: sha512-aqNvKJvnz2A/6VWeJZodAo8XLoAlVwBv+2Z6dama+LHsAF+P/xijQ+OfWrxIs0wcGSJduvdzvTuATzXbNKkpiw==}
-    peerDependencies:
-      '@vue/compiler-sfc': '*'
-      vue: '*'
-      webpack: ^4.1.0 || ^5.0.0-0
-    peerDependenciesMeta:
-      '@vue/compiler-sfc':
-        optional: true
-      vue:
-        optional: true
-    dependencies:
-      chalk: 4.1.2
-      hash-sum: 2.0.0
-      vue: 3.4.38
-      watchpack: 2.4.4
-    dev: true
 
   /vue-router@4.1.6(vue@3.4.38):
     resolution: {integrity: sha512-DYWYwsG6xNPmLq/FmZn8Ip+qrhFEzA14EI12MsMgVxvHFDYvlr4NXpVF5hrRH1wVcDP8fGi5F4rxuJSl8/r+EQ==}
@@ -915,14 +903,6 @@ packages:
       '@vue/devtools-api': 6.6.4
       vue: 3.4.38
     dev: false
-
-  /watchpack@2.4.4:
-    resolution: {integrity: sha512-c5EGNOiyxxV5qmTtAB7rbiXxi1ooX1pQKMLX/MIabJjRA0SJBQOjKF+KSVfHkr9U1cADPon0mRiVe/riyaiDUA==}
-    engines: {node: '>=10.13.0'}
-    dependencies:
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
-    dev: true
 
   /which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
