@@ -20,6 +20,7 @@
 import { getFolderSubtree } from "../helpers/retrieve-subtree-helper";
 import { isFolder } from "../helpers/type-check-helper";
 import type { FakeItem, Folder, FolderContentItem, Item, State } from "../type";
+import { toRaw } from "vue";
 
 export function saveFolderContent(state: State, folder_content: FolderContentItem[]): void {
     state.folder_content = folder_content;
@@ -189,9 +190,10 @@ export function foldFolderContent(state: State, folder_id: number): void {
     const index = state.folder_content.findIndex((item) => item.id === folder_id);
 
     if (index !== -1) {
-        const item = state.folder_content[index];
+        const item = structuredClone(toRaw(state.folder_content[index]));
         if (isFolder(item)) {
             item.is_expanded = false;
+            state.folder_content[index] = item;
         }
     }
     const children = getFolderUnfoldedDescendants(state, folder_id);
@@ -220,9 +222,10 @@ export function unfoldFolderContent(state: State, folder_id: number): void {
     const index = state.folder_content.findIndex((item) => item.id === folder_id);
 
     if (index !== -1) {
-        const item = state.folder_content[index];
+        const item = structuredClone(toRaw(state.folder_content[index]));
         if (isFolder(item)) {
             item.is_expanded = true;
+            state.folder_content[index] = item;
         }
     }
 
