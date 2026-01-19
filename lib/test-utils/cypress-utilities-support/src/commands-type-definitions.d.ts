@@ -163,6 +163,8 @@ declare global {
                 file_size_in_mb: number,
                 file_name: string,
             ): Chainable<{ file: File; data_transfer: DataTransfer }>;
+
+            setDatepickerValue(date: string): void;
         }
     }
 }

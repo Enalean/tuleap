@@ -32,9 +32,7 @@ describe("Tracker Workflow Global Rules", () => {
             cy.get("[data-test=button-next]").click();
 
             const name = "dates" + Date.now();
-            cy.get("[data-test=tracker-name-input]")
-                .clear()
-                .type(name + "{enter}");
+            cy.get("[data-test=tracker-name-input]").type("{selectAll}" + name + "{enter}");
             cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
 
             cy.log("Set rule Start Date < End Date");
@@ -53,13 +51,13 @@ describe("Tracker Workflow Global Rules", () => {
 
             cy.log("Test Start Date < End Date");
             cy.get("[data-test=create-new-item]").first().click({ force: true });
-            cy.get("[data-test=date-time-start_date]").clear().type("2023-06-21");
-            cy.get("[data-test=date-time-end_date]").clear().type("2023-06-20");
+            cy.get("[data-test=date-time-start_date]").setDatepickerValue("2023-06-21");
+            cy.get("[data-test=date-time-end_date]").setDatepickerValue("2023-06-20");
             cy.get("[data-test=summary]").type("Blah{enter}");
             cy.get("[data-test=feedback]").contains("Start Date must be < to End Date");
 
-            cy.get("[data-test=date-time-start_date]").clear().type("2023-06-21");
-            cy.get("[data-test=date-time-end_date]").clear().type("2023-06-22");
+            cy.get("[data-test=date-time-start_date]").setDatepickerValue("2023-06-21");
+            cy.get("[data-test=date-time-end_date]").setDatepickerValue("2023-06-22");
             cy.get("[data-test=summary]").type("Blah{enter}");
             cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
 
@@ -79,15 +77,15 @@ describe("Tracker Workflow Global Rules", () => {
 
             cy.log("Test Due Date > End Date");
             cy.get("[data-test=create-new-item]").first().click({ force: true });
-            cy.get("[data-test=date-time-start_date]").clear().type("2023-06-21");
-            cy.get("[data-test=date-time-due_date]").clear().type("2023-06-22");
-            cy.get("[data-test=date-time-end_date]").clear().type("2023-06-23");
+            cy.get("[data-test=date-time-start_date]").setDatepickerValue("2023-06-21");
+            cy.get("[data-test=date-time-due_date]").setDatepickerValue("2023-06-22");
+            cy.get("[data-test=date-time-end_date]").setDatepickerValue("2023-06-23");
             cy.get("[data-test=summary]").type("Blah{enter}");
             cy.get("[data-test=feedback]").contains("Due Date must be > to End Date.");
 
-            cy.get("[data-test=date-time-start_date]").clear().type("2023-06-21");
-            cy.get("[data-test=date-time-due_date]").clear().type("2023-06-24");
-            cy.get("[data-test=date-time-end_date]").clear().type("2023-06-23");
+            cy.get("[data-test=date-time-start_date]").setDatepickerValue("2023-06-21");
+            cy.get("[data-test=date-time-due_date]").setDatepickerValue("2023-06-24");
+            cy.get("[data-test=date-time-end_date]").setDatepickerValue("2023-06-23");
             cy.get("[data-test=summary]").type("Blah{enter}");
             cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
 
@@ -100,8 +98,8 @@ describe("Tracker Workflow Global Rules", () => {
 
             cy.log("Test that deleted rule is not anymore applied");
             cy.get("[data-test=create-new-item]").first().click({ force: true });
-            cy.get("[data-test=date-time-start_date]").clear().type("2023-06-21");
-            cy.get("[data-test=date-time-end_date]").clear().type("2023-06-20");
+            cy.get("[data-test=date-time-start_date]").setDatepickerValue("2023-06-21");
+            cy.get("[data-test=date-time-end_date]").setDatepickerValue("2023-06-20");
             cy.get("[data-test=summary]").type("Blah{enter}");
             cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
         });
