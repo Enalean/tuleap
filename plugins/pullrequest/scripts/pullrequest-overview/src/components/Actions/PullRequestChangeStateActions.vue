@@ -118,7 +118,7 @@ const merge_status_error = computed(() => {
     flex-direction: column;
     padding: var(--tlp-x-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing)
         var(--tlp-medium-spacing);
-    border-top: 1px solid var(--tlp-neutral-light-color);
+    border-top: 1px solid var(--tlp-border-light-color);
 }
 
 .pull-request-state-buttons {

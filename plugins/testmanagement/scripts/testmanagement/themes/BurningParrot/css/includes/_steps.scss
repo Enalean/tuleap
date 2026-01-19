@@ -5,14 +5,14 @@ execution-detail-just-updated > .feedback-info {
 .steps-maindescription {
     margin: var(--tlp-medium-spacing) 0 0;
     padding: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
+    border-bottom: 1px solid var(--tlp-border-light-color);
 }
 
 /* stylelint-disable selector-no-qualifying-type,selector-type-no-unknown */
 step {
     display: flex;
     align-items: baseline;
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
+    border-bottom: 1px solid var(--tlp-border-light-color);
 
     &.passed {
         border-color: var(--tlp-success-color-transparent-85);

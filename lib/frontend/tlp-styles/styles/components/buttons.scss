@@ -259,8 +259,8 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
 .tlp-button-secondary {
     @extend %-tlp-button;
 
-    border-color: var(--tlp-neutral-light-color);
-    background: var(--tlp-neutral-light-color);
+    border-color: var(--tlp-border-light-color);
+    background: var(--tlp-border-light-color);
     color: var(--tlp-dark-color);
 
     &:hover,

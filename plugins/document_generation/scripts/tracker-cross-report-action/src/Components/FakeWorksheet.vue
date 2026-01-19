@@ -44,12 +44,12 @@ defineProps<{
 </script>
 <style lang="scss" scoped>
 .fake-worksheet-section {
-    border-top: 1px solid var(--tlp-neutral-light-color);
+    border-top: 1px solid var(--tlp-border-light-color);
     background: var(--tlp-background-color);
 }
 
 .fake-worksheet-shadow {
-    filter: drop-shadow(0 0 1px var(--tlp-neutral-light-color));
+    filter: drop-shadow(0 0 1px var(--tlp-border-light-color));
 }
 
 .fake-worksheet {

@@ -88,7 +88,7 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
     align-items: baseline;
     justify-content: space-between;
     padding: $-tlp-modal-padding;
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
+    border-bottom: 1px solid var(--tlp-border-light-color);
     border-top-left-radius: $-tlp-modal-radius;
     border-top-right-radius: $-tlp-modal-radius;
     color: var(--tlp-dark-color);
@@ -151,7 +151,7 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
 
 .tlp-modal-feedback {
     padding: $-tlp-modal-padding;
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
+    border-bottom: 1px solid var(--tlp-border-light-color);
 
     &:empty {
         display: none;
@@ -175,7 +175,7 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
     flex: 0 1 50%;
     padding: $-tlp-modal-padding;
     overflow-y: auto;
-    border-right: 1px solid var(--tlp-neutral-light-color);
+    border-right: 1px solid var(--tlp-border-light-color);
 
     &:last-child {
         border-right: 0;
@@ -186,7 +186,7 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
     display: flex;
     justify-content: flex-end;
     padding: $-tlp-modal-padding;
-    border-top: 1px solid var(--tlp-neutral-light-color);
+    border-top: 1px solid var(--tlp-border-light-color);
     border-bottom-right-radius: $-tlp-modal-radius;
     border-bottom-left-radius: $-tlp-modal-radius;
 }
@@ -234,6 +234,6 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
     height: 1px;
     margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);
     border: 0;
-    background-color: var(--tlp-neutral-light-color);
-    color: var(--tlp-neutral-light-color);
+    background-color: var(--tlp-border-light-color);
+    color: var(--tlp-border-light-color);
 }

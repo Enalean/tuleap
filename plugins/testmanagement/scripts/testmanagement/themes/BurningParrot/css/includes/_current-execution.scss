@@ -347,14 +347,14 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     background: var(--tlp-fade-background-color);
 
     &.current-test-footer-top {
-        border-top: 1px solid var(--tlp-neutral-light-color);
+        border-top: 1px solid var(--tlp-border-light-color);
         border-right: 1px solid var(--tlp-border-color);
         border-bottom: 0;
         border-left: 1px solid var(--tlp-border-color);
     }
 
     &.current-test-footer-bottom {
-        border-top: 1px solid var(--tlp-neutral-light-color);
+        border-top: 1px solid var(--tlp-border-light-color);
         border-right: 1px solid var(--tlp-border-color);
         border-bottom: 1px solid var(--tlp-border-color);
         border-left: 1px solid var(--tlp-border-color);
@@ -748,7 +748,7 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
         flex-direction: column;
         justify-content: center;
         margin: 0;
-        border-bottom: 1px solid var(--tlp-neutral-light-color);
+        border-bottom: 1px solid var(--tlp-border-light-color);
 
         &:last-child {
             border-bottom: 0;
@@ -766,7 +766,7 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 
 .current-test-empty-pane {
     flex: 1;
-    border-top: 1px solid var(--tlp-neutral-light-color);
+    border-top: 1px solid var(--tlp-border-light-color);
     border-right: 1px solid var(--tlp-border-color);
     border-bottom: 1px solid var(--tlp-border-color);
     border-left: 1px solid var(--tlp-border-color);

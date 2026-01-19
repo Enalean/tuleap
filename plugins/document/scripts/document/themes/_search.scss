@@ -228,7 +228,7 @@
 .document-search-table-container-is-scrolling {
     .document-search-result-title-cell,
     .document-search-result-title-header {
-        border-right: 1px solid var(--tlp-neutral-light-color);
+        border-right: 1px solid var(--tlp-border-light-color);
     }
 }
 
@@ -325,7 +325,7 @@ tr:focus-within {
         margin: 0;
 
         > .tlp-pane-container > .tlp-pane-header {
-            border-bottom: 1px solid var(--tlp-neutral-light-color);
+            border-bottom: 1px solid var(--tlp-border-light-color);
         }
     }
 

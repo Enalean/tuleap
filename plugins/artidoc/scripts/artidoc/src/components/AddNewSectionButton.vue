@@ -215,7 +215,7 @@ li:first-child > .artidoc-add-new-section-container {
 @use "@/themes/includes/zindex";
 
 .artidoc-add-new-section-container {
-    --add-new-section-button-background-color: var(--tlp-neutral-light-color);
+    --add-new-section-button-background-color: var(--tlp-border-light-color);
     --add-new-section-button-text-color: var(--tlp-typo-default-text-color);
 
     margin: 0 0 0 calc(-1 * #{size.$add-section-button-container-width});

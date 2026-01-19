@@ -47,7 +47,7 @@
     &:not(:last-child) {
         border-bottom-right-radius: 0;
         border-bottom-left-radius: 0;
-        border-bottom-color: var(--tlp-neutral-light-color);
+        border-bottom-color: var(--tlp-border-light-color);
     }
 }
 
@@ -93,7 +93,7 @@
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 1px solid var(--tlp-border-color);
     border-top: 0;
-    border-bottom-color: var(--tlp-neutral-light-color);
+    border-bottom-color: var(--tlp-border-light-color);
     background: var(--tlp-white-color);
 }
 

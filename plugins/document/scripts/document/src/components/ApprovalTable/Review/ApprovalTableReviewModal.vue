@@ -254,7 +254,7 @@ function onReview(): void {
 
 <style scoped lang="scss">
 .modal-form-section {
-    border-top: 1px solid var(--tlp-neutral-light-color);
+    border-top: 1px solid var(--tlp-border-light-color);
 }
 
 .comment-input {
