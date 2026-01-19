@@ -42,6 +42,9 @@ msgstr "Valeur calculée"
 msgid "Cross references"
 msgstr "Références croisées"
 
+msgid "Custom layout"
+msgstr "Agencement personnalisé"
+
 msgid "Date"
 msgstr "Date"
 
@@ -87,6 +90,9 @@ msgstr "Aucun champ"
 msgid "None"
 msgstr "Aucun"
 
+msgid "One column layout"
+msgstr "Agencement sur une colonne"
+
 msgid "Open list"
 msgstr "Liste ouverte"
 
@@ -128,3 +134,9 @@ msgstr "Texte"
 
 msgid "This tracker does not have any field yet."
 msgstr "Ce tracker n'a pas encore de champ."
+
+msgid "Three columns layout"
+msgstr "Agencement sur trois colonnes"
+
+msgid "Two columns layout"
+msgstr "Agencement sur deux colonnes"

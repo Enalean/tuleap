@@ -20,10 +20,11 @@
 <template>
     <section class="tlp-pane">
         <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
+            <div class="tlp-pane-header fieldset-header">
                 <h1 class="tlp-pane-title">
                     {{ fieldset.field.label }}
                 </h1>
+                <fieldset-layout v-bind:fieldset="fieldset" />
             </div>
             <div class="tlp-pane-section">
                 <display-form-elements v-bind:elements="fieldset.children" />
@@ -35,8 +36,17 @@
 <script setup lang="ts">
 import type { Fieldset } from "../../type";
 import DisplayFormElements from "../DisplayFormElements.vue";
+import FieldsetLayout from "./FieldsetLayout.vue";
 
 defineProps<{
     fieldset: Fieldset;
 }>();
 </script>
+
+<style lang="scss" scoped>
+.fieldset-header {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+    justify-content: space-between;
+}
+</style>
