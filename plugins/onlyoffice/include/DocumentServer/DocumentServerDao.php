@@ -25,16 +25,12 @@ namespace Tuleap\OnlyOffice\DocumentServer;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\UUID;
 
 final class DocumentServerDao extends DataAccessObject implements IRetrieveDocumentServers, IDeleteDocumentServer, ICreateDocumentServer, IUpdateDocumentServer, IRestrictDocumentServer
 {
-    public function __construct(private DocumentServerKeyEncryption $encryption)
-    {
-        parent::__construct();
-    }
-
     /**
      * @return list<DocumentServer>
      */
@@ -77,7 +73,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
 
         foreach ($server_rows as $server_row) {
             $server_id  = $this->uuid_factory->buildUUIDFromBytesData($server_row['id']);
-            $secret_key = new ConcealedString($server_row['secret_key']);
+            $secret_key = $this->decryptDataStoredInATableRow($server_row['secret_key'], $this->getSecretKeyEncryptionAdditionalData($server_row['id']));
             sodium_memzero($server_row['secret_key']);
 
             if ($server_row['is_project_restricted'] || count($server_rows) > 1) {
@@ -117,7 +113,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
                     throw new DocumentServerNotFoundException();
                 }
 
-                $secret_key = new ConcealedString($row['secret_key']);
+                $secret_key = $this->decryptDataStoredInATableRow($row['secret_key'], $this->getSecretKeyEncryptionAdditionalData($uuid_bytes));
                 sodium_memzero($row['secret_key']);
 
                 if ($row['is_project_restricted'] || $this->isThereMultipleServers()) {
@@ -178,7 +174,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
                     [
                         'id' => $id,
                         'url'                   => $url,
-                        'secret_key'            => $this->encryption->encryptValue($secret_key),
+                        'secret_key'            => $this->encryptDataToStoreInATableRow($secret_key, $this->getSecretKeyEncryptionAdditionalData($id)),
                         'is_project_restricted' => false,
                     ]
                 );
@@ -195,11 +191,22 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
         $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)->mapOr(
             fn(UUID $uuid): int => $this->getDB()->update(
                 'plugin_onlyoffice_document_server',
-                ['url' => $url, 'secret_key' => $this->encryption->encryptValue($secret_key)],
+                [
+                    'url' => $url,
+                    'secret_key' => $this->encryptDataToStoreInATableRow($secret_key, $this->getSecretKeyEncryptionAdditionalData($uuid->getBytes())),
+                ],
                 ['id' => $uuid->getBytes()],
             ),
             null
         );
+    }
+
+    /**
+     * @param non-empty-string $id
+     */
+    private function getSecretKeyEncryptionAdditionalData(string $id): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData('plugin_onlyoffice_document_server', 'secret_key', $id);
     }
 
     #[\Override]

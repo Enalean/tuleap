@@ -34,15 +34,11 @@ use Lcobucci\JWT\Validation\Constraint;
 use Lcobucci\JWT\Validation\ConstraintViolation;
 use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 use Lcobucci\JWT\Validator;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\DB\UUID;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
-use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
 use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Option\Option;
 use Tuleap\Test\DB\UUIDTestContext;
@@ -51,32 +47,6 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
-    private string $encrypted_secret_server_1;
-    private string $encrypted_secret_server_2;
-
-    #[\Override]
-    protected function setUp(): void
-    {
-        $root = vfsStream::setup()->url();
-        mkdir($root . '/conf/');
-        \ForgeConfig::set('sys_custom_dir', $root);
-        $secret_key                      = (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getLegacy2025EncryptionKey();
-        $this->encrypted_secret_server_1 = base64_encode(
-            SymmetricCrypto::encrypt(
-                new ConcealedString(str_repeat('A', 32)),
-                $secret_key
-            )
-        );
-        $this->encrypted_secret_server_2 = base64_encode(
-            SymmetricCrypto::encrypt(
-                new ConcealedString(str_repeat('B', 32)),
-                $secret_key
-            )
-        );
-    }
-
     /**
      * @psalm-param list<int> $expected_authors
      */
@@ -284,16 +254,15 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
                     DocumentServer::withoutProjectRestrictions(
                         $this->getServer1UUID(),
                         'https://example.com/1',
-                        new ConcealedString($this->encrypted_secret_server_1)
+                        new ConcealedString('secret_server_1')
                     ),
                     DocumentServer::withoutProjectRestrictions(
                         new UUIDTestContext(),
                         'https://example.com/2',
-                        new ConcealedString($this->encrypted_secret_server_2)
+                        new ConcealedString('secret_server_2')
                     ),
                 ),
             ),
-            new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem()),
         );
     }
 
