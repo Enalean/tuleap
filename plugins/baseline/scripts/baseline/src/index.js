@@ -26,6 +26,7 @@ import App from "./components/App.vue";
 import store from "./store/index";
 import DateUtils from "./support/date-utils";
 import { getLocaleWithDefault } from "@tuleap/tlp-date-picker";
+import "../styles/baseline.scss";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleWithDefault(document);
