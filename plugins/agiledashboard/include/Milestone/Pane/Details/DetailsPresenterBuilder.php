@@ -27,6 +27,7 @@ namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 use EventManager;
 use PFUser;
 use Planning_Milestone;
+use Planning_MilestoneController;
 use Planning_MilestoneRedirectParameter;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
@@ -52,6 +53,10 @@ class DetailsPresenterBuilder
 
         $chart_presenter = $this->getChartPresenter($milestone, $user);
 
+        $solve_inconsistencies_URL = Planning_MilestoneController::getSolveInconsistenciesUrl(
+            $milestone,
+            $redirect_to_self
+        );
         return new DetailsPresenter(
             $this->collection_factory->getOpenClosedAndInconsistentCollection(
                 $user,
@@ -61,7 +66,8 @@ class DetailsPresenterBuilder
             ),
             $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog, $redirect_to_self),
             $descendant_trackers,
-            $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
+            $solve_inconsistencies_URL,
+            new \CSRFSynchronizerToken($solve_inconsistencies_URL),
             $chart_presenter
         );
     }
@@ -102,14 +108,5 @@ class DetailsPresenterBuilder
             $burnup_presenter,
             $event->getEscapedCharts()
         );
-    }
-
-    private function getSolveInconsistenciesUrl(Planning_Milestone $milestone, string $redirect_to_self): string
-    {
-        return AGILEDASHBOARD_BASE_URL .
-            '/?group_id=' . $milestone->getGroupId() .
-            '&aid=' . (int) $milestone->getArtifactId() .
-            '&action=solve-inconsistencies' .
-            '&' . $redirect_to_self;
     }
 }

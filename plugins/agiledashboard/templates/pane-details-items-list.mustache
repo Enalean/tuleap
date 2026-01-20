@@ -6,6 +6,9 @@
         <section class="tlp-pane-section">
             {{# has_something_inconsistent }}
                 <form method="POST" action="{{ solve_inconsistencies_url }}" class="tlp-alert-warning">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
                     {{# inconsistent_collection }}
                         <input type="hidden" name="inconsistent-artifacts-ids[]" value="{{id}}"/>
                     {{/ inconsistent_collection }}

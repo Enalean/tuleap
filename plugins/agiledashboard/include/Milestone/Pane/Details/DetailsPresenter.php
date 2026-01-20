@@ -25,23 +25,26 @@
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
+use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 class DetailsPresenter
 {
     public string $no_items_label;
     public string $backlog_item_type;
     public string $item_is_inconsistent_label;
-
-
+    public CSRFSynchronizerTokenPresenter $csrf_token;
 
     public function __construct(
         public readonly IBacklogItemCollection $items_collection,
         public readonly IBacklogItemCollection $inconsistent_collection,
         array $trackers,
         public readonly string $solve_inconsistencies_url,
+        CSRFSynchronizerTokenInterface $csrf_token,
         readonly DetailsChartPresenter $chart_presenter,
     ) {
         $this->backlog_item_type = $this->getTrackerNames($trackers);
+        $this->csrf_token        = CSRFSynchronizerTokenPresenter::fromToken($csrf_token);
 
         $this->no_items_label             = dgettext('tuleap-agiledashboard', 'There is no item yet');
         $this->item_is_inconsistent_label = dgettext('tuleap-agiledashboard', 'Item is not linked to this milestone');
