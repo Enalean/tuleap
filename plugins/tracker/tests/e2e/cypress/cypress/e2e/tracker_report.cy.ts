@@ -47,8 +47,8 @@ function createArtifactWithValues(now: number): void {
     cy.getFieldWithLabel("Float").find("[data-test-field-input]").type("5.12");
     cy.getFieldWithLabel("Date").get("[data-test=date-time-date]").setDatepickerValue("2025-02-01");
     cy.getFieldWithLabel("Datetime")
-        .get("[data-test=date-time-datetime]")
-        .setDatepickerValue("2025-02-01 02:23");
+        .find("[data-test=date-time-datetime]")
+        .invoke("val", "2025-02-01 02:23");
     cy.getFieldWithLabel("Computed").find("[data-test-field-input]").type("13.5");
 
     cy.getFieldWithLabel("Attachments").then(($field) => {
