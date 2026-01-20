@@ -45,7 +45,7 @@ final class FieldsDataFromValuesByFieldBuilder
         $new_values    = [];
         $artifact_link = Option::nothing(NewArtifactLinkInitialChangesetValue::class);
         foreach ($values as $field_name => $value) {
-            $field = $this->getFieldByName($tracker, $field_name);
+            $field = $this->getFieldByName($tracker, (string) $field_name);
             if ($field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField) {
                 $artifact_link = Option::fromValue(
                     $this->artifact_link_initial_builder->buildFromPayload($field, $value)
