@@ -165,26 +165,50 @@ class Planning_MilestoneController extends BaseController //phpcs:ignore PSR1.Cl
         );
     }
 
-    public function solveInconsistencies()
+    public function solveInconsistencies(): never
     {
         $milestone_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->request->get('aid'));
         $milestone          = $this->milestone_factory->getMilestoneFromArtifact($this->request->getCurrentUser(), $milestone_artifact);
-        $artifact_ids       = $this->request->get('inconsistent-artifacts-ids');
         $extractor          = new AgileDashboard_PaneRedirectionExtractor();
-
-        if (! $milestone || ! ($this->inconsistentArtifactsIdsAreValid($artifact_ids) && $milestone->solveInconsistencies($this->getCurrentUser(), $artifact_ids))) {
+        $redirect_params    = $extractor->getRedirectToParameters($this->request, $this->project);
+        if ($milestone === null) {
             $this->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'An error occurred while trying to solve inconsistencies.'));
+            $this->redirectAfterSolveInconsistencies($redirect_params);
+        }
+
+        $redirect_parameter = new Planning_MilestoneRedirectParameter();
+        $redirect_to_self   = $redirect_parameter->getPlanningRedirectToSelf($milestone, DetailsPaneInfo::IDENTIFIER);
+        new CSRFSynchronizerToken(
+            self::getSolveInconsistenciesURL($milestone, $redirect_to_self)
+        )->check('/plugins/agiledashboard/?' . http_build_query($redirect_params));
+
+        $artifact_ids = $this->request->get('inconsistent-artifacts-ids');
+
+        if (! ($this->inconsistentArtifactsIdsAreValid($artifact_ids) && $milestone->solveInconsistencies($this->getCurrentUser(), $artifact_ids))) {
+            $this->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'An error occurred while trying to solve inconsistencies.'));
+            $this->redirectAfterSolveInconsistencies($redirect_params);
         }
 
         $this->addFeedback(Feedback::INFO, dgettext('tuleap-agiledashboard', 'Inconsistencies successfully solved!'));
+        $this->redirectAfterSolveInconsistencies($redirect_params);
+    }
 
-        if (! $request_has_redirect = $extractor->getRedirectToParameters($this->request, $this->project)) {
-            $this->redirect([
-                'group_id' => $this->project->getGroupId(),
-            ]);
+    private function redirectAfterSolveInconsistencies(?array $params): never
+    {
+        if ($params === null) {
+            $this->redirect(['group_id' => $this->project->getGroupId()]);
         }
 
-        $this->redirect($extractor->getRedirectToParameters($this->request, $this->project));
+        $this->redirect($params);
+    }
+
+    public static function getSolveInconsistenciesURL(Planning_Milestone $milestone, string $redirect_to_self): string
+    {
+        return '/plugins/agiledashboard/?' . http_build_query([
+            'group_id' => $milestone->getGroupId(),
+            'aid'      => (int) $milestone->getArtifactId(),
+            'action'   => 'solve-inconsistencies',
+        ]) . '&' . $redirect_to_self;
     }
 
     private function inconsistentArtifactsIdsAreValid(array $artifact_ids)
