@@ -24,8 +24,8 @@ use Feedback;
 use Override;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -42,8 +42,7 @@ class Router implements DispatchableWithRequest, DispatchableWithBurningParrot
         $this->checkUserIsSiteAdmin($current_user);
 
         $assets = $this->getIncludeAsset();
-        $layout->includeFooterJavascriptFile($assets->getFileURL('bugzilla-reference.js'));
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'burningparrot-style'));
+        $layout->addJavascriptAsset(new JavascriptViteAsset($assets, 'src/bugzilla-reference.js'));
 
         $action = $request->get('action');
         switch ($action) {
@@ -72,11 +71,11 @@ class Router implements DispatchableWithRequest, DispatchableWithBurningParrot
         }
     }
 
-    private function getIncludeAsset(): IncludeAssets
+    private function getIncludeAsset(): IncludeViteAssets
     {
-        return new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/bugzilla_reference'
+        return new IncludeViteAssets(
+            __DIR__ . '/../../../scripts/bugzilla-reference/frontend-assets',
+            '/assets/bugzilla_reference/bugzilla-reference'
         );
     }
 }
