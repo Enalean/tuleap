@@ -21,6 +21,7 @@
 
 namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Tests\Stub\TableFactoryForFileBuilderStub;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -52,6 +53,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             TableFactoryForFileBuilderStub::buildWithFactory($this->factory),
             ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
             ProvideUserAvatarUrlStub::build(),
+            new VersionOpenHrefVisitor(),
         );
         $user_helper   = $this->createStub(\UserHelper::class);
         $user_helper->method('getUserUrl')->willReturn('/path/to/user');

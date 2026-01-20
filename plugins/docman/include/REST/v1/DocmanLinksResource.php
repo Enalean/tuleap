@@ -38,6 +38,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
@@ -357,6 +358,7 @@ class DocmanLinksResource extends AuthenticatedResource
             new LinkVersionDao(),
             UserManager::instance(),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new VersionOpenHrefVisitor(),
         );
 
         $items_representation = $item_representation_builder->buildVersionsCollection($item, $limit, $offset);

@@ -58,6 +58,7 @@ final readonly class ItemApprovalTableRepresentation
         public string $post_processed_description,
         public array $reviewers,
         public int $reminder_occurence,
+        public string $version_open_href,
     ) {
     }
 
@@ -72,9 +73,10 @@ final readonly class ItemApprovalTableRepresentation
         Docman_NotificationsManager $notifications_manager,
         Codendi_HTMLPurifier $purifier,
     ): self {
-        $version_label  = '';
-        $version_id     = null;
-        $version_number = null;
+        $version_label         = '';
+        $version_id            = null;
+        $version_number        = null;
+        $version_download_href = '';
         if ($approval_table instanceof Docman_ApprovalTableVersionned) {
             $version        = $version_factory->getSpecificVersion($item, $approval_table->getVersionNumber());
             $version_label  = (string) $version?->getLabel();
@@ -113,11 +115,12 @@ final readonly class ItemApprovalTableRepresentation
                     $provide_user_avatar_url,
                     $version_factory,
                     $notifications_manager,
-                    $purifier
+                    $purifier,
                 ),
                 $approval_table->getReviewerArray(),
             )),
             (int) $approval_table->getNotificationOccurence(),
+            $version_download_href
         );
     }
 }

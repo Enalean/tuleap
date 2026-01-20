@@ -40,6 +40,7 @@ use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
@@ -587,6 +588,7 @@ final class DocmanFilesResource extends AuthenticatedResource
             UserManager::instance(),
             new \Docman_ApprovalTableFactoriesFactory(),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new VersionOpenHrefVisitor(),
         );
 
         $items_representation = $item_representation_builder->buildVersionsCollection($item, $limit, $offset);

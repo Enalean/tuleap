@@ -292,7 +292,7 @@ final class SearchResource extends AuthenticatedResource
             $html_purifier,
             $provide_user_avatar_url,
             $version_factory,
-            new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
+            new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager()
         );
 
 

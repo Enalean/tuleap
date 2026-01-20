@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1;
 
 use Tuleap\Docman\ApprovalTable\TableFactoryForFileBuilder;
 use Tuleap\Docman\Item\PaginatedFileVersionRepresentationCollection;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\REST\v1\Files\FileVersionRepresentation;
 use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Docman\Version\VersionDao;
@@ -39,6 +40,7 @@ final class VersionRepresentationCollectionBuilder
         private RetrieveUserById $user_retriever,
         private TableFactoryForFileBuilder $table_factory_builder,
         private ProvideUserAvatarUrl $provide_user_avatar_url,
+        private readonly VersionOpenHrefVisitor $version_open_href_visitor,
     ) {
     }
 
@@ -71,6 +73,11 @@ final class VersionRepresentationCollectionBuilder
                 )
                 : null;
 
+            $open_href = $item->accept(
+                $this->version_open_href_visitor,
+                ['version' => $version]
+            );
+
             $author = $this->user_retriever->getUserById((int) $version->getAuthorId());
             if (! $author) {
                 continue;
@@ -93,6 +100,7 @@ final class VersionRepresentationCollectionBuilder
                 (int) $item->getGroupId(),
                 (int) $item->getId(),
                 $approval_href,
+                $open_href,
                 $author,
                 $coauthors,
                 (new \DateTimeImmutable())->setTimestamp((int) $version->getDate()),

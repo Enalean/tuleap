@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Links;
 
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Version\LinkVersionDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -43,6 +44,7 @@ class VersionRepresentationCollectionBuilderTest extends TestCase
             $this->dao,
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
             ProvideUserAvatarUrlStub::build(),
+            new VersionOpenHrefVisitor(),
         );
         $user_helper   = $this->createStub(\UserHelper::class);
         $user_helper->method('getUserUrl')->willReturn('/path/to/user');

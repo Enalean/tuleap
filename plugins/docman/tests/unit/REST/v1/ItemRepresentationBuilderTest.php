@@ -26,7 +26,6 @@ use Codendi_HTMLPurifier;
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableFile;
 use Docman_ApprovalTableFileFactory;
-use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_LockFactory;
@@ -37,6 +36,7 @@ use Docman_VersionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\Builders\DocmanFileTestBuilder;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
@@ -91,7 +91,7 @@ final class ItemRepresentationBuilderTest extends TestCase
             $this->html_purifier,
             ProvideUserAvatarUrlStub::build(),
             $this->version_factory,
-            $this->createStub(Docman_NotificationsManager::class),
+            $this->createStub(Docman_NotificationsManager::class)
         );
 
         UserManager::setInstance($this->user_manager);
@@ -128,11 +128,14 @@ final class ItemRepresentationBuilderTest extends TestCase
             'metadata'
         );
         $this->metadata_representation_builder->method('build')->willReturn([$metadata_representation]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn(null);
 
-        $docman_item = new Docman_Item();
-        $docman_item->setId($docman_item_id);
-        $docman_item->setTitle('My file.txt');
-        $docman_item->setOwnerId($owner_id);
+        $docman_item = DocmanFileTestBuilder::aFile()
+            ->withId($docman_item_id)
+            ->withTitle('My file.txt')
+            ->withOwnerId($owner_id)
+            ->withGroupId(101)
+            ->build();
 
         $item_approval_table = $this->createMock(Docman_ApprovalTableFile::class);
         $item_approval_table->method('getOwner')->willReturn($owner_id);

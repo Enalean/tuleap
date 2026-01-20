@@ -51,6 +51,10 @@ final class FileVersionRepresentation
      */
     public $download_href;
     /**
+     * @var string link to open the version
+     */
+    public string $open_href;
+    /**
      * @var string|null link to the approval table
      */
     public ?string $approval_href;
@@ -86,6 +90,7 @@ final class FileVersionRepresentation
         int $group_id,
         int $item_id,
         ?string $approval_href,
+        string $open_href,
         UserRepresentation $author,
         array $coauthors,
         string $date,
@@ -101,6 +106,7 @@ final class FileVersionRepresentation
         $this->date           = $date;
         $this->changelog      = $changelog;
         $this->approval_href  = $approval_href;
+        $this->open_href      = $open_href;
         $this->download_href  = '/plugins/docman/download/' . urlencode((string) $item_id) . '/' . urlencode((string) $number);
         $this->authoring_tool = $authoring_tool;
     }
@@ -116,6 +122,7 @@ final class FileVersionRepresentation
         int $group_id,
         int $item_id,
         ?string $approval_href,
+        string $open_href,
         \PFUser $author,
         array $coauthors,
         \DateTimeInterface $date,
@@ -131,6 +138,7 @@ final class FileVersionRepresentation
             $group_id,
             $item_id,
             $approval_href,
+            $open_href,
             UserRepresentation::build($author, $provide_user_avatar_url),
             array_map(
                 static fn (\PFUser $coauthor): UserRepresentation => UserRepresentation::build($coauthor, $provide_user_avatar_url),

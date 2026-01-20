@@ -21,6 +21,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Tests\Stub\TableFactoryForFileBuilderStub;
 use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Docman\Version\VersionDao;
@@ -57,6 +58,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             RetrieveUserByIdStub::withUsers($user, $co_author_1, $co_author_2),
             TableFactoryForFileBuilderStub::buildWithFactory($this->factory),
             ProvideUserAvatarUrlStub::build(),
+            new VersionOpenHrefVisitor(),
         );
         $user_helper   = $this->createStub(\UserHelper::class);
         $user_helper->method('getUserUrl')->willReturn('/path/to/user');
@@ -116,6 +118,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         self::assertNull($representation->approval_href);
         self::assertEquals('Awesome Office Editor', $representation->authoring_tool);
         self::assertCount(2, $representation->coauthors);
+        self::assertEquals('/plugins/docman/download/4/1', $representation->open_href);
     }
 
     public function testItBuildAVersionsRepresentationWithApprovalTable(): void

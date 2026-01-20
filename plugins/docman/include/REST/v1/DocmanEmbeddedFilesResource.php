@@ -39,6 +39,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
@@ -330,6 +331,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             new \Docman_ApprovalTableFactoriesFactory(),
             ProjectManager::instance(),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new VersionOpenHrefVisitor(),
         );
 
         $collection = $version_representations_builder->buildVersionsCollection($item, $limit, $offset);

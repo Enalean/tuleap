@@ -22,6 +22,7 @@
 
 namespace Tuleap\Docman\REST\v1\Links;
 
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Version\LinkVersionDao;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
@@ -32,6 +33,7 @@ final class VersionRepresentationCollectionBuilder
         private LinkVersionDao $dao,
         private RetrieveUserById $user_retriever,
         private ProvideUserAvatarUrl $provide_user_avatar_url,
+        private readonly VersionOpenHrefVisitor $version_open_href_visitor,
     ) {
     }
 
@@ -50,12 +52,16 @@ final class VersionRepresentationCollectionBuilder
                 continue;
             }
 
+            $link_href = $item->accept(
+                $this->version_open_href_visitor,
+                ['version' => $version]
+            );
+
             $versions[] = LinkVersionRepresentation::build(
                 (int) $version->getId(),
                 $row['number'],
                 $row['label'],
-                (int) $item->getGroupId(),
-                (int) $item->getId(),
+                $link_href,
                 $author,
                 (new \DateTimeImmutable())->setTimestamp((int) $version->getDate()),
                 (string) $version->getChangelog(),

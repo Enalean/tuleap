@@ -23,6 +23,7 @@
 namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
 use Tuleap\Docman\ApprovalTable\TableFactoryForFileBuilder;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 use Tuleap\Project\ProjectByIDFactory;
@@ -37,6 +38,7 @@ final class VersionRepresentationCollectionBuilder
         private TableFactoryForFileBuilder $table_factory_builder,
         private ProjectByIDFactory $project_factory,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
+        private readonly VersionOpenHrefVisitor $version_open_href_visitor,
     ) {
     }
 
@@ -47,10 +49,7 @@ final class VersionRepresentationCollectionBuilder
     ): PaginatedEmbeddedFileVersionRepresentationCollection {
         $table_factory = $this->table_factory_builder->getTableFactoryForFile($item);
 
-        $project        = $this->project_factory->getProjectById((int) $item->getGroupId());
-        $open_item_href = '/plugins/document/' . urlencode($project->getUnixNameLowerCase())
-            . '/folder/' . urlencode((string) $item->getParentId())
-            . '/' . urlencode((string) $item->getId());
+        $project = $this->project_factory->getProjectById((int) $item->getGroupId());
 
         $dar      = $this->dao->searchByItemId($item->getId(), $offset, $limit);
         $versions = [];
@@ -73,7 +72,13 @@ final class VersionRepresentationCollectionBuilder
                 )
                 : null;
 
-            $open_href = $open_item_href . '/' . urlencode((string) $version->getId());
+            $open_href = $item->accept(
+                $this->version_open_href_visitor,
+                [
+                    'version' => $version,
+                    'project' => $project,
+                ]
+            );
 
             $author = $this->user_retriever->getUserById((int) $version->getAuthorId());
             if (! $author) {
