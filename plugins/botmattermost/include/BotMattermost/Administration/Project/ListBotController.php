@@ -26,25 +26,26 @@ use Override;
 use TemplateRenderer;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
-class ListBotController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final readonly class ListBotController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public function __construct(
         private BotFactory $bot_factory,
         private LayoutHelper $layout_helper,
         private TemplateRenderer $renderer,
-        private IncludeAssets $assets,
+        private IncludeViteAssets $assets,
     ) {
     }
 
     #[Override]
-    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $user       = $request->getCurrentUser();
         $project_id = $variables['project_id'];
@@ -71,7 +72,7 @@ class ListBotController implements DispatchableWithRequest, DispatchableWithBurn
             );
         };
 
-        $layout->includeFooterJavascriptFile($this->assets->getFileURL('project-admin-modals.js'));
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/project-admin/modals.ts'));
         $this->layout_helper->renderInProjectAdministrationLayout(
             $request,
             $project_id,

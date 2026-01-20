@@ -31,6 +31,9 @@ use Tuleap\BotMattermost\Exception\EmptyUpdateException;
 use Tuleap\BotMattermost\Exception\ProvidedBotParameterIsNotValidException;
 use Tuleap\BotMattermost\Presenter\AdminPresenter;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Valid_HTTPURI;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
@@ -40,25 +43,24 @@ use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
 
-class AdminController
+final readonly class AdminController
 {
-    private $csrf;
-    private $bot_factory;
-
     public function __construct(
-        CSRFSynchronizerToken $csrf,
-        BotFactory $bot_factory,
+        private CSRFSynchronizerToken $csrf,
+        private BotFactory $bot_factory,
         private BotDeletor $bot_deletor,
         private BotEditor $bot_editor,
         private BotCreator $bot_creator,
+        private IncludeViteAssets $assets,
     ) {
-        $this->csrf        = $csrf;
-        $this->bot_factory = $bot_factory;
     }
 
     public function displayIndex(BaseLayout $response)
     {
         try {
+            $response->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/site-admin/modals.js'));
+            $response->addCssAsset(CssViteAsset::fromFileName($this->assets, 'themes/botmattermost.scss'));
+
             $admin_presenter     = new AdminPresenter($this->csrf, $this->bot_factory->getSystemBots());
             $admin_page_renderer = new AdminPageRenderer();
             $admin_page_renderer->renderAPresenter(
