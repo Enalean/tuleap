@@ -29,6 +29,9 @@
     tuleap:readonly
 */
 
+import { createModal } from "@tuleap/tlp-modal";
+import { getAttributeOrThrow } from "@tuleap/dom";
+
 document.observe("dom:loaded", function () {
     setTrackerInSelectorUrl();
     codendi.tracker.artifact.artifactLink.showReverseArtifactLinks();
@@ -503,9 +506,9 @@ document.observe("dom:loaded", function () {
                                 'ic/clipboard-search-result.png" />',
                         );
 
-                    var link_create = new Element("a", {
+                    var button_create = new Element("button", {
+                        type: "button",
                         title: tuleap.escaper.html(codendi.locales.tracker_artifact_link.create),
-                        href: "#",
                     })
                         .addClassName("tracker-form-element-artifactlink-selector btn btn-small")
                         .update(
@@ -527,7 +530,7 @@ document.observe("dom:loaded", function () {
                     var input_append_element = input.up();
                     var container = input_append_element.up();
 
-                    input_append_element.insert(link).insert(link_create);
+                    input_append_element.insert(link).insert(button_create);
                     container.appendChild(preview_button);
                     container.insert(
                         '<br /><em style="color:#666; font-size: 0.9em;">' +
@@ -572,32 +575,39 @@ document.observe("dom:loaded", function () {
                     },
                 );
 
-            link_create.observe("click", openCreateArtifactModalOnClickOnCreateButton);
+            button_create.observe("click", openCreateArtifactModalOnClickOnCreateButton);
             link.observe("click", openSearchArtifactModalOnClickOnLinkButton);
 
-            function openCreateArtifactModalOnClickOnCreateButton(evt) {
-                //create a new artifact via artifact links
-                //tracker='.$tracker_id.'&func=new-artifact-link&id='.$artifact->getId().
-                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow =
-                    function () {};
-                codendi.tracker.artifact.artifactLink.overlay_window.activateWindow({
-                    href:
-                        codendi.tracker.base_url +
-                        "?" +
-                        $H({
-                            tracker: codendi.tracker.artifact.artifactLink.selector_url.tracker,
-                            func: "new-artifact-link",
-                            id: codendi.tracker.artifact.artifactLink.selector_url[
-                                "link-artifact-id"
-                            ],
-                            modal: 1,
-                        }).toQueryString(),
-                    title: tuleap.escaper.html(link.title),
-                    iframeEmbed: true,
+            function openCreateArtifactModalOnClickOnCreateButton() {
+                const modal_element = document.getElementById("add-new-artifact-modal");
+
+                const iframe = modal_element.querySelector(".new-artifact-modal-iframe");
+                iframe.src = getAttributeOrThrow(modal_element, "data-iframe-src");
+
+                const modal = createModal(modal_element, {
+                    destroy_on_hide: true,
+                    keyboard: true,
+                    dismiss_on_backdrop_click: true,
                 });
 
-                Event.stop(evt);
-                return false;
+                modal.show();
+
+                iframe.addEventListener("load", function () {
+                    const iframe_doc = iframe.contentDocument || iframe.contentWindow.document;
+                    const form = iframe_doc.querySelector(".artifact-form");
+                    if (!form) {
+                        modal.hide();
+                    }
+                });
+
+                const submit_button = modal_element.querySelector(".new-artifact-modal-submit");
+                submit_button.addEventListener("click", function () {
+                    const iframe_doc = iframe.contentDocument || iframe.contentWindow.document;
+                    const form = iframe_doc.querySelector(".artifact-form");
+                    if (form) {
+                        form.submit();
+                    }
+                });
             }
 
             function openSearchArtifactModalOnClickOnLinkButton(evt) {
