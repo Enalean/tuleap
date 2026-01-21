@@ -95,6 +95,7 @@
                     {{ $gettext("Cancel") }}
                 </button>
                 <button type="submit" class="tlp-button-primary tlp-modal-action">
+                    <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
                     {{ $gettext("Save") }}
                 </button>
             </div>
