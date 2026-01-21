@@ -18,6 +18,7 @@
  */
 
 import { createModal } from "tlp";
+import "../styles/bugzilla_reference.scss";
 
 document.addEventListener("DOMContentLoaded", function () {
     var add_reference = document.querySelector("#bugzilla-add-reference"),
