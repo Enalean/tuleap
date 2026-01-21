@@ -33,6 +33,7 @@ describe("LinkPopoverElement", () => {
     let doc: Document, popover_anchor: HTMLElement;
 
     beforeEach(() => {
+        vi.resetAllMocks();
         doc = createLocalDocument();
         popover_anchor = doc.createElement("span");
     });

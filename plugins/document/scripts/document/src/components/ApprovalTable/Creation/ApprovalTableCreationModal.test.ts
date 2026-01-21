@@ -32,14 +32,6 @@ import { Fault } from "@tuleap/fault";
 
 vi.useFakeTimers();
 
-const noop = (): void => {};
-class ResizeObserverMock {
-    disconnect = noop;
-    observe = noop;
-    unobserve = noop;
-}
-vi.stubGlobal("ResizeObserver", ResizeObserverMock);
-
 describe("ApprovalTableCreationModal", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof ApprovalTableCreationModal>> {
         return shallowMount(ApprovalTableCreationModal, {
@@ -55,6 +47,14 @@ describe("ApprovalTableCreationModal", () => {
     }
 
     beforeEach(() => {
+        const noop = (): void => {};
+        class ResizeObserverMock {
+            disconnect = noop;
+            observe = noop;
+            unobserve = noop;
+        }
+        vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+
         vi.spyOn(ugroups, "loadProjectUserGroups").mockReturnValue(
             okAsync([
                 { id: "101_3", label: "Project Members", short_name: "project_members" },

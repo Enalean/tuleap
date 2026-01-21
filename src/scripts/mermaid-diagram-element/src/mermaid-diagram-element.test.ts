@@ -18,7 +18,7 @@
  */
 
 import type { RenderResult } from "mermaid";
-import { describe, it, expect, vi, beforeEach, beforeAll, afterEach } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { MermaidDiagramElement } from "./mermaid-diagram-element";
 
 vi.mock("./id-generator", () => {
@@ -36,8 +36,12 @@ vi.mock("./panzoom", () => {
     return { panzoom: vi.fn() };
 });
 
+type ObserverCallback = (entries: unknown[]) => Promise<void>;
+
 describe("MermaidDiagramElement", () => {
-    const windowIntersectionObserver = window.IntersectionObserver;
+    const observe = vi.fn();
+    const unobserve = vi.fn();
+    let observerCallback: ObserverCallback;
 
     function createMermaidDiagramElement(): MermaidDiagramElement {
         const doc = document.implementation.createHTMLDocument();
@@ -64,25 +68,25 @@ describe("MermaidDiagramElement", () => {
     });
 
     beforeEach(() => {
-        render.mockReset();
+        vi.resetAllMocks();
         render.mockImplementation(
-            (id: string, txt: string): Promise<RenderResult> =>
+            (_: string, txt: string): Promise<RenderResult> =>
                 Promise.resolve({ svg: `<svg>${txt}</svg>`, diagramType: "flowchart" }),
         );
-    });
+        const mockIntersectionObserver = vi.fn(
+            class {
+                constructor(callback: ObserverCallback) {
+                    observerCallback = callback;
+                }
 
-    afterEach(() => {
-        window.IntersectionObserver = windowIntersectionObserver;
+                observe = observe;
+                unobserve = unobserve;
+            },
+        );
+        vi.stubGlobal("IntersectionObserver", mockIntersectionObserver);
     });
 
     it("displays a spinner while observing if mermaid block is in the viewport", () => {
-        const observe = vi.fn();
-        const mockIntersectionObserver = vi.fn();
-        mockIntersectionObserver.mockReturnValue({
-            observe,
-        });
-        window.IntersectionObserver = mockIntersectionObserver;
-
         const mermaid_diagram = createMermaidDiagramElement();
 
         expect(mermaid_diagram).toMatchSnapshot();
@@ -91,20 +95,8 @@ describe("MermaidDiagramElement", () => {
     });
 
     it("Renders the diagram (and stops observing) whenever the mermaid block enters in the viewport", async () => {
-        const observe = (): void => {
-            // mocking observe
-        };
-        const unobserve = vi.fn();
-        const mockIntersectionObserver = vi.fn();
-        mockIntersectionObserver.mockReturnValue({
-            observe,
-            unobserve,
-        });
-        window.IntersectionObserver = mockIntersectionObserver;
-
         const mermaid_diagram = createMermaidDiagramElement();
 
-        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
         await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         expect(mermaid_diagram).toMatchSnapshot();
@@ -113,20 +105,8 @@ describe("MermaidDiagramElement", () => {
     });
 
     it("On click, the diagram is magnified", async () => {
-        const observe = (): void => {
-            // mocking observe
-        };
-        const unobserve = vi.fn();
-        const mockIntersectionObserver = vi.fn();
-        mockIntersectionObserver.mockReturnValue({
-            observe,
-            unobserve,
-        });
-        window.IntersectionObserver = mockIntersectionObserver;
-
         const mermaid_diagram = createMermaidDiagramElement();
 
-        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
         await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         const backdrop = mermaid_diagram.querySelector("div");
@@ -139,20 +119,8 @@ describe("MermaidDiagramElement", () => {
     });
 
     it("Once magnified, on click on backdrop, the diagram is back to normal", async () => {
-        const observe = (): void => {
-            // mocking observe
-        };
-        const unobserve = vi.fn();
-        const mockIntersectionObserver = vi.fn();
-        mockIntersectionObserver.mockReturnValue({
-            observe,
-            unobserve,
-        });
-        window.IntersectionObserver = mockIntersectionObserver;
-
         const mermaid_diagram = createMermaidDiagramElement();
 
-        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
         await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         const backdrop = mermaid_diagram.querySelector("div");
@@ -166,20 +134,8 @@ describe("MermaidDiagramElement", () => {
     });
 
     it("Once magnified, on click on close button, the diagram is back to normal", async () => {
-        const observe = (): void => {
-            // mocking observe
-        };
-        const unobserve = vi.fn();
-        const mockIntersectionObserver = vi.fn();
-        mockIntersectionObserver.mockReturnValue({
-            observe,
-            unobserve,
-        });
-        window.IntersectionObserver = mockIntersectionObserver;
-
         const mermaid_diagram = createMermaidDiagramElement();
 
-        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
         await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         const backdrop = mermaid_diagram.querySelector("div");

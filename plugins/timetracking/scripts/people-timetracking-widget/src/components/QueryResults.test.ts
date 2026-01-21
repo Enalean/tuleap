@@ -38,6 +38,8 @@ const mireillelabeille: User = {
     user_url: "/users/mireillelabeille",
 };
 
+vi.useFakeTimers();
+
 describe("QueryResults", () => {
     describe("Given there is no users in the query", () => {
         it("Then it should warn the user and not call the request", () => {
@@ -97,7 +99,7 @@ describe("QueryResults", () => {
                 },
             });
 
-            await new Promise(process.nextTick);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(rest).toHaveBeenCalled();
             expect(wrapper.findComponent(QueryResultsNoUsers).exists()).toBe(false);
@@ -123,7 +125,7 @@ describe("QueryResults", () => {
                 },
             });
 
-            await new Promise(process.nextTick);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(rest).toHaveBeenCalled();
             expect(wrapper.findComponent(QueryResultsNoUsers).exists()).toBe(false);

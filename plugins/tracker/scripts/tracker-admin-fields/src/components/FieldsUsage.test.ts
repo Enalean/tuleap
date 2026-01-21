@@ -32,6 +32,8 @@ vi.mock("@tuleap/mention", () => ({
     },
 }));
 
+vi.useFakeTimers();
+
 describe("FieldsUsage", () => {
     it("should display an empty state", async () => {
         const wrapper = shallowMount(FieldsUsage, {
@@ -46,7 +48,7 @@ describe("FieldsUsage", () => {
             },
         });
 
-        await new Promise(process.nextTick);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
@@ -74,7 +76,7 @@ describe("FieldsUsage", () => {
             },
         });
 
-        await new Promise(process.nextTick);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(ErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
@@ -101,7 +103,7 @@ describe("FieldsUsage", () => {
             },
         });
 
-        await new Promise(process.nextTick);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(ErrorState).exists()).toBe(true);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);

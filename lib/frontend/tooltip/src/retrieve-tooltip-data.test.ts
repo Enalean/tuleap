@@ -17,24 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { expect, describe, it, vi } from "vitest";
+import { expect, describe, it, vi, beforeEach } from "vitest";
 import { retrieveTooltipData } from "./retrieve-tooltip-data";
 
 describe("retrieve-tooltip-data", () => {
+    const fetch = vi.fn();
+
+    beforeEach(() => {
+        vi.resetAllMocks();
+        vi.stubGlobal("fetch", fetch);
+    });
+
     it("should ask for json content", async () => {
-        const mocked = vi.fn();
-        mocked.mockResolvedValue({
+        fetch.mockResolvedValue({
             ok: true,
             headers: new Headers({ "Content-Type": "application/json" }),
             json: () => new Promise((resolve) => resolve("le content")),
         });
-        global.fetch = mocked;
 
         const result = await retrieveTooltipData(
             new URL("https://example.com/goto?key=art&value=123"),
         );
 
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(fetch).toHaveBeenCalledWith(
             "https://example.com/goto?key=art&value=123&as-json-for-tooltip=1",
             {
                 credentials: "same-origin",
@@ -45,13 +50,11 @@ describe("retrieve-tooltip-data", () => {
     });
 
     it("may receive text content", async () => {
-        const mocked = vi.fn();
-        mocked.mockResolvedValue({
+        fetch.mockResolvedValue({
             ok: true,
             headers: new Headers({ "Content-Type": "text/plain" }),
             text: () => new Promise((resolve) => resolve("le content")),
         });
-        global.fetch = mocked;
 
         const result = await retrieveTooltipData(
             new URL("https://example.com/goto?key=art&value=123"),
@@ -61,12 +64,10 @@ describe("retrieve-tooltip-data", () => {
     });
 
     it("returns undefined if response does not send content-type headers", async () => {
-        const mocked = vi.fn();
-        mocked.mockResolvedValue({
+        fetch.mockResolvedValue({
             ok: true,
             headers: new Headers({}),
         });
-        global.fetch = mocked;
 
         const result = await retrieveTooltipData(
             new URL("https://example.com/goto?key=art&value=123"),
@@ -76,11 +77,9 @@ describe("retrieve-tooltip-data", () => {
     });
 
     it("returns undefined if response is not a success", async () => {
-        const mocked = vi.fn();
-        mocked.mockResolvedValue({
+        fetch.mockResolvedValue({
             ok: false,
         });
-        global.fetch = mocked;
 
         const result = await retrieveTooltipData(
             new URL("https://example.com/goto?key=art&value=123"),

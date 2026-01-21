@@ -20,7 +20,7 @@
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 
 export interface FetchInterface {
-    fetch: typeof global.fetch;
+    fetch: typeof fetch;
 }
 
 export interface TuleapAPIClient {

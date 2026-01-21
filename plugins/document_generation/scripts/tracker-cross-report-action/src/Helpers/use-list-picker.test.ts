@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, vi, it, expect } from "vitest";
+import { describe, vi, it, expect, afterEach } from "vitest";
 import * as list_picker from "@tuleap/list-picker";
 import { useListPicker } from "./use-list-picker";
 import { effectScope, ref } from "vue";
@@ -25,6 +25,10 @@ import { effectScope, ref } from "vue";
 vi.mock("@tuleap/list-picker");
 
 describe("useListPicker", (): void => {
+    afterEach(() => {
+        vi.resetAllMocks();
+    });
+
     it("creates list picker", () => {
         const create_spy = vi.spyOn(list_picker, "createListPicker").mockReturnValue({
             destroy: () => {

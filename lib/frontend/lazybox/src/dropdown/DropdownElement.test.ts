@@ -43,6 +43,7 @@ describe(`DropdownElement`, () => {
             clear_search_input: () => void;
 
         beforeEach(() => {
+            vi.resetAllMocks();
             target = doc.createElement("div") as unknown as ShadowRoot;
             open = true;
             multiple_selection = true;

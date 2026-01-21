@@ -43,6 +43,7 @@ describe("add-to-help-modal.ts", () => {
     const shortcuts_group: ShortcutsGroup = { title: "Shortcuts group title" } as ShortcutsGroup;
 
     beforeEach(() => {
+        vi.resetAllMocks();
         doc = document.implementation.createHTMLDocument();
 
         shortcuts_template = doc.createElement("div");

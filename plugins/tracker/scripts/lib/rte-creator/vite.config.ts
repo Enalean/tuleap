@@ -20,9 +20,10 @@
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
 import pkg from "./package.json" with { type: "json" };
+import { viteExternalsPlugin } from "vite-plugin-externals";
 
 export default vite.defineLibConfig({
-    plugins: [viteDtsPlugin()],
+    plugins: [viteDtsPlugin(), viteExternalsPlugin({ jquery: "jQuery" })],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/RichTextEditorsCreator.ts"),

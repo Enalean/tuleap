@@ -46,6 +46,7 @@ describe("print-as-pdf", () => {
     let printable: HTMLElement;
 
     beforeEach(() => {
+        vi.resetAllMocks();
         printable = document.createElement("div");
     });
 

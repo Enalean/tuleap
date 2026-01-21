@@ -18,7 +18,7 @@
  */
 
 import type { VueWrapper } from "@vue/test-utils";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import type { Ref } from "vue";
 import { ref } from "vue";
 import DocumentSidebar from "@/components/sidebar/DocumentSidebar.vue";
@@ -29,9 +29,10 @@ import TableOfContents from "@/components/sidebar/toc/TableOfContents.vue";
 import ArtidocVersions from "@/components/sidebar/versions/ArtidocVersions.vue";
 import DocumentSidebarHeader from "@/components/sidebar/DocumentSidebarHeader.vue";
 import { TOC_TAB, VERSIONS_TAB } from "@/components/sidebar/document-sidebar";
-import process from "node:process";
 import { REGISTER_VERSIONS_SHORTCUT_HANDLER } from "@/register-shortcut-handler-injection-keys";
 import { noop } from "@/helpers/noop";
+
+vi.useFakeTimers();
 
 describe("DocumentSidebar", () => {
     function getWrapper(are_versions_displayed: Ref<boolean>): VueWrapper {
@@ -96,7 +97,7 @@ describe("DocumentSidebar", () => {
             .vm.$emit("switch-sidebar-tab", VERSIONS_TAB);
 
         are_versions_displayed.value = false;
-        await new Promise(process.nextTick);
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(DocumentSidebarHeader).props("current_tab")).toBe(TOC_TAB);
         expect(wrapper.findComponent(TableOfContents).exists()).toBe(true);

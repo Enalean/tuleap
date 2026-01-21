@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
 import type { ArtifactResponse } from "../type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
@@ -26,6 +26,10 @@ import { getArtifacts } from "./artifacts-retriever";
 vi.mock("@tuleap/tlp-fetch");
 
 describe("getArtifacts", () => {
+    afterEach(() => {
+        vi.resetAllMocks();
+    });
+
     it("retrieves a bunch of artifacts", async () => {
         const tlpGet = vi.spyOn(tlp, "get");
 
