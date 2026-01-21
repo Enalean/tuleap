@@ -1,0 +1,28 @@
+diff --git a/dist/esm/index.js b/dist/esm/index.js
+index 768dcbed6ac66814495f804ff5f3b09176102fbd..f9e29afca6dc999ad18733e916ad7690c978fb63 100644
+--- a/dist/esm/index.js
++++ b/dist/esm/index.js
+@@ -882,7 +882,8 @@ function FlatpickrInstance(element, instanceConfig) {
+                     !isCalendarElem(e.relatedTarget);
+             const isIgnored = !self.config.ignoredFocusElements.some((elem) => elem.contains(eventTarget));
+             if (lostFocus && isIgnored) {
+-                if (self.timeContainer !== undefined &&
++                if (!self.config.allowInput &&
++                    self.timeContainer !== undefined &&
+                     self.minuteElement !== undefined &&
+                     self.hourElement !== undefined &&
+                     self.input.value !== "" &&
+diff --git a/dist/flatpickr.js b/dist/flatpickr.js
+index f5fe42cbe895995c1a83f4b164f8bcec2facec70..40482b36fef2154334db7c00c1e7cf77593cfb30 100644
+--- a/dist/flatpickr.js
++++ b/dist/flatpickr.js
+@@ -1532,7 +1532,8 @@
+                     return elem.contains(eventTarget_1);
+                 });
+                 if (lostFocus && isIgnored) {
+-                    if (self.timeContainer !== undefined &&
++                    if (!self.config.allowInput &&
++                        self.timeContainer !== undefined &&
+                         self.minuteElement !== undefined &&
+                         self.hourElement !== undefined &&
+                         self.input.value !== "" &&
