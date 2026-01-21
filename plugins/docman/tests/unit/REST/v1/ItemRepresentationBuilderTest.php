@@ -38,14 +38,19 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Builders\DocmanFileTestBuilder;
+use Tuleap\Docman\Builders\FileVersionBuilder;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
+use Tuleap\Docman\Version\VersionRetrieverFromApprovalTableVisitor;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use UserManager;
 
@@ -53,6 +58,8 @@ use UserManager;
 final class ItemRepresentationBuilderTest extends TestCase
 {
     use GlobalLanguageMock;
+
+    private const PROJECT_ID = 23787327;
 
     private ApprovalTableRetriever&MockObject $approval_table_retriever;
     private MetadataRepresentationBuilder&MockObject $metadata_representation_builder;
@@ -102,6 +109,9 @@ final class ItemRepresentationBuilderTest extends TestCase
             $this->version_factory,
             $this->createStub(Docman_NotificationsManager::class),
             $this->docman_icons,
+            new VersionOpenHrefVisitor(),
+            new VersionRetrieverFromApprovalTableVisitor($this->version_factory, $this->createStub(\Docman_LinkVersionFactory::class), $this->createStub(\WikiVersionDao::class), $this->createStub(\WikiPageVersionFactory::class)),
+            ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build())
         );
 
         UserManager::setInstance($this->user_manager);
@@ -127,6 +137,8 @@ final class ItemRepresentationBuilderTest extends TestCase
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
         $this->html_purifier->method('purifyTextWithReferences')->willReturn('description with processed ref');
 
+        $version = FileVersionBuilder::aFileVersion()->withId(2)->withNumber(12)->build();
+
         $metadata_representation = new ItemMetadataRepresentation(
             'metadata name',
             'date',
@@ -138,13 +150,13 @@ final class ItemRepresentationBuilderTest extends TestCase
             'metadata'
         );
         $this->metadata_representation_builder->method('build')->willReturn([$metadata_representation]);
-        $this->version_factory->method('getCurrentVersionForItem')->willReturn(null);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
         $docman_item = DocmanFileTestBuilder::aFile()
             ->withId($docman_item_id)
             ->withTitle('My file.txt')
             ->withOwnerId($owner_id)
-            ->withGroupId(101)
+            ->withGroupId(self::PROJECT_ID)
             ->build();
 
         $item_approval_table = $this->createMock(Docman_ApprovalTableFile::class);
@@ -155,7 +167,7 @@ final class ItemRepresentationBuilderTest extends TestCase
         $item_approval_table->method('getId')->willReturn(10);
         $item_approval_table->method('isDisabled')->willReturn(false);
         $item_approval_table->method('isClosed')->willReturn(false);
-        $item_approval_table->method('getVersionNumber')->willReturn('2');
+        $item_approval_table->method('getVersionNumber')->willReturn($version->getId());
         $item_approval_table->method('getNotification')->willReturn(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
         $item_approval_table->method('getDescription')->willReturn('');
         $item_approval_table->method('getReviewerArray')->willReturn([]);
@@ -184,7 +196,7 @@ final class ItemRepresentationBuilderTest extends TestCase
         $this->item_permissions_for_groups_builder->method('getRepresentation')
             ->with($current_user, $docman_item)->willReturn($permissions_for_groups_representation);
 
-        $this->version_factory->method('getSpecificVersion')->with($docman_item, '2')->willReturn(new Docman_Version([
+        $this->version_factory->method('getSpecificVersion')->with($docman_item, $version->getId())->willReturn(new Docman_Version([
             'label' => '1.0.0-rc3',
         ]));
 

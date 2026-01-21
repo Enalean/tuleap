@@ -39,6 +39,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
     private CoAuthorDao|\PHPUnit\Framework\MockObject\MockObject $co_author_dao;
     private VersionRepresentationCollectionBuilder $builder;
     private \PHPUnit\Framework\MockObject\MockObject|\Docman_ApprovalTableFileFactory $factory;
+    private \Docman_VersionFactory&\PHPUnit\Framework\MockObject\Stub $version_factory;
 
     #[\Override]
     protected function setUp(): void
@@ -52,7 +53,8 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         $co_author_1 = UserTestBuilder::aUser()->withId(102)->build();
         $co_author_2 = UserTestBuilder::aUser()->withId(103)->build();
 
-        $this->builder = new VersionRepresentationCollectionBuilder(
+        $this->version_factory = $this->createStub(\Docman_VersionFactory::class);
+        $this->builder         = new VersionRepresentationCollectionBuilder(
             $this->docman_version_dao,
             $this->co_author_dao,
             RetrieveUserByIdStub::withUsers($user, $co_author_1, $co_author_2),
@@ -60,7 +62,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             ProvideUserAvatarUrlStub::build(),
             new VersionOpenHrefVisitor(),
         );
-        $user_helper   = $this->createStub(\UserHelper::class);
+        $user_helper           = $this->createStub(\UserHelper::class);
         $user_helper->method('getUserUrl')->willReturn('/path/to/user');
         $user_helper->method('getDisplayNameFromUser')->willReturn('John Does');
         \UserHelper::setInstance($user_helper);
@@ -105,6 +107,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         ]);
 
         $this->factory->method('getTableFromVersion')->willReturn(null);
+        $this->version_factory->method('getSpecificVersion')->willReturn(new \Docman_Version(['number' => 1, 'label' => 'my version label']));
 
         $collection = $this->builder->buildVersionsCollection($item, 50, 0);
 
@@ -150,6 +153,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         $this->co_author_dao->method('searchByVersionId')->willReturn([]);
 
         $this->factory->method('getTableFromVersion')->willReturn($this->createMock(\Docman_ApprovalTable::class));
+        $this->version_factory->method('getSpecificVersion')->willReturn(new \Docman_Version(['number' => 1, 'label' => 'my version label']));
 
         $collection = $this->builder->buildVersionsCollection($item, 50, 0);
 

@@ -87,13 +87,13 @@ final class VersionRepresentationCollectionBuilder
                 array_filter(
                     array_map(
                         fn (array $row): ?\PFUser => $this->user_retriever->getUserById($row['user_id']),
-                        $this->co_author_dao->searchByVersionId((int) $version->getId()),
+                        $this->co_author_dao->searchByVersionId($version->getId()),
                     )
                 )
             );
 
             $versions[] = FileVersionRepresentation::build(
-                (int) $version->getId(),
+                $version->getId(),
                 $row['number'],
                 $row['label'],
                 $row['filename'],

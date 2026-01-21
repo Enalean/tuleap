@@ -70,19 +70,12 @@
                     />
                 </td>
                 <td>
-                    <router-link
-                        v-if="reviewer.version_id !== null && reviewer.version_name !== null"
-                        v-bind:to="{
-                            name: 'item_version',
-                            params: {
-                                folder_id: item.parent_id,
-                                item_id: item.id,
-                                version_id: reviewer.version_id,
-                            },
-                        }"
+                    <a
+                        v-if="table.version_open_href !== null"
+                        v-bind:href="table.version_open_href"
                     >
                         {{ reviewer.version_name }}
-                    </router-link>
+                    </a>
                     <template v-else>{{ reviewer.version_name }}</template>
                 </td>
             </tr>

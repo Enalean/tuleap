@@ -28,7 +28,7 @@ use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
  * VersionFactory is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
+class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct()
     {
@@ -40,7 +40,7 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
         return $dao->createFromRow($row);
     }
     public $dao;
-    public function _getVersionDao()
+    public function _getVersionDao() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $this->dao) {
             $this->dao = new Docman_VersionDao(CodendiDataAccess::instance());
@@ -48,17 +48,17 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
         return $this->dao;
     }
 
-    public function _getEventManager()
+    public function _getEventManager(): \EventManager  //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return EventManager::instance();
     }
 
-    public function _getItemFactory()
+    public function _getItemFactory(): \Docman_ItemFactory  //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_ItemFactory();
     }
 
-    public function _getUserManager()
+    public function _getUserManager(): \UserManager  //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return UserManager::instance();
     }
@@ -93,7 +93,7 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
         return null;
     }
 
-    public function getSpecificVersion($item, $number)
+    public function getSpecificVersion($item, $number): ?Docman_Version
     {
         $dao     = $this->_getVersionDao();
         $dar     = $dao->searchByNumber($item->getId(), $number);
@@ -142,6 +142,9 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
         // The event must be processed before the version is deleted
         $version = $this->getSpecificVersion($item, $number);
         $user    = $this->_getUserManager()->getCurrentUser();
+        if (! $version) {
+            return true;
+        }
         $version->fireDeleteEvent($item, $user);
         $dao = $this->_getVersionDao();
         return $dao->deleteSpecificVersion($item->getId(), $number);
@@ -177,7 +180,10 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
      */
     public function archiveBeforePurge(Docman_Version $version): bool
     {
-        $item   = $this->_getItemFactory()->getItemFromDb($version->getItemId(), ['ignore_deleted' => true]);
+        $item = $this->_getItemFactory()->getItemFromDb($version->getItemId(), ['ignore_deleted' => true]);
+        if (! $item) {
+            return false;
+        }
         $prefix = $item->getGroupId() . '_i' . $version->getItemId() . '_v' . $version->getNumber();
 
         $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($version->getPath(), $prefix));
@@ -225,7 +231,10 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
                     // Take into account deleted items because, when we restore a deleted item
                     // the versions are restored before the item (because we restore the item
                     // only if at least one version was restored successfully
-                    $item  = $this->_getItemFactory()->getItemFromDb($version->getItemId(), ['ignore_deleted' => true]);
+                    $item = $this->_getItemFactory()->getItemFromDb($version->getItemId(), ['ignore_deleted' => true]);
+                    if (! $item) {
+                        return false;
+                    }
                     $user  = $this->_getUserManager()->getCurrentUser();
                     $value = $version->getNumber();
                     if ($row['label'] !== '') {

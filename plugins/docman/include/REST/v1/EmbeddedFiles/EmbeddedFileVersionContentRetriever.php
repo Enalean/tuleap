@@ -77,7 +77,7 @@ final class EmbeddedFileVersionContentRetriever
         }
 
         return new VersionContentRepresentation(
-            (int) $version->getNumber(),
+            $version->getNumber(),
             \Psl\File\read($version_file_path),
         );
     }

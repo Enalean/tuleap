@@ -21,7 +21,7 @@
 
 use Tuleap\PHPWiki\WikiPage;
 
-class WikiPageVersion
+class WikiPageVersion //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var int */
     private $page_id;
@@ -47,6 +47,21 @@ class WikiPageVersion
     public function getVersionId()
     {
         return $this->version_id;
+    }
+
+    public function getId(): int
+    {
+        return $this->page_id;
+    }
+
+    public function getNumber(): int
+    {
+        return $this->version_id;
+    }
+
+    public function getLabel(): string
+    {
+        return '';
     }
 
     public function getContent()

@@ -871,10 +871,8 @@
       <code><![CDATA[addChildrenPlannedArtifacts]]></code>
       <code><![CDATA[getAllMilestonesWithoutCaching]]></code>
       <code><![CDATA[getComputedFieldValue]]></code>
-      <code><![CDATA[getRegularSubMilestoneIds]]></code>
       <code><![CDATA[getRegularSubMilestones]]></code>
       <code><![CDATA[getTopSubMilestoneArtifacts]]></code>
-      <code><![CDATA[getTopSubMilestoneIds]]></code>
       <code><![CDATA[isMilestoneCurrent]]></code>
       <code><![CDATA[isMilestoneFuture]]></code>
       <code><![CDATA[makeNodeWithChildren]]></code>
@@ -7136,19 +7134,11 @@
       <code><![CDATA[getChangelog]]></code>
       <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDate]]></code>
-      <code><![CDATA[getId]]></code>
       <code><![CDATA[getItemId]]></code>
-      <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getLink]]></code>
-      <code><![CDATA[getNumber]]></code>
-      <code><![CDATA[initFromRow]]></code>
       <code><![CDATA[setAuthorId]]></code>
-      <code><![CDATA[setChangelog]]></code>
-      <code><![CDATA[setDate]]></code>
       <code><![CDATA[setId]]></code>
       <code><![CDATA[setItemId]]></code>
-      <code><![CDATA[setLabel]]></code>
-      <code><![CDATA[setLink]]></code>
       <code><![CDATA[setNumber]]></code>
     </MissingReturnType>
   </file>
@@ -8826,10 +8816,7 @@
       <code><![CDATA[getChangelog]]></code>
       <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDate]]></code>
-      <code><![CDATA[getId]]></code>
       <code><![CDATA[getItemId]]></code>
-      <code><![CDATA[getLabel]]></code>
-      <code><![CDATA[getNumber]]></code>
       <code><![CDATA[initFromRow]]></code>
       <code><![CDATA[setAuthorId]]></code>
       <code><![CDATA[setChangelog]]></code>
@@ -9017,13 +9004,9 @@
       <code><![CDATA[$dao]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_getEventManager]]></code>
-      <code><![CDATA[_getItemFactory]]></code>
-      <code><![CDATA[_getUserManager]]></code>
       <code><![CDATA[_getVersionDao]]></code>
       <code><![CDATA[create]]></code>
       <code><![CDATA[getAllVersionForItem]]></code>
-      <code><![CDATA[getSpecificVersion]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_Widget_Embedded.php">
@@ -9729,12 +9712,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="plugins/docman/include/REST/v1/EmbeddedFiles/EmbeddedFilePropertiesFullRepresentation.php">
-    <MissingParamType>
-      <code><![CDATA[$content]]></code>
-      <code><![CDATA[$content]]></code>
-    </MissingParamType>
   </file>
   <file src="plugins/docman/include/REST/v1/EmbeddedFiles/EmbeddedFileVersionCreator.php">
     <RedundantCastGivenDocblockType>

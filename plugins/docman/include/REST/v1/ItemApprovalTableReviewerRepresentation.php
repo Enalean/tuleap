@@ -70,7 +70,7 @@ final readonly class ItemApprovalTableReviewerRepresentation
         $version_name = '';
         $version_id   = null;
         if ($version !== null) {
-            $version_id = (int) $version->getId();
+            $version_id = $version->getId();
             if ($version->getLabel() !== null && $version->getLabel() !== '') {
                 $version_name = $version->getLabel() . ' - ';
             }

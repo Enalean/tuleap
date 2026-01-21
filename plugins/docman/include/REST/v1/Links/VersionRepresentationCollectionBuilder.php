@@ -58,7 +58,7 @@ final class VersionRepresentationCollectionBuilder
             );
 
             $versions[] = LinkVersionRepresentation::build(
-                (int) $version->getId(),
+                $version->getId(),
                 $row['number'],
                 $row['label'],
                 $link_href,

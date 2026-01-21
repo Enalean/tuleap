@@ -58,20 +58,23 @@ final class VersionOpenHrefVisitorTest extends TestCase
             ->withGroupId(456)
             ->build();
 
+        $link_version_factory = $this->createStub(\Docman_LinkVersionFactory::class);
+        $link_version         = DocmanLinkVersionBuilder::aLinkVersion()->withNumber(123)->build();
+        $link_version_factory->method('getSpecificVersion')->willReturn($link_version);
         $visitor = new VersionOpenHrefVisitor();
-        $params  = ['version' => DocmanLinkVersionBuilder::aLinkVersion()->withNumber(123)->build()];
+        $params  = ['version' => $link_version];
 
         $expected_url = '/plugins/docman/?' . http_build_query([
             'group_id' => 456,
             'action' => 'show',
             'id' => 678,
-            'version_number' => 123,
+            'version_number' => $link_version->getNumber(),
         ]);
 
         $this->assertSame($expected_url, $visitor->visitLink($link, $params));
     }
 
-    public function testItRThrowsForFileWithoutVersion(): void
+    public function testItThrowsForFileWithoutVersion(): void
     {
         $file    = DocmanFileTestBuilder::aFile()->withId(100)->build();
         $visitor = new VersionOpenHrefVisitor();
@@ -82,8 +85,10 @@ final class VersionOpenHrefVisitorTest extends TestCase
 
     public function testItGeneratesCorrectHrefForFile(): void
     {
-        $file    = DocmanFileTestBuilder::aFile()->withId(200)->build();
-        $version = new \Docman_Version(['number' => 3]);
+        $file            = DocmanFileTestBuilder::aFile()->withId(200)->build();
+        $version         = new \Docman_Version(['number' => 3]);
+        $version_factory = $this->createStub(\Docman_VersionFactory::class);
+        $version_factory->method('getSpecificVersion')->willReturn($version);
         $visitor = new VersionOpenHrefVisitor();
 
         $expected_url = '/plugins/docman/download/200/3';
@@ -108,7 +113,9 @@ final class VersionOpenHrefVisitorTest extends TestCase
             ->withParentId(500)
             ->build();
 
-        $version = new \Docman_Version(['id' => 600]);
+        $version         = new \Docman_Version(['id' => 600, 'number' => 12]);
+        $version_factory = $this->createStub(\Docman_VersionFactory::class);
+        $version_factory->method('getSpecificVersion')->willReturn($version);
         $visitor = new VersionOpenHrefVisitor();
 
         $expected_url = '/plugins/document/unix_project/folder/500/400/600';

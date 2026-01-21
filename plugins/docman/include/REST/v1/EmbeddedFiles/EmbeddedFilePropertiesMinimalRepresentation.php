@@ -27,15 +27,12 @@ namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
  */
 class EmbeddedFilePropertiesMinimalRepresentation implements IEmbeddedFilePropertiesRepresentation
 {
-    /**
-     * @var string
-     */
-    public $file_type;
+    public string $file_type;
     public int $version_number;
 
     private function __construct(\Docman_Version $docman_version)
     {
-        $this->version_number = (int) $docman_version->getNumber();
+        $this->version_number =  $docman_version->getNumber();
         $this->file_type      = $docman_version->getFiletype();
     }
 

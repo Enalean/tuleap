@@ -24,4 +24,9 @@ namespace Tuleap\Docman\Version;
 
 interface Version
 {
+    public function getLabel(): ?string;
+
+    public function getId(): ?int;
+
+    public function getNumber(): ?int;
 }

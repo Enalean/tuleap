@@ -29,6 +29,7 @@ use Project;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\IEmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
@@ -39,6 +40,8 @@ use Tuleap\Docman\REST\v1\MoveItem\MoveItemUriVisitor;
 use Tuleap\Docman\REST\v1\Others\OtherTypePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
+use Tuleap\Docman\Version\VersionRetrieverFromApprovalTableVisitor;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
@@ -59,6 +62,9 @@ class ItemRepresentationBuilder
         private readonly Docman_VersionFactory $version_factory,
         private readonly Docman_NotificationsManager $notifications_manager,
         private readonly ItemIconPresenterBuilder $icon_presenter_builder,
+        private readonly VersionOpenHrefVisitor $version_open_href_visitor,
+        private readonly VersionRetrieverFromApprovalTableVisitor $version_visitor_retriever,
+        private readonly ProjectByIDFactory $project_factory,
     ) {
     }
 
@@ -146,6 +152,9 @@ class ItemRepresentationBuilder
                     $this->version_factory,
                     $this->notifications_manager,
                     $this->purifier,
+                    $this->version_open_href_visitor,
+                    $this->version_visitor_retriever,
+                    $this->project_factory,
                 ),
             $lock_info,
             $this->item_permissions_for_groups_builder->getRepresentation($current_user, $item),

@@ -37,6 +37,7 @@ use Project;
 use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Log\LogEntry;
 use Tuleap\Docman\Log\LogRetriever;
 use Tuleap\Docman\Notifications\NotificationBuilders;
@@ -47,6 +48,7 @@ use Tuleap\Docman\REST\v1\Log\LogEntryRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
+use Tuleap\Docman\Version\VersionRetrieverFromApprovalTableVisitor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -56,6 +58,8 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserHelper;
 use UserManager;
+use WikiPageVersionFactory;
+use WikiVersionDao;
 
 final class DocmanItemsResource extends AuthenticatedResource
 {
@@ -359,6 +363,7 @@ final class DocmanItemsResource extends AuthenticatedResource
         $permissions_manager = $this->getDocmanPermissionManager($project);
         $version_factory     = new Docman_VersionFactory();
 
+        $project_manager = ProjectManager::instance();
         return new ItemRepresentationBuilder(
             $this->item_dao,
             \UserManager::instance(),
@@ -374,7 +379,7 @@ final class DocmanItemsResource extends AuthenticatedResource
             new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory(), $version_factory),
             new DocmanItemPermissionsForGroupsBuilder(
                 $permissions_manager,
-                ProjectManager::instance(),
+                $project_manager,
                 PermissionsManager::instance(),
                 new UGroupManager()
             ),
@@ -383,6 +388,9 @@ final class DocmanItemsResource extends AuthenticatedResource
             $version_factory,
             new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
             new ItemIconPresenterBuilder($this->event_manager, $version_factory),
+            new VersionOpenHrefVisitor(),
+            new VersionRetrieverFromApprovalTableVisitor(new \Docman_VersionFactory(), new \Docman_LinkVersionFactory(), new WikiVersionDao(), new WikiPageVersionFactory()),
+            $project_manager
         );
     }
 }

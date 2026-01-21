@@ -22,12 +22,9 @@
  * VersionFactory is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_LinkVersionFactory
+class Docman_LinkVersionFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    /**
-     * @var Docman_LinkVersionDao
-     */
-    private $dao;
+    private Docman_LinkVersionDao $dao;
 
     public function __construct()
     {
@@ -49,10 +46,7 @@ class Docman_LinkVersionFactory
         return $versions;
     }
 
-    /**
-     * @return Docman_LinkVersion|null
-     */
-    public function getSpecificVersion(Docman_Link $item, $number)
+    public function getSpecificVersion(Docman_Link $item, $number): ?Docman_LinkVersion
     {
         $row = $this->dao->searchByNumber($item->getId(), $number)->getRow();
         if (! $row) {

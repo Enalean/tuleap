@@ -28,6 +28,7 @@ use Docman_File;
 use Docman_Folder;
 use Docman_Item;
 use Docman_Link;
+use Docman_Version;
 use Docman_Wiki;
 use LogicException;
 use Project;
@@ -52,8 +53,8 @@ final readonly class VersionOpenHrefVisitor implements ItemVisitor
     #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): string
     {
-        if (! isset($params['version']) || ! ($params['version'] instanceof \Docman_LinkVersion)) {
-            throw new LogicException('Link does not have a version');
+        if (! isset($params['version']) || ! $params['version'] instanceof \Docman_LinkVersion) {
+            throw new LogicException('No version provided for link');
         }
 
         return '/plugins/docman/?'
@@ -70,8 +71,8 @@ final readonly class VersionOpenHrefVisitor implements ItemVisitor
     #[\Override]
     public function visitFile(Docman_File $item, array $params = []): string
     {
-        if (! isset($params['version']) || ! ($params['version'] instanceof \Docman_Version)) {
-            throw new LogicException('File does not have a version');
+        if (! isset($params['version']) || ! $params['version'] instanceof Docman_Version) {
+            throw new LogicException('No version provided for file');
         }
 
         return '/plugins/docman/download/' . urlencode((string) $item->getId()) . '/' . urlencode((string) $params['version']->getNumber());
@@ -80,8 +81,8 @@ final readonly class VersionOpenHrefVisitor implements ItemVisitor
     #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
-        if (! isset($params['version']) || ! ($params['version'] instanceof \Docman_Version)) {
-            throw new LogicException('EmbededFile does not have a version');
+        if (! isset($params['version']) || ! $params['version'] instanceof Docman_Version) {
+            throw new LogicException('No version provided for embedded');
         }
 
         if (! isset($params['project']) || ! ($params['project'] instanceof Project)) {

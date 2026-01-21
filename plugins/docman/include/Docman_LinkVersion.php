@@ -20,7 +20,7 @@
 
 use Tuleap\Docman\Version\Version;
 
-class Docman_LinkVersion implements Version
+class Docman_LinkVersion implements Version //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private $id;
     private $authorId;
@@ -36,9 +36,10 @@ class Docman_LinkVersion implements Version
         $this->initFromRow($data);
     }
 
-    public function getId()
+    #[Override]
+    public function getId(): int
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     public function setId($id)
@@ -66,9 +67,10 @@ class Docman_LinkVersion implements Version
         $this->itemId = $itemId;
     }
 
-    public function getNumber()
+    #[Override]
+    public function getNumber(): int
     {
-        return $this->number;
+        return (int) $this->number;
     }
 
     public function setNumber($number)
@@ -76,12 +78,13 @@ class Docman_LinkVersion implements Version
         $this->number = $number;
     }
 
-    public function getLabel()
+    #[Override]
+    public function getLabel(): ?string
     {
         return $this->label;
     }
 
-    public function setLabel($label)
+    public function setLabel($label): void
     {
         $this->label = $label;
     }
@@ -91,7 +94,7 @@ class Docman_LinkVersion implements Version
         return $this->changelog;
     }
 
-    public function setChangelog($changelog)
+    public function setChangelog($changelog): void
     {
         $this->changelog = $changelog;
     }
@@ -101,7 +104,7 @@ class Docman_LinkVersion implements Version
         return $this->date;
     }
 
-    public function setDate($date)
+    public function setDate($date): void
     {
         $this->date = $date;
     }
@@ -111,7 +114,7 @@ class Docman_LinkVersion implements Version
         return $this->link;
     }
 
-    public function setLink($link)
+    public function setLink($link): void
     {
         $this->link = $link;
     }
@@ -121,7 +124,7 @@ class Docman_LinkVersion implements Version
         return $this->link;
     }
 
-    private function initFromRow($row)
+    private function initFromRow($row): void
     {
         $this->setId($row['id']);
         $this->setAuthorId($row['user_id']);

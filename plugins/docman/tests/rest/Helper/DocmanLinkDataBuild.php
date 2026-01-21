@@ -300,7 +300,7 @@ class DocmanLinkDataBuild
             $version
         );
         $link_version = $version_link_factory->getLatestVersion($docman_link);
-        return (int) $link_version->getId();
+        return $link_version->getId();
     }
 
     public function createLinkWithApprovalTable(
