@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GroupOfItems, HTMLTemplateResult, Lazybox } from "@tuleap/lazybox";
+import type { GroupOfItems, HTMLTemplateResult, Lazybox, LazyboxItem } from "@tuleap/lazybox";
 import { createLazybox } from "@tuleap/lazybox";
 import type { LazyboxProps } from "./lazybox.stories";
 
@@ -53,7 +53,7 @@ const users_group: GroupOfItems = {
     label: "Matching users",
     empty_message: "No user found",
     is_loading: false,
-    items: [],
+    items: users,
     footer_message: "",
 };
 
@@ -70,6 +70,9 @@ const recent_group = {
     footer_message: "",
 };
 
+let id = 120;
+let selected_values: Array<LazyboxItem> = [users[0]];
+
 export function buildLazyboxMultiple(args: LazyboxProps): Lazybox & HTMLElement {
     const lazybox = createLazybox(document);
     lazybox.id = `lazybox-${args.story}-link-selector`;
@@ -85,8 +88,14 @@ export function buildLazyboxMultiple(args: LazyboxProps): Lazybox & HTMLElement 
                 ${item.value.display_name}
             </span>`;
         },
-        selection_callback: (): void => {
-            // Do nothing
+        selection_callback: (new_selected_values): void => {
+            selected_values = [];
+            new_selected_values.forEach((current) => {
+                const found_user = users.find((user) => user.value === current);
+                if (found_user !== undefined) {
+                    selected_values.push(found_user);
+                }
+            });
         },
         search_input_callback: (query): void => {
             if (query === "") {
@@ -104,8 +113,20 @@ export function buildLazyboxMultiple(args: LazyboxProps): Lazybox & HTMLElement 
             const matching_recent_group = { ...recent_group, items: matching_recent };
             lazybox.replaceDropdownContent([matching_users_group, matching_recent_group]);
         },
+        new_item_label_callback: (item_name): string =>
+            item_name !== "" ? `→ Create a new value ${item_name}…` : "→ Create a new value…",
+        new_item_clicked_callback: (item_name): void => {
+            const new_value = {
+                value: { id: id++, display_name: item_name },
+                is_disabled: false,
+            };
+            selected_values.push(new_value);
+            users.push(new_value);
+            lazybox.replaceSelection(selected_values);
+            lazybox.replaceDropdownContent([users_group]);
+        },
     };
     lazybox.replaceDropdownContent([users_group]);
-    lazybox.replaceSelection([users[0]]);
+    lazybox.replaceSelection(selected_values);
     return lazybox;
 }
