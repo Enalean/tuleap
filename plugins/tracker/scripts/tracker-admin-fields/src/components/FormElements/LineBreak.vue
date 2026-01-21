@@ -32,7 +32,7 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
-div {
+i {
     opacity: 0.5;
     color: var(--tlp-dimmed-color);
 }

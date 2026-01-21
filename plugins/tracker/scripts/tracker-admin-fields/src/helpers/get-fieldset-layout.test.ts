@@ -18,6 +18,7 @@
  */
 
 import { describe, expect, it } from "vitest";
+import { v4 as uuidv4 } from "uuid";
 import {
     CUSTOM_LAYOUT,
     getFieldsetLayout,
@@ -71,6 +72,7 @@ describe("getFieldsetLayout", () => {
 
     function aColumnWrapper(columns: ColumnWrapper["columns"]): ColumnWrapper {
         return {
+            identifier: uuidv4(),
             columns,
         };
     }

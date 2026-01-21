@@ -127,7 +127,7 @@ onMounted(() => {
 
 <style lang="scss">
 // link field is displaying its own label, we need to hide it
-// so that we can do what we want with the lable in field usage (e.g edit inline)
+// so that we can do what we want with the label in field usage (e.g edit inline)
 // stylelint-disable-next-line selector-class-pattern
 .tracker-admin-fields-link-field .tracker_formelement_label {
     display: none;

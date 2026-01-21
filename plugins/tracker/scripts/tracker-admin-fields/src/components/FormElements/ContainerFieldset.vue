@@ -18,26 +18,48 @@
   -->
 
 <template>
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header fieldset-header">
-                <h1 class="tlp-pane-title">
-                    <label-for-field v-bind:field="fieldset.field" />
-                </h1>
-                <fieldset-layout v-bind:fieldset="fieldset" />
-            </div>
-            <div class="tlp-pane-section">
-                <display-form-elements v-bind:elements="fieldset.children" />
-            </div>
+    <div
+        class="draggable-wrapper"
+        draggable="true"
+        v-bind:data-element-id="fieldset.field.field_id"
+    >
+        <i
+            class="fa-solid fa-grip-vertical draggable-handle"
+            role="img"
+            v-bind:title="$gettext('Move element')"
+        ></i>
+        <div class="draggable-form-element">
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header fieldset-header">
+                        <h1 class="tlp-pane-title">
+                            <label-for-field v-bind:field="fieldset.field" />
+                        </h1>
+                        <fieldset-layout v-bind:fieldset="fieldset" />
+                    </div>
+                    <div
+                        class="tlp-pane-section tracker-admin-fields-container-dropzone"
+                        v-bind:data-container-id="fieldset.field.field_id"
+                    >
+                        <display-form-elements
+                            v-bind:elements="fieldset.children"
+                            v-if="fieldset.children.length"
+                        />
+                    </div>
+                </div>
+            </section>
         </div>
-    </section>
+    </div>
 </template>
 
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import type { Fieldset } from "../../type";
 import DisplayFormElements from "../DisplayFormElements.vue";
 import FieldsetLayout from "./FieldsetLayout.vue";
 import LabelForField from "./LabelForField.vue";
+
+const { $gettext } = useGettext();
 
 defineProps<{
     fieldset: Fieldset;

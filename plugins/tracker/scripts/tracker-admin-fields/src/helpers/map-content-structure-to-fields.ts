@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { v4 as uuidv4 } from "uuid";
 import {
     type StructureFields,
     type StructureFormat,
@@ -47,6 +48,7 @@ export function mapContentStructureToFields(
         if (field.type === CONTAINER_COLUMN) {
             if (column_wrapper === null) {
                 column_wrapper = {
+                    identifier: uuidv4(),
                     columns: [],
                 };
                 children.push(column_wrapper);

@@ -24,15 +24,15 @@
             <error-state v-if="has_error" />
             <h2>{{ $gettext("Fields usage") }}</h2>
 
-            <tracker-structure v-bind:root="root" v-if="root.children.length > 0" />
+            <tracker-structure v-if="tracker_root.children.length > 0" v-bind:key="key" />
 
-            <empty-state v-if="root.children.length === 0" />
+            <empty-state v-if="tracker_root.children.length === 0" />
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, provide } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { StructureFields, StructureFormat } from "@tuleap/plugin-tracker-rest-api-types";
 import EmptyState from "./EmptyState.vue";
@@ -41,6 +41,7 @@ import { mapContentStructureToFields } from "../helpers/map-content-structure-to
 import type { ElementWithChildren } from "../type";
 import PaletteContainer from "./Palette/PaletteContainer.vue";
 import ErrorState from "./ErrorState.vue";
+import { POST_FIELD_DND_CALLBACK, TRACKER_ROOT } from "../injection-symbols";
 
 const { $gettext } = useGettext();
 
@@ -50,7 +51,16 @@ const props = defineProps<{
     has_error: boolean;
 }>();
 
-const root = ref<ElementWithChildren>(mapContentStructureToFields(props.structure, props.fields));
+const tracker_root = ref<ElementWithChildren>(
+    mapContentStructureToFields(props.structure, props.fields),
+);
+const key = ref(0);
+const update = (): void => {
+    key.value += 1;
+};
+
+provide(TRACKER_ROOT, tracker_root);
+provide(POST_FIELD_DND_CALLBACK, update);
 </script>
 
 <style lang="scss" scoped>
