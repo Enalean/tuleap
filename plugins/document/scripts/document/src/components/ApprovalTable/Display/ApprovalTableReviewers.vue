@@ -61,11 +61,7 @@
                     </button>
                 </td>
                 <td>
-                    <p
-                        v-if="table.description !== ''"
-                        data-test="table-description"
-                        v-dompurify-html="reviewer.post_processed_comment"
-                    ></p>
+                    <p v-dompurify-html="reviewer.post_processed_comment"></p>
                 </td>
                 <td>
                     <document-relative-date
