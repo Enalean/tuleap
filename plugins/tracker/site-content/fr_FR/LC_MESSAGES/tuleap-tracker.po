@@ -1086,6 +1086,9 @@ msgstr "Créer un rapport"
 msgid "Create a %s"
 msgstr "Créer un(e) %s"
 
+msgid "Create a new artifact to link"
+msgstr "Créer un nouvel artifact à lier"
+
 msgid "Create a new one"
 msgstr "Créer un nouveau"
 

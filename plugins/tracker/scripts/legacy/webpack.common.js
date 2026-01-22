@@ -27,9 +27,15 @@ const output = webpack_configurator.configureOutput(
 );
 
 const config_for_legacy_scripts = {
-    entry: {},
+    entry: {
+        LoadTrackerArtifactLink: "./src/LoadTrackerArtifactLink.js",
+        "legacy-style": "./themes/legacy.scss",
+    },
     context,
     output,
+    module: {
+        rules: [webpack_configurator.rule_scss_loader],
+    },
     externals: {
         tuleap: "tuleap",
     },
@@ -44,7 +50,6 @@ const config_for_legacy_scripts = {
                 "./src/TrackerAdminRichTextEditor.js",
                 "./src/TrackerArtifact.js",
                 "./src/TrackerArtifactLink.js",
-                "./src/LoadTrackerArtifactLink.js",
                 "./src/TrackerCreate.js",
                 "./src/TrackerFormElementFieldPermissions.js",
                 "./src/SubmissionKeeper.js",
@@ -58,6 +63,7 @@ const config_for_legacy_scripts = {
             ],
         }),
         webpack_configurator.getManifestPlugin(),
+        ...webpack_configurator.getCSSExtractionPlugins(),
     ],
 };
 

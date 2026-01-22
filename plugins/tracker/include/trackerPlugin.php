@@ -46,6 +46,7 @@ use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -644,13 +645,12 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         if ($this->currentRequestIsForPlugin()) {
             $layout = $params['layout'];
             assert($layout instanceof \Layout);
-            $legacy_asset = new \Tuleap\Layout\JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../scripts/legacy/frontend-assets', '/assets/trackers/legacy'),
-                'tracker.js',
-            );
+            $legacy_assets =  new IncludeAssets(__DIR__ . '/../scripts/legacy/frontend-assets', '/assets/trackers/legacy');
+            $layout->includeJavascriptFile(new JavascriptAsset($legacy_assets, 'LoadTrackerArtifactLink.js')->getFileURL());
+            $layout->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($legacy_assets, 'legacy-style'));
             // DO NOT REPLACE this `includeJavascriptFile()` with `addJavascriptAsset()`
             // The tracker artifact view has script tags in the middle of the body expecting to have access to `tuleap.tracker`
-            $layout->includeJavascriptFile($legacy_asset->getFileURL());
+            $layout->includeJavascriptFile(new JavascriptAsset($legacy_assets, 'tracker.js')->getFileURL());
             $layout->addJavascriptAsset(
                 new \Tuleap\Layout\JavascriptAsset(
                     new IncludeAssets(

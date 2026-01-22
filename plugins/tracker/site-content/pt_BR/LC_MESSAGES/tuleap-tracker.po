@@ -952,6 +952,9 @@ msgstr ""
 msgid "Create a %s"
 msgstr ""
 
+msgid "Create a new artifact to link"
+msgstr ""
+
 msgid "Create a new one"
 msgstr ""
 

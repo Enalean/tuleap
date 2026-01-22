@@ -553,6 +553,39 @@ class ArtifactLinkField extends TrackerField
             if ($possible_parents_selector) {
                 $html .= $this->renderParentSelector($prefill_parent, $name, $possible_parents_selector);
             }
+
+            $iframe_src = '/plugins/tracker/?' . http_build_query(
+                [
+                    'tracker' => $artifact->getTracker()->getId(),
+                    'func' => 'new-artifact-link',
+                    'id' => $artifact->getId(),
+                    'modal' => 1,
+                ]
+            );
+
+            $html .= '<div class="tlp-modal tlp-modal-medium-sized new-artifact-modal" id="add-new-artifact-modal" role="dialog" aria-labelledby="add-new-artifact-modal-title" data-iframe-src="' . $iframe_src . '">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="add-new-artifact-modal-title">' . dgettext('tuleap-tracker', 'Create a new artifact to link') . '</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="' . dgettext('tuleap-tracker', 'Close') . '">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body new-artifact-modal-body">
+        <iframe name="add-new-artifact-iframe" class="new-artifact-modal-iframe"></iframe>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
+            ' . dgettext('tuleap-tracker', 'Cancel') . '
+        </button>
+        <button
+            type="button"
+            class="tlp-button-primary tlp-modal-action new-artifact-modal-submit"
+        >
+            ' . $GLOBALS['Language']->getText('global', 'btn_submit') . '
+        </button>
+    </div>
+</div>';
+
             $html .= '</div>';
             $html .= '</section>'; // end of tracker_formelement_read_and_edit_edition_section
         }
