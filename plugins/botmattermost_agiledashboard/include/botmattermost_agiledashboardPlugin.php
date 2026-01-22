@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
+use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneScripts;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\BotMattermostDeleted;
@@ -37,6 +38,9 @@ use Tuleap\BotMattermostAgileDashboard\Plugin\PluginInfo;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationBuilder;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
 use Tuleap\Cron\EventCronJobEveryMinute;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Plugin\ListeningToEventClass;
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -87,6 +91,14 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
     {
         $render = $this->getRenderToString();
         $event->addContent($render);
+    }
+
+    #[ListeningToEventClass]
+    public function additionalScrumAdminPaneScripts(GetAdditionalScrumAdminPaneScripts $event): void
+    {
+        $include_assets = new IncludeViteAssets(__DIR__ . '/../frontend-assets/', '/assets/botmattermost_agiledashboard');
+        $event->layout->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'scripts/autocompleter.js'));
+        $event->layout->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'scripts/modal.js'));
     }
 
     public function cron_job_every_minute(EventCronJobEveryMinute $event) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

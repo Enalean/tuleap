@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+declare(strict_types=1);
 
-module.exports = [
+namespace Tuleap\AgileDashboard\Event;
+
+use Tuleap\Event\Dispatchable;
+use Tuleap\Layout\BaseLayout;
+
+final readonly class GetAdditionalScrumAdminPaneScripts implements Dispatchable
+{
+    public const string NAME = 'additional_scrum_admin_pane_scripts';
+
+    public function __construct(public BaseLayout $layout)
     {
-        entry: {
-            autocompleter: "./scripts/autocompleter.js",
-            modal: "./scripts/modal.js",
-        },
-        context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
-        externals: {
-            tlp: "tlp",
-        },
-        plugins: [webpack_configurator.getManifestPlugin()],
-    },
-];
+    }
+}

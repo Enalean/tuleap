@@ -31,7 +31,6 @@ use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\NotificationC
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Validator;
 use Tuleap\BotMattermostAgileDashboard\Exception\CannotDeleteBotNotificationException;
 use Tuleap\BotMattermostAgileDashboard\Presenter\AdminNotificationPresenter;
-use Tuleap\Layout\IncludeAssets;
 
 class Controller
 {
@@ -95,13 +94,6 @@ class Controller
         if ($selected_bot = $this->bot_agiledashboard_factory->getBotNotification($project_id)) {
             $bot_assigned = $selected_bot->toArray();
         }
-
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../frontend-assets/',
-            '/assets/botmattermost_agiledashboard'
-        );
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('autocompleter.js'));
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('modal.js'));
 
         return $renderer->renderToString(
             'adminConfiguration',

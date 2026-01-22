@@ -27,6 +27,7 @@ use Project;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneScripts;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
@@ -112,6 +113,7 @@ class AdminController extends BaseController
                 'src/main.ts'
             )
         );
+        $this->event_manager->dispatch(new GetAdditionalScrumAdminPaneScripts($this->layout));
 
         $title = dgettext('tuleap-agiledashboard', 'Scrum Administration of Backlog');
 
