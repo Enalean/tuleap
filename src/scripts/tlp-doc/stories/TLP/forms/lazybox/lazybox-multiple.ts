@@ -113,11 +113,14 @@ export function buildLazyboxMultiple(args: LazyboxProps): Lazybox & HTMLElement 
             const matching_recent_group = { ...recent_group, items: matching_recent };
             lazybox.replaceDropdownContent([matching_users_group, matching_recent_group]);
         },
-        new_item_label_callback: (item_name): string =>
-            item_name !== "" ? `→ Create a new value ${item_name}…` : "→ Create a new value…",
-        new_item_clicked_callback: (item_name): void => {
+        new_item_label_callback: (query): string =>
+            query.trim() !== "" ? `→ Create a new user ${query}…` : "→ Create a new user…",
+        new_item_clicked_callback: (user_name): void => {
+            if (user_name.trim() === "") {
+                return;
+            }
             const new_value = {
-                value: { id: id++, display_name: item_name },
+                value: { id: id++, display_name: user_name },
                 is_disabled: false,
             };
             selected_values.push(new_value);
