@@ -15,7 +15,8 @@
   "pnpm": {
     "overrides": {
       "dompurify": "^3.2.4",
-      "safer-buffer": "npm:@nolyfill/safer-buffer@^1"
+      "safer-buffer": "npm:@nolyfill/safer-buffer@^1",
+      "lodash-es": "^4.17.23"
     }
   },
   "scripts": {

@@ -7,6 +7,7 @@ settings:
 overrides:
   dompurify: ^3.2.4
   safer-buffer: npm:@nolyfill/safer-buffer@^1
+  lodash-es: ^4.17.23
 
 dependencies:
   mermaid:
@@ -43,14 +44,14 @@ packages:
     dependencies:
       '@chevrotain/gast': 11.0.3
       '@chevrotain/types': 11.0.3
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: false
 
   /@chevrotain/gast@11.0.3:
     resolution: {integrity: sha512-+qNfcoNk70PyS/uxmj3li5NiECO+2YKZZQMbmjTqRI3Qchu8Hig/Q9vgkHpI3alNjr7M+a2St5pw5w5F6NL5/Q==}
     dependencies:
       '@chevrotain/types': 11.0.3
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: false
 
   /@chevrotain/regexp-to-ast@11.0.3:
@@ -306,7 +307,7 @@ packages:
       chevrotain: ^11.0.0
     dependencies:
       chevrotain: 11.0.3
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: false
 
   /chevrotain@11.0.3:
@@ -317,7 +318,7 @@ packages:
       '@chevrotain/regexp-to-ast': 11.0.3
       '@chevrotain/types': 11.0.3
       '@chevrotain/utils': 11.0.3
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: false
 
   /commander@7.2.0:
@@ -648,7 +649,7 @@ packages:
     resolution: {integrity: sha512-tvlJLyQf834SylNKax8Wkzco/1ias1OPw8DcUMDE7oUIoSEW25riQVuiu/0OWEFqT0cxHT3Pa9/D82Jr47IONw==}
     dependencies:
       d3: 7.9.0
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: false
 
   /dayjs@1.11.13:
@@ -751,8 +752,8 @@ packages:
       quansync: 0.2.11
     dev: false
 
-  /lodash-es@4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+  /lodash-es@4.17.23:
+    resolution: {integrity: sha512-kVI48u3PZr38HdYz98UmfPnXl2DXrpdctLrFLCd3kOx1xUkOmpFPx7gCWWM5MPkL/fD8zb+Ph0QzjGFs4+hHWg==}
     dev: false
 
   /marked@16.2.0:
@@ -778,7 +779,7 @@ packages:
       dompurify: 3.2.6
       katex: 0.16.22
       khroma: 2.1.0
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
       marked: 16.2.0
       roughjs: 4.6.6
       stylis: 4.3.6
