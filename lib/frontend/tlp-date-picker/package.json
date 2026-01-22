@@ -26,5 +26,10 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "flatpickr@4.6.9": "patches/flatpickr@4.6.9.patch"
+    }
   }
 }
