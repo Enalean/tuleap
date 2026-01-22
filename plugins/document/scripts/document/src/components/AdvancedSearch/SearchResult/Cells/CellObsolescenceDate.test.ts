@@ -32,9 +32,11 @@ describe("CellObsolescenceDate", () => {
         });
 
         expect(wrapper.element).toMatchInlineSnapshot(`
-            <cell-date-stub
+          <td>
+            <date-without-time-stub
               date="2022-01-30"
             />
+          </td>
         `);
     });
 

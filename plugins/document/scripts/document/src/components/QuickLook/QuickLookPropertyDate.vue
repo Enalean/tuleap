@@ -18,61 +18,47 @@
   -->
 
 <template>
-    <div>
-        <div
-            class="tlp-tooltip tlp-tooltip-left"
-            v-bind:data-tlp-tooltip="getFormattedDate"
-            v-if="is_obsolescence_date_today"
-            data-test="property-date-today"
-        >
-            {{ $gettext("Today") }}
-        </div>
-        <tlp-relative-date
-            v-else-if="is_date_valid"
-            data-test="property-date-formatted-display"
-            v-bind:date="property.value"
-            v-bind:absolute-date="getFormattedDate"
-            v-bind:placement="relative_date_placement"
-            v-bind:preference="relative_date_preference"
-            v-bind:locale="user_locale"
-        >
-            {{ getFormattedDate }}
-        </tlp-relative-date>
-        <span
-            class="document-quick-look-property-empty"
-            data-test="property-date-permanent"
-            v-else-if="has_obsolescence_date_property_unlimited_validity"
-        >
-            {{ $gettext("Permanent") }}
-        </span>
-        <span class="document-quick-look-property-empty" data-test="property-date-empty" v-else>
-            {{ $gettext("Empty") }}
-        </span>
+    <div
+        class="tlp-tooltip tlp-tooltip-left"
+        v-if="is_obsolescence_date_today"
+        data-test="property-date-today"
+    >
+        {{ $gettext("Today") }}
     </div>
+    <date-without-time
+        v-else-if="is_date_valid && isPropertyObsolescenceDate()"
+        v-bind:date="getDate"
+        data-test="property-date-without-time-display"
+    />
+    <document-relative-date
+        v-else-if="is_date_valid"
+        v-bind:date="getDate"
+        data-test="property-date-formatted-display"
+    />
+    <span
+        class="document-quick-look-property-empty"
+        data-test="property-date-permanent"
+        v-else-if="has_obsolescence_date_property_unlimited_validity"
+    >
+        {{ $gettext("Permanent") }}
+    </span>
+    <span class="document-quick-look-property-empty" data-test="property-date-empty" v-else>
+        {{ $gettext("Empty") }}
+    </span>
 </template>
 
 <script setup lang="ts">
-import {
-    formatDateUsingPreferredUserFormat,
-    isDateValid,
-    isToday,
-} from "../../helpers/date-formatter";
+import { isDateValid, isToday } from "../../helpers/date-formatter";
 import { PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME } from "../../constants";
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
-import { toBCP47 } from "@tuleap/locale";
 import { computed } from "vue";
 import type { Property } from "../../type";
 import { useGettext } from "vue3-gettext";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { DATE_TIME_FORMAT, RELATIVE_DATES_DISPLAY, USER_LOCALE } from "../../configuration-keys";
+import DateWithoutTime from "../Date/DateWithoutTime.vue";
+import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
 
 const { $gettext } = useGettext();
 
-const props = defineProps<{ property: Property }>();
-
-const date_time_format = strictInject(DATE_TIME_FORMAT);
-const user_locale = toBCP47(strictInject(USER_LOCALE));
-const relative_dates_display = strictInject(RELATIVE_DATES_DISPLAY);
+const props = defineProps<{ property: Property; isObsolescenceDate: boolean }>();
 
 const is_date_valid = computed((): boolean => {
     if (!isValueString(props.property.value)) {
@@ -94,19 +80,12 @@ const is_obsolescence_date_today = computed((): boolean => {
     return isPropertyObsolescenceDate() && is_date_valid.value && isToday(props.property.value);
 });
 
-const getFormattedDate = computed((): string => {
+const getDate = computed((): string => {
     if (!isValueString(props.property.value)) {
         return "";
     }
-    return formatDateUsingPreferredUserFormat(props.property.value, date_time_format);
-});
 
-const relative_date_preference = computed((): string => {
-    return relativeDatePreference(relative_dates_display);
-});
-
-const relative_date_placement = computed((): string => {
-    return relativeDatePlacement(relative_dates_display, "right");
+    return props.property.value;
 });
 
 function isPropertyObsolescenceDate(): boolean {

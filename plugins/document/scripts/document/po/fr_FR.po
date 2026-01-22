@@ -1100,6 +1100,9 @@ msgstr "Cet élément ne peut pas avoir de table d'approbation"
 msgid "This item is not versionable"
 msgstr "Cet élément n'est pas versionnable"
 
+msgid "This item is obsolete since %{ date }."
+msgstr "Ce document est obsolète depuis le %{ date }."
+
 msgid ""
 "This page is asking you to confirm that you want to leave - data you have "
 "entered may not be saved. Do you want to leave this page?"

@@ -19,14 +19,16 @@
   -->
 
 <template>
-    <cell-date v-bind:date="item.obsolescence_date" v-if="item.obsolescence_date" />
+    <td v-if="item.obsolescence_date">
+        <date-without-time v-bind:date="item.obsolescence_date" />
+    </td>
     <cell-string v-else />
 </template>
 
 <script setup lang="ts">
 import type { ItemSearchResult } from "../../../../type";
-import CellDate from "./CellDate.vue";
 import CellString from "./CellString.vue";
+import DateWithoutTime from "../../../Date/DateWithoutTime.vue";
 
 defineProps<{ item: ItemSearchResult }>();
 </script>
