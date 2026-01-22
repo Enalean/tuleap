@@ -41,7 +41,7 @@ h6 {
 
 h1 {
     margin: 0 0 var(--tlp-title-spacing);
-    color: var(--tlp-dark-color);
+    color: var(--tlp-typo-default-text-color);
     font-size: 36px;
     font-weight: 600;
     line-height: 40px;
@@ -52,7 +52,7 @@ h1 {
 }
 
 h2 {
-    color: var(--tlp-dark-color);
+    color: var(--tlp-typo-default-text-color);
     font-size: 28px;
     font-weight: 400;
     line-height: 36px;
@@ -158,7 +158,7 @@ sup {
 blockquote {
     margin: 0 0 var(--tlp-medium-spacing);
     padding: 0 0 0 calc(var(--tlp-medium-spacing) / 2);
-    border-left: 5px solid #d7d7d7;
+    border-left: 5px solid var(--tlp-border-color);
     line-height: $tlp-paragraph-line-height;
 }
 
@@ -167,19 +167,19 @@ blockquote {
 }
 
 .tlp-text-info {
-    color: var(--tlp-info-dark-color);
+    color: light-dark(var(--tlp-info-dark-color), var(--tlp-info-color-on-dark-background));
 }
 
 .tlp-text-success {
-    color: var(--tlp-success-dark-color);
+    color: light-dark(var(--tlp-success-dark-color), var(--tlp-success-color-on-dark-background));
 }
 
 .tlp-text-warning {
-    color: var(--tlp-warning-dark-color);
+    color: light-dark(var(--tlp-warning-dark-color), var(--tlp-warning-color-on-dark-background));
 }
 
 .tlp-text-danger {
-    color: var(--tlp-danger-dark-color);
+    color: light-dark(var(--tlp-danger-dark-color), var(--tlp-danger-color-on-dark-background));
 }
 
 %-tlp-code {
