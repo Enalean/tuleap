@@ -805,8 +805,8 @@ packages:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
     dev: false
 
-  /lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+  /lodash@4.17.23:
+    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
     dev: false
 
   /loose-envify@1.4.0:
@@ -839,7 +839,7 @@ packages:
     resolution: {integrity: sha512-bjdr2xW1dBCMsMGGsUeqM4eFI60m94+szhxWys+B1ztIt6gWSfeGBdSVCIawezeHYLYn0j6zrsXdQS/JllBzww==}
     engines: {node: '>=6'}
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
     dev: false
 
   /minimatch@7.4.6:
@@ -1199,7 +1199,7 @@ packages:
       immutable: 3.8.2
       js-file-download: 0.4.12
       js-yaml: 4.1.1
-      lodash: 4.17.21
+      lodash: 4.17.23
       prop-types: 15.8.1
       randexp: 0.5.3
       randombytes: 2.1.0

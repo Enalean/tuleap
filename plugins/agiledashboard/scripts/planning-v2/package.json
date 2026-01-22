@@ -7,10 +7,10 @@
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
-    "@tuleap/plugin-cardwall-card-fields": "workspace:*",
     "@tuleap/plugin-agiledashboard-scrum-header": "workspace:*",
     "@tuleap/plugin-agiledashboard-scrum-milestone-header": "workspace:*",
     "@tuleap/plugin-agiledashboard-shared": "workspace:*",
+    "@tuleap/plugin-cardwall-card-fields": "workspace:*",
     "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
@@ -24,7 +24,7 @@
     "animate.css": "3.5.2",
     "dragular": "4.2.0",
     "escape-string-regexp": "^5.0.0",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "moment": "^2.29.4",
     "sprintf-js": "^1.1.2"
   },

@@ -8,7 +8,7 @@
     "console-stamp": "3.1.1",
     "express": "^5.1.0",
     "jsonwebtoken": "9.0.3",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "socket.io": "^4.6.2"
   },
   "devDependencies": {

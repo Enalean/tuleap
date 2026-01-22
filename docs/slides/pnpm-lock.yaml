@@ -9,6 +9,7 @@ overrides:
   safe-buffer: npm:@nolyfill/safe-buffer@^1
   safer-buffer: npm:@nolyfill/safer-buffer@^1
   argparse: npm:@types/argparse@^2
+  lodash-es: ^4.17.23
 
 dependencies:
   '@fontsource-variable/public-sans':
@@ -337,14 +338,14 @@ packages:
     dependencies:
       '@chevrotain/gast': 11.0.3
       '@chevrotain/types': 11.0.3
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: true
 
   /@chevrotain/gast@11.0.3:
     resolution: {integrity: sha512-+qNfcoNk70PyS/uxmj3li5NiECO+2YKZZQMbmjTqRI3Qchu8Hig/Q9vgkHpI3alNjr7M+a2St5pw5w5F6NL5/Q==}
     dependencies:
       '@chevrotain/types': 11.0.3
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: true
 
   /@chevrotain/regexp-to-ast@11.0.3:
@@ -2215,7 +2216,7 @@ packages:
       chevrotain: ^11.0.0
     dependencies:
       chevrotain: 11.0.3
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: true
 
   /chevrotain@11.0.3:
@@ -2226,7 +2227,7 @@ packages:
       '@chevrotain/regexp-to-ast': 11.0.3
       '@chevrotain/types': 11.0.3
       '@chevrotain/utils': 11.0.3
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: true
 
   /chokidar@3.6.0:
@@ -2667,7 +2668,7 @@ packages:
     resolution: {integrity: sha512-efEhnxpSuwpYOKRm/L5KbqoZmNNukHa/Flty4Wp62JRvgH2ojwVgPgdYyr4twpieZnyRDdIH7PY2mopX26+j2Q==}
     dependencies:
       d3: 7.9.0
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
     dev: true
 
   /dayjs@1.11.19:
@@ -3400,8 +3401,8 @@ packages:
       quansync: 0.2.11
     dev: true
 
-  /lodash-es@4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+  /lodash-es@4.17.23:
+    resolution: {integrity: sha512-kVI48u3PZr38HdYz98UmfPnXl2DXrpdctLrFLCd3kOx1xUkOmpFPx7gCWWM5MPkL/fD8zb+Ph0QzjGFs4+hHWg==}
     dev: true
 
   /longest-streak@3.1.0:
@@ -3642,7 +3643,7 @@ packages:
       dompurify: 3.3.0
       katex: 0.16.25
       khroma: 2.1.0
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
       marked: 16.4.1
       roughjs: 4.6.6
       stylis: 4.3.6
