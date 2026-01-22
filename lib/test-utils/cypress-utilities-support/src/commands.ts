@@ -22,49 +22,6 @@ import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 
 export const WEB_UI_SESSION = "WebUI";
 
-Cypress.Commands.add("projectAdministratorSession", () => {
-    sessionThroughWebUI("ProjectAdministrator", "Correct Horse Battery Staple");
-});
-
-Cypress.Commands.add("projectMemberSession", () => {
-    sessionThroughWebUI("ProjectMember", "Correct Horse Battery Staple");
-});
-
-Cypress.Commands.add("siteAdministratorSession", () => {
-    sessionThroughWebUI("admin", "welcome0");
-});
-
-Cypress.Commands.add("regularUserSession", () => {
-    sessionThroughWebUI("ARegularUser", "Correct Horse Battery Staple");
-});
-
-Cypress.Commands.add("anonymousSession", () => {
-    cy.session([WEB_UI_SESSION, "/anonymous"], () => {
-        cy.visit("/");
-        // Do not log in
-    });
-});
-
-Cypress.Commands.add("restrictedMemberSession", () => {
-    sessionThroughWebUI("RestrictedMember", "Correct Horse Battery Staple");
-});
-
-Cypress.Commands.add("restrictedRegularUserSession", () => {
-    sessionThroughWebUI("RestrictedRegularUser", "Correct Horse Battery Staple");
-});
-
-function loginThroughWebUI(username: string, password: string): void {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type(username);
-    cy.get("[data-test=form_pw]").type(`${password}{enter}`);
-}
-
-function sessionThroughWebUI(username: string, password: string): void {
-    cy.session([WEB_UI_SESSION, username], () => {
-        loginThroughWebUI(username, password);
-    });
-}
-
 interface CacheServiceUrls {
     [key: string]: string;
 }
@@ -72,88 +29,105 @@ interface CacheServiceUrls {
 interface CacheProjectUrls {
     [key: string]: CacheServiceUrls;
 }
+
 const cache_service_urls: CacheProjectUrls = {};
-Cypress.Commands.add(
-    "visitProjectService",
-    (
-        project_unixname: string,
+
+export function registerGeneralCommands(): void {
+    Cypress.Commands.add("projectAdministratorSession", () => {
+        sessionThroughWebUI("ProjectAdministrator", "Correct Horse Battery Staple");
+    });
+
+    Cypress.Commands.add("projectMemberSession", () => {
+        sessionThroughWebUI("ProjectMember", "Correct Horse Battery Staple");
+    });
+
+    Cypress.Commands.add("siteAdministratorSession", () => {
+        sessionThroughWebUI("admin", "welcome0");
+    });
+
+    Cypress.Commands.add("regularUserSession", () => {
+        sessionThroughWebUI("ARegularUser", "Correct Horse Battery Staple");
+    });
+
+    Cypress.Commands.add("anonymousSession", () => {
+        cy.session([WEB_UI_SESSION, "/anonymous"], () => {
+            cy.visit("/");
+            // Do not log in
+        });
+    });
+
+    Cypress.Commands.add("restrictedMemberSession", () => {
+        sessionThroughWebUI("RestrictedMember", "Correct Horse Battery Staple");
+    });
+
+    Cypress.Commands.add("restrictedRegularUserSession", () => {
+        sessionThroughWebUI("RestrictedRegularUser", "Correct Horse Battery Staple");
+    });
+
+    function loginThroughWebUI(username: string, password: string): void {
+        cy.visit("/");
+        cy.get("[data-test=form_loginname]").type(username);
+        cy.get("[data-test=form_pw]").type(`${password}{enter}`);
+    }
+
+    function sessionThroughWebUI(username: string, password: string): void {
+        cy.session([WEB_UI_SESSION, username], () => {
+            loginThroughWebUI(username, password);
+        });
+    }
+
+    Cypress.Commands.add(
+        "visitProjectService",
+        (
+            project_unixname: string,
+            service_label: string,
+            fail_on_status_code: boolean = true,
+        ): void => {
+            if (
+                Object.prototype.hasOwnProperty.call(cache_service_urls, project_unixname) &&
+                Object.prototype.hasOwnProperty.call(
+                    cache_service_urls[project_unixname],
+                    service_label,
+                )
+            ) {
+                cy.visit(cache_service_urls[project_unixname][service_label], {
+                    failOnStatusCode: fail_on_status_code,
+                });
+                return;
+            }
+
+            cy.visit("/projects/" + project_unixname, { failOnStatusCode: fail_on_status_code });
+            visitServiceInCurrentProject(service_label, (href) => {
+                cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
+                cache_service_urls[project_unixname][service_label] = href;
+            });
+        },
+    );
+
+    function visitServiceInCurrentProject(
         service_label: string,
-        fail_on_status_code: boolean = true,
-    ): void => {
-        if (
-            Object.prototype.hasOwnProperty.call(cache_service_urls, project_unixname) &&
-            Object.prototype.hasOwnProperty.call(
-                cache_service_urls[project_unixname],
-                service_label,
-            )
-        ) {
-            cy.visit(cache_service_urls[project_unixname][service_label], {
-                failOnStatusCode: fail_on_status_code,
+        before_visit_callback: (href: string) => void,
+    ): void {
+        cy.get("[data-test=project-sidebar-tool]", { includeShadowDom: true })
+            .contains("[data-test=project-sidebar-tool]", service_label, { includeShadowDom: true })
+            .should("have.attr", "href")
+            .then((href) => {
+                before_visit_callback(String(href));
+                cy.visit(String(href));
             });
-            return;
-        }
+    }
 
-        cy.visit("/projects/" + project_unixname, { failOnStatusCode: fail_on_status_code });
-        visitServiceInCurrentProject(service_label, (href) => {
-            cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
-            cache_service_urls[project_unixname][service_label] = href;
-        });
-    },
-);
-
-function visitServiceInCurrentProject(
-    service_label: string,
-    before_visit_callback: (href: string) => void,
-): void {
-    cy.get("[data-test=project-sidebar-tool]", { includeShadowDom: true })
-        .contains("[data-test=project-sidebar-tool]", service_label, { includeShadowDom: true })
-        .should("have.attr", "href")
-        .then((href) => {
-            before_visit_callback(String(href));
-            cy.visit(String(href));
-        });
-}
-
-Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chainable<number> => {
-    return cy
-        .getFromTuleapAPI<
-            ProjectResponse[]
-        >(`/api/projects?limit=1&query=${encodeURIComponent(JSON.stringify({ shortname: project_shortname }))}`)
-        .then((response) => response.body[0].id);
-});
-
-Cypress.Commands.add(
-    "createNewPublicProject",
-    (project_name: string, xml_template: string): Cypress.Chainable<number> => {
-        const payload = {
-            shortname: project_name,
-            description: "",
-            label: project_name,
-            is_public: true,
-            categories: [],
-            fields: [],
-            xml_template_name: xml_template,
-            allow_restricted: false,
-        };
-
+    Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chainable<number> => {
         return cy
-            .postFromTuleapApi<ProjectResponse>("https://tuleap/api/projects/", payload)
-            .then((response) => {
-                return response.body.id;
-            });
-    },
-);
+            .getFromTuleapAPI<
+                ProjectResponse[]
+            >(`/api/projects?limit=1&query=${encodeURIComponent(JSON.stringify({ shortname: project_shortname }))}`)
+            .then((response) => response.body[0].id);
+    });
 
-Cypress.Commands.add(
-    "createNewPublicProjectFromAnotherOne",
-    (project_name: string, project_template: string): Cypress.Chainable<number> => {
-        const get_project_template_url =
-            "https://tuleap/api/projects?query=" +
-            encodeURIComponent(JSON.stringify({ shortname: project_template }));
-
-        return cy.getFromTuleapAPI<ProjectResponse[]>(get_project_template_url).then((response) => {
-            const template_id = response.body[0].id;
-
+    Cypress.Commands.add(
+        "createNewPublicProject",
+        (project_name: string, xml_template: string): Cypress.Chainable<number> => {
             const payload = {
                 shortname: project_name,
                 description: "",
@@ -161,7 +135,7 @@ Cypress.Commands.add(
                 is_public: true,
                 categories: [],
                 fields: [],
-                template_id,
+                xml_template_name: xml_template,
                 allow_restricted: false,
             };
 
@@ -170,139 +144,171 @@ Cypress.Commands.add(
                 .then((response) => {
                     return response.body.id;
                 });
-        });
-    },
-);
+        },
+    );
 
-Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => {
-    const payload = {
-        shortname: project_name,
-        description: "",
-        label: project_name,
-        is_public: false,
-        categories: [],
-        fields: [],
-        xml_template_name: "issues",
-        allow_restricted: true,
-    };
+    Cypress.Commands.add(
+        "createNewPublicProjectFromAnotherOne",
+        (project_name: string, project_template: string): Cypress.Chainable<number> => {
+            const get_project_template_url =
+                "https://tuleap/api/projects?query=" +
+                encodeURIComponent(JSON.stringify({ shortname: project_template }));
 
-    cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
-});
+            return cy
+                .getFromTuleapAPI<ProjectResponse[]>(get_project_template_url)
+                .then((response) => {
+                    const template_id = response.body[0].id;
 
-Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: string): void => {
-    const payload = {
-        project_id: project_id,
-        label: package_name,
-    };
+                    const payload = {
+                        shortname: project_name,
+                        description: "",
+                        label: project_name,
+                        is_public: true,
+                        categories: [],
+                        fields: [],
+                        template_id,
+                        allow_restricted: false,
+                    };
 
-    cy.postFromTuleapApi("https://tuleap/api/frs_packages/", payload);
-});
+                    return cy
+                        .postFromTuleapApi<ProjectResponse>("https://tuleap/api/projects/", payload)
+                        .then((response) => {
+                            return response.body.id;
+                        });
+                });
+        },
+    );
 
-const MAX_ATTEMPTS = 10;
+    Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => {
+        const payload = {
+            shortname: project_name,
+            description: "",
+            label: project_name,
+            is_public: false,
+            categories: [],
+            fields: [],
+            xml_template_name: "issues",
+            allow_restricted: true,
+        };
 
-Cypress.Commands.add(
-    "reloadUntilCondition",
-    (
-        reloadCallback: ReloadCallback,
-        conditionCallback: ConditionPredicate,
-        max_attempts_reached_message: string,
-        number_of_attempts = 0,
-    ): PromiseLike<void> => {
-        if (number_of_attempts > MAX_ATTEMPTS) {
-            throw new Error(max_attempts_reached_message);
-        }
-        return conditionCallback(number_of_attempts, MAX_ATTEMPTS).then(
-            (is_condition_fulfilled) => {
-                if (is_condition_fulfilled) {
-                    return Promise.resolve();
-                }
+        cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
+    });
 
-                // eslint-disable-next-line cypress/no-unnecessary-waiting -- We must wait for this command to work
-                cy.wait(500);
-                reloadCallback();
-                return cy.reloadUntilCondition(
-                    reloadCallback,
-                    conditionCallback,
-                    max_attempts_reached_message,
-                    number_of_attempts + 1,
-                );
-            },
-        );
-    },
-);
+    Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: string): void => {
+        const payload = {
+            project_id: project_id,
+            label: package_name,
+        };
 
-Cypress.Commands.add(
-    "getContains",
-    (selector: string, label: string): Cypress.Chainable<JQuery<HTMLElement>> => {
-        return cy.get(selector).contains(label).parents(selector);
-    },
-);
+        cy.postFromTuleapApi("https://tuleap/api/frs_packages/", payload);
+    });
 
-const LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
+    const MAX_ATTEMPTS = 9;
+    Cypress.Commands.add(
+        "reloadUntilCondition",
+        (
+            reloadCallback: ReloadCallback,
+            conditionCallback: ConditionPredicate,
+            max_attempts_reached_message: string,
+            number_of_attempts = 0,
+        ): PromiseLike<void> => {
+            if (number_of_attempts > MAX_ATTEMPTS) {
+                throw new Error(max_attempts_reached_message);
+            }
+            return conditionCallback(number_of_attempts, MAX_ATTEMPTS).then(
+                (is_condition_fulfilled) => {
+                    if (is_condition_fulfilled) {
+                        return Promise.resolve();
+                    }
 
-Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {
-    cy.get("[data-test=lazybox]").click();
-    cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
-    // eslint-disable-next-line cypress/no-unnecessary-waiting -- Lazybox waits a delay before loading items
-    cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
-    cy.get("[data-test=lazybox]")
-        .find("[data-test=lazybox-loading-group-spinner]")
-        .should("not.exist");
-    return cy.getContains("[data-test=lazybox-item]", dropdown_item_label);
-});
-
-Cypress.Commands.add("addItemInLazyboxDropdown", (query: string) => {
-    cy.get("[data-test=lazybox]").click();
-    cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
-    // eslint-disable-next-line cypress/no-unnecessary-waiting -- Lazybox waits a delay before loading items
-    cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
-    cy.get("[data-test=lazybox]")
-        .find("[data-test=lazybox-loading-group-spinner]")
-        .should("not.exist");
-    cy.get("[data-test=lazybox] [data-test=new-item-button]").click();
-});
-
-Cypress.Commands.add("searchItemInListPickerDropdown", (dropdown_item_label) => {
-    cy.get("[data-test=list-picker-selection]").click();
-    // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
-    return cy.wrap(Cypress.$("body")).then((body) => {
-        cy.wrap(body)
-            .find("[data-test-list-picker-dropdown-open]")
-            .then((dropdown) =>
-                cy
-                    .wrap(dropdown)
-                    .find("[data-test=list-picker-item]")
-                    .contains(dropdown_item_label),
+                    // eslint-disable-next-line cypress/no-unnecessary-waiting -- We must wait for this command to work
+                    cy.wait(500);
+                    reloadCallback();
+                    return cy.reloadUntilCondition(
+                        reloadCallback,
+                        conditionCallback,
+                        max_attempts_reached_message,
+                        number_of_attempts + 1,
+                    );
+                },
             );
+        },
+    );
+
+    Cypress.Commands.add(
+        "getContains",
+        (selector: string, label: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+            return cy.get(selector).contains(label).parents(selector);
+        },
+    );
+
+    const LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
+    Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {
+        cy.get("[data-test=lazybox]").click();
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
+        // eslint-disable-next-line cypress/no-unnecessary-waiting -- Lazybox waits a delay before loading items
+        cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
+        cy.get("[data-test=lazybox]")
+            .find("[data-test=lazybox-loading-group-spinner]")
+            .should("not.exist");
+        return cy.getContains("[data-test=lazybox-item]", dropdown_item_label);
     });
-});
 
-Cypress.Commands.add("generateLargeFile", (file_size_in_mb: number, file_name: string) => {
-    return cy.window().then(() => {
-        const bytes_per_MB = 1024 * 1024;
-        const size = file_size_in_mb * bytes_per_MB;
-        const buffer = new ArrayBuffer(size);
-        const view = new Uint8Array(buffer);
-
-        for (let i = 0; i < size; i += 4096) {
-            view[i] = Math.floor(Math.random() * 256);
-        }
-
-        const blob = new Blob([buffer], { type: "text/plain" });
-        const file = new File([blob], file_name, { type: "text/plain" });
-
-        const data_transfer = new DataTransfer();
-        data_transfer.items.add(file);
-
-        return { file, data_transfer };
+    Cypress.Commands.add("addItemInLazyboxDropdown", (query: string) => {
+        cy.get("[data-test=lazybox]").click();
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
+        // eslint-disable-next-line cypress/no-unnecessary-waiting -- Lazybox waits a delay before loading items
+        cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
+        cy.get("[data-test=lazybox]")
+            .find("[data-test=lazybox-loading-group-spinner]")
+            .should("not.exist");
+        cy.get("[data-test=lazybox] [data-test=new-item-button]").click();
     });
-});
 
-Cypress.Commands.add("setDatepickerValue", { prevSubject: "element" }, (subject, date: string) => {
-    cy.wrap(subject).type("{selectAll}" + date);
-    // close the datepicker by clicking elsewhere
-    cy.get("body").click();
-    return cy.wrap(subject);
-});
+    Cypress.Commands.add("searchItemInListPickerDropdown", (dropdown_item_label) => {
+        cy.get("[data-test=list-picker-selection]").click();
+        // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
+        return cy.wrap(Cypress.$("body")).then((body) => {
+            cy.wrap(body)
+                .find("[data-test-list-picker-dropdown-open]")
+                .then((dropdown) =>
+                    cy
+                        .wrap(dropdown)
+                        .find("[data-test=list-picker-item]")
+                        .contains(dropdown_item_label),
+                );
+        });
+    });
 
-export {};
+    Cypress.Commands.add("generateLargeFile", (file_size_in_mb: number, file_name: string) => {
+        return cy.window().then(() => {
+            const bytes_per_MB = 1024 * 1024;
+            const size = file_size_in_mb * bytes_per_MB;
+            const buffer = new ArrayBuffer(size);
+            const view = new Uint8Array(buffer);
+
+            for (let i = 0; i < size; i += 4096) {
+                view[i] = Math.floor(Math.random() * 256);
+            }
+
+            const blob = new Blob([buffer], { type: "text/plain" });
+            const file = new File([blob], file_name, { type: "text/plain" });
+
+            const data_transfer = new DataTransfer();
+            data_transfer.items.add(file);
+
+            return { file, data_transfer };
+        });
+    });
+
+    Cypress.Commands.add(
+        "setDatepickerValue",
+        { prevSubject: "element" },
+        (subject, date: string) => {
+            cy.wrap(subject).type("{selectAll}" + date);
+            // close the datepicker by clicking elsewhere
+            cy.get("body").click();
+            return cy.wrap(subject);
+        },
+    );
+}

@@ -17,81 +17,88 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", (): void => {
-    cy.siteAdministratorSession();
-    cy.visit("/admin/");
-    cy.get("[data-test=global_access_right]").click({ force: true });
-
-    cy.get("[data-test=access_mode-restricted]").check();
-
-    cy.get("[data-test=update_forge_access_button]").click({ force: true });
-
-    cy.get("[data-test=global-admin-search-user]").type("RestrictedMember{enter}");
-    cy.get("[data-test=user-status]").select("Restricted");
-    cy.get("[data-test=save-user]").click();
-
-    cy.get("[data-test=global-admin-search-user]").type("RestrictedRegularUser{enter}");
-    cy.get("[data-test=user-status]").select("Restricted");
-    cy.get("[data-test=save-user]").click();
-
+function preventAccidentallyContinuingTheTestAsSiteAdmin(): void {
     cy.anonymousSession();
-});
+}
 
-Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
-    cy.siteAdministratorSession();
-    cy.visit("/admin/");
-    cy.get("[data-test=global_access_right]").click({ force: true });
+export function registerSiteAdminCommands(): void {
+    Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", (): void => {
+        cy.siteAdministratorSession();
+        cy.visit("/admin/");
+        cy.get("[data-test=global_access_right]").click({ force: true });
 
-    cy.get("[data-test=access_mode-anonymous]").check();
+        cy.get("[data-test=access_mode-restricted]").check();
 
-    cy.get("[data-test=update_forge_access_button]").click({ force: true });
+        cy.get("[data-test=update_forge_access_button]").click({ force: true });
 
-    cy.anonymousSession();
-});
+        cy.get("[data-test=global-admin-search-user]").type("RestrictedMember{enter}");
+        cy.get("[data-test=user-status]").select("Restricted");
+        cy.get("[data-test=save-user]").click();
 
-Cypress.Commands.add("updatePlatformAndMakeUserInAutoApprovalMode", (): void => {
-    cy.siteAdministratorSession();
-    cy.visit("/admin/");
-    cy.get("[data-test=user-settings-link]").click();
+        cy.get("[data-test=global-admin-search-user]").type("RestrictedRegularUser{enter}");
+        cy.get("[data-test=user-status]").select("Restricted");
+        cy.get("[data-test=save-user]").click();
 
-    cy.get("[data-test=user-must-be-approved]").uncheck();
-    cy.get("[data-test=save-settings]").click();
+        preventAccidentallyContinuingTheTestAsSiteAdmin();
+    });
 
-    cy.anonymousSession();
-});
+    Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
+        cy.siteAdministratorSession();
+        cy.visit("/admin/");
+        cy.get("[data-test=global_access_right]").click({ force: true });
 
-Cypress.Commands.add("updatePlatformAndMakeUserInAdminApprovalMode", (): void => {
-    cy.siteAdministratorSession();
-    cy.visit("/admin/");
-    cy.get("[data-test=user-settings-link]").click();
+        cy.get("[data-test=access_mode-anonymous]").check();
 
-    cy.get("[data-test=user-must-be-approved]").check();
-    cy.get("[data-test=save-settings]").click();
+        cy.get("[data-test=update_forge_access_button]").click({ force: true });
 
-    cy.anonymousSession();
-});
+        preventAccidentallyContinuingTheTestAsSiteAdmin();
+    });
 
-Cypress.Commands.add("addBotMattermost", (bot_name: string): void => {
-    cy.siteAdministratorSession();
-    cy.log("Add new bot");
-    cy.visit("/admin/");
-    cy.get("[data-test=botmattermost]").click();
-    cy.get("[data-test=add-bot]").click();
-    cy.get("[data-test=bot-mattermost-name]").type(bot_name);
-    cy.get("[data-test=bot-mattermost-webhook-url]").type("https://example.com");
-    cy.get("[data-test=add-bot-button]").click();
-    cy.get("[data-test=bot-list]").contains(bot_name);
+    Cypress.Commands.add("updatePlatformAndMakeUserInAutoApprovalMode", (): void => {
+        cy.siteAdministratorSession();
+        cy.visit("/admin/");
+        cy.get("[data-test=user-settings-link]").click();
 
-    cy.anonymousSession();
-});
-Cypress.Commands.add("deleteBotMattermost", (bot_name: string): void => {
-    cy.siteAdministratorSession();
-    cy.log("remove bot");
-    cy.visit("/admin/");
-    cy.get("[data-test=botmattermost]").click();
-    cy.get("[data-test=delete-bot]").click();
-    cy.get("[data-test=confirm-bot-delete]").click();
-    cy.get("[data-test=bot-list]").should("not.contain", bot_name);
+        cy.get("[data-test=user-must-be-approved]").uncheck();
+        cy.get("[data-test=save-settings]").click();
 
-    cy.anonymousSession();
-});
+        preventAccidentallyContinuingTheTestAsSiteAdmin();
+    });
+
+    Cypress.Commands.add("updatePlatformAndMakeUserInAdminApprovalMode", (): void => {
+        cy.siteAdministratorSession();
+        cy.visit("/admin/");
+        cy.get("[data-test=user-settings-link]").click();
+
+        cy.get("[data-test=user-must-be-approved]").check();
+        cy.get("[data-test=save-settings]").click();
+
+        preventAccidentallyContinuingTheTestAsSiteAdmin();
+    });
+
+    Cypress.Commands.add("addBotMattermost", (bot_name: string): void => {
+        cy.siteAdministratorSession();
+        cy.log("Add new bot");
+        cy.visit("/admin/");
+        cy.get("[data-test=botmattermost]").click();
+        cy.get("[data-test=add-bot]").click();
+        cy.get("[data-test=bot-mattermost-name]").type(bot_name);
+        cy.get("[data-test=bot-mattermost-webhook-url]").type("https://example.com");
+        cy.get("[data-test=add-bot-button]").click();
+        cy.get("[data-test=bot-list]").contains(bot_name);
+
+        preventAccidentallyContinuingTheTestAsSiteAdmin();
+    });
+
+    Cypress.Commands.add("deleteBotMattermost", (bot_name: string): void => {
+        cy.siteAdministratorSession();
+        cy.log("remove bot");
+        cy.visit("/admin/");
+        cy.get("[data-test=botmattermost]").click();
+        cy.get("[data-test=delete-bot]").click();
+        cy.get("[data-test=confirm-bot-delete]").click();
+        cy.get("[data-test=bot-list]").should("not.contain", bot_name);
+
+        preventAccidentallyContinuingTheTestAsSiteAdmin();
+    });
+}

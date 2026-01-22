@@ -30,11 +30,11 @@ declare global {
     }
 }
 
-Cypress.Commands.add("dragAndDrop", (source: string, destination: string, position: string) => {
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(source).trigger("mousedown", { which: 1 });
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(destination).trigger("mousemove", { position: position }).trigger("mouseup");
-});
-
-export {};
+export function registerKanbanCommands(): void {
+    Cypress.Commands.add("dragAndDrop", (source: string, destination: string, position: string) => {
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(source).trigger("mousedown", { which: 1 });
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(destination).trigger("mousemove", { position: position }).trigger("mouseup");
+    });
+}

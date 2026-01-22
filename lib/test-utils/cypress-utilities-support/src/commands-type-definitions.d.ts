@@ -19,6 +19,7 @@
 
 import type { ArtifactCreationPayload, ArtifactWithFieldCreationPayload } from "./trackers";
 export { WEB_UI_SESSION } from "./commands";
+export function registerCommands(): void;
 
 export type ReloadCallback = () => void;
 export type ConditionPredicate = (

@@ -18,4 +18,5 @@
  *
  */
 
-import "@tuleap/cypress-utilities-support";
+import { registerCommands } from "@tuleap/cypress-utilities-support";
+registerCommands();

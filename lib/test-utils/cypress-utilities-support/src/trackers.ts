@@ -29,51 +29,6 @@ import type { NewLink } from "./commands-type-definitions";
 
 type Tracker = Pick<TrackerResponseNoInstance, "id" | "item_name" | "fields">;
 
-Cypress.Commands.add(
-    "getTrackerIdFromREST",
-    (project_id: number, tracker_name: string): Cypress.Chainable<number> => {
-        return cy
-            .getFromTuleapAPI<Tracker[]>(`/api/projects/${project_id}/trackers`)
-            .then((response) => {
-                const tracker = response.body.find(
-                    (tracker: Tracker) => tracker.item_name === tracker_name,
-                );
-                if (!tracker) {
-                    throw new Error(`Unable to find the id of the tracker named "${tracker_name}"`);
-                }
-
-                return tracker.id;
-            });
-    },
-);
-
-const statusFieldGuard = (field: StructureFields): field is StaticBoundListField =>
-    field.type === "sb" && field.bindings.type === "static";
-
-function getStatusPayload(
-    status_label: string | undefined,
-    fields: readonly StructureFields[],
-): ListNewChangesetValue[] {
-    if (status_label === undefined) {
-        return [];
-    }
-    const status = fields.find((field) => field.name === "status");
-    if (!status || !statusFieldGuard(status)) {
-        throw Error("No status field in tracker structure");
-    }
-    const status_id = status.field_id;
-    const status_bind_value = status.values.find((value) => value.label === status_label);
-    if (status_bind_value === undefined) {
-        throw Error(`Could not find status value with given label: ${status_label}`);
-    }
-    return [
-        {
-            bind_value_ids: [status_bind_value.id],
-            field_id: status_id,
-        },
-    ];
-}
-
 export interface ArtifactCreationPayload {
     tracker_id: number;
     artifact_title: string;
@@ -84,37 +39,6 @@ export interface ArtifactCreationPayload {
 interface CreatedArtifactResponse {
     id: number;
 }
-
-Cypress.Commands.add(
-    "createArtifact",
-    (payload: ArtifactCreationPayload): Cypress.Chainable<number> =>
-        cy.getFromTuleapAPI<Tracker>(`/api/trackers/${payload.tracker_id}`).then((response) => {
-            const result = response.body;
-
-            const title_field = result.fields.find(
-                (field: StructureFields) => field.name === payload.title_field_name,
-            );
-
-            if (!title_field) {
-                throw new Error(`Unable to find a field named ${payload.title_field_name}`);
-            }
-
-            const artifact_payload = {
-                tracker: { id: payload.tracker_id },
-                values: [
-                    {
-                        field_id: title_field.field_id,
-                        value: payload.artifact_title,
-                    },
-                    ...getStatusPayload(payload.artifact_status, result.fields),
-                ],
-            };
-
-            return cy
-                .postFromTuleapApi<CreatedArtifactResponse>("/api/artifacts/", artifact_payload)
-                .then((response) => response.body.id);
-        }),
-);
 
 type ArtifactFieldToCreate =
     | {
@@ -142,92 +66,172 @@ export interface ArtifactWithFieldCreationPayload {
     fields: Array<TrackerField>;
 }
 
-Cypress.Commands.add(
-    "createArtifactWithFields",
-    (payload: ArtifactWithFieldCreationPayload): Cypress.Chainable<number> =>
-        cy.getFromTuleapAPI<Tracker>(`/api/trackers/${payload.tracker_id}`).then((response) => {
-            const result = response.body;
-
-            const fields_to_create: Array<ArtifactFieldToCreate> = [];
-            payload.fields.forEach((field_to_add: TrackerField) => {
-                const target_field = result.fields.find(
-                    (field: StructureFields) => field.name === field_to_add.shortname,
-                );
-
-                if (!target_field) {
-                    throw new Error(
-                        `Unable to find a field using the shortname ${field_to_add.shortname}`,
-                    );
-                }
-                if (target_field.type === "art_link") {
-                    fields_to_create.push({
-                        field_id: target_field.field_id,
-                        all_links: field_to_add.all_links,
-                    });
-                }
-                if (field_to_add.value) {
-                    fields_to_create.push({
-                        field_id: target_field.field_id,
-                        value: field_to_add.value,
-                    });
-                }
-            });
-
-            const artifact_payload = {
-                tracker: { id: payload.tracker_id },
-                values: fields_to_create,
-            };
-
-            return cy
-                .postFromTuleapApi<CreatedArtifactResponse>("/api/artifacts/", artifact_payload)
-                .then((response) => response.body.id);
-        }),
-);
-
 type ArtifactResponse = Pick<ArtifactResponseNoInstance, "tracker" | "values">;
 
-Cypress.Commands.add("addLinkToArtifact", (artifact_id, new_link: NewLink): void => {
-    cy.getFromTuleapAPI<ArtifactResponse>(`/api/artifacts/${artifact_id}`).then((response) => {
-        const link_field = response.body.values.find((field) => field.type === "art_link");
-        if (!link_field) {
-            const tracker_label = response.body.tracker.label;
-            throw Error(
-                `Tracker "${tracker_label}" of artifact #${artifact_id} does not have an artifact links field`,
-            );
+export function registerTrackerCommands(): void {
+    Cypress.Commands.add(
+        "getTrackerIdFromREST",
+        (project_id: number, tracker_name: string): Cypress.Chainable<number> => {
+            return cy
+                .getFromTuleapAPI<Tracker[]>(`/api/projects/${project_id}/trackers`)
+                .then((response) => {
+                    const tracker = response.body.find(
+                        (tracker: Tracker) => tracker.item_name === tracker_name,
+                    );
+                    if (!tracker) {
+                        throw new Error(
+                            `Unable to find the id of the tracker named "${tracker_name}"`,
+                        );
+                    }
+
+                    return tracker.id;
+                });
+        },
+    );
+
+    const statusFieldGuard = (field: StructureFields): field is StaticBoundListField =>
+        field.type === "sb" && field.bindings.type === "static";
+
+    function getStatusPayload(
+        status_label: string | undefined,
+        fields: readonly StructureFields[],
+    ): ListNewChangesetValue[] {
+        if (status_label === undefined) {
+            return [];
         }
+        const status = fields.find((field) => field.name === "status");
+        if (!status || !statusFieldGuard(status)) {
+            throw Error("No status field in tracker structure");
+        }
+        const status_id = status.field_id;
+        const status_bind_value = status.values.find((value) => value.label === status_label);
+        if (status_bind_value === undefined) {
+            throw Error(`Could not find status value with given label: ${status_label}`);
+        }
+        return [
+            {
+                bind_value_ids: [status_bind_value.id],
+                field_id: status_id,
+            },
+        ];
+    }
 
-        const existing_forward_links = link_field.links.map((link) => {
-            return {
-                id: link.id,
-                type: link.type,
-                direction: "forward",
-            };
-        });
-        const existing_reverse_links = link_field.reverse_links.map((link) => {
-            return {
-                id: link.id,
-                type: link.type,
-                direction: "reverse",
-            };
-        });
+    Cypress.Commands.add(
+        "createArtifact",
+        (payload: ArtifactCreationPayload): Cypress.Chainable<number> =>
+            cy.getFromTuleapAPI<Tracker>(`/api/trackers/${payload.tracker_id}`).then((response) => {
+                const result = response.body;
 
-        const new_link_formatted: ArtifactLinkNewChangesetLink = {
-            id: new_link.linked_artifact_id,
-            type: new_link.type,
-            direction: new_link.direction,
-        };
+                const title_field = result.fields.find(
+                    (field: StructureFields) => field.name === payload.title_field_name,
+                );
 
-        return cy.putFromTuleapApi(`/api/artifacts/${artifact_id}`, {
-            values: [
-                {
-                    field_id: link_field.field_id,
-                    all_links: [
-                        ...existing_forward_links,
-                        ...existing_reverse_links,
-                        new_link_formatted,
+                if (!title_field) {
+                    throw new Error(`Unable to find a field named ${payload.title_field_name}`);
+                }
+
+                const artifact_payload = {
+                    tracker: { id: payload.tracker_id },
+                    values: [
+                        {
+                            field_id: title_field.field_id,
+                            value: payload.artifact_title,
+                        },
+                        ...getStatusPayload(payload.artifact_status, result.fields),
                     ],
-                },
-            ],
+                };
+
+                return cy
+                    .postFromTuleapApi<CreatedArtifactResponse>("/api/artifacts/", artifact_payload)
+                    .then((response) => response.body.id);
+            }),
+    );
+
+    Cypress.Commands.add(
+        "createArtifactWithFields",
+        (payload: ArtifactWithFieldCreationPayload): Cypress.Chainable<number> =>
+            cy.getFromTuleapAPI<Tracker>(`/api/trackers/${payload.tracker_id}`).then((response) => {
+                const result = response.body;
+
+                const fields_to_create: Array<ArtifactFieldToCreate> = [];
+                payload.fields.forEach((field_to_add: TrackerField) => {
+                    const target_field = result.fields.find(
+                        (field: StructureFields) => field.name === field_to_add.shortname,
+                    );
+
+                    if (!target_field) {
+                        throw new Error(
+                            `Unable to find a field using the shortname ${field_to_add.shortname}`,
+                        );
+                    }
+                    if (target_field.type === "art_link") {
+                        fields_to_create.push({
+                            field_id: target_field.field_id,
+                            all_links: field_to_add.all_links,
+                        });
+                    }
+                    if (field_to_add.value) {
+                        fields_to_create.push({
+                            field_id: target_field.field_id,
+                            value: field_to_add.value,
+                        });
+                    }
+                });
+
+                const artifact_payload = {
+                    tracker: { id: payload.tracker_id },
+                    values: fields_to_create,
+                };
+
+                return cy
+                    .postFromTuleapApi<CreatedArtifactResponse>("/api/artifacts/", artifact_payload)
+                    .then((response) => response.body.id);
+            }),
+    );
+
+    Cypress.Commands.add("addLinkToArtifact", (artifact_id, new_link: NewLink): void => {
+        cy.getFromTuleapAPI<ArtifactResponse>(`/api/artifacts/${artifact_id}`).then((response) => {
+            const link_field = response.body.values.find((field) => field.type === "art_link");
+            if (!link_field) {
+                const tracker_label = response.body.tracker.label;
+                throw Error(
+                    `Tracker "${tracker_label}" of artifact #${artifact_id} does not have an artifact links field`,
+                );
+            }
+
+            const existing_forward_links = link_field.links.map((link) => {
+                return {
+                    id: link.id,
+                    type: link.type,
+                    direction: "forward",
+                };
+            });
+            const existing_reverse_links = link_field.reverse_links.map((link) => {
+                return {
+                    id: link.id,
+                    type: link.type,
+                    direction: "reverse",
+                };
+            });
+
+            const new_link_formatted: ArtifactLinkNewChangesetLink = {
+                id: new_link.linked_artifact_id,
+                type: new_link.type,
+                direction: new_link.direction,
+            };
+
+            return cy.putFromTuleapApi(`/api/artifacts/${artifact_id}`, {
+                values: [
+                    {
+                        field_id: link_field.field_id,
+                        all_links: [
+                            ...existing_forward_links,
+                            ...existing_reverse_links,
+                            new_link_formatted,
+                        ],
+                    },
+                ],
+            });
         });
     });
-});
+}

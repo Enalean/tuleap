@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "@tuleap/cypress-utilities-support";
+import { registerCommands } from "@tuleap/cypress-utilities-support";
 
 // Tab is not natively supported by cypress yet
 // See https://docs.cypress.io/api/commands/type#Tabbing
 // See https://github.com/cypress-io/cypress/issues/299
 import "cypress-plugin-tab";
+registerCommands();
