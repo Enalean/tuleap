@@ -68,11 +68,11 @@ pipeline {
             failFast false
             parallel {
                 stage('DB/Integration') {
-                    steps { script { actions.runDBTests('mysql84', '80') } }
+                    steps { script { actions.runDBTests('mysql80', '84') } }
                     post { always { junit 'results/db/*/db_tests.xml' } }
                 }
                 stage('REST') {
-                    steps { script { actions.runRESTTests('mysql84', '80') } }
+                    steps { script { actions.runRESTTests('mysql80', '84') } }
                     post { always { junit 'results/api-rest/*/*' } }
                 }
                 stage('E2E tests') {
