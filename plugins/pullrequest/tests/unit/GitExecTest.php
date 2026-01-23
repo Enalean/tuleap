@@ -135,6 +135,23 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(1, $short_stat->getLinesRemovedNumber());
     }
 
+    public function testItReturnsShortStatsEvenWhenTheTwoBranchesHaveNoCommonAncestor(): void
+    {
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' checkout --quiet --orphan=orphan_branch 2>&1 >/dev/null');
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' reset --hard 2>&1 >/dev/null');
+
+        $file_path = "$this->fixture_dir/file";
+        file_put_contents($file_path, "Contenu\n");
+        $this->git_exec->add($file_path);
+        $this->git_exec->commit("add $file_path");
+
+        $short_stat = $this->git_exec->getShortStat('main', 'orphan_branch');
+
+        self::assertEquals(1, $short_stat->getFilesChangedNumber());
+        self::assertEquals(1, $short_stat->getLinesAddedNumber());
+        self::assertEquals(0, $short_stat->getLinesRemovedNumber());
+    }
+
     public function testItReturnsModifiedLinesStats(): void
     {
         $file1_path = "$this->fixture_dir/file1";
@@ -156,6 +173,21 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $modified_files = $this->git_exec->getModifiedFilesLineStat('main', 'dev');
 
         self::assertEquals(["1\t0\tfile1", "0\t1\tfile2"], $modified_files);
+    }
+
+    public function testItReturnsModifiedLinesStatsEvenWhenTheTwoBranchesHaveNoCommonAncestor(): void
+    {
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' checkout --quiet --orphan=orphan_branch 2>&1 >/dev/null');
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . ' reset --hard 2>&1 >/dev/null');
+
+        $file_path = "$this->fixture_dir/file";
+        file_put_contents($file_path, "Contenu\n");
+        $this->git_exec->add($file_path);
+        $this->git_exec->commit("add $file_path");
+
+        $modified_files = $this->git_exec->getModifiedFilesLineStat('main', 'orphan_branch');
+
+        self::assertEquals(["1\t0\tfile"], $modified_files);
     }
 
     public function testItReturnsFalseIfBaseCommitRefDoesntExist_isAncestor(): void // phpcs:ignore
