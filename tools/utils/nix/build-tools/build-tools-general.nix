@@ -13,7 +13,6 @@
   pkgs.coreutils
   pkgs.which
   pkgs.cosign
-  pkgs.cachix
   pkgs.cacert
   pkgs.trufflehog
 ]

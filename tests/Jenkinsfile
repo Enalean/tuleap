@@ -14,6 +14,7 @@ def execTestWithLimitedConcurrency(Closure testToExecute) {
 }
 
 def actions
+def helpers
 
 pipeline {
     agent {
@@ -24,6 +25,16 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Setup Nix cache') {
+            steps {
+                script {
+                    helpers = load 'sources/tests/helpers.groovy'
+                    helpers.authenticateOnTailscale()
+                    helpers.setupTuleapCommunityNixCache()
+                }
             }
         }
 
@@ -132,7 +143,6 @@ pipeline {
                             execTestWithLimitedConcurrency({
                                 def filesToAnalyze = '.'
                                 if (env.GIT_BRANCH != 'origin/master') {
-                                    def helpers = load 'sources/tests/helpers.groovy'
                                     filesToAnalyze = helpers.getModifiedFilesSinceFirstParentOfCurrentCommit('sources/')
                                 }
                                 actions.runTreefmt(filesToAnalyze)

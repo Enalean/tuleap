@@ -15,6 +15,16 @@ pipeline {
             }
         }
 
+        stage('Setup Nix cache') {
+            steps {
+                script {
+                    def helpers = load 'sources/tests/helpers.groovy'
+                    helpers.authenticateOnTailscale()
+                    helpers.setupTuleapCommunityNixCache()
+                }
+            }
+        }
+
         stage('Prepare') {
             steps {
                 dir ('results') {
