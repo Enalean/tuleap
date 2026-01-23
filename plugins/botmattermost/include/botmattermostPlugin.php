@@ -38,7 +38,7 @@ use Tuleap\BotMattermost\Router;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
@@ -61,8 +61,6 @@ class BotMattermostPlugin extends Plugin
 
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(CollectRoutesEvent::NAME, 'defaultCollectRoutesEvent');
         $this->addHook(NavigationPresenter::NAME);
     }
@@ -90,22 +88,6 @@ class BotMattermostPlugin extends Plugin
         );
     }
 
-    public function burning_parrot_get_javascript_files($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0) {
-            $asset                        = $this->getIncludeAssets();
-            $params['javascript_files'][] = $asset->getFileURL('modals.js');
-        }
-    }
-
-    public function burning_parrot_get_stylesheets(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0) {
-            $asset                   = $this->getIncludeAssets();
-            $params['stylesheets'][] = $asset->getFileURL('botmattermost-style.css');
-        }
-    }
-
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0) {
@@ -121,7 +103,8 @@ class BotMattermostPlugin extends Plugin
                 new BotFactory(new BotDao()),
                 $this->getBotDeletor(),
                 $this->getBotEditor(),
-                $this->getBotCreator()
+                $this->getBotCreator(),
+                $this->getIncludeAssets(),
             )
         );
     }
@@ -187,9 +170,9 @@ class BotMattermostPlugin extends Plugin
         );
     }
 
-    private function getIncludeAssets(): IncludeAssets
+    private function getIncludeAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../frontend-assets/',
             '/assets/botmattermost'
         );
