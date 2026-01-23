@@ -57,6 +57,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraServerClientStub;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
 use UserXMLExporter;
@@ -66,11 +67,6 @@ use XML_SimpleXMLCDATAFactory;
 final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ArtifactsInDedicatedTrackerXMLExporter $exporter;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
-     */
-    private $wrapper;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
@@ -84,13 +80,8 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
      */
     private $attachment_downloader;
 
-    #[\Override]
-    protected function setUp(): void
+    protected function initExporter(JiraServerClientStub|JiraCloudClientStub $wrapper): void
     {
-        parent::setUp();
-
-        $this->wrapper               = new class extends JiraCloudClientStub {
-        };
         $this->attachment_downloader = $this->createMock(AttachmentDownloader::class);
         $this->user_manager          = $this->createMock(UserManager::class);
         $this->logger                = new TestLogger();
@@ -107,7 +98,7 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
 
         $creation_state_list_value_formatter = new CreationStateListValueFormatter();
         $this->exporter                      = new ArtifactsInDedicatedTrackerXMLExporter(
-            $this->wrapper,
+            $wrapper,
             $this->user_manager,
             $this->logger,
             new IssueAsArtifactXMLExporter(
@@ -147,7 +138,7 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
                     ),
                     new IssueSnapshotCollectionBuilder(
                         new JiraCloudChangelogEntriesBuilder(
-                            $this->wrapper,
+                            $wrapper,
                             $this->logger
                         ),
                         new CurrentSnapshotBuilder(
@@ -168,7 +159,7 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
                             $jira_user_retriever
                         ),
                         new JiraCloudCommentValuesBuilder(
-                            $this->wrapper,
+                            $wrapper,
                             $this->logger
                         ),
                         $this->logger,
@@ -189,12 +180,15 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
             ),
         );
 
-        $this->mockChangelogForKey01();
-        $this->mockChangelogForKey02();
+        $this->mockChangelogForKey01($wrapper);
+        $this->mockChangelogForKey02($wrapper);
     }
 
-    public function testItExportsArtifacts(): void
+    public function testItExportsArtifactsFromJiraServer(): void
     {
+        $wrapper = new class extends JiraServerClientStub {
+        };
+        $this->initExporter($wrapper);
         $user = $this->buildForgeUser();
 
         $this->user_manager->method('getUserById')->with(91)->willReturn($user);
@@ -225,7 +219,7 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=0'] = [
             'startAt'    => 0,
             'maxResults' => 50,
             'total'      => 2,
@@ -271,14 +265,14 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
             ],
         ];
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
             'startAt'    => 0,
             'maxResults' => 50,
             'total'      => 0,
             'comments'   => [],
         ];
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
             'startAt'    => 0,
             'maxResults' => 50,
             'total'      => 0,
@@ -301,8 +295,11 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
         self::assertCount(2, $issue_collection->getIssueRepresentationCollection());
     }
 
-    public function testItExportsArtifactsPaginated(): void
+    public function testItExportsArtifactsFromJiraCloud(): void
     {
+        $wrapper = new class extends JiraCloudClientStub {
+        };
+        $this->initExporter($wrapper);
         $user = $this->buildForgeUser();
 
         $this->user_manager->method('getUserById')->with(91)->willReturn($user);
@@ -333,7 +330,116 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+            'isLast' => true,
+            'issues'     => [
+                [
+                    'id'     => '10042',
+                    'self'   => 'https://jira_instance/rest/api/3/issue/10042',
+                    'key'    => 'key01',
+                    'fields' => [
+                        'summary'   => 'summary01',
+                        'issuetype' =>
+                            [
+                                'id' => '10004',
+                            ],
+                        'created' => '2020-03-25T14:10:10.823+0100',
+                        'updated' => '2020-04-25T14:10:10.823+0100',
+                        'creator' => [
+                            'displayName' => 'Mysterio',
+                            'accountId' => 'e8d453qs8f47d538s',
+                        ],
+                    ],
+                    'renderedFields' => [],
+                ],
+                [
+                    'id'     => '10043',
+                    'self'   => 'https://jira_instance/rest/api/3/issue/10043',
+                    'key'    => 'key02',
+                    'fields' => [
+                        'summary'   => 'summary02',
+                        'issuetype' =>
+                            [
+                                'id' => '10004',
+                            ],
+                        'created' => '2020-03-26T14:10:10.823+0100',
+                        'updated' => '2020-04-26T14:10:10.823+0100',
+                        'creator' => [
+                            'displayName' => 'Mysterio',
+                            'accountId' => 'e8d453qs8f47d538s',
+                        ],
+                    ],
+                    'renderedFields' => [],
+                ],
+            ],
+        ];
+
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
+            'startAt'    => 0,
+            'maxResults' => 50,
+            'total'      => 0,
+            'comments'   => [],
+        ];
+
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
+            'startAt'    => 0,
+            'maxResults' => 50,
+            'total'      => 0,
+            'comments'   => [],
+        ];
+
+        $issue_collection = new IssueAPIRepresentationCollection();
+        $this->exporter->exportArtifacts(
+            $tracker_node,
+            $mapping_collection,
+            $issue_collection,
+            new LinkedIssuesCollection(),
+            $jira_base_url,
+            $jira_project_id,
+            $jira_issue_name
+        );
+
+        self::assertXMLArtifactsContent($tracker_node);
+
+        self::assertCount(2, $issue_collection->getIssueRepresentationCollection());
+    }
+
+    public function testItExportsArtifactsPaginated(): void
+    {
+        $wrapper = new class extends JiraServerClientStub {
+        };
+        $this->initExporter($wrapper);
+        $user = $this->buildForgeUser();
+
+        $this->user_manager->method('getUserById')->with(91)->willReturn($user);
+
+        $tracker_node       = new SimpleXMLElement('<tracker/>');
+        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection->addMapping(
+            new ScalarFieldMapping(
+                'summary',
+                'Summary',
+                null,
+                'Fsummary',
+                'summary',
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
+            )
+        );
+        $mapping_collection->addMapping(
+            new ScalarFieldMapping(
+                'jira_issue_url',
+                'Link to original issue',
+                null,
+                'Fjira_issue_url',
+                'jira_issue_url',
+                'string',
+            ),
+        );
+        $jira_project_id = 'project';
+        $jira_base_url   = 'URLinstance';
+        $jira_issue_name = 'Story';
+
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=0'] = [
             'startAt'    => 0,
             'maxResults' => 1,
             'total'      => 2,
@@ -371,7 +477,7 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
             ->with('johndoe@example.com')
             ->willReturn([$john_doe]);
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=1'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=1'] = [
             'startAt'    => 1,
             'maxResults' => 1,
             'total'      => 2,
@@ -398,14 +504,14 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
             ],
         ];
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
             'startAt'    => 0,
             'maxResults' => 50,
             'total'      => 0,
             'comments'   => [],
         ];
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
             'startAt'    => 0,
             'maxResults' => 50,
             'total'      => 0,
@@ -430,6 +536,10 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
 
     public function testItIgnoresArtifactsThatHaveBeenAlreadyExported(): void
     {
+        $wrapper = new class extends JiraServerClientStub {
+        };
+        $this->initExporter($wrapper);
+
         $user = $this->buildForgeUser();
 
         $this->user_manager->method('getUserById')->with(91)->willReturn($user);
@@ -460,7 +570,7 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=0'] = [
             'startAt'    => 0,
             'maxResults' => 1,
             'total'      => 2,
@@ -498,7 +608,7 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
             ->with('johndoe@example.com')
             ->willReturn([$john_doe]);
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=1'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory+ORDER+BY+created+ASC&fields=%2Aall&expand=renderedFields&startAt=1'] = [
             'startAt'    => 1,
             'maxResults' => 1,
             'total'      => 2,
@@ -526,14 +636,14 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
             ],
         ];
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
             'startAt'    => 0,
             'maxResults' => 50,
             'total'      => 0,
             'comments'   => [],
         ];
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
             'startAt'    => 0,
             'maxResults' => 50,
             'total'      => 0,
@@ -567,9 +677,9 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
         self::assertTrue($this->logger->hasDebugThatMatches('/has already be exported, no need to export it again/'));
     }
 
-    private function mockChangelogForKey01(): void
+    private function mockChangelogForKey01(JiraServerClientStub|JiraCloudClientStub $wrapper): void
     {
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/changelog?startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/changelog?startAt=0'] = [
             'maxResults' => 100,
             'startAt'    => 0,
             'total'      => 0,
@@ -578,9 +688,9 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
         ];
     }
 
-    private function mockChangelogForKey02(): void
+    private function mockChangelogForKey02(JiraServerClientStub|JiraCloudClientStub $wrapper): void
     {
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/changelog?startAt=0'] = [
+        $wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/changelog?startAt=0'] = [
             'maxResults' => 100,
             'startAt'    => 0,
             'total'      => 0,

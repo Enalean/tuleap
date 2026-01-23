@@ -72,14 +72,7 @@ class JiraFieldRetriever
      */
     private function appendFromEditMeta(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
-        $params = [
-            'jql'        => 'project="' . $jira_project_key . '" AND issuetype=' . $jira_issue_type_id,
-            'expand'     => 'editmeta',
-            'startAt'    => 0,
-            'maxResults' => 1,
-        ];
-
-        $get_one_issue_url =  ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
+        $get_one_issue_url = $this->getOneIssueURL($jira_project_key, $jira_issue_type_id);
         try {
             $this->logger->debug('GET ' . $get_one_issue_url);
 
@@ -109,6 +102,21 @@ class JiraFieldRetriever
             $this->logger->warning(sprintf('GET %s error (%d): %s', $get_one_issue_url, $exception->getCode(), $exception->getMessage()));
         }
         return $fields_by_id;
+    }
+
+    private function getOneIssueURL(string $jira_project_key, string $jira_issue_type_id): string
+    {
+        $params = [
+            'jql'        => 'project="' . $jira_project_key . '" AND issuetype=' . $jira_issue_type_id,
+            'expand'     => 'editmeta',
+            'startAt'    => 0,
+            'maxResults' => 1,
+        ];
+
+        if ($this->wrapper->isJiraCloud()) {
+            return ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?' . http_build_query($params);
+        }
+        return ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
     }
 
     /**

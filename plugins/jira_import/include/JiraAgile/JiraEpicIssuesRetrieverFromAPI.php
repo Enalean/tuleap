@@ -29,34 +29,17 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 
-final class JiraEpicIssuesRetrieverFromAPI implements JiraEpicIssuesRetriever
+final readonly class JiraEpicIssuesRetrieverFromAPI implements JiraEpicIssuesRetriever
 {
-    /**
-     * @var JiraClient
-     */
-    private $jira_client;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(JiraClient $jira_client, LoggerInterface $logger)
+    public function __construct(private JiraClient $jira_client, private LoggerInterface $logger)
     {
-        $this->jira_client = $jira_client;
-        $this->logger      = $logger;
     }
 
     #[\Override]
     public function getIssueIds(JiraEpic $epic, string $jira_project): array
     {
-        $iterator  = JiraCollectionBuilder::iterateUntilTotal(
-            $this->jira_client,
-            $this->logger,
-            $this->getUrlWithoutHost($epic, $jira_project),
-            'issues'
-        );
         $issue_ids = [];
-        foreach ($iterator as $value) {
+        foreach ($this->getIterator($epic, $jira_project) as $value) {
             if (! isset($value['id'])) {
                 throw new UnexpectedFormatException($this->getUrlWithoutHost($epic, $jira_project) . ' `issues` key is suppose to be an array with `id` key ');
             }
@@ -65,14 +48,30 @@ final class JiraEpicIssuesRetrieverFromAPI implements JiraEpicIssuesRetriever
         return $issue_ids;
     }
 
+    private function getIterator(JiraEpic $epic, string $jira_project): \Generator
+    {
+        if ($this->jira_client->isJiraCloud()) {
+            return JiraCollectionBuilder::iterateUntilIsLast(
+                $this->jira_client,
+                $this->logger,
+                ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?' . $this->getUrlWithoutHost($epic, $jira_project),
+                'issues'
+            );
+        }
+        return JiraCollectionBuilder::iterateUntilTotal(
+            $this->jira_client,
+            $this->logger,
+            ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . $this->getUrlWithoutHost($epic, $jira_project),
+            'issues'
+        );
+    }
+
     private function getUrlWithoutHost(JiraEpic $epic, string $jira_project): string
     {
-        $params = [
+        return http_build_query([
             'jql'    => 'project="' . $jira_project . '" AND parent=' . $epic->id,
             'fields' => '*all',
             'expand' => 'renderedFields',
-        ];
-
-        return parse_url(ClientWrapper::JIRA_CORE_BASE_URL, PHP_URL_PATH) . '/search?' . http_build_query($params);
+        ]);
     }
 }

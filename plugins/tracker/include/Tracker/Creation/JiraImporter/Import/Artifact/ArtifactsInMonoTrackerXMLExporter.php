@@ -71,13 +71,7 @@ class ArtifactsInMonoTrackerXMLExporter
 
         $already_seen_artifacts_ids = [];
 
-        $iterator = JiraCollectionBuilder::iterateUntilTotal(
-            $this->jira_client,
-            $this->logger,
-            $this->getUrl($jira_project_id, $jira_issue_types),
-            'issues',
-        );
-        foreach ($iterator as $issue) {
+        foreach ($this->getIterator($jira_project_id, $jira_issue_types) as $issue) {
             $this->issue_as_artifact_xml_exporter->exportIssueInArtifactXMLFormat(
                 $artifacts_node,
                 $issue,
@@ -88,6 +82,27 @@ class ArtifactsInMonoTrackerXMLExporter
                 $already_seen_artifacts_ids,
             );
         }
+    }
+
+    /**
+     * @param IssueType[] $jira_issue_types
+     */
+    private function getIterator(string $jira_project_id, array $jira_issue_types): \Generator
+    {
+        if ($this->jira_client->isJiraCloud()) {
+            return JiraCollectionBuilder::iterateUntilIsLast(
+                $this->jira_client,
+                $this->logger,
+                ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?' . $this->getUrl($jira_project_id, $jira_issue_types),
+                'issues',
+            );
+        }
+        return JiraCollectionBuilder::iterateUntilTotal(
+            $this->jira_client,
+            $this->logger,
+            ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . $this->getUrl($jira_project_id, $jira_issue_types),
+            'issues',
+        );
     }
 
     /**
@@ -116,6 +131,6 @@ class ArtifactsInMonoTrackerXMLExporter
             ];
         }
 
-        return ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
+        return http_build_query($params);
     }
 }

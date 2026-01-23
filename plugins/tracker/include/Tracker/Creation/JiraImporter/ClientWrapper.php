@@ -53,6 +53,8 @@ abstract class ClientWrapper implements JiraClient
      */
     public const string JIRA_CORE_BASE_URL = '/rest/api/2';
 
+    public const string JIRA_CLOUD_JQL_SEARCH_URL = '/rest/api/3/search/jql';
+
     public const string DEBUG_MARKER_BODY = 'Body content:';
 
     private const string DEPLOYMENT_TYPE_CLOUD = 'Cloud';
