@@ -74,7 +74,8 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
             $this->element_factory,
             $this->date_dao,
             $this->int_dao,
-            $this->float_dao
+            $this->float_dao,
+            new \Psr\Log\NullLogger(),
         );
 
         $this->field_id          = 456;

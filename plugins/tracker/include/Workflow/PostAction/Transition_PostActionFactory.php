@@ -43,7 +43,7 @@ class Transition_PostActionFactory
      */
     private $event_manager;
 
-    public function __construct(EventManager $event_manager)
+    public function __construct(EventManager $event_manager, private readonly \Psr\Log\LoggerInterface $logger)
     {
         $this->event_manager = $event_manager;
     }
@@ -212,7 +212,8 @@ class Transition_PostActionFactory
                 Tracker_FormElementFactory::instance(),
                 new Transition_PostAction_Field_DateDao(),
                 new Transition_PostAction_Field_IntDao(),
-                new Transition_PostAction_Field_FloatDao()
+                new Transition_PostAction_Field_FloatDao(),
+                $this->logger,
             );
         }
         return $this->postaction_field_factory;

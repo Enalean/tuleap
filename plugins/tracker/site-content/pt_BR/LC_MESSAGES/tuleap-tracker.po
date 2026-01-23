@@ -391,10 +391,6 @@ msgstr ""
 msgid "Alpha Ranking updated"
 msgstr ""
 
-#, php-format
-msgid "An action on the field '%1$s' already exists."
-msgstr ""
-
 msgid ""
 "An artifact could be considered <strong>done</strong> only if a semantic "
 "status is defined."

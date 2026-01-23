@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
@@ -49,6 +53,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         Transition_PostAction_Field_DateDao $date_dao,
         Transition_PostAction_Field_IntDao $int_dao,
         Transition_PostAction_Field_FloatDao $float_dao,
+        private readonly \Psr\Log\LoggerInterface $logger,
     ) {
         $this->element_factory = $element_factory;
         $this->daos            = [
@@ -105,7 +110,15 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
 
         foreach ($post_actions_classes as $shortname => $klass) {
             foreach ($this->loadPostActionRows($transition, $shortname) as $row) {
-                $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
+                $this->buildPostAction($transition, $row, $shortname, $klass)
+                    ->match(
+                        function (Transition_PostAction_Field $post_action) use (&$post_actions) {
+                            $post_actions[] = $post_action;
+                        },
+                        function (Fault $fault) {
+                            $this->logger->error((string) $fault);
+                        }
+                    );
             }
         }
         return $post_actions;
@@ -159,11 +172,18 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         $rows         = $this->loadPostActionRows($transition, $shortname);
         $post_actions = [];
         foreach ($rows as $row) {
-            $post_actions[] = $this->buildPostAction(
+            $this->buildPostAction(
                 $transition,
                 $row,
                 $shortname,
                 $this->post_actions_classes[$shortname]
+            )->match(
+                function (Transition_PostAction_Field $post_action) use (&$post_actions) {
+                    $post_actions[] = $post_action;
+                },
+                function (Fault $fault) {
+                    $this->logger->error((string) $fault);
+                }
             );
         }
         return $post_actions;
@@ -284,17 +304,21 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      * @param string     $shortname  The PostAction short name
      *
      * @psalm-param class-string $klass
-     *
+     * @return Ok<Transition_PostAction_Field>|Err<Fault>
      */
-    private function buildPostAction(Transition $transition, $row, $shortname, string $klass): Transition_PostAction_Field
+    private function buildPostAction(Transition $transition, $row, string $shortname, string $klass): Ok|Err
     {
-        $id    = (int) $row['id'];
-        $field = $this->getFieldFromRow($row);
-        $value = $this->getValueFromRow($row, $shortname);
+        return $this->getFieldFromRow($row)->map(
+            function ($field) use ($row, $shortname, $transition, $klass): Transition_PostAction_Field {
+                $value = $this->getValueFromRow($row, $shortname);
 
-        $object = new $klass($transition, $id, $field, $value);
-        assert($object instanceof Transition_PostAction_Field);
-        return $object;
+                $id     = (int) $row['id'];
+                $object = new $klass($transition, $id, $field, $value);
+                assert($object instanceof Transition_PostAction_Field);
+
+                return $object;
+            }
+        );
     }
 
     /**
@@ -315,16 +339,21 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     /**
      * Retrieves the field from the given PostAction database row.
      *
-     * @param array $row
+     * @return Ok<TrackerField>|Err<Fault>
      */
-    private function getFieldFromRow($row): TrackerField
+    private function getFieldFromRow(array $row): Ok|Err
     {
         $field = $this->element_factory->getFieldById((int) $row['field_id']);
         if (! $field) {
-            throw new RuntimeException('Field not found');
+            return Result::err(Fault::fromMessage(
+                sprintf(
+                    'Post action field not found %s',
+                    var_export(array_intersect_key($row, array_flip(['id', 'transition_id', 'field_id'])), true),
+                ),
+            ));
         }
 
-        return $field;
+        return Result::ok($field);
     }
 
     /**

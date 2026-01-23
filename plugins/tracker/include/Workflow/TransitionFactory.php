@@ -93,7 +93,8 @@ class TransitionFactory
                     DBFactory::getMainTuleapDBConnection()
                 ),
                 new Transition_PostActionFactory(
-                    EventManager::instance()
+                    EventManager::instance(),
+                    BackendLogger::getDefaultLogger(),
                 ),
                 new Workflow_TransitionDao()
             );
