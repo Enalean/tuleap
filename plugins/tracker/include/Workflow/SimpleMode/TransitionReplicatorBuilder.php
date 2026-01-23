@@ -138,7 +138,8 @@ class TransitionReplicatorBuilder
                     $form_element_factory,
                     new Transition_PostAction_Field_DateDao(),
                     new Transition_PostAction_Field_IntDao(),
-                    new Transition_PostAction_Field_FloatDao()
+                    new Transition_PostAction_Field_FloatDao(),
+                    \BackendLogger::getDefaultLogger(),
                 ),
                 FrozenFieldsRetriever::instance(),
                 HiddenFieldsetsRetriever::instance(),

@@ -80,37 +80,6 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
     }
 
     /**
-     * Check if a post action on field_id already exists
-     *
-     * @param mixed $request_field_id the field_id from the request
-     *
-     * @return int a field id
-     */
-    public function getFieldIdOfPostActionToUpdate($request_field_id)
-    {
-        $field_id = $this->getFieldId();
-
-        if ($request_field_id != $field_id) {
-            $new_field = $this->getFormElementFactory()->getUsedFormElementById($request_field_id);
-
-            if ($new_field) {
-                $already_used = $this->getDao()->searchByTransitionIdAndFieldId($this->transition->getId(), $new_field->getId());
-
-                if (count($already_used)) {
-                    $this->addFeedback(
-                        'error',
-                        sprintf(dgettext('tuleap-tracker', 'An action on the field \'%1$s\' already exists.'), $new_field->getLabel())
-                    );
-                } else {
-                    $field_id = $new_field->getId();
-                    return $field_id;
-                }
-            }
-        }
-        return $field_id;
-    }
-
-    /**
      * Wrapper for Tracker_FormElementFactory
      *
      * @return Tracker_FormElementFactory

@@ -51,7 +51,7 @@ final class Transition_PostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->transition->method('setPostActions');
 
         $this->event_manager = $this->createMock(EventManager::class);
-        $this->factory       = new Transition_PostActionFactory($this->event_manager);
+        $this->factory       = new Transition_PostActionFactory($this->event_manager, new \Psr\Log\NullLogger());
 
         $this->field_factory           = $this->createMock(Transition_PostAction_FieldFactory::class);
         $this->cibuild_factory         = $this->createMock(Transition_PostAction_CIBuildFactory::class);

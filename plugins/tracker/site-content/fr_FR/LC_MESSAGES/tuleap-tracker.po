@@ -457,10 +457,6 @@ msgstr "Permet de choisir une date avec un calendrier"
 msgid "Alpha Ranking updated"
 msgstr "Ordre alphabétique mis à jour"
 
-#, php-format
-msgid "An action on the field '%1$s' already exists."
-msgstr "Une action sur le champ '%1$s' existe déjà."
-
 msgid ""
 "An artifact could be considered <strong>done</strong> only if a semantic "
 "status is defined."
