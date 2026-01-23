@@ -25,15 +25,18 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use ColinODell\PsrTestLogger\TestLogger;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class AsynchronousJiraRunnerTest extends TestCase
 {
     private JiraRunner&MockObject $jira_runner;
-    private PendingJiraImportDao&MockObject $dao;
+    private PendingJiraImportDao&Stub $dao;
     private PendingJiraImportBuilder&MockObject $builder;
     private AsynchronousJiraRunner $async_runner;
     private TestLogger $logger;
@@ -42,12 +45,12 @@ final class AsynchronousJiraRunnerTest extends TestCase
     protected function setUp(): void
     {
         $this->jira_runner = $this->createMock(JiraRunner::class);
-        $this->dao         = $this->createMock(PendingJiraImportDao::class);
+        $this->dao         = $this->createStub(PendingJiraImportDao::class);
         $this->builder     = $this->createMock(PendingJiraImportBuilder::class);
 
         $this->logger = new TestLogger();
 
-        $this->async_runner = new AsynchronousJiraRunner($this->jira_runner, $this->dao, $this->builder);
+        $this->async_runner = new AsynchronousJiraRunner($this->jira_runner, $this->dao, $this->builder, new DatabaseUUIDV7Factory());
     }
 
     public function testItDoesNotProcessAnythingIfPayloadDoesNotContainsSufficientInformation(): void
@@ -67,37 +70,39 @@ final class AsynchronousJiraRunnerTest extends TestCase
 
     public function testItDoesNotProcessAnythingIfPendingJiraImportCannotBeFound(): void
     {
+        $id    = new UUIDTestContext();
         $event = new WorkerEvent(
             $this->logger,
             new WorkerEventContent(
                 AsynchronousJiraRunner::TOPIC,
-                ['pending_jira_import_id' => 123]
+                ['pending_jira_import_id' => $id->toString()]
             )
         );
 
-        $this->dao->expects($this->once())->method('searchById')->with(123)->willReturn(false);
+        $this->dao->method('searchById')->willReturn(null);
 
         $this->async_runner->process($event);
-        self::assertTrue($this->logger->hasErrorThatContains('Not able to process an event tuleap.tracker.creation.jira, the pending jira import #123 can not be found.'));
+        self::assertTrue($this->logger->hasErrorThatContains('Not able to process an event tuleap.tracker.creation.jira, the pending jira import #' . $id->toString() . ' can not be found.'));
     }
 
     public function testItDoesNotProcessAnythingIfPendingJiraImportCannotBeBuilt(): void
     {
+        $id    = new UUIDTestContext();
         $event = new WorkerEvent(
             $this->logger,
             new WorkerEventContent(
                 AsynchronousJiraRunner::TOPIC,
-                ['pending_jira_import_id' => 123]
+                ['pending_jira_import_id' => $id->toString()]
             )
         );
 
-        $this->dao->expects($this->once())->method('searchById')->with(123)->willReturn(['data_from_db']);
+        $this->dao->method('searchById')->willReturn(['data_from_db']);
 
         $this->builder->expects($this->once())->method('buildFromRow')->with(['data_from_db'])
             ->willThrowException(new UnableToBuildPendingJiraImportException('Project is not active'));
 
         $this->async_runner->process($event);
-        self::assertTrue($this->logger->hasErrorThatContains('Not able to process an event tuleap.tracker.creation.jira, the pending jira import #123 can not be built: Project is not active'));
+        self::assertTrue($this->logger->hasErrorThatContains('Not able to process an event tuleap.tracker.creation.jira, the pending jira import #' . $id->toString() . ' can not be built: Project is not active'));
     }
 
     public function testItAsksToTheRunnerToProcessTheImport(): void
@@ -106,11 +111,11 @@ final class AsynchronousJiraRunnerTest extends TestCase
             $this->logger,
             new WorkerEventContent(
                 AsynchronousJiraRunner::TOPIC,
-                ['pending_jira_import_id' => 123]
+                ['pending_jira_import_id' => new UUIDTestContext()->toString()]
             )
         );
 
-        $this->dao->expects($this->once())->method('searchById')->with(123)->willReturn(['data_from_db']);
+        $this->dao->method('searchById')->willReturn(['data_from_db']);
 
         $import = $this->createStub(PendingJiraImport::class);
         $this->builder->expects($this->once())->method('buildFromRow')->with(['data_from_db'])->willReturn($import);

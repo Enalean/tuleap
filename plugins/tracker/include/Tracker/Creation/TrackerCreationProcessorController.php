@@ -148,6 +148,11 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                 $jira_issue_type_name = (string) $jira_tracker_object['name'];
                 $jira_issue_type_id   = (string) $jira_tracker_object['id'];
 
+                $tracker_shortname = (string) $tracker_shortname;
+                if ($tracker_shortname === '') {
+                    throw TrackerIsInvalidException::buildMissingRequiredProperties();
+                }
+
                 $this->async_jira_scheduler->scheduleCreation(
                     $project,
                     $user,
@@ -158,7 +163,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     $jira_issue_type_name,
                     $jira_issue_type_id,
                     (string) $tracker_name,
-                    (string) $tracker_shortname,
+                    $tracker_shortname,
                     (string) $tracker_color,
                     (string) $tracker_description
                 );

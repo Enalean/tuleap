@@ -23,46 +23,20 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Project;
-use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
-use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
+use Tuleap\DB\DBTransactionExecutor;
 
-class AsyncJiraScheduler
+readonly class AsyncJiraScheduler
 {
-    /**
-     * @var KeyFactory
-     */
-    private $key_factory;
-    /**
-     * @var PendingJiraImportDao
-     */
-    private $dao;
-    /**
-     * @var JiraRunner
-     */
-    private $jira_runner;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        LoggerInterface $logger,
-        KeyFactory $key_factory,
-        PendingJiraImportDao $dao,
-        JiraRunner $jira_runner,
+        private PendingJiraImportDao $dao,
+        private JiraRunner $jira_runner,
+        private DBTransactionExecutor $db_transaction_executor,
     ) {
-        $this->key_factory = $key_factory;
-        $this->dao         = $dao;
-        $this->jira_runner = $jira_runner;
-        $this->logger      = $logger;
     }
 
     /**
-     * @throws TrackerCreationHasFailedException
+     * @param non-empty-string $tracker_shortname
      */
     public function scheduleCreation(
         Project $project,
@@ -78,33 +52,24 @@ class AsyncJiraScheduler
         string $tracker_color,
         string $tracker_description,
     ): void {
-        try {
-            $encryption_key = $this->key_factory->getLegacy2025EncryptionKey();
-        } catch (CannotPerformIOOperationException $exception) {
-            $this->logger->error('Unable to schedule the import of Jira: ' . $exception->getMessage());
-            throw new TrackerCreationHasFailedException('Unable to schedule the import of Jira');
-        }
-
-        $id = $this->dao->create(
-            (int) $project->getID(),
-            (int) $user->getId(),
-            $jira_server,
-            $jira_user_email,
-            SymmetricCrypto::encrypt($jira_token, $encryption_key),
-            $jira_project_id,
-            $jira_issue_type_name,
-            $jira_issue_type_id,
-            $tracker_name,
-            $tracker_shortname,
-            $tracker_color,
-            $tracker_description
+        $this->db_transaction_executor->execute(
+            function () use ($project, $user, $jira_server, $jira_user_email, $jira_token, $jira_project_id, $jira_issue_type_name, $jira_issue_type_id, $tracker_name, $tracker_shortname, $tracker_color, $tracker_description): void {
+                $id = $this->dao->create(
+                    (int) $project->getID(),
+                    (int) $user->getId(),
+                    $jira_server,
+                    $jira_user_email,
+                    $jira_token,
+                    $jira_project_id,
+                    $jira_issue_type_name,
+                    $jira_issue_type_id,
+                    $tracker_name,
+                    $tracker_shortname,
+                    $tracker_color,
+                    $tracker_description
+                );
+                $this->jira_runner->queueJiraImportEvent($id);
+            }
         );
-        if (! $id) {
-            $this->logger->error(
-                'Unable to schedule the import of Jira: the pending jira import cannot be saved in DB.'
-            );
-            throw new TrackerCreationHasFailedException('Unable to schedule the import of Jira');
-        }
-        $this->jira_runner->queueJiraImportEvent($id);
     }
 }

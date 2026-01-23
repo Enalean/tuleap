@@ -1721,6 +1721,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new PendingJiraImportDao(),
             new PendingJiraImportBuilder(ProjectManager::instance(), $user_manager),
             $this->getJiraRunner($logger),
+            new \Tuleap\DB\DatabaseUUIDV7Factory(),
         );
 
         AsynchronousActionsRunner::addListener($event);
@@ -2386,10 +2387,9 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $this->getTrackerCreationPermissionChecker(),
             new DefaultTemplatesCollectionBuilder(\EventManager::instance()),
             new AsyncJiraScheduler(
-                $logger,
-                new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                 new PendingJiraImportDao(),
-                $this->getJiraRunner($logger)
+                $this->getJiraRunner($logger),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             )
         );
     }
@@ -2590,7 +2590,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return new JiraRunner(
             $logger,
             new QueueFactory($logger),
-            new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
             FromJiraTrackerCreator::build($jira_user_on_tuleap_cache),
             new PendingJiraImportDao(),
             $this->getJiraSuccessImportNotifier(),
