@@ -21,73 +21,54 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
+use Override;
 use Tuleap\Gitlab\Repository\Webhook\WebhookData;
 
 /**
  * @psalm-immutable
  */
-class TagPushWebhookData implements WebhookData
+final readonly class TagPushWebhookData implements WebhookData
 {
-    /**
-     * @var string
-     */
-    private $event_name;
-
-    /**
-     * @var int
-     */
-    private $gitlab_project_id;
-
-    /**
-     * @var string
-     */
-    private $gitlab_web_url;
-
-    /**
-     * @var string
-     */
-    private $ref;
-    /**
-     * @var string
-     */
-    private $before;
-    /**
-     * @var string
-     */
-    private $after;
-
     public function __construct(
-        string $event_name,
-        int $gitlab_project_id,
-        string $gitlab_web_url,
-        string $ref,
-        string $before,
-        string $after,
+        private string $event_name,
+        private int $gitlab_project_id,
+        private string $gitlab_web_url,
+        private string $ref,
+        private string $before,
+        private string $after,
+        private string $gitlab_project_name,
+        private string $gitlab_project_description,
     ) {
-        $this->event_name        = $event_name;
-        $this->gitlab_project_id = $gitlab_project_id;
-        $this->gitlab_web_url    = $gitlab_web_url;
-        $this->ref               = $ref;
-        $this->before            = $before;
-        $this->after             = $after;
     }
 
-    #[\Override]
+    #[Override]
     public function getEventName(): string
     {
         return $this->event_name;
     }
 
-    #[\Override]
+    #[Override]
     public function getGitlabProjectId(): int
     {
         return $this->gitlab_project_id;
     }
 
-    #[\Override]
+    #[Override]
     public function getGitlabWebUrl(): string
     {
         return $this->gitlab_web_url;
+    }
+
+    #[Override]
+    public function getGitlabProjectName(): string
+    {
+        return $this->gitlab_project_name;
+    }
+
+    #[Override]
+    public function getGitlabProjectDescription(): string
+    {
+        return $this->gitlab_project_description;
     }
 
     public function getRef(): string

@@ -33,7 +33,9 @@ class TagPushWebhookDataTest extends \Tuleap\Test\PHPUnit\TestCase
             'https://example.com',
             'refs/tags/v1.0.1',
             'before',
-            'after'
+            'after',
+            'my_repo',
+            '',
         );
 
         self::assertSame('v1.0.1', $webhook_data->getTagName());

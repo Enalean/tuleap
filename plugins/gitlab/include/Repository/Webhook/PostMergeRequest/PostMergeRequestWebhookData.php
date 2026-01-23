@@ -21,6 +21,7 @@
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use DateTimeImmutable;
+use Override;
 use Tuleap\Gitlab\Repository\Webhook\WebhookData;
 
 /**
@@ -28,84 +29,50 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookData;
  */
 class PostMergeRequestWebhookData implements WebhookData
 {
-    /**
-     * @var string
-     */
-    private $event_name;
-    /**
-     * @var int
-     */
-    private $gitlab_project_id;
-    /**
-     * @var string
-     */
-    private $gitlab_url;
-    /**
-     * @var string
-     */
-    private $title;
-    /**
-     * @var string
-     */
-    private $description;
-    /**
-     * @var int
-     */
-    private $merge_request_id;
-    /**
-     * @var string
-     */
-    private $state;
-    /**
-     * @var DateTimeImmutable
-     */
-    private $created_at;
-    /**
-     * @var int
-     */
-    private $author_id;
-    private string $source_branch;
-
     public function __construct(
-        string $event_name,
-        int $gitlab_project_id,
-        string $gitlab_url,
-        int $merge_request_id,
-        string $title,
-        string $description,
-        string $state,
-        DateTimeImmutable $created_at,
-        int $author_id,
-        string $source_branch,
+        private readonly string $event_name,
+        private readonly int $gitlab_project_id,
+        private readonly string $gitlab_url,
+        private readonly int $merge_request_id,
+        private readonly string $title,
+        private readonly string $description,
+        private readonly string $state,
+        private readonly DateTimeImmutable $created_at,
+        private readonly int $author_id,
+        private readonly string $source_branch,
+        private readonly string $gitlab_project_name,
+        private readonly string $gitlab_project_description,
     ) {
-        $this->event_name        = $event_name;
-        $this->gitlab_project_id = $gitlab_project_id;
-        $this->gitlab_url        = $gitlab_url;
-        $this->title             = $title;
-        $this->description       = $description;
-        $this->merge_request_id  = $merge_request_id;
-        $this->state             = $state;
-        $this->created_at        = $created_at;
-        $this->author_id         = $author_id;
-        $this->source_branch     = $source_branch;
     }
 
-    #[\Override]
+    #[Override]
     public function getEventName(): string
     {
         return $this->event_name;
     }
 
-    #[\Override]
+    #[Override]
     public function getGitlabProjectId(): int
     {
         return $this->gitlab_project_id;
     }
 
-    #[\Override]
+    #[Override]
     public function getGitlabWebUrl(): string
     {
         return $this->gitlab_url;
+    }
+
+    #[Override]
+    public function getGitlabProjectName(): string
+    {
+        return $this->gitlab_project_name;
+    }
+
+    #[Override]
+    public function getGitlabProjectDescription(): string
+    {
+        return $this->gitlab_project_description;
     }
 
     public function getTitle(): string

@@ -25,25 +25,21 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use Tuleap\Gitlab\Repository\Webhook\InvalidValueFormatException;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
-class PostPushWebhookDataBuilder
+final readonly class PostPushWebhookDataBuilder
 {
     private const string REFERENCE_KEY    = 'ref';
     private const string CHECKOUT_SHA_KEY = 'checkout_sha';
 
-    /**
-     * @var PostPushCommitWebhookDataExtractor
-     */
-    private $commits_extractor;
-
-    public function __construct(PostPushCommitWebhookDataExtractor $commits_extractor)
+    public function __construct(private PostPushCommitWebhookDataExtractor $commits_extractor)
     {
-        $this->commits_extractor = $commits_extractor;
     }
 
     public function build(
         string $event_name,
         int $project_id,
         string $project_url,
+        string $project_name,
+        string $project_description,
         array $webhook_content,
     ): PostPushWebhookData {
         if (! array_key_exists(self::REFERENCE_KEY, $webhook_content)) {
@@ -71,7 +67,9 @@ class PostPushWebhookDataBuilder
             $project_url,
             $webhook_content[self::CHECKOUT_SHA_KEY],
             $webhook_content[self::REFERENCE_KEY],
-            $this->commits_extractor->retrieveWebhookCommitsData($webhook_content)
+            $this->commits_extractor->retrieveWebhookCommitsData($webhook_content),
+            $project_name,
+            $project_description,
         );
     }
 }

@@ -32,6 +32,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
+use Tuleap\Gitlab\Test\Builder\WebhookDataBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -115,7 +116,9 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $now = new DateTimeImmutable();
@@ -157,7 +160,9 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $now = new DateTimeImmutable();
@@ -192,30 +197,10 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsALogicExceptionIfWebhookTypeNotKnown(): void
     {
-        $webhook_data = new class implements WebhookData {
-            #[\Override]
-            public function getEventName(): string
-            {
-                return 'WHATEVER';
-            }
-
-            #[\Override]
-            public function getGitlabProjectId(): int
-            {
-                return 0;
-            }
-
-            #[\Override]
-            public function getGitlabWebUrl(): string
-            {
-                return '';
-            }
-
-            public function getCommits(): array
-            {
-                return [];
-            }
-        };
+        $webhook_data = WebhookDataBuilder::aWebhook('WHATEVER')
+            ->withRepositoryId(0)
+            ->withRepositoryUrl('')
+            ->build();
 
         $this->repository_integration_dao
             ->expects($this->never())

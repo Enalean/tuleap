@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,23 +15,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook;
+namespace Tuleap\Gitlab\Repository;
 
-interface WebhookData
+interface UpdateGitlabRepositoryIntegration
 {
-    public function getEventName(): string;
-
-    public function getGitlabProjectId(): int;
-
-    public function getGitlabWebUrl(): string;
-
-    public function getGitlabProjectName(): string;
-
-    public function getGitlabProjectDescription(): string;
+    public function updateGitlabRepositoryIntegration(
+        int $integration_id,
+        string $repository_name,
+        string $repository_description,
+        string $repository_url,
+    ): void;
 }

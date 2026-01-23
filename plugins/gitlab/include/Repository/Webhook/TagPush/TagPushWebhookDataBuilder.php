@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 use Tuleap\Gitlab\Repository\Webhook\InvalidValueFormatException;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
-class TagPushWebhookDataBuilder
+final class TagPushWebhookDataBuilder
 {
     private const string REF_KEY    = 'ref';
     private const string BEFORE_KEY = 'before';
@@ -35,8 +35,14 @@ class TagPushWebhookDataBuilder
      * @throws MissingKeyException
      * @throws InvalidValueFormatException
      */
-    public function build(string $event_name, int $project_id, string $project_url, array $tag_push_content): TagPushWebhookData
-    {
+    public function build(
+        string $event_name,
+        int $project_id,
+        string $project_url,
+        array $tag_push_content,
+        string $project_name,
+        string $project_description,
+    ): TagPushWebhookData {
         if (! isset($tag_push_content[self::REF_KEY])) {
             throw new MissingKeyException(self::REF_KEY);
         }
@@ -68,6 +74,8 @@ class TagPushWebhookDataBuilder
             $tag_push_content[self::REF_KEY],
             $tag_push_content[self::BEFORE_KEY],
             $tag_push_content[self::AFTER_KEY],
+            $project_name,
+            $project_description,
         );
     }
 }

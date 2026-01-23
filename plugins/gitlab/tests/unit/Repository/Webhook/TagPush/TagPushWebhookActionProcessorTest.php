@@ -76,6 +76,8 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
             'refs/tags/v1.0.2',
             'before',
             '0000000000000000000000000000000000000000',
+            'my_repo',
+            '',
         );
 
         $this->push_webhook_create_action->expects($this->never())->method('createTagReferences');
@@ -113,7 +115,9 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
             'https://example.com',
             'refs/tags/v1.0.2',
             '0000000000000000000000000000000000000000',
-            'after'
+            'after',
+            'my_repo',
+            '',
         );
 
         $this->push_webhook_create_action
@@ -151,7 +155,9 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
             'https://example.com',
             'refs/tags/v1.0.2',
             'before',
-            'after'
+            'after',
+            'my_repo',
+            '',
         );
 
         $this->push_webhook_delete_action

@@ -110,6 +110,8 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             'refs/tags/v1.0.2',
             'before',
             'after',
+            'my_repo',
+            '',
         );
 
         $credentials = new Credentials(
@@ -193,6 +195,8 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             'refs/tags/v1.0.2',
             'before',
             'after',
+            'my_repo',
+            '',
         );
 
         $this->credentials_retriever
@@ -230,6 +234,8 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             'refs/tags/v1.0.2',
             'before',
             'after',
+            'my_repo',
+            '',
         );
 
         $credentials = new Credentials(
@@ -284,6 +290,8 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             'refs/tags/v1.0.2',
             'before',
             'after',
+            'my_repo',
+            '',
         );
 
         $credentials = new Credentials(

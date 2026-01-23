@@ -84,7 +84,9 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->dao
@@ -120,7 +122,9 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->dao
@@ -162,7 +166,9 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->dao
@@ -210,7 +216,9 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->dao
@@ -258,7 +266,9 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->dao

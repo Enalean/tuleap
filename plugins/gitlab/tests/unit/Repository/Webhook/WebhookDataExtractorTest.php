@@ -21,20 +21,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
-use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
-use Psr\Log\LoggerInterface;
-use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
-use Psr\Log\NullLogger;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
+use function Psl\Json\encode as json_encode;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
@@ -228,44 +229,43 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('info')
             ->with('|_ Webhook of type Push Hook received.');
 
-        $request = (new NullServerRequest())->withBody(
+        $request = new NullServerRequest()->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
-                  "ref": "refs/heads/master",
-                  "checkout_sha": "08596fb6360bcc951a06471c616f8bc77800d4f4",
-                  "after": "whatever_after",
-                  "commits": [
-                      {
-                          "id": "feff4ced04b237abb8b4a50b4160099313152c3c",
-                          "title": "commit 01",
-                          "message": "commit 01",
-                          "timestamp": "2020-12-16T10:21:50+01:00",
-                          "author": {
-                            "name": "John Snow",
-                            "email": "john-snow@example.com"
-                          }
-                      },
-                      {
-                          "id": "08596fb6360bcc951a06471c616f8bc77800d4f4",
-                          "title": "commit 02",
-                          "message": "commit 02",
-                          "timestamp": "2020-12-16T10:21:52+01:00",
-                          "author": {
-                            "name": "John Snow",
-                            "email": "john-snow@example.com"
-                          }
-                      }
-                  ]
-                }'
+                json_encode([
+                    'project'      => ['id' => 123456, 'web_url' => 'https://example.com/path/repo01', 'description' => '', 'path_with_namespace' => 'my_repo'],
+                    'ref'          => 'refs/heads/master',
+                    'checkout_sha' => '08596fb6360bcc951a06471c616f8bc77800d4f4',
+                    'after'        => 'whatever_after',
+                    'commits'      => [
+                        [
+                            'id'        => 'feff4ced04b237abb8b4a50b4160099313152c3c',
+                            'title'     => 'commit 01',
+                            'message'   => 'commit 01',
+                            'timestamp' => '2020-12-16T10:21:50+01:00',
+                            'author'    => [
+                                'name'  => 'John Snow',
+                                'email' => 'john-snow@example.com',
+                            ],
+                        ],
+                        [
+                            'id'        => '08596fb6360bcc951a06471c616f8bc77800d4f4',
+                            'title'     => 'commit 02',
+                            'message'   => 'commit 02',
+                            'timestamp' => '2020-12-16T10:21:52+01:00',
+                            'author'    => [
+                                'name'  => 'John Snow',
+                                'email' => 'john-snow@example.com',
+                            ],
+                        ],
+                    ],
+                ]),
             )
         )->withHeader(
             'X-Gitlab-Event',
             'Push Hook'
         );
 
-        $webhook_data = $this->extractor->retrieveWebhookData(
-            $request
-        );
+        $webhook_data = $this->extractor->retrieveWebhookData($request);
 
         self::assertSame('Push Hook', $webhook_data->getEventName());
         self::assertSame(123456, $webhook_data->getGitlabProjectId());
@@ -281,32 +281,31 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('info')
             ->with('|_ Webhook of type Merge Request Hook received.');
 
-        $request = (new NullServerRequest())->withBody(
+        $request = new NullServerRequest()->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
-                  "object_attributes":{
-                    "iid": 2,
-                    "title": "My Title",
-                    "description": "My Description",
-                    "state": "opened",
-                    "created_at": "2021-01-12 13:49:35 UTC",
-                    "author_id": 10,
-                    "source_branch": "some_feature"
-                  }
-                }'
+                json_encode([
+                    'project'           => ['id' => 123456, 'web_url' => 'https://example.com/path/my_repo', 'description' => '', 'path_with_namespace' => 'my_repo'],
+                    'object_attributes' => [
+                        'iid'           => 2,
+                        'title'         => 'My Title',
+                        'description'   => 'My Description',
+                        'state'         => 'opened',
+                        'created_at'    => '2021-01-12 13:49:35 UTC',
+                        'author_id'     => 10,
+                        'source_branch' => 'some_feature',
+                    ],
+                ]),
             )
         )->withHeader(
             'X-Gitlab-Event',
             'Merge Request Hook'
         );
 
-        $webhook_data = $this->extractor->retrieveWebhookData(
-            $request
-        );
+        $webhook_data = $this->extractor->retrieveWebhookData($request);
 
         self::assertSame('Merge Request Hook', $webhook_data->getEventName());
         self::assertSame(123456, $webhook_data->getGitlabProjectId());
-        self::assertSame('https://example.com/path/repo01', $webhook_data->getGitlabWebUrl());
+        self::assertSame('https://example.com/path/my_repo', $webhook_data->getGitlabWebUrl());
         self::assertInstanceOf(PostMergeRequestWebhookData::class, $webhook_data);
         self::assertSame(2, $webhook_data->getMergeRequestId());
         self::assertSame('My Title', $webhook_data->getTitle());
@@ -320,13 +319,14 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('info')
             ->with('|_ Webhook of type Tag Push Hook received.');
 
-        $request = (new NullServerRequest())->withBody(
+        $request = new NullServerRequest()->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
-                  "ref": "refs/tags/v1.0",
-                  "before": "before",
-                  "after": "after"
-                }'
+                json_encode([
+                    'project' => ['id' => 123456, 'web_url' => 'https://example.com/path/repo01', 'description' => '', 'path_with_namespace' => 'my_repo'],
+                    'ref'     => 'refs/tags/v1.0',
+                    'before'  => 'before',
+                    'after'   => 'after',
+                ]),
             )
         )->withHeader(
             'X-Gitlab-Event',

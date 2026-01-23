@@ -80,6 +80,8 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Push Hook',
             123456,
             'https://example.com/path/repo01',
+            'my_repo',
+            'My awesome repository',
             $webhook_data
         );
 
@@ -89,6 +91,8 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertInstanceOf(PostPushWebhookData::class, $post_push_webhook_data);
         self::assertCount(2, $post_push_webhook_data->getCommits());
         self::assertSame('08596fb6360bcc951a06471c616f8bc77800d4f4', $post_push_webhook_data->getCheckoutSha());
+        self::assertSame('my_repo', $post_push_webhook_data->getGitlabProjectName());
+        self::assertSame('My awesome repository', $post_push_webhook_data->getGitlabProjectDescription());
     }
 
     public function testItRetrievesPostPushWebhookDataAtBranchDeletion(): void
@@ -106,6 +110,8 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Push Hook',
             123456,
             'https://example.com/path/repo01',
+            'my_repo',
+            '',
             $webhook_data
         );
 

@@ -25,7 +25,7 @@ use Project;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Gitlab\API\GitlabProject;
 
-class GitlabRepositoryIntegrationDao extends DataAccessObject implements VerifyGitlabRepositoryIsIntegrated, RetrieveIntegrationDao
+class GitlabRepositoryIntegrationDao extends DataAccessObject implements VerifyGitlabRepositoryIsIntegrated, RetrieveIntegrationDao, UpdateGitlabRepositoryIntegration
 {
     /**
      * @psalm-return list<array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int}>
@@ -175,6 +175,24 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject implements VerifyG
             'plugin_gitlab_repository_integration',
             ['allow_artifact_closure' => $allow_artifact_closure],
             ['id' => $id]
+        );
+    }
+
+    #[\Override]
+    public function updateGitlabRepositoryIntegration(
+        int $integration_id,
+        string $repository_name,
+        string $repository_description,
+        string $repository_url,
+    ): void {
+        $this->getDB()->update(
+            'plugin_gitlab_repository_integration',
+            [
+                'name'                  => $repository_name,
+                'description'           => $repository_description,
+                'gitlab_repository_url' => $repository_url,
+            ],
+            ['id' => $integration_id],
         );
     }
 }
