@@ -217,6 +217,15 @@ In this live example, start to type `jo` in the search field to simulate some co
 import type { GroupOfItems, HTMLTemplateResult } from "@tuleap/lazybox";
 import { createLazybox } from "@tuleap/lazybox";
 
+type User = {
+    readonly id: number;
+    readonly display_name: string;
+};
+
+function isUser(item: unknown): item is User {
+    return typeof item === "object" && item !== null && "id" in item;
+}
+
 const users = [
     {
         value: { id: 102, display_name: "Johnny Cash (jocash)" },
@@ -266,19 +275,22 @@ lazybox.options = {
     is_multiple: true,
     placeholder: "Search users by names",
     templating_callback: (html, item): HTMLTemplateResult => {
+        if (!isUser(item.value)) {
+            return html``;
+        }
         return html`<span class="doc-multiple-lazybox-user-with-avatar">
             <div class="tlp-avatar-mini"></div>
             ${item.value.display_name}
         </span>`;
     },
-    selection_callback: (): void => {
-       selected_values = [];
-            new_selected_values.forEach((current) => {
-                const found_user = users.find((user) => user.value === current);
-                if (found_user !== undefined) {
-                    selected_values.push(found_user);
-                }
-          });
+    selection_callback: (new_selected_values): void => {
+        selected_values = [];
+        new_selected_values.forEach((current) => {
+            const found_user = users.find((user) => user.value === current);
+            if (found_user !== undefined) {
+                selected_values.push(found_user);
+            }
+        });
     },
     search_input_callback: (query): void => {
         if (query === "") {
@@ -296,21 +308,24 @@ lazybox.options = {
         const matching_recent_group = { ...recent_group, items: matching_recent };
         lazybox.replaceDropdownContent([matching_users_group, matching_recent_group]);
     },
-    new_item_label_callback: (item_name): string =>
-        item_name !== "" ? `→ Create a new value ${item_name}…` : "→ Create a new value…",
-    new_item_clicked_callback: (item_name): void => {
-        const new_value = {
-          value: { id: id++, display_name: item_name },
-             is_disabled: false,
-          };
-          selected_values.push(new_value);
-          users.push(new_value);
-          lazybox.replaceSelection(selected_values);
-          lazybox.replaceDropdownContent([users_group]);
+    new_item_label_callback: (query): string =>
+        query.trim() !== "" ? `→ Create a new user ${query}…` : "→ Create a new user…",
+    new_item_clicked_callback: (user_name): void => {
+        if (user_name.trim() === "") {
+            return;
+        }
+        const new_user = {
+            value: { id: id++, display_name: user_name },
+            is_disabled: false,
+        };
+        selected_values.push(new_user);
+        users.push(new_user);
+        lazybox.replaceSelection(selected_values);
+        lazybox.replaceDropdownContent([users_group]);
     },
 };
 lazybox.replaceDropdownContent([users_group]);
-lazybox.replaceSelection([users[0]]);
+lazybox.replaceSelection(selected_values);
 ```
 
 [list picker]: ?path=/docs/tlp-forms-list-picker--docs
