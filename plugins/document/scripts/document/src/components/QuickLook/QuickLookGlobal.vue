@@ -81,19 +81,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-    ICON_EMBEDDED,
-    ICON_EMPTY,
-    ICON_FOLDER_ICON,
-    ICON_LINK,
-    ICON_WIKI,
-    TYPE_EMBEDDED,
-    TYPE_FILE,
-    TYPE_FOLDER,
-    TYPE_LINK,
-    TYPE_WIKI,
-} from "../../constants";
-import { iconForMimeType } from "../../helpers/icon-for-mime-type";
 import QuickLookDocumentProperties from "./QuickLookDocumentProperties.vue";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
@@ -108,8 +95,6 @@ import {
     isOtherType,
     isWiki,
 } from "../../helpers/type-check-helper";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { OTHER_ITEM_TYPES } from "../../injection-keys";
 import { useGettext } from "vue3-gettext";
 
 const QuickLookFile = defineAsyncComponent(() => import("./QuickLookFile.vue"));
@@ -134,30 +119,12 @@ const get_description = computed((): string => {
         : "";
 });
 
-const other_item_types = strictInject(OTHER_ITEM_TYPES);
-
 const icon_class = computed((): string => {
     const item = props.currently_previewed_item;
     if (!item) {
-        return ICON_EMPTY;
+        return "";
     }
-    switch (item.type) {
-        case TYPE_FOLDER:
-            return ICON_FOLDER_ICON;
-        case TYPE_LINK:
-            return ICON_LINK;
-        case TYPE_WIKI:
-            return ICON_WIKI;
-        case TYPE_EMBEDDED:
-            return ICON_EMBEDDED;
-        case TYPE_FILE:
-            if (!isFile(item) || !item.file_properties) {
-                return ICON_EMPTY;
-            }
-            return iconForMimeType(item.file_properties.file_type);
-        default:
-            return item.type in other_item_types ? other_item_types[item.type].icon : ICON_EMPTY;
-    }
+    return item.item_icon;
 });
 
 function closeQuickLookEvent(): void {

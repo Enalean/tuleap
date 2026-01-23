@@ -32,6 +32,7 @@ export class ItemBuilder {
     private approval_table: ApprovalTable | null = null;
     private user_can_write: boolean = false;
     private is_approval_table_enabled: boolean = false;
+    private item_icon: string = "";
 
     constructor(id: number) {
         this.id = id;
@@ -49,6 +50,11 @@ export class ItemBuilder {
 
     public withTitle(title: string): this {
         this.title = title;
+        return this;
+    }
+
+    public withIcon(icon: string): this {
+        this.item_icon = icon;
         return this;
     }
 
@@ -112,6 +118,7 @@ export class ItemBuilder {
             user_can_delete: false,
             user_can_write: this.user_can_write,
             level: this.level,
+            item_icon: this.item_icon,
         };
     }
 
@@ -138,6 +145,7 @@ export class ItemBuilder {
             has_approval_table: this.approval_table !== null,
             approval_table: this.approval_table,
             is_approval_table_enabled: this.is_approval_table_enabled,
+            item_icon: this.item_icon,
         };
     }
 }

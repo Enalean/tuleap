@@ -37,6 +37,7 @@ use Docman_VersionFactory;
 use EventManager;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Docman\Item\Icon\ItemIconPresenter;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
 use Tuleap\Docman\Item\PaginatedParentRowCollection;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
@@ -150,6 +151,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
             true,
             true,
             ItemRepresentation::TYPE_FOLDER,
+            new ItemIconPresenter('folder-icon', 'peggy-pink'),
             false,
             true,
             [
@@ -208,6 +210,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
             true,
             true,
             ItemRepresentation::TYPE_FILE,
+            new ItemIconPresenter('file-icon', 'fiesta-red'),
             false,
             false,
             [
@@ -304,6 +307,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
             true,
             true,
             ItemRepresentation::TYPE_FOLDER,
+            new ItemIconPresenter('folder-icon', 'gold'),
             false,
             false,
             [
@@ -338,6 +342,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
             true,
             true,
             ItemRepresentation::TYPE_FOLDER,
+            new ItemIconPresenter('folder-icon', 'silver-mist'),
             false,
             false,
             [

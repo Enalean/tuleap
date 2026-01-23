@@ -27,6 +27,7 @@ module.exports = [
         entry: {
             "burningparrot-style": "./themes/BurningParrot/css/docman.scss",
             "admin-style": "./themes/BurningParrot/css/admin.scss",
+            "icons-style": "./themes/BurningParrot/css/_icons.scss",
             "admin-permissions": "./scripts/admin-permissions.ts",
             "admin-properties": "./scripts/admin-properties.ts",
             "admin-filename-pattern": "./scripts/admin-filename-pattern.ts",

@@ -37,7 +37,7 @@
             v-on:click.prevent="showNewVersionModal(TYPE_EMBEDDED)"
             v-if="embedded_are_allowed"
         >
-            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_EMBEDDED"></i>
+            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="icon_embedded"></i>
             {{ $gettext("Embedded") }}
         </button>
         <button
@@ -48,7 +48,7 @@
             v-on:click.prevent="showNewVersionModal(TYPE_WIKI)"
             v-if="user_can_create_wiki"
         >
-            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_WIKI"></i>
+            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="icon_wiki"></i>
             {{ $gettext("Wiki page") }}
         </button>
         <template v-for="section in create_new_item_alternatives" v-bind:key="section.title">
@@ -65,7 +65,7 @@
             >
                 <i
                     class="fa fa-fw tlp-dropdown-menu-item-icon"
-                    v-bind:class="iconForMimeType(alternative.mime_type)"
+                    v-bind:class="alternative.item_icon"
                 ></i>
                 {{ alternative.title }}
             </button>
@@ -82,7 +82,7 @@
             data-test="document-new-link-creation-button"
             v-on:click.prevent="showNewVersionModal(TYPE_LINK)"
         >
-            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_LINK"></i>
+            <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="icon_link"></i>
             {{ $gettext("Link") }}
         </button>
     </div>
@@ -95,20 +95,11 @@ import type {
     NewItemAlternative,
     NewItemAlternativeArray,
 } from "../../../../type";
-import {
-    ICON_EMBEDDED,
-    TYPE_FILE,
-    TYPE_EMBEDDED,
-    TYPE_LINK,
-    ICON_LINK,
-    TYPE_WIKI,
-    ICON_WIKI,
-} from "../../../../constants";
+import { TYPE_FILE, TYPE_EMBEDDED, TYPE_LINK, TYPE_WIKI } from "../../../../constants";
 import type { ItemHasJustBeenUpdatedEvent } from "../../../../helpers/emitter";
 import emitter from "../../../../helpers/emitter";
 import { useActions } from "vuex-composition-helpers";
 import { inject } from "vue";
-import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 import { getEmptyOfficeFileFromMimeType } from "../../../../helpers/office/get-empty-office-file";
 import type {
     RootActionsUpdate,
@@ -121,6 +112,7 @@ import {
     USER_CAN_CREATE_WIKI,
     USER_LOCALE,
 } from "../../../../configuration-keys";
+import { ICON_EMBEDDED, ICON_LINK, ICON_WIKI } from "../../../../injection-keys";
 
 const { createNewVersionFromEmpty } = useActions<
     Pick<RootActionsUpdate, "createNewVersionFromEmpty">
@@ -128,6 +120,9 @@ const { createNewVersionFromEmpty } = useActions<
 const user_can_create_wiki = strictInject(USER_CAN_CREATE_WIKI);
 const embedded_are_allowed = strictInject(EMBEDDED_ARE_ALLOWED);
 const user_locale = strictInject(USER_LOCALE);
+const icon_link = strictInject(ICON_LINK);
+const icon_wiki = strictInject(ICON_WIKI);
+const icon_embedded = strictInject(ICON_EMBEDDED);
 
 const create_new_item_alternatives = inject<NewItemAlternativeArray>(
     "create_new_item_alternatives",

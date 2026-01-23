@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,25 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Item\Icon;
 
-use Tuleap\Event\Dispatchable;
-
-final class GetIconForItemEvent implements Dispatchable
+/**
+ * @psalm-immutable
+ */
+final readonly class ItemIconPresenter
 {
-    private const string DEFAULT = 'binary';
-
-    private string $icon = self::DEFAULT;
-
-    public function __construct(public readonly \Docman_Item $item, private readonly string $path)
+    public function __construct(private string $icon, private string $color)
     {
+    }
+
+    public function getIconWithColor(): string
+    {
+        return "{$this->icon} tlp-swatch-{$this->color}";
     }
 
     public function getIcon(): string
     {
-        return $this->path . $this->icon;
+        return $this->icon;
     }
 
-    public function setIcon(string $icon): void
+    public function getColor(): string
     {
-        $this->icon = $icon;
+        return $this->color;
     }
 }

@@ -32,6 +32,7 @@ describe("LinkCellTitle", () => {
             ...new ItemBuilder(42)
                 .withType(TYPE_LINK)
                 .withTitle("my link")
+                .withIcon("fa-solid fa-link document-link-icon")
                 .buildApprovableDocument(),
             link_properties: {
                 link_url: "https://example.com",

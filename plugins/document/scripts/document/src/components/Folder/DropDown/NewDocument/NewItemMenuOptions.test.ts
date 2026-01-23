@@ -32,7 +32,15 @@ import {
 } from "../../../../constants";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import { NEW_ITEMS_ALTERNATIVES, OTHER_ITEM_TYPES } from "../../../../injection-keys";
+import {
+    ICON_EMBEDDED,
+    ICON_EMPTY,
+    ICON_FOLDER,
+    ICON_LINK,
+    ICON_WIKI,
+    NEW_ITEMS_ALTERNATIVES,
+    OTHER_ITEM_TYPES,
+} from "../../../../injection-keys";
 import { EMBEDDED_ARE_ALLOWED, USER_CAN_CREATE_WIKI } from "../../../../configuration-keys";
 
 vi.mock("../../../../helpers/emitter");
@@ -64,6 +72,11 @@ describe("NewItemMenuOptions", function () {
                     [OTHER_ITEM_TYPES.valueOf()]: other_item_types,
                     [USER_CAN_CREATE_WIKI.valueOf()]: user_can_create_wiki,
                     [EMBEDDED_ARE_ALLOWED.valueOf()]: embedded_are_allowed,
+                    [ICON_LINK.valueOf()]: "icon-for-link",
+                    [ICON_WIKI.valueOf()]: "icon-for-wiki",
+                    [ICON_EMBEDDED.valueOf()]: "icon-for-embedded",
+                    [ICON_FOLDER.valueOf()]: "icon-for-folder",
+                    [ICON_EMPTY.valueOf()]: "icon-for-empty",
                 },
             },
         });

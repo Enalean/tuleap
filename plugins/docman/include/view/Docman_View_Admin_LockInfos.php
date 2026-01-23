@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
+
 class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string IDENTIFIER = 'admin_lock_infos';
@@ -49,6 +51,14 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView //
     }
 
     #[\Override]
+    protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
+    {
+        $GLOBALS['Response']->addCssAsset(
+            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'icons-style')
+        );
+    }
+
+    #[\Override]
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $html = '<div class="tlp-framed">';
@@ -73,7 +83,7 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView //
         print($html);
     }
 
-    private function getTable($params)
+    private function getTable(array $params): ?string
     {
         $this->defaultUrl = $params['default_url'];
         $content          = '';
@@ -94,8 +104,11 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView //
         $dPM       = Docman_PermissionsManager::instance($params['group_id']);
         $lockInfos = $dPM->getLockFactory()->getProjectLockInfos($params['group_id']);
 
-        $uH = UserHelper::instance();
-        $hp = Codendi_HTMLPurifier::instance();
+        $uH       = UserHelper::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $event_manager = EventManager::instance();
+        $icon_builder  = new ItemIconPresenterBuilder($event_manager, new Docman_VersionFactory());
 
         $dIF = new Docman_ItemFactory($params['group_id']);
 
@@ -113,16 +126,23 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView //
             $project = ProjectManager::instance()->getProject((int) $params['group_id']);
             $service = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
             assert($service instanceof \Tuleap\Docman\ServiceDocman);
+            $icon_presenter_builder = new ItemIconPresenterBuilder($event_manager, new Docman_VersionFactory());
             foreach ($lockInfos as $row) {
                 $item = $dIF->getItemFromDb($row['item_id']);
                 if ($item === null) {
                     return '</tbody></table>';
                 }
+
+                $item_icon = $icon_presenter_builder->buildForItem($item);
+
                 $parent   = $dIF->getItemFromDb($item->getParentId());
                 $content .= '<tr>';
+
                 $item_url = $service->getUrl() . 'preview/' . urlencode((string) $item->getId());
-                $content .= '<td>' . '<a href="' . $item_url . '">';
-                $content .= $hp->purify($item->getTitle());
+                $content .= '<td>';
+                $content .=     '<i class="' . $purifier->purify($item_icon->getIconWithColor()) . '"></i>&nbsp;';
+                $content .= '<a href="' . $item_url . '">';
+                $content .= $purifier->purify($item->getTitle());
                 $content .= '</a></td>';
                 $content .= '<td>';
                 if ($parent === null || $dIF->isRoot($parent)) {
@@ -130,10 +150,10 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView //
                 } else {
                     $parent_url = $service->getUrl() . 'folder/' . urlencode((string) $parent->getId());
                     $content   .=  '<a href="' . $parent_url . '">';
-                    $content   .= $hp->purify($parent->getTitle());
+                    $content   .= $purifier->purify($parent->getTitle());
                     $content   .= '</a></td>';
                 }
-                $content .= '<td>' . $hp->purify($uH->getDisplayNameFromUserId($row['user_id'])) . '</td>';
+                $content .= '<td>' . $purifier->purify($uH->getDisplayNameFromUserId($row['user_id'])) . '</td>';
                 $content .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['lock_date']) . '</td>';
                 $content .= '</tr>';
             }

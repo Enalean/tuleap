@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Reference;
 
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Reference\CrossReferenceSectionPresenter;
@@ -29,27 +30,11 @@ use Tuleap\Reference\TitleBadgePresenter;
 
 class CrossReferenceDocmanOrganizer
 {
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var DocumentFromReferenceValueFinder
-     */
-    private $finder;
-    /**
-     * @var DocumentIconPresenterBuilder
-     */
-    private $icon_presenter_builder;
-
     public function __construct(
-        \ProjectManager $project_manager,
-        DocumentFromReferenceValueFinder $finder,
-        DocumentIconPresenterBuilder $icon_presenter_builder,
+        private \ProjectManager $project_manager,
+        private DocumentFromReferenceValueFinder $finder,
+        private ItemIconPresenterBuilder $icon_presenter_builder,
     ) {
-        $this->project_manager        = $project_manager;
-        $this->finder                 = $finder;
-        $this->icon_presenter_builder = $icon_presenter_builder;
     }
 
     public function organizeDocumentReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -85,8 +70,8 @@ class CrossReferenceDocmanOrganizer
             ->withTitle(
                 (string) $item->getTitle(),
                 TitleBadgePresenter::buildIconBadge(
-                    $icon_presenter->icon,
-                    $icon_presenter->color,
+                    $icon_presenter->getIcon(),
+                    $icon_presenter->getColor(),
                 ),
             );
     }

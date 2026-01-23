@@ -28,6 +28,7 @@ use Docman_VersionFactory;
 use Project;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\IEmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
@@ -57,6 +58,7 @@ class ItemRepresentationBuilder
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
         private readonly Docman_VersionFactory $version_factory,
         private readonly Docman_NotificationsManager $notifications_manager,
+        private readonly ItemIconPresenterBuilder $icon_presenter_builder,
     ) {
     }
 
@@ -116,6 +118,7 @@ class ItemRepresentationBuilder
         $is_approval_table_enabled = $has_approval_item && ! $approval_table->isDisabled();
 
         $metadata_representations = $this->metadata_representation_builder->build($item);
+        $item_icon                = $this->icon_presenter_builder->buildForItem($item, ['expanded' => $is_expanded]);
 
         return ItemRepresentation::build(
             $item,
@@ -124,6 +127,7 @@ class ItemRepresentationBuilder
             $user_can_write,
             $user_can_delete,
             $type,
+            $item_icon,
             $is_expanded,
             $can_user_manage,
             $metadata_representations,

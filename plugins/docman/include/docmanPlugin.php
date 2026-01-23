@@ -57,6 +57,7 @@ use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Docman\ItemType\GetItemTypeAsText;
 use Tuleap\Docman\LegacyRestoreDocumentsController;
 use Tuleap\Docman\LegacySendMessageController;
@@ -78,7 +79,6 @@ use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\Reference\CrossReferenceDocmanOrganizer;
 use Tuleap\Docman\Reference\DocumentFromReferenceValueFinder;
-use Tuleap\Docman\Reference\DocumentIconPresenterBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\DocmanItemsRequestBuilder;
@@ -478,11 +478,12 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
     {
         $event_manager = EventManager::instance();
 
-        $visit_retriever = new VisitedDocumentRetriever(
+        $docman_version_factory = new \Docman_VersionFactory();
+        $visit_retriever        = new VisitedDocumentRetriever(
             new RecentlyVisitedDocumentDao(),
             ProjectManager::instance(),
-            new DocumentIconPresenterBuilder($event_manager),
-            new VisitedDocumentHrefVisitor(new \Docman_VersionFactory(), $event_manager),
+            new ItemIconPresenterBuilder($event_manager, $docman_version_factory),
+            new VisitedDocumentHrefVisitor($docman_version_factory, $event_manager),
         );
         $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY);
     }
@@ -573,7 +574,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
             return;
         }
 
-        $icon_presenter_builder = new DocumentIconPresenterBuilder(EventManager::instance());
+        $icon_presenter_builder = new ItemIconPresenterBuilder(EventManager::instance(), new Docman_VersionFactory());
 
         $renderer     = TemplateRendererFactory::build()->getRenderer(__DIR__);
         $tooltip_json = TooltipJSON::fromHtmlTitleAndHtmlBody(
@@ -592,7 +593,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         $tracker_organizer = new CrossReferenceDocmanOrganizer(
             ProjectManager::instance(),
             new DocumentFromReferenceValueFinder(),
-            new DocumentIconPresenterBuilder(EventManager::instance()),
+            new ItemIconPresenterBuilder(EventManager::instance(), new Docman_VersionFactory()),
         );
 
         $tracker_organizer->organizeDocumentReferences($by_nature_organizer);

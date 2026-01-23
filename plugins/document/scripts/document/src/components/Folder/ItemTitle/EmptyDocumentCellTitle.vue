@@ -22,7 +22,7 @@
 <template>
     <div data-test="empty-file-title">
         <fake-caret v-bind:item="item" />
-        <i class="fa-fw document-folder-content-icon" v-bind:class="ICON_EMPTY"></i>
+        <i class="fa-fw document-folder-content-icon" v-bind:class="item.item_icon"></i>
         <span tabindex="0" class="document-folder-subitem-link">
             {{ item.title }}
         </span>
@@ -30,7 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import { ICON_EMPTY } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 import type { Item } from "../../../type";
 

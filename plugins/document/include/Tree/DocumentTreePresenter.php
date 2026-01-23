@@ -27,6 +27,7 @@ use DocmanPlugin;
 use Tuleap\Date\DateHelper;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePattern;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Document\Config\FileDownloadLimits;
 use Tuleap\Document\Tree\Create\NewItemAlternativeSection;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
@@ -146,6 +147,11 @@ class DocumentTreePresenter
     public bool $is_filename_pattern_enforced;
     public string $create_new_item_alternatives;
     public string $other_item_types;
+    public string $link_icon;
+    public string $embedded_icon;
+    public string $wiki_icon;
+    public string $empty_icon;
+    public string $folder_icon;
 
     /**
      * @param NewItemAlternativeSection[] $create_new_item_alternatives
@@ -205,5 +211,11 @@ class DocumentTreePresenter
 
         $this->create_new_item_alternatives = json_encode($create_new_item_alternatives, JSON_THROW_ON_ERROR);
         $this->other_item_types             = encode($other_item_types);
+
+        $this->link_icon     = ItemIconPresenterBuilder::LINK_ICON;
+        $this->embedded_icon = ItemIconPresenterBuilder::EMBEDDED_ICON;
+        $this->wiki_icon     = ItemIconPresenterBuilder::WIKI_ICON;
+        $this->empty_icon    = ItemIconPresenterBuilder::EMPTY_ICON;
+        $this->folder_icon   = ItemIconPresenterBuilder::FOLDER_ICON;
     }
 }

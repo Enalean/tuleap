@@ -34,9 +34,11 @@ use Docman_PermissionsManager;
 use Docman_Version;
 use Docman_VersionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Builders\DocmanFileTestBuilder;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
@@ -62,6 +64,7 @@ final class ItemRepresentationBuilderTest extends TestCase
     private Codendi_HTMLPurifier&MockObject $html_purifier;
     private Docman_ApprovalTableFactoriesFactory&MockObject $factories_factory;
     private Docman_VersionFactory&MockObject $version_factory;
+    private ItemIconPresenterBuilder $docman_icons;
 
     #[\Override]
     protected function setUp(): void
@@ -77,6 +80,12 @@ final class ItemRepresentationBuilderTest extends TestCase
         $this->html_purifier                       = $this->createMock(Codendi_HTMLPurifier::class);
         $this->factories_factory                   = $this->createMock(Docman_ApprovalTableFactoriesFactory::class);
         $this->version_factory                     = $this->createMock(Docman_VersionFactory::class);
+        $event_dispatcher                          = $this->createMock(EventDispatcherInterface::class);
+        $event_dispatcher->method('dispatch')->willReturnArgument(0);
+        $this->docman_icons = new ItemIconPresenterBuilder(
+            $event_dispatcher,
+            $this->version_factory,
+        );
 
         $this->item_representation_builder = new ItemRepresentationBuilder(
             $this->createMock(Docman_ItemDao::class),
@@ -91,7 +100,8 @@ final class ItemRepresentationBuilderTest extends TestCase
             $this->html_purifier,
             ProvideUserAvatarUrlStub::build(),
             $this->version_factory,
-            $this->createStub(Docman_NotificationsManager::class)
+            $this->createStub(Docman_NotificationsManager::class),
+            $this->docman_icons,
         );
 
         UserManager::setInstance($this->user_manager);
@@ -189,26 +199,34 @@ final class ItemRepresentationBuilderTest extends TestCase
         self::assertTrue($representation->user_can_write);
         self::assertTrue($representation->user_can_delete);
         self::assertTrue($representation->can_user_manage);
-        self::assertSame($owner_id, $representation->lock_info->locked_by->id);
-        self::assertSame('2019-02-06T15:00:00+01:00', $representation->lock_info->lock_date);
+        $item_lock_info = $representation->lock_info;
+        if ($item_lock_info === null) {
+            self::fail('Lock info should not be null');
+        }
+        self::assertSame($owner_id, $item_lock_info->locked_by->id);
+        self::assertSame('2019-02-06T15:00:00+01:00', $item_lock_info->lock_date);
         self::assertNull($representation->file_properties);
         self::assertNull($representation->embedded_file_properties);
         self::assertNull($representation->link_properties);
         self::assertNull($representation->wiki_properties);
         self::assertSame($permissions_for_groups_representation, $representation->permissions_for_groups);
 
-        self::assertSame(10, $representation->approval_table->id);
-        self::assertSame('Not yet', $representation->approval_table->approval_state);
-        self::assertSame($owner_id, $representation->approval_table->table_owner->id);
-        self::assertSame('2019-02-06T15:16:40+01:00', $representation->approval_table->approval_request_date);
-        self::assertFalse($representation->approval_table->has_been_approved);
-        self::assertSame('', $representation->approval_table?->description);
-        self::assertFalse($representation->approval_table?->is_closed);
-        self::assertSame('disabled', $representation->approval_table?->notification_type);
-        self::assertSame(2, $representation->approval_table?->version_number);
-        self::assertSame([], $representation->approval_table?->reviewers);
-        self::assertSame('1.0.0-rc3', $representation->approval_table?->version_label);
-        self::assertSame(0, $representation->approval_table?->reminder_occurence);
+        $table_representation = $representation->approval_table;
+        if ($table_representation === null) {
+            self::fail('Approval table should not be null');
+        }
+        self::assertSame(10, $table_representation->id);
+        self::assertSame('Not yet', $table_representation->approval_state);
+        self::assertSame($owner_id, $table_representation->table_owner->id);
+        self::assertSame('2019-02-06T15:16:40+01:00', $table_representation->approval_request_date);
+        self::assertFalse($table_representation->has_been_approved);
+        self::assertSame('', $table_representation->description);
+        self::assertFalse($table_representation->is_closed);
+        self::assertSame('disabled', $table_representation->notification_type);
+        self::assertSame(2, $table_representation->version_number);
+        self::assertSame([], $table_representation->reviewers);
+        self::assertSame('1.0.0-rc3', $table_representation->version_label);
+        self::assertSame(0, $table_representation->reminder_occurence);
         self::assertSame('2019-02-06T15:00:00+01:00', $representation->metadata[0]->value);
         self::assertSame('2019-02-06T15:00:00+01:00', $representation->metadata[0]->post_processed_value);
         self::assertSame('metadata name', $representation->metadata[0]->name);

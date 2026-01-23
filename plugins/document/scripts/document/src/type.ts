@@ -95,6 +95,7 @@ export interface ItemSearchResult {
     readonly id: number;
     readonly type: string;
     readonly title: string;
+    readonly item_icon: string;
     readonly status: string | null;
     readonly post_processed_description: string;
     readonly owner: User;
@@ -135,6 +136,7 @@ export type ItemType = (typeof ItemType)[number];
 
 export interface Item extends MinimalItem {
     description: string;
+    item_icon: string;
     post_processed_description: string;
     owner: User;
     last_update_date: string;
@@ -230,6 +232,7 @@ export interface FakeItem extends Uploadable {
     upload_error: string | null;
     is_uploading_new_version: boolean;
     level?: number;
+    item_icon: "fa-regular fa-file document-empty-icon";
 }
 
 export interface Folder extends Item, Uploadable {
@@ -598,6 +601,7 @@ export interface NewItemAlternativeSection {
 export interface NewItemAlternative {
     readonly mime_type: string;
     readonly title: string;
+    readonly item_icon: string;
 }
 
 interface OtherItemType {

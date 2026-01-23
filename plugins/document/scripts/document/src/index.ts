@@ -34,6 +34,11 @@ import { getLocaleWithDefault, toBCP47 } from "@tuleap/locale";
 import { getTimezoneOrThrow } from "@tuleap/date-helper";
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
 import {
+    ICON_LINK,
+    ICON_EMBEDDED,
+    ICON_WIKI,
+    ICON_EMPTY,
+    ICON_FOLDER,
     NEW_ITEMS_ALTERNATIVES,
     OTHER_ITEM_TYPES,
     PROJECT_PROPERTIES,
@@ -150,6 +155,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         getAttributeOrThrow(vue_mount_point, "data-should-display-source-column"),
     );
 
+    const icon_folder = getAttributeOrThrow(vue_mount_point, "data-folder-icon");
+    const icon_link = getAttributeOrThrow(vue_mount_point, "data-link-icon");
+    const icon_wiki = getAttributeOrThrow(vue_mount_point, "data-wiki-icon");
+    const icon_embedded = getAttributeOrThrow(vue_mount_point, "data-embbeded-icon");
+    const icon_empty = getAttributeOrThrow(vue_mount_point, "data-empty-icon");
+
     const consider_string_criteria_as_text = (criterion: MustacheCriterion): SearchCriterion => ({
         ...criterion,
         type: criterion.type === "string" ? "text" : criterion.type,
@@ -230,7 +241,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(IS_FILENAME_PATTERN_ENFORCED, is_filename_pattern_enforced)
         .provide(PROJECT_PROPERTIES, ref(null))
         .provide(PROJECT_USER_GROUPS, ref(null))
-        .provide(CSRF_TOKEN, { name: csrf_token_name, value: csrf_token });
+        .provide(CSRF_TOKEN, { name: csrf_token_name, value: csrf_token })
+        .provide(ICON_LINK, icon_link)
+        .provide(ICON_EMBEDDED, icon_embedded)
+        .provide(ICON_WIKI, icon_wiki)
+        .provide(ICON_EMPTY, icon_empty)
+        .provide(ICON_FOLDER, icon_folder);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

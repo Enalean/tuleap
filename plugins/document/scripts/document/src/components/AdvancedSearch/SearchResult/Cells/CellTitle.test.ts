@@ -126,31 +126,6 @@ describe("CellTitle", () => {
         expect(link.attributes().title).toBe("Lorem");
     });
 
-    it("should set the empty icon for empty document", () => {
-        const item = {
-            id: 123,
-            type: "empty",
-            title: "Lorem",
-        } as unknown as ItemSearchResult;
-
-        const wrapper = getWrapper(item, { other: { title: "Other", icon: "other-icon" } });
-
-        expect(wrapper.find("[data-test=icon]").classes()).toContain("document-empty-icon");
-    });
-
-    it("should set the empty icon for other type document", () => {
-        const item = {
-            id: 123,
-            type: "other",
-            title: "Lorem",
-        } as unknown as ItemSearchResult;
-
-        const wrapper = getWrapper(item, { other: { title: "Other", icon: "other-icon" } });
-
-        expect(wrapper.find("[data-test=icon]").classes()).not.toContain("document-empty-icon");
-        expect(wrapper.find("[data-test=icon]").classes()).toContain("other-icon");
-    });
-
     it("should output a route link for Embedded", () => {
         const fake_dropdown_object = {
             addEventListener: vi.fn(),

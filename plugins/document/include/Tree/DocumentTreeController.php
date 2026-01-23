@@ -62,7 +62,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     }
 
     #[\Override]
-    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('document');
 
@@ -75,6 +75,14 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
             __DIR__ . '/../../scripts/document/frontend-assets',
             '/assets/document/document'
         ), 'src/index.ts'));
+
+        $include_assets = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../../docman/frontend-assets',
+            '/assets/docman'
+        );
+        $layout->addCssAsset(
+            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'icons-style')
+        );
         $this->includeHeaderAndNavigationBar($layout, $project);
         $this->includeJavascriptFiles($layout, $request);
 
@@ -144,7 +152,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
     }
 
-    private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project)
+    private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project): void
     {
         $layout->header(
             HeaderConfigurationBuilder::get(dgettext('tuleap-document', 'Document manager'))

@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Reference;
 
 use Docman_Folder;
-use Docman_Link;
-use Tuleap\Docman\Item\Icon\DocumentIconPresenterEvent;
-use Tuleap\Docman\Item\Icon\GetIconForItemEvent;
+use Tuleap\Docman\Item\Icon\ItemIconPresenter;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterEvent;
 use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
@@ -35,43 +35,37 @@ final class DocumentIconPresenterBuilderTest extends TestCase
 {
     public function testBuildForItem(): void
     {
-        $builder = new DocumentIconPresenterBuilder(
+        $builder = new ItemIconPresenterBuilder(
             EventDispatcherStub::withCallback(
                 static function (object $event): object {
-                    if ($event instanceof GetIconForItemEvent) {
-                        $event->setIcon('my-icon');
+                    if ($event instanceof ItemIconPresenterEvent && ! str_contains($event->getPresenter()->getIcon(), 'fa-folder')) {
+                        $event->setPresenter(new ItemIconPresenter('my-icon', 'inca-silver'));
                     }
 
-                    if ($event instanceof DocumentIconPresenterEvent && $event->icon === 'my-icon') {
-                        $event->setPresenter(new DocumentIconPresenter('fa-solid fa-rocket', 'fiesta-red'));
+                    if ($event instanceof ItemIconPresenterEvent && $event->getPresenter()->getIcon() === 'my-icon') {
+                        $event->setPresenter(new ItemIconPresenter('fa-solid fa-rocket', 'fiesta-red'));
                     }
 
                     return $event;
                 }
-            )
+            ),
+            $this->createStub(\Docman_VersionFactory::class)
         );
 
         $folder_icon = $builder->buildForItem(new Docman_Folder());
-        self::assertEquals('fa fa-folder', $folder_icon->icon);
-        self::assertEquals('inca-silver', $folder_icon->color);
-
-        $link_icon = $builder->buildForItem(new Docman_Link());
-        self::assertEquals('fa fa-link', $link_icon->icon);
-        self::assertEquals('flamingo-pink', $link_icon->color);
+        self::assertEquals('fa-regular fa-folder item-icon-color tlp-swatch-inca-silver', $folder_icon->getIconWithColor());
 
         $other_document_icon = $builder->buildForItem(new class ([]) extends OtherDocument {
         });
-        self::assertEquals('fa-solid fa-rocket', $other_document_icon->icon);
-        self::assertEquals('fiesta-red', $other_document_icon->color);
+        self::assertEquals('fa-solid fa-rocket tlp-swatch-fiesta-red', $other_document_icon->getIconWithColor());
     }
 
     public function testBuildForItemDefaultsToBinaryFile(): void
     {
-        $builder = new DocumentIconPresenterBuilder(EventDispatcherStub::withIdentityCallback());
+        $builder = new ItemIconPresenterBuilder(EventDispatcherStub::withIdentityCallback(), $this->createStub(\Docman_VersionFactory::class));
 
         $document_icon = $builder->buildForItem(new class ([]) extends OtherDocument {
         });
-        self::assertEquals('far fa-file', $document_icon->icon);
-        self::assertEquals('firemist-silver', $document_icon->color);
+        self::assertEquals('fa-regular fa-file item-icon-color tlp-swatch-firemist-silver', $document_icon->getIconWithColor());
     }
 }

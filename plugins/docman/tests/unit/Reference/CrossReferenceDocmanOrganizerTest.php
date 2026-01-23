@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Reference;
 use Docman_Folder;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
+use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -48,7 +49,7 @@ final class CrossReferenceDocmanOrganizerTest extends TestCase
         $this->organizer = new CrossReferenceDocmanOrganizer(
             $this->project_manager,
             $this->finder,
-            new DocumentIconPresenterBuilder(EventDispatcherStub::withIdentityCallback())
+            new ItemIconPresenterBuilder(EventDispatcherStub::withIdentityCallback(), $this->createStub(\Docman_VersionFactory::class))
         );
     }
 
@@ -140,7 +141,7 @@ final class CrossReferenceDocmanOrganizerTest extends TestCase
                 static fn(CrossReferencePresenter $presenter) => (
                     $presenter->id === 1
                     && $presenter->title === 'Lorem ipsum'
-                    && $presenter->title_badge->icon === 'fa fa-folder'
+                    && $presenter->title_badge->icon === 'fa-regular fa-folder item-icon-color'
                     && $presenter->title_badge->color === 'inca-silver'
                 )
             ), '');

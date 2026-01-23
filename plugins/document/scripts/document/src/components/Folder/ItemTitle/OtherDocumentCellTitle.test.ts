@@ -23,7 +23,6 @@ import { shallowMount } from "@vue/test-utils";
 import OtherDocumentCellTitle from "./OtherDocumentCellTitle.vue";
 import type { OtherTypeProperties, Folder, OtherTypeItem, RootState } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { OTHER_ITEM_TYPES } from "../../../injection-keys";
 
 describe("OtherDocumentCellTitle", () => {
     function getWrapper(
@@ -40,11 +39,6 @@ describe("OtherDocumentCellTitle", () => {
                         } as Folder,
                     } as RootState,
                 }),
-                provide: {
-                    [OTHER_ITEM_TYPES.valueOf()]: {
-                        whatever: { title: "Whatever", icon: "whatever-icon " },
-                    },
-                },
             },
         });
     }
@@ -92,7 +86,6 @@ describe("OtherDocumentCellTitle", () => {
             } as OtherTypeProperties,
             type: "whatever",
         } as OtherTypeItem;
-
         const wrapper = getWrapper(item);
 
         expect(
@@ -101,26 +94,9 @@ describe("OtherDocumentCellTitle", () => {
         ).toContain("/whatever/42");
     });
 
-    it(`Given it is a known other type
-        When we display item title
-        Then the icon is given by configuration`, () => {
-        const item = {
-            id: 42,
-            title: "my other type document",
-            other_type_properties: {
-                open_href: "/whatever/42",
-            } as OtherTypeProperties,
-            type: "whatever",
-        } as OtherTypeItem;
-
-        const wrapper = getWrapper(item);
-
-        expect(wrapper.find("[data-test=icon]").classes()).toContain("whatever-icon");
-    });
-
     it(`Given it is an unknown other type
         When we display item title
-        Then the icon defaults to empty`, () => {
+        Then the icon is always provided by rest route"`, () => {
         const item = {
             id: 42,
             title: "my other type document",
@@ -128,6 +104,7 @@ describe("OtherDocumentCellTitle", () => {
                 open_href: "/whatever/42",
             } as OtherTypeProperties,
             type: "unknown",
+            item_icon: "document-empty-icon",
         } as OtherTypeItem;
 
         const wrapper = getWrapper(item);

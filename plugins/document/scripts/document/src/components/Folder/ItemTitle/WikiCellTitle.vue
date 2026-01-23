@@ -22,7 +22,7 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa fa-fw document-folder-content-icon" v-bind:class="ICON_WIKI"></i>
+        <i class="fa-fw document-folder-content-icon" v-bind:class="item.item_icon"></i>
         <a
             v-bind:href="wiki_url"
             class="document-folder-subitem-link"
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
-import { ACTION_ICON_WIKI, ICON_WIKI } from "../../../constants";
+import { ACTION_ICON_WIKI } from "../../../constants";
 import type { Wiki } from "../../../type";
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
