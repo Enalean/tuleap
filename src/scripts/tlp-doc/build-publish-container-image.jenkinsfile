@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     def helpers = load 'sources/tests/helpers.groovy'
-                    helpers.authenticateOnTailscale()
+                    helpers.authenticateOnTailscale('tailscale-auth-key')
                     helpers.setupTuleapCommunityNixCache()
                 }
             }
