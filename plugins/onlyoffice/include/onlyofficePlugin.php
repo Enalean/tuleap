@@ -57,7 +57,6 @@ use Tuleap\OnlyOffice\Administration\OnlyOfficeDeleteAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeRestrictAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeUpdateAdminSettingsController;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerDao;
-use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerProjectRestrictionDAO;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
@@ -124,7 +123,7 @@ final class onlyofficePlugin extends Plugin
     {
         $only_office_availability_checker = new OnlyOfficeAvailabilityChecker(
             self::getLogger(),
-            new DocumentServerDao(new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem())),
+            new DocumentServerDao(),
         );
         if (! $only_office_availability_checker->isOnlyOfficeIntegrationAvailableForProject($collector->getProject())) {
             return;
@@ -195,8 +194,6 @@ final class onlyofficePlugin extends Plugin
         $event_manager    = EventManager::instance();
         $docman_root_path = ForgeConfig::get(DocmanPlugin::CONFIG_ROOT_DIRECTORY);
 
-        $encryption = new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem());
-
         return new OnlyOfficeSaveController(
             new \Tuleap\OnlyOffice\Save\OnlyOfficeCallbackResponseJWTParser(
                 new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder()),
@@ -206,8 +203,7 @@ final class onlyofficePlugin extends Plugin
                     new DateInterval('PT2M'),
                 ),
                 new \Lcobucci\JWT\Signer\Hmac\Sha256(),
-                new DocumentServerForSaveDocumentTokenRetriever(new DocumentServerDao($encryption)),
-                $encryption,
+                new DocumentServerForSaveDocumentTokenRetriever(new DocumentServerDao()),
             ),
             new \Tuleap\OnlyOffice\Save\OnlyOfficeCallbackDocumentSaver(
                 UserManager::instance(),
@@ -300,7 +296,7 @@ final class onlyofficePlugin extends Plugin
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function openItemHref(OpenItemHref $open_item_href): void
     {
-        $servers_retriever = new DocumentServerDao(new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem()));
+        $servers_retriever = new DocumentServerDao();
         $transformer       = new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
             new OnlyOfficeAvailabilityChecker(self::getLogger(), $servers_retriever),
             ProjectManager::instance(),
@@ -321,7 +317,7 @@ final class onlyofficePlugin extends Plugin
     {
         $logger = self::getLogger();
 
-        $servers_retriever = new DocumentServerDao(new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem()));
+        $servers_retriever = new DocumentServerDao();
 
         return new OpenInOnlyOfficeController(
             UserManager::instance(),
@@ -346,9 +342,7 @@ final class onlyofficePlugin extends Plugin
     {
         $logger = self::getLogger();
 
-        $encryption = new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem());
-
-        $servers_retriever = new DocumentServerDao($encryption);
+        $servers_retriever = new DocumentServerDao();
 
         return new OnlyOfficeEditorController(
             $logger,
@@ -379,7 +373,6 @@ final class onlyofficePlugin extends Plugin
                 ),
                 new \Lcobucci\JWT\JwtFacade(),
                 new \Lcobucci\JWT\Signer\Hmac\Sha256(),
-                $encryption,
             ),
             UserManager::instance(),
             $servers_retriever,
@@ -414,7 +407,7 @@ final class onlyofficePlugin extends Plugin
     public function routeGetAdminSettings(): OnlyOfficeAdminSettingsController
     {
         $builder = new \Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenterBuilder(
-            new DocumentServerDao(new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem()))
+            new DocumentServerDao()
         );
 
         return new OnlyOfficeAdminSettingsController(
@@ -432,7 +425,7 @@ final class onlyofficePlugin extends Plugin
     {
         return new OnlyOfficeCreateAdminSettingsController(
             self::buildCSRFTokenAdmin(),
-            new DocumentServerDao(new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem())),
+            new DocumentServerDao(),
             \Tuleap\OnlyOffice\Administration\OnlyOfficeServerUrlValidator::buildSelf(),
             \Tuleap\OnlyOffice\Administration\OnlyOfficeSecretKeyValidator::buildSelf(),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
@@ -445,7 +438,7 @@ final class onlyofficePlugin extends Plugin
     {
         return new OnlyOfficeUpdateAdminSettingsController(
             self::buildCSRFTokenAdmin(),
-            new DocumentServerDao(new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem())),
+            new DocumentServerDao(),
             \Tuleap\OnlyOffice\Administration\OnlyOfficeServerUrlValidator::buildSelf(),
             \Tuleap\OnlyOffice\Administration\OnlyOfficeSecretKeyValidator::buildSelf(),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
@@ -458,7 +451,7 @@ final class onlyofficePlugin extends Plugin
     {
         return new OnlyOfficeDeleteAdminSettingsController(
             self::buildCSRFTokenAdmin(),
-            new DocumentServerDao(new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem())),
+            new DocumentServerDao(),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
             new SapiEmitter(),
             new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
@@ -467,7 +460,7 @@ final class onlyofficePlugin extends Plugin
 
     public function routeRestrictAdminSettings(): \Tuleap\Request\DispatchableWithRequest
     {
-        $document_server_dao = new DocumentServerDao(new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem()));
+        $document_server_dao = new DocumentServerDao();
 
         return new OnlyOfficeRestrictAdminSettingsController(
             self::buildCSRFTokenAdmin(),

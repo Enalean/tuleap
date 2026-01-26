@@ -28,17 +28,13 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\ValidAt;
-use org\bovigo\vfs\vfsStream;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Stub\KeyFactoryStub;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
-use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
 use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveCallbackURLGenerator;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenGenerator;
@@ -54,8 +50,6 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
 
     public function testProvidesJWToken(): void
     {
-        $root = vfsStream::setup()->url();
-        mkdir($root . '/conf/');
         \ForgeConfig::set('sys_default_domain', 'example.com');
 
         $secret   = str_repeat('A', 32);
@@ -68,9 +62,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
             DocumentServer::withoutProjectRestrictions(
                 new UUIDTestContext(),
                 'https://example.com',
-                new ConcealedString(
-                    base64_encode(SymmetricCrypto::encrypt(new ConcealedString($secret), (new KeyFactoryStub())->getLegacy2025EncryptionKey()))
-                )
+                new ConcealedString($secret)
             )
         );
 
@@ -162,7 +154,6 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
             ),
             new JwtFacade(),
             new Sha256(),
-            new DocumentServerKeyEncryption(new KeyFactoryStub()),
         );
     }
 }

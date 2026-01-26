@@ -39,11 +39,11 @@ final readonly class DocumentServer
     private function __construct(
         public UUID $id,
         public string $url,
-        public ConcealedString $encrypted_secret_key,
+        public ConcealedString $secret_key,
         public bool $is_project_restricted,
         public array $project_restrictions,
     ) {
-        $this->has_existing_secret = ! $this->encrypted_secret_key->isIdenticalTo(new ConcealedString(''));
+        $this->has_existing_secret = ! $this->secret_key->isIdenticalTo(new ConcealedString(''));
     }
 
     /**
@@ -52,18 +52,18 @@ final readonly class DocumentServer
     public static function withProjectRestrictions(
         UUID $id,
         string $url,
-        ConcealedString $encrypted_secret_key,
+        ConcealedString $secret_key,
         array $project_restrictions,
     ): self {
-        return new self($id, $url, $encrypted_secret_key, true, $project_restrictions);
+        return new self($id, $url, $secret_key, true, $project_restrictions);
     }
 
     public static function withoutProjectRestrictions(
         UUID $id,
         string $url,
-        ConcealedString $encrypted_secret_key,
+        ConcealedString $secret_key,
     ): self {
-        return new self($id, $url, $encrypted_secret_key, false, []);
+        return new self($id, $url, $secret_key, false, []);
     }
 
     public function isProjectAllowed(\Project $project): bool

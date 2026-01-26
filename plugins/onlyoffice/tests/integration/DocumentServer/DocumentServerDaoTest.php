@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\DocumentServer;
 
-use org\bovigo\vfs\vfsStream;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -31,7 +30,6 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 final class DocumentServerDaoTest extends TestIntegrationTestCase
 {
     private DocumentServerDao $dao;
-    private DocumentServerKeyEncryption $encryption;
     private int $project_a_id;
     private int $project_b_id;
     private \ParagonIE\EasyDB\EasyDB $db;
@@ -39,12 +37,7 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
     #[\Override]
     protected function setUp(): void
     {
-        $root = vfsStream::setup()->url();
-        mkdir($root . '/conf/');
-        \ForgeConfig::set('sys_custom_dir', $root);
-
-        $this->encryption = new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem());
-        $this->dao        = new DocumentServerDao($this->encryption);
+        $this->dao = new DocumentServerDao();
 
         $this->db           = DBFactory::getMainTuleapDBConnection()->getDB();
         $this->project_a_id = (int) $this->db->insertReturnId(
@@ -71,28 +64,28 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
 
         // Retrieve
         self::assertEquals('https://example.com', $server->url);
-        self::assertTrue($this->decrypt($server->encrypted_secret_key)->isIdenticalTo(new ConcealedString('very_secret')));
+        self::assertTrue($server->secret_key->isIdenticalTo(new ConcealedString('very_secret')));
 
         $servers = $this->dao->retrieveAll();
         self::assertCount(2, $servers);
         self::assertEquals('https://example.com', $servers[0]->url);
-        self::assertTrue($this->decrypt($servers[0]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('very_secret')));
+        self::assertTrue($servers[0]->secret_key->isIdenticalTo(new ConcealedString('very_secret')));
         self::assertEquals('https://example.com/1', $servers[1]->url);
-        self::assertTrue($this->decrypt($servers[1]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('much_secret')));
+        self::assertTrue($servers[1]->secret_key->isIdenticalTo(new ConcealedString('much_secret')));
         self::assertEquals([1, 1], $this->getServerProjectRestrictions());
 
         // Update
         $this->dao->update($servers[0]->id->toString(), $servers[0]->url, new ConcealedString('new_secret'));
         $servers = $this->dao->retrieveAll();
-        self::assertTrue($this->decrypt($servers[0]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('new_secret')));
-        self::assertTrue($this->decrypt($servers[1]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('much_secret')));
+        self::assertTrue($servers[0]->secret_key->isIdenticalTo(new ConcealedString('new_secret')));
+        self::assertTrue($servers[1]->secret_key->isIdenticalTo(new ConcealedString('much_secret')));
 
         // Delete
         $this->dao->delete($servers[0]->id->toString());
         $servers = $this->dao->retrieveAll();
         self::assertCount(1, $servers);
         self::assertEquals('https://example.com/1', $servers[0]->url);
-        self::assertTrue($this->decrypt($servers[0]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('much_secret')));
+        self::assertTrue($servers[0]->secret_key->isIdenticalTo(new ConcealedString('much_secret')));
     }
 
     public function testServerRestriction(): void
@@ -162,11 +155,6 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
         $server_a = $this->dao->retrieveById($server_a->id->toString());
         self::assertFalse($server_a->is_project_restricted);
         self::assertEmpty($server_a->project_restrictions);
-    }
-
-    private function decrypt(ConcealedString $secret): ConcealedString
-    {
-        return $this->encryption->decryptValue($secret->getString());
     }
 
     private function getServerProjectRestrictions(): array

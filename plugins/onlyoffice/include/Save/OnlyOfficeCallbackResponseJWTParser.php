@@ -37,11 +37,10 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
-use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerNotFoundException;
 use Tuleap\Option\Option;
 
-final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackResponseParser
+final readonly class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackResponseParser
 {
     public function __construct(
         private Parser $jwt_parser,
@@ -49,7 +48,6 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
         private ValidAt $jwt_valid_at_constraint,
         private Signer $jwt_signer,
         private DocumentServerForSaveDocumentTokenRetriever $server_retriever,
-        private DocumentServerKeyEncryption $encryption,
     ) {
     }
 
@@ -168,7 +166,7 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
     private function validateJWT(array $token): Ok|Err
     {
         $key = Signer\Key\InMemory::plainText(
-            $this->encryption->decryptValue($token['server']->encrypted_secret_key->getString())->getString()
+            $token['server']->secret_key->getString()
         );
         try {
             $this->jwt_validator->assert(
