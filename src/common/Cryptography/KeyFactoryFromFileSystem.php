@@ -25,7 +25,6 @@ namespace Tuleap\Cryptography;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey as Legacy2025EncryptionKey;
 use Tuleap\File\FileWriter;
 
 final readonly class KeyFactoryFromFileSystem implements KeyFactory
@@ -40,20 +39,6 @@ final readonly class KeyFactoryFromFileSystem implements KeyFactory
         return $reflection_class->newLazyProxy(
             function (): EncryptionKey {
                 return new EncryptionKey($this->getKeyMaterial());
-            }
-        );
-    }
-
-    /**
-     * @throws CannotPerformIOOperationException
-     */
-    #[\Override]
-    public function getLegacy2025EncryptionKey(): Legacy2025EncryptionKey
-    {
-        $reflection_class = new \ReflectionClass(Legacy2025EncryptionKey::class);
-        return $reflection_class->newLazyProxy(
-            function (): Legacy2025EncryptionKey {
-                return new Legacy2025EncryptionKey($this->getKeyMaterial());
             }
         );
     }

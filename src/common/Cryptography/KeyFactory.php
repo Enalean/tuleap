@@ -25,7 +25,6 @@ namespace Tuleap\Cryptography;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey as Legacy2025EncryptionKey;
 
 interface KeyFactory
 {
@@ -33,11 +32,6 @@ interface KeyFactory
      * @throws CannotPerformIOOperationException
      */
     public function getEncryptionKey(): EncryptionKey;
-
-    /**
-     * @throws CannotPerformIOOperationException
-     */
-    public function getLegacy2025EncryptionKey(): Legacy2025EncryptionKey;
 
     public function restoreOwnership(LoggerInterface $logger): void;
 }
