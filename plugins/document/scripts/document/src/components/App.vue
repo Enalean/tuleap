@@ -45,10 +45,12 @@ import LoadingError from "./Folder/Error/LoadingError.vue";
 import GlobalErrorModal from "./Folder/Error/GlobalErrorModal.vue";
 import PostItemDeletionNotification from "./Folder/DropDown/Delete/PostItemDeletionNotification.vue";
 import { onMounted } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGetters, useNamespacedState, useStore } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import type { ErrorState } from "../store/error/module";
 import type { RootGetter } from "../store/getters";
+import { SHOW_DOCUMENT_IN_TITLE } from "../injection-keys";
 
 const { $gettext } = useGettext();
 const store = useStore();
@@ -79,6 +81,7 @@ const {
     "has_global_modal_error",
 ]);
 const { is_uploading } = useGetters<Pick<RootGetter, "is_uploading">>(["is_uploading"]);
+const show_document_in_title = strictInject(SHOW_DOCUMENT_IN_TITLE);
 
 defineProps<{
     csrf_token: string;
@@ -88,7 +91,7 @@ defineProps<{
 onMounted(() => {
     const base_title = document.title;
     store.watch(
-        (state, getters) => getters.current_folder_title,
+        (state, getters) => getters.current_folder_title(show_document_in_title.value),
         (title, old_title) => {
             if (title) {
                 document.title = title + " - " + base_title;

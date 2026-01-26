@@ -76,7 +76,8 @@
 <script setup lang="ts">
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import type { Item } from "../../type";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
 import type { DetailsTabs } from "../../helpers/details-tabs";
 import {
@@ -90,10 +91,19 @@ import {
 import { TYPE_FOLDER } from "../../constants";
 import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
 
+import { SHOW_DOCUMENT_IN_TITLE } from "../../injection-keys";
+
 const props = defineProps<{
     item: Item;
     active_tab: DetailsTabs;
 }>();
+
+const show_document_in_title = strictInject(SHOW_DOCUMENT_IN_TITLE);
+
+onMounted(() => {
+    show_document_in_title.value = true;
+});
+
 const item_has_versions = computed(
     (): boolean =>
         props.item !== null && (isFile(props.item) || isLink(props.item) || isEmbedded(props.item)),

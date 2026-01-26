@@ -49,3 +49,5 @@ export const ICON_EMBEDDED: StrictInjectionKey<string> = Symbol("icon_embedded")
 export const ICON_WIKI: StrictInjectionKey<string> = Symbol("icon_wiki");
 export const ICON_EMPTY: StrictInjectionKey<string> = Symbol("icon_empty");
 export const ICON_FOLDER: StrictInjectionKey<string> = Symbol("icon_folder");
+export const SHOW_DOCUMENT_IN_TITLE: StrictInjectionKey<Ref<boolean>> =
+    Symbol("show-document-in-title");

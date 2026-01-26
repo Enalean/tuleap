@@ -25,10 +25,11 @@ import FolderHeader from "./FolderHeader.vue";
 import { TYPE_EMPTY, TYPE_LINK } from "../../constants";
 import emitter from "../../helpers/emitter";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { nextTick } from "vue";
+import { nextTick, ref } from "vue";
 import type { Folder, Item, RootState } from "../../type";
+import { SHOW_DOCUMENT_IN_TITLE } from "../../injection-keys";
 
-describe("FolderHeader", () => {
+describe(FolderHeader, () => {
     function factory(
         is_loading_ascendant_hierarchy: boolean,
         is_folder_empty: boolean,
@@ -41,7 +42,7 @@ describe("FolderHeader", () => {
                         current_folder: { id: 20 } as Folder,
                     } as RootState,
                     getters: {
-                        current_folder_title: () => "My folder title",
+                        current_folder_title: () => () => "My folder title",
                         is_folder_empty: () => is_folder_empty,
                     },
                     modules: {
@@ -51,6 +52,9 @@ describe("FolderHeader", () => {
                         },
                     },
                 }),
+                provide: {
+                    [SHOW_DOCUMENT_IN_TITLE.valueOf()]: ref(false),
+                },
             },
         });
     }
