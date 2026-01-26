@@ -17,9 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function getCurrentTimestampInSeconds(): string {
-    return String(Date.now()).slice(0, -4);
-}
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 function visitTopBacklog(project_id: number): void {
     cy.visit(`/plugins/agiledashboard/?group_id=${project_id}&action=show-top&pane=topplanning-v2`);
@@ -63,10 +61,14 @@ function hideEmptyStateSVGToNotConfuseDragAndDrop(): void {
 }
 
 describe(`Backlog`, function () {
-    let now: string, today_date: Date, today: string, next_month_date: Date, next_month: string;
+    let anti_collision: string,
+        today_date: Date,
+        today: string,
+        next_month_date: Date,
+        next_month: string;
 
     beforeEach(function () {
-        now = getCurrentTimestampInSeconds();
+        anti_collision = getAntiCollisionNamePart();
         today_date = new Date();
         const month_starting_one = today_date.getMonth() + 1;
         today = `${today_date.getFullYear()}-${month_starting_one}-${today_date.getDate()}`;
@@ -81,7 +83,7 @@ describe(`Backlog`, function () {
 
     it(`can be used`, function () {
         cy.projectMemberSession();
-        cy.createNewPublicProject(`backlog-${now}`, "scrum").then((project_id) => {
+        cy.createNewPublicProject(`backlog-${anti_collision}`, "scrum").then((project_id) => {
             visitTopBacklog(project_id);
         });
 
@@ -148,7 +150,7 @@ describe(`Backlog`, function () {
 
     it(`Drag and drop at top backlog level`, function () {
         cy.projectMemberSession();
-        cy.createNewPublicProject(`backlog-dnd-${now}`, "scrum").then((project_id) => {
+        cy.createNewPublicProject(`backlog-dnd-${anti_collision}`, "scrum").then((project_id) => {
             visitTopBacklog(project_id);
         });
 
@@ -307,9 +309,11 @@ describe(`Backlog`, function () {
 
     it(`Multi drag and drop at top backlog level`, function () {
         cy.projectMemberSession();
-        cy.createNewPublicProject(`backlog-multi-dnd-${now}`, "scrum").then((project_id) => {
-            visitTopBacklog(project_id);
-        });
+        cy.createNewPublicProject(`backlog-multi-dnd-${anti_collision}`, "scrum").then(
+            (project_id) => {
+                visitTopBacklog(project_id);
+            },
+        );
 
         cy.intercept({ method: "GET", url: "/api/v1/backlog_items/*" }).as("getItem");
         cy.intercept({ method: "PATCH", url: "/api/v1/milestones/*/content" }).as("dropElements");
@@ -345,7 +349,7 @@ describe(`Backlog`, function () {
 
     it(`Drag and drop at sprint level`, function () {
         cy.projectMemberSession();
-        cy.createNewPublicProject(`sprint-dnd-${now}`, "scrum").then((project_id) => {
+        cy.createNewPublicProject(`sprint-dnd-${anti_collision}`, "scrum").then((project_id) => {
             visitTopBacklog(project_id);
         });
 
@@ -441,9 +445,11 @@ describe(`Backlog`, function () {
 
     it(`Multi drag and drop at sprint level`, function () {
         cy.projectMemberSession();
-        cy.createNewPublicProject(`sprint-multi-dnd-${now}`, "scrum").then((project_id) => {
-            visitTopBacklog(project_id);
-        });
+        cy.createNewPublicProject(`sprint-multi-dnd-${anti_collision}`, "scrum").then(
+            (project_id) => {
+                visitTopBacklog(project_id);
+            },
+        );
 
         cy.intercept({ method: "GET", url: "/api/v1/backlog_items/*" }).as("getItem");
         cy.intercept({ method: "PATCH", url: "/api/v1/milestones/*/content" }).as("dropElements");

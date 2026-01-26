@@ -18,19 +18,16 @@
  */
 
 import type { ConditionPredicate } from "@tuleap/cypress-utilities-support";
-
-function getCurrentTimestampInSeconds(): string {
-    return String(Date.now()).slice(0, -4);
-}
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe("Program management", () => {
     let program_project_name: string, team_project_name: string, other_team_project_name: string;
 
     beforeEach(function () {
-        const now = getCurrentTimestampInSeconds();
-        program_project_name = "program-" + now;
-        team_project_name = "team-" + now;
-        other_team_project_name = "z-other-team-" + now;
+        const anti_collision = getAntiCollisionNamePart();
+        program_project_name = "program-" + anti_collision;
+        team_project_name = "team-" + anti_collision;
+        other_team_project_name = "z-other-team-" + anti_collision;
 
         cy.intercept("/api/v1/projects/*/program_teams").as("linkTeamToProgram");
     });
