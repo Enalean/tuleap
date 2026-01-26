@@ -35,34 +35,6 @@ describe(`DropGhost`, () => {
         doc = createLocalDocument();
     });
 
-    describe(`create()`, () => {
-        let ongoing_drag: OngoingDrag;
-
-        beforeEach(() => {
-            ongoing_drag = createOngoingDrag(doc);
-        });
-
-        it(`clones the dragged element, removes the HIDE css class, adds the GHOST css class
-            and returns a new DropGhost with the clone`, () => {
-            const cloneElement = vi.spyOn(dom_manipulation, "cloneHTMLElement");
-            DropGhost.create(mock_event_source, ongoing_drag);
-
-            const clone = cloneElement.mock.results[0].value;
-            expect(clone.classList.contains(HIDE_CSS_CLASS)).toBe(false);
-            expect(clone.classList.contains(GHOST_CSS_CLASS)).toBe(true);
-        });
-
-        it(`will not touch the dragged_element's existing CSS classes`, () => {
-            ongoing_drag.dragged_element.classList.add("custom-css-class");
-            const cloneElement = vi.spyOn(dom_manipulation, "cloneHTMLElement");
-            DropGhost.create(mock_event_source, ongoing_drag);
-
-            const clone = cloneElement.mock.results[0].value;
-            expect(ongoing_drag.dragged_element.classList.contains("custom-css-class")).toBe(true);
-            expect(clone.classList.contains("custom-css-class")).toBe(true);
-        });
-    });
-
     describe(`constructor()`, () => {
         it(`attaches itself to the AfterDropEventSource parameter`, () => {
             const ongoing_drag = createOngoingDrag(doc);

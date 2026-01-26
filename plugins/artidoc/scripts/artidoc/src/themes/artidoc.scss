@@ -21,6 +21,7 @@
 @use "./includes/project-background";
 @use "./includes/section-content";
 @use "./includes/size";
+@use "includes/drag-and-drop";
 
 .artidoc-app {
     --artidoc-app-height: calc(100vh - #{global-variables.$breadcrumb-height});

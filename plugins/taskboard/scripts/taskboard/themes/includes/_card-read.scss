@@ -63,7 +63,6 @@ $accessibility-pattern-right-margin: 1px;
 
 .taskboard-card {
     position: relative;
-    margin: 0 0 var(--tlp-small-spacing);
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing)
         calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--card-border-color, transparent);
@@ -128,10 +127,6 @@ $accessibility-pattern-right-margin: 1px;
 .taskboard-draggable-item {
     cursor: move;
 
-    &.drek-ghost > .taskboard-card {
-        visibility: hidden;
-    }
-
     &:last-child {
         margin-bottom: var(--tlp-x-large-spacing);
     }
@@ -150,10 +145,6 @@ $accessibility-pattern-right-margin: 1px;
     &:focus > .taskboard-card {
         outline: solid var(--tlp-main-color) 2px;
     }
-}
-
-.taskboard-cell-solo-card.drek-ghost > .taskboard-card-remaining-effort {
-    display: none;
 }
 
 .taskboard-cell-parent-card > .taskboard-card-parent {

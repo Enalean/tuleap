@@ -190,7 +190,6 @@ const getSwitchDisplayTypeCheckboxTitle = (field: ConfigurationField): string =>
 </script>
 
 <style scoped lang="scss">
-@use "pkg:@tuleap/drag-and-drop";
 @use "@/themes/includes/size";
 
 .reorder-arrows {
@@ -288,17 +287,5 @@ const getSwitchDisplayTypeCheckboxTitle = (field: ConfigurationField): string =>
     .reorder-arrows {
         opacity: 0;
     }
-}
-
-.drek-ghost {
-    border-radius: 0;
-
-    > div {
-        visibility: hidden;
-    }
-}
-
-.drek-hide {
-    display: none;
 }
 </style>

@@ -18,13 +18,27 @@
  */
 
 import type { DrekkenovInitOptions } from "./types";
+import { GHOST_CSS_CLASS, HIDE_CSS_CLASS } from "./constants";
 
-export function cloneHTMLElement(element: HTMLElement): HTMLElement {
-    const cloned_node = element.cloneNode(true);
-    if (!(cloned_node instanceof HTMLElement)) {
-        throw new Error("Cloned element is not a HTMLElement");
+export function createGhostFromElement(element: HTMLElement): HTMLElement {
+    const ghost = document.createElement(element.tagName);
+    const { height } = element.getBoundingClientRect();
+
+    ghost.setAttribute("style", `height: ${height}px;`);
+
+    for (const attribute of Array.from(element.attributes)) {
+        if (attribute.name === "id") {
+            // Two elements in the page cannot share the same id
+            continue;
+        }
+
+        ghost.setAttribute(attribute.name, attribute.value);
     }
-    return cloned_node;
+
+    ghost.classList.add(GHOST_CSS_CLASS);
+    ghost.classList.remove(HIDE_CSS_CLASS);
+
+    return ghost;
 }
 
 export function findClosestDraggable(
