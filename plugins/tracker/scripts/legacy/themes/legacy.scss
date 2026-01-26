@@ -32,3 +32,13 @@
     height: 100%;
     border: 0;
 }
+
+.search-artifact-modal-title {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+    align-items: baseline;
+
+    > .xref-in-title {
+        margin: 0;
+    }
+}

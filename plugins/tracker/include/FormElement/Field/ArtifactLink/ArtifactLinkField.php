@@ -586,6 +586,37 @@ class ArtifactLinkField extends TrackerField
     </div>
 </div>';
 
+            $search_artifact_url = '/plugins/tracker/?' . http_build_query(
+                [
+                    'tracker' => $artifact->getTracker()->getId(),
+                    'link-artifact-id' => $artifact->getId(),
+                ]
+            );
+
+
+            $html .= '<div class="tlp-modal tlp-modal-medium-sized" id="search-artifact-modal" role="dialog" aria-labelledby="search-artifact-modal-title" data-search-url="' . $search_artifact_url . '">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title search-artifact-modal-title" id="search-artifact-modal-title">
+            ' . dgettext('tuleap-tracker', 'Select artifacts to link to&nbsp;') . $artifact->getXRefAndTitleFlamingParrot() . '
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="' . dgettext('tuleap-tracker', 'Close') . '">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body"></div>
+    <div class="tlp-modal-footer">
+      <button type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
+          ' . dgettext('tuleap-tracker', 'Cancel') . '
+      </button>
+      <button
+        type="button"
+        class="tlp-button-primary tlp-modal-action link-artifact-submit"
+      >
+        ' . $GLOBALS['Language']->getText('global', 'btn_submit') . '
+      </button>
+    </div>
+</div>';
+
             $html .= '</div>';
             $html .= '</section>'; // end of tracker_formelement_read_and_edit_edition_section
         }

@@ -423,7 +423,6 @@ export default defineConfig([
         "src/www/scripts/bootstrap/**/*.js",
         "src/www/scripts/datepicker/**/*.js",
         "src/www/scripts/jquery/**/*.js",
-        "src/www/scripts/lightwindow/**/*.js",
         "src/www/scripts/prototype/**/*.js",
         "src/www/scripts/scriptaculous/**/*.js",
         "src/www/scripts/select2/**/*.js",
