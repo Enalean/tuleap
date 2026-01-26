@@ -150,6 +150,20 @@ class BacklogItemCollectionFactory
         return $this->buildBacklogItemCollection($item_collection, $user, $milestone, $redirection_url);
     }
 
+    public function getPlannableCollection(
+        PFUser $user,
+        Planning_Milestone $milestone,
+        MilestoneBacklog $backlog,
+        ?string $redirection_url,
+    ): IBacklogItemCollection {
+        return $this->buildBacklogItemCollection(
+            $backlog->getPlannableArtifacts($user),
+            $user,
+            $milestone,
+            $redirection_url,
+        );
+    }
+
     private function buildBacklogItemCollection(
         DescendantItemsCollection $item_collection,
         PFUser $user,

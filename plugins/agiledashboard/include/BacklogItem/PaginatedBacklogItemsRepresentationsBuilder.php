@@ -25,12 +25,13 @@ namespace Tuleap\AgileDashboard\BacklogItem;
 use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
+use Tuleap\AgileDashboard\AgileDashboard\REST\v1\Milestone\MilestoneBacklogInclude;
+use Tuleap\AgileDashboard\AgileDashboard\REST\v1\Milestone\MilestoneBacklogRequest;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
-use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 
@@ -46,14 +47,11 @@ final readonly class PaginatedBacklogItemsRepresentationsBuilder
 
     public function getPaginatedBacklogItemsRepresentationsForMilestone(
         PFUser $user,
-        Planning_Milestone $milestone,
-        ISearchOnStatus $criterion,
-        int $limit,
-        int $offset,
+        MilestoneBacklogRequest $request,
     ): PaginatedBacklogItemsRepresentations {
-        $backlog = $this->backlog_factory->getBacklog($user, $milestone, $limit, $offset);
+        $backlog = $this->backlog_factory->getBacklog($user, $request->milestone, $request->limit, $request->offset);
 
-        return $this->getBacklogItemsRepresentations($user, $milestone, $backlog, $criterion, $limit, $offset);
+        return $this->getBacklogItemsRepresentations($user, $backlog, $request);
     }
 
     public function getPaginatedBacklogItemsRepresentationsForTopMilestone(
@@ -64,18 +62,25 @@ final readonly class PaginatedBacklogItemsRepresentationsBuilder
     ): PaginatedBacklogItemsRepresentations {
         $backlog = $this->backlog_factory->getSelfBacklog($top_milestone, $limit, $offset);
 
-        return $this->getBacklogItemsRepresentations($user, $top_milestone, $backlog, new StatusOpen(), $limit, $offset);
+        return $this->getBacklogItemsRepresentations(
+            $user,
+            $backlog,
+            new MilestoneBacklogRequest(
+                $top_milestone,
+                new StatusOpen(),
+                MilestoneBacklogInclude::NOT_PLANNED,
+                $limit,
+                $offset,
+            ),
+        );
     }
 
     private function getBacklogItemsRepresentations(
         PFUser $user,
-        Planning_Milestone $milestone,
         MilestoneBacklog $backlog,
-        ISearchOnStatus $criterion,
-        int $limit,
-        int $offset,
+        MilestoneBacklogRequest $request,
     ): PaginatedBacklogItemsRepresentations {
-        $backlog_items                 = $this->getMilestoneBacklogItems($user, $milestone, $backlog, $criterion, $limit, $offset);
+        $backlog_items                 = $this->getMilestoneBacklogItems($user, $backlog, $request);
         $backlog_items_representations = [];
 
         foreach ($backlog_items as $backlog_item) {
@@ -87,29 +92,30 @@ final readonly class PaginatedBacklogItemsRepresentationsBuilder
 
     private function getMilestoneBacklogItems(
         PFUser $user,
-        Planning_Milestone $milestone,
         MilestoneBacklog $backlog,
-        ISearchOnStatus $criterion,
-        int $limit,
-        int $offset,
+        MilestoneBacklogRequest $request,
     ): IBacklogItemCollection {
         if (
-            $milestone instanceof Planning_VirtualTopMilestone &&
-            $this->explicit_backlog_dao->isProjectUsingExplicitBacklog($milestone->getGroupId())
+            $request->milestone instanceof Planning_VirtualTopMilestone &&
+            $this->explicit_backlog_dao->isProjectUsingExplicitBacklog($request->milestone->getGroupId())
         ) {
             return $this->backlog_item_collection_factory->getExplicitTopBacklogItems(
                 $user,
-                $milestone,
+                $request->milestone,
                 null,
-                $limit,
-                $offset
+                $request->limit,
+                $request->offset
             );
         }
 
-        if ($criterion instanceof StatusOpen) {
-            return $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone, $backlog, null);
+        if ($request->include === MilestoneBacklogInclude::PLANNED_AND_NOT_PLANNED) {
+            return $this->backlog_item_collection_factory->getPlannableCollection($user, $request->milestone, $backlog, null);
         }
 
-        return $this->backlog_item_collection_factory->getOpenClosedUnplannedCollection($user, $milestone, $backlog, null);
+        if ($request->criterion instanceof StatusOpen) {
+            return $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $request->milestone, $backlog, null);
+        }
+
+        return $this->backlog_item_collection_factory->getOpenClosedUnplannedCollection($user, $request->milestone, $backlog, null);
     }
 }

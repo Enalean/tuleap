@@ -479,6 +479,10 @@ msgstr ""
 msgid "Update semantic"
 msgstr ""
 
+msgid ""
+"Using both status and include parameters at the same time is not supported."
+msgstr ""
+
 msgid "View Planning"
 msgstr ""
 
@@ -556,6 +560,9 @@ msgid ""
 msgstr ""
 
 msgid "burnup and velocity charts"
+msgstr ""
+
+msgid "include parameter can only take value \"planned_and_not_planned\""
 msgstr ""
 
 msgid "the Backlog"

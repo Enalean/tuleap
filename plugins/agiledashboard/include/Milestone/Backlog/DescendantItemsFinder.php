@@ -71,6 +71,19 @@ class DescendantItemsFinder
         return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
     }
 
+    public function getAllUIMilestoneBacklogItemsWithLimitAndOffset(PFUser $user, ?int $limit, ?int $offset): DescendantItemsCollection
+    {
+        $result = $this->artifact_dao->getLinkedArtifactsOfTrackersConcatenatedToCustomListWithLimitAndOffset(
+            $this->milestone_id,
+            $this->descendant_tracker_ids,
+            $this->getDescendantPlannifiableItems(),
+            $limit,
+            $offset,
+        );
+
+        return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
+    }
+
     public function getAllMilestoneContentItemsWithLimitAndOffset(PFUser $user, ?int $limit, ?int $offset): DescendantItemsCollection
     {
         $result = $this->artifact_dao->getLinkedArtifactsOfTrackersWithLimitAndOffset(

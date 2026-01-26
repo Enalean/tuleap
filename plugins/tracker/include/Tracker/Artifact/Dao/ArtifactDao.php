@@ -120,6 +120,39 @@ class ArtifactDao extends DataAccessObject
 
     /**
      * @param int[] $tracker_ids
+     * @param int[] $additional_artifacts
+     */
+    public function getLinkedArtifactsOfTrackersConcatenatedToCustomListWithLimitAndOffset(int $artifact_id, array $tracker_ids, array $additional_artifacts, ?int $limit, ?int $offset): array
+    {
+        $tracker_ids_statement = EasyStatement::open()->in('linked_art.tracker_id IN (?*)', $tracker_ids);
+        $params                = [$artifact_id, ...$tracker_ids];
+
+        $additional_artifacts_statement = '';
+        if ($additional_artifacts !== []) {
+            $additional_artifacts_statement = EasyStatement::open()->in('OR linked_art.id IN (?*)', $additional_artifacts);
+            $params                         = [...$additional_artifacts, ...$params];
+        }
+
+        $sql = <<<SQL
+        SELECT SQL_CALC_FOUND_ROWS linked_art.*
+        FROM tracker_artifact parent_art
+            INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND f.use_it = 1)
+            INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+            INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+            INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts_statement)
+            INNER JOIN tracker_artifact_priority_rank                  ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
+        WHERE parent_art.id = ?
+            AND $tracker_ids_statement
+        GROUP BY (linked_art.id)
+        ORDER BY tracker_artifact_priority_rank.`rank` ASC
+        LIMIT ? OFFSET ?
+        SQL;
+
+        return $this->getDB()->safeQuery($sql, [...$params, $limit, $offset]);
+    }
+
+    /**
+     * @param int[] $tracker_ids
      */
     public function getLinkedArtifactsOfTrackersWithLimitAndOffset(int $artifact_id, array $tracker_ids, ?int $limit, ?int $offset): array
     {

@@ -258,7 +258,7 @@
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/MilestoneResource.php">
     <InvalidDocblock>
-      <code><![CDATA[public function getBacklog(int $id, string $query = '', int $limit = 10, int $offset = 0)]]></code>
+      <code><![CDATA[public function getBacklog(int $id, string $query = '', string $include = MilestoneBacklogInclude::NOT_PLANNED->value, int $limit = 10, int $offset = 0): array]]></code>
       <code><![CDATA[public function getContent($id, $limit = 10, $offset = 0)]]></code>
       <code><![CDATA[public function getMilestones(]]></code>
       <code><![CDATA[public function getSiblings($id, $query = '', $limit = 10, $offset = 0)]]></code>
@@ -282,7 +282,6 @@
     <MissingReturnType>
       <code><![CDATA[checkIfUserCanChangePrioritiesInMilestone]]></code>
       <code><![CDATA[filterOutAddedElements]]></code>
-      <code><![CDATA[getBacklog]]></code>
       <code><![CDATA[getBacklogItemAsArtifact]]></code>
       <code><![CDATA[getCardwall]]></code>
       <code><![CDATA[getContent]]></code>
@@ -846,7 +845,6 @@
       <code><![CDATA[getMilestonePresenter]]></code>
       <code><![CDATA[inconsistentArtifactsIdsAreValid]]></code>
       <code><![CDATA[redirectToCorrectPane]]></code>
-      <code><![CDATA[solveInconsistencies]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$milestone_artifact]]></code>
@@ -1924,11 +1922,6 @@
       <code><![CDATA[$xml_planning->permissions->permission[1]['ugroup']]]></code>
     </PossiblyNullArrayAccess>
   </file>
-  <file src="plugins/agiledashboard/tests/unit/REST/QueryToCriterionOnlyAllStatusConverterTest.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[new QueryToCriterionOnlyAllStatusConverter()]]></code>
-    </InvalidPropertyAssignmentValue>
-  </file>
   <file src="plugins/agiledashboard/tests/unit/REST/v1/Milestone/ProjectMilestonesResourceTest.php">
     <MissingParamType>
       <code><![CDATA[$header]]></code>
@@ -2373,26 +2366,17 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$params]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[burningParrotCompatiblePage]]></code>
-      <code><![CDATA[burning_parrot_get_javascript_files]]></code>
-      <code><![CDATA[burning_parrot_get_stylesheets]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
@@ -18408,7 +18392,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
       <code><![CDATA[load]]></code>
       <code><![CDATA[load]]></code>
     </DeprecatedMethod>
@@ -22663,11 +22646,6 @@
     </PossiblyFalseOperand>
   </file>
   <file src="plugins/jira_import/include/JiraAgile/JiraEpicFromIssueTypeRetrieverFromAPI.php">
-    <PossiblyFalseOperand>
-      <code><![CDATA[parse_url(ClientWrapper::JIRA_CORE_BASE_URL, PHP_URL_PATH)]]></code>
-    </PossiblyFalseOperand>
-  </file>
-  <file src="plugins/jira_import/include/JiraAgile/JiraEpicIssuesRetrieverFromAPI.php">
     <PossiblyFalseOperand>
       <code><![CDATA[parse_url(ClientWrapper::JIRA_CORE_BASE_URL, PHP_URL_PATH)]]></code>
     </PossiblyFalseOperand>
@@ -39370,10 +39348,7 @@
       <code><![CDATA[$hierarchy]]></code>
       <code><![CDATA[$parent]]></code>
       <code><![CDATA[$permission_type]]></code>
-      <code><![CDATA[$prefix]]></code>
-      <code><![CDATA[$prefix]]></code>
       <code><![CDATA[$send_notification]]></code>
-      <code><![CDATA[$unsubscribe_button]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$changesets]]></code>
@@ -39391,8 +39366,6 @@
       <code><![CDATA[fetchActionButtons]]></code>
       <code><![CDATA[fetchColoredXRef]]></code>
       <code><![CDATA[fetchHiddenTrackerId]]></code>
-      <code><![CDATA[fetchTitleContent]]></code>
-      <code><![CDATA[fetchTitleWithoutUnsubscribeButton]]></code>
       <code><![CDATA[flattenChangesetArray]]></code>
       <code><![CDATA[forceFetchAllChangesets]]></code>
       <code><![CDATA[getArtifactlinkDao]]></code>
@@ -39931,6 +39904,12 @@
     <ImplicitToStringCast>
       <code><![CDATA[EasyStatement::open()->in('linked_art.id NOT IN (?*)', $excluded_ids)]]></code>
     </ImplicitToStringCast>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->getDB()->safeQuery($sql, [...$params, $limit, $offset])]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Exception/CannotCreateChangeset.php">
     <MissingParamType>
@@ -47564,11 +47543,6 @@
       <code><![CDATA[getJobUrl]]></code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Field/Transition_PostAction_Field.php">
-    <UndefinedMethod>
-      <code><![CDATA[getDao]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Field/Transition_PostAction_FieldFactory.php">
     <DeprecatedMethod>
       <code><![CDATA[$dar]]></code>
@@ -50381,12 +50355,6 @@
       <code><![CDATA[null]]></code>
     </NullArgument>
   </file>
-  <file src="plugins/tracker/tests/unit/Creation/JiraImporter/AsyncJiraSchedulerTest.php">
-    <TypeDoesNotContainType>
-      <code><![CDATA[SymmetricCrypto::decrypt($encrypted_jira_token, $encryption_key)->getString() === 'very_secret']]></code>
-      <code><![CDATA[SymmetricCrypto::decrypt($encrypted_jira_token, $encryption_key)->getString() === 'very_secret']]></code>
-    </TypeDoesNotContainType>
-  </file>
   <file src="plugins/tracker/tests/unit/Creation/JiraImporter/Import/AlwaysThereFieldsExporterTest.php">
     <PossiblyNullArgument>
       <code><![CDATA[$status_field->bind->items->item]]></code>
@@ -50429,10 +50397,6 @@
     </PossiblyNullPropertyFetch>
   </file>
   <file src="plugins/tracker/tests/unit/Creation/JiraImporter/Import/Artifact/ArtifactsInDedicatedTrackerXMLExporterTest.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[new class extends JiraCloudClientStub {
-        }]]></code>
-    </InvalidPropertyAssignmentValue>
     <PossiblyInvalidArrayAccess>
       <code><![CDATA[$artifact_node_01_field_changes_changeset_01[0]]]></code>
       <code><![CDATA[$artifact_node_01_field_changes_changeset_01[1]]]></code>
@@ -50471,28 +50435,6 @@
       <code><![CDATA[$artifact_node_02_field_changes_changeset_01]]></code>
       <code><![CDATA[$artifact_node_02_field_changes_changeset_01]]></code>
     </UndefinedInterfaceMethod>
-    <UndefinedPropertyAssignment>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-    </UndefinedPropertyAssignment>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-      <code><![CDATA[$this->wrapper->urls]]></code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/tracker/tests/unit/Creation/JiraImporter/Import/Artifact/ArtifactsInMonoTrackerXMLExporterTest.php">
     <InvalidPropertyAssignmentValue>
@@ -52925,9 +52867,6 @@
   </file>
   <file src="plugins/tracker/tests/unit/Semantic/Timeframe/Administration/SemanticTimeframeCurrentConfigurationPresenterBuilderTest.php">
     <PossiblyInvalidArgument>
-      <code><![CDATA[$this->current_tracker]]></code>
-      <code><![CDATA[$this->current_tracker]]></code>
-      <code><![CDATA[$this->current_tracker]]></code>
       <code><![CDATA[$this->dao]]></code>
       <code><![CDATA[$this->dao]]></code>
       <code><![CDATA[$this->duration_field]]></code>
@@ -52938,8 +52877,6 @@
       <code><![CDATA[$this->tracker_factory]]></code>
     </PossiblyInvalidArgument>
     <PossiblyUndefinedMethod>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
       <code><![CDATA[expects]]></code>
       <code><![CDATA[expects]]></code>
       <code><![CDATA[expects]]></code>
@@ -53022,19 +52959,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$type]]></code>
     </ArgumentTypeCoercion>
-    <UndefinedMethod>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/tests/unit/Semantic/Timeframe/SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTest.php">
     <PossiblyInvalidArgument>
@@ -53138,27 +53062,10 @@
       <code><![CDATA['1']]></code>
       <code><![CDATA['1']]></code>
     </InvalidScalarArgument>
-    <MissingReturnType>
-      <code><![CDATA[getMockedDurationField]]></code>
-    </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[strtotime($start_date)]]></code>
       <code><![CDATA[strtotime($start_date)]]></code>
     </PossiblyFalseArgument>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$this->duration_field]]></code>
-      <code><![CDATA[$this->duration_field]]></code>
-      <code><![CDATA[$this->duration_field]]></code>
-      <code><![CDATA[$this->duration_field]]></code>
-      <code><![CDATA[$this->duration_field]]></code>
-      <code><![CDATA[$this->duration_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArgument>
       <code><![CDATA[$artifact->getLastChangeset()]]></code>
       <code><![CDATA[$artifact1->getLastChangeset()]]></code>
@@ -53168,41 +53075,6 @@
       <code><![CDATA[$root->children()]]></code>
       <code><![CDATA[$root->children()]]></code>
     </PossiblyNullArgument>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-    </PossiblyUndefinedMethod>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$duration]]></code>
     </RiskyTruthyFalsyComparison>
@@ -53220,20 +53092,6 @@
       <code><![CDATA[strtotime($start_date)]]></code>
       <code><![CDATA[strtotime($start_date)]]></code>
     </PossiblyFalseArgument>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$this->end_date_field]]></code>
-      <code><![CDATA[$this->end_date_field]]></code>
-      <code><![CDATA[$this->end_date_field]]></code>
-      <code><![CDATA[$this->end_date_field]]></code>
-      <code><![CDATA[$this->end_date_field]]></code>
-      <code><![CDATA[$this->end_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-      <code><![CDATA[$this->start_date_field]]></code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArgument>
       <code><![CDATA[$artifact->getLastChangeset()]]></code>
       <code><![CDATA[$artifact1->getLastChangeset()]]></code>
@@ -53243,45 +53101,6 @@
       <code><![CDATA[$root->children()]]></code>
       <code><![CDATA[$root->children()]]></code>
     </PossiblyNullArgument>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-    </PossiblyUndefinedMethod>
   </file>
   <file src="plugins/tracker/tests/unit/Semantic/Title/AdminPresenterBuilderTest.php">
     <MissingParamType>
@@ -75550,11 +75369,6 @@
       <code><![CDATA[$backlog]]></code>
       <code><![CDATA[$backlog_items]]></code>
     </InvalidArgument>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$query]]></code>
-      <code><![CDATA[json_encode($post)]]></code>
-      <code><![CDATA[json_encode($post)]]></code>
-    </PossiblyFalseArgument>
     <PossiblyInvalidArrayAccess>
       <code><![CDATA[$backlog_items[0]]]></code>
       <code><![CDATA[$backlog_items[0]]]></code>
@@ -75565,6 +75379,8 @@
       <code><![CDATA[$backlog_items[0]]]></code>
       <code><![CDATA[$backlog_items[0]]]></code>
       <code><![CDATA[$backlog_items[0]]]></code>
+      <code><![CDATA[$backlog_items[0]]]></code>
+      <code><![CDATA[$backlog_items[0]]]></code>
       <code><![CDATA[$backlog_items[1]]]></code>
       <code><![CDATA[$backlog_items[1]]]></code>
       <code><![CDATA[$backlog_items[1]]]></code>
@@ -75574,6 +75390,10 @@
       <code><![CDATA[$backlog_items[1]]]></code>
       <code><![CDATA[$backlog_items[1]]]></code>
       <code><![CDATA[$backlog_items[1]]]></code>
+      <code><![CDATA[$backlog_items[1]]]></code>
+      <code><![CDATA[$backlog_items[1]]]></code>
+      <code><![CDATA[$backlog_items[2]]]></code>
+      <code><![CDATA[$backlog_items[2]]]></code>
       <code><![CDATA[$backlog_items[2]]]></code>
       <code><![CDATA[$backlog_items[2]]]></code>
       <code><![CDATA[$backlog_items[2]]]></code>
@@ -75584,8 +75404,26 @@
       <code><![CDATA[$backlog_items[2]]]></code>
       <code><![CDATA[$backlog_items[2]]]></code>
       <code><![CDATA[$backlog_items[3]]]></code>
+      <code><![CDATA[$backlog_items[3]]]></code>
+      <code><![CDATA[$backlog_items[3]]]></code>
+      <code><![CDATA[$backlog_items[4]]]></code>
+      <code><![CDATA[$backlog_items[4]]]></code>
+      <code><![CDATA[$backlog_items[5]]]></code>
+      <code><![CDATA[$backlog_items[5]]]></code>
     </PossiblyInvalidArrayAccess>
     <UndefinedInterfaceMethod>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
+      <code><![CDATA[$backlog_items]]></code>
       <code><![CDATA[$backlog_items]]></code>
       <code><![CDATA[$backlog_items]]></code>
       <code><![CDATA[$backlog_items]]></code>
@@ -76621,14 +76459,6 @@
   </file>
   <file src="tests/unit/common/Dashboard/Project/ProjectDashboardXMLImporterLinesTest.php">
     <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
@@ -77751,11 +77581,8 @@
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
       <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
     </InternalMethod>
     <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
@@ -77954,7 +77781,6 @@
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
   </file>
   <file src="tests/unit/common/Project/ProjectManagerGetValidProjectTest.php">
@@ -78034,9 +77860,6 @@
       <code><![CDATA['Project_NotFoundException']]></code>
     </ArgumentTypeCoercion>
     <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
   </file>

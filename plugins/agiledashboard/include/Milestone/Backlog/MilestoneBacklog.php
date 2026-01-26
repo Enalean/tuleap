@@ -188,4 +188,17 @@ class MilestoneBacklog
 
         return $artifacts_collection;
     }
+
+    public function getPlannableArtifacts(PFUser $user): DescendantItemsCollection
+    {
+        if ($this->milestone instanceof Planning_VirtualTopMilestone) {
+            throw new \LogicException('This method is called from a milestone resource, it should not be the virtual top milestone');
+        }
+
+        if ($this->limit === null || $this->offset === null) {
+            throw new \LogicException('This method is called from a milestone resource, limit and offset be set');
+        }
+
+        return $this->items_finder->getAllUIMilestoneBacklogItemsWithLimitAndOffset($user, $this->limit, $this->offset);
+    }
 }
