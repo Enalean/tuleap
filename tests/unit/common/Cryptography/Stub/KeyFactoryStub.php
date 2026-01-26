@@ -26,7 +26,6 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey as Legacy2025EncryptionKey;
 
 final class KeyFactoryStub implements KeyFactory
 {
@@ -37,12 +36,6 @@ final class KeyFactoryStub implements KeyFactory
     public function getEncryptionKey(): EncryptionKey
     {
         return new EncryptionKey($this->getKeyMaterial());
-    }
-
-    #[\Override]
-    public function getLegacy2025EncryptionKey(): Legacy2025EncryptionKey
-    {
-        return new Legacy2025EncryptionKey($this->getKeyMaterial());
     }
 
     private function getKeyMaterial(): ConcealedString
