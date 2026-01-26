@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
@@ -28,6 +29,7 @@ use ProjectManager;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -90,7 +92,8 @@ final class GitlabProjectResource extends AuthenticatedResource
 
         $representation_factory = new GitlabRepositoryRepresentationFactory(
             $repository_integration_factory,
-            $webhook_dao
+            $webhook_dao,
+            CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance()),
         );
 
         $gitlab_repositories_representations = $representation_factory->getAllIntegrationsRepresentationsInProject(

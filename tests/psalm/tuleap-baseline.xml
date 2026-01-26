@@ -19771,13 +19771,13 @@
       <code><![CDATA[$close_artifact_keyword]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/gitlab/tests/rest/GitLabDataBuilder.php">
+  <file src="plugins/gitlab/tests/rest/REST/GitLabDataBuilder.php">
     <MissingReturnType>
       <code><![CDATA[insertFakeGitlabRepository]]></code>
       <code><![CDATA[setUp]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/gitlab/tests/rest/Gitlab/GroupTest.php">
+  <file src="plugins/gitlab/tests/rest/REST/GroupTest.php">
     <InvalidScalarArgument>
       <code><![CDATA[$this->gitlab_group_id]]></code>
       <code><![CDATA[$this->gitlab_group_id]]></code>
@@ -19794,7 +19794,7 @@
       <code><![CDATA[$patch_body]]></code>
     </PossiblyFalseArgument>
   </file>
-  <file src="plugins/gitlab/tests/rest/Gitlab/ProjectTest.php">
+  <file src="plugins/gitlab/tests/rest/REST/ProjectTest.php">
     <PossiblyInvalidArrayAccess>
       <code><![CDATA[$gitlab_repositories[0]]]></code>
     </PossiblyInvalidArrayAccess>
@@ -19802,7 +19802,7 @@
       <code><![CDATA[$gitlab_repositories]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="plugins/gitlab/tests/rest/Gitlab/RepositoryTest.php">
+  <file src="plugins/gitlab/tests/rest/REST/RepositoryTest.php">
     <PossiblyFalseArgument>
       <code><![CDATA[$patch_body]]></code>
       <code><![CDATA[$patch_body]]></code>

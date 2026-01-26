@@ -88,9 +88,8 @@
                             'gitlab-description': isGitlabRepository(props.repository),
                         }"
                         data-test="git-repository-card-description"
-                    >
-                        {{ repository.description }}
-                    </p>
+                        v-dompurify-html="repository.description"
+                    ></p>
                     <div
                         v-if="mustDisplayAdditionalInformation()"
                         class="git-repository-links-spacer"

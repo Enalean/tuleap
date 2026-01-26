@@ -19,6 +19,7 @@
     "@vitejs/plugin-vue": "^5.0.5",
     "javascript-time-ago": "^2.3.4",
     "vue": "^3.4.38",
+    "vue-dompurify-html": "^5.3.0",
     "vue3-gettext": "2.4.0",
     "vuex": "^4.1.0",
     "vuex-composition-helpers": "^2.0.1"

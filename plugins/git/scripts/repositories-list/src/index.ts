@@ -32,6 +32,7 @@ import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue
 import { createInitializedStore } from "./store";
 import { ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "./constants";
 import type { RepositoryOwner, State } from "./type";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("git-repository-list");
@@ -105,5 +106,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         unlink_gitlab_repository: null,
     };
 
-    createApp(App).use(createInitializedStore(state)).use(gettext_plugin).mount(vue_mount_point);
+    createApp(App)
+        .use(createInitializedStore(state))
+        .use(gettext_plugin)
+        .use(VueDOMPurifyHTML)
+        .mount(vue_mount_point);
 });
