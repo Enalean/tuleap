@@ -339,7 +339,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-@use "pkg:@tuleap/drag-and-drop";
 @use "@/themes/includes/viewport-breakpoint";
 @use "@/themes/includes/size";
 
@@ -440,17 +439,6 @@ li[draggable="false"] {
     > .dragndrop-grip {
         opacity: 0.1;
         pointer-events: none;
-    }
-}
-
-.drek-ghost {
-    border-radius: 0;
-
-    > .dragndrop-grip,
-    > .table-of-content-section-title,
-    > .reorder-arrows,
-    > .toc-display-level {
-        visibility: hidden;
     }
 }
 

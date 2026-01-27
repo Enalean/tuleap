@@ -19,13 +19,14 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
-    cloneHTMLElement,
+    createGhostFromElement,
     findClosestDraggable,
     findClosestDropzone,
     findNextGhostSibling,
     insertAfter,
 } from "./dom-manipulation";
 import type { DrekkenovInitOptions } from "./types";
+import { GHOST_CSS_CLASS, HIDE_CSS_CLASS } from "./constants";
 
 describe(`dom-manipulation`, () => {
     let doc: Document;
@@ -33,13 +34,30 @@ describe(`dom-manipulation`, () => {
         doc = createLocalDocument();
     });
 
-    describe(`cloneHTMLElement()`, () => {
-        it(`clones an HTML Element and set its type to HTMLElement so TypeScript is happy`, () => {
+    describe(`createGhostFromElement()`, () => {
+        it(`create a ghost element having the same tag name, classes, attributes (id excluded) and height as the provided element`, () => {
             const div = doc.createElement("div");
+            vi.spyOn(div, "getBoundingClientRect").mockReturnValue({ height: 75 } as DOMRect);
+            div.classList.add("custom-css-class", HIDE_CSS_CLASS);
 
-            const clone = cloneHTMLElement(div);
+            div.setAttribute("data-v-67f3490b", "");
+            div.setAttribute("data-test", "dragged-element");
+            div.setAttribute("id", "dragged-element-id");
+            div.setAttribute("draggable", "true");
 
-            expect(clone.isEqualNode(div)).toBe(true);
+            const ghost = createGhostFromElement(div);
+
+            expect(ghost.tagName).toBe(div.tagName);
+            expect(ghost.classList.contains(GHOST_CSS_CLASS)).toBe(true);
+            expect(ghost.classList.contains(HIDE_CSS_CLASS)).toBe(false);
+            expect(ghost.classList.contains("custom-css-class")).toBe(true);
+
+            expect(ghost.getAttribute("data-v-67f3490b")).toBe("");
+            expect(ghost.getAttribute("data-test")).toBe("dragged-element");
+            expect(ghost.getAttribute("draggable")).toBe("true");
+            expect(ghost.hasAttribute("id")).toBe(false);
+
+            expect(ghost.style.height).toBe("75px");
         });
     });
 

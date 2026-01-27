@@ -225,6 +225,10 @@
     }
 }
 
+.taskboard-child {
+    margin: 0 0 var(--tlp-small-spacing);
+}
+
 .taskboard-child:last-child > .taskboard-card-cancel-save-buttons-for-child {
     margin: calc(var(--tlp-small-spacing) - 5px) 0 0;
 }

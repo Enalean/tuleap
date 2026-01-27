@@ -18,8 +18,7 @@
  */
 
 import type { AfterDropEventSource, AfterDropListener, DrekkenovInitOptions } from "./types";
-import { GHOST_CSS_CLASS, HIDE_CSS_CLASS } from "./constants";
-import { cloneHTMLElement, findNextGhostSibling, insertAfter } from "./dom-manipulation";
+import { createGhostFromElement, findNextGhostSibling, insertAfter } from "./dom-manipulation";
 import type { OngoingDrag } from "./OngoingDrag";
 
 export class DropGhost implements AfterDropListener {
@@ -32,10 +31,11 @@ export class DropGhost implements AfterDropListener {
     }
 
     public static create(event_source: AfterDropEventSource, ongoing_drag: OngoingDrag): DropGhost {
-        const clone = cloneHTMLElement(ongoing_drag.dragged_element);
-        clone.classList.remove(HIDE_CSS_CLASS);
-        clone.classList.add(GHOST_CSS_CLASS);
-        return new DropGhost(event_source, ongoing_drag, clone);
+        return new DropGhost(
+            event_source,
+            ongoing_drag,
+            createGhostFromElement(ongoing_drag.dragged_element),
+        );
     }
 
     public getSibling(): Element | null {
