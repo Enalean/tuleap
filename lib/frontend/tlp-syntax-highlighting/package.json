@@ -1,0 +1,33 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/tlp-syntax-highlighting",
+  "homepage": "https://www.tuleap.com",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "sass": "./dist/tlp-syntax-highlighting.css",
+      "import": "./dist/tlp-syntax-highlighting.js",
+      "require": "./dist/tlp-syntax-highlighting.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "@tuleap/potentially-dangerous-bidirectional-characters": "workspace:*",
+    "@tuleap/prism-language-tql": "workspace:*",
+    "@tuleap/tlp-swatch-colors": "workspace:*",
+    "prismjs": "^1.30.0"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@types/prismjs": "^1.26.1"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

@@ -109,6 +109,7 @@ import { postJSON, uri } from "@tuleap/fetch-result";
 import { EMITTER, WIDGET_ID } from "../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SEND_TQL_QUERY_FROM_CHATBOT_EVENT } from "../helpers/widget-events";
+import "@tuleap/tlp-syntax-highlighting";
 
 const { $gettext } = useGettext();
 

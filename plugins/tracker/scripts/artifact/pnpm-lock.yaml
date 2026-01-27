@@ -62,6 +62,9 @@ dependencies:
   '@tuleap/tlp-styles':
     specifier: workspace:^
     version: link:../../../../lib/frontend/tlp-styles
+  '@tuleap/tlp-syntax-highlighting':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-syntax-highlighting
   '@tuleap/tooltip':
     specifier: workspace:^
     version: link:../../../../lib/frontend/tooltip

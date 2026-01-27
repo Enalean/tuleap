@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../themes/git.scss";
-import initAlreadyForkedModal from "./already-forked-modal";
-import initCopyButton from "./copy-button";
-import initCloneBarPopover from "./clone-bar-popover";
-import initBranchTagSelector from "./branch-tag-selector";
-import initShortlog from "./shortlog";
-import "@tuleap/tlp-syntax-highlighting";
+import { SyntaxHighlightElement } from "./syntax-highlight-element";
+import "../styles/syntax-highlight.scss";
 
-document.addEventListener("DOMContentLoaded", () => {
-    initAlreadyForkedModal();
-    initCopyButton();
-    initCloneBarPopover();
-    initBranchTagSelector();
-    initShortlog();
-});
+if (!window.customElements.get("tlp-syntax-highlighting")) {
+    window.customElements.define("tlp-syntax-highlighting", SyntaxHighlightElement);
+}

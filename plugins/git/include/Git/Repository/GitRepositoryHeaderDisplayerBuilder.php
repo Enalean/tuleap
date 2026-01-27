@@ -46,7 +46,6 @@ use Tuleap\Git\Repository\View\DefaultCloneURLSelector;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Git\Repository\View\RepositoryHeaderTabsURLBuilder;
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Queue\EnqueueTask;
@@ -61,7 +60,6 @@ class GitRepositoryHeaderDisplayerBuilder
         return new GitRepositoryHeaderDisplayer(
             $this->getHeaderRenderer($git_plugin),
             $this->getRepositoryHeaderPresenterBuilder($git_plugin, $selected_tab),
-            $this->getCoreAssets(),
             new JavascriptViteAsset(
                 new IncludeViteAssets(
                     __DIR__ . '/../../../scripts/repository/frontend-assets',
@@ -175,10 +173,5 @@ class GitRepositoryHeaderDisplayerBuilder
             $this->getGitSystemEventManager(),
             ProjectManager::instance()
         );
-    }
-
-    private function getCoreAssets(): IncludeAssets
-    {
-        return new \Tuleap\Layout\IncludeCoreAssets();
     }
 }

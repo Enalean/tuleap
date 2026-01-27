@@ -52,9 +52,7 @@ export class SyntaxHighlightElement extends HTMLElement {
                 if (entry.isIntersecting) {
                     // This is needed to force Prism to not highlight everything when its module is loaded
                     window.Prism = window.Prism || { manual: true };
-                    const { syntaxHighlightElement } = await import(
-                        /* webpackChunkName: "prism-syntax-hl" */ "./prism"
-                    );
+                    const { syntaxHighlightElement } = await import("./prism");
                     syntaxHighlightElement(code_block);
                     intersection_observer.unobserve(this);
 

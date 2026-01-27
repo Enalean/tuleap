@@ -38,6 +38,9 @@ dependencies:
   '@tuleap/tlp-relative-date':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-relative-date
+  '@tuleap/tlp-syntax-highlighting':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-syntax-highlighting
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tooltip

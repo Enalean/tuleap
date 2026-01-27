@@ -17,18 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { SyntaxHighlightElement } from "./syntax-highlight-element";
-const syntaxHighlightElement = jest.fn();
-jest.mock("./prism", () => {
-    return {
-        syntaxHighlightElement,
-    };
-});
+import * as prism from "./prism";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
+
+type ObserverCallback = (entries: unknown[]) => Promise<void>;
 
 describe("SyntaxHighlightElement", () => {
-    const windowIntersectionObserver = window.IntersectionObserver;
+    const observe = vi.fn();
+    const unobserve = vi.fn();
+    let observerCallback: ObserverCallback;
+    let syntaxHighlightElement: MockInstance;
 
     function createSyntaxHighlightElement(): SyntaxHighlightElement {
         const doc = document.implementation.createHTMLDocument();
@@ -53,21 +55,22 @@ describe("SyntaxHighlightElement", () => {
     });
 
     beforeEach(() => {
-        syntaxHighlightElement.mockReset();
-    });
+        vi.resetAllMocks();
+        syntaxHighlightElement = vi.spyOn(prism, "syntaxHighlightElement");
+        const mockIntersectionObserver = vi.fn(
+            class {
+                constructor(callback: ObserverCallback) {
+                    observerCallback = callback;
+                }
 
-    afterEach(() => {
-        window.IntersectionObserver = windowIntersectionObserver;
+                observe = observe;
+                unobserve = unobserve;
+            },
+        );
+        vi.stubGlobal("IntersectionObserver", mockIntersectionObserver);
     });
 
     it("observes if code block is in the viewport", () => {
-        const observe = jest.fn();
-        const mockIntersectionObserver = jest.fn();
-        mockIntersectionObserver.mockReturnValue({
-            observe,
-        });
-        window.IntersectionObserver = mockIntersectionObserver;
-
         createSyntaxHighlightElement();
 
         expect(observe).toHaveBeenCalled();
@@ -75,20 +78,8 @@ describe("SyntaxHighlightElement", () => {
     });
 
     it("Syntax highlight the code block (and stops observing) whenever the block enters the viewport", async (): Promise<void> => {
-        const observe = (): void => {
-            // mocking observe
-        };
-        const unobserve = jest.fn();
-        const mockIntersectionObserver = jest.fn();
-        mockIntersectionObserver.mockReturnValue({
-            observe,
-            unobserve,
-        });
-        window.IntersectionObserver = mockIntersectionObserver;
-
         const mermaid_diagram = createSyntaxHighlightElement();
 
-        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
         await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         expect(syntaxHighlightElement).toHaveBeenCalled();
@@ -96,20 +87,8 @@ describe("SyntaxHighlightElement", () => {
     });
 
     it("Run again the syntax highlight when the code block change", async (): Promise<void> => {
-        const observe = (): void => {
-            // mocking observe
-        };
-        const unobserve = jest.fn();
-        const mockIntersectionObserver = jest.fn();
-        mockIntersectionObserver.mockReturnValue({
-            observe,
-            unobserve,
-        });
-        window.IntersectionObserver = mockIntersectionObserver;
-
         const mermaid_diagram = createSyntaxHighlightElement();
 
-        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
         await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         expect(syntaxHighlightElement).toHaveBeenCalledTimes(1);
@@ -120,7 +99,7 @@ describe("SyntaxHighlightElement", () => {
         }
         code.textContent = "class Bar {}";
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
         expect(syntaxHighlightElement).toHaveBeenCalledTimes(2);
     });
 });

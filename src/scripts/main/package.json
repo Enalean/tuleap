@@ -20,8 +20,6 @@
     "@tuleap/keyboard-shortcuts": "workspace:*",
     "@tuleap/mention": "workspace:*",
     "@tuleap/pinned-header": "workspace:^",
-    "@tuleap/potentially-dangerous-bidirectional-characters": "workspace:*",
-    "@tuleap/prism-language-tql": "workspace:^",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/project-sidebar-internal": "workspace:*",
     "@tuleap/tlp": "workspace:*",
@@ -40,7 +38,6 @@
     "moment": "^2.29.4",
     "mustache": "^4.2.0",
     "node-gettext": "^3.0.0",
-    "prismjs": "^1.30.0",
     "sprintf-js": "^1.1.2",
     "turndown": "^7.0.0"
   },
@@ -51,7 +48,6 @@
     "@types/jquery": "^3.5.32",
     "@types/mustache": "^4.1.2",
     "@types/node": "^14.14.31",
-    "@types/prismjs": "^1.26.1",
     "@types/sprintf-js": "^1.1.2"
   },
   "scripts": {

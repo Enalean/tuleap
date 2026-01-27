@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { markPotentiallyDangerousBidirectionalUnicodeText } from "./bidirectional-unicode-text";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-describe("bidirectional-unicode-text", () => {
-    it("marks potentially dangerous bidirectional characters", () => {
-        const result = markPotentiallyDangerousBidirectionalUnicodeText("A\u202aB\u202b");
-
-        expect(result).toBe(
-            'A<span class="syntax-highlight-invisible-char" dir="ltr" title="\\u202a">\u202a</span>B<span class="syntax-highlight-invisible-char" dir="ltr" title="\\u202b">\u202b</span>',
-        );
-    });
+export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "tlp-syntax-highlighting",
+        },
+    },
 });

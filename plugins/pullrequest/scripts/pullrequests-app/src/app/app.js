@@ -55,6 +55,7 @@ import PullRequestConfig from "./pull-request/pull-request-config.js";
 import angular_custom_elements_module from "angular-custom-elements";
 import "./file-diff/widgets/placeholders/FileDiffPlaceholder.ts";
 import "@tuleap/plugin-pullrequest-comments";
+import "@tuleap/tlp-syntax-highlighting";
 
 export default angular
     .module("tuleap.pull-request", [

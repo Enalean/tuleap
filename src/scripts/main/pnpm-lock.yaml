@@ -50,12 +50,6 @@ dependencies:
   '@tuleap/pinned-header':
     specifier: workspace:^
     version: link:../../../lib/frontend/pinned-header
-  '@tuleap/potentially-dangerous-bidirectional-characters':
-    specifier: workspace:*
-    version: link:../../../lib/frontend/potentially-dangerous-bidirectional-characters
-  '@tuleap/prism-language-tql':
-    specifier: workspace:^
-    version: link:../../../lib/frontend/prism-language-tql
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../../lib/frontend/project-background
@@ -110,9 +104,6 @@ dependencies:
   node-gettext:
     specifier: ^3.0.0
     version: 3.0.0
-  prismjs:
-    specifier: ^1.30.0
-    version: 1.30.0
   sprintf-js:
     specifier: ^1.1.2
     version: 1.1.2
@@ -139,9 +130,6 @@ devDependencies:
   '@types/node':
     specifier: ^14.14.31
     version: 14.14.31
-  '@types/prismjs':
-    specifier: ^1.26.1
-    version: 1.26.1
   '@types/sprintf-js':
     specifier: ^1.1.2
     version: 1.1.2
@@ -221,10 +209,6 @@ packages:
 
   /@types/node@14.14.31:
     resolution: {integrity: sha512-vFHy/ezP5qI0rFgJ7aQnjDXwAMrG0KqqIH7tQG5PPv3BWBayOPIQNBjVc/P6hhdZfMx51REc6tfDNXHUio893g==}
-    dev: true
-
-  /@types/prismjs@1.26.1:
-    resolution: {integrity: sha512-Q7jDsRbzcNHIQje15CS/piKhu6lMLb9jwjxSfEIi4KcFKXW23GoJMkwQiJ8VObyfx+VmUaDcJxXaWN+cTCjVog==}
     dev: true
 
   /@types/sizzle@2.3.2:
@@ -380,11 +364,6 @@ packages:
     resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
     deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
     dev: true
-
-  /prismjs@1.30.0:
-    resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
-    engines: {node: '>=6'}
-    dev: false
 
   /sprintf-js@1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}

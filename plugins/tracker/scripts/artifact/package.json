@@ -25,6 +25,7 @@
     "@tuleap/tlp-dropdown": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-styles": "workspace:^",
+    "@tuleap/tlp-syntax-highlighting": "workspace:*",
     "@tuleap/tooltip": "workspace:^",
     "dompurify": "^3.2.4",
     "lit-html": "^2.8.0"

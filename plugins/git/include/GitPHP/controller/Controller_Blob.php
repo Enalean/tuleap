@@ -29,7 +29,6 @@ use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Git\Unicode\DangerousUnicodeText;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
@@ -246,8 +245,6 @@ class Controller_Blob extends ControllerBase // phpcs:ignore
             return;
         }
 
-        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
-
         $this->tpl->assign('extrascripts', ['blame']);
 
         $detector          = new LanguageDetectorForPrismJS();
@@ -285,7 +282,6 @@ class Controller_Blob extends ControllerBase // phpcs:ignore
             );
             $this->tpl->assign('bloblines', $this->data_reader->getDataLinesInUTF8($blob));
         }
-        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));
         $git_assets = new IncludeViteAssets(
             __DIR__ . '/../../../scripts/repository/frontend-assets',
             '/assets/git/repository'

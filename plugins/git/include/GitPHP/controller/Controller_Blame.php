@@ -24,7 +24,6 @@ namespace Tuleap\Git\GitPHP;
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Git\Unicode\DangerousUnicodeText;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 
 /**
@@ -163,8 +162,6 @@ class Controller_Blame extends ControllerBase // phpcs:ignore
             DangerousUnicodeText::getCodePotentiallyDangerousBidirectionalUnicodeTextWarning($blob->GetData())
         );
         $this->tpl->assign('bloblines', $this->data_reader->getDataLinesInUTF8($blob));
-        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
-        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));
         $git_assets = new IncludeViteAssets(
             __DIR__ . '/../../../scripts/repository/frontend-assets',
             '/assets/git/repository'
