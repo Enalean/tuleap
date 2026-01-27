@@ -23,13 +23,12 @@
     $:readonly
     $$:readonly
     Ajax:readonly
-    lightwindow:readonly
     $F:readonly
-    $H:readonly
     tuleap:readonly
 */
 
-import { createModal } from "@tuleap/tlp-modal";
+import DOMPurify from "dompurify";
+import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { getAttributeOrThrow } from "@tuleap/dom";
 
 document.observe("dom:loaded", function () {
@@ -215,32 +214,25 @@ document.observe("dom:loaded", function () {
     function initSelectArtifactsModal() {
         var artifact_links_values = {};
 
-        codendi.tracker.artifact.artifactLink.overlay_window = new lightwindow({
-            resizeSpeed: 10,
-            delay: 0,
-            finalAnimationDuration: 0,
-            finalAnimationDelay: 0,
-        });
-
         $$("input.tracker-form-element-artifactlink-new").each(injectLinkAndCreateButtons);
 
-        function load_behaviors_in_slow_ways_panel() {
+        function load_behaviors_in_slow_ways_panel(modal_element) {
             //links to artifacts load in a new browser tab/window
-            $$(
-                "#tracker-link-artifact-slow-way-content a.cross-reference",
-                "#tracker-link-artifact-slow-way-content a.direct-link-to-artifact",
-                "#tracker-link-artifact-slow-way-content a.link-to-user",
-            ).each(function (a) {
-                a.target = "_blank";
-                a.rel = "noreferrer";
-            });
+            modal_element
+                .querySelectorAll(
+                    "#tracker-link-artifact-slow-way-content a.cross-reference, #tracker-link-artifact-slow-way-content a.direct-link-to-artifact, #tracker-link-artifact-slow-way-content a.link-to-user",
+                )
+                .forEach(function (a) {
+                    a.target = "_blank";
+                    a.rel = "noreferrer";
+                });
 
-            var renderer_panel = $$(".tracker_report_renderer")[0];
-            load_behavior_in_renderer_panel(renderer_panel);
-            $("tracker_report_renderer_view_controls").hide();
+            var renderer_panel = modal_element.querySelectorAll(".tracker_report_renderer")[0];
+            load_behavior_in_renderer_panel(renderer_panel, modal_element);
+            modal_element.querySelector("#tracker_report_renderer_view_controls").hide();
 
             //links to switch among renderers should load via ajax
-            $$(".tracker_report_renderer_tab a").each(function (a) {
+            modal_element.querySelectorAll(".tracker_report_renderer_tab a").forEach(function (a) {
                 a.observe("click", function (evt) {
                     new Ajax.Updater(renderer_panel, a.href, {
                         onComplete: function () {
@@ -248,7 +240,7 @@ document.observe("dom:loaded", function () {
                                 .childElements()
                                 .invoke("removeClassName", "tracker_report_renderers-current");
                             a.up("li").addClassName("tracker_report_renderers-current");
-                            load_behavior_in_renderer_panel();
+                            load_behavior_in_renderer_panel(modal_element, modal_element);
                         },
                     });
                     Event.stop(evt);
@@ -256,80 +248,95 @@ document.observe("dom:loaded", function () {
                 });
             });
 
-            $("tracker_select_tracker").observe("change", function () {
-                new Ajax.Updater(
-                    "tracker-link-artifact-slow-way-content",
-                    codendi.tracker.base_url,
-                    {
-                        parameters: {
-                            tracker: $F("tracker_select_tracker"),
-                            "link-artifact-id": $F("link-artifact-id"),
-                            "report-only": 1,
-                        },
-                        method: "GET",
-                        onComplete: function () {
-                            load_behaviors_in_slow_ways_panel();
-                        },
-                    },
-                );
-            });
-
-            if ($("tracker_select_report")) {
-                $("tracker_select_report").observe("change", function () {
+            modal_element
+                .querySelector("#tracker_select_tracker")
+                .addEventListener("change", function () {
                     new Ajax.Updater(
                         "tracker-link-artifact-slow-way-content",
                         codendi.tracker.base_url,
                         {
                             parameters: {
                                 tracker: $F("tracker_select_tracker"),
-                                report: $F("tracker_select_report"),
                                 "link-artifact-id": $F("link-artifact-id"),
+                                "report-only": 1,
                             },
                             method: "GET",
                             onComplete: function () {
-                                load_behaviors_in_slow_ways_panel();
+                                load_behaviors_in_slow_ways_panel(modal_element);
                             },
                         },
                     );
                 });
+
+            if (modal_element.querySelector("#tracker_select_report")) {
+                modal_element
+                    .querySelector("#tracker_select_report")
+                    .addEventListener("change", function () {
+                        new Ajax.Updater(
+                            "tracker-link-artifact-slow-way-content",
+                            codendi.tracker.base_url,
+                            {
+                                parameters: {
+                                    tracker: $F("tracker_select_tracker"),
+                                    report: $F("tracker_select_report"),
+                                    "link-artifact-id": $F("link-artifact-id"),
+                                },
+                                method: "GET",
+                                onComplete: function () {
+                                    load_behaviors_in_slow_ways_panel(modal_element);
+                                },
+                            },
+                        );
+                    });
             }
 
-            codendi.Toggler.init($("tracker_report_query_form"), "hide", "noajax");
+            codendi.Toggler.init(
+                modal_element.querySelector("#tracker_report_query_form"),
+                "hide",
+                "noajax",
+            );
 
-            $("tracker_report_query_form").observe("submit", async function (evt) {
-                Event.stop(evt);
+            modal_element
+                .querySelector("#tracker_report_query_form")
+                .addEventListener("submit", async function (evt) {
+                    Event.stop(evt);
 
-                const url = encodeURI(
-                    codendi.tracker.base_url +
-                        "?" +
-                        new URLSearchParams({
-                            tracker: document.getElementById("tracker_select_tracker").value,
-                        }).toString(),
-                );
+                    const url = encodeURI(
+                        codendi.tracker.base_url +
+                            "?" +
+                            new URLSearchParams({
+                                tracker: document.getElementById("tracker_select_tracker").value,
+                            }).toString(),
+                    );
 
-                const body = new URLSearchParams($("tracker_report_query_form").serialize());
-                body.set("aid", "0");
-                body.set("only-renderer", "1");
-                body.set("link-artifact-id", document.getElementById("link-artifact-id").value);
+                    const body = new URLSearchParams(
+                        modal_element.querySelector("#tracker_report_query_form").serialize(),
+                    );
+                    body.set("aid", "0");
+                    body.set("only-renderer", "1");
+                    body.set("link-artifact-id", document.getElementById("link-artifact-id").value);
 
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-type": "application/x-www-form-urlencoded",
-                    },
-                    body: body.toString(),
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-type": "application/x-www-form-urlencoded",
+                        },
+                        body: body.toString(),
+                    });
+
+                    const text = await response.text();
+
+                    const renderer_panel = modal_element.querySelector(
+                        "#tracker-link-artifact-slow-way-content .tracker_report_renderer",
+                    );
+                    renderer_panel.innerHTML = DOMPurify.sanitize(text);
+                    const table_report = renderer_panel.querySelector(".tracker_report_renderer");
+                    renderer_panel.innerHTML = DOMPurify.sanitize(table_report);
+                    renderer_panel.querySelector("#tracker_renderer_options").remove();
+                    renderer_panel.querySelector("#tracker_report_renderer_view_controls").remove();
+                    renderer_panel.querySelector("#tracker_report_table_masschange_form").remove();
+                    load_behavior_in_renderer_panel(renderer_panel, modal_element);
                 });
-
-                const text = await response.text();
-
-                const renderer_panel = $("tracker-link-artifact-slow-way-content")
-                    .up()
-                    .down(".tracker_report_renderer");
-                renderer_panel.update(tuleap.escaper.html(text));
-                load_behavior_in_renderer_panel(renderer_panel);
-
-                return false;
-            });
         }
 
         function force_check(checkbox) {
@@ -349,15 +356,15 @@ document.observe("dom:loaded", function () {
             }
         }
 
-        function load_behavior_in_renderer_panel(renderer_panel) {
+        function load_behavior_in_renderer_panel(renderer_panel, modal_element) {
             codendi.Tooltip.load(renderer_panel);
 
             //pager links should load via ajax
-            $$(".tracker_report_table_pager a").each(function (a) {
-                a.observe("click", function (evt) {
+            renderer_panel.querySelectorAll(".tracker_report_table_pager a").forEach(function (a) {
+                a.addEventListener("click", function (evt) {
                     new Ajax.Updater(renderer_panel, a.href, {
                         onComplete: function () {
-                            load_behavior_in_renderer_panel(renderer_panel);
+                            load_behavior_in_renderer_panel(renderer_panel, modal_element);
                         },
                     });
                     Event.stop(evt);
@@ -365,95 +372,51 @@ document.observe("dom:loaded", function () {
                 });
             });
 
-            var input_to_link = $("lightwindow_contents").down(
-                'input[name="link-artifact[manual]"]',
-            );
-            $("lightwindow_contents")
-                .select('input[name^="link-artifact[search]"]')
-                .each(function (elem) {
-                    add_remove_selected(elem, input_to_link);
+            var input_to_link = modal_element.querySelector('input[name="link-artifact[manual]"]');
+            modal_element
+                .querySelectorAll('input[name^="link-artifact[search]"]')
+                .forEach(function (elem) {
+                    add_remove_selected(elem, input_to_link, modal_element);
                 });
 
             //check already linked artifacts in recent panel
-            $(renderer_panel)
-                .select('input[type=checkbox][name^="link-artifact[search][]"]')
-                .each(force_check);
+            renderer_panel
+                .querySelectorAll('input[type=checkbox][name^="link-artifact[search][]"]')
+                .forEach(force_check);
 
             //check manually added artifact in the renderer
             input_to_link.value.split(",").each(function (link) {
-                checked_values_panels(link);
+                checked_values_panels(link, modal_element);
             });
-
-            //try to resize smartly the lightwindow
-            var diff =
-                $("lightwindow_contents").scrollWidth - $("lightwindow_contents").offsetWidth;
-            if (
-                diff > 0 &&
-                document.body.offsetWidth > $("lightwindow_contents").scrollWidth + 40
-            ) {
-                var previous_container_width = $("lightwindow_container").offsetWidth;
-                var previous_contents_width = $("lightwindow_contents").offsetWidth;
-
-                $("lightwindow").setStyle({
-                    left: Math.round($("lightwindow").offsetLeft - diff / 2) + "px",
-                });
-
-                $("lightwindow_container").setStyle({
-                    width: Math.round(previous_container_width + diff + 30) + "px",
-                });
-
-                $("lightwindow_contents").setStyle({
-                    width: Math.round(previous_contents_width + diff + 30) + "px",
-                });
-            }
-
-            resize_lightwindow.defer();
         }
 
-        function resize_lightwindow() {
-            var effective_height = $("lightwindow_contents")
-                .childElements()
-                .inject(0, function (acc, elem) {
-                    return acc + (elem.visible() ? elem.getHeight() : 0);
-                });
-            if (
-                effective_height < $("lightwindow_contents").getHeight() ||
-                (effective_height > $("lightwindow_contents").getHeight() &&
-                    effective_height + 100 < document.documentElement.clientHeight)
-            ) {
-                $("lightwindow_contents").setStyle({
-                    height: effective_height + 20 + "px",
-                });
-            }
+        function checked_values_panels(artifact_link_id, modal_element) {
+            checked_values_panel_recent(artifact_link_id, true, modal_element);
+            checked_values_panel_search(artifact_link_id, true, modal_element);
         }
 
-        function checked_values_panels(artifact_link_id) {
-            checked_values_panel_recent(artifact_link_id, true);
-            checked_values_panel_search(artifact_link_id, true);
-        }
-
-        function checked_values_panel_recent(artifact_link_id, checked) {
-            $("lightwindow_contents")
-                .select('input[name^="link-artifact[recent]"]')
-                .each(function (elem) {
-                    if (elem.value == artifact_link_id) {
+        function checked_values_panel_recent(artifact_link_id, checked, modal_element) {
+            modal_element
+                .querySelectorAll('input[name^="link-artifact[recent]"]')
+                .forEach(function (elem) {
+                    if (elem.value === artifact_link_id) {
                         elem.checked = checked;
                     }
                 });
         }
 
-        function checked_values_panel_search(artifact_link_id, checked) {
-            $("lightwindow_contents")
-                .select('input[name^="link-artifact[search]"]')
-                .each(function (elem) {
-                    if (elem.value == artifact_link_id) {
+        function checked_values_panel_search(artifact_link_id, checked, modal_element) {
+            modal_element
+                .querySelectorAll('input[name^="link-artifact[search]"]')
+                .forEach(function (elem) {
+                    if (elem.value === artifact_link_id) {
                         elem.checked = checked;
                     }
                 });
         }
 
-        function add_remove_selected(elem, input_to_link) {
-            elem.observe("change", function () {
+        function add_remove_selected(elem, input_to_link, modal_element) {
+            elem.addEventListener("change", function () {
                 if (elem.checked) {
                     if (input_to_link.value) {
                         input_to_link.value += ",";
@@ -463,23 +426,23 @@ document.observe("dom:loaded", function () {
                     input_to_link.value = input_to_link.value
                         .split(",")
                         .reject(function (link) {
-                            return link.strip() == elem.value;
+                            return link.strip() === elem.value;
                         })
                         .join(",");
                 }
-                if (elem.name == "link-artifact[search][]") {
-                    checked_values_panel_recent(elem.value, elem.checked);
+                if (elem.name === "link-artifact[search][]") {
+                    checked_values_panel_recent(elem.value, elem.checked, modal_element);
                 }
-                if (elem.name == "link-artifact[recent][]") {
-                    checked_values_panel_search(elem.value, elem.checked);
+                if (elem.name === "link-artifact[recent][]") {
+                    checked_values_panel_search(elem.value, elem.checked, modal_element);
                 }
             });
         }
 
         function injectLinkAndCreateButtons(input) {
             if (
-                location.href.toQueryParams().func == "new-artifact" ||
-                location.href.toQueryParams().func == "submit-artifact"
+                location.href.toQueryParams().func === "new-artifact" ||
+                location.href.toQueryParams().func === "submit-artifact"
             ) {
                 input.up().up().insert(`
                         <br />
@@ -492,8 +455,8 @@ document.observe("dom:loaded", function () {
             }
 
             if (
-                location.href.toQueryParams().func != "new-artifact" &&
-                location.href.toQueryParams().func != "submit-artifact"
+                location.href.toQueryParams().func !== "new-artifact" &&
+                location.href.toQueryParams().func !== "submit-artifact"
             ) {
                 if (!location.href.toQueryParams().modal) {
                     var link = new Element("a", {
@@ -540,7 +503,7 @@ document.observe("dom:loaded", function () {
                 }
             }
 
-            if (location.href.toQueryParams().modal == 1) {
+            if (location.href.toQueryParams().modal === 1) {
                 input.up().insert(`
                         <br />
                         <em style="color:#666; font-size: 0.9em;">
@@ -610,128 +573,128 @@ document.observe("dom:loaded", function () {
                 });
             }
 
-            function openSearchArtifactModalOnClickOnLinkButton(evt) {
-                $$("button.tracker-form-element-artifactlink-selector");
-                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow =
-                    function () {
-                        if ($("tracker-link-artifact-fast-ways")) {
-                            //Tooltips. load only in fast ways panels
-                            // since report table are loaded later in
-                            // the function load_behavior_...
+            async function openSearchArtifactModalOnClickOnLinkButton() {
+                const modal_element = document.getElementById("search-artifact-modal");
+                const modal_body = modal_element.querySelector(".tlp-modal-body");
+                const submit_button = modal_element.querySelector(".link-artifact-submit");
 
-                            const panel = document.getElementById(
-                                "tracker-link-artifact-fast-ways",
-                            );
-                            if (panel) {
-                                codendi.Tooltip.load(panel);
-                            }
+                const url = getAttributeOrThrow(modal_element, "data-search-url");
 
-                            load_behaviors_in_slow_ways_panel();
-
-                            //links to artifacts load in a new browser tab/window
-                            $$(
-                                "#tracker-link-artifact-fast-ways a.cross-reference",
-                                "#tracker-link-artifact-fast-ways a.direct-link-to-artifact",
-                                "#tracker-link-artifact-fast-ways a.link-to-user",
-                            ).each(function (a) {
-                                a.target = "_blank";
-                                a.rel = "noreferrer";
-                            });
-
-                            var input_to_link = $("lightwindow_contents").down(
-                                'input[name="link-artifact[manual]"]',
-                            );
-
-                            //Checked/unchecked values are added/removed in the manual panel
-                            $("lightwindow_contents")
-                                .select('input[name^="link-artifact[recent]"]')
-                                .each(function (elem) {
-                                    add_remove_selected(elem, input_to_link);
-                                });
-
-                            //Check/Uncheck values in recent and search panels linked to manual panel changes
-                            function observe_input_field() {
-                                var manual_value = input_to_link.value;
-                                var links_array = manual_value.split(",");
-
-                                //unchecked values from recent panel
-                                $("lightwindow_contents")
-                                    .select('input[name^="link-artifact[recent]"]')
-                                    .each(function (elem) {
-                                        if (!elem.disabled) {
-                                            elem.checked = false;
-                                        }
-                                    });
-
-                                //unchecked values from search panel
-                                $("lightwindow_contents")
-                                    .select('input[name^="link-artifact[search]"]')
-                                    .each(function (elem) {
-                                        if (!elem.disabled) {
-                                            elem.checked = false;
-                                        }
-                                    });
-
-                                links_array.each(function (link) {
-                                    checked_values_panels(link.strip());
-                                });
-                            }
-
-                            input_to_link.observe("change", observe_input_field);
-                            input_to_link.observe("keyup", observe_input_field);
-
-                            //check already linked artifacts in recent panel
-                            $$(
-                                '#tracker-link-artifact-fast-ways input[type=checkbox][name^="link-artifact[recent][]"]',
-                            ).each(force_check);
-
-                            var button = $("lightwindow_contents").down(
-                                "button[name=link-artifact-submit]",
-                            );
-                            button.observe("click", function (evt) {
-                                var to_add = [];
-
-                                //manual ones
-                                var manual = $("lightwindow_contents").down(
-                                    'input[name="link-artifact[manual]"]',
-                                ).value;
-                                if (manual) {
-                                    to_add.push(manual);
-                                }
-
-                                //add to the existing ones
-                                if (to_add.size()) {
-                                    var input_field =
-                                        codendi.tracker.artifact.artifactLinker_currentField.down(
-                                            "input.tracker-form-element-artifactlink-new",
-                                        );
-                                    if (input_field.value) {
-                                        input_field.value += ",";
-                                    }
-                                    input_field.value += to_add.join(",");
-                                }
-                                codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
-
-                                //hide the modal window
-                                codendi.tracker.artifact.artifactLink.overlay_window.deactivate();
-
-                                //stop the propagation of the event (don't submit any forms)
-                                Event.stop(evt);
-
-                                return false;
-                            });
-                        }
-                    };
-
-                codendi.tracker.artifact.artifactLink.overlay_window.activateWindow({
-                    href:
-                        location.href.split("?")[0] +
-                        "?" +
-                        $H(codendi.tracker.artifact.artifactLink.selector_url).toQueryString(),
-                    title: "",
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: { Accept: "text/html", "X-Requested-With": "XMLHttpRequest" },
                 });
-                Event.stop(evt);
-                return false;
+                const html = await response.text();
+                modal_body.innerHTML = DOMPurify.sanitize(html);
+
+                const modal = createModal(modal_element, {
+                    destroy_on_hide: true,
+                    keyboard: true,
+                    dismiss_on_backdrop_click: true,
+                });
+
+                modal.show();
+
+                function submitOnClick() {
+                    var to_add = [];
+
+                    //manual ones
+                    var manual = modal_element.querySelector(
+                        'input[name="link-artifact[manual]"]',
+                    ).value;
+                    if (manual) {
+                        to_add.push(manual);
+                    }
+
+                    //add to the existing ones
+                    if (to_add.size()) {
+                        var input_field = codendi.tracker.artifact.artifactLinker_currentField.down(
+                            "input.tracker-form-element-artifactlink-new",
+                        );
+
+                        if (input_field.value) {
+                            input_field.value += ",";
+                        }
+                        input_field.value += to_add.join(",");
+                    }
+                    codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
+
+                    modal.hide();
+                }
+
+                if (modal_element.querySelector("#tracker-link-artifact-fast-ways")) {
+                    const panel = document.getElementById("tracker-link-artifact-fast-ways");
+                    if (panel) {
+                        codendi.Tooltip.load(panel);
+                    }
+
+                    load_behaviors_in_slow_ways_panel(modal_element);
+
+                    //links to artifacts load in a new browser tab/window
+                    modal_element
+                        .querySelectorAll(
+                            "#tracker-link-artifact-fast-ways a.cross-reference, #tracker-link-artifact-fast-ways a.direct-link-to-artifact, #tracker-link-artifact-fast-ways a.link-to-user",
+                        )
+                        .forEach(function (a) {
+                            a.target = "_blank";
+                            a.rel = "noreferrer";
+                        });
+
+                    var input_to_link = modal_element.querySelector(
+                        'input[name="link-artifact[manual]"]',
+                    );
+
+                    //Checked/unchecked values are added/removed in the manual panel
+                    modal_element
+                        .querySelectorAll('input[name^="link-artifact[recent]"]')
+                        .forEach(function (elem) {
+                            add_remove_selected(elem, input_to_link, modal_element);
+                        });
+
+                    //Check/Uncheck values in recent and search panels linked to manual panel changes
+                    function observe_input_field() {
+                        var manual_value = input_to_link.value;
+                        var links_array = manual_value.split(",");
+
+                        //unchecked values from recent panel
+                        modal_element
+                            .querySelectorAll('input[name^="link-artifact[recent]"]')
+                            .forEach(function (elem) {
+                                if (!elem.disabled) {
+                                    elem.checked = false;
+                                }
+                            });
+
+                        //unchecked values from search panel
+                        modal_element
+                            .querySelectorAll('input[name^="link-artifact[search]"]')
+                            .forEach(function (elem) {
+                                if (!elem.disabled) {
+                                    elem.checked = false;
+                                }
+                            });
+
+                        links_array.each(function (link) {
+                            checked_values_panels(link.strip(), modal_element);
+                        });
+                    }
+
+                    input_to_link.addEventListener("change", observe_input_field);
+                    input_to_link.addEventListener("keyup", observe_input_field);
+
+                    //check already linked artifacts in recent panel
+                    modal_element
+                        .querySelectorAll(
+                            '#tracker-link-artifact-fast-ways input[type=checkbox][name^="link-artifact[recent][]"]',
+                        )
+                        .forEach(force_check);
+
+                    submit_button.addEventListener("click", submitOnClick);
+                }
+
+                modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
+                    submit_button.removeEventListener("click", submitOnClick);
+                });
             }
         }
     }

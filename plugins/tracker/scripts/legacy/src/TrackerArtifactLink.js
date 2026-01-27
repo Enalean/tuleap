@@ -159,14 +159,15 @@ codendi.tracker.artifact.artifactLink = {
             var ids = codendi.tracker.artifact.artifactLinker_currentField.down(
                 "input.tracker-form-element-artifactlink-new",
             ).value;
+            const modal_element = document.getElementById("search-artifact-modal");
             if (
-                $("lightwindow_contents") &&
-                $("lightwindow_contents").down('input[name="link-artifact[manual]"]')
+                modal_element &&
+                modal_element.querySelector('input[name="link-artifact[manual]"]')
             ) {
                 if (ids) {
                     ids += ",";
                 }
-                ids += $("lightwindow_contents").down('input[name="link-artifact[manual]"]').value;
+                ids += modal_element.querySelector('input[name="link-artifact[manual]"]').value;
             }
             ids = ids
                 .split(",")

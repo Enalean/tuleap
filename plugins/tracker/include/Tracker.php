@@ -1264,10 +1264,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $GLOBALS['Response']->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?aid=' . $linked_artifact->getId());
             }
 
-            echo $linked_artifact->fetchTitleWithoutUnsubscribeButton(
-                dgettext('tuleap-tracker', 'Select artifacts to link to&nbsp;')
-            );
-
             echo '<input type="hidden" id="link-artifact-id" value="' . (int) $link_artifact_id . '" />';
 
             echo '<table id="tracker-link-artifact-different-ways" cellpadding="0" cellspacing="0" border="0"><tbody><tr>';
@@ -1367,12 +1363,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                 echo '</div></div></td>'; //end of slow
             }
             echo '</tr></tbody></table>'; //end of ways
-
-            echo '<div class="tracker-link-artifact-controls">';
-            echo '<a href="#cancel" onclick="myLightWindow.deactivate(); return false;">&laquo;&nbsp;' . $GLOBALS['Language']->getText('global', 'btn_cancel') . '</a>';
-            echo ' ';
-            echo '<button name="link-artifact-submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>';
-            echo '</div>';
         }
     }
 

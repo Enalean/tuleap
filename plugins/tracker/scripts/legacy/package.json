@@ -13,7 +13,8 @@
     "watch": "webpack --config webpack.dev.js --watch"
   },
   "dependencies": {
+    "@tuleap/dom": "workspace:*",
     "@tuleap/tlp-modal": "workspace:^",
-    "@tuleap/dom": "workspace:*"
+    "dompurify": "^3.2.4"
   }
 }

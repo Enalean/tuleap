@@ -263,10 +263,6 @@ button[name="tracker_query_submit"] {
     vertical-align: top;
 }
 
-.tracker-link-artifact-controls {
-    text-align: left;
-}
-
 #tracker-link-artifact-manual-way {
     margin-bottom: 1em;
 }
@@ -296,10 +292,6 @@ button[name="tracker_query_submit"] {
     font-weight: bold;
 }
 
-.tracker-link-artifact-slow-way-content-selectreport {
-    margin-top: 0;
-}
-
 .tracker_aggregate_function_add_panel {
     position: relative;
 }
@@ -308,11 +300,6 @@ button[name="tracker_query_submit"] {
 #tracker-link-artifact-slow-way > .boxtitle,
 #tracker-link-artifact-recentitems-way > .boxtitle {
     text-align: left;
-}
-
-#lightwindow .tracker_artifact_title {
-    margin-bottom: 0.2em;
-    font-size: 1.2em;
 }
 
 .tracker_report_table_remove_column,
