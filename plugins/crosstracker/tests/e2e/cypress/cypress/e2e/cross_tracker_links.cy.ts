@@ -17,20 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("CrossTracker artifact links", function () {
-    let now: number;
     let project_name: string;
 
     before(function () {
-        now = Date.now();
-        project_name = `xts-link-${now}`;
+        project_name = "xts-link-" + getAntiCollisionNamePart();
         cy.projectMemberSession();
 
         cy.createNewPublicProject(project_name, "agile_alm").as("project_id");
-    });
-
-    beforeEach(function () {
-        now = Date.now();
     });
 
     /**
@@ -117,7 +113,7 @@ describe("CrossTracker artifact links", function () {
 
         cy.visit("/my/");
 
-        cy.createNewXTSWidget(now);
+        cy.createNewXTSWidget(getAntiCollisionNamePart());
 
         cy.get("[data-test=cross-tracker-search-widget]")
             .invoke("attr", "data-widget-json-data")
@@ -241,7 +237,7 @@ describe("CrossTracker artifact links", function () {
 
         cy.visit("/my/");
 
-        cy.createNewXTSWidget(now);
+        cy.createNewXTSWidget(getAntiCollisionNamePart());
 
         cy.get("[data-test=cross-tracker-search-widget]")
             .invoke("attr", "data-widget-json-data")

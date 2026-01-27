@@ -24,15 +24,15 @@ declare global {
         // Be consistent with Cypress declaration
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface Chainable<Subject> {
-            createNewXTSWidget(new_tab_date: number): void;
+            createNewXTSWidget(anti_collision: string): void;
         }
     }
 }
 
 export function registerCrossTrackerCommands(): void {
-    Cypress.Commands.add("createNewXTSWidget", (new_tab_date: number) => {
+    Cypress.Commands.add("createNewXTSWidget", (anti_collision: string) => {
         cy.get("[data-test=dashboard-add-button]").click();
-        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${new_tab_date}`);
+        cy.get("[data-test=dashboard-add-input-name]").type("tab-" + anti_collision);
         cy.get("[data-test=dashboard-add-button-submit]").click();
 
         cy.get("[data-test=dashboard-configuration-button]").click();

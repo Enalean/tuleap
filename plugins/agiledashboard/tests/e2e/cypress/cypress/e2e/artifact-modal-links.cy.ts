@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe(`Link field of Artifact Modal`, function () {
-    let now: number;
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
+describe(`Link field of Artifact Modal`, function () {
     const ARTIFACT_TITLE = "Artifact links types",
         TITLE_FIELD_NAME = "i_want_to",
         CHILD_TITLE = "Child Artifact",
@@ -29,10 +29,9 @@ describe(`Link field of Artifact Modal`, function () {
         TASKS_TRACKER_NAME = "Tasks";
 
     before(function () {
-        now = Date.now();
         cy.log("Create a new project for repeatability");
         cy.projectAdministratorSession();
-        const project_name = "artifact-lnx-mdl-" + now;
+        const project_name = "artifact-links-modal-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "scrum");
         cy.getProjectId(project_name)
             .as("project_id")

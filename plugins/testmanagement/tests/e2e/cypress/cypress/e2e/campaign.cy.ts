@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 function createCampaign(label: string): void {
     cy.get("[data-test=new-campaign-button]").click();
 
@@ -40,16 +42,15 @@ describe("TTM campaign", () => {
         comment_project_name: string,
         file_project_name: string,
         status_project_name: string,
-        bot_project_name: string,
-        now: number;
+        bot_project_name: string;
 
     before(() => {
-        now = Date.now();
-        ttm_project_name = "test-ttm-" + now;
-        comment_project_name = "com-ttm-" + now;
-        status_project_name = "status-ttm-" + now;
-        file_project_name = "file-ttm-" + now;
-        bot_project_name = "bot-ttm-" + now;
+        const anti_collision = getAntiCollisionNamePart();
+        ttm_project_name = "test-ttm-" + anti_collision;
+        comment_project_name = "com-ttm-" + anti_collision;
+        status_project_name = "status-ttm-" + anti_collision;
+        file_project_name = "file-ttm-" + anti_collision;
+        bot_project_name = "bot-ttm-" + anti_collision;
     });
 
     it("As project administrator", () => {

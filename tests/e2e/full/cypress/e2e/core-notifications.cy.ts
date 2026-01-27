@@ -17,15 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { WEB_UI_SESSION } from "@tuleap/cypress-utilities-support";
+import { getAntiCollisionNamePart, WEB_UI_SESSION } from "@tuleap/cypress-utilities-support";
 
 context("Platform notifications", function () {
-    let now: number, project: string, project_member: string;
+    let project: string, project_member: string;
 
     before(() => {
-        now = Date.now();
-        project = `new-project-${now}`;
-        project_member = `project-member-${now}`;
+        project = "new-project-" + getAntiCollisionNamePart();
+        project_member = "project-member-" + getAntiCollisionNamePart();
     });
 
     beforeEach(() => {
@@ -118,11 +117,12 @@ context("Platform notifications", function () {
 
         cy.visit("/account/register.php");
 
-        cy.get("[data-test=user-login]").type(`user-${now}`);
+        const anti_collision = getAntiCollisionNamePart();
+        cy.get("[data-test=user-login]").type("user-" + anti_collision);
         cy.get("[data-test=user-email]").type("user@example.com");
         cy.get("[data-test=user-pw]").type("welcome0");
         cy.get("[data-test=user-pw2]").type("welcome0");
-        cy.get("[data-test=user-name]").type(`user-${now}`);
+        cy.get("[data-test=user-name]").type("user-" + anti_collision);
         cy.get("[data-test=form_register_purpose]").type("My purpose");
 
         cy.get("[data-test=register-user-button]").click();

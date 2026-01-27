@@ -17,16 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { WEB_UI_SESSION } from "@tuleap/cypress-utilities-support";
+import { getAntiCollisionNamePart, WEB_UI_SESSION } from "@tuleap/cypress-utilities-support";
 
 context("PHPWiki notifications", function () {
-    let now: number,
-        project: string,
-        user1: string,
-        user2: string,
-        user3: string,
-        user4: string,
-        user5: string;
+    let project: string, user1: string, user2: string, user3: string, user4: string, user5: string;
 
     const PASSWORD = "welcome0";
 
@@ -39,13 +33,13 @@ context("PHPWiki notifications", function () {
     };
 
     before(() => {
-        now = Date.now();
-        project = `phpwiki-project-${now}`;
-        user1 = `phpwiki-member-1-${now}`;
-        user2 = `phpwiki-member-2-${now}`;
-        user3 = `phpwiki-member-3-${now}`;
-        user4 = `phpwiki-member-4-${now}`;
-        user5 = `phpwiki-member-5-${now}`;
+        const anti_collision = getAntiCollisionNamePart();
+        project = "phpwiki-project-" + anti_collision;
+        user1 = "phpwiki-member-1-" + anti_collision;
+        user2 = "phpwiki-member-2-" + anti_collision;
+        user3 = "phpwiki-member-3-" + anti_collision;
+        user4 = "phpwiki-member-4-" + anti_collision;
+        user5 = "phpwiki-member-5-" + anti_collision;
     });
 
     it("", () => {

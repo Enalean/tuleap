@@ -17,94 +17,88 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Frs", function () {
-    let now: number;
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
+function visitFilesService(project_id: number): void {
+    cy.visit(`/file/showfiles.php?group_id=${project_id}`);
+}
+
+describe("Frs", function () {
     context("Project administrators", function () {
+        let project_name: string;
         before(() => {
+            project_name = "frs-" + getAntiCollisionNamePart();
             cy.projectAdministratorSession();
-            now = Date.now();
-            cy.createNewPublicProject(`frs-${now}`, "agile_alm").as("project_id");
+            cy.createNewPublicProject(project_name, "agile_alm").as("project_id");
         });
 
         context("Frs packages", function () {
             it("can CRUD a new package", function () {
                 cy.projectAdministratorSession();
-                cy.visitProjectService(`frs-${now}`, "Files");
+                cy.visitProjectService(project_name, "Files");
                 cy.get("[data-test=create-new-package]").click();
-                cy.get("[data-test=frs-create-package]").type(`package${now}`);
+                const package_name = "package" + getAntiCollisionNamePart();
+                cy.get("[data-test=frs-create-package]").type(package_name);
                 cy.get("[data-test=frs-create-package-button]").click({
                     timeout: 60000,
                 });
 
-                cy.visitProjectService(`frs-${now}`, "Files");
-                cy.get('[data-test="package-name"]').contains(`package${now}`);
+                visitFilesService(this.project_id);
+                cy.get("[data-test=package-name]").contains(package_name);
 
                 cy.get("[data-test=update-package]").first().click();
-                cy.get("[data-test=frs-create-package]").clear().type(`edited${now}`);
+                const edited_package = "edited" + getAntiCollisionNamePart();
+                cy.get("[data-test=frs-create-package]").clear().type(edited_package);
                 cy.get("[data-test=frs-create-package-button]").click({
                     timeout: 60000,
                 });
 
-                cy.visitProjectService(`frs-${now}`, "Files");
-                cy.get('[data-test="package-name"]').contains(`edited${now}`);
+                visitFilesService(this.project_id);
+                cy.get("[data-test=package-name]").contains(edited_package);
 
                 cy.get("[data-test=remove-package]").first().click({
                     timeout: 60000,
                 });
                 cy.get("[data-test=confirm-deletion]").click();
 
-                cy.visitProjectService(`frs-${now}`, "Files");
-                cy.get("[data-test=packages-list]").should("not.contain", `edited${now}`);
+                visitFilesService(this.project_id);
+                cy.get("[data-test=packages-list]").should("not.contain", edited_package);
             });
         });
 
         context("Frs CRUD releases", function () {
             it("can create a new release", function () {
                 cy.projectAdministratorSession();
-                cy.visitProjectService(`frs-${now}`, "Files");
-                cy.createFRSPackage(parseInt(this.project_id, 10), "Package to test release");
-                cy.visitProjectService(`frs-${now}`, "Files");
+                cy.createFRSPackage(this.project_id, "Package to test release");
+                cy.visitProjectService(project_name, "Files");
                 cy.get("[data-test=package-name]").click();
 
                 cy.intercept({
                     url: /file\/admin\/frsajax\.php/,
                 }).as("createRelease");
-                cy.get("[data-test=create-release]").first().click({ force: true });
+                cy.get("[data-test=create-release]").first().click();
 
-                cy.get("[data-test=release-name]").type(`My release${now}`);
+                const release_name = "My release" + getAntiCollisionNamePart();
+                cy.get("[data-test=release-name]").type(release_name);
                 cy.get("[data-test=create-release-button]").click({
                     timeout: 60000,
                 });
                 cy.wait("@createRelease", { timeout: 60000 });
+                cy.get("[data-test=release-name]").should("contain.text", release_name);
 
-                cy.reloadUntilCondition(
-                    () => cy.visitProjectService(`frs-${now}`, "Files"),
-                    (number_of_attempts, max_attempts) => {
-                        cy.log(
-                            `Check that My release${now} has been created (attempt ${number_of_attempts}/${max_attempts})`,
-                        );
-                        return cy
-                            .get('[data-test="release-name"]')
-                            .then((releases) => releases.text().includes(`My release${now}`));
-                    },
-                    `Timed out while checking if My release${now} has been created`,
-                );
-
-                cy.intercept({
-                    url: /file\/admin\/frsajax\.php/,
-                }).as("createRelease");
-                cy.get("[data-test=edit-release]").first().click({ force: true });
-                cy.get("[data-test=release-name]").clear().type(`Edited${now}`);
-                cy.get("[data-test=create-release-button]").click({
-                    timeout: 60000,
-                });
-                cy.wait("@createRelease", { timeout: 60000 });
-
-                cy.visitProjectService(`frs-${now}`, "Files");
-                cy.get("[data-test=package-name]").click();
                 cy.get("[data-test=edit-release]").first().click();
-                cy.get('[data-test="release-name"]').should("have.value", `Edited${now}`);
+                const edited_release = "Edited" + getAntiCollisionNamePart();
+                cy.get("[data-test=release-name]").type("{selectAll}" + edited_release);
+                cy.get("[data-test=create-release-button]").click({
+                    timeout: 60000,
+                });
+                cy.wait("@createRelease", { timeout: 60000 });
+
+                visitFilesService(this.project_id);
+                cy.get("[data-test=package-name]").click();
+
+                cy.getContains("tr", edited_release).find("[data-test=edit-release]").click();
+                cy.get("[data-test=release-name]").should("have.value", edited_release);
 
                 cy.log("MD5 is computed at file upload when not provided");
                 cy.get("[data-test=file-input]").selectFile("cypress/fixtures/release-file.txt");
@@ -112,8 +106,8 @@ describe("Frs", function () {
                     timeout: 60000,
                 });
                 cy.wait("@createRelease", { timeout: 60000 });
-                cy.get("[data-test=edit-release]").first().click();
-                cy.get('[data-test="release_reference_md5"]').should(
+                cy.getContains("tr", edited_release).find("[data-test=edit-release]").click();
+                cy.get("[data-test=release_reference_md5]").should(
                     "have.value",
                     "d41d8cd98f00b204e9800998ecf8427e",
                 );
@@ -128,9 +122,10 @@ describe("Frs", function () {
                 });
                 cy.wait("@createRelease", { timeout: 60000 });
                 cy.get("[data-test=feedback]").contains("MD5 checksum comparison failed");
-                cy.visitProjectService(`frs-${now}`, "Files");
+
+                visitFilesService(this.project_id);
                 cy.get("[data-test=package-name]").click();
-                cy.get("[data-test=edit-release]").first().click();
+                cy.getContains("tr", edited_release).find("[data-test=edit-release]").click();
 
                 cy.get("[data-test=release-file-name]").should("have.length", 1);
 
@@ -147,47 +142,49 @@ describe("Frs", function () {
                     timeout: 60000,
                 });
                 cy.wait("@createRelease", { timeout: 60000 });
-                cy.get("[data-test=edit-release]").first().click();
+                cy.getContains("tr", edited_release).find("[data-test=edit-release]").click();
                 cy.get("[data-test=release-file-name]").should("have.length", 2);
 
                 cy.get("[data-test=release-file-name]")
                     .should("contain", "release-file.txt")
                     .and("contain", "other-release-file.txt");
 
-                cy.visitProjectService(`frs-${now}`, "Files");
+                cy.log("Delete the release");
+                visitFilesService(this.project_id);
                 cy.get("[data-test=package-name]").click();
-                cy.get("[data-test=release-delete-button]")
-                    .first()
-                    .click({ force: true, timeout: 60000 });
+                cy.getContains("tr", edited_release)
+                    .find("[data-test=release-delete-button]")
+                    .click();
+                cy.get("[data-test=delete-release-modal]")
+                    .find("[data-test=confirm-deletion]")
+                    .click();
 
-                cy.visitProjectService(`frs-${now}`, "Files");
+                visitFilesService(this.project_id);
                 cy.get("[data-test=package-name]").click();
-                cy.get("[data-test=releases-list]").should("not.contain", `edited${now}`);
+                cy.get("[data-test=releases-list]").should("not.contain", edited_release);
             });
         });
 
         context("Hidden packages", function () {
             it("can create a new hidden package", function () {
                 cy.projectAdministratorSession();
-                cy.createNewPublicProject(`frs-hidden-${now}`, "agile_alm");
-                cy.visitProjectService(`frs-hidden-${now}`, "Files");
+                const project_name = "frs-hidden-" + getAntiCollisionNamePart();
+                cy.createNewPublicProject(project_name, "agile_alm");
+                cy.visitProjectService(project_name, "Files");
                 cy.get("[data-test=create-new-package]").click();
-                cy.get("[data-test=frs-create-package]").type(`My hidden package${now}`);
+                cy.get("[data-test=frs-create-package]").type(
+                    "My hidden package" + getAntiCollisionNamePart(),
+                );
                 cy.get("[data-test=status]").select("Hidden");
                 cy.get("[data-test=frs-create-package-button]").click({
                     timeout: 60000,
                 });
-            });
-        });
-    });
 
-    context("Project members", function () {
-        it("should not see hidden packages", function () {
-            cy.projectMemberSession();
-            cy.visitProjectService(`frs-hidden-${now}`, "Files");
+                cy.log("Project members should not see hidden packages");
+                cy.projectMemberSession();
+                cy.visitProjectService(project_name, "Files");
 
-            cy.get("[data-test=packages-list]").then(($body) => {
-                expect($body).not.to.contain("My hidden package");
+                cy.get("[data-test=packages-list]").should("not.contain", "My hidden package");
             });
         });
     });

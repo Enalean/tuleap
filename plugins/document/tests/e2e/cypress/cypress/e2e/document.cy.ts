@@ -23,15 +23,14 @@ import type {
     ProjectServiceResponse,
     CreatedItemResponse,
 } from "@tuleap/plugin-document-rest-api-types";
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe("Document new UI", () => {
-    let now: number;
     context("Project Administrators", function () {
         context("Project administrators", function () {
             let project_unixname: string;
             before(() => {
-                now = Date.now();
-                project_unixname = `docman-${now}`;
+                project_unixname = "docman-" + getAntiCollisionNamePart();
                 cy.projectAdministratorSession();
                 cy.createNewPublicProject(project_unixname, "issues").as("project_id");
                 cy.visit(`${"/plugins/document/" + project_unixname + "/admin-search"}`);
@@ -74,7 +73,7 @@ describe("Document new UI", () => {
             });
 
             function createProjectWithAVersionnedEmbededFile(): void {
-                const project_shortname = `doc-version-${now}`;
+                const project_shortname = "doc-version-" + getAntiCollisionNamePart();
                 cy.createNewPublicProject(project_shortname, "issues").then((project_id) =>
                     cy
                         .getFromTuleapAPI<ProjectServiceResponse>(
@@ -132,11 +131,12 @@ describe("Document new UI", () => {
     });
 
     context("Project members", function () {
+        let project_name: string;
         before(() => {
-            now = Date.now();
             cy.projectAdministratorSession();
-            cy.createNewPublicProject(`document-project-${now}`, "issues");
-            cy.addProjectMember(`document-project-${now}`, "projectMember");
+            project_name = "document-project-" + getAntiCollisionNamePart();
+            cy.createNewPublicProject(project_name, "issues");
+            cy.addProjectMember(project_name, "projectMember");
         });
 
         context("docman permissions", function () {
@@ -144,7 +144,7 @@ describe("Document new UI", () => {
                 cy.projectMemberSession();
                 cy.visit("/my/");
                 cy.request({
-                    url: `/plugins/document/document-project-${now}/admin-search`,
+                    url: `/plugins/document/${project_name}/admin-search`,
                     failOnStatusCode: false,
                 }).then((response) => {
                     expect(response.status).to.eq(404);
@@ -155,7 +155,7 @@ describe("Document new UI", () => {
         context("Item manipulation", () => {
             let permission_project_name: string;
             beforeEach(() => {
-                permission_project_name = `perm-doc-${now}`;
+                permission_project_name = "perm-doc-" + getAntiCollisionNamePart();
                 disableSpecificErrorThrownByCkeditor();
             });
 
@@ -209,7 +209,7 @@ describe("Document new UI", () => {
 
             it("user can manipulate folders", () => {
                 cy.projectAdministratorSession();
-                cy.visitProjectService(`document-project-${now}`, "Documents");
+                cy.visitProjectService(project_name, "Documents");
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-item-action-new-button]").click();
 
@@ -232,7 +232,7 @@ describe("Document new UI", () => {
 
             it("user can manipulate empty document", () => {
                 cy.projectAdministratorSession();
-                cy.visitProjectService(`document-project-${now}`, "Documents");
+                cy.visitProjectService(project_name, "Documents");
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-item-action-new-button]").click();
                     cy.get("[data-test=document-new-empty-creation-button]").click();
@@ -249,7 +249,7 @@ describe("Document new UI", () => {
 
             it("user can manipulate links", () => {
                 cy.projectAdministratorSession();
-                cy.visitProjectService(`document-project-${now}`, "Documents");
+                cy.visitProjectService(project_name, "Documents");
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-item-action-new-button]").click();
                     cy.get("[data-test=document-new-link-creation-button]").click();
@@ -281,7 +281,7 @@ describe("Document new UI", () => {
 
             it("user should be able to create an embedded file", () => {
                 cy.projectAdministratorSession();
-                cy.visitProjectService(`document-project-${now}`, "Documents");
+                cy.visitProjectService(project_name, "Documents");
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-item-action-new-button]").click();
                     cy.get("[data-test=document-new-embedded-creation-button]").click();
@@ -312,8 +312,8 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-tree-content]").should("not.exist");
             });
 
-            function createProjectWithDownloadableDocuments(): void {
-                cy.createNewPublicProject(`download-${now}`, "issues")
+            function createProjectWithDownloadableDocuments(project_name: string): void {
+                cy.createNewPublicProject(project_name, "issues")
                     .then((document_project_id) =>
                         cy.getFromTuleapAPI<ProjectServiceResponse>(
                             `api/projects/${document_project_id}/docman_service`,
@@ -352,9 +352,10 @@ describe("Document new UI", () => {
 
             it(`user can download a folder as a zip archive`, () => {
                 cy.projectAdministratorSession();
-                createProjectWithDownloadableDocuments();
+                const project_name = "download-" + getAntiCollisionNamePart();
+                createProjectWithDownloadableDocuments(project_name);
 
-                cy.visitProjectService(`download-${now}`, "Documents");
+                cy.visitProjectService(project_name, "Documents");
 
                 cy.get("[data-test=document-tree-content]")
                     .contains("tr", "Folder download")
@@ -368,7 +369,7 @@ describe("Document new UI", () => {
                         if (folder_id === undefined) {
                             throw new Error("Could not retrieve the folder id from its <tr>");
                         }
-                        const download_uri = `/plugins/document/document-project-${now}/folders/${encodeURIComponent(
+                        const download_uri = `/plugins/document/${project_name}/folders/${encodeURIComponent(
                             folder_id,
                         )}/download-folder-as-zip`;
 
@@ -404,7 +405,7 @@ describe("Document new UI", () => {
 
             it("can create a new version by dropping file on existing document", () => {
                 cy.projectMemberSession();
-                cy.visitProjectService(`document-project-${now}`, "Documents");
+                cy.visitProjectService(project_name, "Documents");
                 cy.get("[data-test=document-empty-state]");
 
                 cy.log("Upload first version of file");
@@ -414,7 +415,7 @@ describe("Document new UI", () => {
                 cy.wait("@uploadFile");
                 cy.get("[data-test=document-folder-content-row]").should("have.length", 1);
 
-                cy.visitProjectService(`document-project-${now}`, "Documents");
+                cy.visitProjectService(project_name, "Documents");
                 cy.log("Upload a new version");
                 cy.intercept("PATCH", "*/docman/version/*").as("uploadVersion");
                 cy.get("[data-test=document-folder-content-row]").selectFile("./_fixtures/bb.txt", {
@@ -468,8 +469,8 @@ describe("Document new UI", () => {
 
         it("have specifics permissions", function () {
             cy.projectAdministratorSession();
-            const project_name = `document-perm-${now}`;
-            const document_name = `Document ${now}`;
+            const project_name = "document-perm-" + getAntiCollisionNamePart();
+            const document_name = "Document " + getAntiCollisionNamePart();
             createAProjectWithAnEmptyDocument(project_name, document_name);
 
             cy.visitProjectService(project_name, "Documents");

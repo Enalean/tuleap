@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Test plan", function () {
     it("shows the release test campaigns", () => {
-        const now = Date.now();
         cy.projectMemberSession();
 
         cy.log("Displays no campaign nor backlog items if release does not have one");
@@ -36,10 +37,11 @@ describe("Test plan", function () {
 
         cy.log("Adds new campaign");
         cy.get("[data-test=new-campaign]").click();
-        cy.get("[data-test=new-campaign-label]").type("Campaign " + now);
+        const campaign_label = "Campaign " + getAntiCollisionNamePart();
+        cy.get("[data-test=new-campaign-label]").type(campaign_label);
         cy.get("[data-test=new-campaign-tests]").select("Test Suite Complete");
         cy.get("[data-test=new-campaign-submit-button]").click();
-        cy.contains("Campaign " + now);
+        cy.contains(campaign_label);
         cy.contains("8 tests");
 
         cy.log("Display the backlog items");
@@ -68,13 +70,13 @@ describe("Test plan", function () {
                 cy.get("[data-test=automated-test-icon]");
             });
 
-        assertStatusOfTestReflectsCurrentStatus(now, "failed");
-        assertStatusOfTestReflectsCurrentStatus(now, "blocked");
-        assertStatusOfTestReflectsCurrentStatus(now, "notrun");
-        assertStatusOfTestReflectsCurrentStatus(now, "passed");
+        assertStatusOfTestReflectsCurrentStatus(campaign_label, "failed");
+        assertStatusOfTestReflectsCurrentStatus(campaign_label, "blocked");
+        assertStatusOfTestReflectsCurrentStatus(campaign_label, "notrun");
+        assertStatusOfTestReflectsCurrentStatus(campaign_label, "passed");
 
         cy.log("Creates a new test");
-        const new_test_summary = "New test " + now;
+        const new_test_summary = "New test " + getAntiCollisionNamePart();
         cy.get("[data-test=add-test-button]").click();
         cy.get("[data-test=summary]").type(new_test_summary + "{enter}");
         cy.contains("Display list of backlog items with their tests definition");
@@ -93,9 +95,9 @@ function goToTestPlanOfMilestone(milestone_label: string): void {
         .click();
 }
 
-function assertStatusOfTestReflectsCurrentStatus(now: number, new_status: string): void {
+function assertStatusOfTestReflectsCurrentStatus(campaign_label: string, new_status: string): void {
     cy.log("Marks a test as " + new_status);
-    cy.contains("Campaign " + now).click();
+    cy.contains(campaign_label).click();
     cy.contains("Update artifact").click();
     cy.get(`[data-test=mark-test-as-${new_status}]`).click();
     cy.contains("Release with campaigns").click();

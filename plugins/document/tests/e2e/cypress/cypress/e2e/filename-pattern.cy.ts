@@ -18,13 +18,14 @@
  *
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Document filename pattern", () => {
-    let project_unixname: string, no_pattern_project_unixname: string, now: number;
+    let project_unixname: string, no_pattern_project_unixname: string;
 
     before(() => {
-        now = Date.now();
-        project_unixname = "doc-pattern-" + now;
-        no_pattern_project_unixname = "doc-no-pattern-" + now;
+        project_unixname = "doc-pattern-" + getAntiCollisionNamePart();
+        no_pattern_project_unixname = "doc-no-pattern-" + getAntiCollisionNamePart();
     });
 
     function uploadNewVersion(file_name: string): void {

@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 function checkBoxWithLabel(label: string): void {
     cy.get("[data-test=checkbox-field-value]")
@@ -35,11 +36,11 @@ function getCriterionBlock(label: string): Cypress.Chainable<JQuery<HTMLLIElemen
     return cy.getContains("[data-test=report-criteria-item]", label).closest("li");
 }
 
-function createArtifactWithValues(now: number): void {
+function createArtifactWithValues(title: string): void {
     cy.intercept("api/v1/artifacts/*").as("getArtifact");
 
     cy.log("Create an artifact with all fields");
-    cy.getFieldWithLabel("Title").find("[data-test-field-input]").type(`Title ${now}`);
+    cy.getFieldWithLabel("Title").find("[data-test-field-input]").type(title);
     cy.getFieldWithLabel("Description").find("[data-test-cypress=text-area]").type("Description A");
     cy.getFieldWithLabel("String").find("[data-test-field-input]").type("String A");
     cy.getFieldWithLabel("Text").find("[data-test-cypress=text-area]").type("Description A");
@@ -80,9 +81,9 @@ function createArtifactWithValues(now: number): void {
     cy.get("[data-test=feedback]").contains("Artifact Successfully Created ");
 }
 
-function createArtifactWithListValues(now: number): void {
+function createArtifactWithListValues(title: string): void {
     cy.log("Create an artifact with list fields");
-    cy.getFieldWithLabel("Title").find("[data-test-field-input]").type(`Title ${now}`);
+    cy.getFieldWithLabel("Title").find("[data-test-field-input]").type(title);
     cy.getFieldWithLabel("Description").find("[data-test-cypress=text-area]").type("Description A");
 
     cy.getFieldWithLabel("Selectbox static").within(() => {
@@ -140,7 +141,7 @@ function createArtifactWithListValues(now: number): void {
     cy.get("[data-test=feedback]").contains("Artifact Successfully Created ");
 }
 
-function updateTrackerReportCriterias(now: number): void {
+function updateTrackerReportCriterias(title: string): void {
     cy.intercept({
         method: "POST",
         url: "/plugins/tracker/*",
@@ -150,7 +151,7 @@ function updateTrackerReportCriterias(now: number): void {
     cy.log("Update criteria Title");
     getCriterionBlock("Title")
         .find("[data-test=alphanum-report-criteria]")
-        .type(`{selectAll}Title ${now}`);
+        .type(`{selectAll}${title}`);
 
     cy.log("Update criteria Description");
     getCriterionBlock("Description")
@@ -194,7 +195,7 @@ function updateTrackerReportCriterias(now: number): void {
     cy.get("[data-test=number-of-matching-artifacts]").should("contain", 1);
 }
 
-function updateTrackerReportListCriterias(now: number): void {
+function updateTrackerReportListCriterias(title: string): void {
     cy.intercept({
         method: "POST",
         url: "/plugins/tracker/*",
@@ -204,7 +205,7 @@ function updateTrackerReportListCriterias(now: number): void {
     cy.log("Update criteria Title");
     getCriterionBlock("Title")
         .find("[data-test=alphanum-report-criteria]")
-        .type(`{selectAll}Title ${now}`);
+        .type(`{selectAll}${title}`);
 
     cy.log("Update criteria Selectbox static");
     getCriterionBlock("Selectbox static").find("[data-test=list-report-criteria]").select("Dos");
@@ -278,19 +279,14 @@ function updateTrackerReportListCriterias(now: number): void {
 }
 
 describe(`Tracker Report`, () => {
-    let now: number;
-
-    beforeEach(() => {
-        now = Date.now();
-    });
-
     it(`Can submit an artifact with some fields`, function () {
         cy.projectMemberSession();
         cy.visitProjectService("tracker-report", "Trackers");
         cy.get("[data-test=tracker-link]").first().click();
         cy.get("[data-test=new-artifact]").click();
-        createArtifactWithValues(now);
-        updateTrackerReportCriterias(now);
+        const artifact_title = "Title " + getAntiCollisionNamePart();
+        createArtifactWithValues(artifact_title);
+        updateTrackerReportCriterias(artifact_title);
     });
 
     it(`Can submit an artifact with list fields`, function () {
@@ -298,7 +294,8 @@ describe(`Tracker Report`, () => {
         cy.visitProjectService("tracker-report", "Trackers");
         cy.get("[data-test=tracker-link]").last().click();
         cy.get("[data-test=new-artifact]").click();
-        createArtifactWithListValues(now);
-        updateTrackerReportListCriterias(now);
+        const artifact_title = "Title " + getAntiCollisionNamePart();
+        createArtifactWithListValues(artifact_title);
+        updateTrackerReportListCriterias(artifact_title);
     });
 });

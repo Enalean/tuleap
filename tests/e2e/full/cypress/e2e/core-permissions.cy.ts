@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Core", function () {
-    let now = 0;
     let restricted_project_notification: string;
     let private_project_notification: string;
     before(() => {
-        now = Date.now();
-        restricted_project_notification = "restricted-" + now;
-        private_project_notification = "private-" + now;
+        const anti_collision = getAntiCollisionNamePart();
+        restricted_project_notification = "restricted-" + anti_collision;
+        private_project_notification = "private-" + anti_collision;
         cy.projectAdministratorSession();
         cy.getProjectId("permissions-project-01").as("project_id");
     });

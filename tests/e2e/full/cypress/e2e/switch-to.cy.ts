@@ -18,12 +18,13 @@
  *
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Switch To", () => {
     it("has keyboard navigation", () => {
         cy.projectAdministratorSession();
 
-        const now = Date.now();
-        const project_name = `switch-to-${now}`;
+        const project_name = "switch-to-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "kanban")
             .then((project_id) => {
                 cy.addProjectMember(project_name, "projectMember");

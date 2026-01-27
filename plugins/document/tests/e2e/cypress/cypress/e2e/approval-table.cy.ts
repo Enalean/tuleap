@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Approval table workflow", () => {
-    let now: number;
     let project_name: string;
 
     before(() => {
-        now = Date.now();
-        project_name = `approval-table-${now}`;
+        project_name = "approval-table-" + getAntiCollisionNamePart();
         cy.projectAdministratorSession();
         cy.createNewPublicProject(project_name, "issues").as("project_id");
         cy.addProjectMember(project_name, "ProjectMember");

@@ -18,18 +18,20 @@
  *
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe(`Computed fields`, function () {
-    let now: number;
+    let project_name: string;
 
     before(function () {
-        now = Date.now();
+        project_name = "computed-" + getAntiCollisionNamePart();
         cy.projectAdministratorSession();
-        cy.createNewPublicProject(`computed-${now}`, "issues");
-        cy.enableService(`computed-${now}`, "agiledashboard");
-        cy.addProjectMember(`computed-${now}`, "ProjectMember");
+        cy.createNewPublicProject(project_name, "issues");
+        cy.enableService(project_name, "agiledashboard");
+        cy.addProjectMember(project_name, "ProjectMember");
         cy.projectAdministratorSession();
 
-        cy.visitProjectService(`computed-${now}`, "Backlog");
+        cy.visitProjectService(project_name, "Backlog");
         cy.get("[data-test=link-to-ad-administration]").click({ force: true });
         cy.get("[data-test=backlog-template-import]").click();
         cy.get("[data-test=input-backlog-import-file]").selectFile(
@@ -40,7 +42,7 @@ describe(`Computed fields`, function () {
 
     it(`User can copy release with sprints`, function () {
         cy.projectAdministratorSession();
-        cy.visitProjectService(`computed-${now}`, "Backlog");
+        cy.visitProjectService(project_name, "Backlog");
         cy.log("Create a release");
         cy.get("[data-test=add-milestone]").click();
         cy.get("[data-test=string-field-input]").first().type("R0");
@@ -54,7 +56,7 @@ describe(`Computed fields`, function () {
         cy.get("[data-test=string-field-input]").first().type("Sprint 1");
         cy.get("[data-test=artifact-modal-save-button]").click();
 
-        cy.visitProjectService(`computed-${now}`, "Tracker");
+        cy.visitProjectService(project_name, "Tracker");
         cy.getContains("[data-test=tracker-link]", "Releases").click();
 
         cy.log("copy artifact with children with 0 as manual value");
@@ -81,7 +83,7 @@ describe(`Computed fields`, function () {
 
     it(`User can submit new artifacts`, function () {
         cy.projectMemberSession();
-        cy.visitProjectService(`computed-${now}`, "Trackers");
+        cy.visitProjectService(project_name, "Trackers");
         cy.getContains("[data-test=tracker-link]", "Releases").click();
         cy.get("[data-test=new-artifact]").click();
         cy.get("[data-test=release_number]").type("R0");

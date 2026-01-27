@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { WEB_UI_SESSION } from "@tuleap/cypress-utilities-support";
+import { getAntiCollisionNamePart, WEB_UI_SESSION } from "@tuleap/cypress-utilities-support";
 
 describe("User preferences", () => {
     let username: string, password: string;
 
     before(() => {
-        const now = Date.now();
-        username = "test_prefs_" + now;
-        password = "pwd_" + now;
+        const anti_collision = getAntiCollisionNamePart();
+        username = "test_prefs_" + anti_collision;
+        password = "pwd_" + anti_collision;
 
         cy.updatePlatformAndMakeUserInAdminApprovalMode();
 
@@ -36,7 +36,7 @@ describe("User preferences", () => {
         cy.get("[data-test=user-pw]").type(password);
         cy.get("[data-test=user-pw2]").type(password);
         cy.get("[data-test=user-prefs-site-updates]").click();
-        cy.get("[data-test=user-name]").type(`Test Prefs ${now}`);
+        cy.get("[data-test=user-name]").type(`Test Prefs ${anti_collision}`);
         cy.get("[data-test=form_register_purpose]").type(`Create me`);
         cy.get("[data-test=register-user-button]").click();
 

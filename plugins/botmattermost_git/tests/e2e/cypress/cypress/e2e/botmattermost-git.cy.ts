@@ -17,23 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function disableSpecificErrorThrownByPrototypeJs(): void {
-    cy.on("uncaught:exception", (err) => {
-        // the message bellow is only thrown by prototypejs, if any other js exception is thrown
-        // the test will fail
-        if (err.message.includes("Assignment to constant variable")) {
-            return false;
-        }
-    });
-}
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe(`Bot Mattermost`, function () {
     it(`can configure git notifications`, function () {
         cy.addBotMattermost("My bot");
         cy.log("configure git notifications");
         cy.projectAdministratorSession();
-        const now = Date.now();
-        const project_name = "git-mattermost-" + now;
+        const project_name = "git-mattermost-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "agile_alm");
         cy.visitProjectService(project_name, "Git");
 
@@ -46,8 +37,6 @@ describe(`Bot Mattermost`, function () {
         });
         cy.get("[data-test=git-repository-settings]").click();
         cy.get("[data-test=mail]").click();
-
-        disableSpecificErrorThrownByPrototypeJs();
 
         cy.get("[data-test=add-git-bot]").click();
 

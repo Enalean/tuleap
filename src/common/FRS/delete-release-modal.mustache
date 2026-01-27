@@ -4,6 +4,7 @@
       aria-labelledby="frs-delete-release-{{ id }}-title"
       class="tlp-modal tlp-modal-danger"
       action="{{ delete_url }}"
+      data-test="delete-release-modal"
 >
     {{# csrf_token }}
         {{> csrf_token_input }}

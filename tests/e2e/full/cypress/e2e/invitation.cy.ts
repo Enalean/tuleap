@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Invitations", () => {
     describe("In a project", () => {
-        let now: number, project_name: string, invitee_email: string;
+        let project_name: string, invitee_email: string;
 
         before(() => {
-            now = Date.now();
-            project_name = "test-invitations-" + now;
-            invitee_email = `email-${now}@example.com`;
+            project_name = "test-invitations-" + getAntiCollisionNamePart();
+            invitee_email = `email-${getAntiCollisionNamePart()}@example.com`;
 
             cy.projectAdministratorSession();
             cy.createNewPublicProject(project_name, "issues");

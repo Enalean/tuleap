@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe(`TestManagement test case`, function () {
     let project_name: string;
 
     before(function () {
-        const now = Date.now();
-        project_name = "ttm-case-" + now;
+        project_name = "ttm-case-" + getAntiCollisionNamePart();
     });
 
     context(`As project administrator`, function () {

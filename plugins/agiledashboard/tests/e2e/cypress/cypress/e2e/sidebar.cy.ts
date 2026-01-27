@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 function getToday(): string {
     const date = new Date();
 
@@ -30,11 +32,9 @@ function getNextMonth(): string {
 }
 
 describe("Sidebar", () => {
-    let now: number;
     it("Show milestones below backlog", () => {
         cy.projectAdministratorSession();
-        now = Date.now();
-        const project_name = `sidebar-${now}`;
+        const project_name = "sidebar-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "scrum").then(() => {
             cy.addProjectMember(project_name, "projectMember");
         });

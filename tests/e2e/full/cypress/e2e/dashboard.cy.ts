@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Hide widget", function () {
     it("given widget is not available on platform, then it must never be displayed", function () {
         cy.siteAdministratorSession();
@@ -24,7 +26,7 @@ describe("Hide widget", function () {
 
         cy.get("[data-test=project-widgets-checkbox-projectheartbeat]").click({ force: true });
 
-        const shortname = "dashboard-" + Date.now();
+        const shortname = "dashboard-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(shortname, "agile_alm");
         cy.visit("/projects/" + shortname);
 

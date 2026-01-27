@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 import { createAWikiDocument } from "../support/create-document";
 import {
     deleteDocumentDisplayedInQuickLook,
@@ -78,17 +79,16 @@ function createFolderInProject(project_suscribers: string): void {
 }
 
 describe("Document notifications", () => {
-    let now = 0;
     let project_wiki_notif = "";
     let project_suscribers = "";
     let public_doc_mail = "";
     let private_doc_mail = "";
     before(() => {
-        now = Date.now();
-        project_wiki_notif = "wiki-notif" + now;
-        project_suscribers = "doc-suscribers" + now;
-        public_doc_mail = "public-doc-mail-" + now;
-        private_doc_mail = "private-doc-mail-" + now;
+        const anti_collision = getAntiCollisionNamePart();
+        project_wiki_notif = "wiki-notif" + anti_collision;
+        project_suscribers = "doc-suscribers" + anti_collision;
+        public_doc_mail = "public-doc-mail-" + anti_collision;
+        private_doc_mail = "private-doc-mail-" + anti_collision;
 
         cy.projectAdministratorSession();
         createProjectFromTemplate(project_wiki_notif);
@@ -99,12 +99,13 @@ describe("Document notifications", () => {
 
     it("User can monitor a wiki document", () => {
         cy.projectAdministratorSession();
+        const document_title = "A wiki document" + getAntiCollisionNamePart();
         cy.getProjectId(project_wiki_notif).then((project_id) => {
-            createAWikiDocument(`A wiki document${now}`, "Wiki page", project_id);
+            createAWikiDocument(document_title, "Wiki page", project_id);
         });
 
         cy.visitProjectService(project_wiki_notif, "Documents");
-        openQuickLook(`A wiki document${now}`);
+        openQuickLook(document_title);
         notifyMe();
 
         cy.visitProjectService(project_wiki_notif, "Documents");

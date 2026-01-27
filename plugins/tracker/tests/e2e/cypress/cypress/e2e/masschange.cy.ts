@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Artifact Mass Change", function () {
     beforeEach(function () {
         cy.projectAdministratorSession();
-        const now = Date.now();
-        const project_name = `masschange-${now}`;
+        const project_name = "masschange-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "issues").then((project_id) => {
             cy.addProjectMember(project_name, "ProjectMember");
             cy.projectAdministratorSession();

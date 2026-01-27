@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 const LINKABLE_ARTIFACT_TITLE = "Linked Artifact";
 
 describe(`Artifact Modal`, function () {
-    let now: number;
-
     before(function () {
-        now = Date.now();
         cy.projectMemberSession();
         cy.getProjectId("kanban-artifact-modal")
             .as("project_id")
@@ -36,6 +35,7 @@ describe(`Artifact Modal`, function () {
     });
 
     it(`can create an artifact with all fields`, function () {
+        const anti_collision = getAntiCollisionNamePart();
         cy.projectMemberSession();
         cy.visitProjectService("kanban-artifact-modal", "Kanban");
         cy.get("[data-test=go-to-kanban]").first().click();
@@ -43,7 +43,9 @@ describe(`Artifact Modal`, function () {
 
         cy.get("[data-test=artifact-modal-form]").within(() => {
             getFieldWithLabel("Title", "[data-test=string-field]").within(() => {
-                cy.get("[data-test=string-field-input]").type(`Artifact creation ${now}`);
+                cy.get("[data-test=string-field-input]").type(
+                    "Artifact creation " + anti_collision,
+                );
             });
 
             getFieldsetWithLabel("Other fields").within(() => {
@@ -197,10 +199,11 @@ describe(`Artifact Modal`, function () {
 
             cy.get("[data-test=artifact-modal-save-button]").click();
         });
-        waitForKanbanCard(`Artifact creation ${now}`);
+        waitForKanbanCard("Artifact creation " + anti_collision);
     });
 
     it(`can edit an artifact with all fields`, function () {
+        const anti_collision = getAntiCollisionNamePart();
         cy.projectMemberSession();
         cy.visitProjectService("kanban-artifact-modal", "Kanban");
         cy.get("[data-test=go-to-kanban]").first().click();
@@ -213,7 +216,7 @@ describe(`Artifact Modal`, function () {
             getFieldWithLabel("Title", "[data-test=string-field]").within(() => {
                 cy.get("[data-test=string-field-input]")
                     .clear()
-                    .type("Editable Artifact " + now);
+                    .type("Editable Artifact " + anti_collision);
             });
 
             getFieldsetWithLabel("Other fields").within(() => {
@@ -375,8 +378,8 @@ describe(`Artifact Modal`, function () {
 
             cy.get("[data-test=artifact-modal-save-button]").click();
         });
-        waitForKanbanCard(`Editable Artifact ${now}`);
-        getKanbanCard(`Editable Artifact ${now}`).within(() => {
+        waitForKanbanCard("Editable Artifact " + anti_collision);
+        getKanbanCard("Editable Artifact " + anti_collision).within(() => {
             cy.get("[data-test=edit-link]").click();
         });
         cy.get("[data-test=artifact-modal-form]").within(() => {

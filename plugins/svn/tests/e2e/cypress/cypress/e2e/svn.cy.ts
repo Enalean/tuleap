@@ -18,6 +18,8 @@
  *
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("SVN", function () {
     context("Regular users", function () {
         it("do not have administrator privileges", function () {
@@ -86,8 +88,7 @@ describe("SVN", function () {
 
         it("should be able to manage notifications", function () {
             cy.projectAdministratorSession();
-            const now = Date.now();
-            const project_name = "svn-" + now;
+            const project_name = "svn-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "scrum");
             cy.visitProjectAdministration(project_name);
 
@@ -131,10 +132,9 @@ describe("SVN", function () {
 
         it("repository created by REST API should have a correct history", function () {
             cy.projectAdministratorSession();
-            const now = Date.now();
             const payload = {
                 project_id: Number.parseInt(this.svn_project_id, 10),
-                name: "repo01" + now,
+                name: "repo01" + getAntiCollisionNamePart(),
                 settings: {
                     commit_rules: {
                         is_reference_mandatory: true,
