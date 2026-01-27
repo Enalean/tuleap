@@ -169,3 +169,5 @@ declare global {
         }
     }
 }
+
+export function getAntiCollisionNamePart(): string;

@@ -18,12 +18,10 @@
  *
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 function submitAndStay(): void {
     cy.get("[data-test=artifact-submit-and-stay]").click();
-}
-
-function getCurrentTimestampInSeconds(): string {
-    return String(Date.now()).slice(0, -4);
 }
 
 function editSimpleField(label: string): Cypress.Chainable<JQuery<HTMLElement>> {
@@ -278,9 +276,7 @@ describe("Tracker artifacts", function () {
     describe("Site admin specific settings for move/deletion", function () {
         it("must be able to set the artifact deletion setting", function () {
             cy.siteAdministratorSession();
-            cy.visit("/");
-
-            cy.get("[data-test=platform-administration-link]").click();
+            cy.visit("/admin/");
             cy.get("[data-test=admin-tracker]").click();
             cy.get("[data-test=artifact-deletion]").click();
             cy.get("[data-test=input-artifacts-limit]").type("{selectAll}50");
@@ -293,7 +289,7 @@ describe("Tracker artifacts", function () {
         // Create once the project for tests in this context
         let project_name: string;
         before(function () {
-            project_name = "tracker-" + getCurrentTimestampInSeconds();
+            project_name = "tracker-" + getAntiCollisionNamePart();
 
             cy.projectAdministratorSession();
             cy.log("Create a new project");
@@ -318,22 +314,22 @@ describe("Tracker artifacts", function () {
 
                 cy.get("[data-test=button-next]").click();
                 cy.get("[data-test=tracker-name-input]").type(
-                    getCurrentTimestampInSeconds() + " from cypress",
+                    "from cypress " + getAntiCollisionNamePart(),
                 );
                 cy.get("[data-test=button-create-my-tracker]").click();
                 cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
             });
 
             it("must be able to create tracker from empty and configure it", function () {
-                const current_time = getCurrentTimestampInSeconds();
-                const tracker_item_name = current_time + "_from_empty";
+                const anti_collision = getAntiCollisionNamePart();
+                const tracker_item_name = anti_collision + "_from_empty";
 
                 cy.projectAdministratorSession();
                 cy.visit(`/plugins/tracker/${encodeURIComponent(project_name)}/new`);
                 cy.get("[data-test=selected-option-tracker_empty]").click({ force: true });
 
                 cy.get("[data-test=button-next]").click();
-                cy.get("[data-test=tracker-name-input]").type(current_time + " From empty");
+                cy.get("[data-test=tracker-name-input]").type(anti_collision + " From empty");
                 cy.get("[data-test=button-create-my-tracker]").click();
                 cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
                 cy.getTrackerIdFromREST(this.project_id, tracker_item_name).as("tracker_id");
@@ -449,7 +445,7 @@ describe("Tracker artifacts", function () {
 
                 cy.get("[data-test=button-next]").click();
                 cy.get("[data-test=tracker-name-input]").type(
-                    getCurrentTimestampInSeconds() + " From an other project",
+                    getAntiCollisionNamePart() + " From an other project",
                 );
                 cy.get("[data-test=button-create-my-tracker]").click();
                 cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");

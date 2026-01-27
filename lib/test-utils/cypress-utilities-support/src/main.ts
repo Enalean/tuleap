@@ -25,6 +25,8 @@ import { registerSiteAdminCommands } from "./site-admin-actions";
 import { registerProjectAdminCommands } from "./project-admin-actions";
 
 export { WEB_UI_SESSION } from "./commands";
+export { getAntiCollisionNamePart } from "./functions";
+
 export function registerCommands(): void {
     registerAPICommands();
     registerGeneralCommands();

@@ -3,6 +3,7 @@
   "name": "@tuleap/cypress-utilities-support",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "types": "./src/commands-type-definitions.d.ts",
   "exports": {
     ".": "./dist/main.js"
