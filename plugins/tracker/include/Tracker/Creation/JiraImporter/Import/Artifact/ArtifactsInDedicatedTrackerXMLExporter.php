@@ -68,13 +68,7 @@ class ArtifactsInDedicatedTrackerXMLExporter
 
         $already_seen_artifacts_ids = [];
 
-        $iterator = JiraCollectionBuilder::iterateUntilTotal(
-            $this->jira_client,
-            $this->logger,
-            $this->getUrl($jira_project_id, $jira_issue_type_name),
-            'issues',
-        );
-        foreach ($iterator as $issue) {
+        foreach ($this->getIterator($jira_project_id, $jira_issue_type_name) as $issue) {
             $this->issue_as_artifact_xml_exporter->exportIssueInArtifactXMLFormat(
                 $artifacts_node,
                 $issue,
@@ -87,6 +81,24 @@ class ArtifactsInDedicatedTrackerXMLExporter
         }
     }
 
+    private function getIterator(string $jira_project_id, string $jira_issue_type_name): \Generator
+    {
+        if ($this->jira_client->isJiraCloud()) {
+            return JiraCollectionBuilder::iterateUntilIsLast(
+                $this->jira_client,
+                $this->logger,
+                ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?' . $this->getUrl($jira_project_id, $jira_issue_type_name),
+                'issues',
+            );
+        }
+        return JiraCollectionBuilder::iterateUntilTotal(
+            $this->jira_client,
+            $this->logger,
+            ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . $this->getUrl($jira_project_id, $jira_issue_type_name),
+            'issues',
+        );
+    }
+
     private function getUrl(
         string $jira_project_id,
         string $jira_issue_type_id,
@@ -97,6 +109,6 @@ class ArtifactsInDedicatedTrackerXMLExporter
             'expand' => 'renderedFields',
         ];
 
-        return ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
+        return http_build_query($params);
     }
 }

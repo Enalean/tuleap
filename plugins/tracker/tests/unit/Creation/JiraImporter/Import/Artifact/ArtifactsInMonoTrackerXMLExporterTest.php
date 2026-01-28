@@ -230,10 +230,8 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
             new IssueType('10002', 'bug', false),
         ];
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=0'] = [
-            'startAt'    => 0,
-            'maxResults' => 50,
-            'total'      => 2,
+        $this->wrapper->urls[ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+            'isLast'      => true,
             'issues'     => [
                 [
                     'id'     => '10042',
@@ -342,10 +340,8 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
             new IssueType('10002', 'bug', false),
         ];
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=0'] = [
-            'startAt'    => 0,
-            'maxResults' => 1,
-            'total'      => 2,
+        $this->wrapper->urls[ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+            'isLast'     => false,
             'issues'     => [
                 [
                     'id'     => '10042',
@@ -380,10 +376,8 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
             ->with('johndoe@example.com')
             ->willReturn([$john_doe]);
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=1'] = [
-            'startAt'    => 1,
-            'maxResults' => 1,
-            'total'      => 2,
+        $this->wrapper->urls[ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=1'] = [
+            'isLast'     => true,
             'issues'     => [
                 [
                     'id'     => '10043',
@@ -473,10 +467,8 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
             new IssueType('10002', 'bug', false),
         ];
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=0'] = [
-            'startAt'    => 0,
-            'maxResults' => 1,
-            'total'      => 2,
+        $this->wrapper->urls[ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+            'isLast'     => false,
             'issues'     => [
                 [
                     'id'     => '10042',
@@ -511,10 +503,8 @@ final class ArtifactsInMonoTrackerXMLExporterTest extends \Tuleap\Test\PHPUnit\T
             ->with('johndoe@example.com')
             ->willReturn([$john_doe]);
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=1'] = [
-            'startAt'    => 1,
-            'maxResults' => 1,
-            'total'      => 2,
+        $this->wrapper->urls[ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?jql=project%3D%22project%22+AND+issuetype+in+%2810001%2C10002+%29&fields=%2Aall&expand=renderedFields&startAt=1'] = [
+            'isLast'      => true,
             'issues'     => [
                 [
                     'id'     => '10042',

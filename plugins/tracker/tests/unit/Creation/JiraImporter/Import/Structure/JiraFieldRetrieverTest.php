@@ -41,6 +41,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public static function getTestData(): iterable
     {
         yield 'it exports jira fields with common createmeta and build an array indexed by id' => [
+            'is_cloud' => false,
             'payloads' => [
                 ClientWrapper::JIRA_CORE_BASE_URL . '/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields' => [
                     'projects' => [
@@ -102,6 +103,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         yield 'it exports jira fields that are only visible in the edit screen' => [
+            'is_cloud' => false,
             'payloads' => [
                 ClientWrapper::JIRA_CORE_BASE_URL . '/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields' => [
                     'projects' => [
@@ -234,7 +236,129 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             },
         ];
 
+        yield 'it exports jira fields on jira cloud' => [
+            'is_cloud' => true,
+            'payloads' => [
+                ClientWrapper::JIRA_CORE_BASE_URL . '/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields' => [
+                    'projects' => [
+                        [
+                            'issuetypes' => [
+                                [
+                                    'fields' => [
+                                        'summary' => [
+                                            'required' => true,
+                                            'schema' => [
+                                                'type' => 'string',
+                                                'system' => 'summary',
+                                            ],
+                                            'name' => 'Summary',
+                                            'key' => 'summary',
+                                            'hasDefaultValue' => false,
+                                            'operation' => [
+                                                'set',
+                                            ],
+                                        ],
+                                        'custom_01' => [
+                                            'required' => false,
+                                            'schema' => [
+                                                'type' => 'user',
+                                                'custom' => 'com.atlassian.jira.toolkit:lastupdaterorcommenter',
+                                                'customId' => 10071,
+                                            ],
+                                            'name' => '[opt] Last updator',
+                                            'key' => 'customfield_10071',
+                                            'hasDefaultValue' => false,
+                                            'operation' => [
+                                                'set',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                ClientWrapper::JIRA_CLOUD_JQL_SEARCH_URL . '?jql=project%3D%22projID%22+AND+issuetype%3DissueName&expand=editmeta&startAt=0&maxResults=1' => [
+                    'expand'     => 'names,schema',
+                    'isLast'     => true,
+                    'issues'     => [
+                        [
+                            'expand' => 'operations,versionedRepresentations,editmeta,changelog,renderedFields',
+                            'id'     => '10033',
+                            'self'   => 'https://jira.example.com/rest/api/2/issue/10033',
+                            'key'    => 'projID-6',
+                            'editmeta' => [
+                                'fields' => [
+                                    'summary' => [
+                                        'required' => true,
+                                        'schema' => [
+                                            'type' => 'string',
+                                            'system' => 'summary',
+                                        ],
+                                        'name' => 'Summary',
+                                        'key' => 'summary',
+                                        'hasDefaultValue' => false,
+                                        'operation' => [
+                                            'set',
+                                        ],
+                                    ],
+                                    'custom_01' => [
+                                        'required' => false,
+                                        'schema' => [
+                                            'type' => 'user',
+                                            'custom' => 'com.atlassian.jira.toolkit:lastupdaterorcommenter',
+                                            'customId' => 10071,
+                                        ],
+                                        'name' => '[opt] Last updator',
+                                        'key' => 'customfield_10071',
+                                        'hasDefaultValue' => false,
+                                        'operation' => [
+                                            'set',
+                                        ],
+                                    ],
+                                    'customfield_10249' => [
+                                        'required'      => false,
+                                        'schema'        => [
+                                            'type'     => 'option',
+                                            'custom'   => 'com.atlassian.jira.plugin.system.customfieldtypes:select',
+                                            'customId' => 10249,
+                                        ],
+                                        'name'          => 'Branche intégration',
+                                        'fieldId'       => 'customfield_10249',
+                                        'operations'    => [
+                                            'set',
+                                        ],
+                                        'allowedValues' => [
+                                            [
+                                                'self'  => 'https://jira.example.com/rest/api/2/customFieldOption/10142',
+                                                'value' => 'BACKBONE_ITG',
+                                                'id'    => '10142',
+                                            ],
+                                            [
+                                                'self'  => 'https://jira.example.com/rest/api/2/customFieldOption/10430',
+                                                'value' => 'ETHERCAT_ITG',
+                                                'id'    => '10430',
+                                            ],
+                                            [
+                                                'self'  => 'https://jira.example.com/rest/api/2/customFieldOption/10143',
+                                                'value' => 'STD_ITG_01.01',
+                                                'id'    => '10143',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'tests' => function (array $result) {
+                assertCount(3, $result);
+            },
+        ];
+
         yield 'it returns an empty array when no fields are found' => [
+            'is_cloud' => false,
             'payloads' => [],
             'tests' => function (array $results) {
                 assertEquals([], $results);
@@ -242,6 +366,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         yield 'it adds priority if the field is detected in editmeta payload but was not listed in createmeta or editmeta (jira 8.5.1)' => [
+            'is_cloud' => false,
             'payloads' => [
                 ClientWrapper::JIRA_CORE_BASE_URL . '/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields' => [
                     'projects' => [
@@ -366,14 +491,23 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('getTestData')]
-    public function testGetAllJiraFields(array $payloads, callable $tests): void
+    public function testGetAllJiraFields(bool $is_cloud, array $payloads, callable $tests): void
     {
-        $wrapper = new class ($payloads) extends JiraCloudClientStub {
-            public function __construct(array $payloads)
-            {
-                $this->urls = $payloads;
-            }
-        };
+        if ($is_cloud) {
+            $wrapper = new class ($payloads) extends JiraCloudClientStub {
+                public function __construct(array $payloads)
+                {
+                    $this->urls = $payloads;
+                }
+            };
+        } else {
+            $wrapper = new class ($payloads) extends JiraServerClientStub {
+                public function __construct(array $payloads)
+                {
+                    $this->urls = $payloads;
+                }
+            };
+        }
 
         $field_retriever = new JiraFieldRetriever(
             $wrapper,

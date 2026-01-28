@@ -1,8 +1,6 @@
 {
     "expand": "names,schema",
-    "startAt": 0,
-    "maxResults": 1,
-    "total": 1,
+    "isLast": true,
     "issues": [
         {
             "expand": "customfield_10026.requestTypePractice,operations,versionedRepresentations,editmeta,changelog,renderedFields",

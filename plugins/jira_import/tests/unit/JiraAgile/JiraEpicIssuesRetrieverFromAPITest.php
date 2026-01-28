@@ -37,6 +37,28 @@ final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Test
             public function getUrl(string $url): ?array
             {
                 $this->called = true;
+                assertEquals('/rest/api/3/search/jql?jql=project%3D%22project%22+AND+parent%3D10143&fields=%2Aall&expand=renderedFields&startAt=0', $url);
+                return [
+                    'isLast' => true,
+                    'issues' => [],
+                ];
+            }
+        };
+
+        $epic_retriever = new JiraEpicIssuesRetrieverFromAPI($client, new NullLogger());
+        $epic_retriever->getIssueIds(new JiraEpic(10143, '', 'https://example.com/rest/agile/latest/board/1/epic/10143'), 'project');
+
+        self::assertTrue($client->called);
+    }
+
+    public function testItSearchForIssuesWithGivenEpicAsParentWithJiraServer(): void
+    {
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraServerClientStub {
+            public bool $called = false;
+            #[\Override]
+            public function getUrl(string $url): ?array
+            {
+                $this->called = true;
                 assertEquals('/rest/api/2/search?jql=project%3D%22project%22+AND+parent%3D10143&fields=%2Aall&expand=renderedFields&startAt=0', $url);
                 return [
                     'total' => 0,
@@ -58,7 +80,7 @@ final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Test
             public function getUrl(string $url): ?array
             {
                 return [
-                    'total' => 2,
+                    'isLast' => true,
                     'issues' => [
                         [
                             'expand' => 'operations,versionedRepresentations,editmeta,changelog,renderedFields',
