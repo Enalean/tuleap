@@ -8549,16 +8549,16 @@
         },
         {
             "name": "colinodell/psr-testlogger",
-            "version": "v1.2.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/colinodell/psr-testlogger.git",
-                "reference": "9246155e688b310fb3d0f201ead2445686b5844e"
+                "reference": "2f99e75f4b9f34656bfff7cb68ea78b2c23caa91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/colinodell/psr-testlogger/zipball/9246155e688b310fb3d0f201ead2445686b5844e",
-                "reference": "9246155e688b310fb3d0f201ead2445686b5844e",
+                "url": "https://api.github.com/repos/colinodell/psr-testlogger/zipball/2f99e75f4b9f34656bfff7cb68ea78b2c23caa91",
+                "reference": "2f99e75f4b9f34656bfff7cb68ea78b2c23caa91",
                 "shasum": ""
             },
             "require": {
@@ -8624,7 +8624,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-14T19:12:55+00:00"
+            "time": "2025-11-04T22:36:58+00:00"
         },
         {
             "name": "composer/pcre",
