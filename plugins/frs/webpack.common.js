@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
+const path = require("node:path");
 const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
 const context = __dirname;
@@ -28,25 +28,29 @@ const entry_points = {
     "frs-style": "./themes/frs.scss",
 };
 
-module.exports = [
-    {
-        entry: entry_points,
-        context,
-        output,
-        externals: {
-            tlp: "tlp",
-        },
-        module: {
-            rules: [
-                webpack_configurator.rule_ng_cache_loader,
-                webpack_configurator.rule_angular_gettext_loader,
-                webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets,
-            ],
-        },
-        plugins: [
-            webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins(),
+const webpack_config_for_frs = {
+    entry: entry_points,
+    context,
+    output,
+    externals: {
+        tlp: "tlp",
+    },
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.rule_ng_cache_loader,
+            webpack_configurator.rule_angular_gettext_loader,
+            webpack_configurator.rule_scss_loader,
+            webpack_configurator.rule_css_assets,
         ],
     },
-];
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
+    plugins: [
+        webpack_configurator.getManifestPlugin(),
+        ...webpack_configurator.getCSSExtractionPlugins(),
+    ],
+};
+
+module.exports = [webpack_config_for_frs];

@@ -5,10 +5,9 @@
         </div>
         <section class="tlp-pane-section">
             <div ng-if="$ctrl.loading_natures" class="frs-artifact-links-loading-natures"></div>
-
             <p
                 class="tlp-alert-danger frs-artifact-links-error"
-                ng-show="$ctrl.getError().rest_error_occured"
+                ng-show="$ctrl.getError().rest_error_occurred"
                 translate
             >
                 There was an error while getting the list of linked artifacts: {{ $ctrl.getError().rest_error }}
