@@ -20,10 +20,12 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -35,11 +37,11 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TimeframeWithEndDate $timeframe;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\Date\DateField
+     * @var MockObject&DateField
      */
     private $start_date_field;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\Date\DateField
+     * @var MockObject&DateField
      */
     private $end_date_field;
     private \PFUser $user;
@@ -73,8 +75,8 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsItsConfigDescription(): void
     {
-        $this->start_date_field->expects($this->any())->method('getLabel')->willReturn('Start date');
-        $this->end_date_field->expects($this->any())->method('getLabel')->willReturn('End date');
+        $this->start_date_field->method('getLabel')->willReturn('Start date');
+        $this->end_date_field->method('getLabel')->willReturn('End date');
 
         $this->assertEquals(
             'Timeframe is based on start date field "Start date" and end date field "End date".',
@@ -123,16 +125,16 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\PHPUnit\Framework\Attributes\TestWith([true, false])]
     public function testItDoesNotExportToRESTWhenUserCanReadFields(bool $can_read_start_date, bool $can_read_end_date): void
     {
-        $this->start_date_field->expects($this->any())->method('userCanRead')->willReturn($can_read_start_date);
-        $this->end_date_field->expects($this->any())->method('userCanRead')->willReturn($can_read_end_date);
+        $this->start_date_field->method('userCanRead')->willReturn($can_read_start_date);
+        $this->end_date_field->method('userCanRead')->willReturn($can_read_end_date);
 
         $this->assertNull($this->timeframe->exportToREST($this->user));
     }
 
     public function testItExportsToREST(): void
     {
-        $this->start_date_field->expects($this->any())->method('userCanRead')->willReturn(true);
-        $this->end_date_field->expects($this->any())->method('userCanRead')->willReturn(true);
+        $this->start_date_field->method('userCanRead')->willReturn(true);
+        $this->end_date_field->method('userCanRead')->willReturn(true);
 
         $this->assertEquals(
             new SemanticTimeframeWithEndDateRepresentation(
@@ -447,13 +449,13 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals($display_start && $display_end, $this->timeframe->isTimeDisplayedForEvent());
     }
 
-    private function getMockedDateField(int $field_id): \Tuleap\Tracker\FormElement\Field\Date\DateField
+    private function getMockedDateField(int $field_id): MockObject&DateField
     {
-        $mock = $this->getMockBuilder(\Tuleap\Tracker\FormElement\Field\Date\DateField::class)
+        $mock = $this->getMockBuilder(DateField::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mock->expects($this->any())->method('getId')->willReturn($field_id);
+        $mock->method('getId')->willReturn($field_id);
 
         return $mock;
     }

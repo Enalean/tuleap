@@ -120,7 +120,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
     private function getMockedTracker(int $id)
     {
         $mock = $this->createMock(\Tuleap\Tracker\Tracker::class);
-        $mock->expects($this->any())->method('getId')->willReturn($id);
+        $mock->method('getId')->willReturn($id);
         return $mock;
     }
 }

@@ -20,9 +20,12 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -36,11 +39,11 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TimeframeWithDuration $timeframe;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\Date\DateField
+     * @var MockObject&DateField
      */
     private $start_date_field;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\Integer\IntegerField
+     * @var MockObject&IntegerField
      */
     private $duration_field;
     private \PFUser $user;
@@ -76,8 +79,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsItsConfigDescription(): void
     {
-        $this->start_date_field->expects($this->any())->method('getLabel')->willReturn('Start date');
-        $this->duration_field->expects($this->any())->method('getLabel')->willReturn('Duration');
+        $this->start_date_field->method('getLabel')->willReturn('Start date');
+        $this->duration_field->method('getLabel')->willReturn('Duration');
 
         $this->assertEquals(
             'Timeframe is based on start date field "Start date" and duration field "Duration".',
@@ -126,16 +129,16 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\PHPUnit\Framework\Attributes\TestWith([true, false])]
     public function testItDoesNotExportToRESTWhenUserCanReadFields(bool $can_read_start_date, bool $can_read_duration): void
     {
-        $this->start_date_field->expects($this->any())->method('userCanRead')->willReturn($can_read_start_date);
-        $this->duration_field->expects($this->any())->method('userCanRead')->willReturn($can_read_duration);
+        $this->start_date_field->method('userCanRead')->willReturn($can_read_start_date);
+        $this->duration_field->method('userCanRead')->willReturn($can_read_duration);
 
         $this->assertNull($this->timeframe->exportToREST($this->user));
     }
 
     public function testItExportsToREST(): void
     {
-        $this->start_date_field->expects($this->any())->method('userCanRead')->willReturn(true);
-        $this->duration_field->expects($this->any())->method('userCanRead')->willReturn(true);
+        $this->start_date_field->method('userCanRead')->willReturn(true);
+        $this->duration_field->method('userCanRead')->willReturn(true);
 
         $this->assertEquals(
             new SemanticTimeframeWithDurationRepresentation(
@@ -434,24 +437,24 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals($display_time, $this->timeframe->isTimeDisplayedForEvent());
     }
 
-    private function getMockedDateField(int $field_id): \Tuleap\Tracker\FormElement\Field\Date\DateField
+    private function getMockedDateField(int $field_id): MockObject&DateField
     {
-        $mock = $this->getMockBuilder(\Tuleap\Tracker\FormElement\Field\Date\DateField::class)
+        $mock = $this->getMockBuilder(DateField::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mock->expects($this->any())->method('getId')->willReturn($field_id);
+        $mock->method('getId')->willReturn($field_id);
 
         return $mock;
     }
 
-    private function getMockedDurationField(int $field_id)
+    private function getMockedDurationField(int $field_id): MockObject&IntegerField
     {
-        $mock = $this->getMockBuilder(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class)
+        $mock = $this->getMockBuilder(IntegerField::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mock->expects($this->any())->method('getId')->willReturn($field_id);
+        $mock->method('getId')->willReturn($field_id);
 
         return $mock;
     }

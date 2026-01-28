@@ -98,7 +98,6 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->assertTrackerFormElementFactory($user, $field);
 
         $text_field->method('getText')->willReturn('wololo');
-        $text_field->method('getValue')->willReturn(self::any());
 
         $this->purifier->method('purifyHTMLWithReferences')->willReturn('wololo');
 
@@ -157,7 +156,6 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->assertTrackerFormElementFactory($user, $field);
 
         $text_field->method('getText')->willReturn('wololo');
-        $text_field->method('getValue')->willReturn(self::any());
 
         $this->purifier->method('purifyHTMLWithReferences')->willReturn('wololo');
 

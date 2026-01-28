@@ -74,8 +74,8 @@ final class GitActionsTest extends TestCase
     {
         $GLOBALS['Language']->method('getText')->willReturnMap(
             [
-                ['plugin_git', 'actions_no_repository_forked', self::any(), 'actions_no_repository_forked'],
-                ['plugin_git', 'successfully_forked', self::any(), 'successfully_forked'],
+                ['plugin_git', 'actions_no_repository_forked', 'whatever', 'actions_no_repository_forked'],
+                ['plugin_git', 'successfully_forked', 'whatever', 'successfully_forked'],
             ]
         );
 

@@ -53,8 +53,8 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->tracker              = TrackerTestBuilder::aTracker()->withId(10)->build();
         $this->implied_from_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
-        $this->implied_from_tracker->expects($this->any())->method('getName')->willReturn('Releases');
-        $this->implied_from_tracker->expects($this->any())->method('getId')->willReturn(self::RELEASE_TRACKER_ID);
+        $this->implied_from_tracker->method('getName')->willReturn('Releases');
+        $this->implied_from_tracker->method('getId')->willReturn(self::RELEASE_TRACKER_ID);
 
         $this->timeframe_calculator = $this->createMock(TimeframeWithDuration::class);
         $this->logger               = new NullLogger();
@@ -452,7 +452,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     private function getMockedArtifact(int $id)
     {
         $artifact = $this->createMock(Artifact::class);
-        $artifact->expects($this->any())->method('getId')->willReturn($id);
+        $artifact->method('getId')->willReturn($id);
 
         return $artifact;
     }
