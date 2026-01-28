@@ -27,7 +27,7 @@ import "angular-filter";
 import translations from "../po/fr_FR.po";
 
 import AppController from "./app-controller.js";
-import RestErrorService from "./rest-error-service.js";
+import { RestErrorService } from "./rest-error-service.ts";
 import SharedPropertiesService from "./shared-properties-service.js";
 import FrsConfig from "./app-config.js";
 
@@ -51,7 +51,8 @@ export default angular
     .controller("LicenseModalController", LicenseModalController)
     .controller("CustomLicenseModalController", CustomLicenseModalController)
 
-    .service("RestErrorService", RestErrorService)
+    .factory("RestErrorService", RestErrorService)
+
     .service("SharedPropertiesService", SharedPropertiesService)
     .service("ReleaseRestService", ReleaseRestService)
 
