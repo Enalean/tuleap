@@ -103,8 +103,56 @@ describe("Frs", function () {
 
                 cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get("[data-test=package-name]").click();
-                cy.get("[data-test=edit-release]").first().click({ force: true });
+                cy.get("[data-test=edit-release]").first().click();
                 cy.get('[data-test="release-name"]').should("have.value", `Edited${now}`);
+
+                cy.log("MD5 is computed at file upload when not provided");
+                cy.get("[data-test=file-input]").selectFile("cypress/fixtures/release-file.txt");
+                cy.get("[data-test=create-release-button]").click({
+                    timeout: 60000,
+                });
+                cy.wait("@createRelease", { timeout: 60000 });
+                cy.get("[data-test=edit-release]").first().click();
+                cy.get('[data-test="release_reference_md5"]').should(
+                    "have.value",
+                    "d41d8cd98f00b204e9800998ecf8427e",
+                );
+
+                cy.log("File is not created when bad MD5 is written by user");
+                cy.get("[data-test=file-input]").selectFile(
+                    "cypress/fixtures/other-release-file.txt",
+                );
+                cy.get("[data-test=add-md5-file-input]").type("blabla");
+                cy.get("[data-test=create-release-button]").click({
+                    timeout: 60000,
+                });
+                cy.wait("@createRelease", { timeout: 60000 });
+                cy.get("[data-test=feedback]").contains("MD5 checksum comparison failed");
+                cy.visitProjectService(`frs-${now}`, "Files");
+                cy.get("[data-test=package-name]").click();
+                cy.get("[data-test=edit-release]").first().click();
+
+                cy.get("[data-test=release-file-name]").should("have.length", 1);
+
+                cy.get("[data-test=release-file-name]")
+                    .should("contain", "release-file.txt")
+                    .and("not.contain", "other-release-file.txt");
+
+                cy.log("When user provide a correct MD5 file is created");
+                cy.get("[data-test=file-input]").selectFile(
+                    "cypress/fixtures/other-release-file.txt",
+                );
+                cy.get("[data-test=add-md5-file-input]").type("d41d8cd98f00b204e9800998ecf8427e");
+                cy.get("[data-test=create-release-button]").click({
+                    timeout: 60000,
+                });
+                cy.wait("@createRelease", { timeout: 60000 });
+                cy.get("[data-test=edit-release]").first().click();
+                cy.get("[data-test=release-file-name]").should("have.length", 2);
+
+                cy.get("[data-test=release-file-name]")
+                    .should("contain", "release-file.txt")
+                    .and("contain", "other-release-file.txt");
 
                 cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get("[data-test=package-name]").click();

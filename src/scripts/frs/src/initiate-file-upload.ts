@@ -186,6 +186,7 @@ function insertFileRow(
     md5.type = "text";
     md5.name = md5_name;
     md5.size = 32;
+    md5.setAttribute("data-test", "add-md5-file-input");
     md5.classList.add("tlp-input", "tlp-input-small");
     md5_column.appendChild(md5);
 
