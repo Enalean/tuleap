@@ -572,7 +572,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
         $has_files          = count($files) > 0;
         $with_extra_columns = $is_update && $has_files;
         echo '<div class="frs-release-files-container">
-            <table class="tlp-table frs-release-files-table ' . ($with_extra_columns ? 'frs-release-files-table-with-extra-columns' : '') . '">
+            <table class="tlp-table frs-release-files-table ' . ($with_extra_columns ? 'frs-release-files-table-with-extra-columns' : '') . '" data-test="frs-release-files-table">
                 <thead>
                     <tr>
                         <th>' . $hp->purify(_('Delete')) . '</th>
@@ -595,6 +595,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
                     data-filetypes="' . $hp->purify(json_encode($filetypes)) . '"
                     data-choose-label="' . $hp->purify($GLOBALS['Language']->getText('file_file_utils', 'must_choose_one')) . '"
                     data-delete-label="' . $hp->purify(_('Delete')) . '"
+                    data-test="files-table-row"
                 >';
 
         for ($i = 0; $i < count($files); $i++) {
@@ -605,7 +606,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
             $userName = (isset($user_id)) ? UserManager::instance()->getUserById($files[$i]->getUserID())->getRealName() : '';
             echo '<tr class="frs-release-file-row">';
             echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $hp->purify($files[$i]->getFileID()) . '" class="frs-release-file-delete-checkbox"></TD>';
-            echo '<TD class="frs-release-file-name-column" title="' . $hp->purify($fname) . '">' . $hp->purify($fname) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $hp->purify($files[$i]->getFileID()) . '"></TD>';
+            echo '<TD class="frs-release-file-name-column" data-test="release-file-name" title="' . $hp->purify($fname) . '">' . $hp->purify($fname) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $hp->purify($files[$i]->getFileID()) . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($processors, $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($filetypes, $files[$i]->getTypeID()) . '</TD>';
             //In case of difference between the inserted md5 and the computed one
@@ -615,7 +616,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
             if ($files_factory->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
                 $value = 'value = "' . $hp->purify($files[$i]->getComputedMd5()) . '" readonly="true"';
             }
-            echo '<TD><INPUT TYPE="TEXT" NAME="release_reference_md5[]" ' . $value . ' SIZE="32" class="tlp-input tlp-input-small"></TD>';
+            echo '<TD><INPUT TYPE="TEXT" NAME="release_reference_md5[]" ' . $value . ' SIZE="32" class="tlp-input tlp-input-small" data-test="release_reference_md5"></TD>';
             $comment = $files[$i]->getComment();
             echo '<TD><textarea NAME="release_comment[]" cols="20" rows="1" class="tlp-textarea tlp-textarea-small">' . $hp->purify($comment) . '</textarea></TD>';
             if ($with_extra_columns) {
