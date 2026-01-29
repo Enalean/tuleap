@@ -188,6 +188,7 @@ import { USER_LOCALE, USER_TIMEZONE } from "../../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { IntlFormatter } from "@tuleap/date-helper";
 import ApprovalTableReviewPopover from "./ApprovalTableReviewPopover.vue";
+import emitter from "../../../helpers/emitter";
 
 const props = defineProps<{
     item: Item;
@@ -195,8 +196,6 @@ const props = defineProps<{
     reviewer: ApprovalTableReviewer;
     table: ApprovalTable;
 }>();
-
-const emit = defineEmits<{ (e: "refresh-data"): void }>();
 
 const user_locale = strictInject(USER_LOCALE);
 const user_timezone = strictInject(USER_TIMEZONE);
@@ -240,7 +239,7 @@ function onReview(): void {
         notification_value.value,
     ).match(
         () => {
-            emit("refresh-data");
+            emitter.emit("approval-table-refresh-data");
             is_reviewing.value = false;
             modal.value?.hide();
         },

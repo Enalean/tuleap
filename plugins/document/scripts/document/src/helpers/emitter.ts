@@ -172,6 +172,8 @@ export type Events = {
     "update-criteria-date": UpdateCriteriaDateEvent;
 
     "item-has-been-created-under-the-fold": ItemHasBeenCreatedUnderTheFoldEvent;
+
+    "approval-table-refresh-data": void;
 };
 
 export default mitt<Events>();

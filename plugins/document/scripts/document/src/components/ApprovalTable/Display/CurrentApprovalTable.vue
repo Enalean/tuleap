@@ -32,7 +32,6 @@
         v-bind:is_readonly="
             approval_table.id !== props.item.approval_table?.id || approval_table.is_closed
         "
-        v-on:refresh-data="$emit('refresh-data')"
     />
 </template>
 
@@ -49,7 +48,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: "error", message: string): void;
-    (e: "refresh-data"): void;
 }>();
 
 const approval_table = ref<ApprovalTable | null>(props.item.approval_table);

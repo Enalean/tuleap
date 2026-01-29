@@ -95,7 +95,6 @@
         v-bind:trigger="modal_trigger[0]"
         v-bind:reviewer="current_reviewer"
         v-bind:table="table"
-        v-on:refresh-data="$emit('refresh-data')"
     />
 </template>
 
@@ -118,8 +117,6 @@ const props = defineProps<{
     is_readonly: boolean;
     table: ApprovalTable;
 }>();
-
-defineEmits<{ (e: "refresh-data"): void }>();
 
 const user_id = strictInject(USER_ID);
 
