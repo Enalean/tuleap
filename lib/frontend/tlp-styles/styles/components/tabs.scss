@@ -151,6 +151,10 @@ button:where(.tlp-tab) {
         border-bottom-color $tlp-tabs-transition;
     border-bottom: $active-tab-border-width solid transparent;
     color: var(--tlp-dimmed-color);
+
+    // When .tlp-tab is on a <button> we need to enforce the font family
+    // else it will use the system default.
+    font-family: var(--tlp-font-family);
     font-size: 0.85rem;
     font-weight: 500;
     text-decoration: none;
