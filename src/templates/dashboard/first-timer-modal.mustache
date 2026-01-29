@@ -1,11 +1,11 @@
-<section class="tlp-modal first-timer-modal" role="dialog" id="first-timer-success-modal" aria-labelledby="first-timer-success-modal-title">
+<section class="tlp-modal first-timer-modal" role="dialog" id="first-timer-success-modal" aria-labelledby="first-timer-success-modal-title" >
     <div class="tlp-modal-body">
-        <h1 class="first-timer-modal-title" id="first-timer-success-modal-title">
+        <h1 class="first-timer-modal-title" id="first-timer-success-modal-title" data-test="first-timer-success-modal-user-greetings">
             {{# gettext }}Hello{{/ gettext }}
             <br>
             {{ real_name }}
         </h1>
-        <h2 class="first-timer-modal-subtitle">
+        <h2 class="first-timer-modal-subtitle" data-test="first-timer-success-modal-project-greetings">
             {{# project_name }}
                 {{# project_icon }}
                     {{# gettext }}Welcome to %s | {{ project_icon }} {{ project_name }}{{/ gettext }}
@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class="tlp-modal-footer">
-        <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+        <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal" data-test="close-invitation-modal">
             {{# gettext }}Understood{{/ gettext }}
         </button>
     </div>

@@ -28,12 +28,13 @@
                             value="{{ max_invitations_by_day }}"
                             size="4"
                             placeholder="20"
+                            data-test="max-invitations-by-day"
                         >
                     </div>
                 </section>
 
                 <div class="tlp-pane-section tlp-pane-section-submit">
-                    <button class="tlp-button-primary" type="submit">
+                    <button class="tlp-button-primary" type="submit" data-test="save-invitations-settings">
                         <i class="fa-solid fa-save tlp-button-icon"></i>
                         {{# gettext }}Save settings{{/ gettext }}
                     </button>
