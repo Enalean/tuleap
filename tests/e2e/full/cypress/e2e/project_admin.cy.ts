@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 const project_admin_group_id = 4;
 
 export interface ProjectServiceResponse {
@@ -26,11 +28,10 @@ export interface ProjectServiceResponse {
 }
 
 context("Suspended users", function () {
-    let project_name: string, now: number;
+    let project_name: string;
 
     before(() => {
-        now = Date.now();
-        project_name = "test-suspended-" + now;
+        project_name = "test-suspended-" + getAntiCollisionNamePart();
     });
 
     it("can be removed from administrator and members", function () {
@@ -72,11 +73,10 @@ context("Suspended users", function () {
 });
 
 context("Disk usage", function () {
-    let project_name: string, now: number;
+    let project_name: string;
 
     before(() => {
-        now = Date.now();
-        project_name = "test-disk-usage-" + now;
+        project_name = "test-disk-usage-" + getAntiCollisionNamePart();
     });
 
     it("project admin can check diskusage", function () {
@@ -127,17 +127,16 @@ describe("Project admin", function () {
         project_visibility: string,
         project_access_log: string,
         service_site_admin: string,
-        project_reference: string,
-        now: number;
+        project_reference: string;
 
     before(function () {
-        now = Date.now();
-        public_project_name = "public-admin-" + now;
-        private_project_name = "private-admin-" + now;
-        project_visibility = `visibility-${now}`;
-        project_access_log = `access-${now}`;
-        service_site_admin = `service-${now}`;
-        project_reference = `reference-${now}`;
+        const anti_collision = getAntiCollisionNamePart();
+        public_project_name = "public-admin-" + anti_collision;
+        private_project_name = "private-admin-" + anti_collision;
+        project_visibility = "visibility-" + anti_collision;
+        project_access_log = "access-" + anti_collision;
+        service_site_admin = "service-" + anti_collision;
+        project_reference = "reference-" + anti_collision;
         cy.projectAdministratorSession();
         cy.createNewPublicProject(project_access_log, "agile_alm").as("access_project_id");
         cy.createNewPublicProject(project_reference, "agile_alm").as("project_reference_id");
@@ -197,7 +196,7 @@ describe("Project admin", function () {
                 .click();
             cy.get("[data-test=from-another-project]").select(service_site_admin);
             cy.get("[data-test=project-registration-next-button]").click();
-            cy.get("[data-test=new-project-name]").type(`duplicated-${now}`);
+            cy.get("[data-test=new-project-name]").type("duplicated-" + getAntiCollisionNamePart());
             cy.get("[data-test=approve_tos]").click();
             cy.get("[data-test=project-registration-next-button]").click();
             cy.get("[data-test=start-working]").click({
@@ -216,7 +215,7 @@ describe("Project admin", function () {
         });
 
         it("should be able to add users to a public project", function () {
-            const project_name = "project-admin-" + now;
+            const project_name = "project-admin-" + getAntiCollisionNamePart();
 
             cy.projectAdministratorSession();
             createNewPublicProject(project_name);
@@ -433,11 +432,10 @@ context("Restricted users", function () {
 });
 
 context("Membership management", function () {
-    let project_name: string, now: number;
+    let project_name: string;
 
     before(() => {
-        now = Date.now();
-        project_name = "test-membership-" + now;
+        project_name = "test-membership-" + getAntiCollisionNamePart();
     });
     it("chosen users can manage members", function () {
         cy.projectAdministratorSession();
@@ -520,11 +518,10 @@ context("Membership management", function () {
 });
 
 context("Project creation", function () {
-    let project_name: string, now: number;
+    let project_name: string;
 
     before(() => {
-        now = Date.now();
-        project_name = "zip-import-" + now;
+        project_name = "zip-import-" + getAntiCollisionNamePart();
     });
     it("project can be created from archive template", function () {
         cy.projectAdministratorSession();

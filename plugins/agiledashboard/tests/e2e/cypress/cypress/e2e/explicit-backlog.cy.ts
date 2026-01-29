@@ -17,13 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe(`Planning view Explicit Backlog`, function () {
-    let now: number;
-
-    before(function () {
-        now = Date.now();
-    });
-
     beforeEach(function () {
         cy.projectMemberSession();
         cy.visitProjectService("explicit-backlog", "Backlog");
@@ -151,12 +147,8 @@ describe(`Planning view Explicit Backlog`, function () {
     });
 
     context("Scrum template usage", () => {
-        let project_name: string;
-
-        beforeEach(function () {
-            project_name = "ad-" + now;
-        });
         it(`Scrum template can be used in explicit mode`, function () {
+            const project_name = "ad-" + getAntiCollisionNamePart();
             cy.projectMemberSession();
             cy.log("Create a new project");
             cy.createNewPublicProject(project_name, "scrum");
@@ -186,9 +178,10 @@ describe(`Planning view Explicit Backlog`, function () {
 
     context("Backlog administration", () => {
         it(`Project administrator can edit planning configuration`, function () {
-            cy.createNewPublicProject(`backlog-admin-${now}`, "scrum");
+            const project_name = "backlog-admin-" + getAntiCollisionNamePart();
+            cy.createNewPublicProject(project_name, "scrum");
 
-            cy.visitProjectService(`backlog-admin-${now}`, "Backlog");
+            cy.visitProjectService(project_name, "Backlog");
             cy.get("[data-test=link-to-ad-administration]").click({ force: true });
 
             cy.get("[data-test=planning-configuration]").find("tr").should("have.length", 3);

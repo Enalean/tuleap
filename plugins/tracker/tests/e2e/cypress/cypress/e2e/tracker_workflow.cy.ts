@@ -19,6 +19,7 @@
  */
 
 import { PROJECT_ADMINISTRATORS_ID } from "@tuleap/core-constants";
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 const FROZEN_FIELDS_POST_ACTION_TYPE = "frozen_fields";
 
@@ -313,8 +314,7 @@ describe(`Tracker Workflow`, () => {
 
         it(`Workflow PostActions on transitions`, function () {
             cy.projectAdministratorSession();
-            const now = Date.now();
-            const project_name = "transitions-" + now;
+            const project_name = "transitions-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "issues");
             cy.addProjectMember(project_name, "projectMember");
 

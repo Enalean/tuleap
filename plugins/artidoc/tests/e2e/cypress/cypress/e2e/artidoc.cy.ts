@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -14,10 +14,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const now = Date.now();
+
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 const functional_requirements = [
     {
@@ -64,7 +64,7 @@ const structures = [
 ];
 
 describe("Artidoc", () => {
-    const project_name = `artidoc-${now}`;
+    const project_name = "artidoc-" + getAntiCollisionNamePart();
 
     before(() => {
         cy.projectAdministratorSession();

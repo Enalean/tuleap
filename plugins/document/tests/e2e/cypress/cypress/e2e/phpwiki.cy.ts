@@ -17,17 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 import { disableSpecificErrorThrownByCkeditor } from "../support/disable-specific-error-thrown-by-ckeditor";
 import { createAWikiDocument } from "../support/create-document";
 import { updateWikiPage } from "../support/helpers";
 
 describe("Document PhpWiki integration", () => {
-    let project_unixname: string, public_name: string, now: number;
+    let project_unixname: string, public_name: string;
 
     before(() => {
-        now = Date.now();
-        project_unixname = "doc-phpwiki-" + now;
-        public_name = "Doc PhpWiki " + now;
+        const anti_collision = getAntiCollisionNamePart();
+        project_unixname = "doc-phpwiki-" + anti_collision;
+        public_name = "Doc PhpWiki " + anti_collision;
     });
 
     beforeEach(() => {
@@ -79,39 +80,53 @@ describe("Document PhpWiki integration", () => {
 
     it("Multiple document can references the same wiki page", function () {
         cy.projectAdministratorSession();
-        const now = Date.now();
+        const anti_collision = getAntiCollisionNamePart();
 
         cy.getProjectId(project_unixname).then((project_id) => {
-            createAWikiDocument(`A wiki document${now}`, "Wiki page", project_id);
-            createAWikiDocument(`An other wiki document${now}`, "Wiki page", project_id);
-            createAWikiDocument(`A third wiki document${now}`, "Wiki page", project_id);
+            createAWikiDocument(`A wiki document ${anti_collision}`, "Wiki page", project_id);
+            createAWikiDocument(
+                `An other wiki document ${anti_collision}`,
+                "Wiki page",
+                project_id,
+            );
+            createAWikiDocument(`A third wiki document ${anti_collision}`, "Wiki page", project_id);
         });
 
         cy.visitProjectService(project_unixname, "Documents");
         cy.get("[data-test=wiki-document-link]").first().click();
 
-        cy.get("[data-test=wiki-document-location]").contains(`A wiki document${now}`);
-        cy.get("[data-test=wiki-document-location]").contains(`An other wiki document${now}`);
-        cy.get("[data-test=wiki-document-location]").contains(`A third wiki document${now}`);
+        cy.get("[data-test=wiki-document-location]").contains(`A wiki document ${anti_collision}`);
+        cy.get("[data-test=wiki-document-location]").contains(
+            `An other wiki document ${anti_collision}`,
+        );
+        cy.get("[data-test=wiki-document-location]").contains(
+            `A third wiki document ${anti_collision}`,
+        );
     });
 
     it("Phpwiki permissions", function () {
         cy.projectAdministratorSession();
 
-        const now = Date.now();
+        const anti_collision = getAntiCollisionNamePart();
 
         cy.log("Create a wiki page that is not linked to document service");
         cy.visitProjectService(project_unixname, "Wiki");
         cy.get("[data-test=wiki-browse-pages]").click();
-        cy.get("[data-test=new-wiki-page]").type(`Wiki outside Document ${now}{enter}`);
+        cy.get("[data-test=new-wiki-page]").type(`Wiki outside Document ${anti_collision}{enter}`);
 
         cy.log("wiki document have their permissions in document service");
 
         cy.getProjectId(project_unixname).then((project_id) => {
-            createAWikiDocument(`private${now}`, `My Wiki & Page document${now}`, project_id);
+            createAWikiDocument(
+                `private${anti_collision}`,
+                `My Wiki & Page document ${anti_collision}`,
+                project_id,
+            );
         });
         cy.visitProjectService(project_unixname, "Documents");
-        cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
+        cy.get("[data-test=document-tree-content]")
+            .contains("td", `private${anti_collision}`)
+            .click();
         // having page reload prevent to do assertions before the quicklook is rendered and prevent flaky test
         cy.reload();
 
@@ -120,7 +135,7 @@ describe("Document PhpWiki integration", () => {
         // ignore rule for phpwiki generated content
         updateWikiPage("My wiki content");
         updateWikiPage("My wiki content updated");
-        cy.get("[data-test=main-content]").contains(`My Wiki & Page document${now}`);
+        cy.get("[data-test=main-content]").contains(`My Wiki & Page document ${anti_collision}`);
 
         cy.visitProjectService(project_unixname, "Wiki");
         // eslint-disable-next-line cypress/no-force
@@ -137,7 +152,9 @@ describe("Document PhpWiki integration", () => {
 
         cy.log("Document events");
         cy.visitProjectService(project_unixname, "Documents");
-        cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
+        cy.get("[data-test=document-tree-content]")
+            .contains("td", `private${anti_collision}`)
+            .click();
         cy.get("[data-test=document-history]").last().click({ force: true });
 
         cy.get("[data-test=table-test]").contains("Wiki page content change");
@@ -145,7 +162,9 @@ describe("Document PhpWiki integration", () => {
 
         cy.log("project member can not see document when lack of permissions");
         cy.visitProjectService(project_unixname, "Documents");
-        cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
+        cy.get("[data-test=document-tree-content]")
+            .contains("td", `private${anti_collision}`)
+            .click();
 
         cy.get("[data-test=document-permissions]").last().click({ force: true });
 
@@ -157,7 +176,9 @@ describe("Document PhpWiki integration", () => {
         cy.log("wiki page have their permissions in wiki service");
 
         cy.visitProjectService(project_unixname, "Documents");
-        cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
+        cy.get("[data-test=document-tree-content]")
+            .contains("td", `private${anti_collision}`)
+            .click();
 
         cy.url().then((url) => {
             cy.projectMemberSession();
@@ -172,7 +193,9 @@ describe("Document PhpWiki integration", () => {
 
         cy.log("Delete wiki page");
         cy.visitProjectService(project_unixname, "Documents");
-        cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
+        cy.get("[data-test=document-tree-content]")
+            .contains("tr", `private${anti_collision}`)
+            .click();
         cy.get("[data-test=quick-look-button]").last().click({ force: true });
         cy.get("[data-test=document-quick-look]");
         cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });

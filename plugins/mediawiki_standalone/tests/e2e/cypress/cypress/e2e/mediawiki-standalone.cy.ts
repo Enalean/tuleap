@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("MediaWiki Standalone", () => {
-    let now: number;
     it("Manage permissions", () => {
         cy.projectAdministratorSession();
-        now = Date.now();
-        const project_name = `mw-standalone-${now}`;
+        const project_name = "mw-standalone-" + getAntiCollisionNamePart();
         cy.createNewPublicProjectFromAnotherOne(project_name, "mediawiki-standalone-tpl").then(
             () => {
                 cy.addProjectMember(project_name, "projectMember");

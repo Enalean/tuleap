@@ -18,13 +18,13 @@
  */
 
 import type { ProjectServiceResponse } from "@tuleap/plugin-document-rest-api-types";
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe("Document search", () => {
-    let project_unixname: string, now: number;
+    let project_unixname: string;
 
     beforeEach(() => {
-        now = Date.now();
-        project_unixname = "doc-search-" + now;
+        project_unixname = "doc-search-" + getAntiCollisionNamePart();
     });
 
     function createAProjectWithSearchableDocument(title: string): void {

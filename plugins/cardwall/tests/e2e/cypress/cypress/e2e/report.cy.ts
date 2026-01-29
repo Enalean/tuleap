@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe(`Cardwall Report`, () => {
-    let now: number;
     let project_name: string;
 
     beforeEach(() => {
-        now = Date.now();
-        project_name = `cardwall-${now}`;
+        project_name = "cardwall-" + getAntiCollisionNamePart();
         cy.projectMemberSession();
         cy.createNewPublicProject(project_name, "issues");
     });
@@ -44,7 +44,9 @@ describe(`Cardwall Report`, () => {
         cy.log("update an artifact from dashboard will redirect user on dashboard");
         cy.get("[data-test=direct-link-to-artifact]").first().click();
         cy.get("[data-test=edit-field-title]").click();
-        cy.get("[data-test=title]").clear().type(`My first artifact edited ${now}`);
+        cy.get("[data-test=title]").type(
+            "{selectAll}My first artifact edited" + getAntiCollisionNamePart(),
+        );
         cy.get("[data-test=artifact-submit]").click();
 
         cy.get("[data-test=my-dashboard-title]").contains("My Dashboard");

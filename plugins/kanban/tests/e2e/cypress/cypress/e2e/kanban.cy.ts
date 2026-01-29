@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-const now = Date.now();
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 function createCardInColumn(column_name: string, drag_to_collapsed_column_label: string): void {
     cy.intercept("POST", "/api/v1/kanban_items").as("createCard");
@@ -32,9 +32,10 @@ function createCardInColumn(column_name: string, drag_to_collapsed_column_label:
 }
 
 describe("Kanban service", () => {
+    let project_name: string;
     before(function () {
         cy.projectAdministratorSession();
-        const project_name = `kanban-${now}`;
+        project_name = "kanban-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "kanban").then((project_id) => {
             const TITLE_FIELD_NAME = "title";
             cy.getTrackerIdFromREST(project_id, "activity").then((tracker_id) => {
@@ -77,7 +78,7 @@ describe("Kanban service", () => {
             cy.projectAdministratorSession();
 
             cy.log("administrator can reorder column");
-            cy.visitProjectService(`kanban-${now}`, "Kanban");
+            cy.visitProjectService(project_name, "Kanban");
             cy.get('[data-test="go-to-kanban"]').click();
             cy.get("[data-test=kanban-header-edit-button]").click();
             cy.dragAndDrop(
@@ -118,11 +119,11 @@ describe("Kanban service", () => {
         it("changes promotion of kanban", () => {
             cy.projectAdministratorSession();
 
-            cy.visitProjectService(`kanban-${now}`, "Kanban");
+            cy.visitProjectService(project_name, "Kanban");
             cy.get("[data-test=project-sidebar]").shadow().contains("Activities").click();
             cy.get("[data-test=kanban-header-edit-button]").click();
             cy.get("[data-test=is-promoted]").click();
-            cy.visitProjectService(`kanban-${now}`, "Kanban");
+            cy.visitProjectService(project_name, "Kanban");
             cy.get("[data-test=project-sidebar]")
                 .shadow()
                 .contains("Activities")
@@ -131,7 +132,7 @@ describe("Kanban service", () => {
 
         it(`kanban in project dashboard`, function () {
             cy.projectAdministratorSession();
-            const project_name = `filtered-${now}`;
+            const project_name = "filtered-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "kanban").then((project_id) => {
                 const TITLE_FIELD_NAME = "title";
                 cy.getTrackerIdFromREST(project_id, "activity")
@@ -156,11 +157,15 @@ describe("Kanban service", () => {
             cy.visit(`/projects/${project_name}`);
             cy.log("create some empty dashboard in order to add multiple widgets");
             cy.get("[data-test=dashboard-add-button]").click();
-            cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+            cy.get("[data-test=dashboard-add-input-name]").type(
+                `tab-${getAntiCollisionNamePart()}`,
+            );
             cy.get("[data-test=dashboard-add-button-submit]").click();
 
             cy.get("[data-test=dashboard-add-button]").click();
-            cy.get("[data-test=dashboard-add-input-name]").type(`other-${now}`);
+            cy.get("[data-test=dashboard-add-input-name]").type(
+                `other-${getAntiCollisionNamePart()}`,
+            );
             cy.get("[data-test=dashboard-add-button-submit]").click();
 
             cy.log("kanban can be added into dashboard");
@@ -262,12 +267,12 @@ describe("Kanban service", () => {
 
     context("As Project member", function () {
         before(function () {
-            cy.getProjectId(`kanban-${now}`).as("project_id");
+            cy.getProjectId(project_name).as("project_id");
         });
 
         it(`I can use the kanban`, function () {
             cy.projectMemberSession();
-            cy.visitProjectService(`kanban-${now}`, "Kanban");
+            cy.visitProjectService(project_name, "Kanban");
 
             cy.get('[data-test="go-to-kanban"]').click();
 
@@ -333,8 +338,8 @@ describe("Kanban service", () => {
 
             cy.log(`I can drag and drop cards`);
 
-            const drag_label = `drag${now}`;
-            const drop_label = `drop${now}`;
+            const drag_label = `drag${getAntiCollisionNamePart()}`;
+            const drop_label = `drop${getAntiCollisionNamePart()}`;
 
             createCardInColumn("Backlog", drag_label);
             createCardInColumn("Review", drop_label);
@@ -374,44 +379,46 @@ describe("Kanban service", () => {
 
         it("can collapse column", function () {
             cy.projectAdministratorSession();
-            const project_name = `collapse-${now}`;
-            cy.createNewPublicProject(project_name, "kanban").then((project_id) => {
-                const TITLE_FIELD_NAME = "title";
-                cy.getTrackerIdFromREST(project_id, "activity").then((tracker_id) => {
+            const project_name = "collapse-" + getAntiCollisionNamePart();
+            cy.createNewPublicProject(project_name, "kanban")
+                .then((project_id) => {
+                    return cy.getTrackerIdFromREST(project_id, "activity");
+                })
+                .then((tracker_id) => {
+                    const TITLE_FIELD_NAME = "title";
                     cy.createArtifact({
                         tracker_id: tracker_id,
                         artifact_title: "first title",
-                        artifact_status: "To be done",
+                        artifact_status: "In progress",
                         title_field_name: TITLE_FIELD_NAME,
                     });
                     cy.createArtifact({
                         tracker_id: tracker_id,
                         artifact_title: "second title",
-                        artifact_status: "To be done",
+                        artifact_status: "In progress",
                         title_field_name: TITLE_FIELD_NAME,
                     });
                 });
-            });
             cy.addProjectMember(project_name, "ProjectMember");
 
             cy.projectMemberSession();
-            cy.visitProjectService(`kanban-${now}`, "Kanban");
+            cy.visitProjectService(project_name, "Kanban");
 
-            cy.get('[data-test="go-to-kanban"]').click();
+            cy.get("[data-test=go-to-kanban]").click();
 
-            cy.getContains("[data-test=kanban-column]", "In progress").within(() => {
+            cy.getContains("[data-test=kanban-column]", "In progress").then((column) => {
                 cy.log("The `in progress` column is opened");
-                cy.get("[data-test=kanban-column-header-toggle-icon]").should(
-                    "have.class",
-                    "fa-minus-square",
-                );
+                cy.wrap(column)
+                    .find("[data-test=kanban-column-header-toggle-icon]")
+                    .should("have.class", "fa-minus-square");
                 // Cypress says the toggle button is covered by another element
-                cy.get("[data-test=kanban-column-header-toggle]").click({ force: true });
+                cy.wrap(column)
+                    .find("[data-test=kanban-column-header-toggle]")
+                    .click({ force: true });
                 cy.log("The `in progress` column is now closed");
-                cy.get("[data-test=kanban-column-header-toggle-icon]").should(
-                    "have.class",
-                    "fa-plus-square",
-                );
+                cy.wrap(column)
+                    .find("[data-test=kanban-column-header-toggle-icon]")
+                    .should("have.class", "fa-plus-square");
             });
 
             cy.reload();
@@ -425,7 +432,8 @@ describe("Kanban service", () => {
             cy.getContains("[data-test=kanban-column-closed]", "In progress")
                 .find("[data-test=column-count]")
                 .should("have.text", "2");
-            const drag_to_collapsed_column_label = `drag_to_collapsed_column${now}`;
+            const drag_to_collapsed_column_label =
+                "drag_to_collapsed_column" + getAntiCollisionNamePart();
             createCardInColumn("Backlog", drag_to_collapsed_column_label);
 
             cy.intercept("PATCH", "/api/v1/kanban/*/items?column_id=*").as("dropCard");
@@ -452,7 +460,7 @@ describe("Kanban service", () => {
                     "have.class",
                     "fa-minus-square",
                 );
-                cy.get("[data-test=kanban-item]").its("length").should("be.gte", 3);
+                cy.get("[data-test=kanban-item]").should("have.length", 3);
             });
         });
     });

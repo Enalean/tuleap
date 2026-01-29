@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 const PROJECT_NAME = "conditional-notifications";
 
 function createAndUpdateArtifact(title: string, edited_title: string): void {
@@ -73,11 +75,9 @@ function configureTrackerForStatusChangeNotifications(project_name: string): voi
 }
 
 describe("Tracker notifications", () => {
-    let now: number;
     it("Sends calendar events", function () {
         cy.projectAdministratorSession();
-        now = Date.now();
-        const project_name = `calendar-${now}`;
+        const project_name = "calendar-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "scrum").then((project_id) => {
             cy.addProjectMember(project_name, "projectMember");
             cy.projectAdministratorSession();
@@ -231,8 +231,7 @@ describe("Tracker notifications", () => {
     });
 
     it("Status change notifications", function () {
-        now = Date.now();
-        const project_name = `status-${now}`;
+        const project_name = "status-" + getAntiCollisionNamePart();
         configureTrackerForStatusChangeNotifications(project_name);
 
         cy.log("Add user group and a random user to all_updates notifications");
@@ -283,8 +282,7 @@ describe("Tracker notifications", () => {
     });
 
     it("Notification on Status change does not send an email when user did not ask to receive all updates", function () {
-        now = Date.now();
-        const project_name = `status2-${now}`;
+        const project_name = "status2-" + getAntiCollisionNamePart();
         configureTrackerForStatusChangeNotifications(project_name);
 
         cy.log("Add user group and a random user to all_updates notifications");
@@ -321,8 +319,7 @@ describe("Tracker notifications", () => {
 
     it("Tracker notifications - can not add invalid users", function () {
         cy.projectAdministratorSession();
-        now = Date.now();
-        const project_name = `invalid-notif-${now}`;
+        const project_name = "invalid-notif-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "issues");
         cy.visitProjectAdministration(project_name);
         cy.addProjectMember(project_name, "ProjectMember");

@@ -18,6 +18,8 @@
  *
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Site admin", function () {
     context("Platform administrator", function () {
         it("can search user on admin page", function () {
@@ -149,9 +151,8 @@ describe("Site admin", function () {
         });
 
         it("Can delete a project", function () {
-            const now = Date.now();
             cy.projectAdministratorSession();
-            const project_name = "delete-project-" + now;
+            const project_name = "delete-project-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "scrum");
 
             cy.siteAdministratorSession();
@@ -175,8 +176,7 @@ describe("Site admin", function () {
         let project_name: string;
         before(function () {
             cy.projectAdministratorSession();
-            const now = Date.now();
-            project_name = "project-quota-" + now;
+            project_name = "project-quota-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "scrum").as("project_id");
         });
         it("can change project quota", function () {

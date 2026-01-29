@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Keyboard navigation in Document", () => {
-    let project_unixname: string, now: number;
+    let project_unixname: string;
 
     before(() => {
-        now = Date.now();
-        project_unixname = "document-kbd-" + now;
+        project_unixname = "document-kbd-" + getAntiCollisionNamePart();
     });
 
     it("user can navigate and manipulate items using keyboard shortcuts", () => {
@@ -33,8 +34,8 @@ describe("Keyboard navigation in Document", () => {
         cy.get("[data-test=document-header-actions]").should("be.visible");
         cy.get("[data-test=loading-row]").should("not.exist");
 
-        const folder_title = "Folder title " + now;
-        const item_title = "Item title " + now;
+        const folder_title = "Folder title " + getAntiCollisionNamePart();
+        const item_title = "Item title " + getAntiCollisionNamePart();
         testNewFolderShortcut(folder_title);
         testNewItemShortcut(item_title);
         testNavigationShortcuts(folder_title, item_title);

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 function waitForRepositoryCreation(): void {
     cy.get("[data-test=delete]").click();
     cy.reloadUntilCondition(
@@ -40,15 +42,26 @@ function waitForRepositoryCreation(): void {
 }
 
 describe("Git", function () {
-    const now = Date.now();
-    const git_project_name = `git-project-${now}`;
+    let git_project_name: string,
+        git_admin_project_name: string,
+        git_notif_project_name: string,
+        user_fork_project_name: string,
+        update_repository_name: string;
+
     before(() => {
         cy.projectAdministratorSession();
+        const anti_collision = getAntiCollisionNamePart();
+        git_project_name = "git-project-" + anti_collision;
+        git_admin_project_name = "gadmin-" + anti_collision;
+        git_notif_project_name = "gnotif-" + anti_collision;
+        user_fork_project_name = "ruser-fork-" + anti_collision;
+        update_repository_name = "UpdateRepository" + anti_collision;
+
         cy.createNewPublicProject(git_project_name, "agile_alm");
         cy.getProjectId(git_project_name).as("project_id");
-        cy.createNewPublicProject(`gnotif-${now}`, "agile_alm");
+        cy.createNewPublicProject(git_notif_project_name, "agile_alm");
         cy.getProjectId(git_project_name).as("gnotif_project_id");
-        cy.createNewPublicProject(`gadmin-${now}`, "agile_alm");
+        cy.createNewPublicProject(git_admin_project_name, "agile_alm");
 
         cy.visitProjectService(`git-fork`, "Git");
         cy.log("Create a repository and fork it");
@@ -62,13 +75,13 @@ describe("Git", function () {
         cy.log("Create a repository for access test");
         cy.get("[data-test=create-repository-button]").click();
         cy.get("[data-test=create-repository-modal-form]").within(() => {
-            cy.get("[data-test=create_repository_name]").type(`UpdateRepository${now}`);
+            cy.get("[data-test=create_repository_name]").type(update_repository_name);
             cy.root().submit();
         });
 
         cy.regularUserSession();
-        cy.createNewPublicProject(`ruser-fork-${now}`, "agile_alm");
-        cy.visitProjectService(`ruser-fork-${now}`, "Git");
+        cy.createNewPublicProject(user_fork_project_name, "agile_alm");
+        cy.visitProjectService(user_fork_project_name, "Git");
         cy.get("[data-test=create-repository-button]").click();
         cy.get("[data-test=create-repository-modal-form]").within(() => {
             cy.get("[data-test=create_repository_name]").type("RegularUserRepo");
@@ -94,17 +107,20 @@ describe("Git", function () {
                 cy.log(
                     "Push some content inside repository to be sure that last commit can be displayed",
                 );
+                const repository_name = "Aquali" + getAntiCollisionNamePart();
                 cy.cloneRepository(
                     "ProjectAdministrator",
                     "tuleap/plugins/git/git-dashboard/Aquali.git",
-                    `Aquali${now}`,
+                    repository_name,
                 );
-                cy.pushGitCommit(`Aquali${now}`);
+                cy.pushGitCommit(repository_name);
 
                 cy.log("Add widget to project dashboard");
                 cy.visit(`projects/git-dashboard`);
                 cy.get("[data-test=dashboard-add-button]").click();
-                cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+                cy.get("[data-test=dashboard-add-input-name]").type(
+                    `tab-${getAntiCollisionNamePart()}`,
+                );
                 cy.get("[data-test=dashboard-add-button-submit]").click();
                 cy.get("[data-test=dashboard-configuration-button]").click();
                 cy.get("[data-test=dashboard-add-widget-button]").click();
@@ -121,7 +137,9 @@ describe("Git", function () {
                 cy.log("Add widget to user dashboard");
                 cy.visit(`my`);
                 cy.get("[data-test=dashboard-add-button]").click();
-                cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+                cy.get("[data-test=dashboard-add-input-name]").type(
+                    `tab-${getAntiCollisionNamePart()}`,
+                );
                 cy.get("[data-test=dashboard-add-button-submit]").click();
                 cy.get("[data-test=dashboard-configuration-button]").click();
                 cy.get("[data-test=dashboard-add-widget-button]").click();
@@ -137,7 +155,7 @@ describe("Git", function () {
             it("can create a new repository and delete it", function () {
                 cy.projectAdministratorSession();
                 visitGitService();
-                const repository_name = `Aquali-${now}`;
+                const repository_name = "Aquali-" + getAntiCollisionNamePart();
                 cy.get("[data-test=create-repository-button]").click();
                 cy.get("[data-test=create_repository_name]").type(repository_name);
                 cy.get("[data-test=create_repository]").click();
@@ -196,10 +214,10 @@ describe("Git", function () {
                 cy.get("[data-test=gerrit-server-add-button-submit]").click();
 
                 cy.projectAdministratorSession();
-                cy.addProjectMember(`gadmin-${now}`, "projectMember");
+                cy.addProjectMember(git_admin_project_name, "projectMember");
 
                 cy.projectAdministratorSession();
-                cy.visit(`/plugins/git/gadmin-${now}/`);
+                cy.visit(`/plugins/git/${git_admin_project_name}/`);
                 cy.get("[data-test=git-administration]").click({ force: true });
                 cy.get("[data-test=git-administrators]").click();
                 cy.get("[data-test=git-admins-select]").select("Project Members");
@@ -207,7 +225,7 @@ describe("Git", function () {
 
                 cy.log("User can save gerrit templates");
                 cy.projectMemberSession();
-                cy.visit(`/plugins/git/gadmin-${now}/`);
+                cy.visit(`/plugins/git/${git_admin_project_name}/`);
                 cy.get("[data-test=git-administration]").click({ force: true });
                 cy.get("[data-test=create-new-gerrit-template]").click();
                 cy.get("[data-test=from-scratch]").click();
@@ -218,7 +236,7 @@ describe("Git", function () {
                 cy.get("[data-test=save-gerrit-config]").click();
 
                 cy.log("User can create repository");
-                cy.visit(`/plugins/git/gadmin-${now}/`);
+                cy.visit(`/plugins/git/${git_admin_project_name}/`);
                 cy.get("[data-test=create-repository-button]").click();
                 cy.get("[data-test=create-repository-modal-form]").within(() => {
                     cy.get("[data-test=create_repository_name]").type("AdminDelegationRepository");
@@ -227,7 +245,7 @@ describe("Git", function () {
                 cy.get("[data-test=git_repo_name]").contains("AdminDelegationRepository");
 
                 cy.log("User can change git administration permissions");
-                cy.visit(`/plugins/git/gadmin-${now}/`);
+                cy.visit(`/plugins/git/${git_admin_project_name}/`);
                 cy.get("[data-test=git-administration]").click({ force: true });
                 cy.get("[data-test=git-administrators]").click();
                 cy.get("[data-test=git-admins-select]").select([]);
@@ -315,28 +333,28 @@ describe("Git", function () {
             });
             it("should be able to manage notifications", function () {
                 cy.projectAdministratorSession();
-                cy.visitProjectAdministration(`gnotif-${now}`);
-                cy.addProjectMember(`gnotif-${now}`, "ProjectMember");
+                cy.visitProjectAdministration(git_notif_project_name);
+                cy.addProjectMember(git_notif_project_name, "ProjectMember");
                 cy.projectAdministratorSession();
 
-                cy.visitProjectAdministration(`gnotif-${now}`);
+                cy.visitProjectAdministration(git_notif_project_name);
                 cy.get("[data-test=admin-nav-groups]").click();
 
                 cy.addUserGroupWithUsers("developer", ["projectMember"]);
 
-                cy.visitProjectService(`gnotif-${now}`, "Git");
+                cy.visitProjectService(git_notif_project_name, "Git");
                 cy.get("[data-test=create-repository-button]").click();
                 cy.get("[data-test=create_repository_name]").type("my-repo");
                 cy.get("[data-test=create_repository]").click();
 
-                cy.visitProjectService(`gnotif-${now}`, "Git");
+                cy.visitProjectService(git_notif_project_name, "Git");
                 cy.get("[data-test=git-administration]").click({ force: true });
                 cy.get("[data-test=git-administrators]").click();
                 cy.get("[data-test=git-admins-select]").select("Project Members");
                 cy.get("[data-test=update-git-administrators]").click();
 
                 cy.projectMemberSession();
-                cy.visitProjectService(`gnotif-${now}`, "Git");
+                cy.visitProjectService(git_notif_project_name, "Git");
                 cy.get("[data-test=git-repository-card-admin-link]").click();
                 cy.get("[data-test=mail]").click();
 
@@ -359,7 +377,7 @@ describe("Git", function () {
                 cy.get("[data-test=git-repository-tree-table]").contains("No commits");
 
                 const repository_path = "tuleap/plugins/git/git-access/Access";
-                const repository_name = `access-${now}`;
+                const repository_name = "access-" + getAntiCollisionNamePart();
                 cy.cloneRepositoryWillFail(
                     "ProjectAdministrator",
                     repository_path,
@@ -371,9 +389,7 @@ describe("Git", function () {
             it("User can choose permissions of his repository", function () {
                 cy.projectAdministratorSession();
                 cy.visitProjectService(`git-access`, "Git");
-                cy.get("[data-test=git-repository-path]")
-                    .contains(`UpdateRepository${now}`)
-                    .click();
+                cy.get("[data-test=git-repository-path]").contains(update_repository_name).click();
                 cy.get("[data-test=git-repository-settings]").click();
 
                 cy.log("User can change the access right of the repository");
@@ -390,7 +406,7 @@ describe("Git", function () {
         context("Fine grained permissions", function () {
             it("Permissions should be respected", function () {
                 const repository_path = "tuleap/plugins/git/git-fined-grained/fine-grained";
-                const repository_name = `fine-grained-pm-${now}`;
+                const repository_name = "fine-grained-pm-" + getAntiCollisionNamePart();
                 cy.log("clone the repository and push commit in main branch");
                 cy.cloneRepository("ProjectMember", repository_path, repository_name);
                 cy.pushGitCommit(repository_name);
@@ -450,19 +466,20 @@ describe("Git", function () {
                 cy.log("You can create a new fork");
                 cy.get("[data-test=fork-repositories-link]").click({ force: true });
                 cy.get("[data-test=fork-reporitory-selectbox]").select("MyRepository");
-                cy.get("[data-test=fork-repository-path]").type(`MyRepository${now}`);
+                const fork_name = "MyRepository" + getAntiCollisionNamePart();
+                cy.get("[data-test=fork-repository-path]").type(fork_name);
                 cy.get("[data-test=create-fork-button]").click();
                 cy.get("[data-test=create-fork-with-permissions-button]").click();
                 cy.log("Check that fork is displayed in repository list");
                 cy.get("[data-test=select-fork-of-user]").select("ProjectMember (ProjectMember)");
-                cy.get("[data-test=git-repository-path]").should("contain", `MyRepository${now}`);
+                cy.get("[data-test=git-repository-path]").should("contain", fork_name);
 
                 cy.log(
                     "You can change description, permissions, mail prefix and notifications on your fork",
                 );
                 cy.projectAdministratorSession();
                 visitGitService();
-                cy.visit(`plugins/git/git-fork/u/ProjectMember/MyRepository${now}/MyRepository`);
+                cy.visit(`plugins/git/git-fork/u/ProjectMember/${fork_name}/MyRepository`);
                 cy.get("[data-test=git-repository-parent]").contains("MyRepository");
                 cy.get("[data-test=git-repository-settings]").click();
                 cy.get("[data-test=repository-description]").type("My new fork description");
@@ -527,7 +544,7 @@ describe("Git", function () {
                 cy.log(
                     "But you can create new fork from public project in an other project you are admin of",
                 );
-                cy.get("[data-test=fork-destination-project]").select(`ruser-fork-${now}`);
+                cy.get("[data-test=fork-destination-project]").select(user_fork_project_name);
                 cy.get("[data-test=create-fork-button]").click();
                 cy.get("[data-test=create-fork-with-permissions-button]").click();
                 cy.get("[data-test=feedback]").contains("Successfully forked");
@@ -557,7 +574,7 @@ describe("Git", function () {
                 waitForRepositoryCreation();
                 const repository_path =
                     "tuleap/plugins/git/git-fork/u/ProjectAdministrator/ToBeForked";
-                const repository_name = `MyRepositoryClone${now}`;
+                const repository_name = "MyRepositoryClone" + getAntiCollisionNamePart();
                 cy.cloneRepository("ProjectAdministrator", repository_path, repository_name);
                 cy.pushGitCommit(repository_name);
             });
@@ -592,7 +609,7 @@ describe("Git", function () {
 
                             const repository_path =
                                 "tuleap/plugins/git/git-artifact-action/MyRepository";
-                            const repository_name = `MyRepository${now}`;
+                            const repository_name = "MyRepository" + getAntiCollisionNamePart();
                             cy.cloneRepository(
                                 "ProjectAdministrator",
                                 repository_path,

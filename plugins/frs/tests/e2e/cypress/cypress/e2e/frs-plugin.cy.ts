@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("FRS plugin", () => {
-    let now: number;
+    let anti_collision: string;
     beforeEach(() => {
-        now = Date.now();
+        anti_collision = getAntiCollisionNamePart();
     });
 
     it("user can link a frs release to an agiledashboard release", (): void => {
@@ -40,7 +42,7 @@ describe("FRS plugin", () => {
                 .then(function () {
                     cy.visit(`/file/showfiles.php?group_id=${frs_project_id}`);
 
-                    cy.createFRSPackage(frs_project_id, "My first package " + now);
+                    cy.createFRSPackage(frs_project_id, "My first package " + anti_collision);
                     cy.visit(`/file/showfiles.php?group_id=${frs_project_id}`);
 
                     cy.intercept({
@@ -48,9 +50,9 @@ describe("FRS plugin", () => {
                     }).as("createRelease");
                     cy.get("[data-test=package-name]").first().click();
                     cy.get("[data-test=create-release]").first().click();
-                    cy.get("[data-test=release-name]").type("My release name" + now);
+                    cy.get("[data-test=release-name]").type("My release name" + anti_collision);
                     cy.get("[data-test=release-artifact-id]").type(this.release_id);
-                    cy.get("[data-test=release-note]").type("My awesome RN" + now);
+                    cy.get("[data-test=release-note]").type("My awesome RN" + anti_collision);
                     cy.get("[data-test=file-input]").selectFile(
                         "cypress/fixtures/release-file.txt",
                     );
@@ -64,7 +66,7 @@ describe("FRS plugin", () => {
                     cy.visit(`/file/showfiles.php?group_id=${frs_project_id}`);
                     cy.get("[data-test=package-name]").first().click();
                     cy.get(`[data-test=release-name]`).first().click();
-                    cy.get("[data-test=release-note]").contains("My awesome RN" + now);
+                    cy.get("[data-test=release-note]").contains("My awesome RN" + anti_collision);
                     cy.get("[data-test=release-files]").contains("release-file.txt");
                     cy.get("[data-test=release-files]").contains(
                         "ce310e66a8b9e6bde074fb9ac2e17e04",

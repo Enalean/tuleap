@@ -18,6 +18,8 @@
  *
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Tracker Workflow Global Rules", () => {
     context("Tracker Rule date verifications for a workflow", () => {
         it("tests rule dates", () => {
@@ -31,7 +33,7 @@ describe("Tracker Workflow Global Rules", () => {
             cy.get("[data-test=project-tracker-select]").select("Tracker Rule Date Test Tracker");
             cy.get("[data-test=button-next]").click();
 
-            const name = "dates" + Date.now();
+            const name = "dates" + getAntiCollisionNamePart();
             cy.get("[data-test=tracker-name-input]").type("{selectAll}" + name + "{enter}");
             cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
 

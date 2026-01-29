@@ -18,16 +18,12 @@
  *
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Time tracking", function () {
-    let now: number;
-
-    beforeEach(function () {
-        now = Date.now();
-    });
-
     function createANewTab(): void {
         cy.get("[data-test=dashboard-add-button]").click();
-        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${getAntiCollisionNamePart()}`);
         cy.get("[data-test=dashboard-add-button-submit]").click();
     }
 

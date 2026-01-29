@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe(`Bot Mattermost`, function () {
     it(`can configure backlog notifications`, function () {
         cy.addBotMattermost("My bot");
 
         cy.log("configure backlog notifications");
         cy.projectAdministratorSession();
-        const now = Date.now();
-        const project_name = "ad-mattermost-" + now;
+        const project_name = "ad-mattermost-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "scrum");
         cy.visitProjectService(project_name, "Backlog");
         // admin link is displayed on hover, needs to force click

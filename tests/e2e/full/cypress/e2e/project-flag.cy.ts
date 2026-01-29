@@ -17,37 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Project flag", function () {
-    let now: number;
-    let flag_now = Date.now();
     before(function () {
         cy.projectAdministratorSession();
-        now = Date.now();
-        cy.createNewPublicProject(`project-flag-${now}`, "agile_alm").as("project_id");
+        const project_name = "project-flag-" + getAntiCollisionNamePart();
+        cy.createNewPublicProject(project_name, "agile_alm").as("project_id");
     });
+
     it("can add a new project flag and flag value as Site Admin", function () {
-        flag_now = Date.now();
+        const anti_collision = getAntiCollisionNamePart();
         cy.siteAdministratorSession();
         cy.visit(`/admin/project-creation/categories`);
 
         cy.log("Create a new flag category");
         cy.get("[data-test=add-project-category-button]").click();
-        cy.get("[data-test=fullname]").type(`Adzam-${flag_now}`);
-        cy.get("[data-test=shortname]").type(`adzam_flag_${flag_now}`);
+        const flag_name = `Adzam-${anti_collision}`;
+        cy.get("[data-test=fullname]").type(flag_name);
+        cy.get("[data-test=shortname]").type(`adzam_flag_${anti_collision}`);
         cy.get("[data-test=add-trove-cat-submit-button]").click();
 
         cy.log("Create a new value for the 'Adzam flag'");
         cy.get("[data-test=add-project-category-button]").click();
         cy.get("[data-test=fullname]").type("5 XM");
         cy.get("[data-test=shortname]").type("5_xm");
-        cy.get("[data-test=trove-cat-add-modal-select-parent-category]").select(
-            `Adzam-${flag_now}`,
-        );
+        cy.get("[data-test=trove-cat-add-modal-select-parent-category]").select(flag_name);
         cy.get("[data-test=add-trove-cat-submit-button]").click();
 
         cy.log("Edit the created flag");
         cy.get("[data-test=trove-cat-row]")
-            .contains("div:visible", `Adzam-${flag_now}`)
+            .contains("div:visible", flag_name)
             .parentsUntil("[data-test=trove-cat-row]")
             .parent()
             .within(() => {
@@ -62,7 +62,7 @@ describe("Project flag", function () {
                         cy.wrap(modal).get("[data-test=add-trove-cat-update-button]").click();
                     });
             });
-        cy.contains("div:visible", `Adzam-${flag_now}`)
+        cy.contains("div:visible", flag_name)
             .parentsUntil("[data-test=trove-cat-row]")
             .parent()
             .within(() => {
@@ -73,8 +73,8 @@ describe("Project flag", function () {
         cy.projectAdministratorSession();
         cy.visit(`/project/${this.project_id}/admin/categories`);
         cy.get("[data-test=project-admin-category-form]").within(function () {
-            cy.getContains("[data-test=project-admin-category-select]", "Adzam-" + flag_now).select(
-                `Adzam-${flag_now} :: 5 XM`,
+            cy.getContains("[data-test=project-admin-category-select]", flag_name).select(
+                `${flag_name} :: 5 XM`,
             );
         });
         cy.get("[data-test=project-admin-category-form-submit]").click();

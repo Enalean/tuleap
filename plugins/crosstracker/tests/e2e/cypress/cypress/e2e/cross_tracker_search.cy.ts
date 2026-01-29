@@ -18,13 +18,13 @@
  *
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("CrossTracker search", function () {
-    let now: number;
     let project_name: string;
 
     before(function () {
-        now = Date.now();
-        project_name = `x-tracker-${now}`;
+        project_name = "x-tracker-" + getAntiCollisionNamePart();
         cy.projectMemberSession();
 
         cy.createNewPublicProject(project_name, "agile_alm").then((project_id) => {
@@ -73,15 +73,11 @@ describe("CrossTracker search", function () {
         });
     });
 
-    beforeEach(function () {
-        now = Date.now();
-    });
-
     it("User should be able to use CrossTracker search widget", function () {
         cy.projectMemberSession();
         cy.visit("/my/");
 
-        cy.createNewXTSWidget(now);
+        cy.createNewXTSWidget(getAntiCollisionNamePart());
 
         cy.intercept("/api/v1/crosstracker_query/content*").as("getQueryContent");
 
@@ -125,7 +121,7 @@ describe("CrossTracker search", function () {
         cy.projectMemberSession();
         cy.visit("/my/");
 
-        cy.createNewXTSWidget(now);
+        cy.createNewXTSWidget(getAntiCollisionNamePart());
 
         cy.intercept("/api/v1/crosstracker_query/content*").as("getQueryContent");
 
@@ -158,7 +154,7 @@ describe("CrossTracker search", function () {
         cy.projectMemberSession();
         cy.visit("/my/");
 
-        cy.createNewXTSWidget(now);
+        cy.createNewXTSWidget(getAntiCollisionNamePart());
 
         cy.intercept("/api/v1/crosstracker_query/content*").as("getQueryContent");
 
@@ -229,7 +225,7 @@ describe("CrossTracker search", function () {
         cy.projectMemberSession();
         cy.visit("/my/");
 
-        cy.createNewXTSWidget(now);
+        cy.createNewXTSWidget(getAntiCollisionNamePart());
 
         cy.get("[data-test=cross-tracker-search-widget]")
             .invoke("attr", "data-widget-json-data")

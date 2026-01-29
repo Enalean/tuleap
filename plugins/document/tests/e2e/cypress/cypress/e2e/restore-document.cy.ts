@@ -22,15 +22,14 @@ import type {
     ProjectServiceResponse,
 } from "@tuleap/plugin-document-rest-api-types";
 import { deleteDocumentDisplayedInQuickLook, openQuickLook } from "../support/helpers";
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe("Document restoration", () => {
-    let now: number;
     let project_shortname: string;
 
     before(() => {
         cy.projectMemberSession();
-        now = Date.now();
-        project_shortname = `doc-restore-${now}`;
+        project_shortname = "doc-restore-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_shortname, "issues").then((project_id) =>
             cy
                 .getFromTuleapAPI<ProjectServiceResponse>(

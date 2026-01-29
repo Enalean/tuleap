@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+
 describe("Tuleap Functions for Trackers", () => {
-    let now: number;
     it("Show milestones below backlog", () => {
         cy.projectAdministratorSession();
-        now = Date.now();
-        const project_name = `tracker-func-${now}`;
+        const project_name = "tracker-func-" + getAntiCollisionNamePart();
         cy.createNewPublicProjectFromAnotherOne(project_name, "tracker-functions-template").then(
             () => {
                 cy.addProjectMember(project_name, "projectMember");
