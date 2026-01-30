@@ -21,26 +21,20 @@
     <button
         class="tlp-button-danger tlp-button-outline tlp-button-small"
         type="button"
-        v-on:click="markAsDeleted()"
+        v-on:click="setStepDeleted([step, true])"
     >
         <i class="far fa-trash-alt"></i>
         {{ $gettext("Delete") }}
     </button>
 </template>
 
-<script>
-export default {
-    name: "StepDeletionActionButtonMarkAsDeleted",
-    props: {
-        step: {
-            type: Object,
-            required: true,
-        },
-    },
-    methods: {
-        markAsDeleted() {
-            this.$store.commit("setStepDeleted", [this.step, true]);
-        },
-    },
-};
+<script setup lang="ts">
+import { useMutations } from "vuex-composition-helpers";
+import type { Step } from "./Step";
+
+const { setStepDeleted } = useMutations(["setStepDeleted"]);
+
+defineProps<{
+    step: Step;
+}>();
 </script>
