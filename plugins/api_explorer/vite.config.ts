@@ -19,10 +19,18 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 export default vite.defineAppConfig(
     { plugin_name: "api-explorer" },
     {
+        plugins: [
+            nodePolyfills({
+                globals: {
+                    Buffer: true,
+                },
+            }),
+        ],
         build: {
             rollupOptions: {
                 input: {
