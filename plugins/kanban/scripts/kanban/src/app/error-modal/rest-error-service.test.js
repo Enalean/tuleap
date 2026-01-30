@@ -19,13 +19,13 @@
 
 import angular from "angular";
 import "angular-mocks";
-import error_modal_module from "./error-modal.js";
+import kanban_module from "../app.js";
 
 describe("RestErrorService", () => {
     let RestErrorService, TlpModalService;
 
     beforeEach(() => {
-        angular.mock.module(error_modal_module);
+        angular.mock.module(kanban_module);
         angular.mock.inject(function (_TlpModalService_, _RestErrorService_) {
             TlpModalService = _TlpModalService_;
             RestErrorService = _RestErrorService_;

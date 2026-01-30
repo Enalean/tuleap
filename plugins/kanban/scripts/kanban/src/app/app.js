@@ -18,27 +18,20 @@
  */
 
 import angular from "angular";
-import ngSanitize from "angular-sanitize";
+import angular_sanitize from "angular-sanitize";
 import dragular from "dragular";
 import angular_artifact_modal from "@tuleap/plugin-tracker-artifact-modal";
 import angular_moment from "angular-moment";
-
 import angular_tlp from "@tuleap/angular-tlp";
 import angular_async from "@tuleap/angular-async";
-
 import "angular-locker";
 import "angular-gettext";
+import angular_jwt from "angular-jwt";
+import "angular-socket-io"; // provides btford.socket-io
+import { card_fields } from "@tuleap/plugin-cardwall-card-fields";
 import translations from "../../po/fr_FR.po";
-
-import jwt from "./jwt/jwt.js";
-import kanban_item from "./kanban-item/kanban-item.js";
-import shared_properties from "./shared-properties/shared-properties.js";
-import uuid_generator from "./uuid-generator/uuid-generator.js";
-import socket from "./socket/socket.js";
-import mercure from "./realtime/mercure";
-import user_preferences from "./user-preferences/user-preferences.js";
-import error_modal from "./error-modal/error-modal.js";
-
+import SocketConfig from "./socket/socket-config.js";
+import MercureConfig from "./realtime/mercure-config";
 import ErrorCtrl from "./error-modal/error-controller.js";
 import MainCtrl from "./app-main-controller.js";
 import KanbanService from "./kanban-service.js";
@@ -64,25 +57,30 @@ import KanbanDirective from "./kanban-directive.js";
 import ColumnWipHeaderDirective from "./kanban-column/column-wip-header/column-wip-header-directive.js";
 import FeedbackComponent from "./feedback-component.js";
 import UnderTheFoldNotificationComponent from "./under-the-fold-notification-component.js";
+import JWTService from "./jwt/jwt-service.js";
+import SocketFactory from "./socket/socket-factory.js";
+import SocketService from "./socket/socket-service.js";
+import RestErrorService from "./error-modal/rest-error-service.js";
+import KanbanItemDirective from "./kanban-item/kanban-item-directive.js";
+import TimeInfoComponent from "./kanban-item/time-info/time-info-component.js";
+import UUIDGeneratorService from "./uuid-generator/uuid-generator-service.js";
+import SharedPropertiesService from "./shared-properties/shared-properties-service.js";
+import UserPreferencesService from "./user-preferences/user-preferences-service.js";
+import MercureService from "./realtime/mercure-service.js";
 
 export default angular
     .module("kanban", [
         angular_moment,
         "angular-locker",
         "gettext",
+        angular_sanitize,
+        angular_jwt,
+        "btford.socket-io",
+        dragular,
         angular_artifact_modal,
         angular_async,
         angular_tlp,
-        dragular,
-        error_modal,
-        jwt,
-        kanban_item,
-        ngSanitize,
-        shared_properties,
-        socket,
-        user_preferences,
-        uuid_generator,
-        mercure,
+        card_fields,
     ])
     .run([
         "gettextCatalog",
@@ -92,6 +90,8 @@ export default angular
             }
         },
     ])
+    .config(SocketConfig)
+    .config(MercureConfig)
     .controller("MainCtrl", MainCtrl)
     .controller("FilterTrackerReportController", FilterTrackerReportController)
     .controller("KanbanColumnController", KanbanColumnController)
@@ -103,6 +103,14 @@ export default angular
     .service("KanbanItemRestService", KanbanItemRestService)
     .service("FilterTrackerReportService", FilterTrackerReportService)
     .service("KanbanFilteredUpdatedAlertService", KanbanFilteredUpdatedAlertService)
+    .service("JWTService", JWTService)
+    .service("SocketFactory", SocketFactory)
+    .service("SocketService", SocketService)
+    .service("RestErrorService", RestErrorService)
+    .service("UUIDGeneratorService", UUIDGeneratorService)
+    .service("SharedPropertiesService", SharedPropertiesService)
+    .service("UserPreferencesService", UserPreferencesService)
+    .service("MercureService", MercureService)
     .directive("kanban", KanbanDirective)
     .directive("addInPlace", AddInPlaceDirective)
     .directive("addToDashboard", AddToDashboardDirective)
@@ -113,12 +121,14 @@ export default angular
     .directive("goToKanban", GoToKanbanDirective)
     .directive("kanbanFilteredUpdatedAlert", KanbanFilteredUpdatedAlertDirective)
     .directive("columnWipHeader", ColumnWipHeaderDirective)
+    .directive("kanbanItem", KanbanItemDirective)
     .value("KanbanFilterValue", KanbanFilterValue)
     .filter("InPropertiesFilter", InPropertiesFilter)
     .component("underTheFoldNotification", UnderTheFoldNotificationComponent)
-    .component("feedbackMessage", FeedbackComponent).name;
+    .component("feedbackMessage", FeedbackComponent)
+    .component("timeInfo", TimeInfoComponent).name;
 
-var kanban_elements = document.getElementsByClassName("widget-kanban");
-[].forEach.call(kanban_elements, function (kanban_element) {
-    angular.bootstrap(kanban_element, ["kanban"]);
-});
+const kanban_elements = document.getElementsByClassName("widget-kanban");
+for (const element of kanban_elements) {
+    angular.bootstrap(element, ["kanban"]);
+}

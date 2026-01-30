@@ -1,4 +1,4 @@
-import "./app.js";
+import kanban_module from "./app.js";
 import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
@@ -7,7 +7,7 @@ describe("DroppedService -", function () {
     let wrapPromise, DroppedService, KanbanService;
 
     beforeEach(function () {
-        angular.mock.module("kanban", function ($provide) {
+        angular.mock.module(kanban_module, function ($provide) {
             $provide.decorator("KanbanService", function ($delegate, $q) {
                 jest.spyOn($delegate, "moveInArchive").mockReturnValue($q.when());
                 jest.spyOn($delegate, "moveInBacklog").mockReturnValue($q.when());
