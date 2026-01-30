@@ -2,7 +2,7 @@
 
     {{# pending_invitations }}
         <h2>{{# gettext }}Pending invitations{{/ gettext }}</h2>
-        <section class="tlp-pane project-admin-pending-invitation-pane">
+        <section class="tlp-pane project-admin-pending-invitation-pane" data-test="resend-user-invitations-pane">
             <div class="tlp-pane-container">
                 <form method="post" action="{{ manage_invitations_url }}" class="tlp-pane-section">
                     {{# csrf }}

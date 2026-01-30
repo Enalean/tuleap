@@ -142,5 +142,11 @@ context("Platform notifications", function () {
             "user@example.com",
             "You are now a registered user on Tuleap",
         );
+
+        cy.visit("/admin/");
+        cy.get("[data-test=user-settings-link]").click();
+        cy.log("Change user be approved back to its original value");
+        cy.get("[data-test=user-must-be-approved]").uncheck();
+        cy.get("[data-test=save-settings]").click();
     });
 });
