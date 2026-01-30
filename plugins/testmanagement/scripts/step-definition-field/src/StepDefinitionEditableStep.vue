@@ -25,15 +25,14 @@
             v-bind:value="step.id"
         />
         <step-definition-actions
-            v-bind:value="step.description_format"
+            v-bind:step="step"
             v-bind:format_select_id="format_select_id"
             v-bind:is_in_preview_mode="is_in_preview_mode"
             v-bind:is_preview_loading="is_preview_loading"
+            v-bind:disabled="false"
             v-on:input="$emit('toggle-rte', $event)"
             v-on:interpret-content-event="togglePreview"
-        >
-            <step-deletion-action-button-mark-as-deleted v-bind:step="step" />
-        </step-definition-actions>
+        />
         <input
             type="hidden"
             v-bind:name="'artifact[' + field_id + '][description_format][]'"
@@ -117,7 +116,6 @@
 </template>
 
 <script>
-import StepDeletionActionButtonMarkAsDeleted from "./StepDeletionActionButtonMarkAsDeleted.vue";
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
 import { mapState } from "vuex";
@@ -134,7 +132,6 @@ export default {
     components: {
         StepDefinitionArrowExpected,
         StepDefinitionActions,
-        StepDeletionActionButtonMarkAsDeleted,
     },
     props: {
         step: {

@@ -19,9 +19,13 @@
 
 <template>
     <div>
-        <step-definition-actions v-bind:value="step.description_format" v-bind:disabled="true">
-            <step-deletion-action-button-unmark-deletion v-bind:step="step" />
-        </step-definition-actions>
+        <step-definition-actions
+            v-bind:step="step"
+            v-bind:disabled="true"
+            v-bind:format_select_id="''"
+            v-bind:is_preview_loading="false"
+            v-bind:is_in_preview_mode="false"
+        />
         <div class="ttm-definition-step-description-deleted">
             <div
                 v-dompurify-html="step.raw_description"
@@ -50,14 +54,12 @@
 <script>
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
-import StepDeletionActionButtonUnmarkDeletion from "./StepDeletionActionButtonUnmarkDeletion.vue";
 import { mapGetters } from "vuex";
 
 export default {
     name: "StepDefinitionMarkedAsDeleted",
     components: {
         StepDefinitionArrowExpected,
-        StepDeletionActionButtonUnmarkDeletion,
         StepDefinitionActions,
     },
     props: {

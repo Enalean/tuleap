@@ -62,58 +62,50 @@
                 v-if="is_commonmark_button_displayed"
             />
         </div>
-        <slot />
+        <step-deletion-action-button-unmark-deletion v-bind:step="step" v-if="step.is_deleted" />
+        <step-deletion-action-button-mark-as-deleted v-bind:step="step" v-else />
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
-import { mapState } from "vuex";
 import CommonmarkSyntaxHelper from "./CommonMark/CommonmarkSyntaxHelper.vue";
 import CommonmarkPreviewButton from "./CommonMark/CommonmarkPreviewButton.vue";
+import StepDeletionActionButtonUnmarkDeletion from "./StepDeletionActionButtonUnmarkDeletion.vue";
+import StepDeletionActionButtonMarkAsDeleted from "./StepDeletionActionButtonMarkAsDeleted.vue";
+import type { Step } from "./Step";
 
-export default {
-    name: "StepDefinitionActions",
-    components: { CommonmarkPreviewButton, CommonmarkSyntaxHelper },
-    props: {
-        value: String,
-        disabled: {
-            type: Boolean,
-            default: false,
-        },
-        format_select_id: {
-            type: String,
-            default: "",
-        },
-        is_in_preview_mode: Boolean,
-        is_preview_loading: Boolean,
-    },
-    computed: {
-        ...mapState(["field_id"]),
-        is_text() {
-            return this.value === TEXT_FORMAT_TEXT;
-        },
-        is_html() {
-            return this.value === TEXT_FORMAT_HTML;
-        },
-        is_commonmark() {
-            return this.value === TEXT_FORMAT_COMMONMARK;
-        },
-        disabled_format_selectbox() {
-            return this.disabled || this.is_in_preview_mode;
-        },
-        is_commonmark_button_displayed() {
-            return !this.disabled && this.is_commonmark;
-        },
-    },
-    methods: {
-        input(event) {
-            this.$emit("input", event, this.$refs.format.value);
-        },
-    },
-};
+const props = defineProps<{
+    step: Step;
+    disabled: boolean;
+    format_select_id: string;
+    is_in_preview_mode: boolean;
+    is_preview_loading: boolean;
+}>();
+
+const format = ref<TextFieldFormat>();
+
+const is_text = computed(() => props.step.description_format === TEXT_FORMAT_TEXT);
+const is_html = computed(() => props.step.description_format === TEXT_FORMAT_HTML);
+const is_commonmark = computed(() => props.step.description_format === TEXT_FORMAT_COMMONMARK);
+const disabled_format_selectbox = computed(() => props.disabled || props.is_in_preview_mode);
+const is_commonmark_button_displayed = computed(() => !props.disabled && is_commonmark.value);
+
+const emit = defineEmits<{
+    (e: "input", event: Event, format: TextFieldFormat): void;
+    (e: "interpret-content-event"): void;
+}>();
+
+function input(event: Event) {
+    if (!format.value) {
+        return;
+    }
+    emit("input", event, format.value);
+}
 </script>
