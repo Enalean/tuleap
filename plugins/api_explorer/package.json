@@ -10,8 +10,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/react": "^18.3.18",
-    "vite-plugin-node-polyfills": "^0.25.0"
+    "@types/react": "^18.3.18"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -20,19 +19,19 @@
   },
   "pnpm": {
     "overrides": {
-      "axios": "^1.12.0",
-      "prismjs": "^1.30.0",
-      "cookie": "^0.7.2",
-      "dompurify": "^3.2.4",
-      "js-yaml": "^4.1.1",
+      "argparse": "npm:@types/argparse@^2",
+      "assert": "npm:@nolyfill/assert@^1",
+      "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1",
+      "hasown": "npm:@nolyfill/hasown@^1",
+      "is-arguments": "npm:@nolyfill/is-arguments@^1",
+      "is-core-module": "npm:@nolyfill/is-core-module@^1",
+      "is-generator-function": "npm:@nolyfill/is-generator-function@^1",
+      "is-typed-array": "npm:@nolyfill/is-typed-array@^1",
+      "isarray": "npm:@nolyfill/isarray@^1",
       "json-stable-stringify": "npm:@nolyfill/json-stable-stringify@^1",
       "side-channel": "npm:@nolyfill/side-channel@^1",
-      "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1",
-      "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
-      "hasown": "npm:@nolyfill/hasown@^1",
-      "isarray": "npm:@nolyfill/isarray@^1",
       "typed-array-buffer": "npm:@nolyfill/typed-array-buffer@^1",
-      "argparse": "npm:@types/argparse@^2"
+      "which-typed-array": "npm:@nolyfill/which-typed-array@^1"
     }
   }
 }
