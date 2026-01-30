@@ -40,47 +40,33 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref } from "vue";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import StepDefinitionMarkedAsDeleted from "./StepDefinitionMarkedAsDeleted.vue";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
 import StepDefinitionDraggableComponent from "./StepDefinitionDraggableComponent.vue";
-import { mapState } from "vuex";
+import { useState } from "vuex-composition-helpers";
+import type { Step } from "./Step";
 
-export default {
-    name: "StepDefinitionEntry",
-    components: {
-        StepDefinitionMarkedAsDeleted,
-        StepDefinitionEditableStep,
-        StepDefinitionDraggableComponent,
-    },
-    props: {
-        step: {
-            type: Object,
-            required: true,
-        },
-        dynamic_rank: {
-            type: Number,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            reactive_step: this.step,
-        };
-    },
-    computed: {
-        ...mapState(["is_dragging"]),
-    },
-    methods: {
-        updateDescription(event) {
-            this.reactive_step.raw_description = event.target.value;
-        },
-        updateExpectedResults(event) {
-            this.reactive_step.raw_expected_results = event.target.value;
-        },
-        toggleRTE(event) {
-            this.reactive_step.description_format = event.target.value;
-        },
-    },
-};
+const { is_dragging } = useState(["is_dragging"]);
+
+const props = defineProps<{
+    step: Step;
+    dynamic_rank: number;
+}>();
+
+const reactive_step = ref<Step>(props.step);
+
+function updateDescription(new_description: string) {
+    reactive_step.value.raw_description = new_description;
+}
+
+function updateExpectedResults(new_expected_result: string) {
+    reactive_step.value.raw_expected_results = new_expected_result;
+}
+
+function toggleRTE(new_format: TextFieldFormat) {
+    reactive_step.value.description_format = new_format;
+}
 </script>
