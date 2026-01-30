@@ -6,16 +6,17 @@
   "private": true,
   "dependencies": {
     "react": "^18.3.1",
-    "swagger-ui": "^5.20.1"
+    "swagger-ui": "^5.31.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/react": "^18.3.18"
+    "@types/react": "^18.3.18",
+    "vite-plugin-node-polyfills": "^0.25.0"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
-    "watch": "vite build --watch"
+    "watch": "vite build --watch --mode development --minify false"
   },
   "pnpm": {
     "overrides": {
