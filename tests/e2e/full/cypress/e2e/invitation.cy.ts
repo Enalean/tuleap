@@ -89,7 +89,7 @@ describe("Invitations", () => {
             cy.get("[data-test=max-invitations-by-day]").clear().type("50");
             cy.get("[data-test=save-invitations-settings]").click();
 
-            cy.log("Invite a Tuleap user and an external email");
+            cy.log("Invite a Tuleap user and an external email into a specific project");
             cy.projectAdministratorSession();
             cy.visit(`/projects/${project_name}`);
             cy.get("[data-test=invite-buddies-button]").click();
@@ -140,6 +140,51 @@ describe("Invitations", () => {
             );
             cy.get("[data-test=first-timer-success-modal-project-greetings]").contains(
                 project_name,
+            );
+
+            cy.deleteAllMessagesInMailbox();
+
+            cy.log("Invite a Tuleap user and an external email In Tuleap");
+            cy.projectAdministratorSession();
+            cy.visit(`/`);
+            cy.get("[data-test=invite-buddies-button]").click();
+            const user_invited_in_tuleap = `InvitedInTuleap${anti_collision}`;
+            const user_invited_in_tuleap_mail = `user-invited-in-Tuleap${anti_collision}@example.com`;
+            cy.get("[data-test=invite-buddies-email]").type(
+                `RestrictedMember@example.com,${user_invited_in_tuleap_mail}`,
+            );
+            cy.get("[data-test=invite-buddies-submit]").click();
+
+            cy.log("Tuleap user receive a mail to connect to Tuleap");
+            cy.assertEmailWithContentReceived("RestrictedMember@example.com", "To sign in");
+
+            cy.log("external user receive a mail to register to Tuleap");
+            cy.assertEmailWithContentReceived(
+                user_invited_in_tuleap_mail,
+                "ProjectAdministrator invited you to register to Tuleap.",
+            );
+
+            cy.log("Check that users are created without approbation");
+            extractInviteUrlFromEmail(user_invited_in_tuleap_mail).then((url) => {
+                cy.clearCookies();
+                cy.clearLocalStorage();
+                cy.visit(url);
+            });
+
+            cy.log("As non existing user register to Tuleap...");
+            cy.get("[data-test=user-login]").type(user_invited_in_tuleap);
+            cy.get("[data-test=user-pw]").type("welcome0");
+            cy.get("[data-test=user-pw2]").type("welcome0");
+            cy.get("[data-test=user-name]").type(user_invited_in_tuleap);
+
+            cy.get("[data-test=register-user-button]").click();
+
+            cy.log("...and be welcomed on Tuleap");
+            cy.get("[data-test=first-timer-success-modal-user-greetings]").contains(
+                user_invited_in_tuleap,
+            );
+            cy.get("[data-test=first-timer-success-modal-project-greetings]").contains(
+                "Welcome to Tuleap",
             );
         });
     });
