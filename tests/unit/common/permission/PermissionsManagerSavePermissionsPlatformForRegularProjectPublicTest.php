@@ -25,7 +25,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use ForgeConfigSandbox;
     use GlobalResponseMock;
@@ -34,10 +34,7 @@ class PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest exten
     protected Project $project;
     protected string $permission_type;
     protected string $object_id;
-    /**
-     * @var PermissionsDao&MockObject
-     */
-    protected $permissions_dao;
+    protected PermissionsDao&MockObject $permissions_dao;
     protected int $project_id;
 
     #[\Override]
@@ -58,7 +55,7 @@ class PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest exten
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
     }
 
-    protected function expectPermissionsOnce($ugroup): void
+    protected function expectPermissionsOnce(string|int $ugroup): void
     {
         $this->permissions_dao
             ->expects($this->once())
@@ -67,7 +64,7 @@ class PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest exten
             ->willReturn(true);
     }
 
-    protected function savePermissions($ugroups): void
+    protected function savePermissions(array $ugroups): void
     {
         $this->permissions_manager->savePermissions($this->project, $this->object_id, $this->permission_type, $ugroups);
     }

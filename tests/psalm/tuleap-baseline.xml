@@ -79037,70 +79037,6 @@
       <code><![CDATA[$ugroups]]></code>
     </MissingParamType>
   </file>
-  <file src="tests/unit/common/permission/PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest.php">
-    <MissingParamType>
-      <code><![CDATA[$ugroup]]></code>
-      <code><![CDATA[$ugroups]]></code>
-    </MissingParamType>
-  </file>
-  <file src="tests/unit/common/permission/PermissionsManagerSavePermissionsPlatformForRestrictedProjectPublicTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
-    <MissingParamType>
-      <code><![CDATA[$ugroup]]></code>
-      <code><![CDATA[$ugroups]]></code>
-    </MissingParamType>
-  </file>
-  <file src="tests/unit/common/permission/PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
-    <MissingParamType>
-      <code><![CDATA[$ugroup]]></code>
-      <code><![CDATA[$ugroups]]></code>
-    </MissingParamType>
-  </file>
-  <file src="tests/unit/common/permission/PermissionsManagerSavePermissionsPlatformRegularProjectPrivateTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
-    <MissingParamType>
-      <code><![CDATA[$ugroup]]></code>
-      <code><![CDATA[$ugroups]]></code>
-    </MissingParamType>
-  </file>
-  <file src="tests/unit/common/permission/PermissionsManagerSavePermissionsSaveDaoTest.php">
-    <MissingParamType>
-      <code><![CDATA[$ugroups]]></code>
-    </MissingParamType>
-  </file>
   <file src="tests/unit/common/permission/PermissionsManagerTest.php">
     <DeprecatedMethod>
       <code><![CDATA[duplicatePermissions]]></code>
@@ -79110,28 +79046,6 @@
     <InvalidArgument>
       <code><![CDATA[$this->pseudo_php_session['Codendi_SessionTest']]]></code>
     </InvalidArgument>
-    <MissingReturnType>
-      <code><![CDATA[testChangeSessionNamespaceAbsolute]]></code>
-      <code><![CDATA[testChangeSessionNamespaceGotoRoot]]></code>
-      <code><![CDATA[testChangeSessionNamespaceRelativeAlreadyExists]]></code>
-      <code><![CDATA[testChangeSessionNamespaceRelativeDoesntExist]]></code>
-      <code><![CDATA[testCleanNamespace]]></code>
-      <code><![CDATA[testGetArrayValue]]></code>
-      <code><![CDATA[testGetDoesNotExist]]></code>
-      <code><![CDATA[testGetNamespaceCreatePath]]></code>
-      <code><![CDATA[testGetNamespaceEmpty]]></code>
-      <code><![CDATA[testGetNamespaceHappyPath]]></code>
-      <code><![CDATA[testGetNamespaceOneLevel]]></code>
-      <code><![CDATA[testGetNoKey]]></code>
-      <code><![CDATA[testGetNotArrayValue]]></code>
-      <code><![CDATA[testGetUncompletePath]]></code>
-      <code><![CDATA[testGetWithKey]]></code>
-      <code><![CDATA[testOverloading]]></code>
-      <code><![CDATA[testOverloadingNamespace]]></code>
-      <code><![CDATA[testRemoveNoKey]]></code>
-      <code><![CDATA[testRemoveWithKey]]></code>
-      <code><![CDATA[testSet]]></code>
-    </MissingReturnType>
     <UndefinedMagicPropertyAssignment>
       <code><![CDATA[$session->fifi]]></code>
       <code><![CDATA[$session->fifi]]></code>
@@ -79231,9 +79145,6 @@
     <InvalidMethodCall>
       <code><![CDATA[getNumberOfCalls]]></code>
     </InvalidMethodCall>
-    <MissingPropertyType>
-      <code><![CDATA[$number_of_calls]]></code>
-    </MissingPropertyType>
   </file>
   <file src="tests/unit/tests/Network/HTTPResponseFunctionsOverloadTest.php">
     <UndefinedFunction>
@@ -79354,40 +79265,7 @@
       <code><![CDATA[$redis_server]]></code>
     </UndefinedVariable>
   </file>
-  <file src="tests/unit/tuleap-cfg/Command/SystemControlCommandDockerCentos7Test.php">
-    <MissingPropertyType>
-      <code><![CDATA[$control_command]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="tests/unit/tuleap-cfg/Command/SystemControlCommandTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$control_command]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="tests/unit/tuleap-cfg/Command/TestDBWrapper.php">
-    <InvalidReturnType>
-      <code><![CDATA[row]]></code>
-      <code><![CDATA[single]]></code>
-    </InvalidReturnType>
-    <MissingReturnType>
-      <code><![CDATA[assertContains]]></code>
-      <code><![CDATA[assertNoStatments]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="tests/unit/www/include/ServiceCreateServiceTest.php">
-    <MissingParamType>
-      <code><![CDATA[$expected]]></code>
-      <code><![CDATA[$link]]></code>
-    </MissingParamType>
-  </file>
   <file src="tests/unit/www/include/UtilsHTTPTest.php">
-    <MissingReturnType>
-      <code><![CDATA[testItExtractBody]]></code>
-      <code><![CDATA[testItExtractBodyThatStartsWithLN]]></code>
-      <code><![CDATA[testItExtractBodyThatStartsWithNul]]></code>
-      <code><![CDATA[testItExtractHeaders]]></code>
-      <code><![CDATA[testItExtractsBodyWithBinaryData]]></code>
-    </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[file_get_contents(dirname(__FILE__) . '/_fixtures/svn_bin_data')]]></code>
     </PossiblyFalseArgument>

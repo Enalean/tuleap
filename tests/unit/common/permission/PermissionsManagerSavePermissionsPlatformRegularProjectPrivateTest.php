@@ -25,7 +25,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PermissionsManagerSavePermissionsPlatformRegularProjectPrivateTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class PermissionsManagerSavePermissionsPlatformRegularProjectPrivateTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use ForgeConfigSandbox;
     use GlobalResponseMock;
@@ -55,7 +55,7 @@ class PermissionsManagerSavePermissionsPlatformRegularProjectPrivateTest extends
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
     }
 
-    protected function expectPermissionsOnce($ugroup): void
+    protected function expectPermissionsOnce(string|int $ugroup): void
     {
         $this->permissions_dao
             ->expects($this->once())
@@ -64,7 +64,7 @@ class PermissionsManagerSavePermissionsPlatformRegularProjectPrivateTest extends
             ->willReturn(true);
     }
 
-    protected function savePermissions($ugroups): void
+    protected function savePermissions(array $ugroups): void
     {
         $this->permissions_manager->savePermissions($this->project, $this->object_id, $this->permission_type, $ugroups);
     }
@@ -99,23 +99,40 @@ class PermissionsManagerSavePermissionsPlatformRegularProjectPrivateTest extends
 
     public function testItSavesProjectMembersProjectAdminsAndStaticGroup(): void
     {
-        $matcher = self::exactly(2);
-        $this->permissions_dao
-            ->expects($matcher)
-            ->method('addPermission')->willReturnCallback(function (...$parameters) use ($matcher) {
-                if ($matcher->numberOfInvocations() === 1) {
-                    self::assertSame($this->permission_type, $parameters[0]);
-                    self::assertSame($this->object_id, $parameters[1]);
-                    self::assertSame(ProjectUGroup::PROJECT_MEMBERS, $parameters[2]);
-                }
-                if ($matcher->numberOfInvocations() === 2) {
-                    self::assertSame($this->permission_type, $parameters[0]);
-                    self::assertSame($this->object_id, $parameters[1]);
-                    self::assertSame(104, $parameters[2]);
-                }
-                return true;
-            });
+        $expected_calls = [
+            [
+                'permission_type' => $this->permission_type,
+                'object_id'       => $this->object_id,
+                'ugroup_id'       => ProjectUGroup::PROJECT_MEMBERS,
+            ],
+            [
+                'permission_type' => $this->permission_type,
+                'object_id'       => $this->object_id,
+                'ugroup_id'       => 104,
+            ],
+        ];
 
-        $this->savePermissions([ProjectUGroup::REGISTERED, ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104]);
+        $this->permissions_dao
+            ->expects($this->exactly(2))
+            ->method('addPermission')
+            ->willReturnCallback(
+                function (mixed ...$parameters) use (&$expected_calls) {
+                    $expected = array_shift($expected_calls);
+                    self::assertNotNull($expected);
+
+                    self::assertSame($expected['permission_type'], $parameters[0]);
+                    self::assertSame($expected['object_id'], $parameters[1]);
+                    self::assertSame($expected['ugroup_id'], $parameters[2]);
+
+                    return true;
+                }
+            );
+
+        $this->savePermissions([
+            ProjectUGroup::REGISTERED,
+            ProjectUGroup::ANONYMOUS,
+            ProjectUGroup::PROJECT_ADMIN,
+            104,
+        ]);
     }
 }

@@ -20,12 +20,10 @@
 
 namespace Tuleap;
 
-require_once __DIR__ . '/../../../../src/www/include/utils.php';
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class UtilsHTTPTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UtilsHTTPTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItExtractBody()
+    public function testItExtractBody(): void
     {
         $string               = "Content-type: sdfsdf\r\n\r\nThe body";
         list($headers, $body) = http_split_header_body($string);
@@ -33,7 +31,7 @@ class UtilsHTTPTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('The body', $body);
     }
 
-    public function testItExtractBodyThatStartsWithNul()
+    public function testItExtractBodyThatStartsWithNul(): void
     {
         $string               = "Content-type: sdfsdf\r\n\r\n" . (0x00) . 'The body';
         list($headers, $body) = http_split_header_body($string);
@@ -41,14 +39,14 @@ class UtilsHTTPTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame((0x00) . 'The body', $body);
     }
 
-    public function testItExtractBodyThatStartsWithLN()
+    public function testItExtractBodyThatStartsWithLN(): void
     {
         list($headers, $body) = http_split_header_body("Content-type: sdfsdf\r\n\r\n
 The body");
         self::assertSame("\nThe body", $body);
     }
 
-    public function testItExtractHeaders()
+    public function testItExtractHeaders(): void
     {
         list($headers, $body) = http_split_header_body("Content-disposition: anefe
 Content-type: sdfsdf\r\n\r\nThe body");
@@ -58,7 +56,7 @@ Content-type: sdfsdf\r\n\r\nThe body");
     /**
      * @see https://tuleap.net/plugins/tracker/?aid=5604&group_id=101 ViewVC download broken when file start with 0x00
      */
-    public function testItExtractsBodyWithBinaryData()
+    public function testItExtractsBodyWithBinaryData(): void
     {
         list($headers, $body) = http_split_header_body(file_get_contents(dirname(__FILE__) . '/_fixtures/svn_bin_data'));
         self::assertSame('Content-Type: text/plain', $headers);

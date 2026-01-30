@@ -26,7 +26,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 require_once __DIR__ . '/../../../../src/www/include/service.php';
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ServiceCreateServiceTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ServiceCreateServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private array $template;
     private Project $project;
@@ -42,7 +42,7 @@ class ServiceCreateServiceTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project = ProjectTestBuilder::aProject()->withId(101)->withUnixName('h1tst')->build();
     }
 
-    private function assertLinkEquals($link, $expected): void
+    private function assertLinkEquals(string $link, string $expected): void
     {
         $result = service_replace_template_name_in_link($link, $this->template, $this->project);
         self::assertSame($expected, $result);

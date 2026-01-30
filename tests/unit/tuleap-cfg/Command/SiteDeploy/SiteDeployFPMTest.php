@@ -37,18 +37,9 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
     use TemporaryTestDirectory;
 
     private string $php_configuration_folder;
-    /**
-     * @var string
-     */
-    private $temp_dir;
-    /**
-     * @var string
-     */
-    private $current_user;
-    /**
-     * @var string
-     */
-    private $tuleap_redis_conf_file;
+    private string $temp_dir;
+    private mixed $current_user;
+    private string $tuleap_redis_conf_file;
 
     #[\Override]
     protected function setUp(): void
@@ -97,6 +88,9 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertDirectoryExists($this->temp_dir . '/tuleap_cache/php/session');
 
         $tuleap_conf = file_get_contents($this->php_configuration_folder . '/php-fpm.d/tuleap_common.part');
+        if ($tuleap_conf === false) {
+            throw new \Exception('Could not read php-fpm.conf');
+        }
         $this->assertStringContainsString('user = ' . $this->current_user, $tuleap_conf);
         $this->assertStringContainsString('group = ' . $this->current_user, $tuleap_conf);
 

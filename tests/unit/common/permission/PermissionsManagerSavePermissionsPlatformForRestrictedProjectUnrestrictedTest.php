@@ -25,7 +25,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use ForgeConfigSandbox;
     use GlobalResponseMock;
@@ -55,7 +55,7 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedT
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
     }
 
-    protected function expectPermissionsOnce($ugroup): void
+    protected function expectPermissionsOnce(string|int $ugroup): void
     {
         $this->permissions_dao
             ->expects($this->once())
@@ -64,7 +64,7 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedT
             ->willReturn(true);
     }
 
-    protected function savePermissions($ugroups): void
+    protected function savePermissions(array $ugroups): void
     {
         $this->permissions_manager->savePermissions($this->project, $this->object_id, $this->permission_type, $ugroups);
     }
@@ -120,73 +120,120 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedT
 
     public function testItSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup(): void
     {
-        $matcher = self::exactly(2);
-        $this->permissions_dao
-            ->expects($matcher)
-            ->method('addPermission')->willReturnCallback(function (...$parameters) use ($matcher) {
-                if ($matcher->numberOfInvocations() === 1) {
-                    self::assertSame($this->permission_type, $parameters[0]);
-                    self::assertSame($this->object_id, $parameters[1]);
-                    self::assertSame(ProjectUGroup::PROJECT_MEMBERS, $parameters[2]);
-                }
-                if ($matcher->numberOfInvocations() === 2) {
-                    self::assertSame($this->permission_type, $parameters[0]);
-                    self::assertSame($this->object_id, $parameters[1]);
-                    self::assertSame(104, $parameters[2]);
-                }
-                return true;
-            });
+        $expected_calls = [
+            [
+                'permission_type' => $this->permission_type,
+                'object_id'       => $this->object_id,
+                'ugroup_id'       => ProjectUGroup::PROJECT_MEMBERS,
+            ],
+            [
+                'permission_type' => $this->permission_type,
+                'object_id'       => $this->object_id,
+                'ugroup_id'       => 104,
+            ],
+        ];
 
-        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104]);
+        $this->permissions_dao
+            ->expects($this->exactly(2))
+            ->method('addPermission')
+            ->willReturnCallback(
+                function (mixed ...$parameters) use (&$expected_calls) {
+                    $expected = array_shift($expected_calls);
+                    self::assertNotNull($expected);
+
+                    self::assertSame($expected['permission_type'], $parameters[0]);
+                    self::assertSame($expected['object_id'], $parameters[1]);
+                    self::assertSame($expected['ugroup_id'], $parameters[2]);
+
+                    return true;
+                }
+            );
+
+        $this->savePermissions([
+            ProjectUGroup::PROJECT_MEMBERS,
+            ProjectUGroup::PROJECT_ADMIN,
+            104,
+        ]);
     }
 
     public function testItSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup(): void
     {
-        $matcher = self::exactly(2);
-        $this->permissions_dao
-            ->expects($matcher)
-            ->method('addPermission')->willReturnCallback(function (...$parameters) use ($matcher) {
-                if ($matcher->numberOfInvocations() === 1) {
-                    self::assertSame($this->permission_type, $parameters[0]);
-                    self::assertSame($this->object_id, $parameters[1]);
-                    self::assertSame(ProjectUGroup::PROJECT_ADMIN, $parameters[2]);
-                }
-                if ($matcher->numberOfInvocations() === 2) {
-                    self::assertSame($this->permission_type, $parameters[0]);
-                    self::assertSame($this->object_id, $parameters[1]);
-                    self::assertSame(104, $parameters[2]);
-                }
-                return true;
-            });
+        $expected_calls = [
+            [
+                'permission_type' => $this->permission_type,
+                'object_id'       => $this->object_id,
+                'ugroup_id'       => ProjectUGroup::PROJECT_ADMIN,
+            ],
+            [
+                'permission_type' => $this->permission_type,
+                'object_id'       => $this->object_id,
+                'ugroup_id'       => 104,
+            ],
+        ];
 
-        $this->savePermissions([ProjectUGroup::PROJECT_ADMIN, 104]);
+        $this->permissions_dao
+            ->expects($this->exactly(2))
+            ->method('addPermission')
+            ->willReturnCallback(
+                function (mixed ...$parameters) use (&$expected_calls) {
+                    $expected = array_shift($expected_calls);
+                    self::assertNotNull($expected);
+
+                    self::assertSame($expected['permission_type'], $parameters[0]);
+                    self::assertSame($expected['object_id'], $parameters[1]);
+                    self::assertSame($expected['ugroup_id'], $parameters[2]);
+
+                    return true;
+                }
+            );
+
+        $this->savePermissions([
+            ProjectUGroup::PROJECT_ADMIN,
+            104,
+        ]);
     }
 
     public function testItSavesSVNAdminWikiAdminAndStatic(): void
     {
-        $matcher = self::exactly(3);
-        $this->permissions_dao
-            ->expects($matcher)
-            ->method('addPermission')->willReturnCallback(function (...$parameters) use ($matcher) {
-                if ($matcher->numberOfInvocations() === 1) {
-                    self::assertSame($this->permission_type, $parameters[0]);
-                    self::assertSame($this->object_id, $parameters[1]);
-                    self::assertSame(ProjectUGroup::SVN_ADMIN, $parameters[2]);
-                }
-                if ($matcher->numberOfInvocations() === 2) {
-                    self::assertSame($this->permission_type, $parameters[0]);
-                    self::assertSame($this->object_id, $parameters[1]);
-                    self::assertSame(ProjectUGroup::WIKI_ADMIN, $parameters[2]);
-                }
-                if ($matcher->numberOfInvocations() === 3) {
-                    self::assertSame($this->permission_type, $parameters[0]);
-                    self::assertSame($this->object_id, $parameters[1]);
-                    self::assertSame(104, $parameters[2]);
-                }
-                return true;
-            });
+        $expected_calls = [
+            [
+                'permission_type' => $this->permission_type,
+                'object_id'       => $this->object_id,
+                'ugroup_id'       => ProjectUGroup::SVN_ADMIN,
+            ],
+            [
+                'permission_type' => $this->permission_type,
+                'object_id'       => $this->object_id,
+                'ugroup_id'       => ProjectUGroup::WIKI_ADMIN,
+            ],
+            [
+                'permission_type' => $this->permission_type,
+                'object_id'       => $this->object_id,
+                'ugroup_id'       => 104,
+            ],
+        ];
 
-        $this->savePermissions([ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104]);
+        $this->permissions_dao
+            ->expects($this->exactly(3))
+            ->method('addPermission')
+            ->willReturnCallback(
+                function (mixed ...$parameters) use (&$expected_calls) {
+                    $expected = array_shift($expected_calls);
+                    self::assertNotNull($expected);
+
+                    self::assertSame($expected['permission_type'], $parameters[0]);
+                    self::assertSame($expected['object_id'], $parameters[1]);
+                    self::assertSame($expected['ugroup_id'], $parameters[2]);
+
+                    return true;
+                }
+            );
+
+        $this->savePermissions([
+            ProjectUGroup::SVN_ADMIN,
+            ProjectUGroup::WIKI_ADMIN,
+            104,
+        ]);
     }
 
     public function testItSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers(): void
