@@ -20,6 +20,8 @@
 
 use Tuleap\REST\MilestoneBase;
 use Tuleap\REST\RESTTestDataBuilder;
+use function Psl\Json\encode as json_encode;
+use function Psl\Json\decode as json_decode;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
@@ -44,7 +46,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testGETBacklog(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/backlog'));
-        $backlog  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $backlog  = json_decode($response->getBody()->getContents());
         $this->assertCount(3, $backlog);
         $this->assertFirstThreeElementsOfBacklog($response, $backlog);
     }
@@ -55,7 +57,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
             $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/backlog'),
             RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
-        $backlog  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $backlog  = json_decode($response->getBody()->getContents());
         $this->assertCount(3, $backlog);
         $this->assertFirstThreeElementsOfBacklog($response, $backlog);
     }
@@ -67,7 +69,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
             $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/backlog?query=' . urlencode($query))
         );
 
-        $backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $backlog_items = json_decode($response->getBody()->getContents());
         $this->assertCount(4, $backlog_items);
         $this->assertFirstThreeElementsOfBacklog($response, $backlog_items);
 
@@ -82,6 +84,29 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $this->assertEquals($fourth_backlog_item['artifact']['id'], $this->story_artifact_ids[12]);
         $this->assertEquals($fourth_backlog_item['artifact']['uri'], 'artifacts/' . $this->story_artifact_ids[12]);
         $this->assertEquals($fourth_backlog_item['artifact']['tracker']['id'], $this->user_stories_tracker_id);
+    }
+
+    public function testGETBacklogWithItemsThatCanBePlanned(): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/backlog?include=planned_and_not_planned')
+        );
+
+        $backlog_items = json_decode($response->getBody()->getContents());
+        self::assertCount(6, $backlog_items);
+
+        self::assertSame($this->user_stories_tracker_id, $backlog_items[0]['artifact']['tracker']['id']);
+        self::assertSame($this->story_artifact_ids[1], $backlog_items[0]['artifact']['id']);
+        self::assertSame($this->user_stories_tracker_id, $backlog_items[1]['artifact']['tracker']['id']);
+        self::assertSame($this->story_artifact_ids[2], $backlog_items[1]['artifact']['id']);
+        self::assertSame($this->user_stories_tracker_id, $backlog_items[2]['artifact']['tracker']['id']);
+        self::assertSame($this->story_artifact_ids[3], $backlog_items[2]['artifact']['id']);
+        self::assertSame($this->user_stories_tracker_id, $backlog_items[3]['artifact']['tracker']['id']);
+        self::assertSame($this->story_artifact_ids[4], $backlog_items[3]['artifact']['id']);
+        self::assertSame($this->user_stories_tracker_id, $backlog_items[4]['artifact']['tracker']['id']);
+        self::assertSame($this->story_artifact_ids[5], $backlog_items[4]['artifact']['id']);
+        self::assertSame($this->user_stories_tracker_id, $backlog_items[5]['artifact']['tracker']['id']);
+        self::assertSame($this->story_artifact_ids[12], $backlog_items[5]['artifact']['id']);
     }
 
     private function assertFirstThreeElementsOfBacklog(\Psr\Http\Message\ResponseInterface $response, array $backlog_items): void
@@ -158,7 +183,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $response_get  = $this->getResponse(
             $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/backlog')
         );
-        $backlog_items = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $backlog_items = json_decode($response_get->getBody()->getContents());
         $this->assertCount(3, $backlog_items);
 
         $this->assertEquals($backlog_items[0]['artifact']['id'], $this->story_artifact_ids[5]);
@@ -190,7 +215,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $this->assertEquals($response_put->getStatusCode(), 403);
 
         $response_get  = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/backlog'));
-        $backlog_items = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $backlog_items = json_decode($response_get->getBody()->getContents());
         $this->assertCount(3, $backlog_items);
 
         $this->assertEquals($backlog_items[0]['artifact']['id'], $this->story_artifact_ids[5]);
@@ -223,7 +248,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $response_get  = $this->getResponse(
             $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/backlog')
         );
-        $backlog_items = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $backlog_items = json_decode($response_get->getBody()->getContents());
         $this->assertCount(3, $backlog_items);
         $this->assertEquals($backlog_items[0]['artifact']['id'], $this->story_artifact_ids[5]);
         $this->assertEquals($backlog_items[0]['artifact']['uri'], 'artifacts/' . $this->story_artifact_ids[5]);
@@ -250,7 +275,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
                 'milestones/' . $this->release_artifact_ids[1] . '/backlog'
             )->withBody(
                 $this->stream_factory->createStream(
-                    json_encode($post, JSON_THROW_ON_ERROR)
+                    json_encode($post)
                 )
             ),
             RESTTestDataBuilder::TEST_BOT_USER_NAME
@@ -277,7 +302,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $this->assertEquals($response_post->getStatusCode(), 201);
 
         $response_get  = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/backlog'));
-        $backlog_items = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $backlog_items = json_decode($response_get->getBody()->getContents());
         $last_item     = count($backlog_items) - 1;
 
         $this->assertEquals($backlog_items[$last_item]['artifact']['id'], $this->story_artifact_ids[6]);

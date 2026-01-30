@@ -38,6 +38,8 @@ use Tracker_FormElementFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
 use TransitionFactory;
+use Tuleap\AgileDashboard\AgileDashboard\REST\v1\Milestone\MilestoneBacklogInclude;
+use Tuleap\AgileDashboard\AgileDashboard\REST\v1\Milestone\MilestoneBacklogRequest;
 use Tuleap\AgileDashboard\BacklogItem\PaginatedBacklogItemsRepresentationsBuilder;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
@@ -60,6 +62,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\RESTLogger;
@@ -831,8 +834,18 @@ class MilestoneResource extends AuthenticatedResource
      * Get the backlog items of a given milestone that can be planned in a sub-milestone
      *
      * <p>
-     * $query parameter is optional, by default we return only open milestones. If
-     * <code>query={"status":"all"}</code> then open and closed milestones are returned.
+     * $query parameter is optional, by default we return only open backlog items. If
+     * <code>query={"status":"all"}</code> then open and closed items are returned.
+     * </p>
+     *
+     * <p>
+     * If <code>include=planned_and_not_planned</code> then already planned items are included.
+     * By default, only unplanned items are returned.
+     * </p>
+     *
+     * <p>
+     * <code>status</code> takes precedence over <code>include</code>.
+     * Using both <code>"status":"open"</code> and <code>include=planned_and_not_planned</code> at the same time is not supported.
      * </p>
      *
      * @url GET {id}/backlog
@@ -840,15 +853,17 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @param int $id Id of the milestone
      * @param string $query JSON object of search criteria properties {@from path}
+     * @param string $include What to include in results {@from path}
      * @param int $limit Number of elements displayed per page {@min 0} {@max 100}
      * @param int $offset Position of the first element to display {@min 0}
      *
-     * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
+     * @return array {@type \Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
+     * @throws RestException 400
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getBacklog(int $id, string $query = '', int $limit = 10, int $offset = 0)
+    public function getBacklog(int $id, string $query = '', string $include = MilestoneBacklogInclude::NOT_PLANNED->value, int $limit = 10, int $offset = 0): array
     {
         $this->checkAccess();
 
@@ -860,11 +875,23 @@ class MilestoneResource extends AuthenticatedResource
             $milestone->getProject()
         );
 
+        if ($query !== '' && $include !== MilestoneBacklogInclude::NOT_PLANNED->value) {
+            throw new I18NRestException(400, dgettext('tuleap-agiledashboard', 'Using both status and include parameters at the same time is not supported.'));
+        }
+
         try {
             $criterion = $this->query_to_criterion_only_all_status->convert($query);
         } catch (MalformedQueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
+
+        $request = new MilestoneBacklogRequest(
+            $milestone,
+            $criterion,
+            MilestoneBacklogInclude::tryFromString($include),
+            $limit,
+            $offset,
+        );
 
         $paginated_backlog_item_representation_builder = new PaginatedBacklogItemsRepresentationsBuilder(
             $this->getBacklogItemRepresentationFactory(),
@@ -873,7 +900,8 @@ class MilestoneResource extends AuthenticatedResource
             new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
         );
 
-        $paginated_backlog_items_representations = $paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForMilestone($user, $milestone, $criterion, $limit, $offset);
+        $paginated_backlog_items_representations = $paginated_backlog_item_representation_builder
+            ->getPaginatedBacklogItemsRepresentationsForMilestone($user, $request);
 
         $this->sendAllowHeaderForBacklog();
         $this->sendPaginationHeaders($limit, $offset, $paginated_backlog_items_representations->getTotalSize());

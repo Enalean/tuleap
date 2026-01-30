@@ -27,10 +27,7 @@ use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class QueryToCriterionOnlyAllStatusConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var QueryToCriterionStatusConverter
-     */
-    private $converter;
+    private QueryToCriterionOnlyAllStatusConverter $converter;
 
     #[\Override]
     protected function setUp(): void

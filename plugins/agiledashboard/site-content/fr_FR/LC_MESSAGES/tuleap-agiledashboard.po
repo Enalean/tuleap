@@ -546,6 +546,11 @@ msgstr "La mise à jour des plannings peut causer des erreurs dans :"
 msgid "Update semantic"
 msgstr "Mettre à jour la sémantique"
 
+msgid ""
+"Using both status and include parameters at the same time is not supported."
+msgstr ""
+"Utiliser les paramètres status et include en même temps n'est pas supporté."
+
 msgid "View Planning"
 msgstr "Vue du Planning"
 
@@ -645,6 +650,11 @@ msgstr ""
 
 msgid "burnup and velocity charts"
 msgstr "calcul des graphiques de burnup et de vélocité"
+
+msgid "include parameter can only take value \"planned_and_not_planned\""
+msgstr ""
+"Le paramètre include ne peut prendre que la valeur "
+"\"planned_and_not_planned\""
 
 msgid "the Backlog"
 msgstr "le Backlog"
