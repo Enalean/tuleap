@@ -11,6 +11,7 @@
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/tlp": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-popovers": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
     "uuid": "^8.3.2",
     "vue": "^3.5.13",
@@ -22,7 +23,6 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
     "@vue/test-utils": "^2.4.1",
-    "jquery": "^3.6.0",
     "vue-loader": "^17.2.2"
   },
   "scripts": {

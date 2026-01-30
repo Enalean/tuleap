@@ -20,6 +20,9 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-popovers':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-popovers
   '@tuleap/vue3-gettext-init':
     specifier: workspace:^
     version: link:../../../../lib/frontend/vue3-gettext-init
@@ -49,9 +52,6 @@ devDependencies:
   '@vue/test-utils':
     specifier: ^2.4.1
     version: 2.4.6
-  jquery:
-    specifier: ^3.6.0
-    version: 3.6.0
   vue-loader:
     specifier: ^17.2.2
     version: 17.2.2(vue@3.5.13)
@@ -500,10 +500,6 @@ packages:
       '@isaacs/cliui': 8.0.2
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
-    dev: true
-
-  /jquery@3.6.0:
-    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
     dev: true
 
   /js-beautify@1.15.1:
