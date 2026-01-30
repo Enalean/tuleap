@@ -57,65 +57,64 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import { useMutations, useState } from "vuex-composition-helpers";
 import StepDefinitionEntry from "./StepDefinitionEntry.vue";
-import { mapState, mapMutations } from "vuex";
+import type { Step } from "./Step";
 
-export default {
-    name: "StepDefinitionDragContainer",
-    components: { StepDefinitionEntry },
-    data() {
-        return {
-            dragged_step: null,
-            hovered_step: null,
-            dragged_step_index: 0,
-        };
-    },
-    computed: {
-        ...mapState(["steps", "is_dragging", "field_id"]),
-        hasNoStepRemaining() {
-            return (
-                this.steps.filter((step) => step.is_deleted === true).length === this.steps.length
-            );
-        },
-    },
-    methods: {
-        ...mapMutations(["addStep", "moveStep"]),
-        onDragEnd() {
-            this.dragged_step = null;
-            this.hovered_step = null;
-            this.dragged_step_index = 0;
-        },
-        onDragStart(event, step, index) {
-            event.dataTransfer.dropEffect = "move";
-            event.dataTransfer.effectAllowed = "move";
-            this.dragged_step_index = index;
-            this.dragged_step = { ...step };
-        },
-        onDrop(index) {
-            this.moveStep([this.dragged_step, index]);
-        },
-        onDragOver(step) {
-            if (step.uuid !== this.dragged_step.uuid) {
-                this.hovered_step = { ...step };
-            } else {
-                this.hovered_step = null;
-            }
-        },
-        getDragndropClasses(step, index) {
-            if (!this.hovered_step || this.hovered_step.uuid !== step.uuid) {
-                return "";
-            }
+const { steps, is_dragging, field_id } = useState(["steps", "is_dragging", "field_id"]);
+const { addStep, moveStep } = useMutations(["addStep", "moveStep"]);
 
-            if (index === this.dragged_step_index) {
-                return "";
-            }
+const dragged_step = ref<Step | null>(null);
+const hovered_step = ref<Step | null>(null);
+const dragged_step_index = ref(0);
 
-            return (
-                "ttm-definition-step-draggable-drop-" +
-                (index < this.dragged_step_index ? "before" : "after")
-            );
-        },
-    },
-};
+const hasNoStepRemaining = computed(
+    () => steps.value.filter((step: Step) => step.is_deleted).length === steps.value.length,
+);
+
+function onDragEnd() {
+    dragged_step.value = null;
+    hovered_step.value = null;
+    dragged_step_index.value = 0;
+}
+
+function onDragStart(event: DragEvent, step: Step, index: number) {
+    if (!event.dataTransfer) {
+        return;
+    }
+
+    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer.effectAllowed = "move";
+    dragged_step_index.value = index;
+    dragged_step.value = { ...step };
+}
+
+function onDrop(index: number) {
+    moveStep([dragged_step.value, index]);
+}
+
+function onDragOver(step: Step) {
+    if (step.uuid !== dragged_step.value?.uuid) {
+        hovered_step.value = { ...step };
+    } else {
+        hovered_step.value = null;
+    }
+}
+
+function getDragndropClasses(step: Step, index: number) {
+    if (!hovered_step.value || hovered_step.value.uuid !== step.uuid) {
+        return "";
+    }
+
+    if (index === dragged_step_index.value) {
+        return "";
+    }
+
+    return (
+        "ttm-definition-step-draggable-drop-" +
+        (index < dragged_step_index.value ? "before" : "after")
+    );
+}
 </script>

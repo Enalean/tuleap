@@ -33,16 +33,14 @@
     </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
-export default {
-    name: "StepDefinitionDraggableComponent",
-    props: {
-        step: Object,
-        dynamic_rank: Number,
-    },
-    computed: {
-        ...mapGetters(["is_text"]),
-    },
-};
+<script setup lang="ts">
+import { useGetters } from "vuex-composition-helpers";
+import type { Step } from "./Step";
+
+const { is_text } = useGetters(["is_text"]);
+
+defineProps<{
+    step: Step;
+    dynamic_rank: number;
+}>();
 </script>

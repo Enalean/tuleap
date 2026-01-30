@@ -41,6 +41,9 @@ dependencies:
   vuex:
     specifier: ^4.1.0
     version: 4.1.0(vue@3.5.13)
+  vuex-composition-helpers:
+    specifier: ^2.0.1
+    version: 2.0.1(vue@3.5.13)(vuex@4.1.0)
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -823,6 +826,16 @@ packages:
       '@vue/runtime-dom': 3.5.13
       '@vue/server-renderer': 3.5.13(vue@3.5.13)
       '@vue/shared': 3.5.13
+
+  /vuex-composition-helpers@2.0.1(vue@3.5.13)(vuex@4.1.0):
+    resolution: {integrity: sha512-i2Bg24AH9/AL5nDdh2lmP19Mcl86EJLV7EeVjrCtqY29wkzZa6PWaYYKcbwbYffYoAiTtz1n54VhIaZ1MxNAkw==}
+    peerDependencies:
+      vue: '>= 3.0.5'
+      vuex: '>= 4.0.0'
+    dependencies:
+      vue: 3.5.13
+      vuex: 4.1.0(vue@3.5.13)
+    dev: false
 
   /vuex@4.1.0(vue@3.5.13):
     resolution: {integrity: sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==}
