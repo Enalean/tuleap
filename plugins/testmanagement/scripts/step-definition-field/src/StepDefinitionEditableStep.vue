@@ -125,7 +125,7 @@ import {
     UploadImageFormFactory,
 } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
-import { postInterpretCommonMark } from "./api/tuleap-api.js";
+import { postInterpretCommonMark } from "./api/rest-querier.ts";
 
 export default {
     name: "StepDefinitionEditableStep",
