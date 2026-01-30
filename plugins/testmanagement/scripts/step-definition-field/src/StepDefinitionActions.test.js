@@ -34,7 +34,14 @@ const getWrapper = (props = {}) => {
         global: {
             ...getGlobalTestOptions(),
         },
-        propsData: { ...props },
+        propsData: {
+            step: {},
+            disabled: false,
+            format_select_id: "",
+            is_in_preview_mode: false,
+            is_preview_loading: false,
+            ...props,
+        },
     });
 };
 
@@ -42,7 +49,7 @@ describe(`StepDefinitionActions`, () => {
     describe("Display of the CommonMark buttons", () => {
         it(`displays the 'Preview' and the syntax helper buttons when the CommonMark/Markdown value is selected or not disabled`, () => {
             const wrapper = getWrapper({
-                value: TEXT_FORMAT_COMMONMARK,
+                step: { description_format: TEXT_FORMAT_COMMONMARK },
                 disabled: false,
             });
 
@@ -52,7 +59,7 @@ describe(`StepDefinitionActions`, () => {
 
         it(`does not display the 'Preview' and the syntax helper buttons when the step is deleted even if the format is CommonMark/Markdown`, () => {
             const wrapper = getWrapper({
-                value: TEXT_FORMAT_COMMONMARK,
+                step: { description_format: TEXT_FORMAT_COMMONMARK },
                 disabled: true,
             });
 
@@ -64,7 +71,7 @@ describe(`StepDefinitionActions`, () => {
             `does not display the buttons when the selected format is %s`,
             (selected_format) => {
                 const wrapper = getWrapper({
-                    value: selected_format,
+                    step: { description_format: selected_format },
                     disabled: false,
                 });
 
@@ -78,7 +85,7 @@ describe(`StepDefinitionActions`, () => {
             `selects the '%s' format according the prop 'value' value`,
             (value) => {
                 const wrapper = getWrapper({
-                    value,
+                    step: { description_format: value },
                 });
                 expect(
                     wrapper.find("[data-test=ttm-definition-step-description-format-" + value + "]")
