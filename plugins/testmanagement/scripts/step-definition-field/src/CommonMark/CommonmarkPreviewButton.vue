@@ -27,7 +27,7 @@
         data-test="button-commonmark-preview"
     >
         <i
-            class="fas"
+            class="fa-solid"
             v-bind:class="{
                 'fa-circle-notch fa-spin': is_preview_loading,
                 'fa-eye': !is_in_preview_mode && !is_preview_loading,
@@ -40,20 +40,22 @@
     </button>
 </template>
 
-<script>
-export default {
-    name: "CommonmarkPreviewButton",
-    props: {
-        is_in_preview_mode: Boolean,
-        is_preview_loading: Boolean,
-    },
-    computed: {
-        button_preview_label() {
-            if (this.is_in_preview_mode) {
-                return this.$gettext("Edit");
-            }
-            return this.$gettext("Preview");
-        },
-    },
-};
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+
+const props = defineProps<{
+    is_in_preview_mode: boolean;
+    is_preview_loading: boolean;
+}>();
+
+defineEmits<{
+    (e: "commonmark-preview-event"): void;
+}>();
+
+const button_preview_label = computed(() =>
+    props.is_in_preview_mode ? $gettext("Edit") : $gettext("Preview"),
+);
 </script>
