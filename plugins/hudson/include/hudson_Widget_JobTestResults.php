@@ -25,7 +25,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Hudson\TestResultPieChart\TestResultsPieChartDisplayer;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class hudson_Widget_JobTestResults extends HudsonJobWidget
@@ -151,21 +152,21 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('test-results-pie.js')],
+            ['file' => $this->getAssets()->getFileURL('scripts/test-results-pie-chart.js')],
         ];
     }
 
     #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'hudson-style')]);
+        return new CssAssetCollection([CssViteAsset::fromFileName($this->getAssets(), 'themes/BurningParrot/hudson.scss')]);
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../frontend-assets',
-            '/assets/hudson'
+            '/assets/hudson',
         );
     }
 }
