@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-module.exports = [
+export default vite.defineAppConfig(
     {
-        entry: {
-            style: "./themes/style.scss",
-        },
-        context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
-        module: {
-            rules: [webpack_configurator.rule_scss_loader],
-        },
-        plugins: [
-            webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins(),
-        ],
+        plugin_name: path.basename(__dirname),
+        sub_app_name: path.basename(__dirname),
     },
-];
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    captcha: path.resolve(__dirname, "themes/style.scss"),
+                },
+            },
+        },
+    },
+);

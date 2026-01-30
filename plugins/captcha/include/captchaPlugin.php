@@ -33,7 +33,8 @@ use Tuleap\Captcha\Plugin\Info as PluginInfo;
 use Tuleap\Captcha\Registration\Presenter;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Account\Register\AddAdditionalFieldUserRegistration;
@@ -91,13 +92,10 @@ class captchaPlugin extends Plugin // phpcs:ignore
             $event->appendAdditionalFieldsInHtml($renderer->renderToString('user-registration', $presenter));
             $event->getLayout()->includeFooterJavascriptFile('https://www.google.com/recaptcha/api.js');
             $event->getLayout()->addCssAsset(
-                new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons(
-                    new IncludeAssets(
-                        __DIR__ . '/../frontend-assets',
-                        '/assets/captcha'
-                    ),
-                    'style'
-                )
+                CssViteAsset::fromFileName(
+                    new IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/captcha'),
+                    'themes/style.scss',
+                ),
             );
         }
     }
