@@ -54,7 +54,7 @@ function execDeptrac() {
     fi
 
     echo "Processing $config_file_path"
-    "${PHP:-php}" -d opcache.preload="" "$root_path"/src/vendor/bin/deptrac analyse --config-file="$config_file_path" "${args[@]}"
+    "${PHP:-php}" -d memory_limit=256M -d opcache.preload="" "$root_path"/src/vendor/bin/deptrac analyse --config-file="$config_file_path" "${args[@]}"
 
     if [[ -n "${CI_REPORT_OUTPUT_PATH:-}" ]]; then
         sed -i '1a\<testsuites>' "$CI_REPORT_OUTPUT_PATH/${output_file}"
