@@ -144,39 +144,34 @@ echo a.b;
     </div>
 </template>
 
-<script>
-import $ from "jquery";
+<script setup lang="ts">
+import { onMounted, ref, onBeforeUnmount } from "vue";
+import { createPopover } from "@tuleap/tlp-popovers";
+import type { Popover } from "@tuleap/tlp-popovers";
 
-export default {
-    name: "CommonmarkSyntaxHelper",
-    props: {
-        is_in_preview_mode: Boolean,
-    },
-    data() {
-        return {
-            escapeHandler: this.handleKeyUp.bind(this),
-        };
-    },
-    mounted() {
-        $(this.$refs.button_helper).popover({
-            content: $(this.$refs.popover_content).html(),
-            trigger: "click",
-            html: true,
-            placement: "right",
-        });
-        document.addEventListener("keyup", this.escapeHandler);
-    },
-    unMounted() {
-        $(this.$refs.button_helper).popover("destroy");
-        document.removeEventListener("keyup", this.escapeHandler);
-    },
-    methods: {
-        handleKeyUp(event) {
-            if (event.key !== "Escape") {
-                return;
-            }
-            $(this.$refs.button_helper).popover("hide");
-        },
-    },
-};
+defineProps<{
+    is_in_preview_mode: boolean;
+}>();
+
+const popover = ref<Popover>();
+const button_helper = ref<HTMLButtonElement>();
+const popover_content = ref<HTMLElement>();
+
+onMounted(() => {
+    if (!(button_helper.value instanceof HTMLElement)) {
+        throw new Error("Button element is not found in DOM");
+    }
+    if (!(popover_content.value instanceof HTMLElement)) {
+        throw new Error("Popover element is not found in DOM");
+    }
+
+    popover.value = createPopover(button_helper.value, popover_content.value, {
+        trigger: "click",
+        placement: "right",
+    });
+});
+
+onBeforeUnmount(() => {
+    popover.value?.destroy();
+});
 </script>

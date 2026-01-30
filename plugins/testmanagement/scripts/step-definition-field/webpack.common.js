@@ -50,7 +50,6 @@ export default [
             },
         },
         externals: {
-            jquery: "jQuery",
             ckeditor4: "CKEDITOR",
         },
         module: {
