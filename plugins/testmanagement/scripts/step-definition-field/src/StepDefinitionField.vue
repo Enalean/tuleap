@@ -36,7 +36,7 @@
                 <button
                     type="button"
                     class="btn btn-primary"
-                    v-on:click="addStep"
+                    v-on:click="addStep(0)"
                     data-test="add-step"
                 >
                     <i class="fa-solid fa-plus"></i>
@@ -49,49 +49,36 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, onBeforeMount } from "vue";
+import { useStore, useState, useMutations } from "vuex-composition-helpers";
 import StepDefinitionNoStep from "./StepDefinitionNoStep.vue";
 import StepDefinitionDragContainer from "./StepDefinitionDragContainer.vue";
-import { mapState, mapMutations } from "vuex";
+import type { Step } from "./Step";
 
-export default {
-    name: "StepDefinitionField",
-    components: { StepDefinitionNoStep, StepDefinitionDragContainer },
-    props: {
-        initial_steps: Array,
-        artifact_field_id: Number,
-        empty_step: Object,
-        upload_url: String,
-        upload_field_name: String,
-        upload_max_size: String,
-    },
-    computed: {
-        ...mapState(["steps", "field_id", "is_dragging"]),
-        isThereAtLeastOneStep() {
-            return this.steps.length !== 0;
-        },
-        areThereAtLeastTwoSteps() {
-            return this.steps.length > 1;
-        },
-    },
-    created() {
-        this.$store.commit("initStepField", [
-            this.initial_steps,
-            this.artifact_field_id,
-            this.empty_step,
-            this.upload_url,
-            this.upload_field_name,
-            this.upload_max_size,
-        ]);
-    },
-    destroyed() {
-        window.removeEventListener("mousemove", this.replaceMirror);
-    },
-    methods: {
-        ...mapMutations(["toggleIsDragging"]),
-        addStep(index) {
-            this.$store.commit("addStep", index);
-        },
-    },
-};
+const { steps, is_dragging } = useState(["steps", "is_dragging"]);
+const { toggleIsDragging, addStep } = useMutations(["toggleIsDragging", "addStep"]);
+
+const props = defineProps<{
+    initial_steps: Array<Step>;
+    artifact_field_id: number;
+    empty_step: Step;
+    upload_url: string;
+    upload_field_name: string;
+    upload_max_size: string;
+}>();
+
+const isThereAtLeastOneStep = computed(() => steps.value.length !== 0);
+const areThereAtLeastTwoSteps = computed(() => steps.value.length > 1);
+
+onBeforeMount(() => {
+    useStore().commit("initStepField", [
+        props.initial_steps,
+        props.artifact_field_id,
+        props.empty_step,
+        props.upload_url,
+        props.upload_field_name,
+        props.upload_max_size,
+    ]);
+});
 </script>
