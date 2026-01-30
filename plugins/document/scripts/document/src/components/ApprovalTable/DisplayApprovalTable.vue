@@ -67,7 +67,6 @@
                             v-bind:item="item"
                             v-bind:version="version"
                             v-on:error="(message) => (error_message = message)"
-                            v-on:refresh-data="refreshData()"
                         />
                     </section>
                 </div>
@@ -97,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, ref } from "vue";
 import type { Item } from "../../type";
 import { useActions } from "vuex-composition-helpers";
 import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
@@ -107,6 +106,7 @@ import NoApprovalTable from "./Creation/NoApprovalTable.vue";
 import CurrentApprovalTable from "./Display/CurrentApprovalTable.vue";
 import ApprovalTableHistory from "./History/ApprovalTableHistory.vue";
 import ApprovalTableAdministration from "./Administration/ApprovalTableAdministration.vue";
+import emitter from "../../helpers/emitter";
 
 const props = defineProps<{
     item_id: number;
@@ -121,7 +121,12 @@ const is_item_versionable = computed(() => item.value && isItemVersionable(item.
 const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
 
 onBeforeMount(async () => {
+    emitter.on("approval-table-refresh-data", refreshData);
     item.value = await loadDocumentWithAscendentHierarchy(props.item_id);
+});
+
+onBeforeUnmount(() => {
+    emitter.off("approval-table-refresh-data");
 });
 
 async function refreshData(): Promise<void> {

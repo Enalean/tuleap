@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import ApprovalTableReviewModal from "./ApprovalTableReviewModal.vue";
@@ -29,8 +29,11 @@ import { ApprovalTableReviewerBuilder } from "../../../../tests/builders/Approva
 import * as rest_querier from "../../../api/approval-table-rest-querier";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+import emitter from "../../../helpers/emitter";
 
 vi.useFakeTimers();
+
+let refresh_data_event_call_count = 0;
 
 describe(ApprovalTableReviewModal, () => {
     let trigger: HTMLButtonElement;
@@ -57,8 +60,13 @@ describe(ApprovalTableReviewModal, () => {
     }
 
     beforeEach(() => {
+        refresh_data_event_call_count = 0;
+        emitter.on("approval-table-refresh-data", () => refresh_data_event_call_count++);
         const doc = document.implementation.createHTMLDocument();
         trigger = doc.createElement("button");
+    });
+    afterEach(() => {
+        emitter.off("approval-table-refresh-data");
     });
 
     it("Should display error when API fails", async () => {
@@ -87,6 +95,6 @@ describe(ApprovalTableReviewModal, () => {
         await wrapper.find("[data-test=send-review-button]").trigger("click");
 
         expect(putReview).toHaveBeenCalledWith(123, "comment_only", "This is my comment", false);
-        expect(wrapper.emitted("refresh-data")).not.toBe(undefined);
+        expect(refresh_data_event_call_count).toBe(1);
     });
 });
