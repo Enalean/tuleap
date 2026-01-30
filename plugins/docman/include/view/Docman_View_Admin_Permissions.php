@@ -49,18 +49,18 @@ class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView 
     }
 
     #[\Override]
-    protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
+    protected function includeStylesheets(\Tuleap\Layout\IncludeViteAssets $include_assets): void
     {
         $GLOBALS['Response']->addCssAsset(
-            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'admin-style')
+            \Tuleap\Layout\CssViteAsset::fromFileName($include_assets, 'themes/BurningParrot/css/admin.scss'),
         );
     }
 
     #[\Override]
-    protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
+    protected function includeJavascript(\Tuleap\Layout\IncludeViteAssets $include_assets): void
     {
         $GLOBALS['Response']->addJavascriptAsset(
-            new \Tuleap\Layout\JavascriptAsset($include_assets, 'admin-permissions.js')
+            new \Tuleap\Layout\JavascriptViteAsset($include_assets, 'scripts/admin-permissions.ts')
         );
     }
 

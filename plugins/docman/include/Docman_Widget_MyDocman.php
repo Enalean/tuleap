@@ -21,7 +21,8 @@
 
 use Tuleap\Date\DateHelper;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 
 require_once __DIR__ . '/../../../src/www/my/my_utils.php';
 
@@ -182,10 +183,9 @@ class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDec
     #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/docman'
-        );
-        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($theme_include_assets, 'burningparrot-style')]);
+        $theme_include_assets = new IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/docman');
+        return new CssAssetCollection([
+            CssViteAsset::fromFileName($theme_include_assets, 'themes/BurningParrot/css/docman.scss'),
+        ]);
     }
 }

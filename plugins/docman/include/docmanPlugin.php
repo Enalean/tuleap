@@ -145,7 +145,6 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Layout\TooltipJSON;
 use Tuleap\Mail\MailFilter;
@@ -361,14 +360,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
             assert($layout instanceof \Layout);
             $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
         }
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/docman'
-        );
     }
 
     #[\Tuleap\Plugin\ListeningToEventName('logs_daily')]

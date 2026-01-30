@@ -16,8 +16,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "webpack --config webpack.prod.js",
-    "test": "jest",
-    "watch": "webpack --config webpack.dev.js --watch"
+    "build": "vite build",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
+    "test": "jest"
   }
 }

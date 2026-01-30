@@ -31,6 +31,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\NotFoundException;
 
 abstract class AdminView
@@ -104,10 +105,7 @@ abstract class AdminView
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb($documents_crumb);
 
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/docman'
-        );
+        $include_assets = new IncludeViteAssets(__DIR__ . '/../../../frontend-assets', '/assets/docman');
         $this->includeStylesheets($include_assets);
         $this->includeJavascript($include_assets);
 
@@ -140,11 +138,11 @@ abstract class AdminView
     {
     }
 
-    protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
+    protected function includeStylesheets(IncludeViteAssets $include_assets): void
     {
     }
 
-    protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
+    protected function includeJavascript(IncludeViteAssets $include_assets): void
     {
     }
 
