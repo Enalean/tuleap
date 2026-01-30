@@ -27,8 +27,8 @@ use CSRFSynchronizerToken;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\OpenIDConnectClient\UserMapping\CanRemoveUserMappingChecker;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -37,55 +37,22 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\UserPreferencesHeader;
 
-final class OIDCProvidersController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final readonly class OIDCProvidersController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public const string URL = '/plugins/openidconnectclient/account';
 
-    /**
-     * @var \TemplateRenderer
-     */
-    private $renderer;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-    /**
-     * @var UserMappingManager
-     */
-    private $user_mapping_manager;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var bool
-     */
-    private $unique_provider;
-    /**
-     * @var CanRemoveUserMappingChecker
-     */
-    private $can_unlink_provider_from_account_checker;
-    /**
-     * @var IncludeAssets
-     */
-    private $oidc_assets;
+    private \TemplateRenderer $renderer;
 
     public function __construct(
-        EventDispatcherInterface $dispatcher,
+        private EventDispatcherInterface $dispatcher,
         TemplateRendererFactory $renderer_factory,
-        CSRFSynchronizerToken $csrf_token,
-        UserMappingManager $user_mapping_manager,
-        bool $unique_provider,
-        CanRemoveUserMappingChecker $can_unlink_provider_from_account_checker,
-        IncludeAssets $oidc_assets,
+        private CSRFSynchronizerToken $csrf_token,
+        private UserMappingManager $user_mapping_manager,
+        private bool $unique_provider,
+        private CanRemoveUserMappingChecker $can_unlink_provider_from_account_checker,
+        private IncludeViteAssets $oidc_assets,
     ) {
-        $this->dispatcher                               = $dispatcher;
-        $this->renderer                                 = $renderer_factory->getRenderer(__DIR__ . '/templates');
-        $this->csrf_token                               = $csrf_token;
-        $this->user_mapping_manager                     = $user_mapping_manager;
-        $this->unique_provider                          = $unique_provider;
-        $this->can_unlink_provider_from_account_checker = $can_unlink_provider_from_account_checker;
-        $this->oidc_assets                              = $oidc_assets;
+        $this->renderer = $renderer_factory->getRenderer(__DIR__ . '/templates');
     }
 
     /**
@@ -101,12 +68,7 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
 
         $user_mappings_usage = $this->user_mapping_manager->getUsageByUser($user);
 
-        $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                $this->oidc_assets,
-                'user-account-style'
-            )
-        );
+        $layout->addCssAsset(CssViteAsset::fromFileName($this->oidc_assets, 'themes/Account/style.scss'));
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
 

@@ -38,7 +38,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\OpenIDConnectClient\AccountLinker;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
@@ -156,20 +156,20 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
     public function cssfile(): void
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('fp-style.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('themes/FlamingParrot/css/style.scss') . '" />';
         }
     }
 
     public function burning_parrot_get_stylesheets($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($_SERVER['REQUEST_URI'] === '/') {
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('bp-style.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('themes/BurningParrot/css/style.scss');
         }
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../frontend-assets',
             '/assets/openidconnectclient'
         );

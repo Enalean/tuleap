@@ -24,9 +24,9 @@ use CSRFSynchronizerToken;
 use Feedback;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
@@ -41,57 +41,16 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
 
 class Controller
 {
-    /**
-     * @var ProviderManager
-     */
-    private $provider_manager;
-    /**
-     * @var EnableUniqueAuthenticationEndpointVerifier
-     */
-    private $enable_unique_authentication_endpoint_verifier;
-    /**
-     * @var IconPresenterFactory
-     */
-    private $icon_presenter_factory;
-    /**
-     * @var ColorPresenterFactory
-     */
-    private $color_presenter_factory;
-    /**
-     * @var AdminPageRenderer
-     */
-    private $admin_page_renderer;
-    /**
-     * @var GenericProviderManager
-     */
-    private $generic_provider_manager;
-    /**
-     * @var AzureADProviderManager
-     */
-    private $azure_provider_manager;
-    /**
-     * @var IncludeAssets
-     */
-    private $assets;
-
     public function __construct(
-        ProviderManager $provider_manager,
-        GenericProviderManager $generic_provider_manager,
-        AzureADProviderManager $azure_provider_manager,
-        EnableUniqueAuthenticationEndpointVerifier $enable_unique_authentication_endpoint_verifier,
-        IconPresenterFactory $icon_presenter_factory,
-        ColorPresenterFactory $color_presenter_factory,
-        AdminPageRenderer $admin_page_renderer,
-        IncludeAssets $assets,
+        private readonly ProviderManager $provider_manager,
+        private readonly GenericProviderManager $generic_provider_manager,
+        private readonly AzureADProviderManager $azure_provider_manager,
+        private readonly EnableUniqueAuthenticationEndpointVerifier $enable_unique_authentication_endpoint_verifier,
+        private readonly IconPresenterFactory $icon_presenter_factory,
+        private readonly ColorPresenterFactory $color_presenter_factory,
+        private readonly AdminPageRenderer $admin_page_renderer,
+        private readonly IncludeViteAssets $assets,
     ) {
-        $this->provider_manager                               = $provider_manager;
-        $this->generic_provider_manager                       = $generic_provider_manager;
-        $this->azure_provider_manager                         = $azure_provider_manager;
-        $this->enable_unique_authentication_endpoint_verifier = $enable_unique_authentication_endpoint_verifier;
-        $this->icon_presenter_factory                         = $icon_presenter_factory;
-        $this->color_presenter_factory                        = $color_presenter_factory;
-        $this->admin_page_renderer                            = $admin_page_renderer;
-        $this->assets                                         = $assets;
     }
 
     public function showAdministration(CSRFSynchronizerToken $csrf_token, PFUser $user)
@@ -127,8 +86,8 @@ class Controller
             $csrf_token
         );
 
-        $this->admin_page_renderer->addJavascriptAsset(new JavascriptAsset($this->assets, 'open-id-connect-client.js'));
-        $this->admin_page_renderer->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'bp-style'));
+        $this->admin_page_renderer->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/open-id-connect-client.js'));
+        $this->admin_page_renderer->addCssAsset(CssViteAsset::fromFileName($this->assets, 'themes/BurningParrot/css/style.scss'));
 
         $this->admin_page_renderer->renderAPresenter(
             dgettext('tuleap-openidconnectclient', 'OpenID Connect'),

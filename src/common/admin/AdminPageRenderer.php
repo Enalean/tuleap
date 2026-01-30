@@ -23,7 +23,7 @@ namespace Tuleap\Admin;
 use TemplateRendererFactory;
 use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetGeneric;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\SeatManagement\CachedLicenseBuilder;
@@ -100,7 +100,7 @@ class AdminPageRenderer
         $GLOBALS['HTML']->addJavascriptAsset($asset);
     }
 
-    public function addCssAsset(CssAsset $asset): void
+    public function addCssAsset(CssAssetGeneric $asset): void
     {
         $GLOBALS['HTML']->addCssAsset($asset);
     }
