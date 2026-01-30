@@ -72,8 +72,8 @@ final class OpenListValueDaoTest extends TestIntegrationTestCase
         $result = $this->dao->searchByFieldId(self::FIELD_ID);
         self::assertCount(3, $result);
         $this->assertEqualOpenValue($result[0], self::VALUE_A_FIRST_VALUE);
-        $this->assertEqualOpenValue($result[1], self::VALUE_CONSIDERABLY);
-        $this->assertEqualOpenValue($result[2], self::VALUE_TOTO);
+        $this->assertEqualOpenValue($result[1], self::VALUE_TOTO);
+        $this->assertEqualOpenValue($result[2], self::VALUE_CONSIDERABLY);
 
         self::assertCount(0, $this->dao->searchByFieldId(-1));
     }

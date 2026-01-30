@@ -26,14 +26,13 @@ final class b202601081044_unique_index_openlist_value extends \Tuleap\ForgeUpgra
     #[Override]
     public function description(): string
     {
-        return 'Add unique index on field_id and label columns of table tracker_field_openlist_value';
+        return 'De-duplicate Open list value labels to prepare for the unique index.';
     }
 
     #[Override]
     public function up(): void
     {
         $this->removeDuplicationsInTable();
-        $this->addUniqueKey();
     }
 
     private function removeDuplicationsInTable(): void
@@ -201,16 +200,5 @@ final class b202601081044_unique_index_openlist_value extends \Tuleap\ForgeUpgra
         WHERE REGEXP_LIKE(cr.value, 'o($duplicate_ids_to_compare)(,|$)', 'c') = 1
         SQL;
         $this->api->dbh->exec($sql);
-    }
-
-    private function addUniqueKey(): void
-    {
-        $this->api->addIndex(
-            'tracker_field_openlist_value',
-            'idx_field_value',
-            <<<SQL
-            ALTER TABLE tracker_field_openlist_value ADD UNIQUE KEY idx_field_value(field_id, label)
-            SQL,
-        );
     }
 }
