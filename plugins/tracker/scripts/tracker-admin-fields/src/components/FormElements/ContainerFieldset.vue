@@ -23,11 +23,6 @@
         draggable="true"
         v-bind:data-element-id="fieldset.field.field_id"
     >
-        <i
-            class="fa-solid fa-grip-vertical draggable-handle"
-            role="img"
-            v-bind:title="$gettext('Move element')"
-        ></i>
         <div class="draggable-form-element">
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
@@ -45,6 +40,12 @@
                             v-bind:elements="fieldset.children"
                             v-if="fieldset.children.length"
                         />
+                    </div>
+                    <div class="draggable-handle-container" aria-hidden="true">
+                        <i
+                            class="fa-solid fa-grip-vertical draggable-handle"
+                            v-bind:title="$gettext('Move element')"
+                        ></i>
                     </div>
                 </div>
             </section>
@@ -67,9 +68,28 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
+.draggable-wrapper {
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
 .fieldset-header {
     display: flex;
-    gap: var(--tlp-medium-spacing);
+    grid-column: span 2;
     justify-content: space-between;
+    gap: var(--tlp-medium-spacing);
+}
+
+.tlp-pane-container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    border-right: 0;
+}
+
+.tlp-pane-section {
+    padding: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+}
+
+.draggable-wrapper:hover .draggable-handle {
+    opacity: 1;
 }
 </style>

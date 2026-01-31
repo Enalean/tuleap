@@ -20,6 +20,7 @@
 <template>
     <div
         class="column tracker-admin-fields-container-dropzone"
+        v-bind:class="{ 'column-contains-columns': does_column_contain_columns }"
         v-bind:data-container-id="column.field.field_id"
     >
         <display-form-elements v-if="column.children.length" v-bind:elements="column.children" />
@@ -27,19 +28,28 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import type { Column } from "../../type";
 import DisplayFormElements from "../DisplayFormElements.vue";
 
-defineProps<{
+const props = defineProps<{
     column: Column;
 }>();
+
+const does_column_contain_columns = computed(
+    () => props.column.children.length === 1 && "columns" in props.column.children[0],
+);
 </script>
 
 <style lang="scss" scoped>
 .column {
     flex: 1 0 auto;
-    padding: var(--tlp-medium-spacing);
-    border: 1px dashed var(--tlp-neutral-normal-color);
+    border: 1px dashed var(--tlp-border-color);
     border-radius: var(--tlp-medium-radius);
+
+    &.column-contains-columns,
+    &:empty {
+        padding: var(--tlp-medium-spacing);
+    }
 }
 </style>

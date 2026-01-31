@@ -19,13 +19,14 @@
 
 <template>
     <div v-bind:data-element-id="field_id" class="draggable-wrapper" draggable="true">
-        <i
-            class="fa-solid fa-grip-vertical draggable-handle"
-            role="img"
-            v-bind:title="$gettext('Move element')"
-        ></i>
         <div class="draggable-form-element">
             <slot></slot>
+        </div>
+        <div class="draggable-handle-container" aria-hidden="true">
+            <i
+                class="fa-solid fa-grip-vertical draggable-handle"
+                v-bind:title="$gettext('Move element')"
+            ></i>
         </div>
     </div>
 </template>
@@ -38,41 +39,12 @@ const { $gettext } = useGettext();
 defineProps<{ field_id: number }>();
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .draggable-wrapper {
-    display: flex;
-    flex: 1 0 auto;
-    gap: var(--tlp-small-spacing);
-    margin: 0 0 var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 
-    &:last-child {
-        margin: 0;
+    &:hover {
+        background: var(--tlp-main-color-hover-background);
     }
-
-    &:hover > .draggable-handle {
-        visibility: visible;
-    }
-
-    &.drek-ghost {
-        border-radius: var(--tlp-medium-radius);
-        border-color: #00000000;
-        opacity: 1;
-        background: var(--tlp-neutral-normal-color);
-
-        > .draggable-handle,
-        > .draggable-form-element {
-            visibility: hidden;
-        }
-    }
-}
-
-.draggable-form-element {
-    flex: 1 0 auto;
-}
-
-.draggable-handle {
-    visibility: hidden;
-    color: var(--tlp-dimmed-color);
-    cursor: move;
 }
 </style>
