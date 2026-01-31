@@ -18,21 +18,26 @@
   -->
 
 <template>
-    <div class="tlp-form-element column-wrapper">
+    <div
+        class="tlp-form-element column-wrapper"
+        draggable="false"
+        v-bind:data-element-id="column_wrapper.identifier"
+    >
         <container-column
-            v-for="column of columns"
+            v-for="column of column_wrapper.columns"
             v-bind:key="column.field.field_id"
+            v-bind:data-element-id="column.field.field_id"
             v-bind:column="column"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import type { Column } from "../../type";
+import type { ColumnWrapper } from "../../type";
 import ContainerColumn from "./ContainerColumn.vue";
 
 defineProps<{
-    columns: Array<Column>;
+    column_wrapper: ColumnWrapper;
 }>();
 </script>
 

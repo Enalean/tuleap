@@ -18,14 +18,84 @@
   -->
 
 <template>
-    <display-form-elements v-bind:elements="root.children" />
+    <div
+        ref="container"
+        class="tracker-admin-fields-container-dropzone"
+        v-bind:data-container-id="ROOT_CONTAINER_ID"
+    >
+        <display-form-elements v-bind:elements="tracker_root.children" />
+    </div>
 </template>
 
 <script setup lang="ts">
-import type { ElementWithChildren } from "../type";
+import { onBeforeUnmount, onMounted, useTemplateRef } from "vue";
 import DisplayFormElements from "./DisplayFormElements.vue";
+import type {
+    DragDropCallbackParameter,
+    Drekkenov,
+    PossibleDropCallbackParameter,
+    SuccessfulDropCallbackParameter,
+} from "@tuleap/drag-and-drop";
+import { init } from "@tuleap/drag-and-drop";
+import { POST_FIELD_DND_CALLBACK, TRACKER_ROOT } from "../injection-symbols";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { getSuccessfulDropContextTransformer } from "../helpers/SuccessfulDropContextTransformer";
+import { getFieldsMover } from "../helpers/FieldsMover";
+import { ROOT_CONTAINER_ID } from "../type";
+import { getDropRulesEnforcer } from "../helpers/DropRulesEnforcer";
 
-defineProps<{
-    root: ElementWithChildren;
-}>();
+const tracker_root = strictInject(TRACKER_ROOT);
+const post_field_update_callback = strictInject(POST_FIELD_DND_CALLBACK);
+const container = useTemplateRef<HTMLElement>("container");
+const drop_rules_enforcer = getDropRulesEnforcer(tracker_root);
+const context_transformer = getSuccessfulDropContextTransformer(tracker_root);
+const fields_mover = getFieldsMover();
+
+let drek: Drekkenov | undefined = undefined;
+
+onMounted(() => {
+    if (!container.value) {
+        return;
+    }
+
+    drek = init({
+        mirror_container: container.value,
+        isDropZone: (element: HTMLElement) =>
+            element.classList.contains("tracker-admin-fields-container-dropzone"),
+        isDraggable: (element: HTMLElement) => element.draggable,
+        isInvalidDragHandle: (handle: HTMLElement) =>
+            Boolean(handle.closest("[data-not-drag-handle]")),
+        isConsideredInDropzone: (child: Element) => child.hasAttribute("draggable"),
+        doesDropzoneAcceptDraggable: drop_rules_enforcer.isDropPossible,
+        onDragStart: (): void => {},
+        onDragEnter(context: PossibleDropCallbackParameter): void {
+            context.source_dropzone.classList.remove(
+                "tracker-admin-fields-container-dropzone-hover",
+            );
+            context.target_dropzone.classList.add("tracker-admin-fields-container-dropzone-hover");
+        },
+        onDragLeave(context: DragDropCallbackParameter): void {
+            context.target_dropzone.classList.remove(
+                "tracker-admin-fields-container-dropzone-hover",
+            );
+        },
+        onDrop(context: SuccessfulDropCallbackParameter): void {
+            context_transformer
+                .transformSuccessfulDropContext(context)
+                .andThen(fields_mover.moveField)
+                .match(post_field_update_callback, (fault) => {
+                    /* eslint-disable-next-line no-console */
+                    console.error(`[tracker-admin-fields] Unable to move element: ${fault}`);
+                });
+        },
+        cleanupAfterDragCallback: (): void => {},
+    });
+});
+
+onBeforeUnmount(() => {
+    drek?.destroy();
+});
 </script>
+<style lang="scss">
+@use "pkg:@tuleap/drag-and-drop";
+</style>

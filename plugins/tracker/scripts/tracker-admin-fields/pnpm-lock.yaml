@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/dom':
     specifier: workspace:^
     version: link:../../../../lib/frontend/dom
+  '@tuleap/drag-and-drop':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/drag-and-drop
   '@tuleap/fault':
     specifier: workspace:^
     version: link:../../../../lib/frontend/fault
@@ -68,6 +71,9 @@ dependencies:
   neverthrow:
     specifier: 6.0.0
     version: 6.0.0
+  uuid:
+    specifier: ^8.3.2
+    version: 8.3.2
   vue:
     specifier: ^3.5.25
     version: 3.5.25
@@ -88,6 +94,9 @@ devDependencies:
   '@tuleap/po-gettext-plugin':
     specifier: workspace:^
     version: link:../../../../lib/frontend/po-gettext-plugin
+  '@types/uuid':
+    specifier: ^9.0.8
+    version: 9.0.8
   '@vitejs/plugin-vue':
     specifier: ^6.0.3
     version: 6.0.3(vue@3.5.25)
@@ -203,6 +212,10 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
+    dev: true
 
   /@vitejs/plugin-vue@6.0.3(vue@3.5.25):
     resolution: {integrity: sha512-TlGPkLFLVOY3T7fZrwdvKpjprR3s4fxRln0ORDo1VQ7HHyxJwTlrjKU3kpVWTlaAjIEuCTokmjkZnr8Tpc925w==}
@@ -819,6 +832,11 @@ packages:
 
   /undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+    dev: false
+
+  /uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
     dev: false
 
   /vue-component-type-helpers@2.2.12:

@@ -10,6 +10,7 @@
     "@tuleap/core-rest-api-types": "workspace:^",
     "@tuleap/date-helper": "workspace:^",
     "@tuleap/dom": "workspace:^",
+    "@tuleap/drag-and-drop": "workspace:^",
     "@tuleap/fault": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/gettext": "workspace:^",
@@ -27,6 +28,7 @@
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
     "neverthrow": "6.0.0",
+    "uuid": "^8.3.2",
     "vue": "^3.5.25",
     "vue-dompurify-html": "^5.3.0",
     "vue3-gettext": "^2.4.0"
@@ -35,6 +37,7 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/mention": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
+    "@types/uuid": "^9.0.8",
     "@vitejs/plugin-vue": "^6.0.3",
     "@vue/test-utils": "^2.4.6"
   },

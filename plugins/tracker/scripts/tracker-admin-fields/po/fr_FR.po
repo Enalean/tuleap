@@ -81,6 +81,9 @@ msgstr "Date de mise à jour"
 msgid "Line break"
 msgstr "Saut de ligne"
 
+msgid "Move element"
+msgstr "Déplacer l'élément"
+
 msgid "Multi selectbox"
 msgstr "Liste à choix multiple"
 
@@ -101,9 +104,6 @@ msgstr "Id dans le tracker"
 
 msgid "Permissions on artifact"
 msgstr "Permissions sur l'artifact"
-
-msgid "Press Enter to save"
-msgstr "Presser la touche Entrée pour sauvegarder"
 
 msgid "Radio"
 msgstr "Bouton radio"

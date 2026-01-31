@@ -165,6 +165,7 @@ describe("mapContentStructureToFields", () => {
                     children: [
                         { field: staticrichtext },
                         {
+                            identifier: expect.any(String),
                             columns: [
                                 {
                                     field: column_0,

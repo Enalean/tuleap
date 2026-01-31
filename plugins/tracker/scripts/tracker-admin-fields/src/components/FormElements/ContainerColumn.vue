@@ -18,8 +18,11 @@
   -->
 
 <template>
-    <div class="column">
-        <display-form-elements v-bind:elements="column.children" />
+    <div
+        class="column tracker-admin-fields-container-dropzone"
+        v-bind:data-container-id="column.field.field_id"
+    >
+        <display-form-elements v-if="column.children.length" v-bind:elements="column.children" />
     </div>
 </template>
 
