@@ -185,6 +185,7 @@ use Tuleap\Tracker\Creation\TrackerCreationProcessorController;
 use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use Tuleap\Tracker\FormElement\Admin\FieldsUsageConfiguration;
 use Tuleap\Tracker\FormElement\Admin\FieldsUsageDisplayController;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
@@ -2548,6 +2549,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(ArtifactViewCollectionBuilder::class);
         $event->addConfigClass(DateFormatter::class);
         $event->addConfigClass(Tracker_Report_Renderer_Table::class);
+        $event->addConfigClass(FieldsUsageConfiguration::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder

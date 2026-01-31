@@ -1406,6 +1406,12 @@ msgstr ""
 msgid "Failed to remove widget on dashboard of user #%d"
 msgstr ""
 
+#, php-format
+msgid ""
+"Feeling adventurous? Try the new %sfields usage administration interface%s "
+"which is under heavy development!"
+msgstr ""
+
 msgid "Field"
 msgstr ""
 

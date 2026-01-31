@@ -110,4 +110,9 @@ final readonly class FieldsUsageDisplayController implements DispatchableWithReq
 
         return $tracker;
     }
+
+    public static function getUrl(Tracker $tracker): string
+    {
+        return '/trackers/' . $tracker->getId() . '/fields';
+    }
 }

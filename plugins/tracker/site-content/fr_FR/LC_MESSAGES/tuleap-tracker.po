@@ -1594,6 +1594,14 @@ msgstr ""
 "Echec lors de la suppression du widget du tableau de bord de l'utilisateur "
 "#%d"
 
+#, php-format
+msgid ""
+"Feeling adventurous? Try the new %sfields usage administration interface%s "
+"which is under heavy development!"
+msgstr ""
+"Envie de découvrir les nouveautés ? Explorez la nouvelle %sinterface "
+"d’administration des champs%s, actuellement en cours de développement !"
+
 msgid "Field"
 msgstr "Champs"
 
