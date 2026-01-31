@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2026 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,39 +18,27 @@
   -->
 
 <template>
-    <div class="label">
-        <span class="tlp-label">
-            {{ field.label }}
-            <i
-                class="fa-solid fa-asterisk"
-                aria-hidden="true"
-                v-if="field.required"
-                data-test="required"
-            ></i>
-        </span>
-        <list-of-label-decorators v-bind:field="field" />
-    </div>
+    <span class="tlp-badge-primary tlp-badge-outline" v-bind:title="decorator.description">
+        <i
+            v-bind:class="decorator.icon"
+            v-if="decorator.icon"
+            aria-hidden="true"
+            data-test="icon"
+        ></i>
+        {{ decorator.label }}
+    </span>
 </template>
 
 <script setup lang="ts">
-import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
-import ListOfLabelDecorators from "./ListOfLabelDecorators.vue";
+import type { LabelDecorator } from "../../type";
 
 defineProps<{
-    field: StructureFields;
+    decorator: LabelDecorator;
 }>();
 </script>
 
 <style lang="scss" scoped>
-.label {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    margin: 0 0 var(--tlp-small-spacing);
-    gap: var(--tlp-small-spacing);
-}
-
-.tlp-label {
-    margin: 0 var(--tlp-small-spacing) 0 0;
+i {
+    margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
 }
 </style>

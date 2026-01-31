@@ -18,7 +18,7 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+import type { BaseFieldStructure, StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 
 export const PROJECT_ID: StrictInjectionKey<number> = Symbol("PROJECT_ID");
 
@@ -46,4 +46,19 @@ export interface Fieldset extends ElementWithChildren {
 
 export interface Column extends ElementWithChildren {
     readonly field: StructureFields;
+}
+
+export interface LabelDecorator {
+    readonly icon?: string;
+    readonly description: string;
+    readonly label: string;
+}
+
+export interface TrackerSemantic {
+    readonly label: string;
+    readonly description: string;
+}
+
+export interface TrackerSemantics {
+    getForField(field: BaseFieldStructure, $gettext: (msgid: string) => string): TrackerSemantic[];
 }

@@ -64,6 +64,7 @@ export interface BaseFieldStructure {
     readonly field_id: number;
     readonly name: string;
     readonly required: boolean;
+    readonly has_notifications: boolean;
     readonly label: string;
 }
 
@@ -206,6 +207,38 @@ export type SemanticsRepresentation = {
     readonly description?: {
         readonly field_id: number;
     };
+    readonly status?: {
+        readonly field_id: number;
+    };
+    readonly contributor?: {
+        readonly field_id: number;
+    };
+    readonly initial_effort?: {
+        readonly field_id: number;
+    };
+    readonly progress?:
+        | {
+              readonly artifact_link_type: "_is_child";
+          }
+        | {
+              readonly total_effort_field_id: number;
+              readonly remaining_effort_field_id: number;
+          };
+    readonly timeframe?:
+        | {
+              readonly start_date_field_id: number;
+              readonly end_date_field_id: number;
+          }
+        | {
+              readonly start_date_field_id: number;
+              readonly duration_field_id: number;
+          }
+        | {
+              readonly implied_from_tracker: {
+                  readonly id: number;
+                  readonly uri: string;
+              };
+          };
 };
 
 interface NotificationsRepresentation {

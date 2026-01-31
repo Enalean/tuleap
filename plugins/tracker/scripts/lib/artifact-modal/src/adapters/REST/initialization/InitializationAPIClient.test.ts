@@ -63,6 +63,7 @@ describe(`InitializationAPIClient`, () => {
                         name: "unpredisposed",
                         label: "Interseamed",
                         required: false,
+                        has_notifications: false,
 
                         specific_properties: {
                             size: 42,
@@ -76,6 +77,7 @@ describe(`InitializationAPIClient`, () => {
                         name: "coracler",
                         label: "Unwittily",
                         required: false,
+                        has_notifications: false,
                         specific_properties: {
                             size: 42,
                             maxchars: 0,

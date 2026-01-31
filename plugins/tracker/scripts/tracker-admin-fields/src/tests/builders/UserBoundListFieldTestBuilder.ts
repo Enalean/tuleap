@@ -65,6 +65,7 @@ export class UserBoundListFieldTestBuilder {
             label: this.label,
             name: this.name,
             required: this.required,
+            has_notifications: false,
             type: this.type,
             default_value: this.default_value,
             bindings: this.bindings,

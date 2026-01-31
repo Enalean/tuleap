@@ -96,6 +96,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
      * @var mixed
      */
     public $default_value;
+    public bool $has_notifications;
 
     /**
      * @param mixed $values
@@ -121,7 +122,8 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         } else {
             $this->required = false;
         }
-        $this->collapsed = $is_collapsed;
+        $this->has_notifications = $form_element->hasNotifications();
+        $this->collapsed         = $is_collapsed;
 
         $this->default_value = $default_rest_value;
         $this->type          = $type;

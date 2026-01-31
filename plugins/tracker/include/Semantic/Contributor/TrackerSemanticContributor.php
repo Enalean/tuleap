@@ -131,7 +131,7 @@ class TrackerSemanticContributor extends TrackerSemantic
             $html .= dgettext('tuleap-tracker', 'The artifacts of this tracker does not have any contributor/assignee yet.');
         }
 
-        return $html;
+        return '<p>' . $html . '</p>';
     }
 
     #[\Override]
