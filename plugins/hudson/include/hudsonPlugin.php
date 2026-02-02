@@ -26,7 +26,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
@@ -138,7 +138,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
             $this->canIncludeStylesheets() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('hudson-style.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('themes/BurningParrot/hudson.scss');
         }
     }
 
@@ -146,13 +146,13 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
     public function burningParrotGetJavascriptFiles(array $params): void
     {
         if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['javascript_files'][] = (new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'continuous-integration.js'))->getFileURL();
+            $params['javascript_files'][] = (new \Tuleap\Layout\JavascriptViteAsset($this->getAssets(), 'scripts/continuous-integration.ts'))->getFileURL();
         }
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../frontend-assets',
             '/assets/hudson'
         );
