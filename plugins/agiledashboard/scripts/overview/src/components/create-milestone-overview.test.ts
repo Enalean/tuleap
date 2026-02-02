@@ -90,26 +90,14 @@ describe("createMilestoneOverview", () => {
         }
         const rows = element.querySelectorAll("[data-test=artifact-row]");
         expect(rows).toHaveLength(3);
-        expect(rows[0].querySelector<HTMLElement>("[data-test=item-label]")?.innerHTML).toContain(
-            "Label 1",
-        );
-        expect(rows[0].querySelector<HTMLElement>("[data-test=item-status]")?.innerHTML).toContain(
-            "Todo",
-        );
+        expect(rows[0].querySelector("[data-test=item-label]")?.textContent).toContain("Label 1");
+        expect(rows[0].querySelector("[data-test=item-status]")?.textContent).toContain("Todo");
         expect(rows[0].querySelector("[data-test=inconsistent-warning]")).toBe(null);
-        expect(rows[1].querySelector<HTMLElement>("[data-test=item-label]")?.innerHTML).toContain(
-            "Label 3",
-        );
-        expect(rows[1].querySelector<HTMLElement>("[data-test=item-status]")?.innerHTML).toContain(
-            "None",
-        );
+        expect(rows[1].querySelector("[data-test=item-label]")?.textContent).toContain("Label 3");
+        expect(rows[1].querySelector("[data-test=item-status]")?.textContent).toContain("None");
         expect(rows[1].querySelector("[data-test=inconsistent-warning]")).toBe(null);
-        expect(rows[2].querySelector<HTMLElement>("[data-test=item-label]")?.innerHTML).toContain(
-            "Label 2",
-        );
-        expect(rows[2].querySelector<HTMLElement>("[data-test=item-status]")?.innerHTML).toContain(
-            "Done",
-        );
+        expect(rows[2].querySelector("[data-test=item-label]")?.textContent).toContain("Label 2");
+        expect(rows[2].querySelector("[data-test=item-status]")?.textContent).toContain("Done");
         expect(rows[2].querySelector("[data-test=inconsistent-warning]")).not.toBe(null);
 
         const inconsistent = element.querySelectorAll<HTMLInputElement>(
