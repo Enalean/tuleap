@@ -1123,10 +1123,6 @@
               <name><![CDATA[burndown]]></name>
               <label><![CDATA[Burndown]]></label>
             </formElement>
-            <formElement type="burnup" ID="F18374" rank="1" id="18374" tracker_id="856" parent_id="18372">
-              <name><![CDATA[burnup]]></name>
-              <label><![CDATA[Burnup]]></label>
-            </formElement>
           </formElements>
         </formElement>
         <formElement type="fieldset" ID="F18375" rank="57900" id="18375" tracker_id="856" parent_id="0">
@@ -1278,7 +1274,6 @@
         <permission scope="field" REF="F18370" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F18371" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F18373" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F18374" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F18377" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F18378" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F18379" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>

@@ -31,55 +31,37 @@ use Tuleap\DB\DBTransactionExecutor;
 
 class PlanningUpdater
 {
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-    /**
-     * @var PlanningPermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var PlanningDao
-     */
-    private $planning_dao;
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $transaction_executor;
-
     public function __construct(
-        PlanningFactory $planning_factory,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PlanningDao $planning_dao,
-        PlanningPermissionsManager $permissions_manager,
-        DBTransactionExecutor $transaction_executor,
+        private readonly PlanningFactory $planning_factory,
+        private readonly ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private readonly PlanningDao $planning_dao,
+        private readonly PlanningPermissionsManager $permissions_manager,
+        private readonly DBTransactionExecutor $transaction_executor,
     ) {
-        $this->planning_factory                  = $planning_factory;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
-        $this->planning_dao                      = $planning_dao;
-        $this->permissions_manager               = $permissions_manager;
-        $this->transaction_executor              = $transaction_executor;
     }
 
-    public function update(\PFUser $user, Project $project, int $updated_planning_id, \PlanningParameters $planning_parameter): void
+    public function update(\PFUser $user, Project $project, \Planning $original_planning, \PlanningParameters $planning_parameter): void
     {
         $this->transaction_executor->execute(
-            function () use ($user, $project, $updated_planning_id, $planning_parameter) {
-                $this->planning_dao->updatePlanning($updated_planning_id, $planning_parameter);
+            function () use ($user, $project, $original_planning, $planning_parameter) {
+                $this->planning_dao->updatePlanning($original_planning->getId(), $planning_parameter);
+
+                $original_planning_tracker_id = $original_planning->getPlanningTrackerId();
+                if (
+                    $original_planning_tracker_id !== null &&
+                    $original_planning_tracker_id !== (int) $planning_parameter->planning_tracker_id
+                ) {
+                    $this->planning_dao->disableBurnupFieldInTracker($original_planning_tracker_id);
+                }
 
                 $this->permissions_manager->savePlanningPermissionForUgroups(
-                    $updated_planning_id,
+                    $original_planning->getId(),
                     $project->getID(),
                     PlanningPermissionsManager::PERM_PRIORITY_CHANGE,
                     $planning_parameter->priority_change_permission
                 );
 
-                if ($this->isTheRootPlanning($user, $project, $updated_planning_id)) {
+                if ($this->isTheRootPlanning($user, $project, $original_planning->getId())) {
                     $this->artifacts_in_explicit_backlog_dao->removeNoMoreSelectableItemsFromExplicitBacklogOfProject(
                         $planning_parameter->backlog_tracker_ids,
                         (int) $project->getID()

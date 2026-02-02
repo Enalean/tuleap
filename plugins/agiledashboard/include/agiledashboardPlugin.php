@@ -45,6 +45,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionMatchingIdsRetriever;
+use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\BurnupEffortCalculatorForArtifact;
 use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_BURNUP_GENERATE;
@@ -162,6 +163,7 @@ use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
@@ -298,7 +300,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function tracker_formelement_get_classnames($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['dynamic']['burnup'] = \Tuleap\AgileDashboard\FormElement\Burnup::class;
+        $params['dynamic'][Burnup::TYPE] = Burnup::class;
     }
 
     /**
@@ -1923,6 +1925,14 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $event->addError(
                 dgettext('tuleap-agiledashboard', 'Archive should not contain agiledashboard data.'),
             );
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function filterFormElementsThatCanBeCreatedForTracker(FilterFormElementsThatCanBeCreatedForTracker $event): void
+    {
+        if (new PlanningDao()->searchByMilestoneTrackerId($event->getTracker()->getId()) === null) {
+            $event->removeByType(Burnup::TYPE);
         }
     }
 }

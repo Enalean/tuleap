@@ -26,6 +26,7 @@ use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use PlanningParameters;
 use TrackerDao;
+use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\DB\DataAccessObject;
 
 class PlanningDao extends DataAccessObject
@@ -231,5 +232,17 @@ class PlanningDao extends DataAccessObject
     private function deletePlanningBacklogTrackers(EasyDB $db, int $planning_id): void
     {
         $db->delete('plugin_agiledashboard_planning_backlog_tracker', ['planning_id' => $planning_id]);
+    }
+
+    public function disableBurnupFieldInTracker(int $tracker_id): void
+    {
+        $this->getDB()->update(
+            'tracker_field',
+            ['use_it' => false],
+            [
+                'tracker_id'       => $tracker_id,
+                'formElement_type' => Burnup::TYPE,
+            ],
+        );
     }
 }

@@ -419,7 +419,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             try {
                 $this->backlog_trackers_update_checker->checkProvidedBacklogTrackersAreValid($validated_parameters);
                 $this->root_planning_update_checker->checkUpdateIsAllowed($original_planning, $validated_parameters, $user);
-                $this->planning_updater->update($user, $this->project, $updated_planning_id, $validated_parameters);
+                $this->planning_updater->update($user, $this->project, $original_planning, $validated_parameters);
 
                 $new_plan_tracker_list = array_filter(array_map(function ($backlog_tracker_id) {
                     return $this->tracker_factory->getTrackerById($backlog_tracker_id);
@@ -514,13 +514,25 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $user        = $this->request->getCurrentUser();
         $project     = $this->request->getProject();
 
+        $planning = $this->planning_factory->getPlanning($user, $planning_id);
+        if ($planning === null) {
+            $this->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    dgettext('tuleap-agiledashboard', 'Could not find planning with id %s.'),
+                    $planning_id,
+                )
+            );
+            $this->redirect(['group_id' => $this->group_id, 'action' => 'admin']);
+        }
+
         $this->transaction_executor->execute(
-            function () use ($user, $planning_id, $project) {
+            function () use ($user, $planning, $project) {
                 $root_planning = $this->planning_factory->getRootPlanning($user, $project->getID());
-                if ($root_planning && (int) $root_planning->getId() === (int) $planning_id) {
-                    $this->artifacts_in_explicit_backlog_dao->removeExplicitBacklogOfPlanning((int) $planning_id);
+                if ($root_planning && $root_planning->getId() === $planning->getId()) {
+                    $this->artifacts_in_explicit_backlog_dao->removeExplicitBacklogOfPlanning($planning->getId());
                 }
-                $this->planning_factory->deletePlanning($planning_id);
+                $this->planning_factory->deletePlanning($planning);
             }
         );
 

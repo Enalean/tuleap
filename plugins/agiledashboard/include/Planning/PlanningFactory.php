@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Tracker;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
 {
     private PlanningDao $dao;
@@ -65,9 +66,9 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     /**
      * Duplicate plannings for some previously duplicated trackers.
      *
-     * @param int    $group_id         The id of the project where plannings should be created.
-     * @param array  $tracker_mapping  An array mapping source tracker ids to destination tracker ids.
-     * @param array  $ugroups_mapping  An array mapping source ugroups and destinations ones.
+     * @param int $group_id The id of the project where plannings should be created.
+     * @param array $tracker_mapping An array mapping source tracker ids to destination tracker ids.
+     * @param array $ugroups_mapping An array mapping source ugroups and destinations ones.
      */
     public function duplicatePlannings(PFUser $user, $group_id, $tracker_mapping, array $ugroups_mapping): void
     {
@@ -136,8 +137,8 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     /**
      * Get a list of planning defined in a group_id
      *
-     * @param PFUser $user     The user who will see the planning
-     * @param int  $group_id
+     * @param PFUser $user The user who will see the planning
+     * @param int $group_id
      *
      * @return Planning[]
      */
@@ -293,8 +294,8 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     /**
      * Get a list of planning defined in a group_id
      *
-     * @param PFUser $user     The user who will see the planning
-     * @param int  $group_id
+     * @param PFUser $user The user who will see the planning
+     * @param int $group_id
      *
      * @return Planning[]
      */
@@ -310,8 +311,8 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     /**
      * Get a list of planning defined in a group_id with added backlog trackers
      *
-     * @param PFUser $user     The user who will see the planning
-     * @param int  $group_id
+     * @param PFUser $user The user who will see the planning
+     * @param int $group_id
      *
      * @return Planning[]
      */
@@ -376,7 +377,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         $planning->setBacklogTrackers($this->getBacklogTrackers($user, $planning));
 
         return $this->getPlanningTracker($user, $planning)
-            ->andThen(fn (Tracker $tracker) => Result::ok($planning->setPlanningTracker($tracker)));
+            ->andThen(fn(Tracker $tracker) => Result::ok($planning->setPlanningTracker($tracker)));
     }
 
     /**
@@ -408,7 +409,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         );
         $returned->setBacklogTrackers($this->getBacklogTrackers($user, $returned));
         $returned = $this->getPlanningTracker($user, $returned)
-            ->andThen(fn (Tracker $tracker) => Result::ok($returned->setPlanningTracker($tracker)))
+            ->andThen(fn(Tracker $tracker) => Result::ok($returned->setPlanningTracker($tracker)))
             ->unwrapOr(null);
 
         if ($returned !== null) {
@@ -473,7 +474,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         return new Planning(null, null, $group_id, 'Release Backlog', 'Sprint Backlog');
     }
 
-     /**
+    /**
      * Build a new empty planning
      *
      * @return Planning
@@ -567,9 +568,13 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         }
     }
 
-    public function deletePlanning(int $planning_id): void
+    public function deletePlanning(Planning $planning): void
     {
-        $this->dao->deletePlanning($planning_id);
+        $this->dao->deletePlanning($planning->getId());
+        $planning_tracker_id = $planning->getPlanningTrackerId();
+        if ($planning_tracker_id !== null) {
+            $this->dao->disableBurnupFieldInTracker($planning_tracker_id);
+        }
     }
 
     /**
