@@ -42,6 +42,7 @@ use Tracker_Workflow_WorkflowUser;
 use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
@@ -304,14 +305,17 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
                 $this->processUpdate($layout, $request, $current_user);
                 break;
             case Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE:
-                if ($this->isUsedInTrigger()) {
-                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'You cannot remove a field used in a trigger. Please update trigger rules before deleting field.'));
-                    $GLOBALS['Response']->redirect($form_element_management_url);
-                }
+                $field_remover = new TrackerFieldRemover($this->getFormElementFactory(), TrackerFactory::instance());
 
-                if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
-                    $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field removed'));
-                }
+                $field_remover->remove($this)->match(
+                    static function () {
+                        $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field removed'));
+                    },
+                    static function (Fault $fault) {
+                        $GLOBALS['Response']->addFeedback('error', (string) $fault);
+                    }
+                );
+
                 $GLOBALS['Response']->redirect($form_element_management_url);
                 break;
             case Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_DELETE:

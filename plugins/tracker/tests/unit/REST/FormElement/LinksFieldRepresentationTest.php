@@ -48,6 +48,7 @@ final class LinksFieldRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             ListFieldBind::REST_LIST_KEY => [],
         ]);
         $link_field->method('getFlattenPropertiesValues')->willReturn([]);
+        $link_field->method('isUsed')->willReturn(false);
 
         $allowed_link_types = [
             TypePresenter::buildVisibleType('_is_child', 'Child', 'Parent'),
