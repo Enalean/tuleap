@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+
 export type Step = {
     id: number;
     raw_description: string;
-    description_format: string;
+    description_format: TextFieldFormat;
     purified_description: string;
     rank: number;
     raw_expected_results: string;

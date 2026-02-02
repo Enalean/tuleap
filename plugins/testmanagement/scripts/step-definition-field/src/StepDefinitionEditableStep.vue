@@ -30,7 +30,7 @@
             v-bind:is_in_preview_mode="is_in_preview_mode"
             v-bind:is_preview_loading="is_preview_loading"
             v-bind:disabled="false"
-            v-on:input="$emit('toggle-rte', $event)"
+            v-on:input="onInputEmitToggleRte"
             v-on:interpret-content-event="togglePreview"
         />
         <input
@@ -212,6 +212,9 @@ export default {
         areRTEEditorsSet() {
             return this.editors[0] && this.editors[1];
         },
+        onInputEmitToggleRte(new_format) {
+            this.$emit("toggle-rte", new_format);
+        },
         loadRTE(field) {
             const text_area = this.$refs[field];
             let locale = "en_US";
@@ -245,11 +248,11 @@ export default {
         },
         updateDescription(event) {
             this.raw_description = event.target.value;
-            this.$emit("update-description", event);
+            this.$emit("update-description", event.target.value);
         },
         updateExpectedResults(event) {
             this.raw_expected_results = event.target.value;
-            this.$emit("update-expected-results", event);
+            this.$emit("update-expected-results", event.target.value);
         },
         togglePreview() {
             this.is_preview_in_error = false;

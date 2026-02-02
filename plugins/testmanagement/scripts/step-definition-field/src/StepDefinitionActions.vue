@@ -23,9 +23,8 @@
             {{ $gettext("Format:") }}
             <select
                 v-bind:id="format_select_id"
-                ref="format"
                 class="small ttm-definition-step-description-format"
-                v-on:change="input($event)"
+                v-on:change="input"
                 v-bind:disabled="disabled_format_selectbox"
                 data-test="ttm-definition-step-description-format"
             >
@@ -68,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
     TEXT_FORMAT_COMMONMARK,
@@ -89,8 +88,6 @@ const props = defineProps<{
     is_preview_loading: boolean;
 }>();
 
-const format = ref<TextFieldFormat>();
-
 const is_text = computed(() => props.step.description_format === TEXT_FORMAT_TEXT);
 const is_html = computed(() => props.step.description_format === TEXT_FORMAT_HTML);
 const is_commonmark = computed(() => props.step.description_format === TEXT_FORMAT_COMMONMARK);
@@ -98,14 +95,23 @@ const disabled_format_selectbox = computed(() => props.disabled || props.is_in_p
 const is_commonmark_button_displayed = computed(() => !props.disabled && is_commonmark.value);
 
 const emit = defineEmits<{
-    (e: "input", event: Event, format: TextFieldFormat): void;
+    (e: "input", new_format: TextFieldFormat): void;
     (e: "interpret-content-event"): void;
 }>();
 
 function input(event: Event) {
-    if (!format.value) {
+    if (!(event.target instanceof HTMLSelectElement)) {
         return;
     }
-    emit("input", event, format.value);
+
+    if (
+        event.target.value !== TEXT_FORMAT_COMMONMARK &&
+        event.target.value !== TEXT_FORMAT_HTML &&
+        event.target.value !== TEXT_FORMAT_TEXT
+    ) {
+        return;
+    }
+
+    emit("input", event.target.value);
 }
 </script>
