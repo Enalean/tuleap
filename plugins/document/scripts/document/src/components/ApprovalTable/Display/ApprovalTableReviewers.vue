@@ -64,7 +64,7 @@
                     <p v-dompurify-html="reviewer.post_processed_comment"></p>
                 </td>
                 <td>
-                    <document-relative-date
+                    <date-without-time
                         v-if="reviewer.review_date"
                         v-bind:date="reviewer.review_date"
                     />
@@ -103,11 +103,11 @@ import type { ApprovalTable, ApprovalTableReviewer, Item } from "../../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { USER_ID } from "../../../configuration-keys";
 import UserBadge from "../../User/UserBadge.vue";
-import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
 import ApprovalTableReviewModal from "../Review/ApprovalTableReviewModal.vue";
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { translateReviewStatus } from "../../../helpers/approval-table-helper";
+import DateWithoutTime from "../../Date/DateWithoutTime.vue";
 
 const { $gettext } = useGettext();
 

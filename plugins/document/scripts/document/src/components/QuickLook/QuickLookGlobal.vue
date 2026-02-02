@@ -34,6 +34,7 @@
                 v-if="currently_previewed_item.lock_info !== null"
                 v-bind:lock_info="currently_previewed_item.lock_info"
             />
+            <quick-look-obsolescence-warning v-bind:item="currently_previewed_item" />
             <quick-look-document-preview
                 v-bind:icon-class="icon_class"
                 v-bind:item="currently_previewed_item"
@@ -96,6 +97,7 @@ import {
     isWiki,
 } from "../../helpers/type-check-helper";
 import { useGettext } from "vue3-gettext";
+import QuickLookObsolescenceWarning from "./QuickLookObsolescenceWarning.vue";
 
 const QuickLookFile = defineAsyncComponent(() => import("./QuickLookFile.vue"));
 const QuickLookWiki = defineAsyncComponent(() => import("./QuickLookWiki.vue"));

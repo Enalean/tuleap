@@ -1022,6 +1022,9 @@ msgstr ""
 msgid "This item is not versionable"
 msgstr ""
 
+msgid "This item is obsolete since %{ date }."
+msgstr ""
+
 msgid ""
 "This page is asking you to confirm that you want to leave - data you have "
 "entered may not be saved. Do you want to leave this page?"

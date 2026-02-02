@@ -23,7 +23,11 @@
             {{ property_name }}
         </label>
         <p v-bind:id="property_label">
-            <quick-look-property-date v-if="isDate" v-bind:property="property" />
+            <quick-look-property-date
+                v-if="isDate"
+                v-bind:property="property"
+                v-bind:is-obsolescence-date="isPropertyObsolesenceDate"
+            />
             <template
                 v-else-if="
                     isList &&
