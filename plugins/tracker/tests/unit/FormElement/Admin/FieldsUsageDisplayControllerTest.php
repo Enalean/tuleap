@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\StructureRepresentationBuilder;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\DisplayTrackerLayoutStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
@@ -51,8 +52,9 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             RetrieveTrackerStub::withoutTracker(),
             DisplayTrackerLayoutStub::build(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            $this->createMock(StructureRepresentationBuilder::class),
-            $this->createMock(FormElementRepresentationsBuilder::class),
+            $this->createStub(StructureRepresentationBuilder::class),
+            $this->createStub(FormElementRepresentationsBuilder::class),
+            fn() => $this->createStub(TrackerSemanticManager::class),
             IncludeAssetsBuilder::build(),
         );
 
@@ -78,8 +80,9 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             RetrieveTrackerStub::withTracker($tracker),
             DisplayTrackerLayoutStub::build(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            $this->createMock(StructureRepresentationBuilder::class),
-            $this->createMock(FormElementRepresentationsBuilder::class),
+            $this->createStub(StructureRepresentationBuilder::class),
+            $this->createStub(FormElementRepresentationsBuilder::class),
+            fn() => $this->createStub(TrackerSemanticManager::class),
             IncludeAssetsBuilder::build(),
         );
 
@@ -105,10 +108,10 @@ final class FieldsUsageDisplayControllerTest extends TestCase
         $tracker->expects($this->once())->method('displayAdminItemHeaderBurningParrot');
         $tracker->expects($this->once())->method('displayFooter');
 
-        $structure_representation_builder = $this->createMock(StructureRepresentationBuilder::class);
+        $structure_representation_builder = $this->createStub(StructureRepresentationBuilder::class);
         $structure_representation_builder->method('getStructureRepresentation')->willReturn([]);
 
-        $form_element_representations_builder = $this->createMock(FormElementRepresentationsBuilder::class);
+        $form_element_representations_builder = $this->createStub(FormElementRepresentationsBuilder::class);
         $form_element_representations_builder->method('buildRepresentationsInTrackerContextIgnoringReadPermission')->willReturn([]);
 
         $controller = new FieldsUsageDisplayController(
@@ -117,6 +120,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $structure_representation_builder,
             $form_element_representations_builder,
+            fn() => $this->createConfiguredStub(TrackerSemanticManager::class, ['exportToREST' => []]),
             IncludeAssetsBuilder::build(),
         );
 

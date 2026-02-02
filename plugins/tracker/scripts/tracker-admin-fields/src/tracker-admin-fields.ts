@@ -30,11 +30,13 @@ import {
     IS_USER_LOADING,
     TRACKER_COLOR,
     TRACKER_ID,
+    TRACKER_SEMANTICS,
     TRACKER_SHORTNAME,
 } from "./injection-symbols";
 import type { User } from "@tuleap/core-rest-api-types";
 import { Option } from "@tuleap/option";
 import { getJSON, uri } from "@tuleap/fetch-result";
+import { getTrackerSemantics } from "./helpers/get-tracker-semantics";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("tracker-admin-fields-usage-mount-point");
@@ -74,5 +76,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(TRACKER_ID, parseInt(getAttributeOrThrow(mount_point, "data-tracker-id"), 10))
         .provide(TRACKER_SHORTNAME, getAttributeOrThrow(mount_point, "data-tracker-shortname"))
         .provide(TRACKER_COLOR, getAttributeOrThrow(mount_point, "data-tracker-color"))
+        .provide(
+            TRACKER_SEMANTICS,
+            getTrackerSemantics(JSON.parse(getAttributeOrThrow(mount_point, "data-semantics"))),
+        )
         .mount(mount_point);
 });

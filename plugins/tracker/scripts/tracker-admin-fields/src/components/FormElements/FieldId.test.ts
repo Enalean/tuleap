@@ -37,6 +37,7 @@ describe("FieldId", () => {
                         label,
                         type,
                         required: false,
+                        has_notifications: false,
                     },
                 },
             });

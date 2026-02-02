@@ -39,6 +39,9 @@ msgstr "Colonne"
 msgid "Computed value"
 msgstr "Valeur calculée"
 
+msgid "Contributor"
+msgstr "Contributeur"
+
 msgid "Cross references"
 msgstr "Références croisées"
 
@@ -47,6 +50,9 @@ msgstr "Agencement personnalisé"
 
 msgid "Date"
 msgstr "Date"
+
+msgid "Description"
+msgstr "Description"
 
 msgid "Display in & out references"
 msgstr "Liste des objets étant référencés par l'artifact ou le référençant"
@@ -68,6 +74,9 @@ msgstr "Fichier à téléverser"
 
 msgid "Float"
 msgstr "Flottant"
+
+msgid "Initial effort"
+msgstr "Effort initial"
 
 msgid "Integer"
 msgstr "Entier"
@@ -93,6 +102,9 @@ msgstr "Aucun champ"
 msgid "None"
 msgstr "Aucun"
 
+msgid "Notifications"
+msgstr "Notifications"
+
 msgid "One column layout"
 msgstr "Agencement sur une colonne"
 
@@ -104,6 +116,9 @@ msgstr "Id dans le tracker"
 
 msgid "Permissions on artifact"
 msgstr "Permissions sur l'artifact"
+
+msgid "Progress"
+msgstr "Avancement"
 
 msgid "Radio"
 msgstr "Bouton radio"
@@ -123,6 +138,9 @@ msgstr "Champ partagé"
 msgid "Static text"
 msgstr "Texte statique"
 
+msgid "Status"
+msgstr "Statut"
+
 msgid "String"
 msgstr "Chaîne de caractères"
 
@@ -135,11 +153,71 @@ msgstr "Date de création"
 msgid "Text"
 msgstr "Texte"
 
+msgid "This field is used to send notifications"
+msgstr "Ce champ est utilisé pour envoyer des notifications"
+
+msgid "This field will be the description of an artifact"
+msgstr "Ce champ sera la description d'un artifact"
+
+msgid "This field will be the status of an artifact"
+msgstr "Ce champ sera le statut d'un artifact"
+
+msgid "This field will be the title of an artifact"
+msgstr "Ce champ sera le titre d'un artifact"
+
+msgid ""
+"This field will be used to track the duration to compute the timeframe of an "
+"artifact"
+msgstr ""
+"Ce champ sera utilisé pour suivre la durée afin de calculer la période d'un "
+"artifact"
+
+msgid ""
+"This field will be used to track the end date to compute the timeframe of an "
+"artifact"
+msgstr ""
+"Ce champ sera utilisé pour suivre la date de fin afin de calculer la période "
+"d'un artifact"
+
+msgid "This field will be used to track the initial effort of an artifact"
+msgstr "Ce champ sera utilisé pour suivre l'effort initial d'un artifact"
+
+msgid ""
+"This field will be used to track the remaining effort to compute the "
+"progress of an artifact"
+msgstr ""
+"Ce champ sera utilisé pour suivre l'effort restant afin de calculer "
+"l'avancement d'un artifact"
+
+msgid ""
+"This field will be used to track the start date to compute the timeframe of "
+"an artifact"
+msgstr ""
+"Ce champ sera utilisé pour suivre la date de début afin de calculer la "
+"période d'un artifact"
+
+msgid ""
+"This field will be used to track the total effort to compute the progress of "
+"an artifact"
+msgstr ""
+"Ce champ sera utilisé pour suivre l'effort total afin de calculer "
+"l'avancement d'un artifact"
+
 msgid "This tracker does not have any field yet."
 msgstr "Ce tracker n'a pas encore de champ."
 
 msgid "Three columns layout"
 msgstr "Agencement sur trois colonnes"
 
+msgid "Timeframe"
+msgstr "Période"
+
+msgid "Title"
+msgstr "Titre"
+
 msgid "Two columns layout"
 msgstr "Agencement sur deux colonnes"
+
+msgid "User selected in this field will be the contributor of an artifact"
+msgstr ""
+"L'utilisateur sélectionné dans ce champ sera le contributeur d'un artifact"

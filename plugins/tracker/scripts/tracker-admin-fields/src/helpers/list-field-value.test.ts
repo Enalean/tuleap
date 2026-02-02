@@ -98,6 +98,7 @@ describe("list-field-value", () => {
                 label: "Users Group",
                 name: "users_group",
                 required: false,
+                has_notifications: false,
                 type: CHECKBOX_FIELD,
                 default_value: [],
                 bindings: {

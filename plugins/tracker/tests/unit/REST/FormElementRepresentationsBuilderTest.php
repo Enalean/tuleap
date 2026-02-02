@@ -40,11 +40,12 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $field1 = $this->createMock(StringField::class);
+        $field1 = $this->createStub(StringField::class);
         $field1->method('getId')->willReturn(1);
         $field1->method('getName')->willReturn('field_01');
         $field1->method('getLabel')->willReturn('Field 01');
         $field1->method('isRequired')->willReturn(false);
+        $field1->method('hasNotifications')->willReturn(false);
         $field1->method('isCollapsed')->willReturn(false);
         $field1->method('getDefaultRESTValue')->willReturn(null);
         $field1->method('getRESTAvailableValues')->willReturn(null);
@@ -55,7 +56,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         ]);
         $field1->method('getFlattenPropertiesValues')->willReturn([]);
 
-        $field2 = $this->createMock(StringField::class);
+        $field2 = $this->createStub(StringField::class);
         $field2->method('getId')->willReturn(2);
         $field2->method('getName')->willReturn('field_02');
         $field2->method('getLabel')->willReturn('Field 02');
@@ -70,11 +71,12 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         ]);
         $field2->method('getFlattenPropertiesValues')->willReturn([]);
 
-        $field3 = $this->createMock(StringField::class);
+        $field3 = $this->createStub(StringField::class);
         $field3->method('getId')->willReturn(3);
         $field3->method('getName')->willReturn('field_03');
         $field3->method('getLabel')->willReturn('Field 03');
         $field3->method('isRequired')->willReturn(false);
+        $field3->method('hasNotifications')->willReturn(false);
         $field3->method('isCollapsed')->willReturn(false);
         $field3->method('getDefaultRESTValue')->willReturn(null);
         $field3->method('getRESTAvailableValues')->willReturn(null);
@@ -85,9 +87,9 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         ]);
         $field3->method('getFlattenPropertiesValues')->willReturn([]);
 
-        $form_element_factory           = $this->createMock(Tracker_FormElementFactory::class);
-        $permission_exporter            = $this->createMock(PermissionsExporter::class);
-        $hidden_fieldset_checker        = $this->createMock(HiddenFieldsetChecker::class);
+        $form_element_factory           = $this->createStub(Tracker_FormElementFactory::class);
+        $permission_exporter            = $this->createStub(PermissionsExporter::class);
+        $hidden_fieldset_checker        = $this->createStub(HiddenFieldsetChecker::class);
         $permissions_for_groups_builder = $this->createMock(PermissionsForGroupsBuilder::class);
 
         $permissions_for_groups_builder->expects($this->exactly(2))
