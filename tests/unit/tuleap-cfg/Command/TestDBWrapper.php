@@ -32,12 +32,12 @@ final class TestDBWrapper implements DBWrapperInterface
     public array $statements        = [];
     public array $statements_params = [];
 
-    public function assertContains(string $needle)
+    public function assertContains(string $needle): void
     {
         Assert::assertContains($needle, $this->statements);
     }
 
-    public function assertNoStatments()
+    public function assertNoStatments(): void
     {
         Assert::assertEmpty($this->statements);
     }
@@ -71,13 +71,13 @@ final class TestDBWrapper implements DBWrapperInterface
     }
 
     #[\Override]
-    public function row(string $statement)
+    public function row(string $statement): void
     {
         $this->statements[] = $statement;
     }
 
     #[\Override]
-    public function single(string $statement)
+    public function single(string $statement): void
     {
         $this->statements[] = $statement;
     }

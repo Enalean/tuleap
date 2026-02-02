@@ -38,7 +38,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var MockObject&ProcessFactory
      */
     private $process_factory;
-    private $control_command;
+    private SystemControlCommand $control_command;
     /**
      * @var CommandTester
      */

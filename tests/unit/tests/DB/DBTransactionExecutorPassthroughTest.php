@@ -30,7 +30,7 @@ final class DBTransactionExecutorPassthroughTest extends \Tuleap\Test\PHPUnit\Te
         $transation_executor = new DBTransactionExecutorPassthrough();
 
         $callable = new class {
-            private $number_of_calls = 0;
+            private int $number_of_calls = 0;
 
             public function __invoke(): void
             {

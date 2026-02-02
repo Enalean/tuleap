@@ -26,7 +26,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use ForgeConfigSandbox;
     use GlobalResponseMock;
@@ -53,7 +53,7 @@ class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\
         $ldai->method('getErrorMessage');
     }
 
-    protected function savePermissions($ugroups): void
+    protected function savePermissions(array $ugroups): void
     {
         $this->permissions_manager->savePermissions($this->project, $this->object_id, $this->permission_type, $ugroups);
     }

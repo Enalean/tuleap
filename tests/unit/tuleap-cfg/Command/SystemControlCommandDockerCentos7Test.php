@@ -32,16 +32,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 final class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProcessFactory&Stub $process_factory;
-    private $control_command;
-    /**
-     * @var CommandTester
-     */
-    private $command_tester;
-
-    /**
-     * @var vfsStreamDirectory
-     */
-    private $root;
+    private SystemControlCommand $control_command;
+    private CommandTester $command_tester;
+    private vfsStreamDirectory $root;
 
     #[\Override]
     protected function setUp(): void
