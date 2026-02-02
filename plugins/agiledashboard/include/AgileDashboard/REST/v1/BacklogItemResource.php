@@ -449,6 +449,7 @@ class BacklogItemResource extends AuthenticatedResource
             $this->user_manager,
             new ProjectBackgroundConfiguration(new ProjectBackgroundDao()),
             SubmissionPermissionVerifier::instance(),
+            CachedSemanticStatusRetriever::instance(),
         );
     }
 }

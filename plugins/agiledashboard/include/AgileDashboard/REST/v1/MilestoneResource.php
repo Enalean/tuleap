@@ -104,6 +104,7 @@ use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
 use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -204,7 +205,6 @@ class MilestoneResource extends AuthenticatedResource
             new BacklogItemBuilder(),
             new RemainingEffortValueRetriever(Tracker_FormElementFactory::instance()),
             new ArtifactsInExplicitBacklogDao(),
-            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             CachedSemanticTitleFieldRetriever::instance(),
             CachedSemanticStatusFieldRetriever::instance(),
@@ -613,7 +613,7 @@ class MilestoneResource extends AuthenticatedResource
      * @param int $limit Number of elements displayed per page {@min 0} {@max 100}
      * @param int $offset Position of the first element to display {@min 0}
      *
-     * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
+     * @return array {@type \Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
      * @throws RestException 403
      * @throws RestException 404
@@ -1299,6 +1299,7 @@ class MilestoneResource extends AuthenticatedResource
             UserManager::instance(),
             new ProjectBackgroundConfiguration(new ProjectBackgroundDao()),
             SubmissionPermissionVerifier::instance(),
+            CachedSemanticStatusRetriever::instance(),
         );
     }
 

@@ -5,14 +5,50 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/concurrency-limit-pool':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/concurrency-limit-pool
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/gettext
   '@tuleap/plugin-agiledashboard-scrum-header':
     specifier: workspace:*
     version: link:../lib/scrum-header
   '@tuleap/plugin-agiledashboard-scrum-milestone-header':
     specifier: workspace:*
     version: link:../lib/scrum-milestone-header
+  hybrids:
+    specifier: ^9.1.22
+    version: 9.1.22
+  neverthrow:
+    specifier: 6.0.0
+    version: 6.0.0
 
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/po-gettext-plugin
+
+packages:
+
+  /hybrids@9.1.22:
+    resolution: {integrity: sha512-SsUk8GyP4g1zdSa+Da1tT+PCv1m/4yNPCjKzHOawEjJIl/Dyoyid5t6rtLX09ma+PANQ/FWyXzlhZJlLaeLpeg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dev: false
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false

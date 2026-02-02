@@ -194,9 +194,6 @@ msgstr ""
 msgid "Import a configuration from a template file"
 msgstr ""
 
-msgid "Import them in the backlog"
-msgstr ""
-
 msgid "Import/Export"
 msgstr ""
 
@@ -218,9 +215,6 @@ msgid "Initial effort semantic has been unset"
 msgstr ""
 
 msgid "Item"
-msgstr ""
-
-msgid "Item is not linked to this milestone"
 msgstr ""
 
 msgid "Make sure to check their configuration."
@@ -336,9 +330,6 @@ msgstr ""
 msgid "Sidebar shows only the last 5 current milestones"
 msgstr ""
 
-msgid "Some items are not linked to this milestone."
-msgstr ""
-
 msgid ""
 "Something went wrong while updating the planning. Please contact your "
 "administrator."
@@ -394,9 +385,6 @@ msgid "The tracker %s is not found"
 msgstr ""
 
 msgid "There is no Backlog created yet."
-msgstr ""
-
-msgid "There is no item yet"
 msgstr ""
 
 msgid ""

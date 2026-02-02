@@ -223,9 +223,6 @@ msgstr "Importer"
 msgid "Import a configuration from a template file"
 msgstr "Importer une configuration à partir d'un fichier"
 
-msgid "Import them in the backlog"
-msgstr "Les importer dans le backlog"
-
 msgid "Import/Export"
 msgstr "Import/Export"
 
@@ -251,9 +248,6 @@ msgstr "La sémantique effort estimé a été réinitialisée"
 
 msgid "Item"
 msgstr "Élément"
-
-msgid "Item is not linked to this milestone"
-msgstr "L'élément n'est pas lié à ce jalon"
 
 msgid "Make sure to check their configuration."
 msgstr "Merci de vérifier leur configuration."
@@ -381,9 +375,6 @@ msgstr "Le service Backlog est désactivé."
 msgid "Sidebar shows only the last 5 current milestones"
 msgstr "La barre latérale n'affiche que les 5 derniers jalons ouverts"
 
-msgid "Some items are not linked to this milestone."
-msgstr "Certains éléments n'ont pas été liés à ce jalon."
-
 msgid ""
 "Something went wrong while updating the planning. Please contact your "
 "administrator."
@@ -452,9 +443,6 @@ msgstr "Le tracker %s n'a pas été trouvé"
 
 msgid "There is no Backlog created yet."
 msgstr "Aucun Backlog n'a été créé pour le moment."
-
-msgid "There is no item yet"
-msgstr "Il n’y a aucun élément pour l'instant"
 
 msgid ""
 "This artifact has been successfully added to the backlog of the project."

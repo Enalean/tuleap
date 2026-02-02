@@ -62,7 +62,6 @@ use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
-use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemPresenterBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBuildBacklogItemAndBacklogItemCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
@@ -70,8 +69,8 @@ use Tuleap\AgileDashboard\Milestone\Backlog\VisitRetriever;
 use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\MilestoneReportCriterionDao;
 use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPaneInfoIdentifier;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPresenterBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoFactory;
-use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterBuilderFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
@@ -146,7 +145,6 @@ use Tuleap\StatisticsCore\StatisticsServiceUsage;
 use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
 use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
-use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
@@ -1400,7 +1398,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $presenter_builder,
             new RemainingEffortValueRetriever($form_element_factory),
             new ArtifactsInExplicitBacklogDao(),
-            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             CachedSemanticTitleFieldRetriever::instance(),
             CachedSemanticStatusFieldRetriever::instance(),
@@ -1428,14 +1425,11 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return new PlanningMilestonePaneFactory(
             $request,
             $milestone_factory,
-            new PanePresenterBuilderFactory(
+            new DetailsPresenterBuilder(
+                $this->getMilestoneFactory(),
                 $this->getBacklogFactory(),
-                $this->getBacklogItemCollectionFactory(
-                    $this->getMilestoneFactory(),
-                    new BacklogItemPresenterBuilder()
-                ),
                 new BurnupFieldRetriever(Tracker_FormElementFactory::instance()),
-                $event_manager
+                $event_manager,
             ),
             $submilestone_finder,
             $pane_info_factory,

@@ -26,7 +26,9 @@ use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 
 /**
  * @psalm-immutable
@@ -48,6 +50,7 @@ final readonly class BacklogItemRepresentation
         public string $type,
         public string $short_type,
         public string $status,
+        public StatusValueRepresentation $full_status,
         public string $color,
         public string $background_color_name,
         public ?float $initial_effort,
@@ -68,6 +71,7 @@ final readonly class BacklogItemRepresentation
         ProjectBackgroundConfiguration $project_background_configuration,
         \PFUser $current_user,
         VerifySubmissionPermissions $verify_tracker_submission_permissions,
+        RetrieveSemanticStatus $semantic_status_retriever,
     ): self {
         $item_parent_reference = null;
         $item_parent           = $backlog_item->getParent();
@@ -93,6 +97,7 @@ final readonly class BacklogItemRepresentation
             $backlog_item->type(),
             $backlog_item->getShortType(),
             $backlog_item->getNormalizedStatusLabel(),
+            StatusValueRepresentation::buildFromArtifact($backlog_item->getArtifact(), $current_user, $semantic_status_retriever),
             $backlog_item->color(),
             $background_color->getBackgroundColorName(),
             JsonCast::toFloat($backlog_item->getInitialEffort()),

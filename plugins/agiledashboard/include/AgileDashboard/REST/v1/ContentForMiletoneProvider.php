@@ -33,7 +33,6 @@ use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
-use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
@@ -67,7 +66,6 @@ class ContentForMiletoneProvider
                     Tracker_FormElementFactory::instance()
                 ),
                 new ArtifactsInExplicitBacklogDao(),
-                new PriorityDao(),
                 \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
                 CachedSemanticTitleFieldRetriever::instance(),
                 CachedSemanticStatusFieldRetriever::instance(),

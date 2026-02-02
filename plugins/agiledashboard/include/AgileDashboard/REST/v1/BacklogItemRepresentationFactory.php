@@ -28,6 +28,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use UserManager;
 
 final readonly class BacklogItemRepresentationFactory
@@ -37,6 +38,7 @@ final readonly class BacklogItemRepresentationFactory
         private UserManager $user_manager,
         private ProjectBackgroundConfiguration $project_background_configuration,
         private VerifySubmissionPermissions $verify_tracker_submission_permissions,
+        private RetrieveSemanticStatus $semantic_status_retriever,
     ) {
     }
 
@@ -59,6 +61,7 @@ final readonly class BacklogItemRepresentationFactory
             $this->project_background_configuration,
             $current_user,
             $this->verify_tracker_submission_permissions,
+            $this->semantic_status_retriever,
         );
     }
 

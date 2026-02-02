@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,5 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../themes/main.scss";
+import { selectOrThrow } from "@tuleap/dom";
+import { createMilestoneOverview } from "./components/create-milestone-overview";
+import {
+    getLocaleWithDefault,
+    getPOFileFromLocaleWithoutExtension,
+    initGettext,
+} from "@tuleap/gettext";
 import "@tuleap/plugin-agiledashboard-scrum-milestone-header";
+import "../themes/main.scss";
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const gettext = await initGettext(
+        getLocaleWithDefault(document),
+        "overview",
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+    );
+
+    createMilestoneOverview(selectOrThrow(document, "#overview-mount-point"), gettext);
+});
