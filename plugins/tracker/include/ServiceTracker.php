@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\PromotedTrackersRetriever;
-use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\SidebarPromotedTrackerRetriever;
 
 class ServiceTracker extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -119,7 +118,6 @@ class ServiceTracker extends Service //phpcs:ignore PSR1.Classes.ClassDeclaratio
                 new PromotedTrackerDao(),
                 TrackerFactory::instance(),
             ),
-            new CheckPromotedTrackerConfiguration(),
         );
 
         return $retriever->getPromotedItemPresenters($user, $this->project, $active_promoted_item_id);

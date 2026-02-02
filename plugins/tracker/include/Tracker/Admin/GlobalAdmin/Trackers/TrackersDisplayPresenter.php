@@ -59,7 +59,6 @@ final class TrackersDisplayPresenter
         \Project $project,
         array $trackers,
         CSRFSynchronizerTokenInterface $csrf_token,
-        public bool $is_project_allowed_to_promote_trackers_in_sidebar,
     ) {
         $this->trackers_url       = TrackersDisplayController::getURL($project);
         $this->artifact_links_url = ArtifactLinksController::getURL($project);

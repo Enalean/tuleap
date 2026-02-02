@@ -30,7 +30,6 @@ final class SidebarPromotedTrackerRetriever
 {
     public function __construct(
         private readonly RetrievePromotedTrackers $retriever,
-        private readonly PromotedTrackerConfigurationChecker $configuration_checker,
     ) {
     }
 
@@ -39,10 +38,6 @@ final class SidebarPromotedTrackerRetriever
      */
     public function getPromotedItemPresenters(\PFUser $user, \Project $project, ?string $active_promoted_item_id): array
     {
-        if (! $this->configuration_checker->isProjectAllowedToPromoteTrackersInSidebar($project)) {
-            return [];
-        }
-
         $trackers_in_sidebar = [];
         foreach ($this->retriever->getTrackers($user, $project) as $tracker) {
             $trackers_in_sidebar[] = new SidebarPromotedItemPresenter(

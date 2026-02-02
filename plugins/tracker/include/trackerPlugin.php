@@ -280,8 +280,6 @@ use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
-use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
-use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\dao\TrackerGlobalNotificationDao;
 use Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao;
@@ -2245,7 +2243,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new PromotedTrackerDao(),
             new CSRFSynchronizerTokenProvider(),
             new ProjectHistoryDao(),
-            new CheckPromotedTrackerConfiguration(),
         );
     }
 
@@ -2265,7 +2262,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new CSRFSynchronizerTokenProvider(),
             new FieldDao(),
             new TriggersDao(),
-            new CheckPromotedTrackerConfiguration(),
         );
     }
 
@@ -2542,7 +2538,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
         $event->addConfigClass(Tracker_ReportDao::class);
         $event->addConfigClass(ColorpickerMountPointPresenterBuilder::class);
-        $event->addConfigClass(PromotedTrackerConfiguration::class);
         $event->addConfigClass(TrackersPermissionsRetriever::class);
         $event->addConfigClass(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Query::class);
         $event->addConfigClass(ArtifactViewCollectionBuilder::class);

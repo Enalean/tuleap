@@ -36,8 +36,7 @@ final class TrackersDisplayPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $presenter = new TrackersDisplayPresenter(
             ProjectTestBuilder::aProject()->build(),
             [$story, $bug],
-            $this->createMock(CSRFSynchronizerToken::class),
-            true,
+            $this->createStub(CSRFSynchronizerToken::class),
         );
 
         self::assertEquals(

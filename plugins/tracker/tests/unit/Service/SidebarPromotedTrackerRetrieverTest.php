@@ -25,27 +25,12 @@ namespace Tuleap\Tracker\Service;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrievePromotedTrackersStub;
-use Tuleap\Tracker\Test\Stub\Service\PromotedTrackerConfigurationCheckerStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SidebarPromotedTrackerRetrieverTest extends TestCase
 {
-    public function testEmptyWhenProjectIsNotAllowedToPromoteTrackersInSidebar(): void
-    {
-        $user    = UserTestBuilder::buildWithDefaults();
-        $project = ProjectTestBuilder::aProject()->build();
-
-        $retriever = new SidebarPromotedTrackerRetriever(
-            RetrievePromotedTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->build()),
-            PromotedTrackerConfigurationCheckerStub::withoutAllowedProject(),
-        );
-
-        self::assertEmpty($retriever->getPromotedItemPresenters($user, $project, 'whatever'));
-    }
-
     public function testPromotedTrackers(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();
@@ -56,7 +41,6 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
                 TrackerTestBuilder::aTracker()->withName('Bugs')->build(),
                 TrackerTestBuilder::aTracker()->withName('Requests')->build(),
             ),
-            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
         );
 
         self::assertCount(
@@ -77,7 +61,6 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
                 $bugs,
                 $requests,
             ),
-            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
         );
 
         $promoted_item_presenters = $retriever->getPromotedItemPresenters($user, $project, $requests->getPromotedTrackerId());
@@ -95,8 +78,6 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
 
         $retriever = new SidebarPromotedTrackerRetriever(
             RetrievePromotedTrackersStub::withoutTrackers(),
-            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
-            EventDispatcherStub::withIdentityCallback(),
         );
 
         self::assertEmpty(
