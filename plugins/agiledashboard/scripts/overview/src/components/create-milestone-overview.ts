@@ -68,7 +68,7 @@ export function createMilestoneOverview(
                 ),
             ).andThen((ok_items): Result<ArtifactCollections, Fault> => ok_items);
         })
-        .map(deduplicateAndFindInconsistentItems)
+        .map(findInconsistentItems)
         .match(
             ({ all_linked_items, inconsistent_items }) => {
                 const element = document.createElement(TAG);
@@ -93,19 +93,7 @@ export function createMilestoneOverview(
         );
 }
 
-function deduplicateAndFindInconsistentItems(collections: ArtifactCollections): GroupedArtifacts {
-    let all_linked_items: Array<Artifact> = [
-        ...collections.top_items,
-        ...collections.submilestone_items,
-    ];
-
-    all_linked_items = all_linked_items.reduce((accumulator: Array<Artifact>, current) => {
-        if (accumulator.find((item) => item.id === current.id) === undefined) {
-            accumulator.push(current);
-        }
-        return accumulator;
-    }, []);
-
+function findInconsistentItems(collections: ArtifactCollections): GroupedArtifacts {
     const inconsistent_items = collections.submilestone_items.reduce(
         (accumulator: Array<Artifact>, current) => {
             if (collections.top_items.find((item) => current.id === item.id) === undefined) {
@@ -115,6 +103,7 @@ function deduplicateAndFindInconsistentItems(collections: ArtifactCollections): 
         },
         [],
     );
+    const all_linked_items = collections.top_items.concat(inconsistent_items);
 
     return { all_linked_items, inconsistent_items };
 }
