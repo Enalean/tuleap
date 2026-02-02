@@ -51,10 +51,10 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView //
     }
 
     #[\Override]
-    protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
+    protected function includeStylesheets(\Tuleap\Layout\IncludeViteAssets $include_assets): void
     {
         $GLOBALS['Response']->addCssAsset(
-            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'icons-style')
+            \Tuleap\Layout\CssViteAsset::fromFileName($include_assets, 'themes/BurningParrot/css/icons.scss'),
         );
     }
 

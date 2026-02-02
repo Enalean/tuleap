@@ -51,10 +51,10 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView //p
     }
 
     #[\Override]
-    protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
+    protected function includeJavascript(\Tuleap\Layout\IncludeViteAssets $include_assets): void
     {
         $GLOBALS['Response']->addJavascriptAsset(
-            new \Tuleap\Layout\JavascriptAsset($include_assets, 'admin-properties.js')
+            new \Tuleap\Layout\JavascriptViteAsset($include_assets, 'scripts/admin-properties.ts')
         );
     }
 

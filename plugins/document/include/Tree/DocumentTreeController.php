@@ -76,12 +76,12 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
             '/assets/document/document'
         ), 'src/index.ts'));
 
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
+        $include_assets = new \Tuleap\Layout\IncludeViteAssets(
             __DIR__ . '/../../../docman/frontend-assets',
             '/assets/docman'
         );
         $layout->addCssAsset(
-            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'icons-style')
+            \Tuleap\Layout\CssViteAsset::fromFileName($include_assets, 'themes/BurningParrot/css/icons.scss'),
         );
         $this->includeHeaderAndNavigationBar($layout, $project);
         $this->includeJavascriptFiles($layout, $request);
