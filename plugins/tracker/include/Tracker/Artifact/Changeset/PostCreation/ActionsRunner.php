@@ -49,6 +49,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventOrganizerR
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventSummaryRetriever;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\FormElement\Admin\ListOfLabelDecoratorsForFieldBuilder;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
@@ -235,6 +236,7 @@ class ActionsRunner
                                 $permissions_functions_wrapper,
                             ),
                             new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder($event_manager)),
+                            new ListOfLabelDecoratorsForFieldBuilder(),
                         ),
                         new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
                         new WorkflowRestBuilder(),

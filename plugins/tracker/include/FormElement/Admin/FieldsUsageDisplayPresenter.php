@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\Admin;
 
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\StructureRepresentationBuilder;
-use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 use function Psl\Json\encode;
 
@@ -40,19 +39,14 @@ final readonly class FieldsUsageDisplayPresenter
         public string $color_value,
         public string $json_encoded_fields,
         public string $json_encoded_structure,
-        public string $json_encoded_semantics,
     ) {
     }
 
-    /**
-     * @psalm-param \Closure(Tracker): TrackerSemanticManager $semantic_manager_instantiator
-     */
     public static function build(
         Tracker $tracker,
         \PFUser $user,
         FormElementRepresentationsBuilder $form_element_representations_builder,
         StructureRepresentationBuilder $structure_representation_builder,
-        \Closure $semantic_manager_instantiator,
     ): self {
         return new self(
             (int) $tracker->getProject()->getID(),
@@ -61,7 +55,6 @@ final readonly class FieldsUsageDisplayPresenter
             $tracker->getColor()->value,
             encode($form_element_representations_builder->buildRepresentationsInTrackerContextIgnoringReadPermission($tracker, $user)),
             encode($structure_representation_builder->getStructureRepresentation($tracker)),
-            encode($semantic_manager_instantiator($tracker)->exportToREST($user)),
         );
     }
 }

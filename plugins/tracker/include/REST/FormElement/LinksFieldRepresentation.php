@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\FormElement;
 
 use Tracker_REST_FormElementRepresentation;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeRepresentation;
 
@@ -39,6 +40,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
     /**
      * @param mixed $default_rest_value
      * @param mixed|null $values
+     * @param LabelDecorator[] $label_decorators
      */
     private function __construct(
         \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $form_element,
@@ -51,6 +53,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
         array $allowed_types,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
         array $specific_properties,
+        array $label_decorators,
     ) {
         parent::__construct(
             $form_element,
@@ -62,6 +65,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
             $permissions,
             $permissions_for_groups,
             $specific_properties,
+            $label_decorators,
         );
 
         $this->allowed_types = $allowed_types;
@@ -69,6 +73,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
 
     /**
      * @param TypePresenter[] $allowed_link_types_presenters
+     * @param LabelDecorator[] $label_decorators
      */
     public static function buildRepresentationWithAllowedLinkTypes(
         \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $form_element,
@@ -76,6 +81,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
         array $permissions,
         array $allowed_link_types_presenters,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
+        array $label_decorators,
     ): self {
         return new self(
             $form_element,
@@ -88,6 +94,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
             self::buildTypesRepresentations($allowed_link_types_presenters),
             $permissions_for_groups,
             $form_element->getFlattenPropertiesValues(),
+            $label_decorators,
         );
     }
 

@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST;
 
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -31,6 +32,7 @@ use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\FormElement\Admin\BuildListOfLabelDecoratorsForFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveAllUsableTypesInProjectStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -107,7 +109,9 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
             $permissions_for_groups_builder,
             RetrieveAllUsableTypesInProjectStub::withUsableTypes(
                 new TypeIsChildPresenter()
-            )
+            ),
+            BuildListOfLabelDecoratorsForFieldStub::build()
+                ->withDecorator($field1, LabelDecorator::build('decorator', 'description')),
         );
 
         $form_element_factory->method('getAllUsedFormElementOfAnyTypesForTracker')
@@ -123,5 +127,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         $collection = $builder->buildRepresentationsInTrackerContext($tracker, $user);
 
         $this->assertCount(2, $collection);
+        self::assertCount(1, $collection[0]->label_decorators);
+        self::assertCount(0, $collection[1]->label_decorators);
     }
 }

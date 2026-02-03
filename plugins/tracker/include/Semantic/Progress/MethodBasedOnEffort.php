@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\NumericField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class MethodBasedOnEffort implements IComputeProgression
 {
@@ -88,12 +90,43 @@ class MethodBasedOnEffort implements IComputeProgression
     }
 
     #[\Override]
-    public function isFieldUsedInComputation(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
+    public function isFieldUsedInComputation(TrackerField $field): bool
     {
         $field_id = $field->getId();
 
         return $field_id === $this->total_effort_field->getId()
             || $field_id === $this->remaining_effort_field->getId();
+    }
+
+    #[\Override]
+    public function appendLabelDecorators(
+        SemanticProgress $semantic,
+        array &$label_decorators,
+        TrackerField $field,
+    ): void {
+        $label = $semantic->getLabel();
+
+        if ($this->total_effort_field->getId() === $field->getId()) {
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                $label,
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field carries the total effort of "%s" semantic.'),
+                    $label,
+                ),
+                $semantic->getUrl(),
+            );
+        }
+
+        if ($this->remaining_effort_field->getId() === $field->getId()) {
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                $label,
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field carries the remaining effort of "%s" semantic.'),
+                    $label,
+                ),
+                $semantic->getUrl(),
+            );
+        }
     }
 
     #[\Override]

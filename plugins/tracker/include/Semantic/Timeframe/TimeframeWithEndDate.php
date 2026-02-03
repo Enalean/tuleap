@@ -24,6 +24,8 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 
 class TimeframeWithEndDate implements IComputeTimeframes
@@ -60,6 +62,34 @@ class TimeframeWithEndDate implements IComputeTimeframes
 
         return $field_id === $this->start_date_field->getId() ||
             $field_id === $this->end_date_field->getId();
+    }
+
+    #[\Override]
+    public function appendLabelDecorators(SemanticTimeframe $semantic, array &$label_decorators, TrackerField $field): void
+    {
+        $label = $semantic->getLabel();
+
+        if ($this->start_date_field->getId() === $field->getId()) {
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                $label,
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field carries the start date of "%s" semantic.'),
+                    $label,
+                ),
+                $semantic->getUrl(),
+            );
+        }
+
+        if ($this->end_date_field->getId() === $field->getId()) {
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                $label,
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field carries the end date of "%s" semantic.'),
+                    $label,
+                ),
+                $semantic->getUrl(),
+            );
+        }
     }
 
     #[\Override]

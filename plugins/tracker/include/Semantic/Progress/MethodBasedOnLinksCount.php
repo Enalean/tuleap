@@ -24,6 +24,8 @@ namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class MethodBasedOnLinksCount implements IComputeProgression
 {
@@ -73,9 +75,28 @@ class MethodBasedOnLinksCount implements IComputeProgression
     }
 
     #[\Override]
-    public function isFieldUsedInComputation(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
+    public function isFieldUsedInComputation(TrackerField $field): bool
     {
         return $field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+    }
+
+    #[\Override]
+    public function appendLabelDecorators(
+        SemanticProgress $semantic,
+        array &$label_decorators,
+        TrackerField $field,
+    ): void {
+        if ($this->isFieldUsedInComputation($field)) {
+            $label              = $semantic->getLabel();
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                $label,
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field carries the "%s" semantic.'),
+                    $label,
+                ),
+                $semantic->getUrl(),
+            );
+        }
     }
 
     #[\Override]

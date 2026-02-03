@@ -43,6 +43,7 @@ describe("mapContentStructureToFields", () => {
         type: STRING_FIELD,
         required: false,
         has_notifications: false,
+        label_decorators: [],
         specific_properties: {
             size: 42,
             maxchars: 0,
@@ -57,6 +58,7 @@ describe("mapContentStructureToFields", () => {
         type: CONTAINER_FIELDSET,
         required: false,
         has_notifications: false,
+        label_decorators: [],
     };
 
     const staticrichtext: StructureFields = {
@@ -66,6 +68,7 @@ describe("mapContentStructureToFields", () => {
         type: STATIC_RICH_TEXT,
         required: false,
         has_notifications: false,
+        label_decorators: [],
         default_value: "",
     };
 
@@ -76,6 +79,7 @@ describe("mapContentStructureToFields", () => {
         type: CONTAINER_COLUMN,
         required: false,
         has_notifications: false,
+        label_decorators: [],
     };
 
     const column_1: StructureFields = {
@@ -85,6 +89,7 @@ describe("mapContentStructureToFields", () => {
         type: CONTAINER_COLUMN,
         required: false,
         has_notifications: false,
+        label_decorators: [],
     };
 
     const lubby: StructureFields = {
@@ -94,6 +99,7 @@ describe("mapContentStructureToFields", () => {
         type: LAST_UPDATED_BY_FIELD,
         required: false,
         has_notifications: false,
+        label_decorators: [],
     };
 
     const lud: StructureFields = {
@@ -104,6 +110,7 @@ describe("mapContentStructureToFields", () => {
         required: false,
         has_notifications: false,
         is_time_displayed: true,
+        label_decorators: [],
     };
 
     const subby: StructureFields = {
@@ -113,6 +120,7 @@ describe("mapContentStructureToFields", () => {
         type: SUBMITTED_BY_FIELD,
         required: false,
         has_notifications: false,
+        label_decorators: [],
     };
 
     const subon: StructureFields = {
@@ -123,6 +131,7 @@ describe("mapContentStructureToFields", () => {
         required: false,
         has_notifications: false,
         is_time_displayed: true,
+        label_decorators: [],
     };
 
     const fields: TrackerResponseNoInstance["fields"] = [

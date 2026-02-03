@@ -22,6 +22,8 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 interface IComputeTimeframes
 {
@@ -53,6 +55,11 @@ interface IComputeTimeframes
     public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool;
 
     public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool;
+
+    /**
+     * @param LabelDecorator[] $label_decorators
+     */
+    public function appendLabelDecorators(SemanticTimeframe $semantic, array &$label_decorators, TrackerField $field): void;
 
     public function isDefined(): bool;
 

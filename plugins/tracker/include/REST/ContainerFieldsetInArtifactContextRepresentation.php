@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST;
 
 use Tracker_REST_FormElementRepresentation;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
@@ -42,15 +43,19 @@ class ContainerFieldsetInArtifactContextRepresentation extends Tracker_REST_Form
         $this->is_hidden = $is_hidden;
     }
 
+    /**
+     * @param LabelDecorator[] $label_decorators
+     */
     public static function buildContainerFieldset(
         FieldsetContainer $form_element,
         string $type,
         array $permissions,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
         bool $is_hidden,
+        array $label_decorators,
     ): self {
         return new self(
-            parent::build($form_element, $type, $permissions, $permissions_for_groups),
+            parent::build($form_element, $type, $permissions, $permissions_for_groups, $label_decorators),
             $is_hidden
         );
     }

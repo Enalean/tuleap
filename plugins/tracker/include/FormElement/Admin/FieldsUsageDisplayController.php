@@ -33,21 +33,16 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\StructureRepresentationBuilder;
 use Tuleap\Tracker\RetrieveTracker;
-use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 
 final readonly class FieldsUsageDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * @psalm-param \Closure(Tracker): TrackerSemanticManager $semantic_manager_instantiator
-     */
     public function __construct(
         private RetrieveTracker $tracker_factory,
         private Tracker_IDisplayTrackerLayout $layout,
         private \TemplateRendererFactory $renderer_factory,
         private StructureRepresentationBuilder $structure_representation_builder,
         private FormElementRepresentationsBuilder $form_element_representations_builder,
-        private \Closure $semantic_manager_instantiator,
         private IncludeAssetsGeneric $ckeditor_assets,
     ) {
     }
@@ -92,7 +87,6 @@ final readonly class FieldsUsageDisplayController implements DispatchableWithReq
                     $current_user,
                     $this->form_element_representations_builder,
                     $this->structure_representation_builder,
-                    $this->semantic_manager_instantiator,
                 ),
             );
         $tracker->displayFooter($this->layout);

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
 use Tracker_RulesManager;
@@ -41,6 +41,7 @@ use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\FormElement\Admin\BuildListOfLabelDecoratorsForFieldStub;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveSystemTypePresenterStub;
 use Tuleap\Tracker\Test\Stub\Hierarchy\SearchParentTrackerStub;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnTrackersStub;
@@ -62,13 +63,13 @@ final class TrackerRestBuilderTest extends TestCase
 {
     private const int PARENT_TRACKER_ID = 264;
     private const int TRACKER_ID        = 720;
-    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private Tracker_FormElementFactory&Stub $form_element_factory;
     private SearchParentTrackerStub $search_parent_tracker;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->form_element_factory  = $this->createMock(Tracker_FormElementFactory::class);
+        $this->form_element_factory  = $this->createStub(Tracker_FormElementFactory::class);
         $this->search_parent_tracker = SearchParentTrackerStub::withNoParent();
     }
 
@@ -81,21 +82,21 @@ final class TrackerRestBuilderTest extends TestCase
             ->withProject($project)
             ->build();
 
-        $ugroup_manager                = $this->createMock(\UGroupManager::class);
-        $permissions_functions_wrapper = $this->createMock(PermissionsFunctionsWrapper::class);
+        $ugroup_manager                = $this->createStub(\UGroupManager::class);
+        $permissions_functions_wrapper = $this->createStub(PermissionsFunctionsWrapper::class);
         $transition_retriever          = new TransitionRetriever(
             new StateFactory(
-                $this->createMock(\TransitionFactory::class),
-                $this->createMock(SimpleWorkflowDao::class),
+                $this->createStub(\TransitionFactory::class),
+                $this->createStub(SimpleWorkflowDao::class),
             ),
             new TransitionExtractor()
         );
         $frozen_field_detector         = new FrozenFieldDetector(
             $transition_retriever,
-            new FrozenFieldsRetriever($this->createMock(FrozenFieldsDao::class), $this->form_element_factory,)
+            new FrozenFieldsRetriever($this->createStub(FrozenFieldsDao::class), $this->form_element_factory,)
         );
 
-        $semantic_manager = $this->createMock(\Tuleap\Tracker\Semantic\TrackerSemanticManager::class);
+        $semantic_manager = $this->createStub(\Tuleap\Tracker\Semantic\TrackerSemanticManager::class);
         $semantic_manager->method('exportToREST')->willReturn([]);
         $builder = new Tracker_REST_TrackerRestBuilder(
             new StructureRepresentationBuilder($this->form_element_factory),
@@ -106,7 +107,7 @@ final class TrackerRestBuilderTest extends TestCase
                     new HiddenFieldsetsDetector(
                         $transition_retriever,
                         new HiddenFieldsetsRetriever(
-                            $this->createMock(HiddenFieldsetsDao::class),
+                            $this->createStub(HiddenFieldsetsDao::class),
                             $this->form_element_factory,
                         ),
                         $this->form_element_factory
@@ -119,10 +120,11 @@ final class TrackerRestBuilderTest extends TestCase
                     $permissions_functions_wrapper,
                 ),
                 new TypePresenterFactory(
-                    $this->createMock(TypeDao::class),
-                    $this->createMock(ArtifactLinksUsageDao::class),
+                    $this->createStub(TypeDao::class),
+                    $this->createStub(ArtifactLinksUsageDao::class),
                     RetrieveSystemTypePresenterStub::build(),
-                )
+                ),
+                BuildListOfLabelDecoratorsForFieldStub::build(),
             ),
             new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
             new WorkflowRestBuilder(),
@@ -137,7 +139,7 @@ final class TrackerRestBuilderTest extends TestCase
             )
         );
 
-        $workflow = $this->createConfiguredMock(WorkflowWithoutTransition::class, [
+        $workflow = $this->createConfiguredStub(WorkflowWithoutTransition::class, [
             'getFieldId' => 0,
             'getField' => null,
             'isLegacy' => true,
@@ -146,12 +148,12 @@ final class TrackerRestBuilderTest extends TestCase
             'getTransitions' => [],
         ]);
 
-        $rules_manager = $this->createMock(Tracker_RulesManager::class);
+        $rules_manager = $this->createStub(Tracker_RulesManager::class);
         $rules_manager->method('getAllDateRulesByTrackerId')->willReturn([]);
         $rules_manager->method('getAllListRulesByTrackerWithOrder')->willReturn([]);
         $workflow->method('getGlobalRulesManager')->willReturn($rules_manager);
 
-        $tracker = $this->createConfiguredMock(\Tuleap\Tracker\Tracker::class, [
+        $tracker = $this->createConfiguredStub(\Tuleap\Tracker\Tracker::class, [
             'getId' => self::TRACKER_ID,
             'getUri' => '/plugins/tracker/?tracker=' . self::TRACKER_ID,
             'getDescription' => 'Tracks User Stories for developers',

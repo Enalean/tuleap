@@ -25,6 +25,7 @@ use CSRFSynchronizerToken;
 use PFUser;
 use SimpleXMLElement;
 use TrackerManager;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\SemanticRepresentation;
 use Tuleap\Tracker\Tracker;
@@ -141,6 +142,24 @@ abstract class TrackerSemantic
      * @return bool returns true if the field is used in semantics, false otherwise
      */
     abstract public function isUsedInSemantics(TrackerField $field);
+
+    /**
+     * @param LabelDecorator[] $label_decorators
+     */
+    public function appendLabelDecorators(array &$label_decorators, TrackerField $field): void
+    {
+        if ($this->isUsedInSemantics($field)) {
+            $label              = $this->getLabel();
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                $label,
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field carries the "%s" semantic.'),
+                    $label,
+                ),
+                $this->getUrl(),
+            );
+        }
+    }
 
     /**
      * Get the url to this semantic

@@ -47,8 +47,9 @@ class Tracker_REST_FormElement_FieldDateRepresentation extends Tracker_REST_Form
         string $type,
         array $permissions,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
+        array $label_decorators,
     ): Tracker_REST_FormElementRepresentation {
-        $representation = parent::build($form_element, $type, $permissions, $permissions_for_groups);
+        $representation = parent::build($form_element, $type, $permissions, $permissions_for_groups, $label_decorators);
         if (! $form_element instanceof DateField) {
             return $representation;
         }

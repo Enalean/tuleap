@@ -27,6 +27,7 @@ use TemplateRendererFactory;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -310,5 +311,21 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
             }
         }
         return false;
+    }
+
+    #[\Override]
+    public function appendLabelDecorators(array &$label_decorators, TrackerField $field): void
+    {
+        if ($this->isUsedInSemantics($field)) {
+            $label              = $this->getLabel();
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                $label,
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field is part of fields of "%s" semantic.'),
+                    $label,
+                ),
+                $this->getUrl(),
+            );
+        }
     }
 }

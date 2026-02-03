@@ -167,6 +167,12 @@ class SemanticTimeframe extends TrackerSemantic
     }
 
     #[\Override]
+    public function appendLabelDecorators(array &$label_decorators, TrackerField $field): void
+    {
+        $this->timeframe->appendLabelDecorators($this, $label_decorators, $field);
+    }
+
+    #[\Override]
     public function save(): bool
     {
         return $this->timeframe->save($this->tracker, new SemanticTimeframeDao());

@@ -34,6 +34,7 @@ use Tuleap\Cardwall\Semantic\SemanticCardPresenter;
 use Tuleap\Cardwall\Semantic\SingleCardPreviewDetailsBuilder;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
@@ -261,6 +262,32 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
     public function isUsedInSemantics(TrackerField $field)
     {
         return $this->semantic_field_checker->isUsedInSemantic($field, $this->getFields());
+    }
+
+    #[\Override]
+    public function appendLabelDecorators(array &$label_decorators, TrackerField $field): void
+    {
+        if ($this->semantic_field_checker->isUsedInCardFieldSemantic($field, $this->getFields())) {
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                dgettext('tuleap-tracker', 'Cards fields'),
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field is part of fields of "%s" semantic.'),
+                    $this->getLabel(),
+                ),
+                $this->getUrl(),
+            );
+        }
+
+        if ($this->semantic_field_checker->isUsedInBackgroundColorSemantic($field)) {
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                dgettext('tuleap-tracker', 'Cards color'),
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field carries the background color of "%s" semantic.'),
+                    $this->getLabel(),
+                ),
+                $this->getUrl(),
+            );
+        }
     }
 
     #[\Override]

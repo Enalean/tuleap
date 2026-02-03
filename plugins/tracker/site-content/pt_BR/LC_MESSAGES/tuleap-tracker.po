@@ -2268,6 +2268,9 @@ msgstr ""
 msgid "Paste the patch here (text only)"
 msgstr ""
 
+msgid "People selected in this field may receive notifications."
+msgstr ""
+
 msgid "Per tracker id"
 msgstr ""
 
@@ -3631,6 +3634,34 @@ msgstr ""
 msgid ""
 "This artifact doesn't respect tracker's rules. It will not be imported : "
 "CSV's line %s."
+msgstr ""
+
+#, php-format
+msgid "This field carries the \"%s\" semantic."
+msgstr ""
+
+#, php-format
+msgid "This field carries the duration of \"%s\" semantic."
+msgstr ""
+
+#, php-format
+msgid "This field carries the end date of \"%s\" semantic."
+msgstr ""
+
+#, php-format
+msgid "This field carries the remaining effort of \"%s\" semantic."
+msgstr ""
+
+#, php-format
+msgid "This field carries the start date of \"%s\" semantic."
+msgstr ""
+
+#, php-format
+msgid "This field carries the total effort of \"%s\" semantic."
+msgstr ""
+
+#, php-format
+msgid "This field is part of fields of \"%s\" semantic."
 msgstr ""
 
 #, php-format
