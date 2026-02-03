@@ -4,12 +4,13 @@
   "homepage": "https://www.tuleap.com",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@tuleap/filter-inline-table": "workspace:*"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch"
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

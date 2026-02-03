@@ -21,7 +21,7 @@
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\CLI\CLICommandsCollector;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginUpdateHookCommand;
 
@@ -65,7 +65,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implem
     public function burningParrotGetStylesheets($params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('pluginsadministration-style.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('themes/pluginsadministration.scss');
         }
     }
 
@@ -73,7 +73,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implem
     public function burningParrotGetJavascriptFiles(array $params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['javascript_files'][] = $this->getAssets()->getFileURL('pluginsadministration.js');
+            $params['javascript_files'][] = $this->getAssets()->getFileURL('scripts/pluginsadministration.js');
         }
     }
 
@@ -100,9 +100,9 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implem
         $controler->process();
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../frontend-assets/',
             '/assets/pluginsadministration/'
         );
