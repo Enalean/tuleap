@@ -38,8 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import { useState, useMutations } from "vuex-composition-helpers";
+import { useMutations } from "vuex-composition-helpers";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { FIELD_ID } from "./injection-keys";
 
-const { field_id } = useState(["field_id"]);
+const field_id = strictInject(FIELD_ID);
 const { addStep } = useMutations(["addStep"]);
 </script>
