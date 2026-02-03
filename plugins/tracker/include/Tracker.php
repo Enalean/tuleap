@@ -181,6 +181,8 @@ use Tuleap\Tracker\Artifact\XML\Exporter\FilePathXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\LocalAbsoluteFilePathXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\NullChildrenCollector;
 use Tuleap\Tracker\Artifact\XML\Exporter\TrackerStructureXMLExporter;
+use Tuleap\Tracker\FormElement\Admin\CheckFieldsUsageConfiguration;
+use Tuleap\Tracker\FormElement\Admin\FieldsUsageDisplayController;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
@@ -1680,6 +1682,23 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayAdminFormElementsWarnings();
         $title = dgettext('tuleap-tracker', 'Manage Field Usage');
         $this->displayAdminFormElementsHeader($layout, $title);
+
+        if (new CheckFieldsUsageConfiguration()->isProjectAllowedToUseNewFieldsUsageInterface($this->getProject())) {
+            $url = FieldsUsageDisplayController::getUrl($this);
+            echo '<div class="alert alert-info tlp-alert-info">';
+            echo Codendi_HTMLPurifier::instance()->purify(
+                sprintf(
+                    dgettext(
+                        'tuleap-tracker',
+                        'Feeling adventurous? Try the new %sfields usage administration interface%s which is under heavy development!',
+                    ),
+                    '<a href="' . $url . '">',
+                    '</a>'
+                ),
+                Codendi_HTMLPurifier::CONFIG_LIGHT,
+            );
+            echo '</div>';
+        }
 
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
 
