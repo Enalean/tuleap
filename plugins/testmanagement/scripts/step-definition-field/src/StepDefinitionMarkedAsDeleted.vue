@@ -51,25 +51,15 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
-import { mapGetters } from "vuex";
+import { useGetters } from "vuex-composition-helpers";
+import type { Step } from "./Step";
 
-export default {
-    name: "StepDefinitionMarkedAsDeleted",
-    components: {
-        StepDefinitionArrowExpected,
-        StepDefinitionActions,
-    },
-    props: {
-        step: {
-            type: Object,
-            required: true,
-        },
-    },
-    computed: {
-        ...mapGetters(["is_text"]),
-    },
-};
+const { is_text } = useGetters(["is_text"]);
+
+defineProps<{
+    step: Step;
+}>();
 </script>

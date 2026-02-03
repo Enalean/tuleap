@@ -37,15 +37,9 @@
     </div>
 </template>
 
-<script>
-import { mapState, mapMutations } from "vuex";
-export default {
-    name: "StepDefinitionNoStep",
-    computed: {
-        ...mapState(["field_id"]),
-    },
-    methods: {
-        ...mapMutations(["addStep"]),
-    },
-};
+<script setup lang="ts">
+import { useState, useMutations } from "vuex-composition-helpers";
+
+const { field_id } = useState(["field_id"]);
+const { addStep } = useMutations(["addStep"]);
 </script>
