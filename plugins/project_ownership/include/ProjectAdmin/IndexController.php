@@ -22,8 +22,8 @@ namespace Tuleap\ProjectOwnership\ProjectAdmin;
 
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
@@ -35,23 +35,13 @@ use Tuleap\Request\NotFoundException;
 use UserHelper;
 use UserManager;
 
-class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final readonly class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /** @var LayoutHelper */
-    private $layout_helper;
-    /** @var \TemplateRenderer */
-    private $template_renderer;
-    /** @var ProjectOwnerPresenterBuilder */
-    private $project_owner_presenter_builder;
-
     public function __construct(
-        LayoutHelper $layout_helper,
-        \TemplateRenderer $template_renderer,
-        ProjectOwnerPresenterBuilder $project_owner_presenter_builder,
+        private LayoutHelper $layout_helper,
+        private \TemplateRenderer $template_renderer,
+        private ProjectOwnerPresenterBuilder $project_owner_presenter_builder,
     ) {
-        $this->layout_helper                   = $layout_helper;
-        $this->template_renderer               = $template_renderer;
-        $this->project_owner_presenter_builder = $project_owner_presenter_builder;
     }
 
     public static function buildSelf(): self
@@ -73,15 +63,15 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                new IncludeAssets(
+            CssViteAsset::fromFileName(
+                new IncludeViteAssets(
                     __DIR__ . '/../../frontend-assets',
-                    '/assets/project_ownership'
+                    '/assets/project_ownership',
                 ),
-                'project-ownership-project-admin'
+                'themes/project-admin.scss',
             )
         );
         $callback = function (\Project $project, \PFUser $current_user): void {
