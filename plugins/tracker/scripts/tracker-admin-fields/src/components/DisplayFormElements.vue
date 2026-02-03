@@ -126,6 +126,12 @@
         >
             <field-cross-reference v-bind:field="element.field" />
         </draggable-wrapper>
+        <draggable-wrapper
+            v-bind:field_id="element.field.field_id"
+            v-else-if="isAPriorityField(element.field)"
+        >
+            <field-priority v-bind:field="element.field" />
+        </draggable-wrapper>
         <draggable-wrapper v-bind:field_id="element.field.field_id" v-else>
             <base-field v-bind:field="element.field" />
         </draggable-wrapper>
@@ -157,6 +163,7 @@ import {
     LAST_UPDATE_DATE_FIELD,
     CROSS_REFERENCE_FIELD,
     FILE_FIELD,
+    PRIORITY_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     IntFieldStructure,
@@ -194,6 +201,7 @@ import FieldStaticDateText from "./FormElements/FieldStaticDateText.vue";
 import FieldCrossReference from "./FormElements/FieldCrossReference.vue";
 import FieldFile from "./FormElements/FieldFile.vue";
 import DraggableWrapper from "./DraggableWrapper.vue";
+import FieldPriority from "./FormElements/FieldPriority.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -271,5 +279,9 @@ function isCrossReferenceField(field: StructureFields): boolean {
 
 function isAFileField(field: StructureFields): field is FileFieldStructure {
     return field.type === FILE_FIELD;
+}
+
+function isAPriorityField(field: StructureFields): boolean {
+    return field.type === PRIORITY_FIELD;
 }
 </script>
