@@ -18,14 +18,10 @@
  */
 import { v4 as uuid } from "uuid";
 
-export function initStepField(
-    state,
-    [steps, empty_step, upload_url, upload_field_name, upload_max_size],
-) {
+export function initStepField(state, [steps, upload_url, upload_field_name, upload_max_size]) {
     state.steps = steps.map((step) => {
         return { ...step, uuid: uuid(), is_deleted: false };
     });
-    state.empty_step = empty_step;
     state.upload_url = upload_url;
     state.upload_field_name = upload_field_name;
     state.upload_max_size = upload_max_size;
@@ -47,8 +43,8 @@ export function toggleIsDragging(state) {
     state.is_dragging = !state.is_dragging;
 }
 
-export function addStep(state, index) {
-    const step = Object.assign({}, state.empty_step);
+export function addStep(state, [index, empty_step]) {
+    const step = { ...empty_step };
     step.uuid = uuid();
     step.is_deleted = false;
 

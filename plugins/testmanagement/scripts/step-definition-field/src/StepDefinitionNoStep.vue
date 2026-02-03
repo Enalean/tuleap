@@ -27,7 +27,7 @@
             <button
                 type="button"
                 class="btn btn-primary"
-                v-on:click="addStep(0)"
+                v-on:click="addStep([0, empty_step])"
                 data-test="add-step"
             >
                 <i class="fa-solid fa-plus"></i>
@@ -40,7 +40,9 @@
 <script setup lang="ts">
 import { useMutations } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { FIELD_ID } from "./injection-keys";
+import { EMPTY_STEP, FIELD_ID } from "./injection-keys";
+
+const empty_step = strictInject(EMPTY_STEP);
 
 const field_id = strictInject(FIELD_ID);
 const { addStep } = useMutations(["addStep"]);

@@ -45,7 +45,7 @@
                     <button
                         type="button"
                         class="btn btn-primary"
-                        v-on:click="addStep(index + 1)"
+                        v-on:click="addStep([index + 1, empty_step])"
                         data-test="add-step"
                     >
                         <i class="fa-solid fa-plus"></i>
@@ -63,9 +63,10 @@ import { useMutations, useState } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import StepDefinitionEntry from "./StepDefinitionEntry.vue";
 import type { Step } from "./Step";
-import { FIELD_ID } from "./injection-keys";
+import { EMPTY_STEP, FIELD_ID } from "./injection-keys";
 
 const field_id = strictInject(FIELD_ID);
+const empty_step = strictInject(EMPTY_STEP);
 
 const { steps, is_dragging } = useState<{
     steps: Array<Step>;

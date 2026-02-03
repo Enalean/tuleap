@@ -36,7 +36,7 @@
                 <button
                     type="button"
                     class="btn btn-primary"
-                    v-on:click="addStep(0)"
+                    v-on:click="addStep([0, empty_step])"
                     data-test="add-step"
                 >
                     <i class="fa-solid fa-plus"></i>
@@ -52,16 +52,19 @@
 <script setup lang="ts">
 import { computed, onBeforeMount } from "vue";
 import { useStore, useState, useMutations } from "vuex-composition-helpers";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import StepDefinitionNoStep from "./StepDefinitionNoStep.vue";
 import StepDefinitionDragContainer from "./StepDefinitionDragContainer.vue";
 import type { Step } from "./Step";
+import { EMPTY_STEP } from "./injection-keys";
+
+const empty_step = strictInject(EMPTY_STEP);
 
 const { steps, is_dragging } = useState(["steps", "is_dragging"]);
 const { toggleIsDragging, addStep } = useMutations(["toggleIsDragging", "addStep"]);
 
 const props = defineProps<{
     initial_steps: Array<Step>;
-    empty_step: Step;
     upload_url: string;
     upload_field_name: string;
     upload_max_size: string;
@@ -73,7 +76,6 @@ const areThereAtLeastTwoSteps = computed(() => steps.value.length > 1);
 onBeforeMount(() => {
     useStore().commit("initStepField", [
         props.initial_steps,
-        props.empty_step,
         props.upload_url,
         props.upload_field_name,
         props.upload_max_size,

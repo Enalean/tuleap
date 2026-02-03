@@ -19,7 +19,6 @@
 
 const state = {
     steps: [],
-    empty_step: null,
     is_dragging: false,
 };
 
