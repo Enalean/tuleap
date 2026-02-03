@@ -73,7 +73,7 @@ The parameters are "plain-old" keys and values. They can be string type, or numb
 * Good, because the URI is easy to read.
 * Good, because [Restler][3] can [validate it][4] somewhat with `@choice` for Enums, `@min` `@max` for numbers, etc.
 * Good, because it only needs URI escaping, it does not depend on JSON.
-* Neutral, because it does not protect us from breaking changes. If we ever remove the "include" key or "planned_and_not_planned" value, it will be a breaking change.
+* Neutral, because it does not protect us from breaking changes. If we ever remove the "status" key or the "open" value, it will still be an API breaking change.
 * Neutral, because it might be impractical to configure "secret" un-documented keys or values. At the time of writing, it's unknown whether it's possible.
 
 ## More Information
