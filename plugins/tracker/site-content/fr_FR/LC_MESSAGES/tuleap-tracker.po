@@ -2684,9 +2684,6 @@ msgstr ""
 "Les administrateurs de projet peuvent aussi <a href=\"/project/admin/"
 "ugroup.php?group_id=%s\">créer ou modifier</a> des groupes d'utilisateurs."
 
-msgid "Promote %s in the +New dropdown across the project"
-msgstr "Promouvoir %s dans le menu déroulant +Nouveau dans tout le projet"
-
 msgid "Promote %s in the sidebar and +New dropdown across the project"
 msgstr ""
 "Promouvoir %s dans la barre latérale et le menu déroulant +Nouveau dans tout "
@@ -2766,9 +2763,6 @@ msgstr "Rappel: '%1$s' %2$s pour '%3$s'"
 
 msgid "Remove"
 msgstr "Enlever"
-
-msgid "Remove %s from +New dropdown"
-msgstr "Enlever %s du menu déroulant +Nouveau"
 
 msgid "Remove %s from sidebar and +New dropdown"
 msgstr "Enlever %s de la barre latérale et du menu déroulant +Nouveau"
@@ -4333,26 +4327,11 @@ msgstr "Le tracker %s a été supprimé"
 
 #, php-format
 msgid ""
-"Tracker %s will now appear in the +New dropdown on every page of the project"
-msgstr ""
-"Le tracker %s apparaîtra dans le menu déroulant +Nouveau sur toutes les "
-"pages du projet"
-
-#, php-format
-msgid ""
 "Tracker %s will now appear in the sidebar or the +New dropdown on every page "
 "of the project"
 msgstr ""
 "Le tracker %s apparaîtra dans la barre latérale et le menu déroulant "
 "+Nouveau sur toutes les pages du projet"
-
-#, php-format
-msgid ""
-"Tracker %s won't appear anymore in the +New dropdown on every page of the "
-"project"
-msgstr ""
-"Le tracker %s n'apparaîtra plus dans le menu déroulant +Nouveau sur toutes "
-"les pages du projet"
 
 #, php-format
 msgid ""

@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 use CSRFSynchronizerToken;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use ProjectHistoryDao;
 use ProjectManager;
 use TrackerFactory;
@@ -36,14 +37,13 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Service\PromotedTrackerConfigurationCheckerStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TrackerFactory&MockObject $tracker_factory;
     private PromotedTrackerDao&MockObject $in_new_dropdown_dao;
-    private CSRFSynchronizerTokenProvider&MockObject $token_provider;
+    private CSRFSynchronizerTokenProvider&Stub $token_provider;
     private PromoteTrackersController $controller;
     private CSRFSynchronizerToken&MockObject $csrf;
     private ProjectHistoryDao&MockObject $history_dao;
@@ -53,11 +53,11 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $project_manager           = $this->createMock(ProjectManager::class);
+        $project_manager           = $this->createStub(ProjectManager::class);
         $this->perms_checker       = $this->createMock(GlobalAdminPermissionsChecker::class);
         $this->tracker_factory     = $this->createMock(TrackerFactory::class);
         $this->in_new_dropdown_dao = $this->createMock(PromotedTrackerDao::class);
-        $this->token_provider      = $this->createMock(CSRFSynchronizerTokenProvider::class);
+        $this->token_provider      = $this->createStub(CSRFSynchronizerTokenProvider::class);
         $this->history_dao         = $this->createMock(\ProjectHistoryDao::class);
 
         $this->controller = new PromoteTrackersController(
@@ -67,7 +67,6 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->in_new_dropdown_dao,
             $this->token_provider,
             $this->history_dao,
-            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
         );
 
         $this->user = UserTestBuilder::buildWithDefaults();
@@ -91,7 +90,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
-            $this->createMock(BaseLayout::class),
+            $this->createStub(BaseLayout::class),
             ['id' => '102']
         );
     }
@@ -120,7 +119,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withParam('tracker_id', '13')
                 ->withUser($this->user)
                 ->build(),
-            $this->createMock(BaseLayout::class),
+            $this->createStub(BaseLayout::class),
             ['id' => '102']
         );
     }
@@ -150,7 +149,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withParam('tracker_id', '13')
                 ->withUser($this->user)
                 ->build(),
-            $this->createMock(BaseLayout::class),
+            $this->createStub(BaseLayout::class),
             ['id' => '102']
         );
     }
@@ -179,7 +178,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withParam('tracker_id', '13')
                 ->withUser($this->user)
                 ->build(),
-            $this->createMock(BaseLayout::class),
+            $this->createStub(BaseLayout::class),
             ['id' => '102']
         );
     }
@@ -214,7 +213,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->once())
             ->method('groupAddHistory');
 
-        $layout = $this->createMock(BaseLayout::class);
+        $layout = $this->createStub(BaseLayout::class);
         $layout->method('addFeedback');
         $layout->method('redirect');
 
@@ -259,7 +258,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->once())
             ->method('groupAddHistory');
 
-        $layout = $this->createMock(BaseLayout::class);
+        $layout = $this->createStub(BaseLayout::class);
         $layout->method('addFeedback');
         $layout->method('redirect');
 

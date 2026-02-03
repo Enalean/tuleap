@@ -32,7 +32,6 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\PromotedTrackerDao;
-use Tuleap\Tracker\Service\PromotedTrackerConfigurationChecker;
 
 class PromoteTrackersController implements DispatchableWithRequest, DispatchableWithProject
 {
@@ -47,7 +46,6 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
         private readonly PromotedTrackerDao $in_new_dropdown_dao,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
         private readonly ProjectHistoryDao $history_dao,
-        private readonly PromotedTrackerConfigurationChecker $configuration_checker,
     ) {
     }
 
@@ -77,15 +75,10 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
             $layout->addFeedback(
                 \Feedback::INFO,
                 sprintf(
-                    $this->configuration_checker->isProjectAllowedToPromoteTrackersInSidebar($project)
-                        ? dgettext(
-                            'tuleap-tracker',
-                            'Tracker %s will now appear in the sidebar or the +New dropdown on every page of the project'
-                        )
-                        : dgettext(
-                            'tuleap-tracker',
-                            'Tracker %s will now appear in the +New dropdown on every page of the project'
-                        ),
+                    dgettext(
+                        'tuleap-tracker',
+                        'Tracker %s will now appear in the sidebar or the +New dropdown on every page of the project'
+                    ),
                     $tracker->getName(),
                 ),
             );
@@ -100,15 +93,10 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
             $layout->addFeedback(
                 \Feedback::INFO,
                 sprintf(
-                    $this->configuration_checker->isProjectAllowedToPromoteTrackersInSidebar($project)
-                        ? dgettext(
-                            'tuleap-tracker',
-                            'Tracker %s won\'t appear anymore in the sidebar or the +New dropdown on every page of the project'
-                        )
-                        : dgettext(
-                            'tuleap-tracker',
-                            'Tracker %s won\'t appear anymore in the +New dropdown on every page of the project'
-                        ),
+                    dgettext(
+                        'tuleap-tracker',
+                        'Tracker %s won\'t appear anymore in the sidebar or the +New dropdown on every page of the project'
+                    ),
                     $tracker->getName(),
                 ),
             );

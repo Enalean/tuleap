@@ -2378,9 +2378,6 @@ msgid ""
 "group_id=%s\">create or modify</a> user groups."
 msgstr ""
 
-msgid "Promote %s in the +New dropdown across the project"
-msgstr ""
-
 msgid "Promote %s in the sidebar and +New dropdown across the project"
 msgstr ""
 
@@ -2456,9 +2453,6 @@ msgstr ""
 
 msgid "Remove"
 msgstr "Remover"
-
-msgid "Remove %s from +New dropdown"
-msgstr ""
 
 msgid "Remove %s from sidebar and +New dropdown"
 msgstr ""
@@ -3807,19 +3801,8 @@ msgstr ""
 
 #, php-format
 msgid ""
-"Tracker %s will now appear in the +New dropdown on every page of the project"
-msgstr ""
-
-#, php-format
-msgid ""
 "Tracker %s will now appear in the sidebar or the +New dropdown on every page "
 "of the project"
-msgstr ""
-
-#, php-format
-msgid ""
-"Tracker %s won't appear anymore in the +New dropdown on every page of the "
-"project"
 msgstr ""
 
 #, php-format
