@@ -24,7 +24,7 @@
                 v-if="areThereAtLeastTwoSteps"
                 type="button"
                 class="ttm-definition-reorder-steps-button btn btn-small"
-                v-on:click="toggleIsDragging()"
+                v-on:click="toggleIsDragging"
             >
                 <i class="fas fa-sync fa-rotate-90"></i>
                 <span v-if="is_dragging" key="stop-reordering">
@@ -56,12 +56,13 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import StepDefinitionNoStep from "./StepDefinitionNoStep.vue";
 import StepDefinitionDragContainer from "./StepDefinitionDragContainer.vue";
 import type { Step } from "./Step";
-import { EMPTY_STEP } from "./injection-keys";
+import { EMPTY_STEP, IS_DRAGGING } from "./injection-keys";
 
 const empty_step = strictInject(EMPTY_STEP);
+const is_dragging = strictInject(IS_DRAGGING);
 
-const { steps, is_dragging } = useState(["steps", "is_dragging"]);
-const { toggleIsDragging, addStep } = useMutations(["toggleIsDragging", "addStep"]);
+const { steps } = useState(["steps"]);
+const { addStep } = useMutations(["addStep"]);
 
 const props = defineProps<{
     initial_steps: Array<Step>;
@@ -73,4 +74,8 @@ const areThereAtLeastTwoSteps = computed(() => steps.value.length > 1);
 onBeforeMount(() => {
     useStore().commit("initStepField", props.initial_steps);
 });
+
+function toggleIsDragging() {
+    is_dragging.value = !is_dragging.value;
+}
 </script>

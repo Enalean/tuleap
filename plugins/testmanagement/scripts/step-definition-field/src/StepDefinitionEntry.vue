@@ -43,13 +43,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import StepDefinitionMarkedAsDeleted from "./StepDefinitionMarkedAsDeleted.vue";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
 import StepDefinitionDraggableComponent from "./StepDefinitionDraggableComponent.vue";
-import { useState } from "vuex-composition-helpers";
 import type { Step } from "./Step";
+import { IS_DRAGGING } from "./injection-keys";
 
-const { is_dragging } = useState(["is_dragging"]);
+const is_dragging = strictInject(IS_DRAGGING);
 
 const props = defineProps<{
     step: Step;

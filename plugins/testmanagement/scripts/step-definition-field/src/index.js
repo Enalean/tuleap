@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ref, createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createInitializedStore } from "./store/index.js";
 import StepDefinitionField from "./StepDefinitionField.vue";
-import { createApp } from "vue";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
@@ -31,6 +31,7 @@ import {
     UPLOAD_URL,
     UPLOAD_FIELD_NAME,
     UPLOAD_MAX_SIZE,
+    IS_DRAGGING,
 } from "./injection-keys.ts";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(UPLOAD_URL, getAttributeOrThrow(mount_point, "data-upload-url"))
             .provide(UPLOAD_FIELD_NAME, getAttributeOrThrow(mount_point, "data-upload-field-name"))
             .provide(UPLOAD_MAX_SIZE, getAttributeOrThrow(mount_point, "data-upload-max-size"))
+            .provide(IS_DRAGGING, ref(false))
             .use(VueDOMPurifyHTML)
             .use(
                 await initVueGettext(
