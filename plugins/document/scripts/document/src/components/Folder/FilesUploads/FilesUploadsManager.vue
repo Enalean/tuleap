@@ -21,11 +21,11 @@
     <div>
         <div
             class="document-header-global-progress tlp-tooltip tlp-tooltip-left"
-            v-if="should_display_progress_bar"
+            v-if="global_upload_progress > 0"
             v-bind:data-tlp-tooltip="
                 $gettext('Some files are being uploaded, click here to see the whole list.')
             "
-            v-on:click="modal.show()"
+            v-on:click="modal?.show()"
         >
             <global-upload-progress-bar
                 v-bind:progress="global_upload_progress"
@@ -40,17 +40,13 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import FilesUploadsModal from "./FilesUploadsModal.vue";
 import GlobalUploadProgressBar from "../ProgressBar/GlobalUploadProgressBar.vue";
-import { computed, onMounted, ref } from "vue";
-import { useGetters, useState, useStore } from "vuex-composition-helpers";
+import { computed, onMounted, ref, watch } from "vue";
+import { useGetters, useState } from "vuex-composition-helpers";
 import type { RootState } from "../../../type";
 import type { RootGetter } from "../../../store/getters";
-import { templateRef } from "@vueuse/core";
-
-const $store = useStore();
 
 const modal = ref<Modal | null>(null);
-const nb_uploads_in_error = ref<number>(0);
-const uploads_modal = templateRef<InstanceType<FilesUploadsModal>>("uploads_modal");
+const uploads_modal = ref<InstanceType<typeof FilesUploadsModal> | null>(null);
 
 const { files_uploads_list } = useState<Pick<RootState, "files_uploads_list">>([
     "files_uploads_list",
@@ -59,23 +55,22 @@ const { global_upload_progress } = useGetters<Pick<RootGetter, "global_upload_pr
     "global_upload_progress",
 ]);
 
-const should_display_progress_bar = computed(
-    () => files_uploads_list.value.filter((file) => file.upload_error === null).length > 0,
+const nb_uploads_in_error = computed(
+    () => files_uploads_list.value.filter((file) => file.upload_error !== null).length,
 );
 
+watch(nb_uploads_in_error, (nb_uploads_in_error) => {
+    if (modal.value === null) {
+        return;
+    }
+    if (nb_uploads_in_error > 0 && !modal.value.is_shown) {
+        modal.value.show();
+    }
+});
+
 onMounted(() => {
-    modal.value = createModal(uploads_modal.value.$el);
-
-    $store.watch(
-        (state) => state.files_uploads_list.filter((file) => file.upload_error !== null),
-        (uploads_in_error) => {
-            if (uploads_in_error.length > nb_uploads_in_error.value && !modal.value.is_shown) {
-                modal.value.show();
-            }
-
-            nb_uploads_in_error.value = uploads_in_error.length;
-        },
-        { deep: true },
-    );
+    if (uploads_modal.value !== null) {
+        modal.value = createModal(uploads_modal.value.$el);
+    }
 });
 </script>

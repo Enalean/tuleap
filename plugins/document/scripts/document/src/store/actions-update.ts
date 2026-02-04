@@ -44,6 +44,7 @@ import { uploadVersionFromEmpty } from "./actions-helpers/upload-file";
 import { isEmpty, isFakeItem } from "../helpers/type-check-helper";
 import emitter from "../helpers/emitter";
 import { getErrorMessage } from "../helpers/properties-helpers/error-handler-helper";
+import { toRaw } from "vue";
 
 export interface RootActionsUpdate {
     readonly createNewFileVersion: typeof createNewFileVersion;
@@ -59,8 +60,18 @@ export async function createNewFileVersion(
     [item, dropped_file]: [ItemFile, File],
 ): Promise<void> {
     try {
-        await uploadNewVersion(context, [item, dropped_file, item.title, "", false, null]);
-        item.updated = true;
+        const item_to_update = structuredClone(toRaw(item));
+        context.commit("replaceFolderContentByItem", item_to_update, { root: true });
+        await uploadNewVersion(context, [
+            item_to_update,
+            dropped_file,
+            item.title,
+            "",
+            false,
+            null,
+        ]);
+        item_to_update.updated = true;
+        emitter.emit("item-has-just-been-updated", { item: item_to_update });
     } catch (exception) {
         context.commit("toggleCollapsedFolderHasUploadingContent", {
             collapsed_folder: parent,

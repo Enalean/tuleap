@@ -18,20 +18,41 @@
  *
  */
 
-import type { Folder, Item } from "../../type";
+import type { Folder, Item, Uploadable } from "../../type";
 import type { RestFolder, RestItem } from "../../api/rest-querier";
+import { isFile, isFolder } from "../type-check-helper";
 
 export function convertArrayOfItems(items: ReadonlyArray<RestItem>): Array<Item> {
-    return items.map(({ metadata, ...other }) => ({
-        properties: metadata,
-        ...other,
-    }));
+    return items.map(({ metadata, ...other }) =>
+        addUploadableProperties({
+            properties: metadata,
+            ...other,
+        }),
+    );
 }
 
 export function convertRestItemToItem(rest_item: RestItem): Item {
-    return { properties: rest_item.metadata, ...rest_item };
+    return addUploadableProperties({ properties: rest_item.metadata, ...rest_item });
 }
 
 export function convertFolderItemToFolder(rest_folder: RestFolder): Folder {
-    return { properties: rest_folder.metadata, ...rest_folder };
+    return addUploadableProperties({ properties: rest_folder.metadata, ...rest_folder });
+}
+
+function addUploadableProperties<I extends Item>(item: I): I {
+    if (isFolder(item) || isFile(item)) {
+        const default_uploadable_value: Uploadable = {
+            progress: null,
+            upload_error: null,
+            is_uploading: false,
+            is_uploading_new_version: false,
+            is_uploading_in_collapsed_folder: false,
+        };
+        return {
+            ...item,
+            ...default_uploadable_value,
+        };
+    }
+
+    return item;
 }

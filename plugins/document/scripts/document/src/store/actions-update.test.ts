@@ -98,6 +98,11 @@ describe("actions-update", () => {
                 id: 45,
                 lock_info: null,
                 title: "Electronic document management for dummies.pdf",
+                progress: null,
+                updated: true,
+                upload_error: null,
+                uploader: {},
+                is_uploading_new_version: false,
             } as ItemFile;
             const NO_LOCK = false;
 
