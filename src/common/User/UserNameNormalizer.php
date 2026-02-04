@@ -34,7 +34,7 @@ readonly class UserNameNormalizer
      */
     public function normalize(string $username): string
     {
-        $username        = $this->slugify->slugify($username, '_');
+        $username        = mb_substr($this->slugify->slugify($username, '_'), 0, Rule_UserName::USERNAME_MAX_LENGTH);
         $username_length = mb_strlen($username);
         $username_suffix = 1;
 
@@ -64,6 +64,8 @@ readonly class UserNameNormalizer
             if ($this->username_rule->isValid($suffixed_username)) {
                 return $suffixed_username;
             }
+
+            $username_suffix += 1;
         }
 
         throw new DataIncompatibleWithUsernameGenerationException();
