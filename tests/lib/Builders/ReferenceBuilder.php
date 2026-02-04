@@ -30,12 +30,14 @@ final class ReferenceBuilder
     private const ARTIFACT_KEYWORD      = 'artifact';
     private const SYSTEM_SCOPE          = 'S';
     private const PROJECT_SCOPE         = 'P';
+    private const SERVICE_SHORTNAME     = 'plugin_tracker';
 
     private function __construct(
         private int $reference_id,
         private string $keyword,
         private string $scope,
         private int $project_id = 170,
+        private string $short_name = self::SERVICE_SHORTNAME,
     ) {
     }
 
@@ -60,6 +62,20 @@ final class ReferenceBuilder
         return $this;
     }
 
+    public function isASystemReference(): self
+    {
+        $this->scope      = self::SYSTEM_SCOPE;
+        $this->short_name = self::SERVICE_SHORTNAME;
+        return $this;
+    }
+
+    public function isAProjectReference(): self
+    {
+        $this->scope      = self::PROJECT_SCOPE;
+        $this->short_name = '';
+        return $this;
+    }
+
     public function build(): \Reference
     {
         return new \Reference(
@@ -68,7 +84,7 @@ final class ReferenceBuilder
             'Tracker Artifact',
             '/plugins/tracker?&aid=$1&group_id=$group_id',
             $this->scope,
-            'plugin_tracker',
+            $this->short_name,
             'plugin_tracker_artifact',
             1,
             $this->project_id

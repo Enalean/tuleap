@@ -32,6 +32,8 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const string SVN      = 'svn';
     public const string WIKI     = 'wiki';
 
+    public const int NONE = 100;
+
     public const string SCOPE_SYSTEM  = 'system';
     public const string SCOPE_PROJECT = 'project';
 
