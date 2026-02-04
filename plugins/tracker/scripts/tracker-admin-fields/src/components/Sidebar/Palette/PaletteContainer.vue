@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <section class="tlp-pane">
+    <sidebar-container>
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
@@ -40,12 +40,13 @@
                 </div>
             </div>
         </div>
-    </section>
+    </sidebar-container>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import SidebarContainer from "../SidebarContainer.vue";
 
 const { $gettext } = useGettext();
 

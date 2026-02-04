@@ -33,6 +33,7 @@ use function Psl\Json\encode;
 final readonly class FieldsUsageDisplayPresenter
 {
     private function __construct(
+        public string $base_uri,
         public int $project_id,
         public int $id,
         public string $shortname,
@@ -49,6 +50,7 @@ final readonly class FieldsUsageDisplayPresenter
         StructureRepresentationBuilder $structure_representation_builder,
     ): self {
         return new self(
+            FieldsUsageDisplayController::getUrl($tracker),
             (int) $tracker->getProject()->getID(),
             $tracker->getId(),
             $tracker->getItemName(),

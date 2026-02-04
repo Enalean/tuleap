@@ -25,12 +25,14 @@
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:^",
     "@tuleap/plugin-tracker-rte-creator": "workspace:^",
     "@tuleap/tlp-date-picker": "workspace:^",
+    "@tuleap/tlp-modal": "workspace:^",
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
     "neverthrow": "6.0.0",
     "uuid": "^8.3.2",
     "vue": "^3.5.25",
     "vue-dompurify-html": "^5.3.0",
+    "vue-router": "^5.0.2",
     "vue3-gettext": "^2.4.0"
   },
   "devDependencies": {

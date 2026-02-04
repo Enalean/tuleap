@@ -2192,7 +2192,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         });
 
         $event->getRouteCollector()->addGroup('/trackers', function (FastRoute\RouteCollector $r) {
-            $r->get('/{id:\d+}/fields', $this->getRouteHandler('routeGetFieldsUsage'));
+            $r->get('/{id:\d+}/fields[/{vue-routing:.*}]', $this->getRouteHandler('routeGetFieldsUsage'));
         });
 
         $event->getRouteCollector()->addRoute(
