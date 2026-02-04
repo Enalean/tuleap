@@ -36,7 +36,7 @@ describe("CurrentFolderDropZone", () => {
                 global: {
                     ...getGlobalTestOptions({
                         getters: {
-                            current_folder_title: () => "My folder title",
+                            current_folder_title: () => () => "My folder title",
                         },
                     }),
                     provide: {

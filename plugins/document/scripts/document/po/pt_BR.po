@@ -389,10 +389,10 @@ msgstr ""
 msgid "Draft"
 msgstr ""
 
-msgid "Drop one file to upload it to %{folder}s (max size is %{size}s)."
+msgid "Drop one file to upload it to %{folder} (max size is %{size}s)."
 msgid_plural ""
-"Drop up to %{nb_files}s files to upload them to %{folder}s (max size is %"
-"{size}s)."
+"Drop up to %{nb_files} files to upload them to %{folder} (max size is %{size}"
+"s)."
 msgstr[0] ""
 msgstr[1] ""
 

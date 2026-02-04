@@ -69,13 +69,13 @@ const { interpolate, $ngettext } = useGettext();
 const success_message = computed((): string => {
     return interpolate(
         $ngettext(
-            "Drop one file to upload it to %{folder}s (max size is %{size}s).",
-            "Drop up to %{nb_files}s files to upload them to %{folder}s (max size is %{size}s).",
+            "Drop one file to upload it to %{folder} (max size is %{size}s).",
+            "Drop up to %{nb_files} files to upload them to %{folder} (max size is %{size}s).",
             max_files_dragndrop,
         ),
         {
             nb_files: max_files_dragndrop,
-            folder: current_folder_title.value,
+            folder: current_folder_title.value(false),
             size: prettyKibibytes(max_size_upload),
         },
     );
