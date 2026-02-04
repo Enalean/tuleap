@@ -23,6 +23,7 @@
 namespace Tuleap\Tracker\FormElement\Field;
 
 use DataAccessObject;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 class FieldDao extends DataAccessObject
 {
@@ -238,7 +239,7 @@ class FieldDao extends DataAccessObject
         return true;
     }
 
-    public function save($field)
+    public function save(TrackerFormElement $field): bool
     {
         $rank = (int) $this->prepareRanking(
             'tracker_field',
@@ -249,7 +250,7 @@ class FieldDao extends DataAccessObject
             'parent_id',
             'rank',
             'tracker_id',
-            (int) $field->tracker_id
+            $field->tracker_id
         );
 
         $sql = 'UPDATE tracker_field

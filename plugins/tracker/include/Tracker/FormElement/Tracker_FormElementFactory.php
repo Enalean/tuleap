@@ -50,6 +50,7 @@ use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifact
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\RemoveField;
+use Tuleap\Tracker\FormElement\Field\RetrieveAnyTypeOfUsedFormElementById;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
@@ -74,7 +75,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements AddField, RemoveField, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElementFactory implements AddField, RemoveField, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string FIELD_STRING_TYPE                 = 'string';
     public const string FIELD_TEXT_TYPE                   = 'text';
@@ -264,10 +265,7 @@ class Tracker_FormElementFactory implements AddField, RemoveField, RetrieveUsedF
         );
     }
 
-    /**
-     * Get a formElement by id
-     * @param int $form_element_id the id of the formElement to retrieve
-     */
+    #[\Override]
     public function getFormElementById($form_element_id): ?TrackerFormElement
     {
         if (! array_key_exists($form_element_id, $this->formElements)) {

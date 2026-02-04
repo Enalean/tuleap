@@ -35,6 +35,7 @@ final class FieldsetContainerBuilder
     private string $label         = 'label';
     private string $description   = '';
     private bool $required        = false;
+    private bool $use_it          = true;
     private Tracker $tracker;
 
     private function __construct(private readonly int $id)
@@ -84,6 +85,12 @@ final class FieldsetContainerBuilder
         return $this;
     }
 
+    public function unused(): self
+    {
+        $this->use_it = false;
+        return $this;
+    }
+
     public function build(): FieldsetContainer
     {
         $fieldset = new FieldsetContainer(
@@ -93,7 +100,7 @@ final class FieldsetContainerBuilder
             $this->name,
             $this->label,
             $this->description,
-            true,
+            $this->use_it,
             'P',
             $this->required,
             true,
