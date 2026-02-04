@@ -14,6 +14,12 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/lazybox':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/lazybox
+  '@tuleap/option':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/option
   '@tuleap/plugin-pullrequest-constants':
     specifier: workspace:*
     version: link:../lib/constants

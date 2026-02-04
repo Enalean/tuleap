@@ -33,7 +33,8 @@ export default vite.defineAppConfig(
             vue({
                 template: {
                     compilerOptions: {
-                        isCustomElement: (tag) => tag === "tuleap-pull-request-title",
+                        isCustomElement: (tag) =>
+                            tag === "tuleap-pull-request-title" || tag === "tuleap-lazybox",
                     },
                 },
             }),
