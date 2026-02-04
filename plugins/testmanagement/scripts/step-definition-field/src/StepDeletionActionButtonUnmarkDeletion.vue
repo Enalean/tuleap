@@ -21,25 +21,20 @@
     <button
         class="tlp-button-secondary tlp-button-outline tlp-button-small"
         type="button"
-        v-on:click="unmarkDeletion()"
+        v-on:click="setStepDeleted([step, false])"
     >
         <i class="fa fa-undo"></i>
         {{ $gettext("Undo deletion") }}
     </button>
 </template>
-<script>
-export default {
-    name: "StepDeletionActionButtonUnmarkDeletion",
-    props: {
-        step: {
-            type: Object,
-            required: true,
-        },
-    },
-    methods: {
-        unmarkDeletion() {
-            this.$store.commit("setStepDeleted", [this.step, false]);
-        },
-    },
-};
+
+<script setup lang="ts">
+import { useMutations } from "vuex-composition-helpers";
+import type { Step } from "./Step";
+
+const { setStepDeleted } = useMutations(["setStepDeleted"]);
+
+defineProps<{
+    step: Step;
+}>();
 </script>
