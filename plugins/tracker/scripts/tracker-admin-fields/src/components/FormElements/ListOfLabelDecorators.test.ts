@@ -18,23 +18,15 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type {
-    BaseFieldStructure,
-    SemanticsRepresentation,
-} from "@tuleap/plugin-tracker-rest-api-types";
+import type { BaseFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import ListOfLabelDecorators from "./ListOfLabelDecorators.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { TRACKER_SEMANTICS } from "../../injection-symbols";
-import { getTrackerSemantics } from "../../helpers/get-tracker-semantics";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import LabelDecorator from "./LabelDecorator.vue";
 
 describe("ListOfLabelDecorators", () => {
-    const getWrapper = (
-        field: Partial<BaseFieldStructure>,
-        semantics: SemanticsRepresentation,
-    ): VueWrapper =>
+    const getWrapper = (field: Partial<BaseFieldStructure>): VueWrapper =>
         shallowMount(ListOfLabelDecorators, {
             props: {
                 field: {
@@ -43,67 +35,52 @@ describe("ListOfLabelDecorators", () => {
                     label: "Summary",
                     has_notifications: false,
                     required: false,
+                    label_decorators: [],
                     ...field,
                 } as BaseFieldStructure,
             },
             global: {
                 ...getGlobalTestOptions(),
-                provide: {
-                    [TRACKER_SEMANTICS.valueOf()]: getTrackerSemantics(semantics),
-                },
             },
         });
 
     it("should display no label if no decorator for field", () => {
-        const wrapper = getWrapper({ field_id: 123, has_notifications: false }, {});
+        const wrapper = getWrapper({
+            field_id: 123,
+            label_decorators: [],
+        });
 
         expect(wrapper.findAllComponents(LabelDecorator)).toHaveLength(0);
     });
 
     it("should display title decorator if field has title semantic", () => {
-        const wrapper = getWrapper(
-            { field_id: 123, has_notifications: false },
-            {
-                title: {
-                    field_id: 123,
+        const wrapper = getWrapper({
+            field_id: 123,
+            label_decorators: [
+                {
+                    label: "Title",
+                    description: "The title",
                 },
-            },
-        );
+            ],
+        });
 
         expect(wrapper.findAllComponents(LabelDecorator)).toHaveLength(1);
     });
 
-    it("should display notification decorator if field has notifications enabled", () => {
-        const wrapper = getWrapper({ field_id: 123, has_notifications: true }, {});
-
-        expect(wrapper.findAllComponents(LabelDecorator)).toHaveLength(1);
-    });
-
-    it("should display title and description decorator if field has title and description semantics", () => {
-        const wrapper = getWrapper(
-            { field_id: 123, has_notifications: false },
-            {
-                title: {
-                    field_id: 123,
+    it("should display title and description decorators", () => {
+        const wrapper = getWrapper({
+            field_id: 123,
+            label_decorators: [
+                {
+                    label: "Title",
+                    description: "The title",
                 },
-                description: {
-                    field_id: 123,
+                {
+                    label: "Description",
+                    description: "The description",
                 },
-            },
-        );
-
-        expect(wrapper.findAllComponents(LabelDecorator)).toHaveLength(2);
-    });
-
-    it("should display title and notification decorator if field has title semantic and has notifications enabled", () => {
-        const wrapper = getWrapper(
-            { field_id: 123, has_notifications: true },
-            {
-                title: {
-                    field_id: 123,
-                },
-            },
-        );
+            ],
+        });
 
         expect(wrapper.findAllComponents(LabelDecorator)).toHaveLength(2);
     });

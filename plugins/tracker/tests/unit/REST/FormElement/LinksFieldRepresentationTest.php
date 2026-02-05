@@ -60,7 +60,8 @@ final class LinksFieldRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             $type,
             $permissions,
             $allowed_link_types,
-            null
+            null,
+            [],
         );
 
         self::assertEquals(666, $representation->field_id);

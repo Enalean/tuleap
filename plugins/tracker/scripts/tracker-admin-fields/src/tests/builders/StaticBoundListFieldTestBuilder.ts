@@ -65,6 +65,7 @@ export class StaticBoundListFieldTestBuilder {
             name: this.name,
             required: this.required,
             has_notifications: false,
+            label_decorators: [],
             type: this.type,
             default_value: this.default_value,
             bindings: this.bindings,

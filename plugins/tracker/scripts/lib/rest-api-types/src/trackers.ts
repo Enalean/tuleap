@@ -60,12 +60,20 @@ export * from "./link-field";
 
 export type PermissionsArray = readonly [ReadPermission, CreatePermission?, UpdatePermission?];
 
+export interface LabelDecorator {
+    readonly icon?: string;
+    readonly url?: string;
+    readonly description: string;
+    readonly label: string;
+}
+
 export interface BaseFieldStructure {
     readonly field_id: number;
     readonly name: string;
     readonly required: boolean;
     readonly has_notifications: boolean;
     readonly label: string;
+    readonly label_decorators: ReadonlyArray<LabelDecorator>;
 }
 
 export interface UnknownFieldStructure extends BaseFieldStructure {

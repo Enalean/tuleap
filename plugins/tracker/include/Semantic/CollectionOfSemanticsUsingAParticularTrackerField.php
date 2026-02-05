@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic;
 
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
+
 final class CollectionOfSemanticsUsingAParticularTrackerField
 {
     private \Tuleap\Tracker\Tracker $tracker;
@@ -31,7 +33,7 @@ final class CollectionOfSemanticsUsingAParticularTrackerField
     private array $semantics = [];
 
     public function __construct(
-        \Tuleap\Tracker\FormElement\Field\TrackerField $field,
+        private readonly \Tuleap\Tracker\FormElement\Field\TrackerField $field,
         array $semantics,
     ) {
         $this->tracker   = $field->getTracker();
@@ -95,5 +97,18 @@ final class CollectionOfSemanticsUsingAParticularTrackerField
             $semantic_label,
             $semantic_tracker->getName()
         );
+    }
+
+    /**
+     * @return LabelDecorator[]
+     */
+    public function getLabelDecorators(): array
+    {
+        $decorators = [];
+        foreach ($this->semantics as $semantic) {
+            $semantic->appendLabelDecorators($decorators, $this->field);
+        }
+
+        return $decorators;
     }
 }

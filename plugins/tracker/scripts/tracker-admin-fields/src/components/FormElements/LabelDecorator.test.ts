@@ -20,10 +20,10 @@
 import { describe, it, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import LabelDecorator from "./LabelDecorator.vue";
-import type { LabelDecorator as Decorator } from "../../type";
+import type { LabelDecorator as Decorator } from "@tuleap/plugin-tracker-rest-api-types";
 
 describe("LabelDecorator", () => {
-    it("should display the label and no icon", () => {
+    it("should display the label and no icon, no link", () => {
         const decorator: Decorator = {
             label: "Title",
             description: "The title",
@@ -37,6 +37,7 @@ describe("LabelDecorator", () => {
 
         expect(wrapper.text()).toContain("Title");
         expect(wrapper.find("[data-test=icon]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=link]").exists()).toBe(false);
     });
 
     it("should display the label and no icon if icon is empty string", () => {
@@ -56,7 +57,24 @@ describe("LabelDecorator", () => {
         expect(wrapper.find("[data-test=icon]").exists()).toBe(false);
     });
 
-    it("should display the label and the icon", () => {
+    it("should display the label and no link if link is empty string", () => {
+        const decorator: Decorator = {
+            url: "",
+            label: "Title",
+            description: "The title",
+        };
+
+        const wrapper = shallowMount(LabelDecorator, {
+            props: {
+                decorator,
+            },
+        });
+
+        expect(wrapper.text()).toContain("Title");
+        expect(wrapper.find("[data-test=link]").exists()).toBe(false);
+    });
+
+    it("should display the label and the icon and no link", () => {
         const decorator: Decorator = {
             icon: "fa-bug",
             label: "Title",
@@ -71,5 +89,25 @@ describe("LabelDecorator", () => {
 
         expect(wrapper.text()).toContain("Title");
         expect(wrapper.find("[data-test=icon]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=link]").exists()).toBe(false);
+    });
+
+    it("should display the label and the icon and link", () => {
+        const decorator: Decorator = {
+            icon: "fa-bug",
+            url: "https://example.com",
+            label: "Title",
+            description: "The title",
+        };
+
+        const wrapper = shallowMount(LabelDecorator, {
+            props: {
+                decorator,
+            },
+        });
+
+        expect(wrapper.text()).toContain("Title");
+        expect(wrapper.find("[data-test=icon]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=link]").exists()).toBe(true);
     });
 });

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class InvalidMethod implements IComputeProgression
 {
@@ -57,9 +58,17 @@ class InvalidMethod implements IComputeProgression
     }
 
     #[\Override]
-    public function isFieldUsedInComputation(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
+    public function isFieldUsedInComputation(TrackerField $field): bool
     {
         return false;
+    }
+
+    #[\Override]
+    public function appendLabelDecorators(
+        SemanticProgress $semantic,
+        array &$label_decorators,
+        TrackerField $field,
+    ): void {
     }
 
     #[\Override]

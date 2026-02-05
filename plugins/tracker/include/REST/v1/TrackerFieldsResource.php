@@ -31,6 +31,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
+use Tuleap\Tracker\FormElement\Admin\ListOfLabelDecoratorsForFieldBuilder;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\EmptyFileToUploadFinisher;
@@ -143,7 +144,8 @@ class TrackerFieldsResource extends AuthenticatedResource
             $field,
             $form_element_factory->getType($field),
             [],
-            null
+            null,
+            new ListOfLabelDecoratorsForFieldBuilder()->getLabelDecorators($field),
         );
     }
 

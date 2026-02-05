@@ -177,6 +177,12 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
     }
 
     #[\Override]
+    public function appendLabelDecorators(array &$label_decorators, TrackerField $field): void
+    {
+        $this->method->appendLabelDecorators($this, $label_decorators, $field);
+    }
+
+    #[\Override]
     public function save(): bool
     {
         return $this->method->saveSemanticForTracker($this->tracker);

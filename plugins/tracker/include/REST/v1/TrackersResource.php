@@ -52,6 +52,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
+use Tuleap\Tracker\FormElement\Admin\ListOfLabelDecoratorsForFieldBuilder;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
@@ -879,7 +880,8 @@ class TrackersResource extends AuthenticatedResource
                     $frozen_fields_detector,
                     $permissions_functions_wrapper
                 ),
-                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(\EventManager::instance()))
+                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(\EventManager::instance())),
+                new ListOfLabelDecoratorsForFieldBuilder(),
             ),
             new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
             new WorkflowRestBuilder(),

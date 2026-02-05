@@ -48,7 +48,7 @@ class FieldUsedInSemanticObjectChecker
      *
      * @return bool
      */
-    private function isUsedInCardFieldSemantic(TrackerField $field, array $card_fields)
+    public function isUsedInCardFieldSemantic(TrackerField $field, array $card_fields)
     {
         foreach ($card_fields as $card_field) {
             if ($card_field->getId() == $field->getId()) {

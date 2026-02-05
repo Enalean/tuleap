@@ -25,7 +25,9 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Timeframe\Exceptions\ArtifactHasNoLinkToArtifactOfTargetTracker;
 use Tuleap\Tracker\Semantic\Timeframe\Exceptions\ArtifactHasTooManyLinksToArtifactsOfTargetTracker;
 
@@ -200,6 +202,22 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
         return $field_tracker_id === $this->tracker->getId()
             || $field_tracker_id === $this->semantic_timeframe_implied_from_tracker->getTracker()->getId();
+    }
+
+    #[\Override]
+    public function appendLabelDecorators(SemanticTimeframe $semantic, array &$label_decorators, TrackerField $field): void
+    {
+        if ($this->isFieldUsed($field)) {
+            $label              = $this->semantic_timeframe_implied_from_tracker->getLabel();
+            $label_decorators[] = LabelDecorator::buildWithUrl(
+                $label,
+                sprintf(
+                    dgettext('tuleap-tracker', 'This field carries the "%s" semantic.'),
+                    $this->semantic_timeframe_implied_from_tracker->getLabel(),
+                ),
+                $this->semantic_timeframe_implied_from_tracker->getUrl(),
+            );
+        }
     }
 
     #[\Override]

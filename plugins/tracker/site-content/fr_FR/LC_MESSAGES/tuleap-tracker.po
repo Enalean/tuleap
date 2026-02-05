@@ -2549,6 +2549,11 @@ msgstr "Artifact parent :"
 msgid "Paste the patch here (text only)"
 msgstr "Coller le code du correctif ici (texte uniquement)"
 
+msgid "People selected in this field may receive notifications."
+msgstr ""
+"Les personnes sélectionnées dans ce champ sont susceptibles de recevoir des "
+"notifications."
+
 msgid "Per tracker id"
 msgstr "ID dans le tracker"
 
@@ -4134,6 +4139,34 @@ msgid ""
 msgstr ""
 "Cet artifact ne respecte pas les règles du tracker. Il ne sera pas importé: "
 "ligne %s du fichier CSV."
+
+#, php-format
+msgid "This field carries the \"%s\" semantic."
+msgstr "Ce champ porte la sémantique \"%s\"."
+
+#, php-format
+msgid "This field carries the duration of \"%s\" semantic."
+msgstr "Ce champ porte la durée de la sémantique \"%s\"."
+
+#, php-format
+msgid "This field carries the end date of \"%s\" semantic."
+msgstr "Ce champ porte la date de fin de la sémantique \"%s\"."
+
+#, php-format
+msgid "This field carries the remaining effort of \"%s\" semantic."
+msgstr "Ce champ porte l'effort restant de la sémantique \"%s\"."
+
+#, php-format
+msgid "This field carries the start date of \"%s\" semantic."
+msgstr "Ce champ porte la date de début de la sémantique \"%s\"."
+
+#, php-format
+msgid "This field carries the total effort of \"%s\" semantic."
+msgstr "Ce champ porte l'effort total de la sémantique \"%s\"."
+
+#, php-format
+msgid "This field is part of fields of \"%s\" semantic."
+msgstr "Ce champ fait parti des champs de la sémantique \"%s\"."
 
 #, php-format
 msgid "This field is shared from tracker <a href=\"%s\">%s</a> from project %s"

@@ -19,37 +19,17 @@
 
 <template>
     <label-decorator
-        v-for="(decorator, key) of decorators"
+        v-for="(decorator, key) of field.label_decorators"
         v-bind:key="key"
         v-bind:decorator="decorator"
     />
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useGettext } from "vue3-gettext";
 import type { BaseFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
-import { TRACKER_SEMANTICS } from "../../injection-symbols";
-import { strictInject } from "@tuleap/vue-strict-inject";
 import LabelDecorator from "./LabelDecorator.vue";
 
-const props = defineProps<{
+defineProps<{
     field: BaseFieldStructure;
 }>();
-
-const { $gettext } = useGettext();
-
-const semantics = strictInject(TRACKER_SEMANTICS);
-const decorators = computed(() => [
-    ...semantics.getForField(props.field, $gettext),
-    ...(props.field.has_notifications
-        ? [
-              {
-                  icon: "fa-solid fa-bell",
-                  label: $gettext("Notifications"),
-                  description: $gettext("This field is used to send notifications"),
-              },
-          ]
-        : []),
-]);
 </script>

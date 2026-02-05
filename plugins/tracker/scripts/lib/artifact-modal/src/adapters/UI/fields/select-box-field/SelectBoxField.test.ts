@@ -42,6 +42,7 @@ describe("SelectBoxField", () => {
                     bindings: { type: "static" },
                     required: false,
                     has_notifications: false,
+                    label_decorators: [],
                     default_value: [],
                     values: [
                         { id: 205, label: "submeter", value_color: "", is_hidden: false },

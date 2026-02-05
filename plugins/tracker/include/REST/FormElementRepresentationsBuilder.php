@@ -26,6 +26,7 @@ use Tracker_REST_FormElement_FieldDateRepresentation;
 use Tracker_REST_FormElement_FieldOpenListRepresentation;
 use Tracker_REST_FormElementRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Admin\BuildListOfLabelDecoratorsForField;
 use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
@@ -65,6 +66,7 @@ class FormElementRepresentationsBuilder
         HiddenFieldsetChecker $hidden_fieldset_checker,
         PermissionsForGroupsBuilder $permissions_for_groups_builder,
         private IRetrieveAllUsableTypesInProject $types_allowed_retriever,
+        private readonly BuildListOfLabelDecoratorsForField $label_decorators_builder,
     ) {
         $this->permissions_exporter           = $permissions_exporter;
         $this->form_element_factory           = $form_element_factory;
@@ -142,26 +144,30 @@ class FormElementRepresentationsBuilder
     {
         $representation_collection = [];
         foreach ($form_elements_list as $form_element) {
+            $label_decorators = $this->label_decorators_builder->getLabelDecorators($form_element);
             if ($form_element instanceof FilesField) {
                 $form_element_representation = FieldFileRepresentation::build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
-                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
+                    $label_decorators,
                 );
             } elseif ($form_element instanceof DateField) {
                 $form_element_representation = Tracker_REST_FormElement_FieldDateRepresentation::build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
-                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
+                    $label_decorators,
                 );
             } elseif ($form_element instanceof OpenListField) {
                 $form_element_representation = Tracker_REST_FormElement_FieldOpenListRepresentation::build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
-                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
+                    $label_decorators,
                 );
             } elseif ($artifact !== null && $form_element instanceof FieldsetContainer) {
                 $form_element_representation = ContainerFieldsetInArtifactContextRepresentation::buildContainerFieldset(
@@ -169,7 +175,8 @@ class FormElementRepresentationsBuilder
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
                     $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
-                    $this->hidden_fieldset_checker->mustFieldsetBeHidden($form_element, $artifact)
+                    $this->hidden_fieldset_checker->mustFieldsetBeHidden($form_element, $artifact),
+                    $label_decorators,
                 );
             } elseif ($form_element instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField) {
                 $form_element_representation = LinksFieldRepresentation::buildRepresentationWithAllowedLinkTypes(
@@ -178,13 +185,15 @@ class FormElementRepresentationsBuilder
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
                     $this->types_allowed_retriever->getAllUsableTypesInProject($tracker->getProject()),
                     $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
+                    $label_decorators,
                 );
             } else {
                 $form_element_representation = Tracker_REST_FormElementRepresentation::build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
-                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
+                    $label_decorators,
                 );
             }
 

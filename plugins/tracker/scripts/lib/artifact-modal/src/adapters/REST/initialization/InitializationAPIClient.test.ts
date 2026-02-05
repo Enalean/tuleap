@@ -64,7 +64,7 @@ describe(`InitializationAPIClient`, () => {
                         label: "Interseamed",
                         required: false,
                         has_notifications: false,
-
+                        label_decorators: [],
                         specific_properties: {
                             size: 42,
                             maxchars: 0,
@@ -78,6 +78,7 @@ describe(`InitializationAPIClient`, () => {
                         label: "Unwittily",
                         required: false,
                         has_notifications: false,
+                        label_decorators: [],
                         specific_properties: {
                             size: 42,
                             maxchars: 0,

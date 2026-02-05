@@ -25,12 +25,15 @@
             aria-hidden="true"
             data-test="icon"
         ></i>
-        {{ decorator.label }}
+        <a v-bind:href="decorator.url" v-if="decorator.url" data-test="link">
+            {{ decorator.label }}
+        </a>
+        <template v-else>{{ decorator.label }}</template>
     </span>
 </template>
 
 <script setup lang="ts">
-import type { LabelDecorator } from "../../type";
+import type { LabelDecorator } from "@tuleap/plugin-tracker-rest-api-types";
 
 defineProps<{
     decorator: LabelDecorator;

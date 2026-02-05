@@ -187,6 +187,7 @@ use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\Admin\FieldsUsageConfiguration;
 use Tuleap\Tracker\FormElement\Admin\FieldsUsageDisplayController;
+use Tuleap\Tracker\FormElement\Admin\ListOfLabelDecoratorsForFieldBuilder;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
@@ -269,7 +270,6 @@ use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Search\IndexAllArtifactsProcessor;
-use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
@@ -279,8 +279,6 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
-use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\dao\TrackerGlobalNotificationDao;
 use Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao;
@@ -1905,12 +1903,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     new ArtifactLinksUsageDao(),
                     new SystemTypePresenterBuilder(\EventManager::instance()),
                 ),
-            ),
-            static fn(Tracker $tracker) => new TrackerSemanticManager(
-                CachedSemanticDescriptionFieldRetriever::instance(),
-                CachedSemanticTitleFieldRetriever::instance(),
-                CachedSemanticStatusRetriever::instance(),
-                $tracker,
+                new ListOfLabelDecoratorsForFieldBuilder(),
             ),
             new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'),
         );

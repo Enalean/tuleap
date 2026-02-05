@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class TimeframeNotConfigured implements IComputeTimeframes
 {
@@ -56,6 +57,11 @@ class TimeframeNotConfigured implements IComputeTimeframes
     public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return false;
+    }
+
+    #[\Override]
+    public function appendLabelDecorators(SemanticTimeframe $semantic, array &$label_decorators, TrackerField $field): void
+    {
     }
 
     #[\Override]
