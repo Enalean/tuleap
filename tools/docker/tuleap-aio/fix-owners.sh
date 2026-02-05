@@ -20,7 +20,8 @@ chown -R codendiadm:codendiadm \
     /data/lib/tuleap/wiki \
     /data/lib/tuleap/gitolite/admin \
     /var/lib/tuleap/svn_plugin \
-    /data/lib/tuleap/git-lfs
+    /data/lib/tuleap/git-lfs \
+    /data/lib/tuleap/tracker_functions
 
 chown codendiadm:codendiadm \
     /data/home/groups \
