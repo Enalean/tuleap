@@ -19,7 +19,7 @@
 
 export interface RootGetter {
     is_folder_empty: boolean;
-    current_folder_title: (show_document_in_title: boolean) => string;
+    current_folder_title: () => (show_document_in_title: boolean) => string;
     global_upload_progress: number;
     is_uploading: boolean;
 }
