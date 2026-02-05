@@ -50,6 +50,10 @@ git worktree add --detach "$clean_tuleap_sources/"
 
 if [ "$ENTERPRISE" == "1" ]; then
     touch "$clean_tuleap_sources/ENTERPRISE_BUILD"
+
+    if [ "${EXPERIMENTAL_BUILD:-0}" == "1" ]; then
+        echo -n 'dev' > "$clean_tuleap_sources/ENTERPRISE_BUILD"
+    fi
 fi
 
 nix-shell --pure -I nixpkgs="$clean_tuleap_sources/tools/utils/nix/pinned-nixpkgs.nix" "$clean_tuleap_sources/tools/utils/nix/build-tools/" \

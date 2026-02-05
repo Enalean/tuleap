@@ -2,9 +2,11 @@
 
 set -ex
 
-set_community_version() {
+set_community_dev_version() {
     if [ ! -f ENTERPRISE_BUILD ]; then
-        tools/utils/version_numbers/update-community-version.sh
+        tools/utils/version_numbers/update-community-dev-version.sh
+    elif [ grep -Fxq "dev" ENTERPRISE_BUILD ]; then
+        tools/utils/version_numbers/update-community-dev-version.sh
     fi
 }
 
@@ -25,6 +27,6 @@ configure_composer_github_auth(){
     fi
 }
 
-set_community_version
+set_community_dev_version
 configure_composer_github_auth
 build_generated_files $@
