@@ -80,27 +80,23 @@ export function toggleCollapsedFolderHasUploadingContent(
     state: State,
     payload: CollapseFolderPayload,
 ): void {
-    const folder_index = state.folder_content.findIndex(
-        (item) => item.id === payload.collapsed_folder.id,
-    );
-    if (folder_index === -1) {
+    const folder = state.folder_content.find((item) => item.id === payload.collapsed_folder.id);
+    if (!folder || !(isFolder(folder) || isFakeItem(folder))) {
         return;
     }
 
-    payload.collapsed_folder.is_uploading_in_collapsed_folder = payload.toggle;
-    payload.collapsed_folder.progress = 0;
-
-    state.folder_content.splice(folder_index, 1, payload.collapsed_folder);
+    folder.is_uploading_in_collapsed_folder = payload.toggle;
+    folder.progress = 0;
 }
 
 export function updateFolderProgressbar(state: State, collapsed_folder: Folder): void {
-    const folder_index = state.folder_content.findIndex((item) => item.id === collapsed_folder.id);
-    if (folder_index === -1) {
+    const folder = state.folder_content.find((item) => item.id === collapsed_folder.id);
+    if (!folder || !(isFolder(folder) || isFakeItem(folder))) {
         return;
     }
 
     const children = state.files_uploads_list.reduce(function (progresses: Array<number>, item) {
-        if (item.parent_id === collapsed_folder.id && item.progress) {
+        if (item.parent_id === folder.id && item.progress) {
             progresses.push(item.progress);
         }
         return progresses;
@@ -111,21 +107,17 @@ export function updateFolderProgressbar(state: State, collapsed_folder: Folder):
     }
 
     const total = children.reduce((total, item_progress) => total + item_progress, 0);
-    collapsed_folder.progress = Math.trunc(total / children.length);
-
-    state.folder_content.splice(folder_index, 1, collapsed_folder);
+    folder.progress = Math.trunc(total / children.length);
 }
 
-export function resetFolderIsUploading(state: State, folder: Folder): void {
-    const folder_index = state.folder_content.findIndex((item) => item.id === folder.id);
-    if (folder_index === -1) {
+export function resetFolderIsUploading(state: State, folder_to_reset: Folder): void {
+    const folder = state.folder_content.find((item) => item.id === folder_to_reset.id);
+    if (!folder || !(isFolder(folder) || isFakeItem(folder))) {
         return;
     }
 
     folder.is_uploading_in_collapsed_folder = false;
     folder.progress = 0;
-
-    state.folder_content.splice(folder_index, 1, folder);
 }
 
 export interface ReplaceFilePayload {
