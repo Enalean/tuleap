@@ -20,9 +20,6 @@
     "browserslist": "^4.25.0",
     "postcss": "^8.5.3"
   },
-  "devDependencies": {
-    "@types/webpack": "^5.28.5"
-  },
   "pnpm": {
     "overrides": {
       "safe-buffer": "npm:@nolyfill/safe-buffer@^1"
