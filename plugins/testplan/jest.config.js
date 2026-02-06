@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
 const jest_base_config = defineJestConfiguration();
-module.exports = {
+export default {
     ...jest_base_config,
     transform: {
         ...jest_base_config.transform,
