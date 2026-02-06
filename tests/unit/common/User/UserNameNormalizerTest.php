@@ -34,10 +34,13 @@ final class UserNameNormalizerTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $user_jean_pierre   = UserTestBuilder::aUser()->withUserName('jean_pierre')->build();
-        $user_long_username = UserTestBuilder::aUser()->withUserName(str_repeat('a', 30))->build();
-        $user_retriever     = ProvideAndRetrieveUserStub::build($user_jean_pierre)->withUsers([$user_jean_pierre, $user_long_username]);
-        $project_manager    = $this->createStub(\ProjectManager::class);
+        $user_jean_pierre    = UserTestBuilder::aUser()->withUserName('jean_pierre')->build();
+        $users_long_username = [UserTestBuilder::aUser()->withUserName(str_repeat('a', 30))->build()];
+        for ($i = 1; $i < 10; $i++) {
+            $users_long_username[] = UserTestBuilder::aUser()->withUserName(str_repeat('a', 29) . $i)->build();
+        }
+        $user_retriever  = ProvideAndRetrieveUserStub::build($user_jean_pierre)->withUsers([$user_jean_pierre, ...$users_long_username]);
+        $project_manager = $this->createStub(\ProjectManager::class);
         $project_manager->method('getProjectByUnixName')->willReturn(null);
         $system_event_manager = $this->createStub(\SystemEventManager::class);
         $system_event_manager->method('isUserNameAvailable')->willReturn(true);
@@ -96,7 +99,15 @@ final class UserNameNormalizerTest extends TestCase
     public function testSupportLongUsernames(): void
     {
         self::assertSame(
-            str_repeat('a', 29) . '1',
+            str_repeat('z', 30),
+            $this->username_normalizer->normalize(str_repeat('z', 60))
+        );
+    }
+
+    public function testSupportLongUsernamesConflictingWithExistingUsers(): void
+    {
+        self::assertSame(
+            str_repeat('a', 28) . '10',
             $this->username_normalizer->normalize(str_repeat('a', 30))
         );
     }
