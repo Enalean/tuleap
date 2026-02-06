@@ -23,8 +23,8 @@ namespace Tuleap\Timetracking\Widget;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Timetracking\Exceptions\ProjectTimetrackingWidgetNoTitle;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Widget;
@@ -135,19 +135,19 @@ class ProjectTimetracking extends Widget
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('project-timetracking.js')],
+            ['file' => $this->getAssets()->getFileURL('src/main.ts')],
         ];
     }
 
     #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style-bp-project-timetracking')]);
+        return new CssAssetCollection([CssViteAsset::fromFileName($this->getAssets(), 'themes/style.scss')]);
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../../../scripts/project-timetracking-widget/frontend-assets',
             '/assets/timetracking/project-timetracking-widget'
         );
