@@ -119,3 +119,8 @@ ignoreUntil = 2026-02-23
 id = "GO-2026-4341" # CVE-2025-61726
 reason = "No security impact for Tuleap"
 ignoreUntil = 2026-02-23
+
+[[IgnoredVulns]]
+id = "GO-2026-4337" # CVE-2025-68121
+reason = "No security impact for Tuleap"
+ignoreUntil = 2026-02-23
