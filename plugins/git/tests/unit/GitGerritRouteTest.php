@@ -39,7 +39,6 @@ use GitPermissionsManager;
 use GitPlugin;
 use GitRepository;
 use GitRepositoryFactory;
-use GitRepositoryManager;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
@@ -77,6 +76,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 use UGroupManager;
 use UserManager;
 
@@ -153,21 +153,21 @@ final class GitGerritRouteTest extends TestCase
         $can_migrate_checker = $this->createMock(GerritCanMigrateChecker::class);
         $can_migrate_checker->method('canMigrate')->willReturn(true);
 
-        $gerrit_driver = $this->createMock(Git_Driver_Gerrit::class);
+        $gerrit_driver = $this->createStub(Git_Driver_Gerrit::class);
         $gerrit_driver->method('doesTheProjectExist')->willReturn(false);
         $gerrit_driver->method('getGerritProjectName');
 
         $http_request   = new \Tuleap\HTTPRequest(['group_id' => $this->group_id]);
-        $driver_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $driver_factory = $this->createStub(Git_Driver_Gerrit_GerritDriverFactory::class);
         $driver_factory->method('getDriver')->willReturn($gerrit_driver);
         $git = $this->getMockBuilder(Git::class)
             ->setConstructorArgs([
                 $git_plugin,
                 $gerrit_server_factory,
                 $driver_factory,
-                $this->createMock(GitRepositoryManager::class),
-                $this->createMock(Git_SystemEventManager::class),
-                $this->createMock(Git_Driver_Gerrit_UserAccountManager::class),
+                $this->createStub(Git_SystemEventManager::class),
+                new EnqueueTaskStub(),
+                $this->createStub(Git_Driver_Gerrit_UserAccountManager::class),
                 $factory,
                 $this->user_manager,
                 $this->project_manager,
@@ -177,32 +177,32 @@ final class GitGerritRouteTest extends TestCase
                 $this->git_permissions_manager,
                 $url_manager,
                 new NullLogger(),
-                $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
+                $this->createStub(Git_Driver_Gerrit_ProjectCreatorStatus::class),
                 $can_migrate_checker,
-                $this->createMock(FineGrainedUpdater::class),
-                $this->createMock(FineGrainedPermissionFactory::class),
-                $this->createMock(FineGrainedRetriever::class),
-                $this->createMock(FineGrainedPermissionSaver::class),
-                $this->createMock(DefaultFineGrainedPermissionFactory::class),
-                $this->createMock(FineGrainedPermissionDestructor::class),
-                $this->createMock(FineGrainedRepresentationBuilder::class),
-                $this->createMock(HistoryValueFormatter::class),
-                $this->createMock(PermissionChangesDetector::class),
-                $this->createMock(TemplatePermissionsUpdater::class),
-                $this->createMock(ProjectHistoryDao::class),
+                $this->createStub(FineGrainedUpdater::class),
+                $this->createStub(FineGrainedPermissionFactory::class),
+                $this->createStub(FineGrainedRetriever::class),
+                $this->createStub(FineGrainedPermissionSaver::class),
+                $this->createStub(DefaultFineGrainedPermissionFactory::class),
+                $this->createStub(FineGrainedPermissionDestructor::class),
+                $this->createStub(FineGrainedRepresentationBuilder::class),
+                $this->createStub(HistoryValueFormatter::class),
+                $this->createStub(PermissionChangesDetector::class),
+                $this->createStub(TemplatePermissionsUpdater::class),
+                $this->createStub(ProjectHistoryDao::class),
                 new DefaultBranchUpdater(new DefaultBranchUpdateExecutorStub()),
-                $this->createMock(DescriptionUpdater::class),
-                $this->createMock(RegexpFineGrainedRetriever::class),
-                $this->createMock(RegexpFineGrainedEnabler::class),
-                $this->createMock(RegexpFineGrainedDisabler::class),
-                $this->createMock(RegexpPermissionFilter::class),
-                $this->createMock(UsersToNotifyDao::class),
-                $this->createMock(UgroupsToNotifyDao::class),
-                $this->createMock(UGroupManager::class),
-                $this->createMock(HeaderRenderer::class),
-                $this->createMock(VerifyArtifactClosureIsAllowed::class),
-                $this->createMock(ConfigureAllowArtifactClosure::class),
-                $this->createMock(\User_ForgeUserGroupFactory::class),
+                $this->createStub(DescriptionUpdater::class),
+                $this->createStub(RegexpFineGrainedRetriever::class),
+                $this->createStub(RegexpFineGrainedEnabler::class),
+                $this->createStub(RegexpFineGrainedDisabler::class),
+                $this->createStub(RegexpPermissionFilter::class),
+                $this->createStub(UsersToNotifyDao::class),
+                $this->createStub(UgroupsToNotifyDao::class),
+                $this->createStub(UGroupManager::class),
+                $this->createStub(HeaderRenderer::class),
+                $this->createStub(VerifyArtifactClosureIsAllowed::class),
+                $this->createStub(ConfigureAllowArtifactClosure::class),
+                $this->createStub(\User_ForgeUserGroupFactory::class),
             ])
             ->onlyMethods(['addAction', 'addError', 'redirect', 'checkSynchronizerToken'])
             ->getMock();

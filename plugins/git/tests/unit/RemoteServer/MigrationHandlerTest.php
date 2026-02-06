@@ -36,6 +36,7 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
 use ProjectManager;
+use Tuleap\Git\AsynchronousEvents\GitRepositoryChangeTask;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
@@ -46,6 +47,7 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MigrationHandlerTest extends TestCase
@@ -58,11 +60,13 @@ final class MigrationHandlerTest extends TestCase
     private ProjectManager&MockObject $project_manager;
     private PFUser $user;
     private GitRepository $repository;
+    private EnqueueTaskStub $enqueuer;
 
     #[\Override]
     public function setUp(): void
     {
         $this->git_system_event_manager = $this->createMock(Git_SystemEventManager::class);
+        $this->enqueuer                 = new EnqueueTaskStub();
         $this->server_factory           = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
         $this->driver_factory           = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
         $project_history_dao            = $this->createMock(ProjectHistoryDao::class);
@@ -71,6 +75,7 @@ final class MigrationHandlerTest extends TestCase
 
         $this->handler = new MigrationHandler(
             $this->git_system_event_manager,
+            $this->enqueuer,
             $this->server_factory,
             $this->driver_factory,
             $project_history_dao,
@@ -215,78 +220,84 @@ final class MigrationHandlerTest extends TestCase
 
     public function testItDisconnectsWithoutOptionsIfTheRemoteServerDoesNotExist(): void
     {
-        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend = $this->createStub(Git_Backend_Gitolite::class);
         $backend->method('disconnectFromGerrit')->willReturn(true);
-        $repository = $this->createMock(GitRepository::class);
+        $repository = $this->createStub(GitRepository::class);
+        $repository->method('getId')->willReturn(123);
         $repository->method('isMigratedToGerrit')->willReturn(true);
         $repository->method('getBackend')->willReturn($backend);
         $repository->method('getRemoteServerId');
         $disconnect_option = '';
 
         $this->server_factory->method('getServerById');
-        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);
+
+        self::assertEquals([GitRepositoryChangeTask::fromRepository($repository)], $this->enqueuer->queued_tasks);
     }
 
     public function testItDisconnectsWithtEmptyOption(): void
     {
-        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend = $this->createStub(Git_Backend_Gitolite::class);
         $backend->method('disconnectFromGerrit')->willReturn(true);
-        $repository = $this->createMock(GitRepository::class);
+        $repository = $this->createStub(GitRepository::class);
         $repository->method('isMigratedToGerrit')->willReturn(true);
-        $server            = $this->createMock(Git_RemoteServer_GerritServer::class);
-        $driver            = $this->createMock(Git_Driver_Gerrit::class);
+        $server            = $this->createStub(Git_RemoteServer_GerritServer::class);
+        $driver            = $this->createStub(Git_Driver_Gerrit::class);
         $disconnect_option = '';
 
         $repository->method('getBackend')->willReturn($backend);
         $repository->method('getRemoteServerId');
+        $repository->method('getId')->willReturn(123);
         $driver->method('isDeletePluginEnabled');
         $this->server_factory->method('getServerById')->willReturn($server);
         $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);
+
+        self::assertEquals([GitRepositoryChangeTask::fromRepository($repository)], $this->enqueuer->queued_tasks);
     }
 
     public function testItDisconnectsWithtReadOnlyOption(): void
     {
-        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend = $this->createStub(Git_Backend_Gitolite::class);
         $backend->method('disconnectFromGerrit')->willReturn(true);
-        $repository = $this->createMock(GitRepository::class);
+        $repository = $this->createStub(GitRepository::class);
         $repository->method('isMigratedToGerrit')->willReturn(true);
-        $server            = $this->createMock(Git_RemoteServer_GerritServer::class);
-        $driver            = $this->createMock(Git_Driver_Gerrit::class);
+        $server            = $this->createStub(Git_RemoteServer_GerritServer::class);
+        $driver            = $this->createStub(Git_Driver_Gerrit::class);
         $disconnect_option = 'read-only';
 
         $repository->method('getBackend')->willReturn($backend);
         $repository->method('getRemoteServerId');
         $repository->method('getName');
         $repository->method('getProjectId');
+        $repository->method('getId')->willReturn(123);
         $driver->method('isDeletePluginEnabled');
         $this->server_factory->method('getServerById')->willReturn($server);
         $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects($this->once())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);
+
+        self::assertEquals([GitRepositoryChangeTask::fromRepository($repository)], $this->enqueuer->queued_tasks);
     }
 
-    public function testItDisconnectsWithtDeleteOption(): void
+    public function testItDisconnectsWithoutDeleteOption(): void
     {
-        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend = $this->createStub(Git_Backend_Gitolite::class);
         $backend->method('disconnectFromGerrit')->willReturn(true);
-        $repository = $this->createMock(GitRepository::class);
+        $repository = $this->createStub(GitRepository::class);
         $repository->method('isMigratedToGerrit')->willReturn(true);
-        $server            = $this->createMock(Git_RemoteServer_GerritServer::class);
-        $driver            = $this->createMock(Git_Driver_Gerrit::class);
+        $server            = $this->createStub(Git_RemoteServer_GerritServer::class);
+        $driver            = $this->createStub(Git_Driver_Gerrit::class);
         $disconnect_option = 'delete';
 
         $driver->method('isDeletePluginEnabled')->with($server)->willReturn(true);
@@ -294,24 +305,26 @@ final class MigrationHandlerTest extends TestCase
         $repository->method('getRemoteServerId');
         $repository->method('getName');
         $repository->method('getProjectId');
+        $repository->method('getId')->willReturn(123);
         $this->server_factory->method('getServerById')->willReturn($server);
         $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate');
         $this->git_system_event_manager->expects($this->once())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);
+
+        self::assertEquals([GitRepositoryChangeTask::fromRepository($repository)], $this->enqueuer->queued_tasks);
     }
 
     public function testItThrowsAnExceptionIfDeletePluginNotInstalled(): void
     {
-        $backend = $this->createMock(Git_Backend_Gitolite::class);
+        $backend = $this->createStub(Git_Backend_Gitolite::class);
         $backend->method('disconnectFromGerrit')->willReturn(true);
-        $repository = $this->createMock(GitRepository::class);
+        $repository = $this->createStub(GitRepository::class);
         $repository->method('isMigratedToGerrit')->willReturn(true);
-        $server            = $this->createMock(Git_RemoteServer_GerritServer::class);
-        $driver            = $this->createMock(Git_Driver_Gerrit::class);
+        $server            = $this->createStub(Git_RemoteServer_GerritServer::class);
+        $driver            = $this->createStub(Git_Driver_Gerrit::class);
         $disconnect_option = 'delete';
 
         $driver->method('isDeletePluginEnabled')->with($server)->willReturn(false);
@@ -320,12 +333,13 @@ final class MigrationHandlerTest extends TestCase
         $this->server_factory->method('getServerById')->willReturn($server);
         $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->expects($this->never())->method('queueRepositoryUpdate');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectReadOnly');
 
         $this->expectException(DeletePluginNotInstalledException::class);
 
         $this->handler->disconnect($repository, $disconnect_option);
+
+        self::assertEmpty($this->enqueuer->queued_tasks);
     }
 }

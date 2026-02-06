@@ -55,6 +55,13 @@ class GitRepositoryFactory implements RetrieveGitRepository, RetrieveAllGitRepos
     }
 
     #[\Override]
+    public function getExistingRepositoryByIdAndLockItForChange(int $id): \Tuleap\Option\Option
+    {
+        $row = $this->dao->searchExistingRepositoryForChange($id);
+        return \Tuleap\Option\Option::fromNullable($this->getRepositoryFromRow($row));
+    }
+
+    #[\Override]
     public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository
     {
         $dar        = $this->dao->searchProjectRepositoryById($id);

@@ -348,6 +348,14 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         );
     }
 
+    public function searchExistingRepositoryForChange(int $id): ?array
+    {
+        return $this->getDB()->row(
+            'SELECT * FROM plugin_git WHERE repository_id = ? FOR SHARE',
+            $id
+        );
+    }
+
     public function searchDeletedRepositoryById($id)
     {
         return $this->getDB()->row(

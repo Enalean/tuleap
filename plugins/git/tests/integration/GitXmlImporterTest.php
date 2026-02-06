@@ -74,7 +74,6 @@ use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
-use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Markdown\CommonMarkInterpreter;
@@ -156,19 +155,18 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $this->fine_grained_saver            = $this->createMock(FineGrainedPermissionSaver::class);
         $xml_ugroup_retriever                = new XmlUgroupRetriever($this->logger, $ugroup_manager);
 
-        $ongoing_deletion_dao = $this->createStub(OngoingDeletionDAO::class);
-        $ongoing_deletion_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
+        $this->enqueuer = new EnqueueTaskStub();
 
         $git_manager = new GitRepositoryManager(
             $git_factory,
             $this->git_systemeventmanager,
+            $this->enqueuer,
             $this->git_dao,
             $this->getTmpDir(),
             $this->createStub(FineGrainedPermissionReplicator::class),
             $this->createStub(ProjectHistoryDao::class),
             $this->createStub(HistoryValueFormatter::class),
             $this->event_manager,
-            $ongoing_deletion_dao,
         );
 
         $restricted_plugin_dao = $this->createStub(RestrictedPluginDao::class);
@@ -238,7 +236,6 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $this->project = $project_manager->getProjectFromDbRow(
             ['group_id' => 123, 'unix_group_name' => 'test_project', 'access' => Project::ACCESS_PUBLIC]
         );
-        $this->git_systemeventmanager->method('queueRepositoryUpdate');
         $this->event_manager->method('processEvent');
     }
 

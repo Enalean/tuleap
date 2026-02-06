@@ -20,6 +20,7 @@
   */
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Git\AsynchronousEvents\GitRepositoryChangeTask;
 use Tuleap\Git\DefaultBranch\CannotSetANonExistingBranchAsDefaultException;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
@@ -113,8 +114,8 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
         private readonly GitPlugin $plugin,
         private readonly Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         private readonly Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        private readonly GitRepositoryManager $repository_manager,
         private readonly Git_SystemEventManager $git_system_event_manager,
+        private readonly \Tuleap\Queue\EnqueueTaskInterface $enqueuer,
         private readonly Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         GitRepositoryFactory $git_repository_factory,
         UserManager $user_manager,
@@ -355,8 +356,6 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->redirectToProjectRepositoriesList();
             return;
         }
-
-        $this->_informAboutPendingEvents($repository);
 
         $this->_dispatchActionAndView($this->action, $repository, $repoId, $repositoryName, $user);
     }
@@ -709,7 +708,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     [$repository->getName()]
                 );
 
-                $this->git_system_event_manager->queueRepositoryUpdate($repository);
+                $this->enqueuer->enqueue(GitRepositoryChangeTask::fromRepository($repository));
 
                 $this->addAction('redirectToRepoManagement', [$this->groupId, $repository->getId(), $pane]);
                 break;
@@ -886,44 +885,14 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addAction('redirectToRepoManagement', [$this->groupId, $repoId, $pane]);
     }
 
-    protected function _informAboutPendingEvents(/* GitRepository */ $repository) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        $sem = SystemEventManager::instance();
-        $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, ['GIT_REPO_CREATE', 'GIT_REPO_DELETE'], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING]);
-        foreach ($dar as $row) {
-            $p                  = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
-            $deleted_repository = $this->factory->getDeletedRepository($p[1]);
-            switch ($row['type']) {
-                case 'GIT_REPO_CREATE':
-                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-git', 'There is an event in queue for a repository creation (%1$s), it will be processed in one minute or two. Please be patient!'), $p[1]));
-                    break;
-
-                case 'GIT_REPO_DELETE':
-                    $repository_name = '';
-                    if ($deleted_repository !== null) {
-                        $repository_name = $deleted_repository->getFullName();
-                    }
-                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-git', 'There is an event in queue for repository \'%1$s\' deletion, it will be processed in one minute or two. Please be patient!'), $repository_name));
-                    break;
-            }
-        }
-
-        if ($repository && $repository->getId() !== 0) {
-            $dar = $sem->_getDao()->searchWithParam('head', $repository->getId(), ['GIT_REPO_ACCESS'], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING]);
-            foreach ($dar as $row) {
-                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-git', 'There is an event in queue for a repository permissions change, it will be processed in one minute or two. Please be patient!'));
-            }
-        }
-    }
-
     #[\Override]
     protected function instantiateAction($action)
     {
         $instance = new $action(
             $this,
             $this->git_system_event_manager,
+            $this->enqueuer,
             $this->factory,
-            $this->repository_manager,
             $this->gerrit_server_factory,
             $this->driver_factory,
             $this->gerrit_usermanager,
@@ -936,6 +905,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->history_dao,
             new MigrationHandler(
                 $this->git_system_event_manager,
+                $this->enqueuer,
                 $this->gerrit_server_factory,
                 $this->driver_factory,
                 $this->history_dao,

@@ -39,7 +39,6 @@ use GitPermissionsManager;
 use GitPlugin;
 use GitRepository;
 use GitRepositoryFactory;
-use GitRepositoryManager;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
@@ -63,6 +62,7 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 use UGroupManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -111,41 +111,41 @@ final class GitActionsFetchConfigTest extends TestCase
         $controller->method('getRequest')->willReturn(new \Tuleap\HTTPRequest([]));
         $controller->method('getUser')->willReturn($this->user);
 
-        $git_plugin = $this->createMock(GitPlugin::class);
+        $git_plugin = $this->createStub(GitPlugin::class);
         $git_plugin->method('areFriendlyUrlsActivated')->willReturn(false);
 
-        $server_factory = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $server_factory = $this->createStub(Git_Driver_Gerrit_GerritDriverFactory::class);
         $server_factory->method('getDriver')->willReturn($this->driver);
 
         $this->actions = new GitActions(
             $controller,
-            $this->createMock(Git_SystemEventManager::class),
+            $this->createStub(Git_SystemEventManager::class),
+            new EnqueueTaskStub(),
             $this->factory,
-            $this->createMock(GitRepositoryManager::class),
             $gerrit_server_factory,
             $server_factory,
-            $this->createMock(Git_Driver_Gerrit_UserAccountManager::class),
+            $this->createStub(Git_Driver_Gerrit_UserAccountManager::class),
             $this->project_creator,
-            $this->createMock(Git_Driver_Gerrit_Template_TemplateFactory::class),
-            $this->createMock(ProjectManager::class),
+            $this->createStub(Git_Driver_Gerrit_Template_TemplateFactory::class),
+            $this->createStub(ProjectManager::class),
             $this->git_permissions_manager,
             new Git_GitRepositoryUrlManager($git_plugin),
             new NullLogger(),
-            $this->createMock(ProjectHistoryDao::class),
-            $this->createMock(MigrationHandler::class),
-            $this->createMock(GerritCanMigrateChecker::class),
-            $this->createMock(FineGrainedUpdater::class),
-            $this->createMock(FineGrainedPermissionSaver::class),
-            $this->createMock(FineGrainedRetriever::class),
-            $this->createMock(HistoryValueFormatter::class),
-            $this->createMock(PermissionChangesDetector::class),
-            $this->createMock(RegexpFineGrainedEnabler::class),
-            $this->createMock(RegexpFineGrainedDisabler::class),
-            $this->createMock(RegexpPermissionFilter::class),
-            $this->createMock(RegexpFineGrainedRetriever::class),
-            $this->createMock(UsersToNotifyDao::class),
-            $this->createMock(UgroupsToNotifyDao::class),
-            $this->createMock(UGroupManager::class)
+            $this->createStub(ProjectHistoryDao::class),
+            $this->createStub(MigrationHandler::class),
+            $this->createStub(GerritCanMigrateChecker::class),
+            $this->createStub(FineGrainedUpdater::class),
+            $this->createStub(FineGrainedPermissionSaver::class),
+            $this->createStub(FineGrainedRetriever::class),
+            $this->createStub(HistoryValueFormatter::class),
+            $this->createStub(PermissionChangesDetector::class),
+            $this->createStub(RegexpFineGrainedEnabler::class),
+            $this->createStub(RegexpFineGrainedDisabler::class),
+            $this->createStub(RegexpPermissionFilter::class),
+            $this->createStub(RegexpFineGrainedRetriever::class),
+            $this->createStub(UsersToNotifyDao::class),
+            $this->createStub(UgroupsToNotifyDao::class),
+            $this->createStub(UGroupManager::class)
         );
     }
 

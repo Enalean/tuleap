@@ -28,20 +28,23 @@ use GitDao;
 use GitRepository;
 use GitRepositoryFactory;
 use GitRepositoryManager;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectHistoryDao;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
-use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRepositoryManagerRepositoryNameTest extends TestCase
 {
-    private GitRepositoryFactory&MockObject $factory;
+    use TemporaryTestDirectory;
+
+    private GitRepositoryFactory&Stub $factory;
     private Project $project;
     private GitRepositoryManager $manager;
     private string $project_name;
@@ -53,17 +56,17 @@ final class GitRepositoryManagerRepositoryNameTest extends TestCase
         $this->project_name = 'garden';
         $this->project      = ProjectTestBuilder::aProject()->withId($project_id)->withUnixName($this->project_name)->build();
 
-        $this->factory = $this->createMock(GitRepositoryFactory::class);
+        $this->factory = $this->createStub(GitRepositoryFactory::class);
         $this->manager = new GitRepositoryManager(
             $this->factory,
-            $this->createMock(Git_SystemEventManager::class),
-            $this->createMock(GitDao::class),
-            '/tmp/',
-            $this->createMock(FineGrainedPermissionReplicator::class),
-            $this->createMock(ProjectHistoryDao::class),
-            $this->createMock(HistoryValueFormatter::class),
-            $this->createMock(EventManager::class),
-            $this->createMock(OngoingDeletionDAO::class),
+            $this->createStub(Git_SystemEventManager::class),
+            new EnqueueTaskStub(),
+            $this->createStub(GitDao::class),
+            $this->getTmpDir(),
+            $this->createStub(FineGrainedPermissionReplicator::class),
+            $this->createStub(ProjectHistoryDao::class),
+            $this->createStub(HistoryValueFormatter::class),
+            $this->createStub(EventManager::class),
         );
     }
 

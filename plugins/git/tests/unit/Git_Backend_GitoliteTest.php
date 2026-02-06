@@ -136,7 +136,6 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
             ->getMock();
 
         $driver->expects($this->once())->method('fork')->with($name, 'gpig/' . $old_namespace, 'gpig/' . $new_namespace)->willReturn(true);
-        $driver->expects($this->once())->method('dumpProjectRepoConf')->with($project);
 
         $backend->forkOnFilesystem($old_repo, $new_repo);
     }
@@ -171,7 +170,6 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
             ->getMock();
 
         $driver->expects($this->once())->method('fork')->with($repo_name, $old_project_name . '/' . $namespace, $new_project_name . '/' . $namespace)->willReturn(true);
-        $driver->expects($this->once())->method('dumpProjectRepoConf')->with($new_project);
 
         $backend->forkOnFilesystem($old_repo, $new_repo);
     }

@@ -125,6 +125,7 @@ final class GitRepositoryTestBuilder
 
         if ($this->parent_repository) {
             $repository->setParent($this->parent_repository);
+            $repository->setParentId($this->parent_repository->getId());
         }
         if ($this->backend !== null) {
             $repository->setBackend($this->backend);

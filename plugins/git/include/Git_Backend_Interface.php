@@ -46,6 +46,7 @@ interface Git_Backend_Interface
 
     /**
      * Return the base root of all git repositories
+     * @return non-empty-string
      */
     public function getGitRootPath(): string;
 
@@ -58,6 +59,8 @@ interface Git_Backend_Interface
      * Save the repository
      */
     public function save(GitRepository $repository): void;
+
+    public function forkOnFilesystem(GitRepository $old, GitRepository $new): void;
 
     /**
      * Test is user can read the content of this repository and metadata

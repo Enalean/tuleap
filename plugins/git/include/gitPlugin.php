@@ -173,7 +173,6 @@ use Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\RouterLink;
 use Tuleap\Git\SystemCheck;
-use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
 use Tuleap\Git\User\AccessKey\Scope\GitRepositoryAccessKeyScope;
 use Tuleap\Git\Webhook\WebhookDao;
@@ -558,23 +557,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     public function getSystemEventClass($params)
     {
         switch ($params['type']) {
-            case SystemEvent_GIT_REPO_UPDATE::NAME:
-                $params['class']        = 'SystemEvent_GIT_REPO_UPDATE';
-                $params['dependencies'] = [
-                    $this->getRepositoryFactory(),
-                    new DefaultBranchUpdateExecutorAsGitoliteUser(),
-                ];
-                break;
-            case SystemEvent_GIT_REPO_DELETE::NAME:
-                $params['class']        = 'SystemEvent_GIT_REPO_DELETE';
-                $params['dependencies'] = [
-                    $this->getRepositoryFactory(),
-                    $this->getLogger(),
-                    $this->getUgroupsToNotifyDao(),
-                    $this->getUsersToNotifyDao(),
-                    EventManager::instance(),
-                ];
-                break;
             case SystemEvent_GIT_GERRIT_MIGRATION::NAME:
                 $params['class']        = 'SystemEvent_GIT_GERRIT_MIGRATION';
                 $params['dependencies'] = [
@@ -596,12 +578,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                             new MailLogger()
                         )
                     ),
-                ];
-                break;
-            case SystemEvent_GIT_REPO_FORK::NAME:
-                $params['class']        = 'SystemEvent_GIT_REPO_FORK';
-                $params['dependencies'] = [
-                    $this->getRepositoryFactory(),
                 ];
                 break;
             case SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME:
@@ -1507,7 +1483,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new DescriptionUpdater(new ProjectHistoryDao());
     }
 
-    private function getGitController()
+    private function getGitController(): Git
     {
         $gerrit_server_factory = $this->getGerritServerFactory();
         $git_dao               = $this->getGitDao();
@@ -1516,8 +1492,8 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this,
             $this->getGerritServerFactory(),
             $this->getGerritDriverFactory(),
-            $this->getRepositoryManager(),
             $this->getGitSystemEventManager(),
+            new \Tuleap\Queue\EnqueueTask(),
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $gerrit_server_factory),
             $this->getRepositoryFactory(),
             UserManager::instance(),
@@ -1781,21 +1757,18 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new Git_SystemEventManager(SystemEventManager::instance());
     }
 
-    /**
-     * @return GitRepositoryManager
-     */
-    private function getRepositoryManager()
+    private function getRepositoryManager(): GitRepositoryManager
     {
         return new GitRepositoryManager(
             $this->getRepositoryFactory(),
             $this->getGitSystemEventManager(),
+            new \Tuleap\Queue\EnqueueTask(),
             $this->getGitDao(),
             \ForgeConfig::get(\Tuleap\Git\LegacyConfigInc::BACKUP_DIR),
             $this->getFineGrainedPermissionReplicator(),
             new ProjectHistoryDao(),
             $this->getHistoryValueFormatter(),
             EventManager::instance(),
-            new OngoingDeletionDAO(),
         );
     }
 
@@ -2878,10 +2851,24 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
         $hook_handler->handle($event);
 
+        $mapper_builder  = \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder();
+        $gitolite_driver = $this->getGitoliteDriver();
+
         new \Tuleap\Git\AsynchronousEvents\GitProjectAsynchronousEventHandler(
-            \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder(),
+            $mapper_builder,
             $this->getProjectManager(),
-            $this->getGitoliteDriver(),
+            $gitolite_driver,
+        )->handle($event);
+
+        new \Tuleap\Git\AsynchronousEvents\GitRepositoryAsynchronousEventHandler(
+            $mapper_builder,
+            new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
+            $gitolite_driver,
+            $this->getRepositoryFactory(),
+            new UgroupsToNotifyDao(),
+            new UsersToNotifyDao(),
+            $event_manager,
+            $this->getLogger(),
         )->handle($event);
     }
 

@@ -1235,29 +1235,6 @@ msgstr ""
 "Veuillez contacter l'administrateur du site."
 
 #, php-format
-msgid ""
-"There is an event in queue for a repository creation (%1$s), it will be "
-"processed in one minute or two. Please be patient!"
-msgstr ""
-"Un événement est en attente pour la création du dépôt %1$s. Il sera traité "
-"dans une minute ou deux. Merci de votre patience."
-
-msgid ""
-"There is an event in queue for a repository permissions change, it will be "
-"processed in one minute or two. Please be patient!"
-msgstr ""
-"Un événement est en attente pour le changement de permissions d'un dépôt. Il "
-"sera traité dans une minute ou deux. Merci de votre patience."
-
-#, php-format
-msgid ""
-"There is an event in queue for repository '%1$s' deletion, it will be "
-"processed in one minute or two. Please be patient!"
-msgstr ""
-"Un événement est en attente pour la suppression du dépôt '%1$s'. Il sera "
-"traité dans une minute ou deux. Merci de votre patience."
-
-#, php-format
 msgid "There is no logged pushes in the last %1$s week(s)"
 msgstr "Pas de push pour la/les dernière(s) %1$s semaine(s)"
 
