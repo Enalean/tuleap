@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanningUpdaterTest extends TestCase
@@ -65,8 +66,14 @@ final class PlanningUpdaterTest extends TestCase
         $user                = UserTestBuilder::aUser()->build();
         $project             = ProjectTestBuilder::aProject()->withId(102)->build();
         $updated_planning_id = 10;
+        $original_planning   = PlanningBuilder::aPlanning(102)
+            ->withId($updated_planning_id)
+            ->withMilestoneTracker(TrackerTestBuilder::aTracker()->withId(12)->build())
+            ->build();
         $planning_parameters = $this->createMock(PlanningParameters::class);
 
+        $planning_parameters->planning_tracker_id = '14';
+        $this->planning_dao->method('disableBurnupFieldInTracker')->with(12);
         $this->planning_dao->expects($this->once())->method('updatePlanning')
             ->with($updated_planning_id, $planning_parameters);
         $this->permissions_manager->expects($this->once())->method('savePlanningPermissionForUgroups');
@@ -76,7 +83,7 @@ final class PlanningUpdaterTest extends TestCase
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeNoMoreSelectableItemsFromExplicitBacklogOfProject');
 
-        $this->planning_updater->update($user, $project, $updated_planning_id, $planning_parameters);
+        $this->planning_updater->update($user, $project, $original_planning, $planning_parameters);
     }
 
     public function testItUpdatesExplicitBacklogPlanning(): void
@@ -84,19 +91,23 @@ final class PlanningUpdaterTest extends TestCase
         $user                = UserTestBuilder::aUser()->build();
         $project             = ProjectTestBuilder::aProject()->withId(102)->build();
         $updated_planning_id = 10;
+        $original_planning   = PlanningBuilder::aPlanning(102)
+            ->withId($updated_planning_id)
+            ->withMilestoneTracker(TrackerTestBuilder::aTracker()->withId(12)->build())
+            ->build();
         $planning_parameters = $this->createMock(PlanningParameters::class);
 
+        $planning_parameters->planning_tracker_id = '12';
         $this->planning_dao->expects($this->once())->method('updatePlanning')
             ->with($updated_planning_id, $planning_parameters);
         $this->permissions_manager->expects($this->once())->method('savePlanningPermissionForUgroups');
 
-        $planning = PlanningBuilder::aPlanning(102)->withId($updated_planning_id)->build();
-        $this->planning_factory->method('getRootPlanning')->willReturn($planning);
+        $this->planning_factory->method('getRootPlanning')->willReturn($original_planning);
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method(
             'removeNoMoreSelectableItemsFromExplicitBacklogOfProject'
         );
 
-        $this->planning_updater->update($user, $project, $updated_planning_id, $planning_parameters);
+        $this->planning_updater->update($user, $project, $original_planning, $planning_parameters);
     }
 }

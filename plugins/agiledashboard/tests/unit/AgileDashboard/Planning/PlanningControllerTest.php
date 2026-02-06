@@ -131,9 +131,11 @@ final class PlanningControllerTest extends TestCase
             ->withAdministratorOf($this->project)
             ->build();
 
+        $planning      = PlanningBuilder::aPlanning(101)->withId(42)->build();
         $root_planning = PlanningBuilder::aPlanning(101)->withId(109)->build();
+        $this->planning_factory->method('getPlanning')->with($user, 42)->willReturn($planning);
         $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
-        $this->planning_factory->expects($this->once())->method('deletePlanning')->with(42);
+        $this->planning_factory->expects($this->once())->method('deletePlanning')->with($planning);
         $this->explicit_backlog_dao->expects($this->never())->method('removeExplicitBacklogOfPlanning');
 
         $this->event_manager->expects($this->once())->method('dispatch');
@@ -155,8 +157,9 @@ final class PlanningControllerTest extends TestCase
             ->build();
 
         $root_planning = PlanningBuilder::aPlanning(101)->withId(42)->build();
+        $this->planning_factory->method('getPlanning')->with($user, 42)->willReturn($root_planning);
         $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
-        $this->planning_factory->expects($this->once())->method('deletePlanning')->with(42);
+        $this->planning_factory->expects($this->once())->method('deletePlanning')->with($root_planning);
         $this->explicit_backlog_dao->expects($this->once())->method('removeExplicitBacklogOfPlanning')->with(42);
 
         $this->event_manager->expects($this->once())->method('dispatch');
