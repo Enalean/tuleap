@@ -426,7 +426,6 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-update-changelog]").type("This is my new version");
                 cy.get("[data-test=document-modal-submit-button-create-version-changelog]").click();
                 cy.wait("@uploadVersion");
-                cy.get("[data-test=file-upload-modal-close-button]").click();
 
                 cy.log("Check new version exists");
                 cy.get("[data-test=document-folder-content-row]").should("be.visible");
