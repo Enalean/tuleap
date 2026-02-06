@@ -156,12 +156,13 @@ describe("Store mutations", () => {
             const folder = {
                 id: 1,
                 title: "tutu.txt",
+                type: "folder",
             } as Folder;
 
             const state = {
                 folder_content: [
                     { id: 2, title: "titi.txt" },
-                    { id: 1, title: "tutu.txt" },
+                    { id: 1, title: "tutu.txt", type: "folder" },
                 ],
             } as State;
 
@@ -172,7 +173,13 @@ describe("Store mutations", () => {
 
             expect(state.folder_content).toStrictEqual([
                 { id: 2, title: "titi.txt" },
-                { id: 1, title: "tutu.txt", is_uploading_in_collapsed_folder: true, progress: 0 },
+                {
+                    id: 1,
+                    title: "tutu.txt",
+                    type: "folder",
+                    is_uploading_in_collapsed_folder: true,
+                    progress: 0,
+                },
             ]);
         });
     });
@@ -182,6 +189,7 @@ describe("Store mutations", () => {
             const folder = {
                 id: 5,
                 title: "toto.txt",
+                type: "folder",
             } as Folder;
 
             const state = {
@@ -203,10 +211,11 @@ describe("Store mutations", () => {
             const folder = {
                 id: 1,
                 title: "tutu.txt",
+                type: "folder",
             } as Folder;
 
             const state = {
-                folder_content: [{ id: 1, title: "tutu.txt", progress: null }],
+                folder_content: [{ id: 1, title: "tutu.txt", progress: null, type: "folder" }],
                 files_uploads_list: [
                     { id: 2, title: "tutu.txt", progress: 25, parent_id: 1 },
                     { id: 3, title: "tutu.txt", progress: 50, parent_id: 1 },
@@ -217,7 +226,7 @@ describe("Store mutations", () => {
             mutations.updateFolderProgressbar(state, folder);
 
             expect(state.folder_content).toStrictEqual([
-                { id: 1, title: "tutu.txt", progress: 50 },
+                { id: 1, title: "tutu.txt", progress: 50, type: "folder" },
             ]);
         });
     });
@@ -227,6 +236,7 @@ describe("Store mutations", () => {
             const folder = {
                 id: 5,
                 title: "toto.txt",
+                type: "folder",
             } as Folder;
 
             const state = {
@@ -248,6 +258,7 @@ describe("Store mutations", () => {
             const folder = {
                 id: 1,
                 title: "tutu.txt",
+                type: "folder",
             } as Folder;
 
             const state = {
@@ -256,6 +267,7 @@ describe("Store mutations", () => {
                     {
                         id: 1,
                         title: "tutu.txt",
+                        type: "folder",
                         is_uploading_in_collapsed_folder: true,
                         progress: 75,
                     },
@@ -266,7 +278,13 @@ describe("Store mutations", () => {
 
             expect(state.folder_content).toStrictEqual([
                 { id: 2, title: "titi.txt" },
-                { id: 1, title: "tutu.txt", is_uploading_in_collapsed_folder: false, progress: 0 },
+                {
+                    id: 1,
+                    title: "tutu.txt",
+                    type: "folder",
+                    is_uploading_in_collapsed_folder: false,
+                    progress: 0,
+                },
             ]);
         });
     });
