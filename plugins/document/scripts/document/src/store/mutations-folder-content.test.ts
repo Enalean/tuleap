@@ -17,11 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import * as mutations from "./mutations-folder-content";
 import { StateBuilder } from "../../tests/builders/StateBuilder";
 import { ItemBuilder } from "../../tests/builders/ItemBuilder";
 import { FakeItemBuilder } from "../../tests/builders/FakeItemBuilder";
+import type { FolderContentItem, State } from "../type";
+import { TYPE_FILE } from "../constants";
+import { FolderBuilder } from "../../tests/builders/FolderBuilder";
 
 describe("Store mutations", () => {
     describe("foldFolderContent", () => {
@@ -127,1057 +130,183 @@ describe("Store mutations", () => {
         });
     });
 
-    describe("addJustCreatedItemToFolderContent", () => {
-        it("set the level of the new document according to its parent one", () => {
-            const item = new ItemBuilder(66)
-                .withParentId(42)
-                .withType("wiki")
-                .withTitle("Document")
-                .build();
-            const folder = new ItemBuilder(42)
-                .withParentId(0)
-                .withType("folder")
-                .withTitle("Folder")
-                .withLevel(2)
-                .build();
-            const state = new StateBuilder().withFolderContent([folder]).build();
+    describe(`addJustCreatedItemToFolderContent`, () => {
+        let state: State;
+        const root_folder = new FolderBuilder(7676).withTitle("A - Project Documentation").build();
 
-            mutations.addJustCreatedItemToFolderContent(state, item);
-            expect(state.folder_content).toEqual([folder, item]);
+        beforeEach(() => {
+            state = { folder_content: [root_folder] as Array<FolderContentItem> } as State;
         });
-        it("default to level=0 if parent is not found (should not happen)", () => {
-            const item = new ItemBuilder(66)
-                .withParentId(42)
-                .withType("wiki")
-                .withTitle("Document")
-                .build();
-            const folder = new ItemBuilder(101)
-                .withParentId(0)
-                .withType("folder")
-                .withTitle("Folder")
-                .withLevel(2)
-                .build();
-            const state = new StateBuilder().withFolderContent([folder]).build();
 
-            mutations.addJustCreatedItemToFolderContent(state, item);
-            expect(state.folder_content).toEqual([folder, item]);
-        });
-        it("inserts DOCUMENT by respecting the natural sort order", () => {
-            const item = new ItemBuilder(66)
-                .withParentId(42)
-                .withType("wiki")
-                .withTitle("A.2.x")
-                .build();
-            const state = new StateBuilder()
-                .withFolderContent([
-                    new ItemBuilder(42)
-                        .withParentId(0)
-                        .withLevel(2)
-                        .withType("folder")
-                        .withTitle("Folder")
-                        .build(),
-                    new ItemBuilder(43)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("wiki")
-                        .withTitle("A.1")
-                        .build(),
-                    new ItemBuilder(44)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("wiki")
-                        .withTitle("A.10")
-                        .build(),
-                ])
-                .build();
+        function checkThatFolderContentStateIsCorrect(
+            expected_folder_content: Array<string>,
+        ): void {
+            const expected_folder_content_by_title = state.folder_content.map(
+                (i) => `${i.title} (id: ${i.id}) (parent ${i.parent_id}) (level: ${i.level})`,
+            );
 
-            mutations.addJustCreatedItemToFolderContent(state, item);
-            expect(state.folder_content).toEqual([
-                new ItemBuilder(42)
-                    .withParentId(0)
-                    .withLevel(2)
-                    .withType("folder")
-                    .withTitle("Folder")
-                    .build(),
-                new ItemBuilder(43)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.1")
-                    .build(),
-                new ItemBuilder(66)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.2.x")
-                    .build(),
-                new ItemBuilder(44)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.10")
-                    .build(),
-            ]);
-        });
-        it("inserts DOCUMENT by respecting the natural sort order, and AFTER folders", () => {
-            const item = new ItemBuilder(66)
-                .withParentId(42)
-                .withType("wiki")
-                .withTitle("A.2.x")
-                .build();
-            const state = new StateBuilder()
-                .withFolderContent([
-                    new ItemBuilder(42)
-                        .withParentId(0)
-                        .withLevel(2)
-                        .withType("folder")
-                        .withTitle("Folder")
-                        .build(),
-                    new ItemBuilder(43)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("A.1")
-                        .build(),
-                    new ItemBuilder(44)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("A.10")
-                        .build(),
-                    new ItemBuilder(45)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("wiki")
-                        .withTitle("A.11")
-                        .build(),
-                ])
-                .build();
+            expect(expected_folder_content_by_title).toEqual(expected_folder_content);
+        }
 
-            mutations.addJustCreatedItemToFolderContent(state, item);
-            expect(state.folder_content).toEqual([
-                new ItemBuilder(42)
-                    .withParentId(0)
-                    .withLevel(2)
-                    .withType("folder")
-                    .withTitle("Folder")
-                    .build(),
-                new ItemBuilder(43)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("A.1")
-                    .build(),
-                new ItemBuilder(44)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("A.10")
-                    .build(),
-                new ItemBuilder(66)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.2.x")
-                    .build(),
-                new ItemBuilder(45)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.11")
-                    .build(),
-            ]);
-        });
-        it("inserts FOLDER by respecting the natural sort order, and BEFORE items", () => {
-            const folder = new ItemBuilder(66)
-                .withParentId(42)
-                .withType("folder")
-                .withTitle("D folder")
-                .build();
-            const state = new StateBuilder()
-                .withFolderContent([
-                    new ItemBuilder(42)
-                        .withParentId(0)
-                        .withLevel(2)
-                        .withType("folder")
-                        .withTitle("Folder")
-                        .build(),
-                    new ItemBuilder(43)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("B folder")
-                        .build(),
-                    new ItemBuilder(44)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("C folder")
-                        .build(),
-                    new ItemBuilder(45)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("wiki")
-                        .withTitle("A.11")
-                        .build(),
-                ])
-                .build();
-            mutations.addJustCreatedItemToFolderContent(state, folder);
-            expect(state.folder_content).toEqual([
-                new ItemBuilder(42)
-                    .withParentId(0)
-                    .withLevel(2)
-                    .withType("folder")
-                    .withTitle("Folder")
-                    .build(),
-                new ItemBuilder(43)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("B folder")
-                    .build(),
-                new ItemBuilder(44)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("C folder")
-                    .build(),
-                new ItemBuilder(66)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("D folder")
-                    .build(),
-                new ItemBuilder(45)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.11")
-                    .build(),
-            ]);
-        });
-        it("inserts FOLDER by respecting the natural sort order, and at the right level", () => {
-            const folder = new ItemBuilder(66)
-                .withParentId(43)
-                .withType("folder")
-                .withTitle("Z folder")
-                .build();
-            const state = new StateBuilder()
-                .withFolderContent([
-                    new ItemBuilder(42)
-                        .withParentId(0)
-                        .withLevel(2)
-                        .withType("folder")
-                        .withTitle("Folder")
-                        .build(),
-                    new ItemBuilder(43)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("B folder")
-                        .build(),
-                    new ItemBuilder(46)
-                        .withParentId(43)
-                        .withLevel(4)
-                        .withType("wiki")
-                        .withTitle("B.1")
-                        .build(),
-                    new ItemBuilder(44)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("D folder")
-                        .build(),
-                    new ItemBuilder(45)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("wiki")
-                        .withTitle("A.11")
-                        .build(),
-                ])
-                .build();
-            mutations.addJustCreatedItemToFolderContent(state, folder);
-            expect(state.folder_content).toEqual([
-                new ItemBuilder(42)
-                    .withParentId(0)
-                    .withLevel(2)
-                    .withType("folder")
-                    .withTitle("Folder")
-                    .build(),
-                new ItemBuilder(43)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("B folder")
-                    .build(),
-                new ItemBuilder(66)
-                    .withParentId(43)
-                    .withLevel(4)
-                    .withType("folder")
-                    .withTitle("Z folder")
-                    .build(),
-                new ItemBuilder(46)
-                    .withParentId(43)
-                    .withLevel(4)
-                    .withType("wiki")
-                    .withTitle("B.1")
-                    .build(),
-                new ItemBuilder(44)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("D folder")
-                    .build(),
-                new ItemBuilder(45)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.11")
-                    .build(),
-            ]);
-        });
-        it("inserts DOCUMENT by respecting the natural sort order, and at the right level", () => {
-            const item = new ItemBuilder(66)
-                .withParentId(43)
-                .withType("empty")
-                .withTitle("zzzzempty")
-                .build();
-            const state = new StateBuilder()
-                .withFolderContent([
-                    new ItemBuilder(42)
-                        .withParentId(0)
-                        .withLevel(2)
-                        .withType("folder")
-                        .withTitle("Folder")
-                        .build(),
-                    new ItemBuilder(43)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("B folder")
-                        .build(),
-                    new ItemBuilder(46)
-                        .withParentId(43)
-                        .withLevel(4)
-                        .withType("wiki")
-                        .withTitle("B.1")
-                        .build(),
-                    new ItemBuilder(44)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("D folder")
-                        .build(),
-                    new ItemBuilder(45)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("wiki")
-                        .withTitle("A.11")
-                        .build(),
-                ])
-                .build();
-            mutations.addJustCreatedItemToFolderContent(state, item);
-            expect(state.folder_content).toEqual([
-                new ItemBuilder(42)
-                    .withParentId(0)
-                    .withLevel(2)
-                    .withType("folder")
-                    .withTitle("Folder")
-                    .build(),
-                new ItemBuilder(43)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("B folder")
-                    .build(),
-                new ItemBuilder(46)
-                    .withParentId(43)
-                    .withLevel(4)
-                    .withType("wiki")
-                    .withTitle("B.1")
-                    .build(),
-                new ItemBuilder(66)
-                    .withParentId(43)
-                    .withLevel(4)
-                    .withType("empty")
-                    .withTitle("zzzzempty")
-                    .build(),
-                new ItemBuilder(44)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("D folder")
-                    .build(),
-                new ItemBuilder(45)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.11")
-                    .build(),
-            ]);
-        });
-        it("inserts DOCUMENT by respecting the natural sort order, at the end of the folder", () => {
-            const item = new ItemBuilder(66)
-                .withParentId(42)
-                .withType("empty")
-                .withTitle("zzzzempty")
-                .build();
-            const state = new StateBuilder()
-                .withFolderContent([
-                    new ItemBuilder(42)
-                        .withParentId(0)
-                        .withLevel(2)
-                        .withType("folder")
-                        .withTitle("Folder")
-                        .build(),
-                    new ItemBuilder(43)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("B folder")
-                        .build(),
-                    new ItemBuilder(46)
-                        .withParentId(43)
-                        .withLevel(4)
-                        .withType("wiki")
-                        .withTitle("B.1")
-                        .build(),
-                    new ItemBuilder(44)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("D folder")
-                        .build(),
-                    new ItemBuilder(45)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("wiki")
-                        .withTitle("A.11")
-                        .build(),
-                ])
-                .build();
-            mutations.addJustCreatedItemToFolderContent(state, item);
-            expect(state.folder_content).toEqual([
-                new ItemBuilder(42)
-                    .withParentId(0)
-                    .withLevel(2)
-                    .withType("folder")
-                    .withTitle("Folder")
-                    .build(),
-                new ItemBuilder(43)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("B folder")
-                    .build(),
-                new ItemBuilder(46)
-                    .withParentId(43)
-                    .withLevel(4)
-                    .withType("wiki")
-                    .withTitle("B.1")
-                    .build(),
-                new ItemBuilder(44)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("D folder")
-                    .build(),
-                new ItemBuilder(45)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.11")
-                    .build(),
-                new ItemBuilder(66)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("empty")
-                    .withTitle("zzzzempty")
-                    .build(),
-            ]);
-        });
-        it("inserts FOLDER by respecting the natural sort order, at the end of the folder", () => {
-            const folder = new ItemBuilder(66)
-                .withParentId(43)
-                .withType("folder")
-                .withTitle("zzzzfolder")
-                .build();
-            const state = new StateBuilder()
-                .withFolderContent([
-                    new ItemBuilder(42)
-                        .withParentId(0)
-                        .withLevel(2)
-                        .withType("folder")
-                        .withTitle("Folder")
-                        .build(),
-                    new ItemBuilder(43)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("B folder")
-                        .build(),
-                    new ItemBuilder(44)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("D folder")
-                        .build(),
-                    new ItemBuilder(45)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("wiki")
-                        .withTitle("A.11")
-                        .build(),
-                ])
-                .build();
-            mutations.addJustCreatedItemToFolderContent(state, folder);
-            expect(state.folder_content).toEqual([
-                new ItemBuilder(42)
-                    .withParentId(0)
-                    .withLevel(2)
-                    .withType("folder")
-                    .withTitle("Folder")
-                    .build(),
-                new ItemBuilder(43)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("B folder")
-                    .build(),
-                new ItemBuilder(66)
-                    .withParentId(43)
-                    .withLevel(4)
-                    .withType("folder")
-                    .withTitle("zzzzfolder")
-                    .build(),
-                new ItemBuilder(44)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("D folder")
-                    .build(),
-                new ItemBuilder(45)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.11")
-                    .build(),
-            ]);
-        });
-        it("inserts DOCUMENT by respecting the natural sort order, at the end of the folder 2", () => {
-            const item = new ItemBuilder(66)
-                .withParentId(43)
-                .withType("empty")
-                .withTitle("zzzzDOCUMENT")
-                .build();
-            const state = new StateBuilder()
-                .withFolderContent([
-                    new ItemBuilder(42)
-                        .withParentId(0)
-                        .withLevel(2)
-                        .withType("folder")
-                        .withTitle("Folder")
-                        .build(),
-                    new ItemBuilder(43)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("B folder")
-                        .build(),
-                    new ItemBuilder(44)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("folder")
-                        .withTitle("D folder")
-                        .build(),
-                    new ItemBuilder(45)
-                        .withParentId(42)
-                        .withLevel(3)
-                        .withType("wiki")
-                        .withTitle("A.11")
-                        .build(),
-                ])
-                .build();
-            mutations.addJustCreatedItemToFolderContent(state, item);
-            expect(state.folder_content).toEqual([
-                new ItemBuilder(42)
-                    .withParentId(0)
-                    .withLevel(2)
-                    .withType("folder")
-                    .withTitle("Folder")
-                    .build(),
-                new ItemBuilder(43)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("B folder")
-                    .build(),
-                new ItemBuilder(66)
-                    .withParentId(43)
-                    .withLevel(4)
-                    .withType("empty")
-                    .withTitle("zzzzDOCUMENT")
-                    .build(),
-                new ItemBuilder(44)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("folder")
-                    .withTitle("D folder")
-                    .build(),
-                new ItemBuilder(45)
-                    .withParentId(42)
-                    .withLevel(3)
-                    .withType("wiki")
-                    .withTitle("A.11")
-                    .build(),
-            ]);
-        });
-        it("inserts a FOLDER at the right place, after the last children of its nearest sibling", () => {
-            const item = new ItemBuilder(66)
-                .withParentId(0)
-                .withType("folder")
-                .withTitle("B")
-                .build();
-            const state = new StateBuilder()
-                .withFolderContent([
-                    new ItemBuilder(42)
-                        .withParentId(0)
-                        .withLevel(0)
-                        .withType("folder")
-                        .withTitle("A")
-                        .build(),
-                    new ItemBuilder(43)
-                        .withParentId(42)
-                        .withLevel(1)
-                        .withType("folder")
-                        .withTitle("A.A")
-                        .build(),
-                    new ItemBuilder(45)
-                        .withParentId(42)
-                        .withLevel(1)
-                        .withType("wiki")
-                        .withTitle("A kiwi")
-                        .build(),
-                    new ItemBuilder(44)
-                        .withParentId(0)
-                        .withLevel(0)
-                        .withType("folder")
-                        .withTitle("C")
-                        .build(),
-                ])
-                .build();
-            mutations.addJustCreatedItemToFolderContent(state, item);
-            expect(state.folder_content).toEqual([
-                new ItemBuilder(42)
-                    .withParentId(0)
-                    .withLevel(0)
-                    .withType("folder")
-                    .withTitle("A")
-                    .build(),
-                new ItemBuilder(43)
-                    .withParentId(42)
-                    .withLevel(1)
-                    .withType("folder")
-                    .withTitle("A.A")
-                    .build(),
-                new ItemBuilder(45)
-                    .withParentId(42)
-                    .withLevel(1)
-                    .withType("wiki")
-                    .withTitle("A kiwi")
-                    .build(),
-                new ItemBuilder(66)
-                    .withParentId(0)
-                    .withLevel(0)
-                    .withType("folder")
-                    .withTitle("B")
-                    .build(),
-                new ItemBuilder(44)
-                    .withParentId(0)
-                    .withLevel(0)
-                    .withType("folder")
-                    .withTitle("C")
-                    .build(),
-            ]);
-        });
-        it("Given newly created items, then they should be inserted at the right place", () => {
-            const folder_a = new ItemBuilder(10)
-                .withTitle("A")
-                .withType("folder")
-                .withParentId(42)
-                .withLevel(0)
-                .build();
-            const folder_b = new ItemBuilder(11)
-                .withTitle("B")
-                .withType("folder")
-                .withParentId(42)
-                .withLevel(0)
-                .build();
-            const doc_a = new ItemBuilder(12)
-                .withTitle("A")
-                .withType("wiki")
-                .withParentId(42)
-                .withLevel(0)
-                .build();
-            const doc_b = new ItemBuilder(13)
-                .withTitle("B")
-                .withType("wiki")
-                .withParentId(42)
-                .withLevel(0)
-                .build();
-            const sub_folder_a = new ItemBuilder(14)
-                .withTitle("A")
-                .withType("folder")
-                .withParentId(folder_a.id)
-                .withLevel(0)
-                .build();
-            const sub_folder_b = new ItemBuilder(15)
-                .withTitle("B")
-                .withType("folder")
-                .withParentId(folder_a.id)
-                .withLevel(0)
-                .build();
-            const sub_doc_a = new ItemBuilder(16)
-                .withTitle("A")
-                .withType("wiki")
-                .withParentId(folder_a.id)
-                .withLevel(0)
-                .build();
-            const sub_doc_b = new ItemBuilder(17)
-                .withTitle("B")
-                .withType("wiki")
-                .withParentId(folder_a.id)
-                .withLevel(0)
-                .build();
-            const doc_to_add = new ItemBuilder(66)
-                .withTitle("A1")
-                .withType("wiki")
-                .withParentId(42)
-                .build();
-            const doc_added = { ...doc_to_add, level: 0 };
-            const doc_to_add_in_folder_a = { ...doc_to_add, parent_id: folder_a.id };
-            const doc_added_in_folder_a = { ...doc_to_add_in_folder_a, level: 1 };
-            const folder_to_add = new ItemBuilder(69)
-                .withTitle("A1")
-                .withType("folder")
-                .withParentId(42)
-                .build();
-            const folder_added = { ...folder_to_add, level: 0 };
-            const folder_to_add_in_folder_a = { ...folder_to_add, parent_id: folder_a.id };
-            const folder_added_in_folder_a = { ...folder_to_add_in_folder_a, level: 1 };
-            const map = new Map([
-                [
-                    {
-                        item: doc_to_add,
-                        folder_content: [],
-                    },
-                    [doc_added],
-                ],
-                [
-                    {
-                        item: doc_to_add,
-                        folder_content: [doc_a],
-                    },
-                    [doc_a, doc_added],
-                ],
-                [
-                    {
-                        item: doc_to_add,
-                        folder_content: [doc_b],
-                    },
-                    [doc_added, doc_b],
-                ],
-                [
-                    {
-                        item: doc_to_add,
-                        folder_content: [doc_a, doc_b],
-                    },
-                    [doc_a, doc_added, doc_b],
-                ],
-                [
-                    {
-                        item: doc_to_add,
-                        folder_content: [folder_a],
-                    },
-                    [folder_a, doc_added],
-                ],
-                [
-                    {
-                        item: doc_to_add,
-                        folder_content: [folder_b],
-                    },
-                    [folder_b, doc_added],
-                ],
-                [
-                    {
-                        item: doc_to_add,
-                        folder_content: [folder_a, folder_b],
-                    },
-                    [folder_a, folder_b, doc_added],
-                ],
-                [
-                    {
-                        item: doc_to_add,
-                        folder_content: [folder_a, folder_b, doc_a, doc_b],
-                    },
-                    [folder_a, folder_b, doc_a, doc_added, doc_b],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a],
-                    },
-                    [folder_a, doc_added_in_folder_a],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a, folder_b],
-                    },
-                    [folder_a, doc_added_in_folder_a, folder_b],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a, folder_b, doc_a],
-                    },
-                    [folder_a, doc_added_in_folder_a, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a, folder_b, doc_a, doc_b],
-                    },
-                    [folder_a, doc_added_in_folder_a, folder_b, doc_a, doc_b],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_doc_a, folder_b, doc_a],
-                    },
-                    [folder_a, sub_doc_a, doc_added_in_folder_a, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_doc_b, folder_b, doc_a],
-                    },
-                    [folder_a, doc_added_in_folder_a, sub_doc_b, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_doc_a, sub_doc_b, folder_b, doc_a],
-                    },
-                    [folder_a, sub_doc_a, doc_added_in_folder_a, sub_doc_b, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_folder_a, folder_b, doc_a],
-                    },
-                    [folder_a, sub_folder_a, doc_added_in_folder_a, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_folder_b, folder_b, doc_a],
-                    },
-                    [folder_a, sub_folder_b, doc_added_in_folder_a, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_folder_a, sub_folder_b, folder_b, doc_a],
-                    },
-                    [folder_a, sub_folder_a, sub_folder_b, doc_added_in_folder_a, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: doc_to_add_in_folder_a,
-                        folder_content: [
-                            folder_a,
-                            sub_folder_a,
-                            sub_folder_b,
-                            sub_doc_a,
-                            sub_doc_b,
-                            folder_b,
-                            doc_a,
-                        ],
-                    },
-                    [
-                        folder_a,
-                        sub_folder_a,
-                        sub_folder_b,
-                        sub_doc_a,
-                        doc_added_in_folder_a,
-                        sub_doc_b,
-                        folder_b,
-                        doc_a,
-                    ],
-                ],
-                [
-                    {
-                        item: folder_to_add,
-                        folder_content: [],
-                    },
-                    [folder_added],
-                ],
-                [
-                    {
-                        item: folder_to_add,
-                        folder_content: [doc_a],
-                    },
-                    [folder_added, doc_a],
-                ],
-                [
-                    {
-                        item: folder_to_add,
-                        folder_content: [doc_b],
-                    },
-                    [folder_added, doc_b],
-                ],
-                [
-                    {
-                        item: folder_to_add,
-                        folder_content: [doc_a, doc_b],
-                    },
-                    [folder_added, doc_a, doc_b],
-                ],
-                [
-                    {
-                        item: folder_to_add,
-                        folder_content: [folder_a],
-                    },
-                    [folder_a, folder_added],
-                ],
-                [
-                    {
-                        item: folder_to_add,
-                        folder_content: [folder_b],
-                    },
-                    [folder_added, folder_b],
-                ],
-                [
-                    {
-                        item: folder_to_add,
-                        folder_content: [folder_a, folder_b],
-                    },
-                    [folder_a, folder_added, folder_b],
-                ],
-                [
-                    {
-                        item: folder_to_add,
-                        folder_content: [folder_a, folder_b, doc_a, doc_b],
-                    },
-                    [folder_a, folder_added, folder_b, doc_a, doc_b],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a],
-                    },
-                    [folder_a, folder_added_in_folder_a],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a, folder_b],
-                    },
-                    [folder_a, folder_added_in_folder_a, folder_b],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a, folder_b, doc_a],
-                    },
-                    [folder_a, folder_added_in_folder_a, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a, folder_b, doc_a, doc_b],
-                    },
-                    [folder_a, folder_added_in_folder_a, folder_b, doc_a, doc_b],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_doc_a, folder_b, doc_a],
-                    },
-                    [folder_a, folder_added_in_folder_a, sub_doc_a, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_doc_b, folder_b, doc_a],
-                    },
-                    [folder_a, folder_added_in_folder_a, sub_doc_b, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_doc_a, sub_doc_b, folder_b, doc_a],
-                    },
-                    [folder_a, folder_added_in_folder_a, sub_doc_a, sub_doc_b, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_folder_a, folder_b, doc_a],
-                    },
-                    [folder_a, sub_folder_a, folder_added_in_folder_a, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_folder_b, folder_b, doc_a],
-                    },
-                    [folder_a, folder_added_in_folder_a, sub_folder_b, folder_b, doc_a],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [folder_a, sub_folder_a, sub_folder_b, folder_b, doc_a],
-                    },
-                    [
-                        folder_a,
-                        sub_folder_a,
-                        folder_added_in_folder_a,
-                        sub_folder_b,
-                        folder_b,
-                        doc_a,
-                    ],
-                ],
-                [
-                    {
-                        item: folder_to_add_in_folder_a,
-                        folder_content: [
-                            folder_a,
-                            sub_folder_a,
-                            sub_folder_b,
-                            sub_doc_a,
-                            sub_doc_b,
-                            folder_b,
-                            doc_a,
-                        ],
-                    },
-                    [
-                        folder_a,
-                        sub_folder_a,
-                        folder_added_in_folder_a,
-                        sub_folder_b,
-                        sub_doc_a,
-                        sub_doc_b,
-                        folder_b,
-                        doc_a,
-                    ],
-                ],
-            ]);
-            map.forEach((expected_content, { item, folder_content }) => {
-                const state = new StateBuilder().withFolderContent(folder_content).build();
-                mutations.addJustCreatedItemToFolderContent(state, item);
-                expect(state.folder_content).toEqual(expected_content);
+        describe(`Given elements are added inside a folder
+        Then the folder_content respect sort structure and indentation level
+        id are the order where element are inserted in tree, tree bellow is the expected final result
+
+        ROOT (id: 7676)
+        ├── an other folder  (id: 4)
+        ├── folder_a (id: 2) - working folder - is opened
+            └── folder a1 (id: 9)
+                └── subfile A11 (id: 10)
+            └── folder a2 (id: 5)
+                └── subfolder a22 (id: 8)
+                └── subfile a21 (id: 7)
+            └── folder b (id: 11)
+            └── file a (id: 12)
+            └── file b (id: 3)
+            └── file c (id: 13)
+        ├── zan other folder  (id: 6)
+        ├── a file  (id: 1)
+        `, () => {
+            it(`Given folder is updated, it respects the order for files and folders`, () => {
+                const a_file = new ItemBuilder(1)
+                    .withType(TYPE_FILE)
+                    .withTitle("a file")
+                    .withParentId(root_folder.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: a_file,
+                    parent: root_folder,
+                });
+
+                const folder_a = new FolderBuilder(2)
+                    .withTitle("Folder A")
+                    .withParentId(root_folder.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: folder_a,
+                    parent: root_folder,
+                });
+
+                const file_b = new ItemBuilder(3)
+                    .withType(TYPE_FILE)
+                    .withTitle("File B")
+                    .withParentId(folder_a.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: file_b,
+                    parent: folder_a,
+                });
+
+                const an_other_folder = new FolderBuilder(4)
+                    .withTitle("An other folder")
+                    .withParentId(root_folder.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: an_other_folder,
+                    parent: root_folder,
+                });
+
+                const folder_a2 = new FolderBuilder(5)
+                    .withTitle("Folder A2")
+                    .withParentId(folder_a.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: folder_a2,
+                    parent: folder_a,
+                });
+
+                const z_an_other_folder = new FolderBuilder(6)
+                    .withTitle("Z An Other folder")
+                    .withParentId(root_folder.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: z_an_other_folder,
+                    parent: root_folder,
+                });
+
+                const subfile_a21 = new ItemBuilder(7)
+                    .withType(TYPE_FILE)
+                    .withTitle("subfile_a21")
+                    .withParentId(folder_a2.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: subfile_a21,
+                    parent: folder_a2,
+                });
+
+                const subfolder_a22 = new FolderBuilder(8)
+                    .withTitle("subfolder_a22")
+                    .withParentId(folder_a2.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: subfolder_a22,
+                    parent: folder_a2,
+                });
+
+                const folder_a1 = new FolderBuilder(9)
+                    .withTitle("folder A1")
+                    .withParentId(folder_a.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: folder_a1,
+                    parent: folder_a,
+                });
+
+                const subfile_a11 = new ItemBuilder(10)
+                    .withType(TYPE_FILE)
+                    .withTitle("subfile_a11")
+                    .withParentId(folder_a1.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: subfile_a11,
+                    parent: folder_a1,
+                });
+
+                const folder_b = new FolderBuilder(11)
+                    .withTitle("folder_b")
+                    .withParentId(folder_a.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: folder_b,
+                    parent: folder_a,
+                });
+
+                const file_a = new ItemBuilder(12)
+                    .withType(TYPE_FILE)
+                    .withTitle("File A")
+                    .withParentId(folder_a.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: file_a,
+                    parent: folder_a,
+                });
+
+                const file_c = new ItemBuilder(13)
+                    .withType(TYPE_FILE)
+                    .withTitle("File C")
+                    .withParentId(folder_a.id)
+                    .build();
+                mutations.addJustCreatedItemToFolderContent(state, {
+                    new_item: file_c,
+                    parent: folder_a,
+                });
+
+                checkThatFolderContentStateIsCorrect([
+                    `${root_folder.title} (id: ${root_folder.id}) (parent ${root_folder.parent_id}) (level: ${root_folder.level})`,
+                    `${an_other_folder.title} (id: ${an_other_folder.id}) (parent ${an_other_folder.parent_id}) (level: ${an_other_folder.level})`,
+                    `${folder_a.title} (id: ${folder_a.id}) (parent ${folder_a.parent_id}) (level: ${folder_a.level})`,
+                    `${folder_a1.title} (id: ${folder_a1.id}) (parent ${folder_a1.parent_id}) (level: ${folder_a1.level})`,
+                    `${subfile_a11.title} (id: ${subfile_a11.id}) (parent ${subfile_a11.parent_id}) (level: ${subfile_a11.level})`,
+                    `${folder_a2.title} (id: ${folder_a2.id}) (parent ${folder_a2.parent_id}) (level: ${folder_a2.level})`,
+                    `${subfolder_a22.title} (id: ${subfolder_a22.id}) (parent ${subfolder_a22.parent_id}) (level: ${subfolder_a22.level})`,
+                    `${subfile_a21.title} (id: ${subfile_a21.id}) (parent ${subfile_a21.parent_id}) (level: ${subfile_a21.level})`,
+                    `${folder_b.title} (id: ${folder_b.id}) (parent ${folder_b.parent_id}) (level: ${folder_b.level})`,
+                    `${file_a.title} (id: ${file_a.id}) (parent ${file_a.parent_id}) (level: ${file_a.level})`,
+                    `${file_b.title} (id: ${file_b.id}) (parent ${file_b.parent_id}) (level: ${file_b.level})`,
+                    `${file_c.title} (id: ${file_c.id}) (parent ${file_c.parent_id}) (level: ${file_c.level})`,
+                    `${z_an_other_folder.title} (id: ${z_an_other_folder.id}) (parent ${z_an_other_folder.parent_id}) (level: ${z_an_other_folder.level})`,
+                    `${a_file.title} (id: ${a_file.id}) (parent ${a_file.parent_id}) (level: ${a_file.level})`,
+                ]);
             });
         });
     });

@@ -110,7 +110,10 @@ describe("actions-create", () => {
 
             expect(getItem).toHaveBeenCalledWith(66);
             expect(emitter.emit).toHaveBeenCalledWith("new-item-has-just-been-created", { id: 66 });
-            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                parent,
+                new_item: item,
+            });
             expect(context.dispatch).not.toHaveBeenCalledWith("error/handleErrorsForModal");
         });
 
@@ -160,7 +163,10 @@ describe("actions-create", () => {
             await createNewItem(context, [item, folder_of_created_item, current_folder, fake_item]);
 
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
-            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                parent: folder_of_created_item,
+                new_item: item,
+            });
         });
         it("not displays the created item when it is created in a collapsed folder", async () => {
             const created_item_reference = { id: 66 } as CreatedItem;
@@ -188,7 +194,10 @@ describe("actions-create", () => {
                 item,
                 false,
             ]);
-            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                parent: collapsed_folder_of_created_item,
+                new_item: item,
+            });
         });
         it("displays the created item when it is created in a expanded folder which is not the same as the current folder", async () => {
             const created_item_reference = { id: 66 } as CreatedItem;
@@ -212,7 +221,10 @@ describe("actions-create", () => {
                 fake_item,
             ]);
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
-            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                parent: collapsed_folder_of_created_item,
+                new_item: item,
+            });
         });
         it("displays the created file when it is created in the current folder", async () => {
             context.state.folder_content = [{ id: 10 } as Folder];
@@ -614,10 +626,10 @@ describe("actions-create", () => {
                 created_item,
                 false,
             ]);
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                created_item,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: created_item,
+                parent,
+            });
         });
 
         it("Item must not be added to folded content when parent is expanded", async () => {
@@ -655,10 +667,10 @@ describe("actions-create", () => {
             );
             expect(flagItemAsCreated).toHaveBeenCalled();
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                created_item,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: created_item,
+                parent,
+            });
         });
 
         it("Item is not added to folded content when we are adding item in current folder", async () => {
@@ -696,10 +708,10 @@ describe("actions-create", () => {
             );
             expect(flagItemAsCreated).toHaveBeenCalled();
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                created_item,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: created_item,
+                parent,
+            });
         });
     });
 });

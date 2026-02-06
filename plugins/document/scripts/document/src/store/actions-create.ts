@@ -156,5 +156,10 @@ export async function adjustItemToContentAfterItemCreationInAFolder(
         context.commit("addDocumentToFoldedFolder", [payload.parent, created_item, false]);
     }
 
-    return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
+    return Promise.resolve(
+        context.commit("addJustCreatedItemToFolderContent", {
+            new_item: created_item,
+            parent: payload.parent,
+        }),
+    );
 }

@@ -34,6 +34,7 @@ export class FolderBuilder {
         value: "",
         recursion: "",
     };
+    private level: number | undefined = undefined;
 
     constructor(id: number) {
         this.id = id;
@@ -74,6 +75,11 @@ export class FolderBuilder {
         return this;
     }
 
+    public withLevel(level: number): this {
+        this.level = level;
+        return this;
+    }
+
     public build(): Folder {
         return {
             can_user_manage: false,
@@ -107,6 +113,8 @@ export class FolderBuilder {
             upload_error: null,
             user_can_delete: false,
             user_can_write: false,
+            item_icon: "",
+            ...(this.level !== undefined ? { level: this.level } : {}),
         };
     }
 }

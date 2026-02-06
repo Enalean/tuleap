@@ -127,7 +127,7 @@ import emitter from "../../../../helpers/emitter";
 import { isFile, isFolder } from "../../../../helpers/type-check-helper";
 import { getEmptyOfficeFileFromMimeType } from "../../../../helpers/office/get-empty-office-file";
 import { buildFakeItem } from "../../../../helpers/item-builder";
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, toRaw } from "vue";
 import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
 import type { FakeItem, Item, RootState } from "../../../../type";
 import type { ErrorState } from "../../../../store/error/module";
@@ -186,6 +186,7 @@ onMounted(() => {
     emitter.on("update-embedded-properties", updateEmbeddedContent);
     emitter.on("update-file-properties", updateFilesProperties);
     emitter.on("update-permissions", updateUGroup);
+    parent.value = structuredClone(toRaw(current_folder.value));
 });
 
 onBeforeUnmount(() => {
