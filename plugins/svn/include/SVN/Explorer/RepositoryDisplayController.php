@@ -23,8 +23,8 @@ namespace Tuleap\SVN\Explorer;
 use Event;
 use EventManager;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\ServiceSvn;
@@ -76,9 +76,9 @@ class RepositoryDisplayController
             }
 
             $GLOBALS['Response']->addJavascriptAsset(
-                new JavascriptAsset(
-                    new IncludeAssets(__DIR__ . '/../../../scripts/main/frontend-assets', '/assets/svn/main'),
-                    'svn.js',
+                new JavascriptViteAsset(
+                    new IncludeViteAssets(__DIR__ . '/../../../scripts/main/frontend-assets', '/assets/svn/main'),
+                    'src/svn.ts',
                 )
             );
 

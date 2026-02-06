@@ -39,7 +39,7 @@ use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Httpd\PostRotateEvent;
 use Tuleap\Layout\HomePage\LastMonthStatisticsCollectorSVN;
 use Tuleap\Layout\HomePage\StatisticsCollectorSVN;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
@@ -1142,7 +1142,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         ) {
             $assets = $this->getIncludeAssets();
 
-            $params['stylesheets'][] = $assets->getFileURL('style-bp.css');
+            $params['stylesheets'][] = $assets->getFileURL('themes/BurningParrot/css/style.scss');
         }
     }
 
@@ -1165,9 +1165,9 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    private function getIncludeAssets(): IncludeAssets
+    private function getIncludeAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(__DIR__ . '/../scripts/main/frontend-assets', '/assets/svn/main');
+        return new IncludeViteAssets(__DIR__ . '/../scripts/main/frontend-assets', '/assets/svn/main');
     }
 
     #[ListeningToEventClass]

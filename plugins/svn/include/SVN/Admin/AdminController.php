@@ -26,7 +26,6 @@ use Psr\Log\LoggerInterface;
 use Project;
 use Rule_Email;
 use Tuleap\CSRFSynchronizerTokenPresenter;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\UGroups\UserGroupsPresenterBuilder;
@@ -121,9 +120,9 @@ class AdminController
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
         $GLOBALS['Response']->addJavascriptAsset(
-            new \Tuleap\Layout\JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../scripts/main/frontend-assets', '/assets/svn/main'),
-                'svn-admin.js',
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../../../scripts/main/frontend-assets', '/assets/svn/main'),
+                'src/svn-admin.ts',
             )
         );
         $service->renderInPageRepositoryAdministration(
