@@ -89,7 +89,9 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->reference_manager
@@ -127,7 +129,9 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever
@@ -182,7 +186,9 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever
@@ -236,7 +242,9 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever

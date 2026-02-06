@@ -50,6 +50,7 @@ use Tuleap\Gitlab\Reference\Branch\GitlabBranchReferenceSplitValuesBuilder;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\CrossReferenceDAO;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
 use Tuleap\Gitlab\Reference\GitlabReferenceBuilder;
 use Tuleap\Gitlab\Reference\GitlabReferenceExtractor;
@@ -66,6 +67,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
 use Tuleap\Gitlab\Repository\IntegrationWebhookController;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
+use Tuleap\Gitlab\Repository\Project\GitlabRepositoryUpdater;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
@@ -547,6 +549,7 @@ class gitlabPlugin extends Plugin
         );
         $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
+        $repository_integration_dao     = new GitlabRepositoryIntegrationDao();
 
         $changeset_creator = new NewChangesetCreator(
             $db_transaction_executor,
@@ -619,7 +622,7 @@ class gitlabPlugin extends Plugin
                 )
             ),
             new WebhookActions(
-                new GitlabRepositoryIntegrationDao(),
+                $repository_integration_dao,
                 new PostPushWebhookActionProcessor(
                     new WebhookTuleapReferencesParser(),
                     new CommitTuleapReferenceDao(),
@@ -708,6 +711,12 @@ class gitlabPlugin extends Plugin
             ),
             $logger,
             HTTPFactoryBuilder::responseFactory(),
+            new GitlabRepositoryUpdater(
+                $logger,
+                $db_transaction_executor,
+                $repository_integration_dao,
+                new CrossReferenceDAO(),
+            ),
             new SapiEmitter(),
             new \Tuleap\Http\Server\ServiceInstrumentationMiddleware(self::SERVICE_NAME)
         );

@@ -111,7 +111,9 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever->expects($this->once())
@@ -184,7 +186,9 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever->expects($this->never())
@@ -239,7 +243,9 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever->expects($this->never())
@@ -294,7 +300,9 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever->expects($this->once())
@@ -354,7 +362,9 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever->expects($this->once())
@@ -427,7 +437,9 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever->expects($this->once())

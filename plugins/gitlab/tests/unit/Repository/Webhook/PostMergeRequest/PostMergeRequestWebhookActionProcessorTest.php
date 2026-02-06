@@ -129,7 +129,9 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->merge_request_reference_dao
@@ -238,7 +240,9 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->merge_request_reference_dao
@@ -366,7 +370,9 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->merge_request_reference_dao
@@ -486,7 +492,9 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->merge_request_reference_dao
@@ -576,7 +584,9 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->merge_request_reference_dao
@@ -666,7 +676,9 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->merge_request_reference_dao
@@ -715,7 +727,9 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->merge_request_reference_dao

@@ -24,7 +24,7 @@ use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
-class PostMergeRequestWebhookDataBuilder
+final readonly class PostMergeRequestWebhookDataBuilder
 {
     private const string OBJECT_ATTRIBUTES_KEY         = 'object_attributes';
     private const string MERGE_REQUEST_ID_KEY          = 'iid';
@@ -35,14 +35,8 @@ class PostMergeRequestWebhookDataBuilder
     private const string MERGE_REQUEST_AUTHOR_ID_KEY   = 'author_id';
     private const string MERGE_REQUEST_SOURCE_BRANCH   = 'source_branch';
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     public function build(
@@ -50,6 +44,8 @@ class PostMergeRequestWebhookDataBuilder
         int $project_id,
         string $project_url,
         array $webhook_content,
+        string $project_name,
+        string $project_description,
     ): PostMergeRequestWebhookData {
         $this->checkNoMissingKeyInMergeRequestData($webhook_content);
 
@@ -84,7 +80,9 @@ class PostMergeRequestWebhookDataBuilder
             $state,
             $created_at,
             $author_id,
-            $source_branch
+            $source_branch,
+            $project_name,
+            $project_description,
         );
     }
 

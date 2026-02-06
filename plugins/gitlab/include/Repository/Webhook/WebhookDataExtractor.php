@@ -27,43 +27,24 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDat
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 
-class WebhookDataExtractor
+final readonly class WebhookDataExtractor
 {
-    private const string EVENT_HEADER        = 'X-Gitlab-Event';
-    private const string PROJECT_KEY         = 'project';
-    private const string PROJECT_ID_KEY      = 'id';
-    private const string PROJECT_URL_KEY     = 'web_url';
-    private const string PUSH_EVENT          = 'Push Hook';
-    private const string MERGE_REQUEST_EVENT = 'Merge Request Hook';
-    private const string TAG_PUSH_EVENT      = 'Tag Push Hook';
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var PostMergeRequestWebhookDataBuilder
-     */
-    private $post_merge_request_webhook_data_builder;
-    /**
-     * @var PostPushWebhookDataBuilder
-     */
-    private $post_push_webhook_data_builder;
-    /**
-     * @var TagPushWebhookDataBuilder
-     */
-    private $tag_push_webhook_data_builder;
+    private const string EVENT_HEADER            = 'X-Gitlab-Event';
+    private const string PROJECT_KEY             = 'project';
+    private const string PROJECT_ID_KEY          = 'id';
+    private const string PROJECT_URL_KEY         = 'web_url';
+    private const string PROJECT_NAME_KEY        = 'path_with_namespace';
+    private const string PROJECT_DESCRIPTION_KEY = 'description';
+    public const string PUSH_EVENT               = 'Push Hook';
+    public const string MERGE_REQUEST_EVENT      = 'Merge Request Hook';
+    public const string TAG_PUSH_EVENT           = 'Tag Push Hook';
 
     public function __construct(
-        PostPushWebhookDataBuilder $post_push_webhook_data_builder,
-        PostMergeRequestWebhookDataBuilder $post_merge_request_webhook_data_builder,
-        TagPushWebhookDataBuilder $tag_push_webhook_data_builder,
-        LoggerInterface $logger,
+        private PostPushWebhookDataBuilder $post_push_webhook_data_builder,
+        private PostMergeRequestWebhookDataBuilder $post_merge_request_webhook_data_builder,
+        private TagPushWebhookDataBuilder $tag_push_webhook_data_builder,
+        private LoggerInterface $logger,
     ) {
-        $this->post_push_webhook_data_builder          = $post_push_webhook_data_builder;
-        $this->post_merge_request_webhook_data_builder = $post_merge_request_webhook_data_builder;
-        $this->tag_push_webhook_data_builder           = $tag_push_webhook_data_builder;
-        $this->logger                                  = $logger;
     }
 
     /**
@@ -86,7 +67,9 @@ class WebhookDataExtractor
                 $webhook_type,
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
-                $webhook_content
+                $webhook_content[self::PROJECT_KEY][self::PROJECT_NAME_KEY],
+                $webhook_content[self::PROJECT_KEY][self::PROJECT_DESCRIPTION_KEY],
+                $webhook_content,
             );
         }
 
@@ -96,7 +79,9 @@ class WebhookDataExtractor
                 $webhook_type,
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
-                $webhook_content
+                $webhook_content,
+                $webhook_content[self::PROJECT_KEY][self::PROJECT_NAME_KEY],
+                $webhook_content[self::PROJECT_KEY][self::PROJECT_DESCRIPTION_KEY],
             );
         }
 
@@ -106,7 +91,9 @@ class WebhookDataExtractor
             $webhook_type,
             $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
             $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
-            $webhook_content
+            $webhook_content,
+            $webhook_content[self::PROJECT_KEY][self::PROJECT_NAME_KEY],
+            $webhook_content[self::PROJECT_KEY][self::PROJECT_DESCRIPTION_KEY],
         );
     }
 

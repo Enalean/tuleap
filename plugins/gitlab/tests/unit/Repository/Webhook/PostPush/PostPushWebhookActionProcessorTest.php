@@ -128,7 +128,9 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever
@@ -221,7 +223,9 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever->expects($this->once())->method('retrieveTuleapReference')
@@ -297,7 +301,9 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever->expects($this->once())->method('retrieveTuleapReference')
@@ -352,7 +358,9 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     'john-snow@example.com',
                     'John Snow'
                 ),
-            ]
+            ],
+            'my_repo',
+            '',
         );
 
         $this->tuleap_reference_retriever->expects($this->once())->method('retrieveTuleapReference')

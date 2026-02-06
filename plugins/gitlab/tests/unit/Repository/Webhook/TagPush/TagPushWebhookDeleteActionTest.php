@@ -78,6 +78,8 @@ final class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
             'refs/tags/v1.0.2',
             'before',
             '0000000000000000000000000000000000000000',
+            'my_repo',
+            '',
         );
 
         $this->cross_reference_manager

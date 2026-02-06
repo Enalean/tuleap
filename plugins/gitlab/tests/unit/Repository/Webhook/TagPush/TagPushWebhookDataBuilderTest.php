@@ -26,7 +26,7 @@ use Tuleap\Gitlab\Repository\Webhook\InvalidValueFormatException;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsAnExceptionIfRefIsNotInContent(): void
     {
@@ -42,7 +42,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Tag Push Hook',
             123456,
             'https://example.com/path/repo01',
-            $webhook_data
+            $webhook_data,
+            'my_repo',
+            '',
         );
     }
 
@@ -62,7 +64,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Tag Push Hook',
             123456,
             'https://example.com/path/repo01',
-            $webhook_data
+            $webhook_data,
+            'my_repo',
+            '',
         );
     }
 
@@ -82,7 +86,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Tag Push Hook',
             123456,
             'https://example.com/path/repo01',
-            $webhook_data
+            $webhook_data,
+            'my_repo',
+            '',
         );
     }
 
@@ -103,7 +109,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Tag Push Hook',
             123456,
             'https://example.com/path/repo01',
-            $webhook_data
+            $webhook_data,
+            'my_repo',
+            '',
         );
     }
 
@@ -124,7 +132,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Tag Push Hook',
             123456,
             'https://example.com/path/repo01',
-            $webhook_data
+            $webhook_data,
+            'my_repo',
+            '',
         );
     }
 
@@ -145,7 +155,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Tag Push Hook',
             123456,
             'https://example.com/path/repo01',
-            $webhook_data
+            $webhook_data,
+            'my_repo',
+            '',
         );
     }
 
@@ -164,7 +176,9 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Tag Push Hook',
             123456,
             'https://example.com/path/repo01',
-            $webhook_data
+            $webhook_data,
+            'my_repo',
+            'My awesome repository',
         );
 
         self::assertSame('Tag Push Hook', $tag_push_webhook_data->getEventName());
@@ -172,5 +186,7 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('https://example.com/path/repo01', $tag_push_webhook_data->getGitlabWebUrl());
         self::assertInstanceOf(TagPushWebhookData::class, $tag_push_webhook_data);
         self::assertSame('refs/tags/v1.0', $tag_push_webhook_data->getRef());
+        self::assertSame('my_repo', $tag_push_webhook_data->getGitlabProjectName());
+        self::assertSame('My awesome repository', $tag_push_webhook_data->getGitlabProjectDescription());
     }
 }

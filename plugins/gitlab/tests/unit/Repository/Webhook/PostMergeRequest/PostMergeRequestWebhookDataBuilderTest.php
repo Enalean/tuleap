@@ -49,7 +49,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->expectExceptionMessage('key object_attributes is missing');
 
         $webhook_content = [];
-        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content);
+        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content, 'my_repo', '');
     }
 
     public function testItThrowsAnExceptionIfMergeRequestIdKeyIsMissing(): void
@@ -58,7 +58,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->expectExceptionMessage('key iid in object_attributes is missing');
 
         $webhook_content = ['object_attributes' => []];
-        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content);
+        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content, 'my_repo', '');
     }
 
     public function testItThrowsAnExceptionIfMergeRequestTitleKeyIsMissing(): void
@@ -67,7 +67,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->expectExceptionMessage('key title in object_attributes is missing');
 
         $webhook_content = ['object_attributes' => ['iid' => 1]];
-        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content);
+        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content, 'my_repo', '');
     }
 
     public function testItThrowsAnExceptionIfMergeRequestDescriptionKeyIsMissing(): void
@@ -76,7 +76,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->expectExceptionMessage('key description in object_attributes is missing');
 
         $webhook_content = ['object_attributes' => ['iid' => 1, 'title' => 'My Title']];
-        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content);
+        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content, 'my_repo', '');
     }
 
     public function testItThrowsAnExceptionIfMergeRequestCreatedAtKeyIsMissing(): void
@@ -92,7 +92,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
                 'state'       => 'closed',
             ],
         ];
-        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content);
+        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content, 'my_repo', '');
     }
 
     public function testItThrowsAnExceptionIfMergeRequestAuthorIdKeyIsMissing(): void
@@ -109,7 +109,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
                 'created_at'  => '2021-01-12 13:49:35 UTC',
             ],
         ];
-        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content);
+        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content, 'my_repo', '');
     }
 
     public function testThrowsAnExceptionIfMergeRequestSourceBranchKeyIsMissing(): void
@@ -127,7 +127,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
                 'author_id'   => 10,
             ],
         ];
-        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content);
+        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content, 'my_repo', '');
     }
 
     public function testItReturnsPostMergeRequestWebhookData(): void
@@ -144,7 +144,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
             ],
         ];
 
-        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content);
+        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content, 'my_repo', '');
 
         self::assertTrue(
             $this->logger->hasDebugThatContains(
@@ -167,7 +167,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
             ],
         ];
 
-        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content);
+        $this->builder->build('Merge Request Hook', 123, 'https://example.com', $webhook_content, 'my_repo', '');
 
         self::assertTrue(
             $this->logger->hasDebugThatContains(

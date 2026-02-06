@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
+use Tuleap\Gitlab\Repository\Project\GitlabRepositoryUpdater;
 use Tuleap\Gitlab\Repository\Webhook\EventNotAllowedException;
 use Tuleap\Gitlab\Repository\Webhook\InvalidValueFormatException;
 use Tuleap\Gitlab\Repository\Webhook\MissingEventHeaderException;
@@ -45,54 +46,18 @@ use Tuleap\Request\NotFoundException;
 
 class IntegrationWebhookController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    /**
-     * @var WebhookDataExtractor
-     */
-    private $webhook_data_extractor;
-
-    /**
-     * @var ResponseFactoryInterface
-     */
-    private $response_factory;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var GitlabRepositoryIntegrationFactory
-     */
-    private $repository_integration_factory;
-
-    /**
-     * @var SecretChecker
-     */
-    private $secret_checker;
-
-    /**
-     * @var WebhookActions
-     */
-    private $webhook_actions;
-
     public function __construct(
-        WebhookDataExtractor $webhook_data_extractor,
-        GitlabRepositoryIntegrationFactory $repository_integration_factory,
-        SecretChecker $secret_checker,
-        WebhookActions $webhook_actions,
-        LoggerInterface $logger,
-        ResponseFactoryInterface $response_factory,
+        private readonly WebhookDataExtractor $webhook_data_extractor,
+        private readonly GitlabRepositoryIntegrationFactory $repository_integration_factory,
+        private readonly SecretChecker $secret_checker,
+        private readonly WebhookActions $webhook_actions,
+        private readonly LoggerInterface $logger,
+        private readonly ResponseFactoryInterface $response_factory,
+        private readonly GitlabRepositoryUpdater $gitlab_repository_updater,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-
-        $this->webhook_data_extractor         = $webhook_data_extractor;
-        $this->repository_integration_factory = $repository_integration_factory;
-        $this->secret_checker                 = $secret_checker;
-        $this->response_factory               = $response_factory;
-        $this->logger                         = $logger;
-        $this->webhook_actions                = $webhook_actions;
     }
 
     #[\Override]
@@ -121,6 +86,8 @@ class IntegrationWebhookController extends DispatchablePSR15Compatible implement
                 $webhook_data,
                 $current_time
             );
+
+            $this->gitlab_repository_updater->updateRepositoryDataIfNeeded($gitlab_repository, $webhook_data);
 
             return $this->response_factory->createResponse(200);
         } catch (

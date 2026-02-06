@@ -76,7 +76,9 @@ final class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $this->credentials_retriever
@@ -113,7 +115,9 @@ final class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10,
-            'some_feature'
+            'some_feature',
+            'my_repo',
+            '',
         );
 
         $credentials = CredentialsTestBuilder::get()->build();
