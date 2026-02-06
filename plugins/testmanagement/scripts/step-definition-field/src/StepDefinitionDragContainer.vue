@@ -58,14 +58,16 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from "vue";
 import { ref, computed } from "vue";
 import { useMutations, useState } from "vuex-composition-helpers";
 import StepDefinitionEntry from "./StepDefinitionEntry.vue";
 import type { Step } from "./Step";
 
-const { steps_no_type, is_dragging, field_id } = useState(["steps", "is_dragging", "field_id"]);
-const steps: Ref<Array<Step>> = steps_no_type;
+const { steps, is_dragging, field_id } = useState<{
+    steps: Array<Step>;
+    is_dragging: boolean;
+    field_id: number;
+}>(["steps", "is_dragging", "field_id"]);
 const { addStep, moveStep } = useMutations(["addStep", "moveStep"]);
 
 const dragged_step = ref<Step | null>(null);
