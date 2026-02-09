@@ -28,11 +28,11 @@ use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
@@ -149,12 +149,12 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         if ($this->canIncludeStepDefinitionAssets()) {
             $layout = $params['layout'];
             assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $assets = new IncludeAssets(
+            $assets = new IncludeViteAssets(
                 __DIR__ . '/../scripts/step-definition-field/frontend-assets',
                 '/assets/testmanagement/step-definition-field'
             );
-            $layout->addJavascriptAsset(new JavascriptAsset($assets, 'step-definition-field.js'));
-            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'step-definition-style'));
+            $layout->includeFooterJavascriptFile(new JavascriptViteAsset($assets, 'src/index.js')->getFileURL());
+            $layout->addCssAsset(CssViteAsset::fromFileName($assets, 'themes/FlamingParrot/style.scss'));
         }
     }
 
