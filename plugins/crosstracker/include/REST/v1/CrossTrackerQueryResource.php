@@ -99,6 +99,9 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
      * query is required. It is a json object. Example:
      * <pre>{ "widget_id": 3, "tql_query": "SELECT  @id FROM  @project = 'self' WHERE  @id >= 1" }</pre>
      *
+     * <code>widget_id</code> key is optional. If not given, the TQL query is executed in the context of a personal dashboard. Example:
+     * <pre>{ "tql_query": "SELECT @id FROM @project.name = 'my-project' WHERE @id >= 1" }</pre>
+     *
      * @url GET content
      * @access hybrid
      *
