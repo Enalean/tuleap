@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
+use Tuleap\AgileDashboard\Event\GetTaskboardUsageEvent;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPane;
@@ -36,6 +37,7 @@ use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Taskboard\Admin\ScrumBoardTypeSelectorController;
@@ -176,7 +178,7 @@ class taskboardPlugin extends Plugin
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup(
@@ -187,7 +189,7 @@ class taskboardPlugin extends Plugin
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
         $pane_info = $this->getPaneInfoForMilestone($collector->getMilestone());
@@ -240,7 +242,7 @@ class taskboardPlugin extends Plugin
         return new TaskboardUsage(new TaskboardUsageDao());
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function cardwallIsAllowedEvent(CardwallIsAllowedEvent $event): void
     {
         if (! $this->getTaskboardUsage()->isCardwallAllowed($event->getProject())) {
@@ -248,7 +250,7 @@ class taskboardPlugin extends Plugin
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function getAdditionalScrumAdminSection(GetAdditionalScrumAdminSection $event): void
     {
         $event->addAdditionalSectionController(
@@ -260,7 +262,7 @@ class taskboardPlugin extends Plugin
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         $duplicator = new TaskboardUsageDuplicator(new TaskboardUsageDao());
@@ -270,9 +272,17 @@ class taskboardPlugin extends Plugin
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void
     {
         $event->add(TaskboardPaneInfo::NAME);
+    }
+
+    #[ListeningToEventClass]
+    public function getTaskboardUsageEvent(GetTaskboardUsageEvent $event): void
+    {
+        $taskboard_usage = new TaskboardUsage(new TaskboardUsageDao());
+
+        $event->uses_taskboard = $taskboard_usage->isTaskboardAllowed($event->project);
     }
 }

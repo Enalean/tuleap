@@ -22,6 +22,7 @@ require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
+use Tuleap\AgileDashboard\Event\GetTaskboardUsageEvent;
 use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPane;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
@@ -30,6 +31,7 @@ use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
+use Tuleap\Cardwall\OnTop\Config\View\CardwallConfigAdminView;
 use Tuleap\Cardwall\REST\v1\MilestonesCardwallResource;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
@@ -58,6 +60,7 @@ use Tuleap\Tracker\Semantic\TrackerSemanticCollection;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
@@ -113,7 +116,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(PaneInfoCollector::NAME);
                 $this->addHook(Planning_MilestoneSelectorController::AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
-                $this->addHook(Planning_Controller::AGILEDASHBOARD_EVENT_PLANNING_CONFIG);
                 $this->addHook(Planning_Controller::AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
                 $this->addHook(MilestoneResource::AGILEDASHBOARD_EVENT_REST_GET_CARDWALL);
                 $this->addHook(MilestoneRepresentationBuilder::AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
@@ -621,12 +623,15 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
      *  'tracker' => The planning tracker
      *  'view'    => A string of HTML
      */
-    public function agiledashboard_event_planning_config($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventName(Planning_Controller::AGILEDASHBOARD_EVENT_PLANNING_CONFIG)]
+    public function agiledashboardEventPlanningConfig(array &$params): void
     {
         $tracker = $params['tracker'];
-        $config  = $this->getConfigFactory()->getOnTopConfig($tracker);
+        assert($tracker instanceof Tracker);
+        $config = $this->getConfigFactory()->getOnTopConfig($tracker);
 
-        $admin_view     = new Cardwall_OnTop_Config_View_Admin();
+        $event          = EventManager::instance()->dispatch(new GetTaskboardUsageEvent($tracker->getProject()));
+        $admin_view     = new CardwallConfigAdminView($event->uses_taskboard);
         $params['view'] = $admin_view->displayAdminOnTop($config);
     }
 
