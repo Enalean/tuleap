@@ -24,8 +24,8 @@ use CSRFSynchronizerToken;
 use Feedback;
 use Project;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
@@ -80,11 +80,11 @@ class ExplorerController
         $is_admin        = $this->permissions_manager->isAdmin($project, $request->getCurrentUser());
 
         $GLOBALS['HTML']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
-        $include_assets = new IncludeAssets(
+        $include_assets = new IncludeViteAssets(
             __DIR__ . '/../../../scripts/main/frontend-assets',
             '/assets/svn/main'
         );
-        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($include_assets, 'homepage.js'));
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'src/homepage.ts'));
 
         $service->renderInPage(
             $request,
