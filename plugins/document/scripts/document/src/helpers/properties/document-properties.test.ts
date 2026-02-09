@@ -102,7 +102,7 @@ describe("document-properties", () => {
             getItem = vi.spyOn(rest_querier, "getItem");
         });
 
-        it("should update folder properties", async () => {
+        it("should update folder properties and reload its parent so store is always accurate", async () => {
             vi.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
                 Promise.resolve({} as unknown as Response),
             );
@@ -118,7 +118,9 @@ describe("document-properties", () => {
                 .withListValue(list_values)
                 .build();
             const properties: Array<Property> = [folder_properties];
+            const current_folder = new FolderBuilder(456).withParentId(0).build();
             const item_to_update = new FolderBuilder(123)
+                .withParentId(current_folder.id)
                 .withTitle("My new empty title")
                 .withDescription("My empty description")
                 .withOwner(new UserBuilder(102).build())
@@ -128,8 +130,6 @@ describe("document-properties", () => {
                     recursion: "all_item",
                 })
                 .build();
-
-            const current_folder = new FolderBuilder(456).build();
 
             getItem.mockReturnValue(Promise.resolve(item_to_update));
 
@@ -145,21 +145,12 @@ describe("document-properties", () => {
             );
 
             expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                item_to_update,
-                { root: true },
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                item_to_update,
-                { root: true },
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                item_to_update,
-                { root: true },
-            );
+            expect(context.commit).toHaveBeenCalledWith("replaceCurrentFolder", item_to_update, {
+                root: true,
+            });
+            expect(context.dispatch).toHaveBeenCalledWith("loadFolder", item_to_update.parent_id, {
+                root: true,
+            });
         });
     });
 
@@ -623,7 +614,7 @@ describe("document-properties", () => {
             );
         });
 
-        it("should update file properties", async () => {
+        it("should update file properties and reload root folder when parent is at top of hierarchy", async () => {
             vi.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
                 Promise.resolve({} as unknown as Response),
             );
@@ -662,6 +653,7 @@ describe("document-properties", () => {
 
             const current_folder = {
                 id: 123,
+                parent_id: 0,
             } as Folder;
 
             getItem.mockReturnValue(Promise.resolve(item_to_update));
@@ -678,7 +670,7 @@ describe("document-properties", () => {
             expect(context.commit).toHaveBeenCalledWith("replaceCurrentFolder", item_to_update, {
                 root: true,
             });
-            expect(context.dispatch).toHaveBeenCalledWith("loadFolder", current_folder.id, {
+            expect(context.dispatch).toHaveBeenCalledWith("loadFolder", 123, {
                 root: true,
             });
         });
