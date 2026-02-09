@@ -85,8 +85,9 @@ final class b202601081044_unique_index_openlist_value extends \Tuleap\ForgeUpgra
                     $all_duplicate_ids[] = $id;
                     $changesets          = $this->api->dbh->query(sprintf('SELECT changeset_value_id FROM tracker_changeset_value_openlist WHERE openvalue_id = %d', $id));
 
+                    $this->log->info('Retrieved ' . $changesets->rowCount() . " changesets for label #$id '$label' in field #$field_id");
                     foreach ($changesets as $row) {
-                        $values[] = [$row['changeset_value_id'], $field_id, $id, $this->api->dbh->quote($label), $is_hidden];
+                        $values[] = [$row['changeset_value_id'], $field_id, $id, $this->api->dbh->quote((string) $label), $is_hidden];
                     }
                 }
             }
