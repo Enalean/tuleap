@@ -81,6 +81,9 @@ msgstr ""
 msgid "Enable cardwall on top of this planning"
 msgstr ""
 
+msgid "Enable taskboard on top of this planning"
+msgstr ""
+
 msgid "Expand cards"
 msgstr ""
 

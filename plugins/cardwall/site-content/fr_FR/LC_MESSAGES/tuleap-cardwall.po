@@ -90,6 +90,9 @@ msgstr "Mur virtuel de notes repositionnables pour scrum, kanban, ..."
 msgid "Enable cardwall on top of this planning"
 msgstr "Activer un cardwall au dessus du planning"
 
+msgid "Enable taskboard on top of this planning"
+msgstr "Activer un tableau de tâches au dessus du planning"
+
 msgid "Expand cards"
 msgstr "Dépiler les cartes"
 

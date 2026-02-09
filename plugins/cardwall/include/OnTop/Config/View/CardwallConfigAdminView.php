@@ -18,12 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Cardwall\OnTop\Config\View;
+
+use Cardwall_OnTop_Config;
+use Cardwall_OnTop_Config_View_ColumnDefinition;
 
 /**
  * Display the admin of the Cardwall
  */
-final readonly class Cardwall_OnTop_Config_View_Admin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+final readonly class CardwallConfigAdminView
 {
+    public function __construct(
+        private bool $uses_taskboard,
+    ) {
+    }
+
     public function displayAdminOnTop(Cardwall_OnTop_Config $config): string
     {
         return $this->generateAdminForm($config);
@@ -38,7 +49,11 @@ final readonly class Cardwall_OnTop_Config_View_Admin // phpcs:ignore PSR1.Class
         $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
         $html .= '<label class="tlp-label tlp-checkbox">';
         $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" ' . $checked . '/> ';
-        $html .= dgettext('tuleap-cardwall', 'Enable cardwall on top of this planning');
+        if ($this->uses_taskboard) {
+            $html .= dgettext('tuleap-cardwall', 'Enable taskboard on top of this planning');
+        } else {
+            $html .= dgettext('tuleap-cardwall', 'Enable cardwall on top of this planning');
+        }
         $html .= '</label>';
         $html .= '</div>';
         $html .= '<input type="hidden" name="update_cardwall" value="1" />';
