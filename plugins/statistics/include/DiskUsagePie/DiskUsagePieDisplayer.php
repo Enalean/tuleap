@@ -25,34 +25,18 @@ use ProjectQuotaManager;
 use Statistics_DiskUsageManager;
 use Statistics_DiskUsageOutput;
 use TemplateRendererFactory;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 
-class DiskUsagePieDisplayer
+final readonly class DiskUsagePieDisplayer
 {
-    /**
-     * @var Statistics_DiskUsageManager
-     */
-    private $disk_manager;
-    /**
-     * @var ProjectQuotaManager
-     */
-    private $quota_manager;
-    /**
-     * @var Statistics_DiskUsageOutput
-     */
-    private $disk_usage_output;
-
     public function __construct(
-        Statistics_DiskUsageManager $disk_manager,
-        ProjectQuotaManager $quota_manager,
-        Statistics_DiskUsageOutput $disk_usage_output,
+        private Statistics_DiskUsageManager $disk_manager,
+        private ProjectQuotaManager $quota_manager,
+        private Statistics_DiskUsageOutput $disk_usage_output,
     ) {
-        $this->disk_manager      = $disk_manager;
-        $this->quota_manager     = $quota_manager;
-        $this->disk_usage_output = $disk_usage_output;
     }
 
-    public function displayDiskUsagePie(Project $project)
+    public function displayDiskUsagePie(Project $project): void
     {
         $project_id      = $project->getID();
         $quota           = \ForgeConfig::getInt(ProjectQuotaManager::CONFIG_ALLOWED_QUOTA);
@@ -83,13 +67,13 @@ class DiskUsagePieDisplayer
         );
         $renderer  = TemplateRendererFactory::build()->getRenderer(STATISTICS_TEMPLATE_DIR);
 
-        $include_assets = new IncludeAssets(
+        $include_assets = new IncludeViteAssets(
             __DIR__ . '/../../frontend-assets',
             '/assets/statistics'
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $include_assets->getFileURL('disk-usage-pie.js')
+            $include_assets->getFileURL('scripts/disk-usage-pie/src/disk-usage-pie-chart.js')
         );
 
         $renderer->renderToPage(
