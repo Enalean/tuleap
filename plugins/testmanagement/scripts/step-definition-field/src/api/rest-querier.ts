@@ -18,12 +18,20 @@
  *
  */
 
-let project_id;
+import { post } from "@tuleap/tlp-fetch";
+import { getProjectId } from "../helpers/shared-properties";
 
-export function setProjectId(id_project) {
-    project_id = id_project;
-}
-
-export function getProjectId() {
-    return project_id;
+export function postInterpretCommonMark(content: string): Promise<Response> {
+    const form_data = new FormData();
+    form_data.set("content", content);
+    return post(encodeURI(`/project/${getProjectId()}/interpret-commonmark`), {
+        body: form_data,
+    }).then(
+        (response) => response.text(),
+        (error) =>
+            error.response.text().then((error_text: string) => {
+                //Re-throw the error to trigger the next .catch()
+                throw new Error(error_text);
+            }),
+    );
 }

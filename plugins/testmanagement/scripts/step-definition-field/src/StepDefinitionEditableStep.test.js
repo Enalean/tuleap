@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
 import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
-import * as tuleap_api from "./api/tuleap-api.js";
+import * as tuleap_api from "./api/rest-querier.ts";
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 
 jest.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
