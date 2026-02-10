@@ -158,6 +158,12 @@ export interface FloatFieldStructure extends NumericFieldStructure {
     };
 }
 
+export interface ComputedFieldStructure extends NumericFieldStructure {
+    readonly type: ComputedFieldIdentifier;
+    readonly specific_properties: {
+        default_value: number;
+    };
+}
 export interface UserFieldStructure extends BaseFieldStructure {
     readonly type: SubmittedByFieldIdentifier | LastUpdateByFieldIdentifier;
 }

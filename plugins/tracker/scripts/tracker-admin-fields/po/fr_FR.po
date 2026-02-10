@@ -30,6 +30,9 @@ msgstr "Id artifact"
 msgid "Artifact link"
 msgstr "Liens entre artifacts"
 
+msgid "Auto-compute"
+msgstr "Calcul automatique"
+
 msgid "Checkbox"
 msgstr "Case à cocher"
 

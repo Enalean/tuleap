@@ -132,6 +132,12 @@
         >
             <field-priority v-bind:field="element.field" />
         </draggable-wrapper>
+        <draggable-wrapper
+            v-bind:field_id="element.field.field_id"
+            v-else-if="isComputedField(element.field)"
+        >
+            <field-computed v-bind:field="element.field" />
+        </draggable-wrapper>
         <draggable-wrapper v-bind:field_id="element.field.field_id" v-else>
             <base-field v-bind:field="element.field" />
         </draggable-wrapper>
@@ -163,6 +169,7 @@ import {
     CROSS_REFERENCE_FIELD,
     FILE_FIELD,
     PRIORITY_FIELD,
+    COMPUTED_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     IntFieldStructure,
@@ -177,6 +184,7 @@ import type {
     StaticRichTextStructure,
     ArtifactLinkFieldStructure,
     FileFieldStructure,
+    ComputedFieldStructure,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import { isColumnWrapper } from "../helpers/is-column-wrapper";
 import { isFieldset } from "../helpers/is-fieldset";
@@ -202,6 +210,7 @@ import FieldCrossReference from "./FormElements/FieldCrossReference.vue";
 import FieldFile from "./FormElements/FieldFile.vue";
 import DraggableWrapper from "./DraggableWrapper.vue";
 import FieldPriority from "./FormElements/FieldPriority.vue";
+import FieldComputed from "./FormElements/FieldComputed.vue";
 
 defineProps<{
     elements: ElementWithChildren["children"];
@@ -277,5 +286,9 @@ function isAFileField(field: StructureFields): field is FileFieldStructure {
 
 function isAPriorityField(field: StructureFields): boolean {
     return field.type === PRIORITY_FIELD;
+}
+
+function isComputedField(field: StructureFields): field is ComputedFieldStructure {
+    return field.type === COMPUTED_FIELD;
 }
 </script>
