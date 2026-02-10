@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\AuthorizationServer;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -29,26 +31,20 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /** @var AuthorizationCodeResponseFactory */
-    private $authorization_code_response_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeCreator
-     */
-    private $authorization_code_creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\URLRedirect
-     */
-    private $url_redirect;
+    private AuthorizationCodeResponseFactory $authorization_code_response_factory;
+    private OAuth2AuthorizationCodeCreator&MockObject $authorization_code_creator;
+    private \URLRedirect&Stub $url_redirect;
 
     #[\Override]
     protected function setUp(): void
     {
         $this->authorization_code_creator          = $this->createMock(OAuth2AuthorizationCodeCreator::class);
-        $this->url_redirect                        = $this->createMock(\URLRedirect::class);
+        $this->url_redirect                        = $this->createStub(\URLRedirect::class);
         $this->authorization_code_response_factory = new AuthorizationCodeResponseFactory(
             HTTPFactoryBuilder::responseFactory(),
             $this->authorization_code_creator,
@@ -65,9 +61,12 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
             new ConcealedString($auth_code)
         );
 
+        /** @var non-empty-array<AuthenticationScope<OAuth2ScopeIdentifier>> $scopes */
+        $scopes = [$this->createStub(AuthenticationScope::class)];
+
         $response = $this->authorization_code_response_factory->createSuccessfulResponse(
             $this->buildOAuth2App(),
-            [$this->createMock(AuthenticationScope::class)],
+            $scopes,
             UserTestBuilder::aUser()->withId(102)->build(),
             'https://example.com',
             null,
@@ -87,9 +86,12 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
             new ConcealedString($auth_code)
         );
 
+        /** @var non-empty-array<AuthenticationScope<OAuth2ScopeIdentifier>> $scopes */
+        $scopes = [$this->createStub(AuthenticationScope::class)];
+
         $response = $this->authorization_code_response_factory->createSuccessfulResponse(
             $this->buildOAuth2App(),
-            [$this->createMock(AuthenticationScope::class)],
+            $scopes,
             UserTestBuilder::aUser()->withId(102)->build(),
             'https://example.com',
             '6k9Sfw',
@@ -105,6 +107,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testCreateErrorResponseRedirectsWithErrorCode(): void
     {
+        $this->authorization_code_creator->expects($this->never())->method('createAuthorizationCodeIdentifier');
         $response = $this->authorization_code_response_factory->createErrorResponse(
             AuthorizationEndpointController::ERROR_CODE_INVALID_REQUEST,
             'https://example.com',
@@ -118,6 +121,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testCreateErrorResponseRedirectsWithStateWhenNotNull(): void
     {
+        $this->authorization_code_creator->expects($this->never())->method('createAuthorizationCodeIdentifier');
         $response = $this->authorization_code_response_factory->createErrorResponse(
             AuthorizationEndpointController::ERROR_CODE_INVALID_REQUEST,
             'https://example.com',
@@ -132,7 +136,8 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testCreateRedirectToLoginResponse(): void
     {
-        $this->url_redirect->expects($this->once())->method('buildReturnToLogin')
+        $this->authorization_code_creator->expects($this->never())->method('createAuthorizationCodeIdentifier');
+        $this->url_redirect->method('buildReturnToLogin')
             ->with(['REQUEST_URI' => '/oauth2/authorize?client_id=1'])->willReturn('/login');
         $request  = new NullServerRequest();
         $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));
@@ -143,7 +148,8 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testCreateRedirectToLoginResponseAndLoginValueFromPromptToAvoidAnInfiniteRedirectionLoop(): void
     {
-        $this->url_redirect->expects($this->once())->method('buildReturnToLogin')
+        $this->authorization_code_creator->expects($this->never())->method('createAuthorizationCodeIdentifier');
+        $this->url_redirect->method('buildReturnToLogin')
             ->with(['REQUEST_URI' => '/oauth2/authorize?client_id=1&prompt=consent'])->willReturn('/login');
         $request  = new NullServerRequest();
         $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));

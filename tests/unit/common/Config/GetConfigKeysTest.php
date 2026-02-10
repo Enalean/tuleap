@@ -29,7 +29,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\Override]
     protected function setUp(): void
     {
-        \PluginManager::setInstance($this->createMock(\PluginManager::class));
+        \PluginManager::setInstance($this->createStub(\PluginManager::class));
     }
 
     #[\Override]

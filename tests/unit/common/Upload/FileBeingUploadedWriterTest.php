@@ -37,7 +37,7 @@ final class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $tmp_dir);
 
-        $path_allocator = $this->createMock(PathAllocator::class);
+        $path_allocator = $this->createStub(PathAllocator::class);
         $path_allocator
             ->method('getPathForItemBeingUploaded')
             ->willReturn("$tmp_dir/12");
@@ -73,7 +73,7 @@ final class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $tmp_dir);
 
-        $path_allocator = $this->createMock(PathAllocator::class);
+        $path_allocator = $this->createStub(PathAllocator::class);
         $path_allocator
             ->method('getPathForItemBeingUploaded')
             ->willReturn("$tmp_dir/12");
@@ -102,11 +102,11 @@ final class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testInputThatIsNotAResourceIsRejected(): void
     {
-        $writer = new FileBeingUploadedWriter($this->createMock(PathAllocator::class), $this->createMock(DBConnection::class));
+        $writer = new FileBeingUploadedWriter($this->createStub(PathAllocator::class), $this->createStub(DBConnection::class));
 
         $this->expectException(\InvalidArgumentException::class);
 
         $not_a_resource = false;
-        $writer->writeChunk($this->createMock(TusFileInformation::class), 0, $not_a_resource);
+        $writer->writeChunk($this->createStub(TusFileInformation::class), 0, $not_a_resource);
     }
 }

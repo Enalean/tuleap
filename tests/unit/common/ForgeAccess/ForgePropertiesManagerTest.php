@@ -20,6 +20,8 @@
 
 namespace Tuleap\ForgeAccess;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Config\ConfigDao;
 use Event;
 use EventManager;
@@ -32,39 +34,21 @@ use Tuleap\FRS\FRSPermissionCreator;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForgePropertiesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var ForgeAccess_ForgePropertiesManager
-     */
-    private $forge_properties_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ConfigDao
-     */
-    private $config_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&EventManager
-     */
-    private $event_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&FRSPermissionCreator
-     */
-    private $frs_permissions_manager;
+    private ForgeAccess_ForgePropertiesManager $forge_properties_manager;
+    private ProjectManager&MockObject $project_manager;
+    private ConfigDao&Stub $config_dao;
+    private PermissionsManager&Stub $permissions_manager;
+    private EventManager&Stub $event_manager;
+    private FRSPermissionCreator&Stub $frs_permissions_manager;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->config_dao              = $this->createMock(ConfigDao::class);
+        $this->config_dao              = $this->createStub(ConfigDao::class);
         $this->project_manager         = $this->createMock(ProjectManager::class);
-        $this->permissions_manager     = $this->createMock(PermissionsManager::class);
-        $this->event_manager           = $this->createMock(EventManager::class);
-        $this->frs_permissions_manager = $this->createMock(FRSPermissionCreator::class);
+        $this->permissions_manager     = $this->createStub(PermissionsManager::class);
+        $this->event_manager           = $this->createStub(EventManager::class);
+        $this->frs_permissions_manager = $this->createStub(FRSPermissionCreator::class);
 
         $this->forge_properties_manager = new ForgeAccess_ForgePropertiesManager(
             $this->config_dao,
@@ -77,6 +61,8 @@ final class ForgePropertiesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUnknownAccessValueIsRejected(): void
     {
+        $this->project_manager->expects($this->never())->method('disableAllowRestrictedForAll');
+
         $this->expectException(UnknownForgeAccessValueException::class);
 
         $this->forge_properties_manager->updateAccess('not_valid_access_value', 'anonymous');

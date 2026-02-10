@@ -64,7 +64,7 @@ final class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testALockCanOnlyBeAcquiredOnce(): void
     {
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
-        $path_allocator = $this->createMock(PathAllocator::class);
+        $path_allocator = $this->createStub(PathAllocator::class);
         $path_allocator
             ->method('getPathForItemBeingUploaded')
             ->willReturn("$this->tmp_dir/12");
@@ -72,7 +72,7 @@ final class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $identifier_factory = new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory());
 
-        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information = $this->createStub(TusFileInformation::class);
         $file_information->method('getID')->willReturn($identifier_factory->buildIdentifier());
 
         self::assertTrue($locker->lock($file_information));
@@ -82,7 +82,7 @@ final class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testALockCanBeAcquiredAgainAfterHavingBeenReleased(): void
     {
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
-        $path_allocator = $this->createMock(PathAllocator::class);
+        $path_allocator = $this->createStub(PathAllocator::class);
         $path_allocator
             ->method('getPathForItemBeingUploaded')
             ->willReturn("$this->tmp_dir/12");
@@ -90,7 +90,7 @@ final class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $identifier_factory = new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory());
 
-        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information = $this->createStub(TusFileInformation::class);
         $file_information->method('getID')->willReturn($identifier_factory->buildIdentifier());
 
         self::assertTrue($locker->lock($file_information));

@@ -35,7 +35,7 @@ use Tuleap\Widget\IBuildInstanceOfWidgets;
 use Tuleap\Widget\ProjectMembers\ProjectMembers;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class DashboardXMLExporterTest extends TestCase
+final class DashboardXMLExporterTest extends TestCase
 {
     public function testItExportsNothingIfNoDashboard(): void
     {
@@ -50,8 +50,8 @@ class DashboardXMLExporterTest extends TestCase
                     return [];
                 }
             },
-            $this->createMock(IRetrieveDashboardWidgets::class),
-            $this->createMock(IBuildInstanceOfWidgets::class),
+            $this->createStub(IRetrieveDashboardWidgets::class),
+            $this->createStub(IBuildInstanceOfWidgets::class),
             new NullLogger()
         );
 
@@ -88,7 +88,7 @@ class DashboardXMLExporterTest extends TestCase
                     return [];
                 }
             },
-            $this->createMock(IBuildInstanceOfWidgets::class),
+            $this->createStub(IBuildInstanceOfWidgets::class),
             new NullLogger()
         );
 

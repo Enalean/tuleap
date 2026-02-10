@@ -22,37 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Dashboard\Project;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Dashboard\User\UserDashboard;
 use Widget;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var MockObject&DisabledProjectWidgetsDao
-     */
-    private $dao;
+    private DisabledProjectWidgetsDao&Stub $dao;
 
-    /**
-     * @var DisabledProjectWidgetsChecker
-     */
-    private $checker;
+    private DisabledProjectWidgetsChecker $checker;
 
-    /**
-     * @var MockObject&Widget
-     */
-    private $widget;
+    private Widget&Stub $widget;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dao     = $this->createMock(DisabledProjectWidgetsDao::class);
+        $this->dao     = $this->createStub(DisabledProjectWidgetsDao::class);
         $this->checker = new DisabledProjectWidgetsChecker($this->dao);
 
-        $this->widget = $this->createMock(Widget::class);
+        $this->widget = $this->createStub(Widget::class);
         $this->widget->method('getId')->willReturn('widget01');
     }
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Grant;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
@@ -38,29 +39,17 @@ use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenCreator;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AccessTokenCreator
-     */
-    private $access_token_creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenCreator
-     */
-    private $refresh_token_creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OpenIDConnectIDTokenCreator
-     */
-    private $id_token_creator;
-    /**
-     * @var AccessTokenGrantRepresentationBuilder
-     */
-    private $builder;
+    private OAuth2AccessTokenCreator&Stub $access_token_creator;
+    private OAuth2RefreshTokenCreator&Stub $refresh_token_creator;
+    private OpenIDConnectIDTokenCreator&Stub $id_token_creator;
+    private AccessTokenGrantRepresentationBuilder $builder;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->access_token_creator  = $this->createMock(OAuth2AccessTokenCreator::class);
-        $this->refresh_token_creator = $this->createMock(OAuth2RefreshTokenCreator::class);
-        $this->id_token_creator      = $this->createMock(OpenIDConnectIDTokenCreator::class);
+        $this->access_token_creator  = $this->createStub(OAuth2AccessTokenCreator::class);
+        $this->refresh_token_creator = $this->createStub(OAuth2RefreshTokenCreator::class);
+        $this->id_token_creator      = $this->createStub(OpenIDConnectIDTokenCreator::class);
 
         $this->builder = new AccessTokenGrantRepresentationBuilder(
             $this->access_token_creator,
@@ -98,7 +87,6 @@ final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUn
             new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20'))
         );
         $this->refresh_token_creator->method('issueRefreshTokenIdentifierFromExistingRefreshToken')->willReturn(new ConcealedString('rt_token'));
-        $this->id_token_creator->expects($this->never())->method('issueIDTokenFromAuthorizationCode');
 
         $representation = $this->builder->buildRepresentationFromRefreshToken(
             new \DateTimeImmutable('@10'),

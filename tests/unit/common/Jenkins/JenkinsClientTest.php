@@ -26,7 +26,7 @@ use Exception;
 use Http\Mock\Client;
 use Jenkins_Client;
 use Jenkins_ClientUnableToLaunchBuildException;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -34,15 +34,12 @@ use Tuleap\Http\HTTPFactoryBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var JenkinsCSRFCrumbRetriever&MockObject
-     */
-    private $jenkins_csrf_crumb_retriever;
+    private JenkinsCSRFCrumbRetriever&Stub $jenkins_csrf_crumb_retriever;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->jenkins_csrf_crumb_retriever = $this->createMock(JenkinsCSRFCrumbRetriever::class);
+        $this->jenkins_csrf_crumb_retriever = $this->createStub(JenkinsCSRFCrumbRetriever::class);
     }
 
     public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest(): void
@@ -65,7 +62,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLaunchJobBuildThrowsAnExceptionOnNetworkFailure(): void
     {
-        $http_client = $this->createMock(ClientInterface::class);
+        $http_client = $this->createStub(ClientInterface::class);
         $http_client->method('sendRequest')->willThrowException(
             new class extends Exception implements ClientExceptionInterface {
             }

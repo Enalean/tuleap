@@ -29,6 +29,7 @@ use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Validator;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\ForgeConfigSandbox;
@@ -46,21 +47,15 @@ final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     use ForgeConfigSandbox;
 
-    private const EXPECTED_EXPIRATION_DELAY_SECONDS = 60;
+    private const int EXPECTED_EXPIRATION_DELAY_SECONDS = 60;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var OpenIDConnectIDTokenCreator
-     */
-    private $id_token_creator;
+    private \UserManager&Stub $user_manager;
+    private OpenIDConnectIDTokenCreator $id_token_creator;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->user_manager = $this->createMock(\UserManager::class);
+        $this->user_manager = $this->createStub(\UserManager::class);
 
         $this->id_token_creator = new OpenIDConnectIDTokenCreator(
             OAuth2SignInScope::fromItself(),

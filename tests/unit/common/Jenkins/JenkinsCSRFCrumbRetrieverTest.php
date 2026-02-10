@@ -27,7 +27,7 @@ use Psr\Http\Client\ClientInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class JenkinsCSRFCrumbRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class JenkinsCSRFCrumbRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[\PHPUnit\Framework\Attributes\TestWith(['https://example.com'])]
     #[\PHPUnit\Framework\Attributes\TestWith(['https://example.com/'])]
@@ -70,7 +70,7 @@ class JenkinsCSRFCrumbRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotFailOnNetworkError(): void
     {
-        $http_client = $this->createMock(ClientInterface::class);
+        $http_client = $this->createStub(ClientInterface::class);
         $http_client->method('sendRequest')->willThrowException(
             new class extends Exception implements ClientExceptionInterface {
             }

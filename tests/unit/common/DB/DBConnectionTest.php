@@ -32,7 +32,7 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $db_creator    = $this->createMock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
 
-        $db = $this->createMock(EasyDB::class);
+        $db = $this->createStub(EasyDB::class);
 
         $db_creator->expects($this->once())->method('createDB')->willReturn($db);
         self::assertSame($db, $db_connection->getDB());
@@ -53,7 +53,7 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $db_creator    = $this->createMock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
 
-        $db = $this->createMock(EasyDB::class);
+        $db = $this->createStub(EasyDB::class);
         $db_creator->expects($this->once())->method('createDB')->willReturn($db);
         $db->method('run');
 
@@ -63,11 +63,11 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNewDBIsCreatedIfTheConnectionHasBeenClosedAfterALongRunningProcess(): void
     {
-        $db_creator    = $this->createMock(DBCreator::class);
+        $db_creator    = $this->createStub(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
 
-        $db_closed = $this->createMock(EasyDB::class);
-        $db        = $this->createMock(EasyDB::class);
+        $db_closed = $this->createStub(EasyDB::class);
+        $db        = $this->createStub(EasyDB::class);
         $db_creator->method('createDB')->willReturn($db_closed, $db);
 
         $db_closed->method('run')->willReturnCallback(
@@ -84,10 +84,10 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDBCommunicationFailureNotRelatedToAClosedStateAfterALongRunningProcessAreNotHidden(): void
     {
-        $db_creator    = $this->createMock(DBCreator::class);
+        $db_creator    = $this->createStub(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
 
-        $db = $this->createMock(EasyDB::class);
+        $db = $this->createStub(EasyDB::class);
         $db->method('run')->willThrowException(new \PDOException());
         $db_creator->method('createDB')->willReturn($db);
 

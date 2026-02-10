@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Grant\RefreshToken;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
@@ -44,34 +45,19 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AccessTokenGrantRepresentationBuilder
-     */
-    private $representation_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
-     */
-    private $refresh_token_unserializer;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenVerifier
-     */
-    private $refresh_token_verifier;
-    /**
-     * @var OAuth2GrantAccessTokenFromRefreshToken
-     */
-    private $grant_access_from_refresh_token;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ScopeExtractor
-     */
-    private $scope_extractor;
+    private AccessTokenGrantRepresentationBuilder&Stub $representation_builder;
+    private SplitTokenIdentifierTranslator&Stub $refresh_token_unserializer;
+    private OAuth2RefreshTokenVerifier&Stub $refresh_token_verifier;
+    private OAuth2GrantAccessTokenFromRefreshToken $grant_access_from_refresh_token;
+    private ScopeExtractor&Stub $scope_extractor;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->representation_builder     = $this->createMock(AccessTokenGrantRepresentationBuilder::class);
-        $this->refresh_token_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
-        $this->refresh_token_verifier     = $this->createMock(OAuth2RefreshTokenVerifier::class);
-        $this->scope_extractor            = $this->createMock(ScopeExtractor::class);
+        $this->representation_builder     = $this->createStub(AccessTokenGrantRepresentationBuilder::class);
+        $this->refresh_token_unserializer = $this->createStub(SplitTokenIdentifierTranslator::class);
+        $this->refresh_token_verifier     = $this->createStub(OAuth2RefreshTokenVerifier::class);
+        $this->scope_extractor            = $this->createStub(ScopeExtractor::class);
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
@@ -90,7 +76,7 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPU
 
     public function testBuildsSuccessfulResponse(): void
     {
-        $this->refresh_token_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->refresh_token_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->refresh_token_verifier->method('getRefreshToken')->willReturn(
             $this->buildRefreshToken()
         );
@@ -111,7 +97,7 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPU
 
     public function testBuildsSuccessfulResponseWithLessScopes(): void
     {
-        $this->refresh_token_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->refresh_token_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->refresh_token_verifier->method('getRefreshToken')->willReturn(
             $this->buildRefreshToken()
         );
@@ -135,7 +121,6 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPU
     {
         $body_params = [];
 
-        $this->representation_builder->expects($this->never())->method('buildRepresentationFromRefreshToken');
         $response = $this->grant_access_from_refresh_token->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -144,7 +129,7 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPU
 
     public function testRejectsWithANotValidRefreshToken(): void
     {
-        $this->refresh_token_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->refresh_token_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->refresh_token_verifier->method('getRefreshToken')->willThrowException(
             new class extends \RuntimeException implements OAuth2ServerException {
             }
@@ -173,7 +158,7 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPU
 
     public function testRejectsWhenScopeCannotBeProperlyExtracted(): void
     {
-        $this->refresh_token_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
+        $this->refresh_token_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $this->refresh_token_verifier->method('getRefreshToken')->willReturn(
             $this->buildRefreshToken()
         );

@@ -21,6 +21,7 @@
 namespace Tuleap\Dashboard\Project;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
@@ -29,31 +30,19 @@ use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var ProjectDashboardDuplicator
-     */
-    private $duplicator;
+    private ProjectDashboardDuplicator $duplicator;
 
-    /**
-     * @var Project
-     */
-    private $template_project;
+    private Project $template_project;
 
-    /**
-     * @var Project
-     */
-    private $new_project;
+    private Project $new_project;
 
-    /**
-     * @var MockObject&DisabledProjectWidgetsChecker
-     */
-    private $checker;
+    private DisabledProjectWidgetsChecker&MockObject $checker;
     private ProjectDashboardDao&MockObject $dao;
-    private ProjectDashboardRetriever&MockObject $retriever;
+    private ProjectDashboardRetriever&Stub $retriever;
     private \Tuleap\Dashboard\Widget\DashboardWidgetDao&MockObject $widget_dao;
-    private \Tuleap\Dashboard\Widget\DashboardWidgetRetriever&MockObject $widget_retriever;
+    private \Tuleap\Dashboard\Widget\DashboardWidgetRetriever&Stub $widget_retriever;
     private \Tuleap\Widget\WidgetFactory&MockObject $widget_factory;
 
     #[\Override]
@@ -61,11 +50,11 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
         $this->dao->method('duplicateDashboard');
-        $this->retriever  = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardRetriever::class);
+        $this->retriever  = $this->createStub(\Tuleap\Dashboard\Project\ProjectDashboardRetriever::class);
         $this->widget_dao = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $this->widget_dao->method('duplicateLine');
         $this->widget_dao->method('duplicateColumn');
-        $this->widget_retriever = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetRetriever::class);
+        $this->widget_retriever = $this->createStub(\Tuleap\Dashboard\Widget\DashboardWidgetRetriever::class);
         $this->widget_factory   = $this->createMock(\Tuleap\Widget\WidgetFactory::class);
         $this->checker          = $this->createMock(DisabledProjectWidgetsChecker::class);
 
@@ -79,9 +68,9 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
         );
 
-        $this->template_project = $this->createMock(\Project::class);
+        $this->template_project = $this->createStub(\Project::class);
         $this->template_project->method('getID')->willReturn(101);
-        $this->new_project = $this->createMock(\Project::class);
+        $this->new_project = $this->createStub(\Project::class);
         $this->new_project->method('getID')->willReturn(102);
     }
 
@@ -89,6 +78,10 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dashboard_01 = new ProjectDashboard(1, 101, 'dashboard');
         $dashboard_02 = new ProjectDashboard(2, 101, 'dashboard 2');
+
+        $this->checker->expects($this->never())->method('isWidgetDisabled');
+        $this->widget_factory->expects($this->never())->method('getInstanceByWidgetName');
+        $this->widget_dao->expects($this->never())->method('duplicateWidget');
 
         $this->widget_retriever->method('getAllWidgets')->willReturn([]);
 
@@ -102,6 +95,12 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDuplicatesEachLinesForADashboard(): void
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
+
+        $this->checker->expects($this->never())->method('isWidgetDisabled');
+        $this->widget_dao->expects($this->never())->method('duplicateWidget');
+        $this->widget_factory->expects($this->never())->method('getInstanceByWidgetName');
+
+        $this->dao->expects($this->once())->method('duplicateDashboard');
 
         $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
@@ -118,6 +117,12 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDuplicatesEachColumnsForALine(): void
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
+
+        $this->checker->expects($this->never())->method('isWidgetDisabled');
+        $this->widget_factory->expects($this->never())->method('getInstanceByWidgetName');
+        $this->widget_dao->expects($this->never())->method('duplicateWidget');
+
+        $this->dao->expects($this->once())->method('duplicateDashboard');
 
         $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
@@ -140,6 +145,8 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDuplicatesEachWidgetForAColumn(): void
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
+
+        $this->dao->expects($this->once())->method('duplicateDashboard');
 
         $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
@@ -196,6 +203,8 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
+        $this->dao->expects($this->once())->method('duplicateDashboard');
+
         $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
         $widget_01 = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
@@ -251,6 +260,8 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
+        $this->dao->expects($this->once())->method('duplicateDashboard');
+
         $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
         $widget = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
@@ -264,7 +275,7 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->widget_retriever->method('getAllWidgets')->with(1, 'project')->willReturn([$line]);
 
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectimageviewer')->willReturn(null);
+        $this->widget_factory->expects($this->once())->method('getInstanceByWidgetName')->with('projectimageviewer')->willReturn(null);
 
         $this->widget_dao->expects($this->never())->method('duplicateWidget');
 

@@ -24,10 +24,11 @@ namespace Tuleap\Date;
 
 use DateTimeImmutable;
 use PFUser;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\GlobalLanguageMock;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
@@ -117,9 +118,9 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('fr_FR', $presenter->locale);
     }
 
-    private function buildUserMock(string $preference_value): PFUser&\PHPUnit\Framework\MockObject\MockObject
+    private function buildUserMock(string $preference_value): PFUser&Stub
     {
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturn($preference_value);
         $user->method('getLocale')->willReturn('fr_FR');
 
