@@ -19,7 +19,7 @@
 
 <template>
     <section>
-        <palette-container />
+        <router-view name="sidebar" />
         <div class="tlp-framed">
             <error-state v-if="has_error" />
             <h2>{{ $gettext("Fields usage") }}</h2>
@@ -29,6 +29,7 @@
             <empty-state v-if="tracker_root.children.length === 0" />
         </div>
     </section>
+    <router-view name="error" />
 </template>
 
 <script setup lang="ts">
@@ -39,7 +40,7 @@ import EmptyState from "./EmptyState.vue";
 import TrackerStructure from "./TrackerStructure.vue";
 import { mapContentStructureToFields } from "../helpers/map-content-structure-to-fields";
 import type { ElementWithChildren } from "../type";
-import PaletteContainer from "./Palette/PaletteContainer.vue";
+import { RouterView } from "vue-router";
 import ErrorState from "./ErrorState.vue";
 import { POST_FIELD_DND_CALLBACK, TRACKER_ROOT } from "../injection-symbols";
 
