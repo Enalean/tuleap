@@ -871,10 +871,8 @@
       <code><![CDATA[addChildrenPlannedArtifacts]]></code>
       <code><![CDATA[getAllMilestonesWithoutCaching]]></code>
       <code><![CDATA[getComputedFieldValue]]></code>
-      <code><![CDATA[getRegularSubMilestoneIds]]></code>
       <code><![CDATA[getRegularSubMilestones]]></code>
       <code><![CDATA[getTopSubMilestoneArtifacts]]></code>
-      <code><![CDATA[getTopSubMilestoneIds]]></code>
       <code><![CDATA[isMilestoneCurrent]]></code>
       <code><![CDATA[isMilestoneFuture]]></code>
       <code><![CDATA[makeNodeWithChildren]]></code>
@@ -1001,9 +999,6 @@
       <code><![CDATA[redirectNonAdmin]]></code>
       <code><![CDATA[updateCardwallConfig]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $root_planning->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <TooManyArguments>
       <code><![CDATA[userIsAdmin]]></code>
     </TooManyArguments>
@@ -4340,7 +4335,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$cardwall]]></code>
@@ -4362,7 +4356,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[agiledashboard_event_milestone_selector_redirect]]></code>
-      <code><![CDATA[agiledashboard_event_planning_config]]></code>
       <code><![CDATA[agiledashboard_event_planning_config_update]]></code>
       <code><![CDATA[agiledashboard_event_rest_get_cardwall]]></code>
       <code><![CDATA[agiledashboard_event_rest_get_milestone]]></code>
@@ -13182,9 +13175,6 @@
       <code><![CDATA[groupAddHistory]]></code>
       <code><![CDATA[groupAddHistory]]></code>
     </DeprecatedMethod>
-    <InvalidArgument>
-      <code><![CDATA[$p[1]]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$action]]></code>
       <code><![CDATA[$action]]></code>
@@ -13198,7 +13188,6 @@
       <code><![CDATA[$repository]]></code>
       <code><![CDATA[$repository]]></code>
       <code><![CDATA[$repository]]></code>
-      <code><![CDATA[$repository]]></code>
       <code><![CDATA[$repositoryName]]></code>
       <code><![CDATA[$repositoryName]]></code>
       <code><![CDATA[$url]]></code>
@@ -13208,7 +13197,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[_dispatchActionAndView]]></code>
-      <code><![CDATA[_informAboutPendingEvents]]></code>
       <code><![CDATA[addAdditionalPermittedActions]]></code>
       <code><![CDATA[addRedirectToDefaultSettingsAction]]></code>
       <code><![CDATA[checkSynchronizerToken]]></code>
@@ -15233,7 +15221,6 @@
     <MissingReturnType>
       <code><![CDATA[checkDisconnectOptionUsable]]></code>
       <code><![CDATA[disconnect]]></code>
-      <code><![CDATA[disconnectFromGerrit]]></code>
       <code><![CDATA[disconnectFromGerritWithOption]]></code>
       <code><![CDATA[getRepositoryServer]]></code>
       <code><![CDATA[migrate]]></code>
@@ -15742,15 +15729,12 @@
       <code><![CDATA[isProjectDeletionOnGerritOnGoing]]></code>
       <code><![CDATA[isProjectSetReadOnlyOnGerritOnGoing]]></code>
       <code><![CDATA[isRepositoryMigrationToGerritOnGoing]]></code>
-      <code><![CDATA[isRepositoryUpdateAlreadyQueued]]></code>
       <code><![CDATA[queueDumpAllSSHKeys]]></code>
       <code><![CDATA[queueEditSSHKey]]></code>
       <code><![CDATA[queueGerritReplicationKeyUpdate]]></code>
       <code><![CDATA[queueMigrateToGerrit]]></code>
       <code><![CDATA[queueRemoteProjectDeletion]]></code>
       <code><![CDATA[queueRemoteProjectReadOnly]]></code>
-      <code><![CDATA[queueRepositoryDeletion]]></code>
-      <code><![CDATA[queueRepositoryFork]]></code>
       <code><![CDATA[queueRepositoryRestore]]></code>
       <code><![CDATA[queueUserRenameUpdate]]></code>
     </MissingReturnType>
@@ -17413,7 +17397,6 @@
       <code><![CDATA[assertRepositoryNameNotAlreadyUsed]]></code>
       <code><![CDATA[createFromBundle]]></code>
       <code><![CDATA[createTemporaryWorkingDir]]></code>
-      <code><![CDATA[deleteProjectRepositories]]></code>
       <code><![CDATA[doFork]]></code>
       <code><![CDATA[doForkRepository]]></code>
       <code><![CDATA[fork]]></code>
@@ -17664,7 +17647,6 @@
       <code><![CDATA[clonePermissions]]></code>
       <code><![CDATA[disconnectFromGerrit]]></code>
       <code><![CDATA[fork]]></code>
-      <code><![CDATA[forkOnFilesystem]]></code>
       <code><![CDATA[getDriver]]></code>
       <code><![CDATA[getEventManager]]></code>
       <code><![CDATA[getPermissionsManager]]></code>
@@ -18208,26 +18190,6 @@
       <code><![CDATA[process]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_DELETE.php">
-    <MissingReturnType>
-      <code><![CDATA[injectDependencies]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_FORK..php">
-    <MissingReturnType>
-      <code><![CDATA[getLinkToRepositoryManagement]]></code>
-      <code><![CDATA[getNewRepositoryFromParameters]]></code>
-      <code><![CDATA[getNewRepositoryIdFromParameters]]></code>
-      <code><![CDATA[getOldRepositoryFromParameters]]></code>
-      <code><![CDATA[getOldRepositoryIdFromParameters]]></code>
-      <code><![CDATA[injectDependencies]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$project->getId()]]></code>
-    </PossiblyInvalidOperand>
-  </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_RESTORE.php">
     <MissingReturnType>
       <code><![CDATA[getRepositoryFromParameters]]></code>
@@ -18239,13 +18201,6 @@
       <code><![CDATA[restoreArchivedRepository]]></code>
       <code><![CDATA[updateRepoConf]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_UPDATE.php">
-    <MissingReturnType>
-      <code><![CDATA[getRepositoryFromParameters]]></code>
-      <code><![CDATA[injectDependencies]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_USER_RENAME.php">
     <MissingParamType>
@@ -18456,7 +18411,6 @@
       <code><![CDATA[getGerritServerFactory]]></code>
       <code><![CDATA[getGerritUmbrellaProjectManager]]></code>
       <code><![CDATA[getGerritUserFinder]]></code>
-      <code><![CDATA[getGitController]]></code>
       <code><![CDATA[getGitolite3Parser]]></code>
       <code><![CDATA[getHistoryValueFormatter]]></code>
       <code><![CDATA[getHooksAndCallbacks]]></code>
@@ -19178,15 +19132,6 @@
             'ugroup_id'       => 115,
         ])]]></code>
     </TooManyArguments>
-  </file>
-  <file src="plugins/git/tests/unit/GitRepositoryManagerDeleteAllRepositoriesTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
   </file>
   <file src="plugins/git/tests/unit/GitRepositoryManagerForkTest.php">
     <NullArgument>
@@ -28357,9 +28302,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/statistics/include/DiskUsagePie/DiskUsagePieDisplayer.php">
-    <MissingReturnType>
-      <code><![CDATA[displayDiskUsagePie]]></code>
-    </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getId()]]></code>
     </PossiblyInvalidArgument>
@@ -29553,7 +29495,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
@@ -29569,7 +29510,6 @@
       <code><![CDATA[after_massmail_to_project_admins]]></code>
       <code><![CDATA[aggregate_statistics]]></code>
       <code><![CDATA[burningParrotCompatiblePage]]></code>
-      <code><![CDATA[burning_parrot_get_javascript_files]]></code>
       <code><![CDATA[burning_parrot_get_stylesheets]]></code>
       <code><![CDATA[collectProjectAdminNavigationItems]]></code>
       <code><![CDATA[getConfigurationManager]]></code>
@@ -29587,9 +29527,6 @@
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
@@ -53168,15 +53105,6 @@
       <code><![CDATA[file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticTitleTest.xml')]]></code>
       <code><![CDATA[file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticTooltipTest.xml')]]></code>
     </PossiblyFalseArgument>
-  </file>
-  <file src="plugins/tracker/tests/unit/Service/SidebarPromotedTrackerRetrieverTest.php">
-    <TooManyArguments>
-      <code><![CDATA[new SidebarPromotedTrackerRetriever(
-            RetrievePromotedTrackersStub::withoutTrackers(),
-            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
-            EventDispatcherStub::withIdentityCallback(),
-        )]]></code>
-    </TooManyArguments>
   </file>
   <file src="plugins/tracker/tests/unit/Test/Builders/Fields/FieldBuilderWithSpecificProperties.php">
     <DeprecatedMethod>
@@ -79238,8 +79166,6 @@
   </file>
   <file src="tests/unit/tuleap-cfg/Command/SiteDeploy/SiteDeployFPMTest.php">
     <PossiblyFalseArgument>
-      <code><![CDATA[$tuleap_conf]]></code>
-      <code><![CDATA[$tuleap_conf]]></code>
       <code><![CDATA[$tuleap_conf]]></code>
       <code><![CDATA[$tuleap_conf]]></code>
       <code><![CDATA[$tuleap_conf]]></code>
