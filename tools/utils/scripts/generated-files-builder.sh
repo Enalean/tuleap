@@ -5,7 +5,7 @@ set -ex
 set_community_dev_version() {
     if [ ! -f ENTERPRISE_BUILD ]; then
         tools/utils/version_numbers/update-community-dev-version.sh
-    elif [ grep -Fxq "dev" ENTERPRISE_BUILD ]; then
+    elif grep -Fxq "dev" ENTERPRISE_BUILD; then
         tools/utils/version_numbers/update-community-dev-version.sh
     fi
 }
