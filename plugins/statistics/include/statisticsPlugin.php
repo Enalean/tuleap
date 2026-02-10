@@ -67,7 +67,6 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook('get_statistics_aggregation');
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(NavigationPresenter::NAME);
 
         $this->addHook(ProjectQuotaRequester::NAME);
@@ -279,16 +278,21 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
 
     public function burning_parrot_get_stylesheets(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/project_stat.php') === 0) {
+        if (str_starts_with((string) $_SERVER['REQUEST_URI'], $this->getPluginPath() . '/project_stat.php')) {
             $params['stylesheets'][] = $this->getAssets()->getFileURL('themes/BurningParrot/css/disk-usage.scss');
-        } elseif (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        } elseif (str_starts_with((string) $_SERVER['REQUEST_URI'], $this->getPluginPath())) {
             $params['stylesheets'][] = $this->getAssets()->getFileURL('themes/BurningParrot/css/statistics.scss');
         }
     }
 
-    public function burning_parrot_get_javascript_files(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventName(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES)]
+    public function burningParrotGetJavascriptFiles(array &$params): void
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if (str_starts_with((string) $_SERVER['REQUEST_URI'], $this->getPluginPath() . '/project_stat.php')) {
+            return;
+        }
+
+        if (str_starts_with((string) $_SERVER['REQUEST_URI'], $this->getPluginPath())) {
             $ckeditor_assets              = new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/');
             $params['javascript_files'][] = $ckeditor_assets->getFileURL('ckeditor.js');
             $params['javascript_files'][] = $this->getAssets()->getFileURL('scripts/admin.js');
