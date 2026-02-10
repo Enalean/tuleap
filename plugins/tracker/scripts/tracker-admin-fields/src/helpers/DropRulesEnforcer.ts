@@ -19,11 +19,12 @@
 
 import { type Ref } from "vue";
 import { getAttributeOrThrow } from "@tuleap/dom";
-import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
 import type { PossibleDropCallbackParameter } from "@tuleap/drag-and-drop";
 import type { Child, ElementWithChildren } from "../type";
 import { ROOT_CONTAINER_ID } from "../type";
 import { findElementInStructure } from "./find-element-in-structure";
+import { isColumn } from "./is-column";
+import { isFieldset } from "./is-fieldset";
 
 export type DropRulesEnforcer = {
     isDropPossible(context: PossibleDropCallbackParameter): boolean;
@@ -37,40 +38,36 @@ export const getDropRulesEnforcer = (tracker_root: Ref<ElementWithChildren>): Dr
         );
     };
 
-    const checkFieldsetsCanOnlyBeMovedIntoRoot = (
+    const getDropzoneElementFromContext = (
         context: PossibleDropCallbackParameter,
-    ): boolean => {
-        const dragged_element = getDraggedElementFromContext(context);
+    ): Child | null => {
+        const dropzone_id = getAttributeOrThrow(context.target_dropzone, "data-container-id");
+        if (dropzone_id === ROOT_CONTAINER_ID) {
+            return null;
+        }
 
-        return (
-            dragged_element !== null &&
-            "field" in dragged_element &&
-            dragged_element.field.type !== CONTAINER_FIELDSET
-        );
-    };
-
-    const checkOnlyFieldsetsCanBeMovedToTrackerRoot = (
-        context: PossibleDropCallbackParameter,
-    ): boolean => {
-        const dragged_element = getDraggedElementFromContext(context);
-
-        return (
-            dragged_element !== null &&
-            "field" in dragged_element &&
-            dragged_element.field.type === CONTAINER_FIELDSET
+        return findElementInStructure(
+            Number.parseInt(dropzone_id, 10),
+            tracker_root.value.children,
         );
     };
 
     return {
         isDropPossible(context): boolean {
-            if (
-                getAttributeOrThrow(context.target_dropzone, "data-container-id") !==
-                ROOT_CONTAINER_ID
-            ) {
-                return checkFieldsetsCanOnlyBeMovedIntoRoot(context);
+            const dragged_element = getDraggedElementFromContext(context);
+            const dropzone_element = getDropzoneElementFromContext(context);
+            const is_dragged_element_a_fieldset =
+                dragged_element !== null && isFieldset(dragged_element);
+
+            if (dropzone_element === null) {
+                return is_dragged_element_a_fieldset;
             }
 
-            return checkOnlyFieldsetsCanBeMovedToTrackerRoot(context);
+            if (is_dragged_element_a_fieldset) {
+                return false;
+            }
+
+            return isColumn(dropzone_element);
         },
     };
 };

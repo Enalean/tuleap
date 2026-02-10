@@ -139,9 +139,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ElementWithChildren, Fieldset } from "../type";
+import type { ElementWithChildren } from "../type";
 import {
-    CONTAINER_FIELDSET,
     DATE_FIELD,
     FLOAT_FIELD,
     INT_FIELD,
@@ -180,6 +179,7 @@ import type {
     FileFieldStructure,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import { isColumnWrapper } from "../helpers/is-column-wrapper";
+import { isFieldset } from "../helpers/is-fieldset";
 import ContainerFieldset from "./FormElements/ContainerFieldset.vue";
 import ContainerColumnWrapper from "./FormElements/ContainerColumnWrapper.vue";
 import BaseField from "./FormElements/BaseField.vue";
@@ -207,8 +207,6 @@ defineProps<{
     elements: ElementWithChildren["children"];
 }>();
 
-type TrackerElement = ElementWithChildren | ElementWithChildren["children"][0];
-
 function isDateField(field: StructureFields): field is EditableDateFieldStructure {
     return field.type === DATE_FIELD;
 }
@@ -231,10 +229,6 @@ function isStringField(field: StructureFields): field is StringFieldStructure {
 
 function isSelectField(field: StructureFields): field is ListFieldStructure {
     return field.type === SELECTBOX_FIELD || field.type === MULTI_SELECTBOX_FIELD;
-}
-
-function isFieldset(element: TrackerElement): element is Fieldset {
-    return "field" in element && element.field.type === CONTAINER_FIELDSET;
 }
 
 function isLineSeparator(field: StructureFields): field is SeparatorStructure {
