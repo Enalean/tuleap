@@ -58,6 +58,22 @@ class TrackerFieldsTest extends TrackerBase
         self::assertSame('Lorem ipsum', $tracker_field_json['label']);
     }
 
+    public function testPATCHRemoveAField(): void
+    {
+        $field_id = $this->getUserSelectboxFieldId();
+        $body     = json_encode([
+            'use_it' => false,
+        ]);
+
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream((string) $body)));
+
+        self::assertSame(200, $response->getStatusCode());
+
+        $tracker_field_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertFalse($tracker_field_json['is_used']);
+    }
+
     public function testPATCHLabelThrowsAnExceptionIfUserIsNotAdmin(): void
     {
         $field_id = $this->getUserSelectboxFieldId();

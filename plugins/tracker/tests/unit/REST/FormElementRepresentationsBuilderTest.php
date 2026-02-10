@@ -57,6 +57,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
             'bind_list' => [],
         ]);
         $field1->method('getFlattenPropertiesValues')->willReturn([]);
+        $field1->method('isUsed')->willReturn(false);
 
         $field2 = $this->createStub(StringField::class);
         $field2->method('getId')->willReturn(2);
@@ -72,6 +73,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
             'bind_list' => [],
         ]);
         $field2->method('getFlattenPropertiesValues')->willReturn([]);
+        $field2->method('isUsed')->willReturn(false);
 
         $field3 = $this->createStub(StringField::class);
         $field3->method('getId')->willReturn(3);
@@ -88,6 +90,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
             'bind_list' => [],
         ]);
         $field3->method('getFlattenPropertiesValues')->willReturn([]);
+        $field3->method('isUsed')->willReturn(false);
 
         $form_element_factory           = $this->createStub(Tracker_FormElementFactory::class);
         $permission_exporter            = $this->createStub(PermissionsExporter::class);

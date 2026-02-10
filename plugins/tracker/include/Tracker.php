@@ -848,7 +848,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if ($request->isPost() && is_array($request->get('add-formElement'))) {
                         $csrf_token->check();
                         $formElement_id = key($request->get('add-formElement'));
-                        if (Tracker_FormElementFactory::instance()->addFormElement($formElement_id)) {
+                        if (Tracker_FormElementFactory::instance()->addFormElement((int) $formElement_id)) {
                             $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field added to the form'));
                             $GLOBALS['Response']->redirect($form_element_admin_url);
                         }

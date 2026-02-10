@@ -98,6 +98,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
      */
     public $default_value;
     public bool $has_notifications;
+    public bool $is_used;
 
     /**
      * @param mixed $values
@@ -162,6 +163,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         );
 
         $this->permissions_for_groups = $permissions_for_groups;
+        $this->is_used                = $form_element->isUsed();
     }
 
     /**

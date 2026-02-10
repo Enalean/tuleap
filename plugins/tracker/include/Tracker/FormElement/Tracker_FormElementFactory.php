@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\FormElement\Container\Column\ColumnContainer;
 use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
+use Tuleap\Tracker\FormElement\Field\AddField;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
@@ -48,6 +49,7 @@ use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
+use Tuleap\Tracker\FormElement\Field\RemoveField;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
@@ -72,7 +74,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElementFactory implements AddField, RemoveField, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string FIELD_STRING_TYPE                 = 'string';
     public const string FIELD_TEXT_TYPE                   = 'text';
@@ -1313,9 +1315,9 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     /**
      * Unuse the formElement
-     * @param boolean true if success
      */
-    public function removeFormElement($form_element_id)
+    #[Override]
+    public function removeFormElement(int $form_element_id): bool
     {
         $success = false;
         if ($form_element = $this->getFormElementById($form_element_id)) {
@@ -1328,11 +1330,8 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $success;
     }
 
-    /**
-     * Add the formElement
-     * @param boolean true if success
-     */
-    public function addFormElement($form_element_id)
+    #[Override]
+    public function addFormElement(int $form_element_id): bool
     {
         $success = false;
         if ($form_element = $this->getFormElementById($form_element_id)) {
