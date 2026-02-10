@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 @use "pkg:@tuleap/tlp-styles/components/buttons" as buttons;
 
 .tlp-button-bar {
@@ -82,20 +81,31 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-white-color);
-                background: var(--tlp-main-color-lighter-80);
+                border: 1px solid var(--tlp-structure-background-color);
+                background: light-dark(
+                    var(--tlp-main-color-lighter-80),
+                    var(--tlp-dark-color-lighter-05)
+                );
             }
         }
 
         + .tlp-button-secondary {
-            border-color: var(--tlp-neutral-light-color-darker-10);
-            background: var(--tlp-neutral-light-color-darker-10);
+            border-color: light-dark(
+                var(--tlp-neutral-light-color-darker-10),
+                var(--tlp-dark-color-lighter-20)
+            );
+            background: light-dark(
+                var(--tlp-neutral-light-color-darker-10),
+                var(--tlp-dark-color-lighter-20)
+            );
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-white-color);
-                background: var(--tlp-dark-color-lighter-90);
-                color: var(--tlp-dark-color);
+                border: 1px solid var(--tlp-structure-background-color);
+                background: light-dark(
+                    var(--tlp-dark-color-lighter-90),
+                    var(--tlp-dark-color-lighter-05)
+                );
             }
         }
 
@@ -105,8 +115,11 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-white-color);
-                background: var(--tlp-info-color-transparent-80);
+                border: 1px solid var(--tlp-structure-background-color);
+                background: light-dark(
+                    var(--tlp-info-color-lighter-80),
+                    var(--tlp-dark-color-lighter-05)
+                );
             }
         }
 
@@ -116,8 +129,11 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-white-color);
-                background: var(--tlp-success-color-lighter-80);
+                border: 1px solid var(--tlp-structure-background-color);
+                background: light-dark(
+                    var(--tlp-success-color-lighter-80),
+                    var(--tlp-dark-color-lighter-05)
+                );
             }
         }
 
@@ -127,8 +143,11 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-white-color);
-                background: var(--tlp-warning-color-lighter-80);
+                border: 1px solid var(--tlp-structure-background-color);
+                background: light-dark(
+                    var(--tlp-warning-color-lighter-80),
+                    var(--tlp-dark-color-lighter-05)
+                );
             }
         }
 
@@ -138,8 +157,11 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-white-color);
-                background: var(--tlp-danger-color-lighter-80);
+                border: 1px solid var(--tlp-structure-background-color);
+                background: light-dark(
+                    var(--tlp-danger-color-lighter-80),
+                    var(--tlp-dark-color-lighter-05)
+                );
             }
         }
     }

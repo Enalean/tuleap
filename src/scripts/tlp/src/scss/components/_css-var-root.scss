@@ -350,6 +350,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-dark-color-darker-20: #{color.scale($tlp-dark-color, $lightness: -20%)};
     --tlp-dark-color-lighter-05: #{color.scale($tlp-dark-color, $lightness: 5%)};
     --tlp-dark-color-lighter-10: #{color.scale($tlp-dark-color, $lightness: 10%)};
+    --tlp-dark-color-lighter-20: #{color.scale($tlp-dark-color, $lightness: 20%)};
     --tlp-dark-color-lighter-90: #{color.scale($tlp-dark-color, $lightness: 90%)};
     --tlp-typo-default-text-color-on-dark-background: #{$tlp-neutral-normal-color};
 
