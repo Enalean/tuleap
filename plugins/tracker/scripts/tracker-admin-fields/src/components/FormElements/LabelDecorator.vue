@@ -25,7 +25,12 @@
             aria-hidden="true"
             data-test="icon"
         ></i>
-        <a v-bind:href="decorator.url" v-if="decorator.url" data-test="link">
+        <a
+            v-bind:href="decorator.url"
+            v-if="decorator.url"
+            data-test="link"
+            data-not-drag-handle="true"
+        >
             {{ decorator.label }}
         </a>
         <template v-else>{{ decorator.label }}</template>
