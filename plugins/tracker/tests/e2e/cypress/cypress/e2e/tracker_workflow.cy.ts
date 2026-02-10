@@ -30,7 +30,7 @@ function getTrackerIdFromTrackerListPage(
     cy.visitProjectService(project_name, "Trackers");
     return cy
         .getContains("[data-test=tracker-link]", tracker_label)
-        .invoke("data", "testTrackerId");
+        .invoke("attr", "data-test-tracker-id");
 }
 
 function saveTransition(
@@ -48,6 +48,40 @@ function saveTransition(
     cy.get("[data-test=save-button]").click();
 }
 
+function editSimpleFieldInNewArtifact(label: string): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy
+        .getContains("[data-test=artifact-form-element]", label)
+        .find("[data-test-field-input]");
+}
+
+function editSimpleField(label: string): Cypress.Chainable<JQuery<HTMLElement>> {
+    cy.getContains("[data-test-artifact-form-element]", label)
+        .find("[data-test-edit-field]")
+        .click();
+    return cy
+        .getContains("[data-test-artifact-form-element]", label)
+        .find("[data-test-field-input]");
+}
+
+function selectLabelInListPickerDropdown(label: string): void {
+    cy.get("[data-test=edit-field-status]").click();
+    cy.get("[data-test=list-picker-selection]").first().click();
+    cy.root().within(() => {
+        cy.get("[data-test-list-picker-dropdown-open]").within(() => {
+            cy.get("[data-test=list-picker-item]").contains(label).click();
+        });
+    });
+}
+
+function getFieldsetWithLabel(label: string): Cypress.Chainable<JQuery<HTMLElement>> {
+    cy.get("[data-test=fieldset-label]").contains(label).parent();
+    return cy
+        .get("[data-test=fieldset-label]")
+        .contains(label)
+        .parents("[data-test=fieldset]")
+        .find("[data-test=fieldset-content]");
+}
+
 describe(`Tracker Workflow`, () => {
     const STATUS_FIELD_LABEL = "Status";
     const REMAINING_EFFORT_FIELD_LABEL = "Remaining Effort";
@@ -60,11 +94,9 @@ describe(`Tracker Workflow`, () => {
 
     it(`has an empty state`, function () {
         cy.projectAdministratorSession();
-        getTrackerIdFromTrackerListPage("tracker-project", "Workflow")
-            .as("workflow_tracker_id")
-            .then((tracker_id) => {
-                cy.visit(`/plugins/tracker/workflow/${tracker_id}/transitions`);
-            });
+        getTrackerIdFromTrackerListPage("tracker-project", "Workflow").then((tracker_id) => {
+            cy.visit(`/plugins/tracker/workflow/${tracker_id}/transitions`);
+        });
     });
 
     beforeEach(function () {
@@ -101,9 +133,9 @@ describe(`Tracker Workflow`, () => {
                 cy.get("[data-test=matrix-row]")
                     .contains("(New artifact)")
                     .parent("[data-test=matrix-row]")
-                    .within(() => {
-                        cy.get("[data-test-action=create-transition]").first().click();
-                    });
+                    .find("[data-test-action=create-transition]")
+                    .first()
+                    .click();
                 cy.get("[data-test=configure-state]").first().click();
             });
             /* Configure a state */
@@ -254,16 +286,22 @@ describe(`Tracker Workflow`, () => {
             cy.log("Every field can be updated at artifact creation");
             cy.visitProjectService("workflow", "Trackers");
             cy.getContains("[data-test=tracker-link]", "Frozen fields").click();
-            cy.get("[data-test=new-artifact]").click();
-            cy.get("[data-test=title]").type("My artifact");
-            cy.get("[data-test=points]").type("10");
 
+            cy.get("[data-test=new-artifact]").click();
+            editSimpleFieldInNewArtifact("title").type("My artifact");
+            editSimpleFieldInNewArtifact("Points").type("10");
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             cy.log("`fields points` and `title` can no longer be updated");
-            cy.get("[data-test=edit-field-title]").should("not.exist");
-            cy.get("[data-test=edit-field-points]").should("not.exist");
-            cy.get("[data-test=edit-field-status]").should("exist");
+            cy.getContains("[data-test-artifact-form-element]", "title")
+                .find("[data-test-edit-field]")
+                .should("not.exist");
+            cy.getContains("[data-test-artifact-form-element]", "Points")
+                .find("[data-test-edit-field]")
+                .should("not.exist");
+            cy.getContains("[data-test-artifact-form-element]", "Status")
+                .find("[data-test-edit-field]")
+                .should("exist");
         });
 
         it(`Workflow required comment`, function () {
@@ -271,20 +309,22 @@ describe(`Tracker Workflow`, () => {
             cy.log("Comment is not required at creation");
             cy.visitProjectService("workflow", "Trackers");
             cy.getContains("[data-test=tracker-link]", "required comments").click();
-            cy.get("[data-test=new-artifact]").click();
-            cy.get("[data-test=title]").type("My artifact");
 
+            cy.get("[data-test=new-artifact]").click();
+            editSimpleFieldInNewArtifact("title").type("My artifact");
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             cy.log("Comments are required at update");
-            cy.get('[data-test="edit-field-title"]').click();
-            cy.get("[data-test=title]").clear().type("My artifact updated");
+            editSimpleField("title").then((title) => {
+                cy.wrap(title).clear();
+                cy.wrap(title).type("My artifact updated");
+            });
             selectLabelInListPickerDropdown("Done");
-
             cy.get("[data-test=artifact-submit-and-stay]").click();
+
             cy.get("[data-test=feedback]").contains("Comment must not be empty");
 
-            cy.get('[data-test="artifact_followup_comment"]').type("My comment");
+            cy.get("[data-test=artifact_followup_comment]").type("My comment");
             cy.get("[data-test=artifact-submit-and-stay]").click();
             cy.get("[data-test=feedback]").contains("Successfully Updated");
         });
@@ -294,20 +334,24 @@ describe(`Tracker Workflow`, () => {
             cy.log("Fields are not required a submission");
             cy.visitProjectService("workflow", "Trackers");
             cy.getContains("[data-test=tracker-link]", "required fields").click();
-            cy.get("[data-test=new-artifact]").click();
-            cy.get("[data-test=title]").type("My artifact");
 
+            cy.get("[data-test=new-artifact]").click();
+            editSimpleFieldInNewArtifact("title").type("My artifact");
             cy.get("[data-test=artifact-submit-and-stay]").click();
 
             cy.log("Field are required at update");
-            cy.get('[data-test="edit-field-title"]').click();
-            cy.get("[data-test=title]").clear().type("My artifact updated");
+            editSimpleField("title").then((title) => {
+                cy.wrap(title).clear();
+                cy.wrap(title).type("My artifact updated");
+            });
             selectLabelInListPickerDropdown("Done");
-
             cy.get("[data-test=artifact-submit-and-stay]").click();
+
             cy.get("[data-test=feedback]").contains("Invalid condition: the field");
 
-            cy.get("[data-test=required_by_workflow]").type("required");
+            cy.getContains("[data-test-artifact-form-element]", "required by workflow")
+                .find("[data-test-field-input]")
+                .type("required");
             cy.get("[data-test=artifact-submit-and-stay]").click();
             cy.get("[data-test=feedback]").contains("Successfully Updated");
         });
@@ -354,67 +398,81 @@ describe(`Tracker Workflow`, () => {
 
             cy.get("[data-test=workflow-transitions-enabled]").click({ force: true });
 
+            cy.projectMemberSession();
             cy.log("Create a new Artifact should set Start Date");
             getTrackerIdFromTrackerListPage(project_name, "SR8")
                 .as("tracker_id")
                 .then((tracker_id) => {
                     cy.visit(`/plugins/tracker/?tracker=${tracker_id}&func=new-artifact`);
                 });
-            cy.get("[data-test=summary]").type("My artifact");
+            editSimpleFieldInNewArtifact("Summary").type("My artifact");
             cy.get("[data-test=artifact-submit-and-stay]").click();
+
+            cy.get("[data-test=current-artifact-id]")
+                .should("have.attr", "data-artifact-id")
+                .as("artifact_id");
+
             const today = new Date().toISOString().slice(0, 10);
-            cy.get("[data-test=tracker-artifact-value-start_date]").contains(today);
+            cy.getContains("[data-test-artifact-form-element]", "Start date").should(
+                "contain.text",
+                today,
+            );
 
             cy.log("Closing an artifact should update close date");
             selectLabelInListPickerDropdown("Closed");
             cy.get("[data-test=artifact-submit-and-stay]").click();
-            cy.get("[data-test=tracker-artifact-value-close_date]").contains(today);
+            cy.getContains("[data-test-artifact-form-element]", "Close date").should(
+                "contain.text",
+                today,
+            );
 
             cy.log("Reopening an artifact should clear close date");
             selectLabelInListPickerDropdown("Open");
             cy.get("[data-test=artifact-submit-and-stay]").click();
-            cy.get("[data-test=tracker-artifact-value-close_date]").should(
+            cy.getContains("[data-test-artifact-form-element]", "Close date").should(
                 "not.include.text",
                 today,
             );
 
             cy.log("End date is set by workflow, and not by user");
-            cy.get("[data-test=edit-field-start_date]").click();
-            // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
-            cy.get('[data-test="date-time-start_date"]')
-                .clear({ force: true })
-                .type("2024-06-01", { force: true });
+            cy.getContains("[data-test-artifact-form-element]", "Start date")
+                .find("[data-test-edit-field]")
+                .click();
+            cy.getContains("[data-test-artifact-form-element]", "Start date")
+                .find("[data-test=date-time-start_date]")
+                .setDatepickerValue("2024-06-01");
             selectLabelInListPickerDropdown("Closed");
             cy.get("[data-test=artifact-submit-and-stay]").click();
-            cy.get("[data-test=tracker-artifact-value-close_date]").contains(today);
+            cy.getContains("[data-test-artifact-form-element]", "Close date").should(
+                "contain.text",
+                today,
+            );
 
             cy.log("User can change artifact status even when he can not update date field");
-            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
-            cy.get("[data-test=admin-permissions]").click();
-            cy.get("[data-test=field-permissions]").click();
+            cy.projectAdministratorSession();
+            cy.wrap("").then(() => {
+                cy.visit(`/plugins/tracker/permissions/fields-by-field/${this.tracker_id}`);
+            });
             cy.get("[data-test=select-field-permissions]").select("Close date");
             cy.get("[data-test=field-permissions]").eq(3).select("Read only");
             cy.get("[data-test=submit-permissions]").click();
 
             cy.projectMemberSession();
             cy.wrap("").then(() => {
-                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}`);
+                cy.visit(`/plugins/tracker?aid=${this.artifact_id}`);
             });
-            cy.get("[data-test=direct-link-to-artifact]").click();
             selectLabelInListPickerDropdown("Open");
             cy.get("[data-test=artifact-submit-and-stay]").click();
-            cy.get("[data-test=tracker-artifact-value-close_date]").should(
+            cy.getContains("[data-test-artifact-form-element]", "Close date").should(
                 "not.include.text",
                 today,
             );
 
             cy.projectAdministratorSession();
             cy.wrap("").then(() => {
-                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}&func=admin`);
+                cy.visit(`/plugins/tracker/permissions/fields-by-field/${this.tracker_id}`);
             });
             cy.log("User can change artifact status even when he can not see date field");
-            cy.get("[data-test=admin-permissions]").click();
-            cy.get("[data-test=field-permissions]").click();
             cy.get("[data-test=select-field-permissions]").select("Close date");
             cy.get("[data-test=field-permissions]").eq(0).select("-");
             cy.get("[data-test=field-permissions]").eq(1).select("-");
@@ -424,40 +482,20 @@ describe(`Tracker Workflow`, () => {
 
             cy.projectMemberSession();
             cy.wrap("").then(() => {
-                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}`);
+                cy.visit(`/plugins/tracker?aid=${this.artifact_id}`);
             });
-            cy.get("[data-test=direct-link-to-artifact]").click();
             selectLabelInListPickerDropdown("Close");
             cy.get("[data-test=artifact-submit-and-stay]").click();
-            cy.get("[data-test=tracker-artifact-value-close_date]").should("not.exist");
+            cy.get("[data-test-artifact-form-element]").contains("Close date").should("not.exist");
 
             cy.projectAdministratorSession();
             cy.wrap("").then(() => {
-                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}`);
+                cy.visit(`/plugins/tracker?aid=${this.artifact_id}`);
             });
-            cy.get("[data-test=direct-link-to-artifact]").click();
-            cy.get("[data-test=tracker-artifact-value-close_date]").contains(today);
+            cy.getContains("[data-test-artifact-form-element]", "Close date").should(
+                "contain.text",
+                today,
+            );
         });
     });
 });
-
-function selectLabelInListPickerDropdown(label: string): void {
-    cy.get("[data-test=edit-field-status]").click();
-    cy.get("[data-test=list-picker-selection]").first().click();
-    cy.root().within(() => {
-        cy.get("[data-test-list-picker-dropdown-open]").within(() => {
-            cy.get("[data-test=list-picker-item]").contains(label).click();
-        });
-    });
-}
-
-function getFieldsetWithLabel(label: string): Cypress.Chainable<JQuery<HTMLElement>> {
-    cy.get("[data-test=fieldset-label]").contains(label).parent();
-    return cy
-        .get("[data-test=fieldset-label]")
-        .contains(label)
-        .parents("[data-test=fieldset]")
-        .within(() => {
-            return cy.get("[data-test=fieldset-content]");
-        });
-}
