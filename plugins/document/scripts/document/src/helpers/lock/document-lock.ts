@@ -32,6 +32,7 @@ import {
     postLockWiki,
 } from "../../api/lock-rest-querier";
 import { getItem } from "../../api/rest-querier";
+import emitter from "../emitter";
 
 export type DocumentLock = {
     lockDocument(context: ActionContext<State, State>, item: Item): Promise<void>;
@@ -54,7 +55,7 @@ export const getDocumentLock = (): DocumentLock => ({
             }
 
             const updated_item = await getItem(item.id);
-            item.lock_info = updated_item.lock_info;
+            emitter.emit("item-has-just-been-updated", { item: updated_item });
             context.commit("replaceFolderContentByItem", updated_item, { root: true });
         } catch (exception) {
             await context.dispatch("error/handleErrorsForLock", exception, { root: true });
@@ -75,7 +76,7 @@ export const getDocumentLock = (): DocumentLock => ({
             }
 
             const updated_item = await getItem(item.id);
-            item.lock_info = updated_item.lock_info;
+            emitter.emit("item-has-just-been-updated", { item: updated_item });
             context.commit("replaceFolderContentByItem", updated_item, { root: true });
         } catch (exception) {
             await context.dispatch("error/handleErrorsForLock", exception, { root: true });

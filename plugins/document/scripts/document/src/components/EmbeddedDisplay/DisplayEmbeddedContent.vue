@@ -22,7 +22,7 @@
     <div class="embedded-document-container">
         <div class="document-header tlp-framed-horizontally">
             <document-title-lock-info
-                v-bind:item="embedded_file"
+                v-bind:item="embedded_file_for_display"
                 v-bind:is-displaying-in-header="true"
             />
 
@@ -100,8 +100,8 @@
 
 <script setup lang="ts">
 import emitter from "../../helpers/emitter";
-import { computed, defineAsyncComponent, onBeforeMount, onUnmounted, ref } from "vue";
-import type { Embedded, EmbeddedFileDisplayPreference } from "../../type";
+import { computed, defineAsyncComponent, onBeforeMount, onUnmounted, ref, watch } from "vue";
+import type { Embedded, EmbeddedFileDisplayPreference, Item } from "../../type";
 import { EMBEDDED_FILE_DISPLAY_LARGE } from "../../type";
 import { useGettext } from "vue3-gettext";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
@@ -109,6 +109,7 @@ import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import ActionsHeader from "./ActionsHeader.vue";
 import { getDocumentProperties } from "../../helpers/properties/document-properties";
+import { isEmbedded } from "../../helpers/type-check-helper";
 
 const PermissionsUpdateModal = defineAsyncComponent(
     () => import("../Folder/Permissions/PermissionsUpdateModal.vue"),
@@ -145,6 +146,15 @@ const emit = defineEmits<{
 const document_properties = getDocumentProperties();
 
 const { interpolate, $gettext } = useGettext();
+
+const embedded_file_for_display = ref<Embedded>(props.embedded_file);
+
+watch(
+    () => props.embedded_file,
+    (value) => {
+        embedded_file_for_display.value = value;
+    },
+);
 
 const is_embedded_in_large_view = computed(
     () => props.embedded_file_display_preference === EMBEDDED_FILE_DISPLAY_LARGE,
@@ -185,6 +195,7 @@ onBeforeMount(() => {
     emitter.on("show-create-new-item-version-modal", showCreateNewItemVersionModal);
     emitter.on("show-update-item-properties-modal", showUpdatePropertiesModal);
     emitter.on("show-update-permissions-modal", showUpdateItemPermissionsModal);
+    emitter.on("item-has-just-been-updated", onItemHasJustBeenUpdated);
 });
 
 onUnmounted(() => {
@@ -192,7 +203,18 @@ onUnmounted(() => {
     emitter.off("show-create-new-item-version-modal", showCreateNewItemVersionModal);
     emitter.off("show-update-item-properties-modal", showUpdatePropertiesModal);
     emitter.off("show-update-permissions-modal", showUpdateItemPermissionsModal);
+    emitter.off("item-has-just-been-updated", onItemHasJustBeenUpdated);
 });
+
+function onItemHasJustBeenUpdated(event: { item: Item }): void {
+    const updated = event.item;
+    if (!isEmbedded(updated)) {
+        return;
+    }
+    if (updated?.id === embedded_file_for_display.value.id) {
+        embedded_file_for_display.value = updated;
+    }
+}
 
 function showCreateNewItemVersionModal(): void {
     is_modal_shown.value = true;
