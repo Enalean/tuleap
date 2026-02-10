@@ -17,8 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CONTAINER_COLUMN } from "@tuleap/plugin-tracker-constants";
-import type { Column, Child, ElementWithChildren } from "../type";
+import { type ResultAsync } from "neverthrow";
+import { type Fault } from "@tuleap/fault";
+import { uri, patchJSON } from "@tuleap/fetch-result";
 
-export const isColumn = (element: Child | ElementWithChildren): element is Column =>
-    "field" in element && element.field.type === CONTAINER_COLUMN;
+export type MoveFieldsAPIRequestParams = {
+    field_id: number;
+    parent_id: number | null;
+    next_sibling_id: number | null;
+};
+
+export const saveNewFieldsOrder = (move: MoveFieldsAPIRequestParams): ResultAsync<null, Fault> =>
+    patchJSON(uri`/api/v1/tracker_fields/${move.field_id}`, {
+        move: {
+            parent_id: move.parent_id,
+            next_sibling_id: move.next_sibling_id,
+        },
+    });

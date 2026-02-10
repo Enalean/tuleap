@@ -33,6 +33,7 @@ import { getFieldsMover } from "./FieldsMover";
 import { findElementInStructure } from "./find-element-in-structure";
 import { isElementWithChildren } from "./is-element-with-children";
 import { isColumnWrapper } from "./is-column-wrapper";
+import type { MoveFieldsAPIRequestParams } from "./save-new-fields-order";
 
 describe("FieldsMover", () => {
     let tracker_root: ElementWithChildren;
@@ -76,7 +77,7 @@ describe("FieldsMover", () => {
         from_parent_with_id: ContainerId;
         before_sibling_with_id: number | string | null;
         to_destination_parent_with_id: ContainerId;
-    }): void => {
+    }): MoveFieldsAPIRequestParams => {
         const moved_element = findElementInStructure(
             context.move_element_with_id,
             tracker_root.children,
@@ -116,6 +117,7 @@ describe("FieldsMover", () => {
         if (!result.isOk()) {
             throw new Error(`Expected an ok, got: ${result.error}`);
         }
+        return result.value;
     };
 
     const getChildrenInParent = (parent_id: ContainerId): Child[] => {
@@ -130,16 +132,22 @@ describe("FieldsMover", () => {
         const context = {
             move_element_with_id: 9,
             from_parent_with_id: 5,
-            to_destination_parent_with_id: 2,
+            to_destination_parent_with_id: 4,
             before_sibling_with_id: null,
         };
-        moveField(context);
+        const move = moveField(context);
 
         expect(getChildrenInParent(context.from_parent_with_id)).toStrictEqual([]);
         expect(getChildrenInParent(context.to_destination_parent_with_id)).toStrictEqual([
-            { field: { field_id: 10, type: FLOAT_FIELD } },
+            { field: { field_id: 6, type: STRING_FIELD } },
+            { field: { field_id: 7, type: DATE_FIELD } },
             { field: { field_id: 9, type: ARTIFACT_ID_FIELD } },
         ]);
+        expect(move).toStrictEqual({
+            field_id: context.move_element_with_id,
+            parent_id: context.to_destination_parent_with_id,
+            next_sibling_id: null,
+        });
     });
 
     it("When there is a next sibling, the the element will be moved before it inside the destination parent", () => {
@@ -149,7 +157,7 @@ describe("FieldsMover", () => {
             to_destination_parent_with_id: 5,
             before_sibling_with_id: 9,
         };
-        moveField(context);
+        const move = moveField(context);
 
         expect(getChildrenInParent(context.from_parent_with_id)).toStrictEqual([
             { field: { field_id: 7, type: DATE_FIELD } },
@@ -158,37 +166,11 @@ describe("FieldsMover", () => {
             { field: { field_id: 6, type: STRING_FIELD } },
             { field: { field_id: 9, type: ARTIFACT_ID_FIELD } },
         ]);
-    });
-
-    it("Should be able to move a Field before a ColumnWrapper", () => {
-        const context = {
-            move_element_with_id: 9,
-            from_parent_with_id: 5,
-            to_destination_parent_with_id: 1,
-            before_sibling_with_id: column_wrapper_id,
-        };
-        moveField(context);
-
-        expect(getChildrenInParent(context.from_parent_with_id)).toStrictEqual([]);
-        expect(getChildrenInParent(context.to_destination_parent_with_id)).toStrictEqual([
-            { field: { field_id: 9, type: ARTIFACT_ID_FIELD } },
-            {
-                identifier: column_wrapper_id,
-                columns: [
-                    {
-                        field: { field_id: 4, type: CONTAINER_COLUMN },
-                        children: [
-                            { field: { field_id: 6, type: STRING_FIELD } },
-                            { field: { field_id: 7, type: DATE_FIELD } },
-                        ],
-                    },
-                    {
-                        field: { field_id: 5, type: CONTAINER_COLUMN },
-                        children: [],
-                    },
-                ],
-            },
-        ]);
+        expect(move).toStrictEqual({
+            field_id: context.move_element_with_id,
+            parent_id: context.to_destination_parent_with_id,
+            next_sibling_id: context.before_sibling_with_id,
+        });
     });
 
     it("should be able to move fieldsets in tracker root", () => {
@@ -199,10 +181,37 @@ describe("FieldsMover", () => {
             before_sibling_with_id: 1,
         };
 
-        moveField(context);
+        const move = moveField(context);
 
         expect(
             tracker_root.children.map((child) => ("field" in child ? child.field.field_id : 0)),
         ).toStrictEqual([context.move_element_with_id, context.before_sibling_with_id]);
+
+        expect(move).toStrictEqual({
+            field_id: context.move_element_with_id,
+            parent_id: null,
+            next_sibling_id: context.before_sibling_with_id,
+        });
+    });
+
+    it("should be able to move fieldsets at the end of tracker root", () => {
+        const context = {
+            move_element_with_id: 1,
+            from_parent_with_id: ROOT_CONTAINER_ID,
+            to_destination_parent_with_id: ROOT_CONTAINER_ID,
+            before_sibling_with_id: null,
+        };
+
+        const move = moveField(context);
+
+        expect(
+            tracker_root.children.map((child) => ("field" in child ? child.field.field_id : 0)),
+        ).toStrictEqual([2, 1]);
+
+        expect(move).toStrictEqual({
+            field_id: context.move_element_with_id,
+            parent_id: null,
+            next_sibling_id: null,
+        });
     });
 });
