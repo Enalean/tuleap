@@ -19,7 +19,7 @@
 
 <template>
     <div class="dropdown-menu">
-        <template v-if="currently_previewed_item.user_can_write">
+        <template v-if="currently_previewed_item && currently_previewed_item.user_can_write">
             <lock-item
                 v-bind:item="currently_previewed_item"
                 v-bind:document_lock="document_lock"
