@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CONTAINER_COLUMN } from "@tuleap/plugin-tracker-constants";
-import type { Child, Column } from "../type";
+import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
+import type { Child, Fieldset } from "../type";
 
-export const isColumn = (element: Child): element is Column =>
-    "field" in element && element.field.type === CONTAINER_COLUMN;
+export const isFieldset = (element: Child): element is Fieldset =>
+    "field" in element && element.field.type === CONTAINER_FIELDSET;

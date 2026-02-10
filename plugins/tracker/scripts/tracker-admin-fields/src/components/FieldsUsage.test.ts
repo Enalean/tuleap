@@ -38,7 +38,6 @@ describe("FieldsUsage", () => {
     it("should display an empty state", async () => {
         const wrapper = shallowMount(FieldsUsage, {
             props: {
-                tracker_id: 123,
                 fields: [],
                 structure: [],
                 has_error: false,
@@ -58,7 +57,6 @@ describe("FieldsUsage", () => {
     it("should display fields", async () => {
         const wrapper = shallowMount(FieldsUsage, {
             props: {
-                tracker_id: 123,
                 fields: [
                     {
                         field_id: 123,
@@ -87,7 +85,6 @@ describe("FieldsUsage", () => {
     it("should display and error", async () => {
         const wrapper = shallowMount(FieldsUsage, {
             props: {
-                tracker_id: 123,
                 fields: [
                     {
                         field_id: 123,

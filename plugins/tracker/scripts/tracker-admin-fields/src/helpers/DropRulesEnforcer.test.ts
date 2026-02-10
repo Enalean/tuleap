@@ -19,12 +19,16 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { ref } from "vue";
-import { CONTAINER_FIELDSET, STRING_FIELD } from "@tuleap/plugin-tracker-constants";
+import {
+    CONTAINER_FIELDSET,
+    STRING_FIELD,
+    CONTAINER_COLUMN,
+} from "@tuleap/plugin-tracker-constants";
 import {
     buildDraggableElement,
     buildDropzoneElement,
 } from "../tests/builders/build-drag-and-drop-elements";
-import type { Field, Fieldset } from "../type";
+import type { Column, Field, Fieldset } from "../type";
 import { ROOT_CONTAINER_ID } from "../type";
 import type { DropRulesEnforcer } from "./DropRulesEnforcer";
 import { getDropRulesEnforcer } from "./DropRulesEnforcer";
@@ -33,17 +37,22 @@ describe("DropRulesEnforcer", () => {
     let drop_rules_enforcer: DropRulesEnforcer,
         string_field: Field,
         fieldset_1: Fieldset,
-        fieldset_2: Fieldset;
+        fieldset_2: Fieldset,
+        column: Column;
 
     beforeEach(() => {
         string_field = { field: { field_id: 3 }, type: STRING_FIELD } as unknown as Field;
+        column = {
+            field: { field_id: 4, type: CONTAINER_COLUMN, label: "Column" },
+            children: [],
+        } as unknown as Fieldset;
         fieldset_1 = {
             field: { field_id: 1, type: CONTAINER_FIELDSET, label: "Fieldset 1" },
             children: [string_field],
         } as unknown as Fieldset;
         fieldset_2 = {
             field: { field_id: 2, type: CONTAINER_FIELDSET, label: "Fieldset 2" },
-            children: [],
+            children: [column],
         } as unknown as Fieldset;
 
         drop_rules_enforcer = getDropRulesEnforcer(
@@ -76,21 +85,31 @@ describe("DropRulesEnforcer", () => {
     });
 
     describe("Given that the target dropzone is NOT the root of the tracker", () => {
-        it("When the dragged element is not a fieldset, Then it should return true", () => {
+        it("When the dragged element is not a fieldset, And the target dropzone is a Column, Then it should return true", () => {
+            const is_drop_possible = drop_rules_enforcer.isDropPossible({
+                dragged_element: buildDraggableElement(string_field.field.field_id),
+                source_dropzone: buildDropzoneElement(fieldset_1.field.field_id),
+                target_dropzone: buildDropzoneElement(column.field.field_id),
+            });
+
+            expect(is_drop_possible).toBe(true);
+        });
+
+        it("When the dragged element is not a fieldset, And the target dropzone not a Column, Then it should return false", () => {
             const is_drop_possible = drop_rules_enforcer.isDropPossible({
                 dragged_element: buildDraggableElement(string_field.field.field_id),
                 source_dropzone: buildDropzoneElement(fieldset_1.field.field_id),
                 target_dropzone: buildDropzoneElement(fieldset_2.field.field_id),
             });
 
-            expect(is_drop_possible).toBe(true);
+            expect(is_drop_possible).toBe(false);
         });
 
-        it("When the dragged element is a fieldset, Then it should return false", () => {
+        it("When the dragged element is a fieldset, And the target dropzone is a Column, Then it should return false", () => {
             const is_drop_possible = drop_rules_enforcer.isDropPossible({
                 dragged_element: buildDraggableElement(fieldset_1.field.field_id),
                 source_dropzone: buildDropzoneElement(ROOT_CONTAINER_ID),
-                target_dropzone: buildDropzoneElement(fieldset_2.field.field_id),
+                target_dropzone: buildDropzoneElement(column.field.field_id),
             });
 
             expect(is_drop_possible).toBe(false);
