@@ -12,6 +12,7 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
+    "@tuleap/tlp-syntax-highlighting": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "@vitejs/plugin-vue": "^6.0.3",
     "javascript-time-ago": "^2.3.4",

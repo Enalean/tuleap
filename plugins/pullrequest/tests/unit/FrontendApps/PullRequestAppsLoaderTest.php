@@ -46,9 +46,8 @@ final class PullRequestAppsLoaderTest extends TestCase
         );
 
         $javascript_assets = $this->base_layout->getJavascriptAssets();
-        self::assertCount(2, $javascript_assets);
-        self::assertStringContainsString('syntax-highlight', $javascript_assets[0]->getFileURL());
-        self::assertStringContainsString('tuleap-pullrequest', $javascript_assets[1]->getFileURL());
+        self::assertCount(1, $javascript_assets);
+        self::assertStringContainsString('tuleap-pullrequest', $javascript_assets[0]->getFileURL());
 
         $css_assets = $this->base_layout->getCssAssets()->getDeduplicatedAssets();
         self::assertCount(1, $css_assets);
@@ -63,9 +62,8 @@ final class PullRequestAppsLoaderTest extends TestCase
         );
 
         $javascript_assets = $this->base_layout->getJavascriptAssets();
-        self::assertCount(2, $javascript_assets);
-        self::assertStringContainsString('syntax-highlight', $javascript_assets[0]->getFileURL());
-        self::assertStringContainsString('pullrequest-overview', $javascript_assets[1]->getFileUrl());
+        self::assertCount(1, $javascript_assets);
+        self::assertStringContainsString('pullrequest-overview', $javascript_assets[0]->getFileUrl());
 
         $css_assets = $this->base_layout->getCssAssets()->getDeduplicatedAssets();
         self::assertCount(1, $css_assets);

@@ -24,6 +24,7 @@
 @use "pkg:@tuleap/plugin-tracker-link-field";
 @use "pkg:@tuleap/tlp-date-picker";
 @use "pkg:@tuleap/tlp-styles/components/forms";
+@use "pkg:@tuleap/tlp-syntax-highlighting";
 
 .list-picker-circular-color {
     box-sizing: border-box;

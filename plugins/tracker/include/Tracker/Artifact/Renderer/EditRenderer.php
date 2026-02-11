@@ -178,9 +178,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             $GLOBALS['HTML']->addJavascriptAsset($asset);
         }
 
-        $assets = new \Tuleap\Layout\IncludeCoreAssets();
-        $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'syntax-highlight'));
-
         $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, $params);
 
 
@@ -372,10 +369,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     #[\Override]
     protected function displayFooter()
     {
-        if (CodeBlockFeaturesOnArtifact::getInstance()->isSyntaxHighlightNeeded()) {
-            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'syntax-highlight.js'));
-        }
-
         $this->tracker->displayFooter($this->layout);
     }
 }

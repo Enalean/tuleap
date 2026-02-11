@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/tlp-popovers':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-popovers
+  '@tuleap/tlp-syntax-highlighting':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-syntax-highlighting
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue3-gettext-init

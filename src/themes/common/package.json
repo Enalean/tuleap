@@ -8,7 +8,6 @@
   "dependencies": {
     "@tuleap/project-background": "workspace:*",
     "@tuleap/project-sidebar-internal": "workspace:*",
-    "@tuleap/tlp-swatch-colors": "workspace:*",
-    "prismjs": "^1.30.0"
+    "@tuleap/tlp-swatch-colors": "workspace:*"
   }
 }

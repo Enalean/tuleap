@@ -38,6 +38,7 @@ import "./text-follow-up";
 import { listenEnableDisableSubmitEvents } from "./artifact-edition-buttons-switcher/disable-submit-buttons";
 import { EventDispatcher } from "@tuleap/plugin-tracker-artifact-common";
 import { initDateTimeFields } from "../fields/date-time-fields";
+import "@tuleap/tlp-syntax-highlighting";
 
 function initTextFields(user_locale: LocaleString): void {
     const creator = RichTextEditorsCreator(

@@ -25,7 +25,6 @@ namespace Tuleap\PullRequest\FrontendApps;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -127,13 +126,6 @@ final class PullRequestAppsLoader
             new CssAssetWithoutVariantDeclinaisons(
                 $assets,
                 'pull-requests-style'
-            )
-        );
-
-        $base_layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeCoreAssets(),
-                'syntax-highlight.js'
             )
         );
     }

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../themes/git.scss";
-import initAlreadyForkedModal from "./already-forked-modal";
-import initCopyButton from "./copy-button";
-import initCloneBarPopover from "./clone-bar-popover";
-import initBranchTagSelector from "./branch-tag-selector";
-import initShortlog from "./shortlog";
-import "@tuleap/tlp-syntax-highlighting";
+import { describe, expect, it } from "vitest";
+import { markPotentiallyDangerousBidirectionalUnicodeText } from "./bidirectional-unicode-text";
 
-document.addEventListener("DOMContentLoaded", () => {
-    initAlreadyForkedModal();
-    initCopyButton();
-    initCloneBarPopover();
-    initBranchTagSelector();
-    initShortlog();
+describe("bidirectional-unicode-text", () => {
+    it("marks potentially dangerous bidirectional characters", () => {
+        const result = markPotentiallyDangerousBidirectionalUnicodeText("A\u202aB\u202b");
+
+        expect(result).toBe(
+            'A<span class="syntax-highlight-invisible-char" dir="ltr" title="\\u202a">\u202a</span>B<span class="syntax-highlight-invisible-char" dir="ltr" title="\\u202b">\u202b</span>',
+        );
+    });
 });

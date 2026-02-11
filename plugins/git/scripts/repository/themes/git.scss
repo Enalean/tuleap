@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "pkg:@tuleap/tlp-syntax-highlighting";
 @use "./repository/repository";
 @use "./widget/last-pushes-widget";
 @use "./project-background-header";

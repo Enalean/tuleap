@@ -17,6 +17,7 @@
     "@tuleap/tlp-badge": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:^",
     "@tuleap/tlp-modal": "workspace:^",
+    "@tuleap/tlp-syntax-highlighting": "workspace:*",
     "@tuleap/tooltip": "workspace:^",
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",

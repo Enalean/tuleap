@@ -16,6 +16,7 @@
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
+    "@tuleap/tlp-syntax-highlighting": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "@uirouter/angularjs": "^1.0.29",
     "angular": "^1.8.2",

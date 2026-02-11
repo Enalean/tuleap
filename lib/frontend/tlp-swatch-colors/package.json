@@ -6,6 +6,8 @@
   "private": true,
   "exports": {
     ".": "./themes/main.scss",
-    "./tlp-swatch-colors.scss": "./themes/tlp-swatch-colors.scss"
+    "./tlp-swatch-colors": {
+      "sass": "./themes/tlp-swatch-colors.scss"
+    }
   }
 }

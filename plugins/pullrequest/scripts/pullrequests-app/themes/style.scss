@@ -20,6 +20,7 @@
 @use "pkg:codemirror/lib/codemirror";
 @use "pkg:codemirror/addon/merge/merge";
 @use "pkg:@tuleap/plugin-pullrequest-comments";
+@use "pkg:@tuleap/tlp-syntax-highlighting";
 @use "./includes/pull-request";
 @use "./includes/files";
 @use "./includes/file-diff";

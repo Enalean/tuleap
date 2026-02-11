@@ -147,8 +147,6 @@ class Controller_Tree extends ControllerBase // phpcs:ignore
                     $this->data_reader->getDataStringInUTF8($readme_tree_item)
                 )
             );
-            $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
-            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($core_assets, 'syntax-highlight.js'));
             if ($code_block_features->isMermaidNeeded()) {
                 $js_asset = new \Tuleap\Layout\JavascriptViteAsset(
                     new \Tuleap\Layout\IncludeViteAssets(

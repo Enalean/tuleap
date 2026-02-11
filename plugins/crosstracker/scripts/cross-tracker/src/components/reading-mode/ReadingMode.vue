@@ -48,6 +48,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Query } from "../../type";
 import { IS_USER_ADMIN, WIDGET_ID } from "../../injection-symbols";
 import ReadingModeActionButtons from "./ReadingModeActionButtons.vue";
+import "@tuleap/tlp-syntax-highlighting";
 
 const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);

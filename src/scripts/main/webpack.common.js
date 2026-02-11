@@ -51,7 +51,6 @@ const manifest_plugin = new WebpackAssetsManifest({
 const webpack_config_for_flaming_parrot_code = {
     entry: {
         "flamingparrot-with-polyfills": "./src/FlamingParrot/index.ts",
-        "syntax-highlight": "./src/syntax-highlight/index.ts",
     },
     context,
     output,
@@ -255,7 +254,6 @@ const webpack_config_for_flaming_parrot_css = {
     entry: {
         "FlamingParrot/style": "./node_modules/@tuleap/flamingparrot-theme/css/style.scss",
         "FlamingParrot/print": "./node_modules/@tuleap/flamingparrot-theme/css/print.scss",
-        "syntax-highlight": "./node_modules/@tuleap/common-theme/css/syntax-highlight.scss",
     },
     context,
     output,

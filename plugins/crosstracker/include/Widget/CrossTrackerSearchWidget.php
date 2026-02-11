@@ -26,11 +26,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tuleap\CrossTracker\GetCrossTrackerExternalPluginUsage;
-use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Widget;
@@ -157,16 +153,7 @@ class CrossTrackerSearchWidget extends Widget
     {
         return [
             new JavascriptViteAsset($this->getAssets(), 'src/index.ts'),
-            new JavascriptAsset(new IncludeCoreAssets(), 'syntax-highlight.js'),
         ];
-    }
-
-    #[\Override]
-    public function getStylesheetDependencies(): CssAssetCollection
-    {
-        return new CssAssetCollection([
-            new CssAssetWithoutVariantDeclinaisons(new IncludeCoreAssets(), 'syntax-highlight'),
-        ]);
     }
 
     private function getAssets(): IncludeViteAssets

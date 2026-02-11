@@ -38,6 +38,9 @@ dependencies:
   '@tuleap/tlp-modal':
     specifier: workspace:^
     version: link:../../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-syntax-highlighting':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-syntax-highlighting
   '@tuleap/tooltip':
     specifier: workspace:^
     version: link:../../../../lib/frontend/tooltip

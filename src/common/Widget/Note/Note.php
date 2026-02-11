@@ -22,8 +22,9 @@
 namespace Tuleap\Widget\Note;
 
 use TemplateRenderer;
-use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
@@ -147,55 +148,34 @@ abstract class Note extends \Widget
         return $this->interpreted_content;
     }
 
-    /** @return array */
-    #[\Override]
-    public function getJavascriptDependencies()
-    {
-        $javascript_dependencies = [];
-
-        $this->interpretContent();
-        if ($this->code_block_features->isSyntaxHighlightNeeded()) {
-            $javascript_dependencies[] = [
-                'file' => $this->getAssets()->getFileURL('syntax-highlight.js'),
-            ];
-        }
-
-        return $javascript_dependencies;
-    }
-
     #[\Override]
     public function getJavascriptAssets(): array
     {
+        $assets = [];
+
+        $this->interpretContent();
+
         if ($this->code_block_features->isMermaidNeeded()) {
-            $js_asset = new \Tuleap\Layout\JavascriptViteAsset(
-                new \Tuleap\Layout\IncludeViteAssets(
+            $assets[] = new JavascriptViteAsset(
+                new IncludeViteAssets(
                     __DIR__ . '/../../../scripts/mermaid-diagram-element/frontend-assets',
                     '/assets/core/mermaid-diagram-element',
                 ),
                 'src/index.ts',
             );
-            return [$js_asset];
         }
-        return [];
-    }
-
-    /**
-     * @return CssAssetCollection
-     */
-    #[\Override]
-    public function getStylesheetDependencies()
-    {
-        $this->interpretContent();
 
         if ($this->code_block_features->isSyntaxHighlightNeeded()) {
-            return new CssAssetCollection(
-                [
-                    new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'syntax-highlight'),
-                ]
+            $assets[] = new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/note-widget/frontend-assets',
+                    '/assets/core/note-widget'
+                ),
+                'src/main.ts',
             );
         }
 
-        return new CssAssetCollection([]);
+        return $assets;
     }
 
     private function getAssets(): IncludeAssets

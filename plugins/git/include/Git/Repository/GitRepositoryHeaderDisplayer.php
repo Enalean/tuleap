@@ -26,8 +26,6 @@ use TemplateRendererFactory;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 
 class GitRepositoryHeaderDisplayer
@@ -45,21 +43,15 @@ class GitRepositoryHeaderDisplayer
      * @var \EventManager
      */
     private $event_manager;
-    /**
-     * @var IncludeAssets
-     */
-    private $core_assets;
 
     public function __construct(
         HeaderRenderer $header_renderer,
         RepositoryHeaderPresenterBuilder $header_presenter_builder,
-        IncludeAssets $core_assets,
         JavascriptAssetGeneric $asset,
         \EventManager $event_manager,
     ) {
         $this->header_renderer          = $header_renderer;
         $this->header_presenter_builder = $header_presenter_builder;
-        $this->core_assets              = $core_assets;
         $this->asset                    = $asset;
         $this->event_manager            = $event_manager;
     }
@@ -76,9 +68,6 @@ class GitRepositoryHeaderDisplayer
 
     private function includeAssetsForBurningParrot(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
-        if (! $request->exist('a') || in_array($request->get('a'), ['blob', 'blame', 'tree'], true)) {
-            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->core_assets, 'syntax-highlight'));
-        }
         $layout->addJavascriptAsset($this->asset);
 
         $external_assets = new CollectAssets();

@@ -5,15 +5,23 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "main": "dist/index.js",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "bin": {
-    "potentially-dangerous-bidirectional-characters":  "src/potentially-dangerous-bidirectional-characters-cli.mjs"
+    "potentially-dangerous-bidirectional-characters": "src/potentially-dangerous-bidirectional-characters-cli.mjs"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@types/node": "^18.0.3"
   },
   "scripts": {
     "build": "rm -rf dist/ && tsc",
     "watch": "rm -rf dist/ && tsc --watch"
-  },
-  "devDependencies": {
-    "@types/node": "^18.0.3"
   }
 }

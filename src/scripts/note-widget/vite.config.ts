@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SyntaxHighlightElement } from "./syntax-highlight-element";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-if (!window.customElements.get("tlp-syntax-highlighting")) {
-    window.customElements.define("tlp-syntax-highlighting", SyntaxHighlightElement);
-}
+export default vite.defineAppConfig(
+    {
+        plugin_name: "core",
+        sub_app_name: "note-widget",
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    note: path.resolve(__dirname, "src/main.ts"),
+                },
+            },
+        },
+    },
+);
