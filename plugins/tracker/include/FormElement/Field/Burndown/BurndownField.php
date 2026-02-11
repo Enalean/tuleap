@@ -41,7 +41,8 @@ use Tracker_IDisplayTrackerLayout;
 use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tuleap\Date\DatePeriodWithOpenDays;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
@@ -198,14 +199,14 @@ class BurndownField extends TrackerField implements Tracker_FormElement_Field_Re
             $warning                 = $error->getMessage();
         }
 
-        $assets = new IncludeAssets(
+        $assets = new IncludeViteAssets(
             __DIR__ . '/../../../../scripts/burndown-chart/frontend-assets',
             '/assets/trackers/burndown-chart'
         );
 
         assert($GLOBALS['HTML'] instanceof \Tuleap\Layout\BaseLayout);
-        $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'burndown-chart.js'));
-        $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'burndown-chart-style'));
+        $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/burndown-chart.js'));
+        $GLOBALS['HTML']->addCssAsset(CssViteAsset::fromFileName($assets, 'themes/burndown-chart.scss'));
 
         return new BurndownFieldPresenter(
             $user,
