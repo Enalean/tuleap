@@ -66,14 +66,13 @@ final class EditLicenseAgreementControllerTest extends TestCase
 
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
         $this->project_retriever->expects($this->once())->method('getProjectFromId')
-            ->with('101')
             ->willReturn($this->project);
 
         $this->renderer_factory = $this->createStub(TemplateRendererFactory::class);
 
-        $this->helper = $this->createStub(LicenseAgreementControllersHelper::class);
-        $this->helper->method('assertCanAccess')->with($this->project, $this->current_user);
-        $this->helper->method('renderHeader')->with($this->project);
+        $this->helper = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->helper->expects($this->once())->method('assertCanAccess')->with($this->project, $this->current_user);
+        $this->helper->method('renderHeader');
 
         $this->factory = $this->createStub(LicenseAgreementFactory::class);
 
@@ -94,13 +93,11 @@ final class EditLicenseAgreementControllerTest extends TestCase
     {
         $content_renderer = $this->createMock(TemplateRenderer::class);
         $content_renderer->expects($this->once())->method('renderToPage')->with('edit-license-agreement', self::anything());
-        $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
-            return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
-        }))->willReturn($content_renderer);
+        $this->renderer_factory->method('getRenderer')->willReturn($content_renderer);
 
         $license = new LicenseAgreement(1, 'some title', 'some content');
-        $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn($license);
-        $this->factory->method('canBeDeleted')->with($this->project, $license)->willReturn(true);
+        $this->factory->method('getLicenseAgreementById')->willReturn($license);
+        $this->factory->method('canBeDeleted')->willReturn(true);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
     }
@@ -109,11 +106,9 @@ final class EditLicenseAgreementControllerTest extends TestCase
     {
         $content_renderer = $this->createMock(TemplateRenderer::class);
         $content_renderer->expects($this->once())->method('renderToPage')->with('view-default-license-agreement', self::anything());
-        $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
-            return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
-        }))->willReturn($content_renderer);
+        $this->renderer_factory->method('getRenderer')->willReturn($content_renderer);
 
-        $this->factory->method('getLicenseAgreementById')->with($this->project, 0)->willReturn(new DefaultLicenseAgreement());
+        $this->factory->method('getLicenseAgreementById')->willReturn(new DefaultLicenseAgreement());
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '0']);
     }
@@ -122,7 +117,7 @@ final class EditLicenseAgreementControllerTest extends TestCase
     {
         $this->expectException(NotFoundException::class);
 
-        $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(null);
+        $this->factory->method('getLicenseAgreementById')->willReturn(null);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
     }

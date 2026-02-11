@@ -66,7 +66,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request = $this->createStub(ServerRequestInterface::class);
         $app     = $this->buildOAuth2App();
-        $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn($app);
+        $request->method('getAttribute')->willReturnMap([[OAuth2ClientAuthenticationMiddleware::class, $app]]);
         $request->method('getParsedBody')->willReturn(
             ['grant_type' => 'authorization_code']
         );
@@ -83,7 +83,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request = $this->createStub(ServerRequestInterface::class);
         $app     = $this->buildOAuth2App();
-        $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn($app);
+        $request->method('getAttribute')->willReturnMap([[OAuth2ClientAuthenticationMiddleware::class, $app]]);
         $request->method('getParsedBody')->willReturn(
             ['grant_type' => 'refresh_token']
         );
@@ -95,7 +95,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRejectsRequestThatDoesNotHaveAnExplicitGrantType(): void
     {
         $request = $this->createStub(ServerRequestInterface::class);
-        $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn($this->buildOAuth2App());
+        $request->method('getAttribute')->willReturnMap([[OAuth2ClientAuthenticationMiddleware::class, $this->buildOAuth2App()]]);
         $request->method('getParsedBody')->willReturn(null);
 
         $response = $this->controller->handle($request);
@@ -107,7 +107,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRejectsRequestWithAnUnsupportedGrantType(): void
     {
         $request = $this->createStub(ServerRequestInterface::class);
-        $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn($this->buildOAuth2App());
+        $request->method('getAttribute')->willReturnMap([[OAuth2ClientAuthenticationMiddleware::class, $this->buildOAuth2App()]]);
         $request->method('getParsedBody')->willReturn(['grant_type' => 'password']);
 
         $response = $this->controller->handle($request);
@@ -119,7 +119,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRejectsRequestWhereTheClientHasNotBeenAuthenticated(): void
     {
         $request = $this->createStub(ServerRequestInterface::class);
-        $request->method('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->willReturn(null);
+        $request->method('getAttribute')->willReturnMap([[OAuth2ClientAuthenticationMiddleware::class, null]]);
 
         $response = $this->controller->handle($request);
         $this->assertEquals(401, $response->getStatusCode());

@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use EventManager;
 use ForgeAccess;
 use ForgeConfig;
-use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Project_AccessDeletedException;
 use Project_AccessPrivateException;
@@ -35,25 +33,13 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
-
-    private RestrictedUserCanAccessVerifier&Stub $verifier;
-    private EventManager&Stub $event_manager;
-    private ProjectAccessChecker $checker;
-
-    #[\PHPUnit\Framework\Attributes\Before]
-    public function createInstance(): void
-    {
-        $this->verifier      = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
-        $this->event_manager = $this->createStub(EventManager::class);
-
-        $this->checker = new ProjectAccessChecker($this->verifier, $this->event_manager);
-    }
 
     public function testRestrictedUserCanNotAccessProjectWhichDoesntAllowRestricted(): void
     {
@@ -69,7 +55,10 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(\Project_AccessRestrictedException::class);
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testRestrictedUserCanAccessProjectWhichAllowsRestricted(): void
@@ -84,11 +73,14 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PUBLIC_UNRESTRICTED)
             ->build();
 
-        $this->verifier->method('isRestrictedUserAllowedToAccess')->willReturn(true);
 
         $this->expectNotToPerformAssertions();
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+        $verifier->method('isRestrictedUserAllowedToAccess')->willReturn(true);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testRestrictedUserCannotAccessProjectWhichAllowsRestrictedButVerifierDoesNot(): void
@@ -103,11 +95,14 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PUBLIC_UNRESTRICTED)
             ->build();
 
-        $this->verifier->method('isRestrictedUserAllowedToAccess')->willReturn(false);
 
         $this->expectException(\Project_AccessRestrictedException::class);
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+        $verifier->method('isRestrictedUserAllowedToAccess')->willReturn(false);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testRestrictedUserCanNotAccessAProjectMarkedAsPrivateWithoutRestrictedEvenSheIsMemberOf(): void
@@ -126,7 +121,10 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(Project_AccessProjectNotFoundException::class);
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testRestrictedUserCanAccessAProjectMarkedAsPrivateEvenSheIsMemberOf(): void
@@ -145,7 +143,10 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItGrantsAccessToProjectMembers(): void
@@ -162,7 +163,10 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItGrantsAccessToNonProjectMembersForPublicProjects(): void
@@ -179,7 +183,10 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItForbidsAccessToRestrictedUsersNotProjectMembers(): void
@@ -196,7 +203,10 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(Project_AccessRestrictedException::class);
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItGrantsAccessToRestrictedUsersThatAreProjectMembers(): void
@@ -213,7 +223,10 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItForbidsAccessToActiveUsersThatAreNotPrivateProjectMembers(): void
@@ -228,11 +241,12 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PRIVATE)
             ->build();
 
-        $this->event_manager->method('processEvent');
-
         $this->expectException(Project_AccessPrivateException::class);
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItForbidsRestrictedUsersToAccessProjectsTheyAreNotMemberOf(): void
@@ -249,7 +263,10 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(Project_AccessRestrictedException::class);
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItForbidsAccessToDeletedProjects(): void
@@ -266,7 +283,11 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->expectException(Project_AccessDeletedException::class);
-        $this->checker->checkUserCanAccessProject($user, $project);
+
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItForbidsAccessToNotActiveProjects(): void
@@ -283,7 +304,11 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->expectException(AccessNotActiveException::class);
-        $this->checker->checkUserCanAccessProject($user, $project);
+
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItForbidsAccessToSuspendedProjects(): void
@@ -300,7 +325,11 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->expectException(ProjectAccessSuspendedException::class);
-        $this->checker->checkUserCanAccessProject($user, $project);
+
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItForbidsAccessToNonExistentProject(): void
@@ -314,7 +343,11 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('isActive')->willReturn(true);
 
         $this->expectException(Project_AccessProjectNotFoundException::class);
-        $this->checker->checkUserCanAccessProject($user, $project);
+
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItBlindlyGrantAccessForSiteAdmin(): void
@@ -328,7 +361,10 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItGrantsAccessForUserWithDelegatedAccessByAPlugin(): void
@@ -343,14 +379,19 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(Project::ACCESS_PRIVATE)
             ->build();
 
-        $this->event_manager->method('processEvent')->with(
-            self::callback(static function (DelegatedUserAccessForProject $event): bool {
-                $event->enableAccessToProjectToTheUser();
-                return true;
-            })
-        );
+        $this->expectNotToPerformAssertions();
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withCallback(
+            function (object $event): object {
+                if ($event instanceof DelegatedUserAccessForProject) {
+                    $event->enableAccessToProjectToTheUser();
+                }
+                return $event;
+            }
+        ));
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItForbidsAccessToAnonymousUsersWhenTheInstanceDoesNotAllowAnonymousUsers(): void
@@ -362,7 +403,11 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->expectException(Project_AccessProjectNotFoundException::class);
-        $this->checker->checkUserCanAccessProject($user, $project);
+
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 
     public function testItForbidsAccessForAnonymousUsersInAPublicProjectWhenTheInstanceAllowsAnonymousUsers(): void
@@ -378,6 +423,9 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $this->checker->checkUserCanAccessProject($user, $project);
+        $verifier = $this->createStub(RestrictedUserCanAccessUrlOrProjectVerifier::class);
+
+        $checker = new ProjectAccessChecker($verifier, EventDispatcherStub::withIdentityCallback());
+        $checker->checkUserCanAccessProject($user, $project);
     }
 }

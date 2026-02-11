@@ -158,7 +158,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->artifact->method('getWorkflow')->willReturn($this->workflow);
         $this->workflow->method('isUsed')->willReturn(true);
 
-        $this->artifact->method('getValue')->with($this->field_changed)->willReturn($changeset_value);
+        $this->artifact->method('getValue')->willReturn($changeset_value);
         $changeset_value->method('getValue')->willReturn([self::ORIGINAL_FIELD_CHANGED_VALUE_ID]);
 
         $this->workflow->method('getTransition')->willReturnCallback(
@@ -169,8 +169,8 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
             }
         );
 
-        $this->condition_1->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
-        $this->condition_2->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
+        $this->condition_1->method('isUserAllowedToSeeTransition')->willReturn(true);
+        $this->condition_2->method('isUserAllowedToSeeTransition')->willReturn(true);
 
         $this->workflow->method('getGlobalRulesManager')->willReturn($this->tracker_rules_manager);
         $this->tracker_rules_manager->method('getAllListRulesByTrackerWithOrder')->willReturn([]);
@@ -194,17 +194,11 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->artifact->method('getWorkflow')->willReturn($this->workflow);
         $this->workflow->method('isUsed')->willReturn(true);
 
-        $this->artifact->method('getValue')->with($this->field_changed)->willReturn($changeset_value);
+        $this->artifact->method('getValue')->willReturn($changeset_value);
         $changeset_value->method('getValue')->willReturn([self::ORIGINAL_FIELD_CHANGED_VALUE_ID]);
 
-        $this->condition_1->method('isUserAllowedToSeeTransition')->with(
-            $user_without_permissions,
-            $this->tracker
-        )->willReturn(false);
-        $this->condition_2->method('isUserAllowedToSeeTransition')->with(
-            $user_without_permissions,
-            $this->tracker
-        )->willReturn(false);
+        $this->condition_1->method('isUserAllowedToSeeTransition')->willReturn(false);
+        $this->condition_2->method('isUserAllowedToSeeTransition')->willReturn(false);
 
         $this->workflow->method('getTransition')->willReturnCallback(
             fn (int $field_value_id_from, int $field_value_id_to): ?Transition => match (true) {
@@ -241,8 +235,8 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         );
 
 
-        $this->condition_1->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
-        $this->condition_2->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
+        $this->condition_1->method('isUserAllowedToSeeTransition')->willReturn(true);
+        $this->condition_2->method('isUserAllowedToSeeTransition')->willReturn(true);
 
         $this->workflow->method('getGlobalRulesManager')->willReturn($this->tracker_rules_manager);
         $this->tracker_rules_manager->method('getAllListRulesByTrackerWithOrder')->willReturn(
@@ -258,7 +252,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
 
         $changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue::class);
 
-        $this->artifact->method('getValue')->with($this->field_changed)->willReturn($changeset_value);
+        $this->artifact->method('getValue')->willReturn($changeset_value);
         $changeset_value->method('getValue')->willReturn([self::ORIGINAL_FIELD_CHANGED_VALUE_ID]);
 
         self::assertSame(
@@ -294,8 +288,8 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
             }
         );
 
-        $this->condition_1->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
-        $this->condition_2->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
+        $this->condition_1->method('isUserAllowedToSeeTransition')->willReturn(true);
+        $this->condition_2->method('isUserAllowedToSeeTransition')->willReturn(true);
 
         $this->workflow->method('getGlobalRulesManager')->willReturn($this->tracker_rules_manager);
         $this->tracker_rules_manager->method('getAllListRulesByTrackerWithOrder')->willReturn(
@@ -311,7 +305,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
 
         $changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue::class);
 
-        $this->artifact->method('getValue')->with($this->field_changed)->willReturn($changeset_value);
+        $this->artifact->method('getValue')->willReturn($changeset_value);
         $changeset_value->method('getValue')->willReturn([self::ORIGINAL_FIELD_CHANGED_VALUE_ID]);
 
         $this->expectException(NoPossibleValueException::class);

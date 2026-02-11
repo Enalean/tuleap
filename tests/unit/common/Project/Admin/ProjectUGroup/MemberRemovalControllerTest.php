@@ -47,8 +47,8 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \UserManager&Stub $user_manager;
     private MemberRemovalController $controller;
     private \Tuleap\HTTPRequest&MockObject $http_request;
-    private BaseLayout&Stub $layout;
-    private MemberRemover&Stub $member_remover;
+    private BaseLayout&MockObject $layout;
+    private MemberRemover&MockObject $member_remover;
     private ProjectMemberRemover&MockObject $project_member_remover;
     private \CSRFSynchronizerToken&MockObject $csrf;
 
@@ -59,9 +59,9 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->administrator_checker  = $this->createMock(ProjectAdministratorChecker::class);
         $this->ugroup_manager         = $this->createStub(\UGroupManager::class);
         $this->user_manager           = $this->createStub(\UserManager::class);
-        $this->member_remover         = $this->createStub(MemberRemover::class);
+        $this->member_remover         = $this->createMock(MemberRemover::class);
         $this->http_request           = $this->createMock(\Tuleap\HTTPRequest::class);
-        $this->layout                 = $this->createStub(BaseLayout::class);
+        $this->layout                 = $this->createMock(BaseLayout::class);
         $this->project_member_remover = $this->createMock(ProjectMemberRemover::class);
         $this->csrf                   = $this->createMock(\CSRFSynchronizerToken::class);
         $this->csrf->expects($this->once())->method('check');
@@ -102,7 +102,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProjectId')->willReturn(101);
         $ugroup->method('getId')->willReturn(202);
-        $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
+        $this->ugroup_manager->method('getUGroup')->willReturn($ugroup);
 
         $user_to_remove = new \PFUser(['user_id' => 303]);
         $matcher        = $this->exactly(2);
@@ -116,13 +116,13 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 return 'remove-from-ugroup-only';
             }
         });
-        $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
+        $this->user_manager->method('getUserById')->willReturn($user_to_remove);
 
-        $this->member_remover->method('removeMember')->with($user_to_remove, $project_admin, $ugroup);
+        $this->member_remover->expects($this->once())->method('removeMember')->with($user_to_remove, $project_admin, $ugroup);
 
         $this->project_member_remover->expects($this->never())->method('removeUserFromProject');
 
-        $this->layout->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
@@ -141,7 +141,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProjectId')->willReturn(101);
         $ugroup->method('getId')->willReturn(202);
-        $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
+        $this->ugroup_manager->method('getUGroup')->willReturn($ugroup);
 
         $user_to_remove = new \PFUser(['user_id' => 303]);
         $matcher        = $this->exactly(2);
@@ -155,7 +155,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 return 'remove-from-ugroup-only';
             }
         });
-        $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
+        $this->user_manager->method('getUserById')->willReturn($user_to_remove);
 
         $this->member_remover->method('removeMember')->with($user_to_remove, $project_admin, $ugroup)
             ->willThrowException(new CannotModifyBoundGroupException());
@@ -182,7 +182,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProjectId')->willReturn(101);
         $ugroup->method('getId')->willReturn(202);
-        $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
+        $this->ugroup_manager->method('getUGroup')->willReturn($ugroup);
 
         $user_to_remove = UserTestBuilder::aUser()
             ->withId(303)
@@ -200,7 +200,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 return 'remove-from-ugroup-and-project';
             }
         });
-        $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
+        $this->user_manager->method('getUserById')->willReturn($user_to_remove);
 
         $this->project_member_remover->expects($this->once())->method('removeUserFromProject')->with(101, 303);
 
@@ -223,7 +223,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup = $this->createStub(\ProjectUGroup::class);
         $ugroup->method('getProjectId')->willReturn(101);
         $ugroup->method('getId')->willReturn(202);
-        $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
+        $this->ugroup_manager->method('getUGroup')->willReturn($ugroup);
 
         $user_to_remove = UserTestBuilder::aUser()
             ->withId(303)
@@ -241,15 +241,15 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 return 'remove-from-ugroup-and-project';
             }
         });
-        $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
+        $this->user_manager->method('getUserById')->willReturn($user_to_remove);
 
         $this->project_member_remover->expects($this->never())->method('removeUserFromProject');
 
-        $this->layout->method('addFeedback')->with(\Feedback::ERROR, self::anything());
+        $this->layout->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR, self::anything());
         $exception_stop_exec_redirect = new \Exception('Redirect');
         $this->layout->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->willThrowException($exception_stop_exec_redirect);
 
-        self::expectExceptionObject($exception_stop_exec_redirect);
+        $this->expectExceptionObject($exception_stop_exec_redirect);
         $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
 }

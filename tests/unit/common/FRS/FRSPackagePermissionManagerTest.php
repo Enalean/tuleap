@@ -54,7 +54,7 @@ final class FRSPackagePermissionManagerTest extends TestCase
     public function testItReturnsTrueWhenUserCanReadThePackage(): void
     {
         $package = new FRSPackage(['package_id' => 101]);
-        $this->package_factory->method('userCanRead')->with(101, $this->user->getId())->willReturn(true);
+        $this->package_factory->method('userCanRead')->willReturn(true);
 
         self::assertTrue(
             $this->package_permission_manager->canUserSeePackage($this->user, $package)
@@ -64,7 +64,7 @@ final class FRSPackagePermissionManagerTest extends TestCase
     public function testItReturnsFalseWhenUserCannotReadThePackage(): void
     {
         $package = new FRSPackage(['package_id' => 101]);
-        $this->package_factory->method('userCanRead')->with(101, $this->user->getId())->willReturn(false);
+        $this->package_factory->method('userCanRead')->willReturn(false);
 
         self::assertFalse(
             $this->package_permission_manager->canUserSeePackage($this->user, $package)

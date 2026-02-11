@@ -121,8 +121,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->method('createErrorResponse')
-            ->with('login_required', 'https://example.com/redirect', null)
-            ->willReturn($response);
+            ->willReturnMap([['login_required', 'https://example.com/redirect', null, $response]]);
 
         self::assertSame($response, $this->controller->handle($request));
     }
@@ -412,8 +411,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->method('createErrorResponse')
-            ->with('interaction_required', 'https://example.com/redirect', 'xyz')
-            ->willReturn($response);
+            ->willReturnMap([['interaction_required', 'https://example.com/redirect', 'xyz', $response]]);
 
         self::assertSame($response, $this->controller->handle($request));
     }

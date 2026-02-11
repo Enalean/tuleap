@@ -41,8 +41,7 @@ final class XMLMediaWikiExporterTest extends TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with('project_ugroup', 'ugroup_project_members_name_key')
-            ->willReturn('project_members');
+            ->willReturnMap([['project_ugroup', 'ugroup_project_members_name_key', 'project_members']]);
     }
 
     public function testItExportsMediaWikiPermissions(): void

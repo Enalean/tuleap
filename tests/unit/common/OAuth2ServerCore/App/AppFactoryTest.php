@@ -58,7 +58,6 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
         $this->project_manager->method('getValidProject')
-            ->with(404)
             ->willThrowException(new \Project_NotFoundException());
 
         $this->expectException(OAuth2AppNotFoundException::class);
@@ -74,7 +73,6 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
         $project   = ProjectTestBuilder::aProject()->build();
         $this->project_manager->method('getValidProject')
-            ->with(102)
             ->willReturn($project);
 
         $result = $this->app_factory->getAppMatchingClientId($client_id);

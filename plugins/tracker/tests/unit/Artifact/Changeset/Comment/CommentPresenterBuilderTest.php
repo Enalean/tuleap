@@ -54,8 +54,7 @@ final class CommentPresenterBuilderTest extends TestCase
 
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt')
-            ->willReturn('d/m/Y H:i');
+            ->willReturnMap([['system', 'datefmt', 'd/m/Y H:i']]);
 
         $user_helper = $this->createStub(UserHelper::class);
         $user_helper->method('getLinkOnUserFromUserId')->willReturn('/some/user/link');

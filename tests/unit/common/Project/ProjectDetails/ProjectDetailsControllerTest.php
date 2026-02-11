@@ -251,7 +251,7 @@ final class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
         $request = $this->createMock(\Tuleap\HTTPRequest::class);
-        $matcher = self::exactly(12);
+        $matcher = $this->exactly(12);
         $request
             ->expects($matcher)
             ->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
@@ -314,7 +314,7 @@ final class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $project->method('getAccess')->willReturn(Project::ACCESS_PUBLIC);
         $project->method('getID')->willReturn(101);
-        $current_user->method('isAdmin')->with(101)->willReturn(true);
+        $current_user->method('isAdmin')->willReturn(true);
         $request->expects($this->exactly(2))->method('getProject')->willReturn($project);
 
         $this->description_fields_factory->method('getAllDescriptionFields')->willReturn([]);

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -35,13 +36,13 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalResponseMock;
 
     private UGroupBinding $binding;
-    private \UGroupUserDao&MockObject $ugroup_user_dao;
+    private \UGroupUserDao&Stub $ugroup_user_dao;
     private \UGroupManager&MockObject $ugroup_manager;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->ugroup_user_dao = $this->createMock(\UGroupUserDao::class);
+        $this->ugroup_user_dao = $this->createStub(\UGroupUserDao::class);
         $this->ugroup_manager  = $this->createMock(\UGroupManager::class);
         $this->binding         = new UGroupBinding($this->ugroup_user_dao, $this->ugroup_manager);
     }
@@ -50,7 +51,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->ugroup_manager->expects($this->once())->method('updateUgroupBinding');
         $GLOBALS['Language']->method('getText')
-            ->with('project_ugroup_binding', 'binding_removed')->willReturn('Something');
+            ->willReturnMap([['project_ugroup_binding', 'binding_removed', 'Something']]);
 
         self::assertTrue($this->binding->removeBinding(200));
         self::assertNotEmpty($this->global_response->getRawFeedback());
@@ -68,7 +69,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->binding = $this->createPartialMock(UGroupBinding::class, [
             'getUGroupsByBindingSource',
         ]);
-        $this->binding->method('getUGroupsByBindingSource')
+        $this->binding->expects($this->once())->method('getUGroupsByBindingSource')
             ->willReturn([]);
 
         $this->ugroup_manager->expects($this->never())->method('updateUgroupBinding');
@@ -168,7 +169,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
             'getUGroupsByBindingSource',
             'reloadUgroupBinding',
         ]);
-        $this->binding->method('getUGroupsByBindingSource')
+        $this->binding->expects($this->once())->method('getUGroupsByBindingSource')
             ->willReturn([300 => [], 400 => []]);
 
         $this->binding->expects($this->once())->method('reloadUgroupBinding')

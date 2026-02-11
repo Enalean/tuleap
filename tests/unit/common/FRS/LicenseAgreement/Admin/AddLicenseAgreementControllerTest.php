@@ -64,7 +64,7 @@ final class AddLicenseAgreementControllerTest extends TestCase
     public function testProcessRenders(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
-        $this->project_retriever->method('getProjectFromId')->with('102')->willReturn($project);
+        $this->project_retriever->method('getProjectFromId')->willReturn($project);
         $current_user = UserTestBuilder::buildWithDefaults();
         $request      = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->expects($this->once())->method('getCurrentUser')->willReturn($current_user);

@@ -81,7 +81,7 @@ final class BrowserDeprecationMessageTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildDetectedBrowserFromUserAgent(string $user_agent): DetectedBrowser
     {
         $request = $this->createStub(\Tuleap\HTTPRequest::class);
-        $request->method('getFromServer')->with('HTTP_USER_AGENT')->willReturn($user_agent);
+        $request->method('getFromServer')->willReturn($user_agent);
 
         return DetectedBrowser::detectFromTuleapHTTPRequest($request);
     }

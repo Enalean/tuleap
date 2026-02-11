@@ -93,13 +93,11 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
     {
         $this->cross_ref_link_collection_presenter_builder
             ->method('build')
-            ->with([$this->cross_ref_target_1], 'target', true)
-            ->willReturn([$this->cross_ref_link_1]);
+            ->willReturnMap([[[$this->cross_ref_target_1], 'target', true, [$this->cross_ref_link_1]]]);
 
         $this->cross_ref_link_list_presenter_builder
             ->method('buildForTarget')
-            ->with([$this->cross_ref_link_1])
-            ->willReturn($this->cross_reference_link_list);
+            ->willReturnMap([[[$this->cross_ref_link_1], $this->cross_reference_link_list]]);
 
         $this->cross_ref_collection->method('getCrossReferencesBoth')->willReturn([]);
         $this->cross_ref_collection->method('getCrossReferencesTarget')->willReturn([$this->cross_ref_target_1]);
@@ -116,13 +114,11 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
     {
         $this->cross_ref_link_collection_presenter_builder
             ->method('build')
-            ->with([$this->cross_ref_target_1], 'source', true)
-            ->willReturn([$this->cross_ref_link_1]);
+            ->willReturnMap([[[$this->cross_ref_target_1], 'source', true, [$this->cross_ref_link_1]]]);
 
         $this->cross_ref_link_list_presenter_builder
             ->method('buildForSource')
-            ->with([$this->cross_ref_link_1])
-            ->willReturn($this->cross_reference_link_list);
+            ->willReturnMap([[[$this->cross_ref_link_1], $this->cross_reference_link_list]]);
 
         $this->cross_ref_collection->method('getCrossReferencesBoth')->willReturn([]);
         $this->cross_ref_collection->method('getCrossReferencesTarget')->willReturn([]);
@@ -139,13 +135,11 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
     {
         $this->cross_ref_link_collection_presenter_builder
             ->method('build')
-            ->with([$this->cross_ref_target_1], 'both', false)
-            ->willReturn([$this->cross_ref_link_1]);
+            ->willReturnMap([[[$this->cross_ref_target_1], 'both', false, [$this->cross_ref_link_1]]]);
 
         $this->cross_ref_link_list_presenter_builder
             ->method('buildForBoth')
-            ->with([$this->cross_ref_link_1])
-            ->willReturn($this->cross_reference_link_list);
+            ->willReturnMap([[[$this->cross_ref_link_1], $this->cross_reference_link_list]]);
 
         $this->cross_ref_collection->method('getCrossReferencesBoth')->willReturn([$this->cross_ref_target_1]);
         $this->cross_ref_collection->method('getCrossReferencesTarget')->willReturn([]);
@@ -165,18 +159,15 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
 
         $this->cross_ref_link_list_presenter_builder
             ->method('buildForSource')
-            ->with([$this->cross_ref_link_1])
-            ->willReturn($this->cross_reference_link_list);
+            ->willReturnMap([[[$this->cross_ref_link_1], $this->cross_reference_link_list]]);
 
         $this->cross_ref_link_list_presenter_builder
             ->method('buildForTarget')
-            ->with([$this->cross_ref_link_2])
-            ->willReturn($this->cross_reference_link_list_2);
+            ->willReturnMap([[[$this->cross_ref_link_2], $this->cross_reference_link_list_2]]);
 
         $this->cross_ref_link_list_presenter_builder
             ->method('buildForBoth')
-            ->with([$this->cross_ref_link_3])
-            ->willReturn($this->cross_reference_link_list_3);
+            ->willReturnMap([[[$this->cross_ref_link_3], $this->cross_reference_link_list_3]]);
 
         $this->cross_ref_collection->method('getCrossReferencesBoth')->willReturn([$this->cross_ref_target_3]);
         $this->cross_ref_collection->method('getCrossReferencesTarget')->willReturn([$this->cross_ref_target_2]);

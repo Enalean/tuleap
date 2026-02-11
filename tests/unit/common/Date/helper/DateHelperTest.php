@@ -149,12 +149,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with(
-                'include_utils',
-                'X_minutes',
-                8
-            )
-            ->willReturn('8 minutes');
+            ->willReturnMap([['include_utils', 'X_minutes', 8.0, '8 minutes']]);
 
         self::assertEquals(
             '8 minutes ago',
@@ -166,12 +161,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with(
-                'include_utils',
-                'X_minutes',
-                8
-            )
-            ->willReturn('8 minutes');
+            ->willReturnMap([['include_utils', 'X_minutes', 8.0, '8 minutes']]);
 
         self::assertEquals(
             'in 8 minutes',
@@ -183,11 +173,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with(
-                'system',
-                'datefmt',
-            )
-            ->willReturn('Y-m-d H:i');
+            ->willReturnMap([['system', 'datefmt', 'Y-m-d H:i']]);
 
         $user = UserTestBuilder::aUser()->withLocale('en_US')->build();
 
@@ -206,11 +192,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with(
-                'system',
-                'datefmt',
-            )
-            ->willReturn('Y-m-d H:i');
+            ->willReturnMap([['system', 'datefmt', 'Y-m-d H:i']]);
 
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
@@ -232,11 +214,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with(
-                'system',
-                'datefmt_short',
-            )
-            ->willReturn('Y-m-d');
+            ->willReturnMap([['system', 'datefmt_short', 'Y-m-d']]);
 
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
@@ -258,11 +236,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with(
-                'system',
-                'datefmt',
-            )
-            ->willReturn('Y-m-d H:i');
+            ->willReturnMap([['system', 'datefmt', 'Y-m-d H:i']]);
 
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
@@ -284,11 +258,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with(
-                'system',
-                'datefmt',
-            )
-            ->willReturn('Y-m-d H:i');
+            ->willReturnMap([['system', 'datefmt', 'Y-m-d H:i']]);
 
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
@@ -310,11 +280,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with(
-                'system',
-                'datefmt',
-            )
-            ->willReturn('Y-m-d H:i');
+            ->willReturnMap([['system', 'datefmt', 'Y-m-d H:i']]);
 
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
@@ -336,11 +302,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with(
-                'system',
-                'datefmt',
-            )
-            ->willReturn('Y-m-d H:i');
+            ->willReturnMap([['system', 'datefmt', 'Y-m-d H:i']]);
 
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')

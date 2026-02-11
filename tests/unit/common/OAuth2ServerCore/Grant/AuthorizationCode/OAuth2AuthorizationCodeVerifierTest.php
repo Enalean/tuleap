@@ -61,13 +61,13 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
     public function testGivingACorrectTokenTheCorrespondingUserIsRetrieved(): void
     {
         $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
-        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
+        $this->user_manager->method('getUserById')->willReturn($expected_user);
 
         $auth_code = new SplitToken(
             1,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
+        $this->dao->method('searchAuthorizationCode')->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'expected_hashed_verification_string',
@@ -102,12 +102,12 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
     public function testVerificationFailsWhenVerificationStringDoesNotMatch(): void
     {
         $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
-        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
+        $this->user_manager->method('getUserById')->willReturn($expected_user);
         $auth_code = new SplitToken(
             2,
             new SplitTokenVerificationString(new ConcealedString('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'))
         );
-        $this->dao->expects($this->once())->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
+        $this->dao->expects($this->once())->method('searchAuthorizationCode')->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'wrong_hashed_verification_string',
@@ -124,12 +124,12 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
     public function testVerificationFailsWhenTheAuthCodeHasExpired(): void
     {
         $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
-        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
+        $this->user_manager->method('getUserById')->willReturn($expected_user);
         $auth_code = new SplitToken(
             3,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->expects($this->once())->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
+        $this->dao->expects($this->once())->method('searchAuthorizationCode')->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'wrong_hashed_verification_string',
@@ -151,7 +151,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
             4,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
+        $this->dao->method('searchAuthorizationCode')->willReturn(
             [
                 'user_id'               => 404,
                 'verifier'              => 'expected_hashed_verification_string',
@@ -172,7 +172,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
             5,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
+        $this->dao->method('searchAuthorizationCode')->willReturn(
             [
                 'user_id'               => 102,
                 'verifier'              => 'expected_hashed_verification_string',
@@ -190,13 +190,13 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
     public function testVerificationFailsWhenNoValidScopesCanBeFound(): void
     {
         $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
-        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
+        $this->user_manager->method('getUserById')->willReturn($expected_user);
 
         $auth_code = new SplitToken(
             6,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
+        $this->dao->method('searchAuthorizationCode')->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'expected_hashed_verification_string',

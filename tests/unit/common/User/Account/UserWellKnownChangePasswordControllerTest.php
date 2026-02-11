@@ -25,12 +25,12 @@ namespace Tuleap\User\Account;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\Stub;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -38,21 +38,11 @@ final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUn
     use ForgeConfigSandbox;
 
     private \UserManager&Stub $user_manager;
-    private EventDispatcherInterface&Stub $event_dispatcher;
-    private UserWellKnownChangePasswordController $controller;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->user_manager     = $this->createStub(\UserManager::class);
-        $this->event_dispatcher = $this->createStub(EventDispatcherInterface::class);
-        $this->controller       = new UserWellKnownChangePasswordController(
-            $this->user_manager,
-            $this->event_dispatcher,
-            HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
-            new NoopSapiEmitter(),
-        );
+        $this->user_manager = $this->createStub(\UserManager::class);
     }
 
     public function testRedirectsUserToChangePasswordPage(): void
@@ -61,12 +51,18 @@ final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUn
         $current_user->method('isAnonymous')->willReturn(false);
         $current_user->method('getUserPw')->willReturn('some_password_hash');
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
-        $this->event_dispatcher->method('dispatch')->with(self::isInstanceOf(PasswordPreUpdateEvent::class))
-            ->willReturn(new PasswordPreUpdateEvent($current_user));
 
         \ForgeConfig::set('sys_default_domain', 'example.com');
 
-        $response = $this->controller->handle(new NullServerRequest());
+        $controller = new UserWellKnownChangePasswordController(
+            $this->user_manager,
+            EventDispatcherStub::withIdentityCallback(),
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new NoopSapiEmitter(),
+        );
+
+        $response = $controller->handle(new NullServerRequest());
 
         self::assertEquals(302, $response->getStatusCode());
         self::assertEquals('https://example.com/account/security', $response->getHeaderLine('Location'));
@@ -76,7 +72,15 @@ final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUn
     {
         $this->user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::anAnonymousUser()->build());
 
-        $response = $this->controller->handle(new NullServerRequest());
+        $controller = new UserWellKnownChangePasswordController(
+            $this->user_manager,
+            EventDispatcherStub::withIdentityCallback(),
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new NoopSapiEmitter(),
+        );
+
+        $response = $controller->handle(new NullServerRequest());
         self::assertEquals(404, $response->getStatusCode());
     }
 
@@ -84,12 +88,23 @@ final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUn
     {
         $current_user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
-        $password_pre_update_event = new PasswordPreUpdateEvent($current_user);
-        $password_pre_update_event->forbidUserToChangePassword();
-        $this->event_dispatcher->method('dispatch')->with(self::isInstanceOf(PasswordPreUpdateEvent::class))
-            ->willReturn($password_pre_update_event);
 
-        $response = $this->controller->handle(new NullServerRequest());
+        $controller = new UserWellKnownChangePasswordController(
+            $this->user_manager,
+            EventDispatcherStub::withCallback(
+                function (object $event): object {
+                    if ($event instanceof PasswordPreUpdateEvent) {
+                        $event->forbidUserToChangePassword();
+                    }
+                    return $event;
+                }
+            ),
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new NoopSapiEmitter(),
+        );
+
+        $response = $controller->handle(new NullServerRequest());
         self::assertEquals(404, $response->getStatusCode());
     }
 }

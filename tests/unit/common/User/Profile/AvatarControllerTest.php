@@ -72,7 +72,7 @@ final class AvatarControllerTest extends TestCase
 
         $request = (new NullServerRequest())->withAttribute('name', $user->getUserName());
 
-        $this->user_manager->method('getUserByUserName')->with($user->getUserName())
+        $this->user_manager->method('getUserByUserName')
             ->willReturn($user);
         $this->user_manager->method('updateDb');
 
@@ -92,7 +92,7 @@ final class AvatarControllerTest extends TestCase
             ->withAttribute('name', $user->getUserName())
             ->withAttribute('hash', 'expected_hash');
 
-        $this->user_manager->method('getUserByUserName')->with($user->getUserName())->willReturn($user);
+        $this->user_manager->method('getUserByUserName')->willReturn($user);
         $this->user_manager->method('updateDb');
 
         $response = $this->avatar_controller->handle($request);
@@ -111,7 +111,7 @@ final class AvatarControllerTest extends TestCase
             ->withAttribute('name', $user->getUserName())
             ->withAttribute('hash', 'wrong_hash');
 
-        $this->user_manager->method('getUserByUserName')->with($user->getUserName())->willReturn($user);
+        $this->user_manager->method('getUserByUserName')->willReturn($user);
         $this->user_manager->method('updateDb');
 
         $response = $this->avatar_controller->handle($request);

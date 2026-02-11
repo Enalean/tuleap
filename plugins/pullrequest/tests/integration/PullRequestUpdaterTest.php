@@ -24,10 +24,8 @@ namespace Tuleap\PullRequest;
 use GitRepositoryFactory;
 use PFUser;
 use PHPUnit\Framework\MockObject\Stub;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
 use Tuleap\NeverThrow\Result;
-use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use GitRepository;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDAO;
@@ -36,6 +34,7 @@ use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestUpdaterTest extends TestIntegrationTestCase
@@ -50,7 +49,6 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
     private GitPullRequestReferenceUpdater&Stub $pr_reference_updater;
     private PullRequestMerger&Stub $pr_merger;
     private TimelineEventCreator&Stub $timeline_event_creator;
-    private EventDispatcherInterface&Stub $event_dispatcher;
 
     #[\Override]
     protected function setUp(): void
@@ -64,7 +62,6 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
         $this->pr_reference_updater   = $this->createStub(GitPullRequestReferenceUpdater::class);
         $this->pr_merger              = $this->createStub(PullRequestMerger::class);
         $this->timeline_event_creator = $this->createStub(TimelineEventCreator::class);
-        $this->event_dispatcher       = $this->createStub(EventDispatcherInterface::class);
         $this->pull_request_updater   = new PullRequestUpdater(
             new Factory($this->dao, $reference_manager),
             $this->pr_merger,
@@ -75,7 +72,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
             $this->git_repository_factory,
             $this->git_exec_factory,
             $this->pr_reference_updater,
-            $this->event_dispatcher
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $this->git_exec = $this->createStub(GitExec::class);
@@ -99,9 +96,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
         $this->inline_comments_dao->method('searchUpToDateByPullRequestId')->willReturn([]);
 
         $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repo);
-        $this->git_exec_factory->method('getGitExec')->with($git_repo)->willReturn($this->git_exec);
-
-        $this->event_dispatcher->method('dispatch')->with(self::isInstanceOf(PullRequestUpdatedEvent::class));
+        $this->git_exec_factory->method('getGitExec')->willReturn($this->git_exec);
 
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
@@ -133,9 +128,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
         $this->inline_comments_dao->method('searchUpToDateByPullRequestId')->willReturn([]);
 
         $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repo);
-        $this->git_exec_factory->method('getGitExec')->with($git_repo)->willReturn($this->git_exec);
-
-        $this->event_dispatcher->method('dispatch');
+        $this->git_exec_factory->method('getGitExec')->willReturn($this->git_exec);
 
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
@@ -167,9 +160,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
         $this->inline_comments_dao->method('searchUpToDateByPullRequestId')->willReturn([]);
 
         $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repo);
-        $this->git_exec_factory->method('getGitExec')->with($git_repo)->willReturn($this->git_exec);
-
-        $this->event_dispatcher->method('dispatch');
+        $this->git_exec_factory->method('getGitExec')->willReturn($this->git_exec);
 
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 

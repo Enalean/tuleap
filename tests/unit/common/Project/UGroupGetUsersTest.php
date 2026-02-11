@@ -61,7 +61,7 @@ final class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
         $row    = ['ugroup_id' => $id, 'group_id' => 105];
         $ugroup = new ProjectUGroup($row);
         $dao    = $this->createStub(\UGroupUserDao::class);
-        $dao->method('searchUserByStaticUGroupId')->with($id)->willReturn(\TestHelper::emptyDar());
+        $dao->method('searchUserByStaticUGroupId')->willReturn(\TestHelper::emptyDar());
         $ugroup->setUGroupUserDao($dao);
         self::assertEquals([], $ugroup->getUsers()->getNames());
     }
@@ -72,7 +72,7 @@ final class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
         $row    = ['ugroup_id' => $id, 'group_id' => 105];
         $ugroup = new ProjectUGroup($row);
         $dao    = $this->createStub(\UGroupUserDao::class);
-        $dao->method('searchUserByStaticUGroupId')->with($id)->willReturn(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+        $dao->method('searchUserByStaticUGroupId')->willReturn(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         $ugroup->setUGroupUserDao($dao);
 
         self::assertEquals(['garfield', 'goofy'], $ugroup->getUsers()->getNames());
@@ -85,7 +85,7 @@ final class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
         $row      = ['ugroup_id' => $id, 'group_id' => $group_id];
         $ugroup   = new ProjectUGroup($row);
         $dao      = $this->createStub(\UGroupUserDao::class);
-        $dao->method('searchUserByDynamicUGroupId')->with($id, $group_id)->willReturn(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+        $dao->method('searchUserByDynamicUGroupId')->willReturn(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         $ugroup->setUGroupUserDao($dao);
 
         self::assertEquals(['garfield', 'goofy'], $ugroup->getUsers()->getNames());

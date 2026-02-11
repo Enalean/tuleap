@@ -85,7 +85,6 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
 
         $this->project_manager
             ->method('getProject')
-            ->with(101)
             ->willReturn(
                 new Project([
                     'group_id' => '101',
@@ -131,7 +130,6 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
 
         $this->template_factory
             ->method('getTemplate')
-            ->with('template')
             ->willReturn(
                 new class implements \Tuleap\Project\Registration\Template\TuleapTemplate
                 {
@@ -188,7 +186,6 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
 
         $this->xml_file_content_retriever
             ->method('getSimpleXMLElementFromFilePath')
-            ->with('path/to/xml/template')
             ->willReturn(Result::ok($xml_content));
 
         $this->from_xml_inheritor

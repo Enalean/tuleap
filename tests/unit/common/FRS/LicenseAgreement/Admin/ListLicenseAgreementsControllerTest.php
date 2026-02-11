@@ -25,6 +25,7 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use CSRFSynchronizerToken;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use TemplateRenderer;
@@ -42,7 +43,7 @@ final class ListLicenseAgreementsControllerTest extends TestCase
     private ListLicenseAgreementsController $controller;
     private ProjectRetriever&Stub $project_retriever;
     private Project $project;
-    private TemplateRendererFactory&Stub $renderer_factory;
+    private TemplateRendererFactory&MockObject $renderer_factory;
     private \Tuleap\HTTPRequest $request;
     private PFUser $current_user;
     private LicenseAgreementFactory&Stub $factory;
@@ -64,10 +65,10 @@ final class ListLicenseAgreementsControllerTest extends TestCase
             ->with('101')
             ->willReturn($this->project);
 
-        $this->renderer_factory = $this->createStub(TemplateRendererFactory::class);
+        $this->renderer_factory = $this->createMock(TemplateRendererFactory::class);
 
-        $this->helper = $this->createStub(LicenseAgreementControllersHelper::class);
-        $this->helper->method('assertCanAccess')->with($this->project, $this->current_user);
+        $this->helper = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->helper->expects($this->once())->method('assertCanAccess')->with($this->project, $this->current_user);
 
         $this->factory = $this->createStub(LicenseAgreementFactory::class);
 
@@ -82,18 +83,18 @@ final class ListLicenseAgreementsControllerTest extends TestCase
 
     public function testItRendersThePageHeader(): void
     {
-        $this->helper->method('renderHeader')->with($this->project);
+        $this->helper->method('renderHeader');
 
         $content_renderer = $this->createMock(TemplateRenderer::class);
         $content_renderer->expects($this->once())->method('renderToPage')->with('list-license-agreements', self::anything());
-        $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
+        $this->renderer_factory->expects($this->once())->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
         }))->willReturn($content_renderer);
 
         $this->layout->method('footer');
 
         $this->factory->method('getDefaultLicenseAgreementForProject')->willReturn(new NoLicenseToApprove());
-        $this->factory->method('getProjectLicenseAgreements')->with($this->project)->willReturn([]);
+        $this->factory->method('getProjectLicenseAgreements')->willReturn([]);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }

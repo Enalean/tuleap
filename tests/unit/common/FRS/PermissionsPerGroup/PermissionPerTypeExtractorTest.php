@@ -102,10 +102,7 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
         $this->ugroup_manager->method('getProjectAdminsUGroup')->willReturn($this->ugroup_project_admin);
-        $this->ugroup_manager->method('getUGroup')->with(
-            $this->equalTo($this->project),
-            (int) ProjectUGroup::PROJECT_MEMBERS
-        )->willReturn(
+        $this->ugroup_manager->method('getUGroup')->willReturn(
             $this->ugroup_project_member
         );
 
@@ -151,16 +148,11 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
             ]
         );
-        $this->ugroup_manager->method('getUGroup')->with(
-            $this->equalTo($this->project),
-            ProjectUGroup::PROJECT_MEMBERS
-        )->willReturn(
+        $this->ugroup_manager->method('getUGroup')->willReturn(
             $this->ugroup_project_member
         );
 
-        $this->formatter->method('formatGroup')->with(
-            $this->ugroup_project_member
-        )->willReturn(
+        $this->formatter->method('formatGroup')->willReturn(
             $this->formatted_project_member
         );
 

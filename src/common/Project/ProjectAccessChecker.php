@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use EventManager;
 use ForgeConfig;
 use PFUser;
 use Project;
@@ -30,12 +29,13 @@ use Project_AccessDeletedException;
 use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
 use Project_AccessRestrictedException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 class ProjectAccessChecker implements CheckProjectAccess
 {
     public function __construct(
         private RestrictedUserCanAccessVerifier $verifier,
-        private EventManager $event_manager,
+        private EventDispatcherInterface $event_manager,
     ) {
     }
 
@@ -115,7 +115,7 @@ class ProjectAccessChecker implements CheckProjectAccess
     {
         $event = new DelegatedUserAccessForProject($user);
 
-        $this->event_manager->processEvent($event);
+        $this->event_manager->dispatch($event);
 
         return $event->canUserAccessProject();
     }

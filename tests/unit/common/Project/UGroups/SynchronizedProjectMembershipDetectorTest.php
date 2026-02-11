@@ -55,7 +55,6 @@ final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUn
             ->build();
         $this->dao
             ->method('isEnabled')
-            ->with(165)
             ->willReturn(true);
 
         self::assertTrue($this->detector->isSynchronizedWithProjectMembers($project));
@@ -69,7 +68,6 @@ final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUn
             ->build();
         $this->dao
             ->method('isEnabled')
-            ->with(165)
             ->willReturn(false);
 
         self::assertFalse($this->detector->isSynchronizedWithProjectMembers($project));

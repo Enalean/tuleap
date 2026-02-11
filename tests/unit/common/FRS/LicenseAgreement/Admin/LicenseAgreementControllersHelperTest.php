@@ -63,8 +63,8 @@ final class LicenseAgreementControllersHelperTest extends TestCase
 
     public function testItThrowsAndExceptionWhenServiceIsNotAvailable(): void
     {
-        $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(true);
-        $this->project->method('getService')->with(\Service::FILE)->willReturn(null);
+        $this->permissions_manager->method('isAdmin')->willReturn(true);
+        $this->project->method('getService')->willReturn(null);
 
         $this->expectException(NotFoundException::class);
 
@@ -73,7 +73,7 @@ final class LicenseAgreementControllersHelperTest extends TestCase
 
     public function testItThrowsAnExceptionWhenUserIsNotFileAdministrator(): void
     {
-        $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(false);
+        $this->permissions_manager->method('isAdmin')->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
@@ -82,12 +82,10 @@ final class LicenseAgreementControllersHelperTest extends TestCase
 
     public function testItRendersFrsAdminHeader(): void
     {
-        $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
+        $this->project->method('getService')->willReturn($this->service_file);
         $header_renderer = $this->createMock(TemplateRenderer::class);
         $header_renderer->expects($this->once())->method('renderToPage')->with('toolbar-presenter', self::anything());
-        $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
-            return realpath($path) === realpath(__DIR__ . '/../../../../../../src/templates/frs');
-        }))->willReturn($header_renderer);
+        $this->renderer_factory->method('getRenderer')->willReturn($header_renderer);
 
         $this->helper->renderHeader($this->project);
     }

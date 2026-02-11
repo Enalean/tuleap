@@ -61,8 +61,7 @@ final class CrossReferenceGitEnhancerTest extends TestCase
 
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt')
-            ->willReturn('d/m/Y H:i');
+            ->willReturnMap([['system', 'datefmt', 'd/m/Y H:i']]);
     }
 
     public function testItDisplaysCommitTitleAsXRefTitle(): void

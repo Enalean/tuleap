@@ -164,7 +164,7 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $template120->method('getPublicName')->willReturn('Lyudi Invalidy Company');
 
         $this->user_manager->method('getCurrentUser')->willReturn($this->user);
-        $this->url_verification->method('userCanAccessProject')->with($this->user, $template100)->willReturn(true);
+        $this->url_verification->method('userCanAccessProject')->willReturn(true);
 
         $site_templates = [$template100, $template110, $template120];
         $this->project_manager->method('getSiteTemplates')->willReturn($site_templates);
@@ -191,7 +191,7 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getSiteTemplates')->willReturn([$template110]);
 
         $this->user_manager->method('getCurrentUser')->willReturn($this->user);
-        $this->url_verification->method('userCanAccessProject')->with($this->user, $template110)->willThrowException(new Project_AccessPrivateException());
+        $this->url_verification->method('userCanAccessProject')->willThrowException(new Project_AccessPrivateException());
 
         self::assertEmpty($this->factory->getCompanyTemplateList());
     }

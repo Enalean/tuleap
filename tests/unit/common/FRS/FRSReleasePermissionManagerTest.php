@@ -54,7 +54,7 @@ final class FRSReleasePermissionManagerTest extends TestCase
 
     public function testReturnsTrueWhenUserCanReadTheRelease(): void
     {
-        $this->release_factory->method('userCanRead')->with($this->release, $this->user->getId())->willReturn(true);
+        $this->release_factory->method('userCanRead')->willReturn(true);
 
         self::assertTrue(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release)
@@ -63,7 +63,7 @@ final class FRSReleasePermissionManagerTest extends TestCase
 
     public function testReturnsFalseWhenUserCannotReadTheRelease(): void
     {
-        $this->release_factory->method('userCanRead')->with($this->release, $this->user->getId())->willReturn(false);
+        $this->release_factory->method('userCanRead')->willReturn(false);
 
         self::assertFalse(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release)

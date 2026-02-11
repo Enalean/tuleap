@@ -85,7 +85,7 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
 
-        $this->user_manager->method('getUserById')->with(101)->willReturn($user);
+        $this->user_manager->method('getUserById')->willReturn($user);
 
         $this->user_xml_exporter->exportUserByUserId(101, $this->base_xml, 'user');
 
@@ -115,7 +115,7 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectsUserById(): void
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
-        $this->user_manager->method('getUserById')->with(101)->willReturn($user);
+        $this->user_manager->method('getUserById')->willReturn($user);
 
         $this->user_xml_exporter->exportUserByUserId(101, $this->base_xml, 'user');
 

@@ -138,7 +138,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->authorization_code_creator->expects($this->never())->method('createAuthorizationCodeIdentifier');
         $this->url_redirect->method('buildReturnToLogin')
-            ->with(['REQUEST_URI' => '/oauth2/authorize?client_id=1'])->willReturn('/login');
+            ->willReturnMap([[['REQUEST_URI' => '/oauth2/authorize?client_id=1'], '/login']]);
         $request  = new NullServerRequest();
         $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));
         $response = $this->authorization_code_response_factory->createRedirectToLoginResponse($request, ['client_id' => '1']);
@@ -150,7 +150,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->authorization_code_creator->expects($this->never())->method('createAuthorizationCodeIdentifier');
         $this->url_redirect->method('buildReturnToLogin')
-            ->with(['REQUEST_URI' => '/oauth2/authorize?client_id=1&prompt=consent'])->willReturn('/login');
+            ->willReturnMap([[['REQUEST_URI' => '/oauth2/authorize?client_id=1&prompt=consent'], '/login']]);
         $request  = new NullServerRequest();
         $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));
         $response = $this->authorization_code_response_factory->createRedirectToLoginResponse($request, ['client_id' => '1', 'prompt' => 'login consent']);

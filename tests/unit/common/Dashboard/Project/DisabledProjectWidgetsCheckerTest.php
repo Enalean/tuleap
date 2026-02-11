@@ -58,7 +58,7 @@ final class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItReturnsTrueIfDashboardTypeIsProjectAndWidgetIsInDB(): void
     {
-        $this->dao->method('isWidgetDisabled')->with('widget01')->willReturn(true);
+        $this->dao->method('isWidgetDisabled')->willReturn(true);
         self::assertTrue($this->checker->isWidgetDisabled($this->widget, 'project'));
         self::assertTrue($this->checker->isWidgetDisabled($this->widget, 'g'));
 
@@ -68,7 +68,7 @@ final class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItReturnsFalseIfDashboardTypeIsProjectAndWidgetIsNotInDB(): void
     {
-        $this->dao->method('isWidgetDisabled')->with('widget01')->willReturn(false);
+        $this->dao->method('isWidgetDisabled')->willReturn(false);
         self::assertFalse($this->checker->isWidgetDisabled($this->widget, 'project'));
         self::assertFalse($this->checker->isWidgetDisabled($this->widget, 'g'));
 

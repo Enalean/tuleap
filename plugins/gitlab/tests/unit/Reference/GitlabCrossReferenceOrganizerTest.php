@@ -141,8 +141,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt')
-            ->willReturn('d/m/Y H:i');
+            ->willReturnMap([['system', 'datefmt', 'd/m/Y H:i']]);
 
         $this->organizer = new GitlabCrossReferenceOrganizer(
             $this->repository_integration_factory,

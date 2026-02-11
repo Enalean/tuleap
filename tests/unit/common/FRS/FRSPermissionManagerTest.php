@@ -70,7 +70,7 @@ final class FRSPermissionManagerTest extends TestCase
             '4' => new FRSPermission('4'),
         ];
 
-        $this->permission_factory->method('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->willReturn($permissions);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->willReturn($permissions);
         $this->user->method('isSuperUser')->willReturn(false);
         $this->user->method('isAdmin')->willReturn(false);
         $this->user->method('isMemberOfUGroup')->willReturnMap([
@@ -88,7 +88,7 @@ final class FRSPermissionManagerTest extends TestCase
             '4' => new FRSPermission('4'),
         ];
 
-        $this->permission_factory->method('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->willReturn($permissions);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->willReturn($permissions);
         $this->user->method('isSuperUser')->willReturn(false);
         $this->user->method('isAdmin')->willReturn(false);
         $this->user->method('isMemberOfUGroup')->willReturn(false);
@@ -104,7 +104,7 @@ final class FRSPermissionManagerTest extends TestCase
             '4' => new FRSPermission('4'),
         ];
 
-        $this->permission_factory->method('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->willReturn($permissions);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->willReturn($permissions);
         $this->user->method('isAdmin')->willReturn(false);
         $this->user->method('isMemberOfUGroup')->willReturn(false);
 
@@ -113,14 +113,14 @@ final class FRSPermissionManagerTest extends TestCase
 
     public function testItShouldNotBePossibleToAdministrateFRSIfUserCannotAccessTheProject()
     {
-        $this->access_checker->method('checkUserCanAccessProject')->with($this->user, $this->project)->willThrowException($this->createStub(Project_AccessException::class));
+        $this->access_checker->method('checkUserCanAccessProject')->willThrowException($this->createStub(Project_AccessException::class));
 
         self::assertFalse($this->permission_manager->isAdmin($this->project, $this->user));
     }
 
     public function testItReturnsFalseIToUserCanReadfProjectLevelChecksReturnsAnException()
     {
-        $this->access_checker->method('checkUserCanAccessProject')->with($this->user, $this->project)->willThrowException($this->createStub(Project_AccessException::class));
+        $this->access_checker->method('checkUserCanAccessProject')->willThrowException($this->createStub(Project_AccessException::class));
 
         self::assertFalse($this->permission_manager->userCanRead($this->project, $this->user));
     }
@@ -131,22 +131,22 @@ final class FRSPermissionManagerTest extends TestCase
             '4' => new FRSPermission('4'),
         ];
 
-        $this->permission_factory->method('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->willReturn($permissions);
+        $this->permission_factory->method('getFrsUgroupsByPermission')->willReturn($permissions);
         $this->user->method('isSuperUser')->willReturn(false);
         $this->user->method('isAdmin')->willReturn(false);
-        $this->user->method('isMemberOfUGroup')->with(4, 101)->willReturn(true);
+        $this->user->method('isMemberOfUGroup')->willReturn(true);
 
         self::assertTrue($this->permission_manager->userCanRead($this->project, $this->user));
     }
 
     public function testUserHasReadAccessIfTheyArePartOfFRSReaders()
     {
-        $this->permission_dao->method('searchPermissionsForProjectByType')->with(101, FRSPermission::FRS_READER)->willReturn(
+        $this->permission_dao->method('searchPermissionsForProjectByType')->willReturn(
             [
                 [ 'project_id' => 101, 'permission_type' => FRSPermission::FRS_READER, 'ugroup_id' => 3],
             ]
         );
-        $this->user->method('isMemberOfUGroup')->with(3, 101)->willReturn(true);
+        $this->user->method('isMemberOfUGroup')->willReturn(true);
         $this->permission_factory->method('getFrsUgroupsByPermission')->willReturn([]);
 
         self::assertTrue($this->permission_manager->userCanRead($this->project, $this->user));
@@ -154,7 +154,7 @@ final class FRSPermissionManagerTest extends TestCase
 
     public function testUserCannotReadFRS()
     {
-        $this->permission_dao->method('searchPermissionsForProjectByType')->with(101, FRSPermission::FRS_READER)->willReturn(
+        $this->permission_dao->method('searchPermissionsForProjectByType')->willReturn(
             [
                 [ 'project_id' => 101, 'permission_type' => FRSPermission::FRS_READER, 'ugroup_id' => 3],
             ]

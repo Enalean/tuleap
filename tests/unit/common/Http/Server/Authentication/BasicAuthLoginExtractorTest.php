@@ -35,7 +35,7 @@ final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testExtractsCredentialFromValidAuthorizationHeader(string $authorization_header_line, string $expected_password): void
     {
         $server_request = $this->createStub(ServerRequestInterface::class);
-        $server_request->method('getHeaderLine')->with('Authorization')->willReturn($authorization_header_line);
+        $server_request->method('getHeaderLine')->willReturn($authorization_header_line);
 
         $extractor = new BasicAuthLoginExtractor();
 
@@ -65,7 +65,7 @@ final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNoCredentialsAreExtractedWhenTheAuthorizationHeaderLineIsNotValid(string $authorization_header_line): void
     {
         $server_request = $this->createStub(ServerRequestInterface::class);
-        $server_request->method('getHeaderLine')->with('Authorization')->willReturn($authorization_header_line);
+        $server_request->method('getHeaderLine')->willReturn($authorization_header_line);
 
         $extractor = new BasicAuthLoginExtractor();
 

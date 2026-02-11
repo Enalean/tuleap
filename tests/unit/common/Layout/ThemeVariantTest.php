@@ -116,7 +116,7 @@ final class ThemeVariantTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set('sys_available_theme_variants', $allowed);
 
         $user = $this->createStub(\PFUser::class);
-        $user->method('getPreference')->with('theme_variant')->willReturn($preference);
+        $user->method('getPreference')->willReturn($preference);
 
         $variant = new ThemeVariant();
         self::assertEquals($expected, $variant->getVariantColorForUser($user));

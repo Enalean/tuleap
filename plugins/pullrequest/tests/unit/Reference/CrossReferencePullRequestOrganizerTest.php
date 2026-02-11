@@ -69,8 +69,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
 
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt')
-            ->willReturn('d/m/Y H:i');
+            ->willReturnMap([['system', 'datefmt', 'd/m/Y H:i']]);
     }
 
     private function organizePullRequestReferences(MockObject&CrossReferenceByNatureOrganizer $by_nature_organizer): void

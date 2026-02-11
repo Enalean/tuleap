@@ -38,8 +38,8 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $urlVerification = $this->getStubBuilder(\URLVerification::class)->onlyMethods(['getEventManager'])->getStub();
 
-        $em = $this->createStub(EventManager::class);
-        $em->method('processEvent')->with(
+        $em = $this->createMock(EventManager::class);
+        $em->expects($this->once())->method('processEvent')->with(
             self::anything(),
             self::callback(
                 function (array $params) {
@@ -102,8 +102,8 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIsScriptAllowedForAnonymousFromHook(): void
     {
         $urlVerification = $this->getStubBuilder(\URLVerification::class)->onlyMethods(['getEventManager'])->getStub();
-        $em              = $this->createStub(EventManager::class);
-        $em->method('processEvent')->with(
+        $em              = $this->createMock(EventManager::class);
+        $em->expects($this->once())->method('processEvent')->with(
             self::anything(),
             self::callback(
                 function (array $params) {

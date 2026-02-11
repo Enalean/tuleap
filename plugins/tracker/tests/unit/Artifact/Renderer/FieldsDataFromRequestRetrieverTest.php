@@ -79,10 +79,9 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
         );
 
         $collection = new StatusValuesCollection([1, 2, 3]);
-        $this->form_element_factory->method('getFieldById')->with(123)->willReturn($this->field);
+        $this->form_element_factory->method('getFieldById')->willReturn($this->field);
 
         $this->first_possible_value_retriever->method('getFirstPossibleValue')
-            ->with($this->artifact, $this->field, $collection)
             ->willReturn(2);
 
         $this->assertEquals(
@@ -107,9 +106,7 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
             $this->createStub(ProjectManager::class)
         );
 
-        $this->tracker->method('augmentDataFromRequest')->with(
-            ['123' => '12', 'request_method_called' => 'artifact-update']
-        )->willReturn([123 => 12]);
+        $this->tracker->method('augmentDataFromRequest')->willReturn([123 => 12]);
 
         $this->assertEquals(
             $expected_result,
