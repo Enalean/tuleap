@@ -20,7 +20,7 @@
 import type { MockInstance } from "vitest";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { SyntaxHighlightElement } from "./syntax-highlight-element";
-import * as prism from "./prism";
+import * as shiki from "./shiki-highlight";
 
 vi.useFakeTimers();
 
@@ -33,7 +33,6 @@ describe("SyntaxHighlightElement", () => {
     let syntaxHighlightElement: MockInstance;
 
     function createSyntaxHighlightElement(): SyntaxHighlightElement {
-        const doc = document.implementation.createHTMLDocument();
         const container = document.createElement("div");
 
         container.innerHTML = `<tlp-syntax-highlighting>
@@ -45,7 +44,7 @@ describe("SyntaxHighlightElement", () => {
             throw Error("Unable to find just created element");
         }
 
-        doc.body.appendChild(container);
+        document.body.appendChild(container);
 
         return code_block;
     }
@@ -56,7 +55,7 @@ describe("SyntaxHighlightElement", () => {
 
     beforeEach(() => {
         vi.resetAllMocks();
-        syntaxHighlightElement = vi.spyOn(prism, "syntaxHighlightElement");
+        syntaxHighlightElement = vi.spyOn(shiki, "syntaxHighlightElement");
         const mockIntersectionObserver = vi.fn(
             class {
                 constructor(callback: ObserverCallback) {
@@ -78,25 +77,29 @@ describe("SyntaxHighlightElement", () => {
     });
 
     it("Syntax highlight the code block (and stops observing) whenever the block enters the viewport", async (): Promise<void> => {
-        const mermaid_diagram = createSyntaxHighlightElement();
+        const highlight_element = createSyntaxHighlightElement();
 
-        await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+        const code = highlight_element.querySelector("code");
+        if (!(code instanceof HTMLElement)) {
+            throw new Error("Unable to find code");
+        }
+        await observerCallback([{ isIntersecting: true, target: code }]);
 
         expect(syntaxHighlightElement).toHaveBeenCalled();
         expect(unobserve).toHaveBeenCalled();
     });
 
     it("Run again the syntax highlight when the code block change", async (): Promise<void> => {
-        const mermaid_diagram = createSyntaxHighlightElement();
+        const highlight_element = createSyntaxHighlightElement();
 
-        await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+        const code = highlight_element.querySelector("code");
+        if (!(code instanceof HTMLElement)) {
+            throw new Error("Unable to find code");
+        }
+        await observerCallback([{ isIntersecting: true, target: code }]);
 
         expect(syntaxHighlightElement).toHaveBeenCalledTimes(1);
 
-        const code = mermaid_diagram.querySelector("code");
-        if (!code) {
-            throw new Error("Unable to find code");
-        }
         code.textContent = "class Bar {}";
 
         await vi.runOnlyPendingTimersAsync();
