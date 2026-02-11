@@ -347,6 +347,7 @@ export interface ApprovalTable {
     post_processed_description: string;
     reviewers: ReadonlyArray<ApprovalTableReviewer>;
     reminder_occurence: number;
+    version_open_href: string;
 }
 
 export interface ApprovalTableReviewer {

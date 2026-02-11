@@ -86,8 +86,8 @@ final class VersionRepresentationCollectionBuilder
             }
 
             $versions[] = EmbeddedFileVersionRepresentation::build(
-                (int) $version->getId(),
-                (int) $version->getNumber(),
+                $version->getId(),
+                $version->getNumber(),
                 $version->getLabel(),
                 (int) $item->getGroupId(),
                 (int) $item->getId(),

@@ -30,7 +30,10 @@ use Docman_Item;
 use Docman_NotificationsManager;
 use Docman_VersionFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTableNotificationMapper;
+use Tuleap\Docman\Version\VersionRetrieverFromApprovalTableVisitor;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
@@ -72,16 +75,27 @@ final readonly class ItemApprovalTableRepresentation
         Docman_VersionFactory $version_factory,
         Docman_NotificationsManager $notifications_manager,
         Codendi_HTMLPurifier $purifier,
+        VersionOpenHrefVisitor $version_open_href_visitor,
+        VersionRetrieverFromApprovalTableVisitor $version_retriever_visitor,
+        ProjectByIDFactory $project_factory,
     ): self {
         $version_label         = '';
         $version_id            = null;
         $version_number        = null;
         $version_download_href = '';
         if ($approval_table instanceof Docman_ApprovalTableVersionned) {
-            $version        = $version_factory->getSpecificVersion($item, $approval_table->getVersionNumber());
-            $version_label  = (string) $version?->getLabel();
-            $version_id     = (int) $version?->getId();
-            $version_number = (int) $approval_table->getVersionNumber();
+            $version               = $item->accept($version_retriever_visitor, ['approval_table_version_number' =>  $approval_table->getVersionNumber()]);
+            $version_label         = (string) $version?->getLabel();
+            $version_id            = (int) $version?->getId();
+            $version_number        = (int) $approval_table->getVersionNumber();
+            $project               = $project_factory->getProjectById($item->getGroupId());
+            $version_download_href = $item->accept(
+                $version_open_href_visitor,
+                [
+                    'version' => $version,
+                    'project' => $project,
+                ]
+            );
         }
 
         $description                = $approval_table->getDescription() ?? '';

@@ -26,7 +26,7 @@ use Tuleap\Docman\Version\Version;
  * Version is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_Version implements Version
+class Docman_Version implements Version //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private string $authoring_tool;
 
@@ -51,9 +51,10 @@ class Docman_Version implements Version
     }
 
     public $id;
-    public function getId()
+    #[Override]
+    public function getId(): int
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     public function setId($id)
@@ -88,9 +89,10 @@ class Docman_Version implements Version
     /**
      * @psalm-mutation-free
      */
-    public function getNumber()
+    #[Override]
+    public function getNumber(): int
     {
-        return $this->number;
+        return (int) $this->number;
     }
 
     public function setNumber($number)
@@ -99,7 +101,8 @@ class Docman_Version implements Version
     }
 
     public $label;
-    public function getLabel()
+    #[Override]
+    public function getLabel(): ?string
     {
         return $this->label;
     }
@@ -168,10 +171,9 @@ class Docman_Version implements Version
     public $filetype;
 
     /**
-     * @return string
      * @psalm-mutation-free
      */
-    public function getFiletype()
+    public function getFiletype(): string
     {
         return $this->filetype ?? 'application/octet-stream';
     }
@@ -199,7 +201,7 @@ class Docman_Version implements Version
         $this->path = $path;
     }
 
-    protected $_content;
+    protected $_content; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     public function getContent()
     {
         if ($this->_content === null && is_file($this->getPath())) {

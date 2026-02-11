@@ -29,12 +29,14 @@ use PermissionsManager;
 use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\ResponseFeedbackWrapper;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
+use Tuleap\Docman\Version\VersionRetrieverFromApprovalTableVisitor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\Avatar\AvatarHashDao;
@@ -42,6 +44,8 @@ use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserHelper;
+use WikiPageVersionFactory;
+use WikiVersionDao;
 
 final class DocmanServiceResource extends AuthenticatedResource
 {
@@ -90,7 +94,7 @@ final class DocmanServiceResource extends AuthenticatedResource
                 new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory(), $version_factory),
                 new DocmanItemPermissionsForGroupsBuilder(
                     $permissions_manager,
-                    ProjectManager::instance(),
+                    $project_manager,
                     PermissionsManager::instance(),
                     $ugroup_manager
                 ),
@@ -99,6 +103,9 @@ final class DocmanServiceResource extends AuthenticatedResource
                 $version_factory,
                 new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
                 new ItemIconPresenterBuilder(\EventManager::instance(), $version_factory),
+                new VersionOpenHrefVisitor(),
+                new VersionRetrieverFromApprovalTableVisitor(new \Docman_VersionFactory(), new \Docman_LinkVersionFactory(), new WikiVersionDao(), new WikiPageVersionFactory()),
+                $project_manager
             ),
             $permissions_manager,
             new DocmanServicePermissionsForGroupsBuilder(

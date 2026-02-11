@@ -72,7 +72,7 @@ final class FileVersionsDeletor
                 throw new RestException(403, 'Cannot delete the last version of an item');
             }
 
-            if (! $this->version_deletor->deleteSpecificVersion($item, (int) $version->getNumber())) {
+            if (! $this->version_deletor->deleteSpecificVersion($item, $version->getNumber())) {
                 throw new UnableToDeleteVersionException();
             }
         });

@@ -168,7 +168,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         if ($item_version) {
             $content = file_get_contents($item_version->getPath());
             if ($this->isADirectAccessToDocument($params)) {
-                $file_embedded_properties = EmbeddedFilePropertiesFullRepresentation::build($item_version, $content);
+                $file_embedded_properties = EmbeddedFilePropertiesFullRepresentation::build($item_version, (string) $content);
             } else {
                 $file_embedded_properties = EmbeddedFilePropertiesMinimalRepresentation::build($item_version);
             }

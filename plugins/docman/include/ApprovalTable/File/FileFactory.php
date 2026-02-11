@@ -48,6 +48,7 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
 
             if (
                 $versionNumber !== null
+                && $lastItemVersion !== null
                 && $lastItemVersion->getNumber() != $versionNumber
             ) {
                 $this->itemVersion  = $vFactory->getSpecificVersion($item, $versionNumber);

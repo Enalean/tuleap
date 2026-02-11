@@ -35,7 +35,7 @@ class LinkPropertiesRepresentation
     {
         return new self(
             ($link !== null) ? $link->getLink() : '',
-            ($link !== null) ? (int) $link->getNumber() : null,
+            ($link !== null) ? $link->getNumber() : null,
         );
     }
 }

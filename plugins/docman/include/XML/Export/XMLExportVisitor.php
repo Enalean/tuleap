@@ -238,7 +238,7 @@ class XMLExportVisitor implements ItemVisitor
         }
 
         $label = $version->getLabel();
-        if ($label) {
+        if ($label !== null) {
             $this->appendTextChild($node, 'label', $label);
         }
 

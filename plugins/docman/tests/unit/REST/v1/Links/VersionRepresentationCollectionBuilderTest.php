@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Links;
 
+use Docman_LinkVersionFactory;
+use Tuleap\Docman\Builders\DocmanLinkVersionBuilder;
 use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Version\LinkVersionDao;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -30,23 +32,25 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class VersionRepresentationCollectionBuilderTest extends TestCase
+final class VersionRepresentationCollectionBuilderTest extends TestCase
 {
     private LinkVersionDao|\PHPUnit\Framework\MockObject\MockObject $dao;
     private VersionRepresentationCollectionBuilder $builder;
+    private Docman_LinkVersionFactory&\PHPUnit\Framework\MockObject\Stub $link_version_factory;
 
     #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(LinkVersionDao::class);
 
-        $this->builder = new VersionRepresentationCollectionBuilder(
+        $this->link_version_factory = $this->createStub(Docman_LinkVersionFactory::class);
+        $this->builder              = new VersionRepresentationCollectionBuilder(
             $this->dao,
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
             ProvideUserAvatarUrlStub::build(),
             new VersionOpenHrefVisitor(),
         );
-        $user_helper   = $this->createStub(\UserHelper::class);
+        $user_helper                = $this->createStub(\UserHelper::class);
         $user_helper->method('getUserUrl')->willReturn('/path/to/user');
         $user_helper->method('getDisplayNameFromUser')->willReturn('John Doe');
         \UserHelper::setInstance($user_helper);
@@ -87,6 +91,7 @@ class VersionRepresentationCollectionBuilderTest extends TestCase
             ],
             ]);
         $this->dao->method('countByItemId')->willReturn(1);
+        $this->link_version_factory->method('getSpecificVersion')->willReturn(DocmanLinkVersionBuilder::aLinkVersion()->withNumber(1)->build());
 
         $collection = $this->builder->buildVersionsCollection($item, 50, 0);
 

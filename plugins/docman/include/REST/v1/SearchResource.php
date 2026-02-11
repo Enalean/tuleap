@@ -37,6 +37,7 @@ use Project;
 use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\Item\VersionOpenHrefVisitor;
 use Tuleap\Docman\Item\Icon\ItemIconPresenterBuilder;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Notifications\NotificationBuilders;
@@ -54,6 +55,7 @@ use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
 use Tuleap\Docman\Search\SearchSortPropertyMapper;
+use Tuleap\Docman\Version\VersionRetrieverFromApprovalTableVisitor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -62,6 +64,8 @@ use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserHelper;
+use WikiPageVersionFactory;
+use WikiVersionDao;
 
 final class SearchResource extends AuthenticatedResource
 {
@@ -296,6 +300,9 @@ final class SearchResource extends AuthenticatedResource
             $version_factory,
             new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
             new ItemIconPresenterBuilder($event_manager, $version_factory),
+            new VersionOpenHrefVisitor(),
+            new VersionRetrieverFromApprovalTableVisitor(new \Docman_VersionFactory(), new \Docman_LinkVersionFactory(), new WikiVersionDao(), new WikiPageVersionFactory()),
+            $project_manager
         );
 
 

@@ -40,14 +40,14 @@ class EmbeddedFilePropertiesFullRepresentation implements IEmbeddedFilePropertie
 
     public int $version_number;
 
-    private function __construct(\Docman_Version $docman_version, $content)
+    private function __construct(\Docman_Version $docman_version, string $content)
     {
-        $this->version_number = (int) $docman_version->getNumber();
+        $this->version_number = $docman_version->getNumber();
         $this->file_type      = $docman_version->getFiletype();
         $this->content        = $content;
     }
 
-    public static function build(\Docman_Version $docman_version, $content): self
+    public static function build(\Docman_Version $docman_version, string $content): self
     {
         return new self($docman_version, $content);
     }

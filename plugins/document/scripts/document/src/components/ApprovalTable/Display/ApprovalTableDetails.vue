@@ -25,7 +25,9 @@
     <div class="tlp-property" v-if="table.version_number !== null">
         <label class="tlp-label">{{ $gettext("Attached to document version") }}</label>
         <p data-test="table-version-number">
-            {{ table.version_number }}
+            <a v-bind:href="table.version_open_href">
+                {{ table.version_number }}
+            </a>
         </p>
     </div>
     <div class="tlp-property">
