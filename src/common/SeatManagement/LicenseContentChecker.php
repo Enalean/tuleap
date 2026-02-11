@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
-use _PHPStan_b0aa47e74\Symfony\Component\Console\Exception\LogicException;
 use DateTimeImmutable;
 use ForgeConfig;
+use LogicException;
 use Override;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Rfc4122\FieldsInterface;
