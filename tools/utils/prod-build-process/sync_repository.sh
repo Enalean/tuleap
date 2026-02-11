@@ -2,6 +2,13 @@
 
 set -euxo pipefail
 
+if [ -z "${INSIDE_NIX_SHELL_SYNC_REPO:-}" ]; then
+  export INSIDE_NIX_SHELL_SYNC_REPO=1
+
+  current_dir="$(dirname "$(readlink -f "$0")")"
+  exec nix-shell -I nixpkgs="$current_dir"/../nix/pinned-nixpkgs.nix --packages rsync openssh curl jq --run "$0 $*"
+fi
+
 build_tmp="$(mktemp -d)"
 
 set +x
