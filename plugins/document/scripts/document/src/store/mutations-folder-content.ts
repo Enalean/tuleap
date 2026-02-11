@@ -17,6 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+    findNearestByTitle,
+    getDocumentSiblings,
+    getFolderSiblings,
+    getLastOrThrow,
+    insertAfterItem,
+    insertAfterLastInSubtree,
+    insertBeforeItem,
+} from "../helpers/folder/folder-content-filter";
 import { getFolderSubtree } from "../helpers/retrieve-subtree-helper";
 import { isFolder } from "../helpers/type-check-helper";
 import type { FakeItem, Folder, FolderContentItem, Item, State } from "../type";
@@ -29,107 +38,94 @@ export function saveFolderContent(state: State, folder_content: FolderContentIte
 function addDocumentToTheRightPlace(
     state: State,
     new_item: FolderContentItem,
-    parent: FolderContentItem | undefined,
+    document_siblings: FolderContentItem[],
+    folder_siblings: FolderContentItem[],
+    parent: FolderContentItem,
 ): void {
-    const near_sibling_index = state.folder_content.findIndex(
-        (sibling) =>
-            !isFolder(sibling) &&
-            sibling.parent_id === new_item.parent_id &&
-            sibling.title.localeCompare(new_item.title, undefined, {
-                numeric: true,
-            }) >= 0,
-    );
+    // Given item is a document, and given other documents already exist in the folder
+    // Then we should respect document insertion order
+    if (document_siblings.length > 0) {
+        const alphabetical_sibling = findNearestByTitle(document_siblings, new_item);
 
-    const has_no_sibling_and_no_parent = near_sibling_index === -1 && parent === undefined;
-    const has_a_parent_but_no_siblings = near_sibling_index === -1 && parent !== undefined;
-
-    if (has_no_sibling_and_no_parent) {
-        state.folder_content.push(new_item);
-
-        return;
-    } else if (has_a_parent_but_no_siblings) {
-        const document_siblings = state.folder_content.filter(
-            (item) => item.parent_id === new_item.parent_id,
-        );
-
-        let nearest_sibling: FolderContentItem;
-
-        if (!document_siblings.length) {
-            nearest_sibling = parent;
-        } else {
-            nearest_sibling = document_siblings[document_siblings.length - 1];
+        // Given document has siblings, insert it alphabetically
+        if (alphabetical_sibling) {
+            insertBeforeItem(state, alphabetical_sibling, new_item);
+            return;
         }
 
-        const nearest_sibling_index = state.folder_content.findIndex(
-            (item) => item.id === nearest_sibling.id,
-        );
-
-        state.folder_content.splice(nearest_sibling_index + 1, 0, new_item);
-
+        // Otherwise insert after last file
+        insertAfterLastInSubtree(state, getLastOrThrow(document_siblings), new_item);
         return;
     }
 
-    state.folder_content.splice(near_sibling_index, 0, new_item);
+    // Given item is a document, and no other folder already exist in the folder
+    // Then we should insert it after last folder subtree
+    if (folder_siblings.length > 0) {
+        insertAfterLastInSubtree(state, getLastOrThrow(folder_siblings), new_item);
+        return;
+    }
+
+    // Given folder is empty
+    // Then we should insert it after parent
+    insertAfterItem(state, parent, new_item);
 }
 
 function addFolderToTheRightPlace(
     state: State,
-    new_item: Folder,
-    parent: FolderContentItem | undefined,
+    new_item: FolderContentItem,
+    parent: FolderContentItem,
+    folder_siblings: FolderContentItem[],
+    document_siblings: FolderContentItem[],
 ): void {
-    const folder_siblings = state.folder_content.filter(
-        (item) => isFolder(item) && item.parent_id === new_item.parent_id,
-    );
+    // Given folder has subfolders elements
+    if (folder_siblings.length > 0) {
+        const alphabetical_sibling = findNearestByTitle(folder_siblings, new_item);
 
-    let nearest_sibling = folder_siblings.find((sibling) => {
-        return (
-            sibling.title.localeCompare(new_item.title, undefined, {
-                numeric: true,
-            }) >= 0
-        );
-    });
-
-    const is_the_last_of_its_siblings = nearest_sibling === undefined && folder_siblings.length > 0;
-
-    if (is_the_last_of_its_siblings) {
-        nearest_sibling = folder_siblings[folder_siblings.length - 1];
-
-        const nearest_sibling_index = state.folder_content.findIndex(
-            (item) => nearest_sibling !== undefined && item.id === nearest_sibling.id,
-        );
-
-        state.folder_content.splice(nearest_sibling_index + 1, 0, new_item);
-    } else if (nearest_sibling !== undefined) {
-        const nearest_sibling_index = state.folder_content.findIndex(
-            (item) => nearest_sibling !== undefined && item.id === nearest_sibling.id,
-        );
-
-        state.folder_content.splice(nearest_sibling_index, 0, new_item);
-    } else {
-        if (parent !== undefined) {
-            const parent_index = state.folder_content.findIndex((item) => item.id === parent.id);
-
-            state.folder_content.splice(parent_index + 1, 0, new_item);
-        } else {
-            state.folder_content.splice(0, 0, new_item);
+        // and given we find alphabetical insertion point => insert it alphabetically
+        if (alphabetical_sibling) {
+            insertBeforeItem(state, alphabetical_sibling, new_item);
+            return;
         }
+
+        // Otherwise insert after last file
+        insertAfterLastInSubtree(state, getLastOrThrow(folder_siblings), new_item);
+        return;
     }
+
+    // Given folder has NO folder BUT have documents elements => insert it before the first document
+    if (document_siblings.length > 0) {
+        insertBeforeItem(state, document_siblings[0], new_item);
+        return;
+    }
+
+    // Given folder is empty =>  Insert it directly after its parent
+    insertAfterItem(state, parent, new_item);
 }
 
-export function addJustCreatedItemToFolderContent(state: State, new_item: FolderContentItem): void {
-    const parent = state.folder_content.find((parent) => parent.id === new_item.parent_id);
+export interface AdjustItemToFolderContentPayload {
+    parent: Folder;
+    new_item: FolderContentItem;
+}
 
-    if (parent !== undefined && parent.level === undefined) {
-        parent.level = 0;
+export function addJustCreatedItemToFolderContent(
+    state: State,
+    payload: AdjustItemToFolderContentPayload,
+): void {
+    const new_item = payload.new_item;
+    const parent = payload.parent;
+    const folder_siblings = getFolderSiblings(state, new_item.parent_id);
+    const document_siblings = getDocumentSiblings(state, new_item.parent_id);
+
+    new_item.level = parent.level !== undefined ? parent.level + 1 : 0;
+
+    // Given item is a folder
+    // Then we should respect folder insertion order
+    if (isFolder(new_item)) {
+        addFolderToTheRightPlace(state, new_item, parent, folder_siblings, document_siblings);
+        return;
     }
 
-    new_item.level = parent !== undefined && parent.level !== undefined ? parent.level + 1 : 0;
-
-    if (!isFolder(new_item)) {
-        return addDocumentToTheRightPlace(state, new_item, parent);
-    }
-
-    return addFolderToTheRightPlace(state, new_item, parent);
+    addDocumentToTheRightPlace(state, new_item, document_siblings, folder_siblings, parent);
 }
 
 export function appendSubFolderContent(

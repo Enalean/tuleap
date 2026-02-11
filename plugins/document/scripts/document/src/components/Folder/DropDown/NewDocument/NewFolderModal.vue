@@ -73,7 +73,7 @@ import {
 import type { UpdateCustomEvent, UpdateMultipleListValueEvent } from "../../../../helpers/emitter";
 import emitter from "../../../../helpers/emitter";
 import { buildFakeItem } from "../../../../helpers/item-builder";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref, toRaw } from "vue";
 import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
 import type { Item, RootState } from "../../../../type";
 import type { ErrorState } from "../../../../store/error/module";
@@ -108,6 +108,7 @@ onMounted(() => {
     emitter.on("update-title-property", updateTitleValue);
     emitter.on("update-description-property", updateDescriptionValue);
     emitter.on("update-custom-property", updateCustomProperty);
+    parent.value = structuredClone(toRaw(current_folder.value));
 });
 
 onBeforeUnmount(() => {
