@@ -1,0 +1,105 @@
+@Library('tuleap-jenkinsfile-library@master') _
+
+def tuleap_commit_reference
+
+node('agent-one-time-use') {
+    def lib = new org.tuleap.Build()
+    def lib_signing = new org.tuleap.Signing()
+    String tuleap_sources_directory = "$WORKSPACE/sources/"
+
+    stage ('Checkout Tuleap source') {
+        def tuleap_checkout = checkout scm
+        tuleap_commit_reference = tuleap_checkout.GIT_COMMIT
+    }
+
+    stage('Setup Nix cache') {
+        def helpers = load 'sources/tests/helpers.groovy'
+        helpers.authenticateOnTailscale('tailscale-auth-key')
+        helpers.setupTuleapCommunityNixCache('nix-cache-attic-token')
+    }
+
+    stage('Prepare') {
+        dir (tuleap_sources_directory) {
+            def actions = load 'tests/actions.groovy';
+            withCredentials([
+                usernamePassword(
+                    credentialsId: 'nexus.enalean.com_readonly',
+                    passwordVariable: 'NPM_PASSWORD',
+                    usernameVariable: 'NPM_USER'
+                ),
+                string(credentialsId: 'github-token-composer', variable: 'COMPOSER_GITHUB_AUTH')
+            ]) {
+                actions.prepareSources("prod");
+            }
+        }
+    }
+
+    String packages_directory = pwd()+"/packages"
+    sh "rm -rf "+packages_directory
+
+    String el9_directory = packages_directory+"/el9"
+
+    stage ('Build Tuleap EL9') {
+        lib.buildTuleap(el9_directory, tuleap_sources_directory, 'el9', '1', false, 'tuleap-community')
+    }
+
+    stage ('Antiviral scan') {
+        lib.antiviralScan(pwd() + '/packages/')
+    }
+
+    stage('Sign packages') {
+        lib_signing.signPackages(packages_directory, env.VAULT, 'gpg/sign/tuleap-community-rpm-signing', 'vault-role-community-signing-key', 'ci-write');
+    }
+
+    stage('Build repositories') {
+        parallel 'EL9': {
+            sh """
+            set -e
+            set +x
+            nix-shell -I nixpkgs='${tuleap_sources_directory}/tools/utils/nix/pinned-nixpkgs.nix' -p createrepo_c --run "createrepo_c --checksum=sha256 --compress-type=gz '${el9_directory}/RPMS/noarch'"
+            """
+        }
+    }
+
+    stage ('Sign repositories metadata') {
+        lib_signing.signRepositories(packages_directory, env.VAULT, 'gpg/sign/tuleap-community-rpm-signing', 'vault-role-community-signing-key', 'ci-write');
+    }
+
+    stage ('Publish repositories') {
+        withCredentials([
+            usernamePassword(credentialsId: 'vault-role-community-signing-key', passwordVariable: 'SECRET_ID', usernameVariable: 'ROLE_ID')
+        ]) {
+            sh "TULEAP_SOURCES='${tuleap_sources_directory}' TULEAP_FLAVOR=community VAULT_ADDR=\$VAULT SOURCE_TO_SYNC='${el9_directory}/RPMS/noarch/' SYNC_TARGET=ci.tuleap.net:/yum/tuleap/rhel/9/dev/x86_64/ '${tuleap_sources_directory}/tools/utils/prod-build-process/sync_repository.sh'"
+            sh "TULEAP_SOURCES='${tuleap_sources_directory}' TULEAP_FLAVOR=community VAULT_ADDR=\$VAULT SOURCE_TO_SYNC='${tuleap_sources_directory}/tools/rpm/RPM-GPG-KEY-Tuleap' SYNC_TARGET=ci.tuleap.net:/yum/tuleap/gpg.key '${tuleap_sources_directory}/tools/utils/prod-build-process/sync_repository.sh'"
+        }
+    }
+
+    stage('Build Tuleap Community Edition Docker image') {
+        lib_signing.prefetchToolsToSignDockerImages('ci-write')
+        dir (tuleap_sources_directory) {
+            def image_name = 'tuleap/tuleap-community-edition';
+            def image = docker.build(
+                image_name,
+                "--no-cache -f $tuleap_sources_directory/tools/docker/tuleap-community-edition/Dockerfile --label org.opencontainers.image.revision=${tuleap_commit_reference} --label build_id=${env.BUILD_ID} $tuleap_sources_directory/tools"
+            )
+            docker.withRegistry('https://index.docker.io/v1/', 'tuleap-push-bot-docker-hub') {
+                image.push()
+                def image_digest = sh(script: "docker images --format='{{.Digest}}' ${image_name}", returnStdout: true).trim()
+
+                lib_signing.signDockerImage("${image_name}@${image_digest}", env.VAULT, 'tuleap-community-signing', 'vault-role-community-signing-key')
+            }
+        }
+    }
+
+    stage('Cache Nix Shell environment') {
+        dir (tuleap_sources_directory) {
+            sh """
+                nix-build --no-out-link shell.nix
+                nix-store --query --references \$(nix-instantiate shell.nix) \
+                    | xargs nix-store --realise \
+                    | xargs nix-store --query --requisites \
+                    | nix-shell -I nixpkgs=./tools/utils/nix/pinned-nixpkgs.nix -p attic-client --run "attic push --stdin tuleap-community"
+            """
+        }
+    }
+}
