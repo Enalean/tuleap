@@ -273,6 +273,7 @@ async function ondrop(event: DragEvent): Promise<void> {
         } catch (error) {
             error_modal_shown.value = CREATION_ERROR;
             error_modal_reasons.value.push({ filename: file.name, message: error });
+            throw error;
         }
     }
 }

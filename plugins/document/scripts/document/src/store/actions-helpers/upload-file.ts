@@ -188,7 +188,10 @@ export function uploadVersionFromEmpty(
             context.commit("removeFileFromUploadsList", updated_empty);
             const new_item_version = await getItem(updated_empty.id);
             context.commit("removeItemFromFolderContent", new_item_version);
-            context.commit("addJustCreatedItemToFolderContent", new_item_version);
+            context.commit("addJustCreatedItemToFolderContent", {
+                new_item: new_item_version,
+                parent: parent_folder,
+            });
             context.commit("updateCurrentItemForQuickLokDisplay", new_item_version);
             context.commit("replaceUploadingFileWithActualFile", [updated_empty, new_item_version]);
             emitter.emit("item-has-just-been-updated", { item: new_item_version });

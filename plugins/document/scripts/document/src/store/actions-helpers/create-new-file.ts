@@ -59,7 +59,10 @@ export async function createNewFile(
         flagItemAsCreated(context, created_item);
         emitter.emit("new-item-has-just-been-created", created_item);
 
-        await context.commit("addJustCreatedItemToFolderContent", created_item);
+        await context.commit("addJustCreatedItemToFolderContent", {
+            new_item: created_item,
+            parent,
+        });
         return new_file;
     }
     if (context.state.folder_content.find(({ id }) => id === new_file.id)) {
@@ -72,7 +75,7 @@ export async function createNewFile(
 
     fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file, parent);
 
-    context.commit("addJustCreatedItemToFolderContent", fake_item);
+    context.commit("addJustCreatedItemToFolderContent", { new_item: fake_item, parent });
     context.commit("addDocumentToFoldedFolder", [parent, fake_item, should_display_fake_item]);
     context.commit("addFileInUploadsList", fake_item);
     emitter.emit("item-is-being-uploaded");

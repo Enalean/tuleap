@@ -77,9 +77,9 @@ import type {
 } from "../../../helpers/emitter";
 import emitter from "../../../helpers/emitter";
 import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
-import type { Item } from "../../../type";
+import type { Item, RootState } from "../../../type";
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { useNamespacedState, useStore } from "vuex-composition-helpers";
+import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
 import type { ErrorState } from "../../../store/error/module";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -109,6 +109,7 @@ const project = strictInject(PROJECT);
 const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
     "has_modal_error",
 ]);
+const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
 const project_user_groups = strictInject(PROJECT_USER_GROUPS);
 
 const modal_title = computed(() => sprintf($gettext('Edit "%s" permissions'), props.item.title));
@@ -171,7 +172,7 @@ function reset(): void {
 async function onSubmit(): Promise<void> {
     is_submitting_new_permissions.value = true;
     $store.commit("error/resetModalError");
-    await updatePermissions($store, props.item, updated_permissions.value);
+    await updatePermissions($store, props.item, updated_permissions.value, current_folder.value);
     is_submitting_new_permissions.value = false;
     if (!has_modal_error.value) {
         modal?.hide();

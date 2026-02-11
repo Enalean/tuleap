@@ -272,10 +272,10 @@ describe("actions-create", () => {
             await createNewItem(context, [item, folder_of_created_item, current_folder, fake_item]);
 
             expect(uploadFile).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                expected_fake_item_with_uploader,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: expected_fake_item_with_uploader,
+                parent: folder_of_created_item,
+            });
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
                 folder_of_created_item,
                 expected_fake_item_with_uploader,
@@ -336,10 +336,10 @@ describe("actions-create", () => {
             ]);
 
             expect(uploadFile).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                expected_fake_item_with_uploader,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: expected_fake_item_with_uploader,
+                parent: collapsed_folder_of_created_item,
+            });
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
                 collapsed_folder_of_created_item,
                 expected_fake_item_with_uploader,
@@ -404,10 +404,10 @@ describe("actions-create", () => {
             ]);
 
             expect(uploadFile).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                expected_fake_item_with_uploader,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: expected_fake_item_with_uploader,
+                parent: extended_folder_of_created_item,
+            });
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
                 extended_folder_of_created_item,
                 expected_fake_item_with_uploader,
@@ -463,10 +463,10 @@ describe("actions-create", () => {
                 has_approval_table: false,
                 is_approval_table_enabled: false,
             };
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                expected_fake_item_with_uploader,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: expected_fake_item_with_uploader,
+                parent: parent,
+            });
         });
         it("Starts upload", async () => {
             context.state.folder_content = [{ id: 45 } as Folder];
@@ -563,10 +563,10 @@ describe("actions-create", () => {
                 fake_item,
             ]);
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                created_item,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: created_item,
+                parent,
+            });
             expect(uploadFile).not.toHaveBeenCalled();
         });
     });

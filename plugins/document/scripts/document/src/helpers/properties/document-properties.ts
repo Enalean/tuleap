@@ -179,7 +179,11 @@ export const getDocumentProperties = (): DocumentProperties => {
             } else {
                 updated_item.updated = true;
                 context.commit("removeItemFromFolderContent", updated_item, { root: true });
-                context.commit("addJustCreatedItemToFolderContent", updated_item, { root: true });
+                context.commit(
+                    "addJustCreatedItemToFolderContent",
+                    { new_item: updated_item, parent: current_folder },
+                    { root: true },
+                );
                 context.commit("updateCurrentItemForQuickLokDisplay", updated_item, { root: true });
             }
         } catch (exception) {

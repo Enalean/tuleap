@@ -205,7 +205,7 @@ describe("document-properties", () => {
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
-                    item_to_update,
+                    { new_item: item_to_update, parent: current_folder },
                     { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
@@ -256,7 +256,7 @@ describe("document-properties", () => {
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
-                    item_to_update,
+                    { new_item: item_to_update, parent: current_folder },
                     { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
@@ -307,7 +307,7 @@ describe("document-properties", () => {
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
-                    item_to_update,
+                    { new_item: item_to_update, parent: current_folder },
                     { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
@@ -358,7 +358,7 @@ describe("document-properties", () => {
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
-                    item_to_update,
+                    { new_item: item_to_update, parent: current_folder },
                     { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
@@ -410,7 +410,7 @@ describe("document-properties", () => {
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
-                    item_to_update,
+                    { new_item: item_to_update, parent: current_folder },
                     { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
@@ -461,7 +461,7 @@ describe("document-properties", () => {
                 );
                 expect(context.commit).toHaveBeenCalledWith(
                     "addJustCreatedItemToFolderContent",
-                    item_to_update,
+                    { new_item: item_to_update, parent: current_folder },
                     { root: true },
                 );
                 expect(context.commit).toHaveBeenCalledWith(
