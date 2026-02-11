@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
@@ -33,32 +35,19 @@ use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevok
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /** @var OAuth2RefreshTokenRevoker */
-    private $revoker;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
-     */
-    private $refresh_token_unserializer;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeRevoker
-     */
-    private $authorization_code_revoker;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenDAO
-     */
-    private $dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
-     */
-    private $hasher;
+    private OAuth2RefreshTokenRevoker $revoker;
+    private SplitTokenIdentifierTranslator&MockObject $refresh_token_unserializer;
+    private OAuth2AuthorizationCodeRevoker&Stub $authorization_code_revoker;
+    private OAuth2RefreshTokenDAO&MockObject $dao;
+    private SplitTokenVerificationStringHasher&Stub $hasher;
 
     #[\Override]
     protected function setUp(): void
     {
         $this->refresh_token_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
-        $this->authorization_code_revoker = $this->createMock(OAuth2AuthorizationCodeRevoker::class);
+        $this->authorization_code_revoker = $this->createStub(OAuth2AuthorizationCodeRevoker::class);
         $this->dao                        = $this->createMock(OAuth2RefreshTokenDAO::class);
-        $this->hasher                     = $this->createMock(SplitTokenVerificationStringHasher::class);
+        $this->hasher                     = $this->createStub(SplitTokenVerificationStringHasher::class);
         $this->revoker                    = new OAuth2RefreshTokenRevoker(
             $this->refresh_token_unserializer,
             $this->authorization_code_revoker,
@@ -84,7 +73,7 @@ final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
         $this->dao->expects($this->once())->method('searchRefreshTokenByApp')
             ->willReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
-        $this->hasher->expects($this->once())->method('verifyHash')->willReturn(false);
+        $this->hasher->method('verifyHash')->willReturn(false);
 
         $this->expectException(InvalidOAuth2RefreshTokenException::class);
         $this->revoker->revokeGrantOfRefreshToken($this->buildApp(), new ConcealedString('token_identifier'));
@@ -96,8 +85,8 @@ final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
         $this->dao->expects($this->once())->method('searchRefreshTokenByApp')
             ->willReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
-        $this->hasher->expects($this->once())->method('verifyHash')->willReturn(true);
-        $this->authorization_code_revoker->expects($this->once())->method('revokeByAuthCodeId')
+        $this->hasher->method('verifyHash')->willReturn(true);
+        $this->authorization_code_revoker->method('revokeByAuthCodeId')
             ->with(89);
 
         $this->revoker->revokeGrantOfRefreshToken($this->buildApp(), new ConcealedString('token_identifier'));

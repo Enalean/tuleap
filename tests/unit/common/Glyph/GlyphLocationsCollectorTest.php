@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Glyph;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class GlyphLocationsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GlyphLocationsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItFindsDeclaredLocation(): void
     {
         $glyph_location_collector = new GlyphLocationsCollector();
-        $glyph_location           = $this->createMock(GlyphLocation::class);
+        $glyph_location           = $this->createStub(GlyphLocation::class);
         $glyph_location_collector->addLocation('tuleap-git', $glyph_location);
         $glyph_location_collector->addLocation('tuleap-tracker', $glyph_location);
 

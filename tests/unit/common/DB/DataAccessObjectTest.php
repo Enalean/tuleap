@@ -29,7 +29,7 @@ final class DataAccessObjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDBIsAlwaysRetrievedFromTheConnection(): void
     {
-        $connection = $this->createMock(DBConnection::class);
+        $connection = $this->createStub(DBConnection::class);
 
         $dao = new class ($connection) extends DataAccessObject {
             public function getDBPubliclyForTest(): EasyDB
@@ -38,8 +38,8 @@ final class DataAccessObjectTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $db1 = $this->createMock(EasyDB::class);
-        $db2 = $this->createMock(EasyDB::class);
+        $db1 = $this->createStub(EasyDB::class);
+        $db2 = $this->createStub(EasyDB::class);
         $connection->method('getDB')->willReturn($db1, $db2);
 
         self::assertSame($db1, $dao->getDBPubliclyForTest());
@@ -48,12 +48,12 @@ final class DataAccessObjectTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFoundRowsReturnsAnInteger(): void
     {
-        $connection = $this->createMock(DBConnection::class);
+        $connection = $this->createStub(DBConnection::class);
 
         $dao = new class ($connection) extends DataAccessObject {
         };
 
-        $db = $this->createMock(EasyDB::class);
+        $db = $this->createStub(EasyDB::class);
         $connection->method('getDB')->willReturn($db);
         $db->method('single')->willReturn('0');
 

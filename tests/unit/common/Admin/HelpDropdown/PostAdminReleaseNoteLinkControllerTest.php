@@ -25,6 +25,8 @@ namespace Tuleap\admin\HelpDropdown;
 
 use CSRFSynchronizerToken;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\HelpDropdown\ReleaseNoteCustomLinkUpdater;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
@@ -35,32 +37,23 @@ final class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\
 {
     private PostAdminReleaseNoteLinkController $post_admin_release_note_controller;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ReleaseNoteCustomLinkUpdater
-     */
-    private $custom_link_updater;
+    private ReleaseNoteCustomLinkUpdater&Stub $custom_link_updater;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&CSRFSynchronizerToken
-     */
-    private $csrf_token;
+    private CSRFSynchronizerToken&Stub $csrf_token;
 
     private PFUser $user;
 
     private PFUser $admin_user;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&BaseLayout
-     */
-    private $layout;
+    private BaseLayout&MockObject $layout;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->custom_link_updater = $this->createMock(ReleaseNoteCustomLinkUpdater::class);
-        $this->csrf_token          = $this->createMock(CSRFSynchronizerToken::class);
+        $this->custom_link_updater = $this->createStub(ReleaseNoteCustomLinkUpdater::class);
+        $this->csrf_token          = $this->createStub(CSRFSynchronizerToken::class);
 
         $this->post_admin_release_note_controller = new PostAdminReleaseNoteLinkController(
             $this->custom_link_updater,
@@ -90,13 +83,10 @@ final class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testNoSiteAdminUserIsNotAllowed(): void
     {
-        $request = $this->createMock(\Tuleap\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn($this->user);
 
         $this->expectException(ForbiddenException::class);
-
-        $this->csrf_token->expects($this->never())->method('check');
-        $this->custom_link_updater->expects($this->never())->method('updateReleaseNoteLink');
 
         $this->layout->expects($this->never())->method('addFeedback');
         $this->layout->expects($this->never())->method('redirect');

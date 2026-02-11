@@ -29,7 +29,7 @@ final class DBTransactionExecutorWithConnectionTest extends \Tuleap\Test\PHPUnit
 {
     public function testTransactionIsGivenToTheUnderlyingDB(): void
     {
-        $db_connection = $this->createMock(DBConnection::class);
+        $db_connection = $this->createStub(DBConnection::class);
 
         $transaction_executor = new DBTransactionExecutorWithConnection($db_connection);
 

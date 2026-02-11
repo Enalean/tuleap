@@ -29,8 +29,8 @@ final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit
 {
     public function testStopLookingForAnAuthenticationScopeAtTheFirstSuccessfulAnswerFromABuilder(): void
     {
-        $builder_1 = $this->createMock(AuthenticationScopeBuilder::class);
-        $builder_1->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn($this->createMock(AuthenticationScope::class));
+        $builder_1 = $this->createStub(AuthenticationScopeBuilder::class);
+        $builder_1->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn($this->createStub(AuthenticationScope::class));
         $builder_2 = $this->createMock(AuthenticationScopeBuilder::class);
         $builder_2->expects($this->never())->method('buildAuthenticationScopeFromScopeIdentifier');
 
@@ -63,7 +63,7 @@ final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit
     {
         $builder = $this->createMock(AuthenticationScopeBuilder::class);
         $builder->expects($this->once())->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(
-            $this->createMock(AuthenticationScope::class)
+            $this->createStub(AuthenticationScope::class)
         );
 
         $event = new class ($builder) implements AuthenticationScopeBuilderCollectorEvent {
@@ -104,14 +104,14 @@ final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit
 
     public function testGetAllAccessKeysScopesFromMultipleBuilders(): void
     {
-        $scope_1   = $this->createMock(AuthenticationScope::class);
-        $scope_2   = $this->createMock(AuthenticationScope::class);
-        $builder_1 = $this->createMock(AuthenticationScopeBuilder::class);
+        $scope_1   = $this->createStub(AuthenticationScope::class);
+        $scope_2   = $this->createStub(AuthenticationScope::class);
+        $builder_1 = $this->createStub(AuthenticationScopeBuilder::class);
         $builder_1->method('buildAllAvailableAuthenticationScopes')->willReturn([$scope_1, $scope_2]);
-        $builder_2 = $this->createMock(AuthenticationScopeBuilder::class);
-        $scope_3   = $this->createMock(AuthenticationScope::class);
+        $builder_2 = $this->createStub(AuthenticationScopeBuilder::class);
+        $scope_3   = $this->createStub(AuthenticationScope::class);
         $builder_2->method('buildAllAvailableAuthenticationScopes')->willReturn([$scope_3]);
-        $builder_3 = $this->createMock(AuthenticationScopeBuilder::class);
+        $builder_3 = $this->createStub(AuthenticationScopeBuilder::class);
         $builder_3->method('buildAllAvailableAuthenticationScopes')->willReturn([]);
 
         $aggregate_builder = AggregateAuthenticationScopeBuilder::fromBuildersList($builder_1, $builder_2, $builder_3);

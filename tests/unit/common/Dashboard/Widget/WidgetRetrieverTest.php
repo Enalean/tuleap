@@ -25,7 +25,7 @@ use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsAllWidgets()
     {
@@ -89,7 +89,7 @@ class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsEmptyArrayIfThereAreNotWidgets()
     {
-        $dao       = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $dao       = $this->createStub(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
         $dao->method('searchAllLinesByDashboardIdOrderedByRank')->willReturn(\TestHelper::emptyDar());
@@ -102,7 +102,7 @@ class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsColumnsByLineById()
     {
-        $dao       = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $dao       = $this->createStub(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
         $dao->method('searchAllColumnsByLineIdOrderedByRank')->willReturn(\TestHelper::argListToDar([
@@ -122,7 +122,7 @@ class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsEmptyArrayIfThereAreNotColumnsByLineById()
     {
-        $dao       = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $dao       = $this->createStub(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
         $dao->method('searchAllColumnsByLineIdOrderedByRank')->willReturn(\TestHelper::emptyDar());
@@ -134,7 +134,7 @@ class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsWidgetById()
     {
-        $dao       = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $dao       = $this->createStub(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
         $dao->method('searchWidgetById')->willReturn(\TestHelper::arrayToDar([
@@ -154,7 +154,7 @@ class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsExceptionIfThereIsNoWidget()
     {
-        $dao       = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $dao       = $this->createStub(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
         $dao->method('searchWidgetById')->willReturn(\TestHelper::emptyDar());

@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -34,34 +36,19 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
-     */
-    private $hasher;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeDAO
-     */
-    private $dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeRetriever
-     */
-    private $scope_retriever;
-    /**
-     * @var OAuth2AuthorizationCodeVerifier
-     */
-    private $verifier;
+    private SplitTokenVerificationStringHasher&Stub $hasher;
+    private \UserManager&Stub $user_manager;
+    private OAuth2AuthorizationCodeDAO&MockObject $dao;
+    private OAuth2ScopeRetriever&Stub $scope_retriever;
+    private OAuth2AuthorizationCodeVerifier $verifier;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->hasher          = $this->createMock(SplitTokenVerificationStringHasher::class);
-        $this->user_manager    = $this->createMock(\UserManager::class);
+        $this->hasher          = $this->createStub(SplitTokenVerificationStringHasher::class);
+        $this->user_manager    = $this->createStub(\UserManager::class);
         $this->dao             = $this->createMock(OAuth2AuthorizationCodeDAO::class);
-        $this->scope_retriever = $this->createMock(OAuth2ScopeRetriever::class);
+        $this->scope_retriever = $this->createStub(OAuth2ScopeRetriever::class);
         $this->verifier        = new OAuth2AuthorizationCodeVerifier(
             $this->hasher,
             $this->user_manager,
@@ -106,7 +93,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
             404,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->method('searchAuthorizationCode')->willReturn(null);
+        $this->dao->expects($this->once())->method('searchAuthorizationCode')->willReturn(null);
 
         $this->expectException(OAuth2AuthCodeNotFoundException::class);
         $this->verifier->getAuthorizationCode($auth_code);
@@ -120,7 +107,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
             2,
             new SplitTokenVerificationString(new ConcealedString('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'))
         );
-        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
+        $this->dao->expects($this->once())->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'wrong_hashed_verification_string',
@@ -142,7 +129,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
             3,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
+        $this->dao->expects($this->once())->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'wrong_hashed_verification_string',

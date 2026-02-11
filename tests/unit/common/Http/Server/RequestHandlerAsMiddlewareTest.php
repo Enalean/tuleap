@@ -37,7 +37,7 @@ final class RequestHandlerAsMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
         $middleware = new RequestHandlerAsMiddleware($request_handler);
         $response   = $middleware->process(
             new NullServerRequest(),
-            $this->createMock(RequestHandlerInterface::class)
+            $this->createStub(RequestHandlerInterface::class)
         );
 
         self::assertSame($expected_response, $response);

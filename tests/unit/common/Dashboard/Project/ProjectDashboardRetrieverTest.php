@@ -20,30 +20,28 @@
 
 namespace Tuleap\Dashboard\Project;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
+use Project;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /** @var Project */
-    private $project_with_a_dashboard;
+    private Project $project_with_a_dashboard;
 
-    /** @var Project */
-    private $project_without_dashboard;
+    private Project $project_without_dashboard;
 
-    /** @var ProjectDashboardRetriever */
-    private $project_retriever;
-    private ProjectDashboardDao&MockObject $dao;
+    private ProjectDashboardRetriever $project_retriever;
+    private ProjectDashboardDao&Stub $dao;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->project_with_a_dashboard = $this->createMock(\Project::class);
+        $this->project_with_a_dashboard = $this->createStub(\Project::class);
         $this->project_with_a_dashboard->method('getID')->willReturn(1);
-        $this->project_without_dashboard = $this->createMock(\Project::class);
+        $this->project_without_dashboard = $this->createStub(\Project::class);
         $this->project_without_dashboard->method('getID')->willReturn(2);
 
-        $this->dao = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
+        $this->dao = $this->createStub(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
 
         $this->project_retriever = new ProjectDashboardRetriever($this->dao);
     }

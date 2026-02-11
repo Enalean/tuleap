@@ -38,7 +38,7 @@ final class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $tmp_dir);
 
-        $path_allocator = $this->createMock(PathAllocator::class);
+        $path_allocator = $this->createStub(PathAllocator::class);
         $path_allocator
             ->method('getPathForItemBeingUploaded')
             ->willReturn("$tmp_dir/12");
@@ -74,7 +74,7 @@ final class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $tmp_dir);
 
-        $path_allocator = $this->createMock(PathAllocator::class);
+        $path_allocator = $this->createStub(PathAllocator::class);
         $path_allocator
             ->method('getPathForItemBeingUploaded')
             ->willReturn("$tmp_dir/12");
