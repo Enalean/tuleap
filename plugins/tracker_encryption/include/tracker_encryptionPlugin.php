@@ -21,6 +21,7 @@
 
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\MarkTrackerAsDeletedController;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
@@ -199,7 +200,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         if ($this->currentRequestIsForPlugin() || strpos($_SERVER['REQUEST_URI'], 'plugins/tracker') == true) {
             $layout = $params['layout'];
             assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'tracker_encryption.js'));
+            $layout->includeFooterJavascriptFile(new \Tuleap\Layout\JavascriptViteAsset($this->getAssets(), 'scripts/encrypted_field.js')->getFileURL());
         }
     }
 
@@ -207,13 +208,13 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     public function cssfile($params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/tracker') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('style.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('themes/default/css/style.scss') . '" />';
         }
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../frontend-assets',
             '/assets/tracker_encryption/'
         );
