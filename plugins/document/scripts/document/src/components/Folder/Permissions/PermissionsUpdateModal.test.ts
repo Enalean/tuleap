@@ -32,8 +32,9 @@ import * as permissions from "../../../helpers/permissions/permissions";
 import { PROJECT_USER_GROUPS } from "../../../injection-keys";
 import * as user_group_helpers from "../../../helpers/permissions/ugroups";
 import { okAsync } from "neverthrow";
-import type { UserGroup } from "../../../type";
+import type { RootState, UserGroup } from "../../../type";
 import { ref } from "vue";
+import { FolderBuilder } from "../../../../tests/builders/FolderBuilder";
 
 vi.useFakeTimers();
 
@@ -42,6 +43,7 @@ describe("PermissionsUpdateModal", () => {
         .spyOn(user_group_helpers, "loadProjectUserGroups")
         .mockReturnValue(okAsync([{ id: "102_3", label: "Project members" }]));
     let update_permissions: MockInstance;
+    const current_folder = new FolderBuilder(456).withParentId(0).build();
     const factory = (
         props = {},
         ugroups: ReadonlyArray<UserGroup> | null = null,
@@ -50,6 +52,9 @@ describe("PermissionsUpdateModal", () => {
             props: { ...props },
             global: {
                 ...getGlobalTestOptions({
+                    state: {
+                        current_folder,
+                    } as RootState,
                     modules: {
                         error: {
                             namespaced: true,
@@ -188,6 +193,7 @@ describe("PermissionsUpdateModal", () => {
             expect.anything(),
             item,
             permissions_to_update,
+            current_folder,
         );
         await vi.runOnlyPendingTimersAsync();
         expect(wrapper.vm.can_be_submitted).toBe(true);

@@ -191,8 +191,7 @@ describe("DragNDropHandler", () => {
                     throw new Error("it cannot");
                 });
 
-                await wrapper.vm.ondrop(drop_event);
-
+                await expect(wrapper.vm.ondrop(drop_event)).rejects.toThrow("it cannot");
                 expect(wrapper.vm.error_modal_shown).toStrictEqual(wrapper.vm.CREATION_ERROR);
             });
 

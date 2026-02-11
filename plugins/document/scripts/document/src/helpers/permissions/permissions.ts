@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Item, Permissions, RootState } from "../../type";
+import type { Folder, Item, Permissions, RootState } from "../../type";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -42,6 +42,7 @@ export async function updatePermissions(
     context: ActionContext<RootState, RootState>,
     item: Item,
     updated_permissions: Permissions,
+    parent: Folder,
 ): Promise<void> {
     try {
         const item_id = item.id;
@@ -78,7 +79,11 @@ export async function updatePermissions(
         } else {
             updated_item.updated = true;
             context.commit("removeItemFromFolderContent", updated_item, { root: true });
-            context.commit("addJustCreatedItemToFolderContent", updated_item, { root: true });
+            context.commit(
+                "addJustCreatedItemToFolderContent",
+                { new_item: updated_item, parent },
+                { root: true },
+            );
             context.commit("updateCurrentItemForQuickLokDisplay", updated_item, { root: true });
         }
     } catch (exception) {
