@@ -21,13 +21,41 @@
     <sidebar-container>
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">Field edition</h1>
+                <h1 class="tlp-pane-title">{{ title }}</h1>
             </div>
-            <div class="tlp-pane-section">Not yet implemented</div>
+            <div class="tlp-pane-section">
+                <not-found v-if="field === undefined" />
+                <field-edition-body v-else v-bind:field="field" />
+            </div>
         </div>
     </sidebar-container>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import SidebarContainer from "../SidebarContainer.vue";
+import { FIELDS } from "../../../injection-symbols";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { useGettext } from "vue3-gettext";
+import FieldEditionBody from "./FieldEditionBody.vue";
+import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
+import NotFound from "../../NotFound.vue";
+
+const { $gettext } = useGettext();
+
+const props = defineProps<{ field_id: number }>();
+
+const fields = strictInject(FIELDS);
+
+const field = computed(() =>
+    fields.find((field) => {
+        return field.field_id === props.field_id;
+    }),
+);
+
+const title = computed(() =>
+    field.value?.type === CONTAINER_FIELDSET
+        ? $gettext("Fieldset configuration")
+        : $gettext("Field configuration"),
+);
 </script>

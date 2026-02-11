@@ -23,6 +23,7 @@ import type { User } from "@tuleap/core-rest-api-types";
 import type { Option } from "@tuleap/option";
 import type { ColorName } from "@tuleap/core-constants";
 import type { ElementWithChildren } from "./type";
+import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 
 export const CURRENT_USER: StrictInjectionKey<Option<User>> = Symbol();
 export const IS_USER_LOADING: StrictInjectionKey<boolean> = Symbol();
@@ -31,3 +32,4 @@ export const TRACKER_SHORTNAME: StrictInjectionKey<string> = Symbol();
 export const TRACKER_COLOR: StrictInjectionKey<ColorName> = Symbol();
 export const TRACKER_ROOT: StrictInjectionKey<Ref<ElementWithChildren>> = Symbol();
 export const POST_FIELD_DND_CALLBACK: StrictInjectionKey<() => void> = Symbol();
+export const FIELDS: StrictInjectionKey<ReadonlyArray<StructureFields>> = Symbol();

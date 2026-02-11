@@ -57,6 +57,9 @@ msgstr "Date"
 msgid "Display in & out references"
 msgstr "Liste des objets étant référencés par l'artifact ou le référençant"
 
+msgid "Field configuration"
+msgstr "Configuration du champ"
+
 msgid "Field..."
 msgstr "Champ..."
 
@@ -65,6 +68,9 @@ msgstr "Utilisation des champs"
 
 msgid "Fieldset"
 msgstr "Groupe de champs"
+
+msgid "Fieldset configuration"
+msgstr "Configuration du groupe de champs"
 
 msgid "File description"
 msgstr "Description du fichier"
@@ -77,6 +83,9 @@ msgstr "Flottant"
 
 msgid "Integer"
 msgstr "Entier"
+
+msgid "Label"
+msgstr "Label"
 
 msgid "Last update by"
 msgstr "Dernière mise à jour par"
