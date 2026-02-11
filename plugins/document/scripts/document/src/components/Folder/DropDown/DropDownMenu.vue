@@ -140,9 +140,11 @@ import {
 import type { Item } from "../../../type";
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { IS_DELETION_ALLOWED } from "../../../configuration-keys";
+import { IS_DELETION_ALLOWED, ROOT_ID } from "../../../configuration-keys";
 import { getDocumentProperties } from "../../../helpers/properties/document-properties";
 import { TYPE_FOLDER } from "../../../constants";
+
+const root_id = strictInject(ROOT_ID);
 
 const props = defineProps<{ item: Item }>();
 
@@ -158,10 +160,15 @@ const should_display_versions_link = computed(
     (): boolean => isFile(props.item) || isLink(props.item) || isEmbedded(props.item),
 );
 
+const is_in_root_folder = computed((): boolean => {
+    return props.item.id === root_id;
+});
+
 const should_display_notifications = computed((): boolean => !isOtherType(props.item));
 const should_display_history = computed((): boolean => !isOtherType(props.item));
 const should_display_approval = computed(
-    (): boolean => !is_item_an_empty_document.value && !isOtherType(props.item),
+    (): boolean =>
+        !is_item_an_empty_document.value && !isOtherType(props.item) && !is_in_root_folder.value,
 );
 
 defineExpose({ is_item_an_empty_document, is_item_a_folder, should_display_versions_link });

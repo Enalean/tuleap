@@ -56,7 +56,7 @@ final class NotificationsSubscribersController extends DispatchablePSR15Compatib
     #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $item_id       = $request->getAttribute('item_id');
+        $item_id       = (int) $request->getAttribute('item_id');
         $items_request = $this->item_request_builder->buildFromItemId($item_id);
         $project       = $items_request->getProject();
         $current_user  = $this->user_manager->getCurrentUser();
@@ -105,7 +105,7 @@ final class NotificationsSubscribersController extends DispatchablePSR15Compatib
         ])->withStatus(200);
     }
 
-    private function getUsersToNotifyForItem(string $item_id): array
+    private function getUsersToNotifyForItem(int $item_id): array
     {
         $users_to_notify = [];
         $users_iterator  = $this->user_dao->searchUserIdByObjectIdAndType($item_id, PLUGIN_DOCMAN_NOTIFICATION);
@@ -117,7 +117,7 @@ final class NotificationsSubscribersController extends DispatchablePSR15Compatib
                     continue;
                 }
                 $user_representation = UserRepresentation::build($pfuser, $this->user_avatar_url_provide);
-                $user_subscription   = $this->isUserSubscribedToTheEntireSubhierarchy((int) $item_id, (int) $user_representation->id)
+                $user_subscription   = $this->isUserSubscribedToTheEntireSubhierarchy($item_id, (int) $user_representation->id)
                     ? ['subscriber' => $user_representation, 'subscription_type' => PLUGIN_DOCMAN_NOTIFICATION_CASCADE]
                     : ['subscriber' => $user_representation, 'subscription_type' => PLUGIN_DOCMAN_NOTIFICATION];
                 $users_to_notify[]   = $user_subscription;
@@ -154,7 +154,7 @@ final class NotificationsSubscribersController extends DispatchablePSR15Compatib
         return $users_to_notify;
     }
 
-    private function getUgroupsToNotifyForItem(string $item_id, Project $project): array
+    private function getUgroupsToNotifyForItem(int $item_id, Project $project): array
     {
         $ugroups_to_notify = [];
         $ugroups_iterator  = $this->ugroup_dao->searchUgroupsByItemIdAndType($item_id, PLUGIN_DOCMAN_NOTIFICATION);
@@ -168,7 +168,7 @@ final class NotificationsSubscribersController extends DispatchablePSR15Compatib
                     $this->user_manager->getCurrentUser(),
                     \EventManager::instance(),
                 );
-                $ugroup_subscription       = $this->isUserGroupSubscribedToTheEntireSubhierarchy((int) $item_id, $ugroup_id)
+                $ugroup_subscription       = $this->isUserGroupSubscribedToTheEntireSubhierarchy($item_id, $ugroup_id)
                     ? ['subscriber' => $user_group_representation, 'subscription_type' => PLUGIN_DOCMAN_NOTIFICATION_CASCADE]
                     : ['subscriber' => $user_group_representation, 'subscription_type' => PLUGIN_DOCMAN_NOTIFICATION];
                 $ugroups_to_notify[]       = $ugroup_subscription;

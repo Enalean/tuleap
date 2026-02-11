@@ -64,10 +64,11 @@
             {{ $gettext("Statistics") }}
         </router-link>
         <router-link
-            v-if="isAnApprovableDocument(item)"
+            v-if="isAnApprovableDocument(item) && !is_in_root_folder"
             class="tlp-tab"
             v-bind:class="{ 'tlp-tab-active': active_tab === ApprovalTableTab }"
             v-bind:to="{ name: 'approval-table', params: { item_id: item.id } }"
+            data-test="approval-table-link"
         >
             {{ $gettext("Approval table") }}
         </router-link>
@@ -92,11 +93,14 @@ import { TYPE_FOLDER } from "../../constants";
 import { isAnApprovableDocument } from "../../helpers/approval-table-helper";
 
 import { SHOW_DOCUMENT_IN_TITLE } from "../../injection-keys";
+import { ROOT_ID } from "../../configuration-keys";
 
 const props = defineProps<{
     item: Item;
     active_tab: DetailsTabs;
 }>();
+
+const root_id = strictInject(ROOT_ID);
 
 const show_document_in_title = strictInject(SHOW_DOCUMENT_IN_TITLE);
 
@@ -108,5 +112,7 @@ const item_has_versions = computed(
     (): boolean =>
         props.item !== null && (isFile(props.item) || isLink(props.item) || isEmbedded(props.item)),
 );
-defineExpose({ item_has_versions });
+const is_in_root_folder = computed((): boolean => {
+    return props.item.id === root_id;
+});
 </script>

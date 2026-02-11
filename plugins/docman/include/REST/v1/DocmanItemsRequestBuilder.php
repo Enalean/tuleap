@@ -39,30 +39,14 @@ use UserManager;
 
 class DocmanItemsRequestBuilder
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-
-    public function __construct(UserManager $user_manager, ProjectManager $project_manager)
+    public function __construct(private UserManager $user_manager, private ProjectManager $project_manager)
     {
-        $this->user_manager    = $user_manager;
-        $this->project_manager = $project_manager;
     }
 
     /**
-     * @param int $id
-     *
-     * @return DocmanItemsRequest
-     *
      * @throws RestException
      */
-    public function buildFromItemId($id)
+    public function buildFromItemId(int $id): DocmanItemsRequest
     {
         $item_factory = new Docman_ItemFactory();
 
@@ -89,7 +73,7 @@ class DocmanItemsRequestBuilder
     /**
      * @throws RestException
      */
-    private function checkProjectAccessibility(Project $project, PFUser $user)
+    private function checkProjectAccessibility(Project $project, PFUser $user): void
     {
         ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt($user, $project);
@@ -98,7 +82,7 @@ class DocmanItemsRequestBuilder
     /**
      * @throws RestException
      */
-    private function checkItemAccessibility(Project $project, PFUser $user, Docman_Item $item)
+    private function checkItemAccessibility(Project $project, PFUser $user, Docman_Item $item): void
     {
         $docman_permissions_manager = Docman_PermissionsManager::instance($project->getGroupId());
         if (! $docman_permissions_manager->userCanAccess($user, $item->getId())) {

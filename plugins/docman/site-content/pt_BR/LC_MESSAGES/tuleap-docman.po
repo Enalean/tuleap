@@ -620,6 +620,9 @@ msgstr ""
 msgid "Item type"
 msgstr ""
 
+msgid "Item type empty can not have approval tables"
+msgstr ""
+
 msgid "Items permissions are not listed."
 msgstr ""
 
@@ -915,6 +918,9 @@ msgid "Restore version"
 msgstr ""
 
 msgid "Reviewer"
+msgstr ""
+
+msgid "Root item can not have approval tables"
 msgstr ""
 
 msgid "Save settings"

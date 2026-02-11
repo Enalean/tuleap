@@ -719,6 +719,9 @@ msgstr "Élément mis à jour"
 msgid "Item type"
 msgstr "Type d'élément"
 
+msgid "Item type empty can not have approval tables"
+msgstr "Les éléments de type vide ne peuvent pas avoir de tables d'approbation"
+
 msgid "Items permissions are not listed."
 msgstr "Les permissions des éléments ne sont pas listées."
 
@@ -1025,6 +1028,9 @@ msgstr "Restitution de version"
 
 msgid "Reviewer"
 msgstr "Approbateur"
+
+msgid "Root item can not have approval tables"
+msgstr "L'élément racine ne peut pas avoir de table d'approbation"
 
 msgid "Save settings"
 msgstr "Enregistrer"

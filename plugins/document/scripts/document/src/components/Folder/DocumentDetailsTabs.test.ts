@@ -32,7 +32,11 @@ import DocumentDetailsTabs from "./DocumentDetailsTabs.vue";
 import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
 import { SHOW_DOCUMENT_IN_TITLE } from "../../injection-keys";
 import { ref } from "vue";
+import { ROOT_ID } from "../../configuration-keys";
+import { FolderBuilder } from "../../../tests/builders/FolderBuilder";
 describe(DocumentDetailsTabs, () => {
+    let root_id = 3;
+    const DOCUMENT_ID = 12;
     it.each([
         [TYPE_FOLDER, false],
         [TYPE_FILE, true],
@@ -42,7 +46,10 @@ describe(DocumentDetailsTabs, () => {
         [TYPE_EMPTY, false],
     ])(`should display a Versions link for %s: %s`, (type, should_versions_link_be_displayed) => {
         const wrapper = shallowMount(DocumentDetailsTabs, {
-            props: { item: new ItemBuilder(12).withType(type).build(), active_tab: "versions" },
+            props: {
+                item: new ItemBuilder(DOCUMENT_ID).withType(type).build(),
+                active_tab: "versions",
+            },
             global: {
                 ...getGlobalTestOptions({}),
                 stubs: {
@@ -50,9 +57,62 @@ describe(DocumentDetailsTabs, () => {
                 },
                 provide: {
                     [SHOW_DOCUMENT_IN_TITLE.valueOf()]: ref(false),
+                    [ROOT_ID.valueOf()]: root_id,
                 },
             },
         });
-        expect(wrapper.vm.item_has_versions).toBe(should_versions_link_be_displayed);
+        expect(wrapper.find("[data-test=versions-link]").exists()).toBe(
+            should_versions_link_be_displayed,
+        );
+    });
+
+    it.each([
+        [TYPE_FOLDER, true],
+        [TYPE_FILE, true],
+        [TYPE_LINK, true],
+        [TYPE_EMBEDDED, true],
+        [TYPE_WIKI, true],
+        [TYPE_EMPTY, false],
+    ])(`should display an approval link for %s: %s`, (type, should_approval_link_be_displayed) => {
+        const wrapper = shallowMount(DocumentDetailsTabs, {
+            props: {
+                item: new ItemBuilder(DOCUMENT_ID).withType(type).build(),
+                active_tab: "versions",
+            },
+            global: {
+                ...getGlobalTestOptions({}),
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
+                provide: {
+                    [SHOW_DOCUMENT_IN_TITLE.valueOf()]: ref(false),
+                    [ROOT_ID.valueOf()]: root_id,
+                },
+            },
+        });
+        expect(wrapper.find("[data-test=approval-table-link]").exists()).toBe(
+            should_approval_link_be_displayed,
+        );
+    });
+
+    it("Is in root folder", () => {
+        root_id = DOCUMENT_ID;
+        const wrapper = shallowMount(DocumentDetailsTabs, {
+            props: {
+                item: new FolderBuilder(DOCUMENT_ID).build(),
+                active_tab: "versions",
+            },
+            global: {
+                ...getGlobalTestOptions({}),
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
+                provide: {
+                    [SHOW_DOCUMENT_IN_TITLE.valueOf()]: ref(false),
+                    [ROOT_ID.valueOf()]: root_id,
+                },
+            },
+        });
+        expect(wrapper.find("[data-test=approval-table-link]").exists()).toBe(false);
     });
 });

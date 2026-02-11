@@ -31,10 +31,12 @@ import {
     TYPE_WIKI,
 } from "../../../constants";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { IS_DELETION_ALLOWED, PROJECT } from "../../../configuration-keys";
+import { IS_DELETION_ALLOWED, PROJECT, ROOT_ID } from "../../../configuration-keys";
 import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 describe("DropDownMenu", () => {
+    let root_id = 3;
+    const DOCUMENT_ID = 333;
     function createWrapper(item: Item): VueWrapper<InstanceType<typeof DropDownMenu>> {
         return shallowMount(DropDownMenu, {
             props: { item },
@@ -46,6 +48,7 @@ describe("DropDownMenu", () => {
                 provide: {
                     [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                     [IS_DELETION_ALLOWED.valueOf()]: true,
+                    [ROOT_ID.valueOf()]: root_id,
                 },
             },
         });
@@ -54,7 +57,7 @@ describe("DropDownMenu", () => {
     describe("Dropdown menu", () => {
         it(`Detects empty document type`, () => {
             const wrapper = createWrapper({
-                id: 4,
+                id: DOCUMENT_ID,
                 title: "my item title",
                 type: "empty",
                 can_user_manage: false,
@@ -63,7 +66,7 @@ describe("DropDownMenu", () => {
         });
         it(`Other types are not empty documents`, () => {
             const wrapper = createWrapper({
-                id: 4,
+                id: DOCUMENT_ID,
                 title: "my item title",
                 type: "file",
                 can_user_manage: false,
@@ -73,7 +76,7 @@ describe("DropDownMenu", () => {
 
         it("Detects folder", () => {
             const wrapper = createWrapper({
-                id: 69,
+                id: DOCUMENT_ID,
                 title: "NSFW",
                 type: "folder",
             } as Item);
@@ -83,7 +86,7 @@ describe("DropDownMenu", () => {
 
         it("Other types are not folders", () => {
             const wrapper = createWrapper({
-                id: 4,
+                id: DOCUMENT_ID,
                 title: "my item title",
                 type: "file",
                 can_user_manage: false,
@@ -103,7 +106,7 @@ describe("DropDownMenu", () => {
         ["whatever", false],
     ])("should display a %s with versions link: %s", (type, should_versions_be_displayed) => {
         const wrapper = createWrapper({
-            id: 4,
+            id: DOCUMENT_ID,
             title: "my item title",
             type,
             can_user_manage: false,
@@ -124,7 +127,7 @@ describe("DropDownMenu", () => {
         "should display a %s with notifications link: %s",
         (type, should_notifications_be_displayed) => {
             const wrapper = createWrapper({
-                id: 4,
+                id: DOCUMENT_ID,
                 title: "my item title",
                 type,
                 can_user_manage: false,
@@ -146,7 +149,7 @@ describe("DropDownMenu", () => {
         ["whatever", false],
     ])("should display a %s with history link: %s", (type, should_history_be_displayed) => {
         const wrapper = createWrapper({
-            id: 4,
+            id: DOCUMENT_ID,
             title: "my item title",
             type,
             can_user_manage: false,
@@ -167,7 +170,7 @@ describe("DropDownMenu", () => {
         ["whatever", false],
     ])("should display a %s with approval link: %s", (type, should_approval_be_displayed) => {
         const wrapper = createWrapper({
-            id: 4,
+            id: DOCUMENT_ID,
             title: "my item title",
             type,
             can_user_manage: false,
@@ -176,6 +179,18 @@ describe("DropDownMenu", () => {
         expect(wrapper.find("[data-test=document-dropdown-approval-tables]").exists()).toBe(
             should_approval_be_displayed,
         );
+    });
+
+    it("Does not display approval table for root folder", () => {
+        root_id = DOCUMENT_ID;
+        const wrapper = createWrapper({
+            id: DOCUMENT_ID,
+            title: "my item title",
+            type: "file",
+            can_user_manage: false,
+        } as Item);
+
+        expect(wrapper.find("[data-test=document-dropdown-approval-tables]").exists()).toBe(false);
     });
 
     it.each([
@@ -188,7 +203,7 @@ describe("DropDownMenu", () => {
         ["whatever", false],
     ])("should display a %s with statistics link: %s", (type, should_approval_be_displayed) => {
         const wrapper = createWrapper({
-            id: 4,
+            id: DOCUMENT_ID,
             title: "my item title",
             type,
             can_user_manage: false,
