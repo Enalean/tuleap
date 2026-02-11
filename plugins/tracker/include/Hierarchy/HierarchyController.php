@@ -29,8 +29,8 @@ use Tracker_Hierarchy_HierarchicalTracker;
 use Tracker_Hierarchy_HierarchicalTrackerFactory;
 use Tracker_Workflow_Trigger_RulesDao;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Tracker;
@@ -59,12 +59,12 @@ final readonly class HierarchyController
     public function includeHeaderAssets(): void
     {
         $this->layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                new IncludeAssets(
+            CssViteAsset::fromFileName(
+                new IncludeViteAssets(
                     __DIR__ . '/../../scripts/tracker-admin/frontend-assets',
                     '/assets/trackers/tracker-admin'
                 ),
-                'hierarchy'
+                'styles/hierarchy.scss',
             )
         );
     }

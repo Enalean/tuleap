@@ -55,6 +55,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/po-gettext-plugin
   '@types/bootstrap':
     specifier: ^4.5.1
     version: 4.5.1

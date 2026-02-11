@@ -26,9 +26,9 @@ use PFUser;
 use TemplateRendererFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tracker_Workflow_Action;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -61,9 +61,9 @@ class AdminWebhooks extends Tracker_Workflow_Action
     #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user)
     {
-        $assets = new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
-        $GLOBALS['Response']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'webhooks-style'));
-        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($assets, 'webhooks.js'));
+        $assets = new IncludeViteAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
+        $GLOBALS['Response']->addCssAsset(CssViteAsset::fromFileName($assets, 'styles/webhooks.scss'));
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset($assets, 'src/webhooks.ts'));
 
         $this->displayHeaderBurningParrot($layout, dgettext('tuleap-tracker', 'Webhooks'));
 

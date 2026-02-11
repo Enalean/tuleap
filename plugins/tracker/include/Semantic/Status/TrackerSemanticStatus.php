@@ -31,7 +31,7 @@ use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
@@ -246,6 +246,11 @@ class TrackerSemanticStatus extends TrackerSemantic
         \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ): void {
+        $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptViteAsset(
+            new IncludeViteAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+            'src/semantics/status/status-picker.ts',
+        ));
+
         $this->tracker->displayAdminItemHeaderBurningParrot(
             $tracker_manager,
             'editsemantic',
@@ -254,11 +259,6 @@ class TrackerSemanticStatus extends TrackerSemantic
 
         $template_rendreder      = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
         $admin_presenter_builder = new AdminPresenterBuilder(Tracker_FormElementFactory::instance(), new SemanticDoneDao());
-
-        $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset(
-            new IncludeAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
-            'status-semantic.js'
-        ));
 
         echo $template_rendreder->renderToString(
             'semantics/admin-status-open',

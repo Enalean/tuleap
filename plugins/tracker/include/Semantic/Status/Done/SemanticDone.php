@@ -32,8 +32,8 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Value;
 use TrackerManager;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
@@ -143,6 +143,10 @@ class SemanticDone extends TrackerSemantic
     #[\Override]
     public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+            'src/semantics/status/done-picker.ts',
+        ));
         $this->tracker->displayAdminItemHeaderBurningParrot(
             $tracker_manager,
             'editsemantic',
@@ -158,10 +162,6 @@ class SemanticDone extends TrackerSemantic
 
         $csrf = $this->getCSRFSynchronizerToken();
 
-        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset(
-            new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
-            'done-semantic.js'
-        ));
         $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/semantics');
         $presenter = new SemanticDoneAdminPresenter(
             $csrf,

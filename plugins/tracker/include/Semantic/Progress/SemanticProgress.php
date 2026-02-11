@@ -25,8 +25,8 @@ namespace Tuleap\Tracker\Semantic\Progress;
 use PFUser;
 use SimpleXMLElement;
 use TrackerManager;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -99,6 +99,10 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
         \Tuleap\HTTPRequest $request,
         PFUser $current_user,
     ): void {
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+            'src/semantics/progress/admin-selectors.ts',
+        ));
         $this->tracker->displayAdminItemHeaderBurningParrot(
             $tracker_manager,
             'editsemantic',
@@ -109,11 +113,6 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
         $builder  = new SemanticProgressAdminPresenterBuilder(
             \Tracker_FormElementFactory::instance()
         );
-
-        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset(
-            new IncludeAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
-            'progress-semantic.js'
-        ));
 
         $renderer->renderToPage(
             'semantic-progress-admin',

@@ -19,9 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
@@ -275,9 +275,9 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
 
     public function process($engine, $request, $current_user)
     {
-        $assets = new IncludeAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
-        $GLOBALS['Response']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'field-dependencies-style'));
-        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($assets, 'field-dependencies.js'));
+        $assets = new IncludeViteAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
+        $GLOBALS['Response']->addCssAsset(CssViteAsset::fromFileName($assets, 'styles/field-dependencies.scss'));
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset($assets, 'src/field-dependencies.ts'));
 
         if ($request->get('source_field') && ! $request->get('target_field')) {
             $source_field = $request->get('source_field');

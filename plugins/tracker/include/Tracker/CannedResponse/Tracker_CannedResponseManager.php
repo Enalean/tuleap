@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Tracker\Tracker;
 
 class Tracker_CannedResponseManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
@@ -40,9 +40,9 @@ class Tracker_CannedResponseManager //phpcs:ignore PSR1.Classes.ClassDeclaration
             if ($request->get('edit') !== false) {
                 $this->displayAdminResponse($tracker_manager, $request);
             }
-            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
-                'canned-responses.js'
+            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+                'src/canned-responses.ts',
             ));
             $this->displayAdminAllResponses($tracker_manager);
             return;
