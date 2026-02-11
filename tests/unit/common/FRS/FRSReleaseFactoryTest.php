@@ -25,7 +25,7 @@ use FRSPackageFactory;
 use FRSReleaseFactory;
 use PermissionsManager;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use ProjectManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -36,30 +36,24 @@ final class FRSReleaseFactoryTest extends TestCase
 {
     private \FRSRelease $release;
     private PFUser $user;
-    /**
-     * @var MockObject&FRSReleaseFactory
-     */
-    private $frs_release_factory;
-    /**
-     * @var MockObject&UserManager
-     */
-    private $user_manager;
-    /**
-     * @var MockObject&PermissionsManager
-     */
-    private $permission_manager;
+    private FRSReleaseFactory&Stub $frs_release_factory;
+    private UserManager&Stub $user_manager;
+    private PermissionsManager&Stub $permission_manager;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->frs_release_factory = $this->createPartialMock(FRSReleaseFactory::class, [
-            'getUserManager',
-            'userCanAdmin',
-            'getPermissionsManager',
-            '_getFRSPackageFactory',
-            'getFRSReleasesInfoListFromDb',
-            'delete_release',
-        ]);
+        $this->frs_release_factory = $this->getStubBuilder(FRSReleaseFactory::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->onlyMethods([
+                'getUserManager',
+                'userCanAdmin',
+                'getPermissionsManager',
+                '_getFRSPackageFactory',
+                'getFRSReleasesInfoListFromDb',
+                'delete_release',
+            ])->getStub();
         $this->release             = new \FRSRelease(['release_id' => 56, 'package_id' => 34, 'status_id' => 1]);
         $this->release->setGroupID(12);
         $project    = ProjectTestBuilder::aProject()->withId($this->release->getGroupID())->build();
@@ -70,11 +64,11 @@ final class FRSReleaseFactoryTest extends TestCase
         $this->user->method('isMember')->willReturn(false);
         $this->user->method('isRestricted')->willReturn(false);
         $this->user->method('getUgroups')->willReturn([1, 2, 76]);
-        $this->user_manager       = $this->createMock(UserManager::class);
-        $this->permission_manager = $this->createMock(PermissionsManager::class);
+        $this->user_manager       = $this->createStub(UserManager::class);
+        $this->permission_manager = $this->createStub(PermissionsManager::class);
         $this->user_manager->method('getUserById')->willReturn($this->user);
         $this->frs_release_factory->method('getUserManager')->willReturn($this->user_manager);
-        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager = $this->createStub(ProjectManager::class);
         $project_manager->method('getProject')->willReturn($project);
         ProjectManager::setInstance($project_manager);
     }
@@ -92,7 +86,7 @@ final class FRSReleaseFactoryTest extends TestCase
         self::assertTrue($this->frs_release_factory->userCanRead($this->release, $this->user->getId()));
     }
 
-    protected function userCanReadWhenNoPermsOnRelease($canReadPackage): MockObject&FRSReleaseFactory
+    protected function userCanReadWhenNoPermsOnRelease($canReadPackage): FRSReleaseFactory&Stub
     {
         $this->frs_release_factory->method('userCanAdmin')->willReturn(false);
         $this->permission_manager->method('isPermissionExist')->with($this->release->getReleaseID(), 'RELEASE_READ')->willReturn(false);
@@ -119,8 +113,8 @@ final class FRSReleaseFactoryTest extends TestCase
 
     protected function userCanReadWithSpecificPerms($can_read_release): void
     {
-        $this->permission_manager->expects($this->once())->method('isPermissionExist')->with($this->release->getReleaseID(), 'RELEASE_READ')->willReturn(true);
-        $this->permission_manager->expects($this->once())->method('userHasPermission')->with($this->release->getReleaseID(), 'RELEASE_READ', [1, 2, 76])->willReturn($can_read_release);
+        $this->permission_manager->method('isPermissionExist')->with($this->release->getReleaseID(), 'RELEASE_READ')->willReturn(true);
+        $this->permission_manager->method('userHasPermission')->with($this->release->getReleaseID(), 'RELEASE_READ', [1, 2, 76])->willReturn($can_read_release);
         $this->frs_release_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
         $frs_package_factory = $this->createStub(FRSPackageFactory::class);
         $frs_package_factory->method('userCanRead')->willReturn(true);
@@ -158,23 +152,15 @@ final class FRSReleaseFactoryTest extends TestCase
         $release2 = ['release_id' => 2];
         $release3 = ['release_id' => 3];
         $this->frs_release_factory->method('getFRSReleasesInfoListFromDb')->willReturn([$release1, $release2, $release3]);
-        $matcher = $this->exactly(3);
-        $this->frs_release_factory->expects($matcher)->method('delete_release')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(1, $parameters[0]);
-                self::assertSame(1, $parameters[1]);
-                return true;
+        $this->frs_release_factory->method('delete_release')->willReturnCallback(function (int $group_id, int $release_id) {
+            if ($group_id !== 1) {
+                $this->fail('Expected group_id to be 1');
             }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(1, $parameters[0]);
-                self::assertSame(2, $parameters[1]);
-                return false;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame(1, $parameters[0]);
-                self::assertSame(3, $parameters[1]);
-                return true;
-            }
+
+            return match ($release_id) {
+                1, 3 => true,
+                2 => false,
+            };
         });
         self::assertFalse($this->frs_release_factory->deleteProjectReleases(1));
     }
@@ -185,21 +171,14 @@ final class FRSReleaseFactoryTest extends TestCase
         $release2 = ['release_id' => 2];
         $release3 = ['release_id' => 3];
         $this->frs_release_factory->method('getFRSReleasesInfoListFromDb')->willReturn([$release1, $release2, $release3]);
-        $matcher = $this->exactly(3);
-        $this->frs_release_factory->expects($matcher)->method('delete_release')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(1, $parameters[0]);
-                self::assertSame(1, $parameters[1]);
+        $this->frs_release_factory->method('delete_release')->willReturnCallback(function (int $group_id, int $release_id) {
+            if ($group_id !== 1) {
+                $this->fail('Expected group_id to be 1');
             }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(1, $parameters[0]);
-                self::assertSame(2, $parameters[1]);
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame(1, $parameters[0]);
-                self::assertSame(3, $parameters[1]);
-            }
-            return true;
+
+            return match ($release_id) {
+                1, 2, 3 => true,
+            };
         });
         self::assertTrue($this->frs_release_factory->deleteProjectReleases(1));
     }

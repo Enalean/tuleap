@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ServiceFile;
 use TemplateRenderer;
@@ -35,24 +35,12 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class LicenseAgreementControllersHelperTest extends TestCase
+final class LicenseAgreementControllersHelperTest extends TestCase
 {
-    /**
-     * @var MockObject&ServiceFile
-     */
-    private $service_file;
-    /**
-     * @var MockObject&Project
-     */
-    private $project;
-    /**
-     * @var MockObject&TemplateRendererFactory
-     */
-    private $renderer_factory;
-    /**
-     * @var MockObject&FRSPermissionManager
-     */
-    private $permissions_manager;
+    private ServiceFile&Stub $service_file;
+    private Project&Stub $project;
+    private TemplateRendererFactory&Stub $renderer_factory;
+    private FRSPermissionManager&Stub $permissions_manager;
     private PFUser $current_user;
     private LicenseAgreementControllersHelper $helper;
 
@@ -61,14 +49,14 @@ class LicenseAgreementControllersHelperTest extends TestCase
     {
         $this->current_user = new PFUser(['language_id' => 'en_US']);
 
-        $this->service_file = $this->createMock(\ServiceFile::class);
+        $this->service_file = $this->createStub(\ServiceFile::class);
         $this->service_file->method('displayFRSHeader');
 
-        $this->project = $this->createConfiguredMock(Project::class, ['isError' => false, 'getID' => '101']);
+        $this->project = $this->createConfiguredStub(Project::class, ['isError' => false, 'getID' => '101']);
 
-        $this->renderer_factory = $this->createMock(TemplateRendererFactory::class);
+        $this->renderer_factory = $this->createStub(TemplateRendererFactory::class);
 
-        $this->permissions_manager = $this->createMock(FRSPermissionManager::class);
+        $this->permissions_manager = $this->createStub(FRSPermissionManager::class);
 
         $this->helper = new LicenseAgreementControllersHelper($this->permissions_manager, $this->renderer_factory);
     }

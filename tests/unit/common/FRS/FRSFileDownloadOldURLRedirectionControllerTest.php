@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS;
 
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -34,7 +34,7 @@ final class FRSFileDownloadOldURLRedirectionControllerTest extends TestCase
     {
         $controller = new FRSFileDownloadOldURLRedirectionController(
             HTTPFactoryBuilder::responseFactory(),
-            $this->createMock(EmitterInterface::class)
+            new NoopSapiEmitter(),
         );
 
         $server_request = (new NullServerRequest())->withAttribute('file_id', '12');

@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
+final class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 {
     use \Tuleap\ForgeConfigSandbox;
 
@@ -44,17 +44,14 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 
     public function testProjectsDontExist(): void
     {
-        $url    = $this->createPartialMock(\URL::class, [
-            'getProjectNameRule',
-            'getProjectDao',
-        ]);
-        $dao    = $this->createMock(\ProjectDao::class);
-        $exists = $this->createMock(\DataAccessResult::class);
+        $url    = $this->getStubBuilder(\URL::class)->onlyMethods(['getProjectNameRule', 'getProjectDao'])->getStub();
+        $dao    = $this->createStub(\ProjectDao::class);
+        $exists = $this->createStub(\DataAccessResult::class);
         $exists->method('rowCount')->willReturn(0);
         $exists->method('getRow')->willReturn(false);
         $dao->method('searchByUnixGroupName')->willReturn($exists);
 
-        $rule = $this->createMock(\Rule_ProjectName::class);
+        $rule = $this->createStub(\Rule_ProjectName::class);
         $rule->method('containsIllegalChars');
         $url->method('getProjectNameRule')->willReturn($rule);
         $url->method('getProjectDao')->willReturn($dao);
@@ -63,24 +60,21 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 
     public function testProjectsExist(): void
     {
-        $url = $this->createPartialMock(\URL::class, [
-            'getProjectNameRule',
-            'getProjectDao',
-        ]);
+        $url = $this->getStubBuilder(\URL::class)->onlyMethods(['getProjectNameRule', 'getProjectDao'])->getStub();
 
-        $exists = $this->createMock(\DataAccessResult::class);
+        $exists = $this->createStub(\DataAccessResult::class);
         $exists->method('rowCount')->willReturn(1);
         $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
 
-        $exists1 = $this->createMock(\DataAccessResult::class);
+        $exists1 = $this->createStub(\DataAccessResult::class);
         $exists1->method('rowCount')->willReturn(1);
         $exists1->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
 
-        $rule = $this->createMock(\Rule_ProjectName::class);
+        $rule = $this->createStub(\Rule_ProjectName::class);
         $rule->method('containsIllegalChars')->willReturn(false);
         $url->method('getProjectNameRule')->willReturn($rule);
 
-        $dao = $this->createMock(\ProjectDao::class);
+        $dao = $this->createStub(\ProjectDao::class);
         $dao->method('searchByUnixGroupName')->willReturnOnConsecutiveCalls($exists, $exists1);
 
         $url->method('getProjectDao')->willReturn($dao);
@@ -90,15 +84,12 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 
     public function testViewVcDontExist(): void
     {
-        $url    = $this->createPartialMock(\URL::class, [
-            'getProjectNameRule',
-            'getProjectDao',
-        ]);
-        $dao    = $this->createMock(\ProjectDao::class);
-        $exists = $this->createMock(\DataAccessResult::class);
+        $url    = $this->getStubBuilder(\URL::class)->onlyMethods(['getProjectNameRule', 'getProjectDao'])->getStub();
+        $dao    = $this->createStub(\ProjectDao::class);
+        $exists = $this->createStub(\DataAccessResult::class);
         $exists->method('rowCount')->willReturn(0);
         $exists->method('getRow')->willReturn(false);
-        $rule = $this->createMock(\Rule_ProjectName::class);
+        $rule = $this->createStub(\Rule_ProjectName::class);
         $url->method('getProjectNameRule')->willReturn($rule);
         $rule->method('containsIllegalChars')->willReturn(false);
 
@@ -110,16 +101,13 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 
     public function testViewVcExist(): void
     {
-        $url    = $this->createPartialMock(\URL::class, [
-            'getProjectNameRule',
-            'getProjectDao',
-        ]);
-        $dao    = $this->createMock(\ProjectDao::class);
-        $exists = $this->createMock(\DataAccessResult::class);
+        $url    = $this->getStubBuilder(\URL::class)->onlyMethods(['getProjectNameRule', 'getProjectDao'])->getStub();
+        $dao    = $this->createStub(\ProjectDao::class);
+        $exists = $this->createStub(\DataAccessResult::class);
         $exists->method('rowCount')->willReturn(1);
         $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
         $dao->method('searchByUnixGroupName')->willReturn($exists);
-        $rule = $this->createMock(\Rule_ProjectName::class);
+        $rule = $this->createStub(\Rule_ProjectName::class);
         $url->method('getProjectNameRule')->willReturn($rule);
         $rule->method('containsIllegalChars')->willReturn(false);
 
@@ -129,10 +117,8 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 
     public function testViewVcNotValidProjectName(): void
     {
-        $url  = $this->createPartialMock(\URL::class, [
-            'getProjectNameRule',
-        ]);
-        $rule = $this->createMock(\Rule_ProjectName::class);
+        $url  = $this->getStubBuilder(\URL::class)->onlyMethods(['getProjectNameRule'])->getStub();
+        $rule = $this->createStub(\Rule_ProjectName::class);
         $url->method('getProjectNameRule')->willReturn($rule);
         $rule->method('containsIllegalChars')->willReturn(true);
 
@@ -141,15 +127,12 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 
     public function testViewVcExistForProjectWithPoint(): void
     {
-        $url    = $this->createPartialMock(\URL::class, [
-            'getProjectNameRule',
-            'getProjectDao',
-        ]);
+        $url    = $this->getStubBuilder(\URL::class)->onlyMethods(['getProjectNameRule', 'getProjectDao'])->getStub();
         $dao    = $this->createMock(\ProjectDao::class);
-        $exists = $this->createMock(\DataAccessResult::class);
+        $exists = $this->createStub(\DataAccessResult::class);
         $exists->method('rowCount')->willReturn(1);
         $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
-        $rule = $this->createMock(\Rule_ProjectName::class);
+        $rule = $this->createStub(\Rule_ProjectName::class);
         $url->method('getProjectNameRule')->willReturn($rule);
         $rule->method('containsIllegalChars')->willReturn(false);
         $dao->expects($this->once())->method('searchByUnixGroupName')->with('test.svn')->willReturn($exists);

@@ -34,19 +34,13 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class LicenseAgreementDisplayTest extends TestCase
+final class LicenseAgreementDisplayTest extends TestCase
 {
     use ForgeConfigSandbox;
 
     private LicenseAgreementDisplay $display;
-    /**
-     * @var MockObject&LicenseAgreementFactory
-     */
-    private $factory;
-    /**
-     * @var MockObject&TemplateRenderer
-     */
-    private $renderer;
+    private LicenseAgreementFactory&MockObject $factory;
+    private TemplateRenderer&MockObject $renderer;
     private Project $project;
 
     #[\Override]
@@ -55,7 +49,7 @@ class LicenseAgreementDisplayTest extends TestCase
         $this->project    = new Project(['group_id' => '101']);
         $this->factory    = $this->createMock(LicenseAgreementFactory::class);
         $this->renderer   = $this->createMock(TemplateRenderer::class);
-        $renderer_factory = $this->createMock(TemplateRendererFactory::class);
+        $renderer_factory = $this->createStub(TemplateRendererFactory::class);
         $renderer_factory->method('getRenderer')->willReturn($this->renderer);
         $this->display = new LicenseAgreementDisplay(
             Codendi_HTMLPurifier::instance(),
@@ -67,6 +61,8 @@ class LicenseAgreementDisplayTest extends TestCase
     public function testDoNotShowSelectWhenAgreementIsMandatoryAndNoCustomLicenseExistsInProject(): void
     {
         ForgeConfig::set('sys_frs_license_mandatory', true);
+
+        $this->renderer->expects($this->never())->method('renderToString');
 
         $this->factory->expects($this->once())->method('getLicenseAgreementForPackage')->willReturn(new DefaultLicenseAgreement());
         $this->factory->expects($this->once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([]);
@@ -109,8 +105,8 @@ class LicenseAgreementDisplayTest extends TestCase
 
         $package = new FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(false);
-        $this->factory->method('getLicenseAgreementForPackage')->willReturn(new NoLicenseToApprove());
-        $this->factory->method('getProjectLicenseAgreements')->with($this->project)->willReturn([]);
+        $this->factory->expects($this->once())->method('getLicenseAgreementForPackage')->willReturn(new NoLicenseToApprove());
+        $this->factory->expects($this->once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([]);
         self::assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
     }
 

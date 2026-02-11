@@ -130,7 +130,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
     public function testValidKeyTrue(): void
     {
-        $v = $this->createMock(\Rule::class);
+        $v = $this->createStub(\Rule::class);
         $v->method('isValid')->willReturn(true);
         $r = new \Tuleap\HTTPRequest();
         self::assertTrue($r->validKey('testkey', $v));
@@ -138,7 +138,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
     public function testValidKeyFalse(): void
     {
-        $v = $this->createMock(\Rule::class);
+        $v = $this->createStub(\Rule::class);
         $v->method('isValid')->willReturn(false);
         $r = new \Tuleap\HTTPRequest();
         self::assertFalse($r->validKey('testkey', $v));
@@ -166,10 +166,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
     public function testValidTrue(): void
     {
-        $v = $this->createPartialMock(\Valid::class, [
-            'getKey',
-            'validate',
-        ]);
+        $v = $this->getStubBuilder(\Valid::class)->onlyMethods(['getKey', 'validate'])->getStub();
         $v->method('getKey')->willReturn('testkey');
         $v->method('validate')->willReturn(true);
         $r = new \Tuleap\HTTPRequest();
@@ -178,10 +175,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
     public function testValidFalse(): void
     {
-        $v = $this->createPartialMock(\Valid::class, [
-            'getKey',
-            'validate',
-        ]);
+        $v = $this->getStubBuilder(\Valid::class)->onlyMethods(['getKey', 'validate'])->getStub();
         $v->method('getKey')->willReturn('testkey');
         $v->method('validate')->willReturn(false);
         $r = new \Tuleap\HTTPRequest();
@@ -214,10 +208,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
     public function testValidArrayTrue(): void
     {
-        $v = $this->createPartialMock(\Valid::class, [
-            'getKey',
-            'validate',
-        ]);
+        $v = $this->getStubBuilder(\Valid::class)->onlyMethods(['getKey', 'validate'])->getStub();
         $v->method('getKey')->willReturn('testkey_array');
         $v->method('validate')->willReturn(true);
         $r = new \Tuleap\HTTPRequest();
@@ -226,10 +217,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
     public function testValidArrayFalse(): void
     {
-        $v = $this->createPartialMock(\Valid::class, [
-            'getKey',
-            'validate',
-        ]);
+        $v = $this->getStubBuilder(\Valid::class)->onlyMethods(['getKey', 'validate'])->getStub();
         $v->method('getKey')->willReturn('testkey_array');
         $v->method('validate')->willReturn(false);
         $r = new \Tuleap\HTTPRequest();
@@ -374,31 +362,19 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
     public function testGetValidated(): void
     {
-        $v1 = $this->createPartialMock(\Valid::class, [
-            'getKey',
-            'validate',
-        ]);
+        $v1 = $this->getStubBuilder(\Valid::class)->onlyMethods(['getKey', 'validate'])->getStub();
         $v1->method('getKey')->willReturn('testkey');
         $v1->method('validate')->willReturn(true);
 
-        $v2 = $this->createPartialMock(\Valid::class, [
-            'getKey',
-            'validate',
-        ]);
+        $v2 = $this->getStubBuilder(\Valid::class)->onlyMethods(['getKey', 'validate'])->getStub();
         $v2->method('getKey')->willReturn('testkey');
         $v2->method('validate')->willReturn(false);
 
-        $v3 = $this->createPartialMock(\Valid::class, [
-            'getKey',
-            'validate',
-        ]);
+        $v3 = $this->getStubBuilder(\Valid::class)->onlyMethods(['getKey', 'validate'])->getStub();
         $v3->method('getKey')->willReturn('does_not_exist');
         $v3->method('validate')->willReturn(false);
 
-        $v4 = $this->createPartialMock(\Valid::class, [
-            'getKey',
-            'validate',
-        ]);
+        $v4 = $this->getStubBuilder(\Valid::class)->onlyMethods(['getKey', 'validate'])->getStub();
         $v4->method('getKey')->willReturn('does_not_exist');
         $v4->method('validate')->willReturn(true);
 

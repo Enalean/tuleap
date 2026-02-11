@@ -20,7 +20,7 @@
  *
  */
 
-class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
+final class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     public function testItRecordsOnlyThePathOfThePlugin(): void
     {
@@ -44,7 +44,7 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testItReturnsTrueWhenForgeUpgradeTellsThatSystemIsUpToDate(): void
     {
-        $forge_upgrade = $this->createMock(\Tuleap\ForgeUpgrade\ForgeUpgrade::class);
+        $forge_upgrade = $this->createStub(\Tuleap\ForgeUpgrade\ForgeUpgrade::class);
         $forge_upgrade->method('isSystemUpToDate')->willReturn(true);
 
         $forgeupgrade_config = new ForgeUpgradeConfig($forge_upgrade);
@@ -54,7 +54,7 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testItReturnsFalseWhenForgeUpgradeTellsThereArePendingBuckets(): void
     {
-        $forge_upgrade = $this->createMock(\Tuleap\ForgeUpgrade\ForgeUpgrade::class);
+        $forge_upgrade = $this->createStub(\Tuleap\ForgeUpgrade\ForgeUpgrade::class);
         $forge_upgrade->method('isSystemUpToDate')->willReturn(false);
 
         $forgeupgrade_config = new ForgeUpgradeConfig($forge_upgrade);

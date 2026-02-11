@@ -24,39 +24,28 @@ namespace Tuleap\FRS;
 use DirectoryIterator;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectManager;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
+final class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 {
     private string $directory;
 
-    /**
-     * @var MockObject&ProjectManager
-     */
-    private $project_manager;
+    private ProjectManager&MockObject $project_manager;
 
     private CorrectFrsRepositoryPermissionsCommand $correct_command;
 
     private string $base;
 
-    /**
-     * @var MockObject&Project
-     */
-    private $project_1;
+    private Project&Stub $project_1;
 
-    /**
-     * @var MockObject&Project
-     */
-    private $project_2;
+    private Project&Stub $project_2;
 
-    /**
-     * @var MockObject&Project
-     */
-    private $project_3;
+    private Project&Stub $project_3;
 
     #[\Override]
     protected function setUp(): void
@@ -90,9 +79,9 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
     private function initProjects(): void
     {
-        $this->project_1 = $this->createMock(Project::class);
-        $this->project_2 = $this->createMock(Project::class);
-        $this->project_3 = $this->createMock(Project::class);
+        $this->project_1 = $this->createStub(Project::class);
+        $this->project_2 = $this->createStub(Project::class);
+        $this->project_3 = $this->createStub(Project::class);
 
         $this->project_1->method('getUnixGID')->willReturn(1);
         $this->project_2->method('getUnixGID')->willReturn(2);

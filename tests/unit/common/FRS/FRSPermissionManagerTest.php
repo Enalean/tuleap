@@ -22,45 +22,30 @@
 namespace Tuleap\FRS;
 
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Project_AccessException;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FRSPermissionManagerTest extends TestCase
+final class FRSPermissionManagerTest extends TestCase
 {
     private FRSPermissionManager $permission_manager;
-    /**
-     * @var MockObject&PFUser
-     */
-    private $user;
-    /**
-     * @var MockObject&Project
-     */
-    private $project;
-    /**
-     * @var MockObject&FRSPermissionDao
-     */
-    private $permission_dao;
-    /**
-     * @var MockObject&FRSPermissionFactory
-     */
-    private $permission_factory;
-    /**
-     * @var MockObject&ProjectAccessChecker
-     */
-    private $access_checker;
+    private PFUser&Stub $user;
+    private Project&Stub $project;
+    private FRSPermissionDao&Stub $permission_dao;
+    private FRSPermissionFactory&Stub $permission_factory;
+    private ProjectAccessChecker&Stub $access_checker;
 
     #[\Override]
     public function setUp(): void
     {
-        $this->permission_dao     = $this->createMock(FRSPermissionDao::class);
-        $this->permission_factory = $this->createMock(FRSPermissionFactory::class);
-        $this->project            = $this->createConfiguredMock(Project::class, ['getID' => 101]);
-        $this->user               = $this->createMock(PFUser::class);
-        $this->access_checker     = $this->createMock(ProjectAccessChecker::class);
+        $this->permission_dao     = $this->createStub(FRSPermissionDao::class);
+        $this->permission_factory = $this->createStub(FRSPermissionFactory::class);
+        $this->project            = $this->createConfiguredStub(Project::class, ['getID' => 101]);
+        $this->user               = $this->createStub(PFUser::class);
+        $this->access_checker     = $this->createStub(ProjectAccessChecker::class);
         $this->access_checker->method('checkUserCanAccessProject');
 
         $this->permission_manager = new FRSPermissionManager(
@@ -128,14 +113,14 @@ class FRSPermissionManagerTest extends TestCase
 
     public function testItShouldNotBePossibleToAdministrateFRSIfUserCannotAccessTheProject()
     {
-        $this->access_checker->method('checkUserCanAccessProject')->with($this->user, $this->project)->willThrowException($this->createMock(Project_AccessException::class));
+        $this->access_checker->method('checkUserCanAccessProject')->with($this->user, $this->project)->willThrowException($this->createStub(Project_AccessException::class));
 
         self::assertFalse($this->permission_manager->isAdmin($this->project, $this->user));
     }
 
     public function testItReturnsFalseIToUserCanReadfProjectLevelChecksReturnsAnException()
     {
-        $this->access_checker->method('checkUserCanAccessProject')->with($this->user, $this->project)->willThrowException($this->createMock(Project_AccessException::class));
+        $this->access_checker->method('checkUserCanAccessProject')->with($this->user, $this->project)->willThrowException($this->createStub(Project_AccessException::class));
 
         self::assertFalse($this->permission_manager->userCanRead($this->project, $this->user));
     }

@@ -21,41 +21,35 @@
 
 namespace Tuleap\FRS;
 
-use FrsRelease;
+use FRSRelease;
 use FRSReleaseFactory;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FRSReleasePermissionManagerTest extends TestCase
 {
-    /**
-     * @var MockObject&FRSReleaseFactory
-     */
-    private $release_factory;
+    private FRSReleaseFactory&Stub $release_factory;
 
     private ReleasePermissionManager $release_permission_manager;
 
     private PFUser $user;
 
-    /**
-     * @var MockObject&FrsRelease
-     */
-    private $release;
+    private FRSRelease&Stub $release;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->release_factory = $this->createMock(FRSReleaseFactory::class);
+        $this->release_factory = $this->createStub(FRSReleaseFactory::class);
 
         $this->release_permission_manager = new ReleasePermissionManager(
             $this->release_factory
         );
 
         $this->user    = UserTestBuilder::aUser()->build();
-        $this->release = $this->createMock(FRSRelease::class);
+        $this->release = $this->createStub(FRSRelease::class);
     }
 
     public function testReturnsTrueWhenUserCanReadTheRelease(): void
