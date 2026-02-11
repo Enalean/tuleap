@@ -23,10 +23,11 @@ import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import type { Embedded, Folder, Item, RootState } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { PROJECT, USER_IS_ADMIN } from "../../configuration-keys";
+import { PROJECT, ROOT_ID, USER_IS_ADMIN } from "../../configuration-keys";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 
 describe("DocumentBreadcrumb", () => {
+    const FOLDER_ROOT_ID = 33;
     function createWrapper(
         user_is_admin: boolean,
         current_folder_ascendant_hierarchy: Array<Folder>,
@@ -54,10 +55,25 @@ describe("DocumentBreadcrumb", () => {
                         .withIcon(project_icon)
                         .build(),
                     [USER_IS_ADMIN.valueOf()]: user_is_admin,
+                    [ROOT_ID.valueOf()]: FOLDER_ROOT_ID,
                 },
             },
         });
     }
+
+    it(`Given current item is root folder
+        When we display the breadcrumb
+        Then the Project Documentation folder is NOT added to breadcrumb`, () => {
+        const wrapper = createWrapper(true, [], false, { id: FOLDER_ROOT_ID } as Item);
+        expect(wrapper.find("[data-test=breadcrumb-current-document]").exists()).toBeFalsy();
+    });
+
+    it(`Given current item is NOT root folder
+        When we display the breadcrumb
+        Then the current item is added to breadcrumb`, () => {
+        const wrapper = createWrapper(true, [], false, { id: 232 } as Item);
+        expect(wrapper.find("[data-test=breadcrumb-current-document]").exists()).toBe(true);
+    });
 
     it(`Given user is docman administrator
         When we display the breadcrumb
