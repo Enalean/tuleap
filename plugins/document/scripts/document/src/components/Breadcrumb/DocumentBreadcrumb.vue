@@ -105,7 +105,7 @@ import { BreadcrumbPrivacy } from "@tuleap/vue3-breadcrumb-privacy";
 import { useState } from "vuex-composition-helpers";
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT, USER_IS_ADMIN } from "../../configuration-keys";
+import { PROJECT, ROOT_ID, USER_IS_ADMIN } from "../../configuration-keys";
 
 const {
     current_folder_ascendant_hierarchy,
@@ -128,6 +128,7 @@ const {
 ]);
 const project = strictInject(PROJECT);
 const user_is_admin = strictInject(USER_IS_ADMIN);
+const root_id = strictInject(ROOT_ID);
 
 const max_nb_to_display = ref(5);
 
@@ -152,11 +153,15 @@ function isEllipsisDisplayed(): boolean {
 }
 function currentFolderAscendantHierarchyToDisplay(): Array<Item> {
     return current_folder_ascendant_hierarchy.value
-        .filter((parent) => parent.parent_id !== 0)
+        .filter((parent) => parent.id !== root_id)
         .slice(-max_nb_to_display.value);
 }
 
 function isCurrentDocumentDisplayed(): boolean {
-    return currently_previewed_item.value !== null && current_folder.value !== null;
+    return (
+        currently_previewed_item.value !== null &&
+        current_folder.value !== null &&
+        currently_previewed_item.value.id !== root_id
+    );
 }
 </script>
