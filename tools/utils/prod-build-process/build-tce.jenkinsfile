@@ -69,8 +69,8 @@ node('agent-one-time-use') {
         withCredentials([
             usernamePassword(credentialsId: 'vault-role-community-signing-key', passwordVariable: 'SECRET_ID', usernameVariable: 'ROLE_ID')
         ]) {
-            sh "TULEAP_SOURCES='${tuleap_sources_directory}' TULEAP_FLAVOR=community VAULT_ADDR=\$VAULT SOURCE_TO_SYNC='${el9_directory}/RPMS/noarch/' SYNC_TARGET=ci.tuleap.net:/yum/tuleap/rhel/9/dev/x86_64/ '${tuleap_sources_directory}/tools/utils/prod-build-process/sync_repository.sh'"
-            sh "TULEAP_SOURCES='${tuleap_sources_directory}' TULEAP_FLAVOR=community VAULT_ADDR=\$VAULT SOURCE_TO_SYNC='${tuleap_sources_directory}/tools/rpm/RPM-GPG-KEY-Tuleap' SYNC_TARGET=ci.tuleap.net:/yum/tuleap/gpg.key '${tuleap_sources_directory}/tools/utils/prod-build-process/sync_repository.sh'"
+            sh "TULEAP_SOURCES='${tuleap_sources_directory}' TULEAP_FLAVOR=community VAULT_ADDR=\$VAULT SOURCE_TO_SYNC='${el9_directory}/RPMS/noarch/' SYNC_TARGET=ci.tuleap.net:/yum/tuleap/rhel/9/dev/x86_64/ '${tuleap_sources_directory}/tools/utils/prod-build-process/sync_repository_with_env.sh'"
+            sh "TULEAP_SOURCES='${tuleap_sources_directory}' TULEAP_FLAVOR=community VAULT_ADDR=\$VAULT SOURCE_TO_SYNC='${tuleap_sources_directory}/tools/rpm/RPM-GPG-KEY-Tuleap' SYNC_TARGET=ci.tuleap.net:/yum/tuleap/gpg.key '${tuleap_sources_directory}/tools/utils/prod-build-process/sync_repository_with_env.sh'"
         }
     }
 
