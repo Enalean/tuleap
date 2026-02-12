@@ -61,7 +61,7 @@ onMounted(async () => {
     if (route.name === "preview") {
         await store.dispatch("toggleQuickLook", props.preview_item_id);
 
-        if (!current_folder.value && currently_previewed_item.value) {
+        if (currently_previewed_item.value) {
             store.dispatch("loadFolder", currently_previewed_item.value.parent_id);
         }
     } else {
