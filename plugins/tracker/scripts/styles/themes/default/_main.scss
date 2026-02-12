@@ -1045,22 +1045,26 @@ button[name="tracker_query_submit"] {
         display: none;
     }
 
-    > .tracker-artifact-preview-attachment-magnifier-image {
-        display: flex;
-        box-sizing: border-box;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        padding: var(--tlp-medium-spacing);
-        overflow: hidden;
-        border-radius: var(--tlp-medium-radius);
-        background: var(--tlp-white-color);
-    }
-
     > .tracker-artifact-preview-attachment-magnifier-close-button {
         display: inherit;
     }
+}
+
+.tracker-artifact-preview-attachment-magnifier-container {
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: var(--tlp-medium-spacing);
+    overflow: hidden;
+    border-radius: var(--tlp-medium-radius);
+    background: var(--tlp-white-color);
+}
+
+.tracker-artifact-preview-attachment-magnifier-image {
+    max-height: 100%;
 }
 
 .tracker-artifact-preview-attachment-magnifier-close-button {

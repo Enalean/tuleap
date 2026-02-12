@@ -372,8 +372,8 @@ class FilesField extends TrackerField
                     $add .= '</div>';
                     $add .= <<<EOS
                         <div class="tracker-artifact-preview-attachment-magnifier hidden" data-preview-id="{$hp->purify($preview_id)}">
-                            <div class="tracker-artifact-preview-attachment-magnifier-image">
-                                <img loading="lazy" src="{$hp->purify($query_link)}" alt="$sanitized_description" title="$sanitized_description"/>
+                            <div class="tracker-artifact-preview-attachment-magnifier-container">
+                                <img loading="lazy" class="tracker-artifact-preview-attachment-magnifier-image" src="{$hp->purify($query_link)}" alt="$sanitized_description" title="$sanitized_description"/>
                             </div>
                             <button class="tracker-artifact-preview-attachment-magnifier-close-button" type="button" title="{$hp->purify(_('Close'))}">
                                 <i class="fa-solid fa-times" role="img"></i>
