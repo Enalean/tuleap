@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2026 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,15 +15,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-let project_id: number;
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-export function setProjectId(id_project: number): void {
-    project_id = id_project;
-}
-
-export function getProjectId(): number {
-    return project_id;
-}
+export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project_id");

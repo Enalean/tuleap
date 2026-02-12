@@ -19,12 +19,11 @@
  */
 
 import { post } from "@tuleap/tlp-fetch";
-import { getProjectId } from "../helpers/shared-properties";
 
-export function postInterpretCommonMark(content: string): Promise<string> {
+export function postInterpretCommonMark(project_id: number, content: string): Promise<string> {
     const form_data = new FormData();
     form_data.set("content", content);
-    return post(encodeURI(`/project/${getProjectId()}/interpret-commonmark`), {
+    return post(encodeURI(`/project/${project_id}/interpret-commonmark`), {
         body: form_data,
     }).then(
         (response) => response.text(),

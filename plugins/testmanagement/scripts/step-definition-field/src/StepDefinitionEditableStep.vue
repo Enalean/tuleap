@@ -120,6 +120,7 @@ import type CKEDITOR from "ckeditor4";
 import { ref, computed, onMounted, watch, onUnmounted } from "vue";
 import { useState } from "vuex-composition-helpers";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
@@ -131,6 +132,9 @@ import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 import { postInterpretCommonMark } from "./api/rest-querier";
 import type { Step } from "./Step";
 import type { TextEditorInterface } from "@tuleap/plugin-tracker-rich-text-editor";
+import { PROJECT_ID } from "./injection-keys";
+
+const project_id = strictInject(PROJECT_ID);
 
 const { field_id, is_dragging, upload_url, upload_field_name, upload_max_size } = useState([
     "field_id",
@@ -281,8 +285,8 @@ function togglePreview() {
     is_preview_loading.value = true;
 
     return Promise.all([
-        postInterpretCommonMark(props.step.raw_description),
-        postInterpretCommonMark(props.step.raw_expected_results),
+        postInterpretCommonMark(project_id, props.step.raw_description),
+        postInterpretCommonMark(project_id, props.step.raw_expected_results),
     ])
         .then((interpreted_fields: Array<string>) => {
             interpreted_description.value = interpreted_fields[0];

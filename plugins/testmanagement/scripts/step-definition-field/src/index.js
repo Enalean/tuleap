@@ -20,10 +20,11 @@
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createInitializedStore } from "./store/index.js";
 import StepDefinitionField from "./StepDefinitionField.vue";
-import { setProjectId } from "./helpers/shared-properties.ts";
 import { createApp } from "vue";
+import { getAttributeOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
+import { PROJECT_ID } from "./injection-keys.ts";
 
 document.addEventListener("DOMContentLoaded", async () => {
     for (const mount_point of document.querySelectorAll(".ttm-definition-step-mount-point")) {
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             upload_field_name: mount_point.dataset.uploadFieldName,
             upload_max_size: mount_point.dataset.uploadMaxSize,
         })
+            .provide(PROJECT_ID, getAttributeOrThrow(mount_point, "data-project-id"))
             .use(VueDOMPurifyHTML)
             .use(
                 await initVueGettext(
@@ -47,6 +49,5 @@ document.addEventListener("DOMContentLoaded", async () => {
             )
             .use(store)
             .mount(mount_point);
-        setProjectId(mount_point.dataset.projectId);
     }
 });

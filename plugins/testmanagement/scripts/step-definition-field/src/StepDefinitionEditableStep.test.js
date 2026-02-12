@@ -25,6 +25,7 @@ import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
 import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
 import * as tuleap_api from "./api/rest-querier.ts";
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
+import { PROJECT_ID } from "./injection-keys.ts";
 
 vi.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
     return {
@@ -38,6 +39,8 @@ vi.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
     };
 });
 
+const project_id = 102;
+
 function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
     return shallowMount(StepDefinitionEditableStep, {
         global: {
@@ -45,11 +48,13 @@ function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
                 state: {
                     is_dragging: false,
                     field_id: 18,
-                    project_id: 102,
                 },
             }),
             directives: {
                 "dompurify-html": vi.fn(),
+            },
+            provide: {
+                [PROJECT_ID.valueOf()]: project_id,
             },
         },
         propsData: {
@@ -116,8 +121,14 @@ describe("StepDefinitionEditableStep", () => {
             const wrapper = getComponentInstance();
 
             const promise = wrapper.vm.togglePreview();
-            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith("raw description");
-            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith("raw expected results");
+            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith(
+                project_id,
+                "raw description",
+            );
+            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith(
+                project_id,
+                "raw expected results",
+            );
             expect(wrapper.vm.is_preview_loading).toBe(true);
 
             await promise;
@@ -145,7 +156,10 @@ describe("StepDefinitionEditableStep", () => {
             const wrapper = getComponentInstance();
             const promise = wrapper.vm.togglePreview();
 
-            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith("raw description");
+            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith(
+                project_id,
+                "raw description",
+            );
             expect(wrapper.vm.is_preview_loading).toBe(true);
 
             await promise;
