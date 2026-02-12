@@ -103,7 +103,7 @@ context("PHPWiki notifications", function () {
         cy.visitProjectService(project, "Wiki");
         cy.get("[data-test=phpwiki-page-HomePage]").click();
         cy.get("[data-test=php-wiki-edit-page]").contains("Edit").click();
-        cy.get("[data-test=textarea-wiki-content]").clear().type("Lorem ipsum");
+        cy.get("[data-test=textarea-wiki-content]").type("{selectAll}Lorem ipsum");
         cy.get("[data-test=edit-page-action-buttons]").contains("Save").click();
 
         [user1, user2, user3, user4, user5].forEach((user) => {
@@ -117,7 +117,7 @@ context("PHPWiki notifications", function () {
         cy.visitProjectAdministration(project);
         cy.get("[data-test=admin-nav-groups]").click();
         cy.get("[data-test=project-admin-ugroups-modal]").click();
-        cy.get("[data-test=ugroup_name]").clear().type("AccessToHomePage");
+        cy.get("[data-test=ugroup_name]").type("{selectAll}AccessToHomePage");
         cy.get("[data-test=create-user-group]").click();
         [user1, user2, user4, user5].forEach((user) => {
             cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
@@ -130,7 +130,7 @@ context("PHPWiki notifications", function () {
         });
         cy.get("[data-test=admin-nav-groups]").click();
         cy.get("[data-test=project-admin-ugroups-modal]").click();
-        cy.get("[data-test=ugroup_name]").clear().type("AccessToWikiService");
+        cy.get("[data-test=ugroup_name]").type("{selectAll}AccessToWikiService");
         cy.get("[data-test=create-user-group]").click();
         [user1, user2, user3, user5].forEach((user) => {
             cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
@@ -159,10 +159,10 @@ context("PHPWiki notifications", function () {
 
         cy.siteAdministratorSession();
         cy.visit("/admin/");
-        cy.get("[data-test=global-admin-search-user]").clear().type(`${user1}{enter}`);
+        cy.get("[data-test=global-admin-search-user]").type(`{selectAll}${user1}{enter}`);
         cy.get("[data-test=user-status]").select("Deleted");
         cy.get("[data-test=save-user]").click();
-        cy.get("[data-test=global-admin-search-user]").clear().type(`${user2}{enter}`);
+        cy.get("[data-test=global-admin-search-user]").type(`{selectAll}${user2}{enter}`);
         cy.get("[data-test=user-status]").select("Suspended");
         cy.get("[data-test=save-user]").click();
 
@@ -171,7 +171,7 @@ context("PHPWiki notifications", function () {
         cy.visitProjectService(project, "Wiki");
         cy.get("[data-test=phpwiki-page-HomePage]").click();
         cy.get("[data-test=php-wiki-edit-page]").contains("Edit").click();
-        cy.get("[data-test=textarea-wiki-content]").clear().type("Lorem ipsum doloret");
+        cy.get("[data-test=textarea-wiki-content]").type("{selectAll}Lorem ipsum doloret");
         cy.get("[data-test=edit-page-action-buttons]").contains("Save").click();
 
         cy.log("User1 is deleted: no notifications");

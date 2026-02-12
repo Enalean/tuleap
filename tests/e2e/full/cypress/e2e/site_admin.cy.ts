@@ -121,33 +121,22 @@ describe("Site admin", function () {
             last_year_date.setFullYear(last_year_date.getFullYear() - 1);
             const last_year = last_year_date.toISOString().slice(0, 10);
 
-            cy.get("[data-test=export-csv-button]")
-                .click()
-                .then(() => {
-                    cy.get("[data-test=services-usage-start-date]")
-                        .invoke("val")
-                        .then((last_month) => {
-                            cy.readFile(
-                                download_folder + `/services_usage_${last_month}_${today}.csv`,
-                            ).should("exist");
-                        });
+            cy.get("[data-test=export-csv-button]").click();
+            cy.get("[data-test=services-usage-start-date]")
+                .invoke("val")
+                .then((last_month) => {
+                    cy.readFile(
+                        download_folder + `/services_usage_${last_month}_${today}.csv`,
+                    ).should("exist");
                 });
 
             cy.get("[data-test=scm-statistics]").click();
-            cy.get("[data-test=scm-export-button]")
-                .click()
-                .then(() => {
-                    cy.readFile(download_folder + `/scm_stats_${last_year}_${today}.csv`).should(
-                        "exist",
-                    );
-                });
+            cy.get("[data-test=scm-export-button]").click();
+            cy.readFile(download_folder + `/scm_stats_${last_year}_${today}.csv`).should("exist");
 
             cy.get("[data-test=usage-progress]").click();
-            cy.get("[data-test=usage-progress-button]")
-                .click()
-                .then(() => {
-                    cy.readFile(download_folder + "/Tuleap_progress_data.csv").should("exist");
-                });
+            cy.get("[data-test=usage-progress-button]").click();
+            cy.readFile(download_folder + "/Tuleap_progress_data.csv").should("exist");
         });
 
         it("Can delete a project", function () {
@@ -208,13 +197,12 @@ describe("Site admin", function () {
             cy.log("Log as site admin and remove the applied quota");
             cy.siteAdministratorSession();
             cy.visit("/plugins/statistics/project_quota.php");
-            cy.getContains("[data-test=project-quota-row]", project_name).within(() => {
-                cy.get("[data-test=modal-delete-quota]")
-                    .click()
-                    .then((modal) => {
-                        cy.wrap(modal).get("[data-test=modal-confirmation-delete-quota]").click();
-                    });
-            });
+            cy.getContains("[data-test=project-quota-row]", project_name)
+                .find("[data-test=delete-quota]")
+                .click();
+            cy.get("[data-test=modal-delete-quota]:visible")
+                .find("[data-test=modal-confirmation-delete-quota]")
+                .click();
 
             cy.log("Log as project admin and see if the quota has been removed");
             cy.projectAdministratorSession();

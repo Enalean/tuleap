@@ -18,7 +18,14 @@
  */
 
 import * as quotedPrintable from "quoted-printable";
-import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+import { getAntiCollisionNamePart, WEB_UI_SESSION } from "@tuleap/cypress-utilities-support";
+
+function newSessionForInvitedUser(user_name: string): void {
+    cy.session([WEB_UI_SESSION, `/${user_name}`], () => {
+        cy.visit("/");
+        // Do not log in
+    });
+}
 
 describe("Invitations", () => {
     describe("In a project", () => {
@@ -86,7 +93,7 @@ describe("Invitations", () => {
             cy.siteAdministratorSession();
             cy.visit("/admin/");
             cy.get("[data-test=site-admin-invitations]").click();
-            cy.get("[data-test=max-invitations-by-day]").clear().type("50");
+            cy.get("[data-test=max-invitations-by-day]").type("{selectAll}50");
             cy.get("[data-test=save-invitations-settings]").click();
 
             cy.log("Invite a Tuleap user and an external email into a specific project");
@@ -112,7 +119,7 @@ describe("Invitations", () => {
                 "ProjectAdministrator invited you to register to Tuleap and join the project",
             );
 
-            cy.log("Project administrators can re sent invitation");
+            cy.log("Project administrators can re send invitation");
             cy.visit(`/projects/${project_name}`);
             cy.get('[data-test="project-administration-link"]', { includeShadowDom: true }).click();
             cy.get("[data-test=resend-user-invitations-pane]").contains(
@@ -121,8 +128,7 @@ describe("Invitations", () => {
 
             cy.log("Check that users are created without approbation");
             extractInviteUrlFromEmail(user_invited_in_project_mail).then((url) => {
-                cy.clearCookies();
-                cy.clearLocalStorage();
+                newSessionForInvitedUser(user_invited_in_project);
                 cy.visit(url);
             });
 
@@ -166,8 +172,7 @@ describe("Invitations", () => {
 
             cy.log("Check that users are created without approbation");
             extractInviteUrlFromEmail(user_invited_in_tuleap_mail).then((url) => {
-                cy.clearCookies();
-                cy.clearLocalStorage();
+                newSessionForInvitedUser(user_invited_in_tuleap);
                 cy.visit(url);
             });
 

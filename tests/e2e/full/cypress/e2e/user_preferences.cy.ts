@@ -60,8 +60,8 @@ describe("User preferences", () => {
             it("Change his data", () => {
                 newUserSession();
                 cy.visit("/account/");
-                cy.get("[data-test=user-real-name]").clear().type("Heisenberg");
-                cy.get("[data-test=user-email]").clear().type("heisenberg@vamonos-pest.us");
+                cy.get("[data-test=user-real-name]").type("{selectAll}Heisenberg");
+                cy.get("[data-test=user-email]").type("{selectAll}heisenberg@vamonos-pest.us");
                 cy.get("[data-test=user-timezone]").select("America/Denver", { force: true });
                 cy.get("[data-test=user-prefs-submit-button]").click();
 
@@ -179,13 +179,12 @@ describe("User preferences", () => {
                 newUserSession();
                 cy.visit("/account/keys-tokens");
                 cy.get("[data-test=add-ssh-key-button]").click();
-                cy.get("[data-test=ssh-key]")
-                    .type(".")
-                    .then(($input) => {
-                        $input.val(
-                            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFCu3WYbOeBkXkDaKiV3AX6noIw16pjjrftXyiRjvP9O heisenberg@example",
-                        );
-                    });
+                cy.get("[data-test=ssh-key]").then(($input) => {
+                    cy.wrap($input).type(".");
+                    $input.val(
+                        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFCu3WYbOeBkXkDaKiV3AX6noIw16pjjrftXyiRjvP9O heisenberg@example",
+                    );
+                });
 
                 cy.get("[data-test=submit-new-ssh-key-button]").click();
                 assertFeedbackContainsMessage(
@@ -215,9 +214,7 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-personal-access-key-scope-option]").click({
                     multiple: true,
                 });
-                cy.get("[data-test=access-key-expiration-date-picker]").type("2099-12-31", {
-                    force: true,
-                });
+                cy.get("[data-test=access-key-expiration-date-picker]").type("2099-12-31");
                 cy.get("[data-test=generate-new-access-key-button]").click();
 
                 cy.get("[data-test=user-prefs-add-personal-access-key-feedback]").contains(

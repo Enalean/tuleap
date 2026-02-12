@@ -27,19 +27,20 @@ describe("Core", function () {
         restricted_project_notification = "restricted-" + anti_collision;
         private_project_notification = "private-" + anti_collision;
         cy.projectAdministratorSession();
-        cy.getProjectId("permissions-project-01").as("project_id");
     });
 
     it("Permissions are respected", function () {
         cy.log("Project administrator can access core administration pages");
-        cy.visit(`/wiki/admin/index.php?group_id=${this.project_id}&view=wikiPerms`);
-        cy.visit(`/file/admin/?group_id=${this.project_id}&action=edit-permissions`);
+        cy.getProjectId("permissions-project-01").then((project_id) => {
+            cy.visit(`/wiki/admin/index.php?group_id=${project_id}&view=wikiPerms`);
+            cy.visit(`/file/admin/?group_id=${project_id}&action=edit-permissions`);
 
-        cy.projectMemberSession();
-        cy.log("Project members has never access to core administration pages");
-        checkPhpWikiPermissions(this.project_id);
-        checkFrsPermissions(this.project_id);
-        checkProjectAdminPermissions(this.project_id);
+            cy.projectMemberSession();
+            cy.log("Project members has never access to core administration pages");
+            checkPhpWikiPermissions(project_id);
+            checkFrsPermissions(project_id);
+            checkProjectAdminPermissions(project_id);
+        });
     });
 
     it("restricted users can request access to a project they are not members of", function () {
@@ -55,7 +56,7 @@ describe("Core", function () {
         });
         cy.get("[data-test=button-ask-to-join-for-restricted]").click();
         const message = "restricted_join";
-        cy.get("[data-test=message-ask-to-join-project]").clear().type(message);
+        cy.get("[data-test=message-ask-to-join-project]").type("{selectAll}" + message);
         cy.get("[data-test=ask-to-join-project-button]").click();
 
         cy.assertEmailWithContentReceived("ProjectAdministrator@example.com", message);
@@ -75,14 +76,14 @@ describe("Core", function () {
 
         cy.get("[data-test=button-ask-to-join-private-project]").click();
         const message = "private_join";
-        cy.get("[data-test=message-ask-to-join-project]").clear().type(message);
+        cy.get("[data-test=message-ask-to-join-project]").type("{selectAll}" + message);
         cy.get("[data-test=ask-to-join-project-button]").click();
 
         cy.assertEmailWithContentReceived("ProjectAdministrator@example.com", message);
     });
 });
 
-function checkPhpWikiPermissions(project_id: string): void {
+function checkPhpWikiPermissions(project_id: number): void {
     cy.visit(`/wiki/admin/index.php?group_id=${project_id}&view=wikiPerms`);
 
     cy.get("[data-test=feedback]").contains(
@@ -90,14 +91,14 @@ function checkPhpWikiPermissions(project_id: string): void {
     );
 }
 
-function checkFrsPermissions(project_id: string): void {
+function checkFrsPermissions(project_id: number): void {
     cy.visit(`/file/admin/?group_id=${project_id}&action=edit-permissions`);
     cy.get("[data-test=feedback]").contains(
         "You are not granted sufficient permission to perform this operation.",
     );
 }
 
-function checkProjectAdminPermissions(project_id: string): void {
+function checkProjectAdminPermissions(project_id: number): void {
     cy.visit(`/project/admin/?group_id=${project_id}`, { failOnStatusCode: false });
 
     cy.contains("You don't have permission to access administration of this project.");

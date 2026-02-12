@@ -245,7 +245,10 @@ export function registerGeneralCommands(): void {
     const LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
     Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {
         cy.get("[data-test=lazybox]").click();
-        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).then((search) => {
+            cy.wrap(search).focus();
+            cy.wrap(search).type(query);
+        });
         // eslint-disable-next-line cypress/no-unnecessary-waiting -- Lazybox waits a delay before loading items
         cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
         cy.get("[data-test=lazybox]")
@@ -256,7 +259,10 @@ export function registerGeneralCommands(): void {
 
     Cypress.Commands.add("addItemInLazyboxDropdown", (query: string) => {
         cy.get("[data-test=lazybox]").click();
-        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).then((search) => {
+            cy.wrap(search).focus();
+            cy.wrap(search).type(query);
+        });
         // eslint-disable-next-line cypress/no-unnecessary-waiting -- Lazybox waits a delay before loading items
         cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
         cy.get("[data-test=lazybox]")
