@@ -24,7 +24,7 @@ $tlp-switch-large-height: 48px;
 $tlp-switch-large-width: 96px;
 $tlp-switch-mini-height: 16px;
 $tlp-switch-mini-width: 40px;
-$tlp-switch-background: light-dark(var(--tlp-neutral-dark-color), var(--tlp-dimmed-color));
+$tlp-switch-background: var(--tlp-grey-color);
 $tlp-switch-button-background: var(--tlp-white-color);
 $tlp-switch-button-reactive-background: light-dark(var(--tlp-white-color), var(--tlp-dark-color));
 $tlp-switch-button-width: 37px;

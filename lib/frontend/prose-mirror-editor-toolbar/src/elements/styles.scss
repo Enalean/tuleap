@@ -23,7 +23,7 @@
     flex-wrap: wrap;
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     gap: var(--tlp-small-spacing);
 }
 
@@ -50,7 +50,7 @@ $height-of-separator: calc(
         right: 0;
         width: 1px;
         height: $height-of-separator;
-        background: var(--tlp-neutral-dark-color);
+        background: var(--tlp-grey-color);
     }
 
     &:last-child::after {
@@ -65,7 +65,11 @@ $height-of-separator: calc(
     box-shadow: none;
 
     &.button-active {
-        background: var(--tlp-main-color-lighter-90);
+        background: var(--tlp-main-color-hover-background);
+
+        &:hover {
+            background: var(--tlp-main-color-hover-background);
+        }
     }
 
     &:hover {

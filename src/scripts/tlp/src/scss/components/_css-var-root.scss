@@ -124,6 +124,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
         #{color.mix($tlp-background-color, common.$tlp-white-color, 50%)},
         #{color.mix($tlp-dark-color, common.$tlp-black-color, 50%)}
     );
+    --tlp-grey-color: light-dark(var(--tlp-neutral-dark-color), #{$tlp-dimmed-color});
     --tlp-backdrop-color: #{color.adjust(common.$tlp-black-color, $alpha: - 0.5)};
     --tlp-theme-orange: #{common.$tlp-theme-orange};
     --tlp-background-color-lighter-02: #{color.adjust($tlp-background-color, $lightness: 2%)};
@@ -462,7 +463,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
         #{$tlp-illustration-grey-on-white},
         #{color.mix($tlp-dark-color, common.$tlp-black-color, 50%)}
     );
-    --tlp-illustration-grey: light-dark(var(--tlp-neutral-dark-color), var(--tlp-dimmed-color));
+    --tlp-illustration-grey: var(--tlp-grey-color);
     --tlp-illustration-yellow: #fbe484;
     --tlp-illustration-red: #faaaa5;
     --tlp-illustration-green: #b8daaf;
