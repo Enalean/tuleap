@@ -20,3 +20,33 @@
 @use "pkg:@tuleap/tlp-date-picker";
 @use "pkg:@tuleap/plugin-tracker-link-field";
 @use "dragndrop";
+
+.badge-container {
+    display: flex;
+    gap: calc(var(--tlp-small-spacing) * 0.5);
+    align-items: center;
+}
+
+$size-of-color: 16px;
+$size-of-border: 2px;
+
+.item-colored-element {
+    position: relative;
+    flex-shrink: 0;
+    width: $size-of-color;
+    height: $size-of-color;
+    border: $size-of-border solid var(--border-color);
+    border-radius: 50%;
+    background: var(--secondary-color);
+}
+
+[data-user-has-accessibility-mode="1"] .item-colored-element::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: calc(#{$size-of-color} - 2 * #{$size-of-border});
+    height: calc(#{$size-of-color} - 2 * #{$size-of-border});
+    border-radius: 50%;
+    background: var(--border-color);
+    mask-image: var(--accessibility-pattern);
+}

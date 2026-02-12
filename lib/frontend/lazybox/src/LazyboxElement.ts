@@ -238,6 +238,9 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
         element.addEventListener("click-create-item", () => {
             host.options.new_item_clicked_callback?.(host.search_input_element.getQuery());
             host.search_input_element.clear();
+            setTimeout(() => {
+                host.search_input_element.focus();
+            });
         });
     }
     element.selection = host.selection_element;

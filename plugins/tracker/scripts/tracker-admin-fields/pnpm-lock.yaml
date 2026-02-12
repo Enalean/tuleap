@@ -29,6 +29,9 @@ dependencies:
   '@tuleap/gettext':
     specifier: workspace:^
     version: link:../../../../lib/frontend/gettext
+  '@tuleap/lazybox':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/lazybox
   '@tuleap/list-picker':
     specifier: workspace:^
     version: link:../../../../lib/frontend/list-picker

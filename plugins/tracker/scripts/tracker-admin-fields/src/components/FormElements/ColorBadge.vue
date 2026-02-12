@@ -21,7 +21,7 @@
     <span
         v-if="hasColorValue(value)"
         v-bind:class="buildColor(value)"
-        class="input-box-colored-element"
+        class="item-colored-element"
         data-test="input-box-colored-element"
     ></span>
 </template>
@@ -34,29 +34,3 @@ defineProps<{
     value: StaticListItem;
 }>();
 </script>
-
-<style scoped lang="scss">
-$size-of-color: 16px;
-$size-of-border: 2px;
-
-.input-box-colored-element {
-    position: relative;
-    flex-shrink: 0;
-    width: $size-of-color;
-    height: $size-of-color;
-    border: $size-of-border solid var(--border-color);
-    border-radius: 50%;
-    background: var(--secondary-color);
-}
-
-[data-user-has-accessibility-mode="1"] .input-box-colored-element::before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: calc(#{$size-of-color} - 2 * #{$size-of-border});
-    height: calc(#{$size-of-color} - 2 * #{$size-of-border});
-    border-radius: 50%;
-    background: var(--border-color);
-    mask-image: var(--accessibility-pattern);
-}
-</style>
