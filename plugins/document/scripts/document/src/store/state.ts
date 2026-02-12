@@ -19,6 +19,9 @@
 
 import type { RootState } from "../type";
 
+// raises : [vuex] state field "error" was overridden by a module with the same name at "error"
+// We should not declare error here as it's a module
+// For safety purpose (We need to change RootState into State here) the proper fix will be to move error out of vuex someday
 export const state: RootState = {
     error: {
         has_document_permission_error: false,
