@@ -85,12 +85,16 @@ describe("actions-update", () => {
         it("does not trigger any upload if the file is empty", async () => {
             const dropped_file = { name: "filename.txt", size: 0, type: "text/plain" } as File;
             const item = {} as ItemFile;
+            getItem.mockResolvedValue(item);
 
             createNewVersion.mockReturnValue(Promise.resolve());
 
             await createNewFileVersion(context, [item, dropped_file]);
 
             expect(uploadVersion).not.toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
+                root: true,
+            });
         });
 
         it("uploads a new version of the file and releases the edition lock", async () => {
@@ -105,6 +109,7 @@ describe("actions-update", () => {
                 is_uploading_new_version: false,
             } as ItemFile;
             const NO_LOCK = false;
+            getItem.mockResolvedValue(item);
 
             context.state.folder_content = [{ id: 45 } as Folder];
             const dropped_file = { name: "filename.txt", size: 123, type: "text/plain" } as File;
@@ -126,6 +131,9 @@ describe("actions-update", () => {
                 NO_LOCK,
                 null,
             );
+            expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
+                root: true,
+            });
         });
     });
 
@@ -146,6 +154,7 @@ describe("actions-update", () => {
 
             const uploader = {};
             uploadVersion.mockReturnValue(uploader);
+            getItem.mockResolvedValue(item);
 
             await createNewFileVersionFromModal(context, [
                 item,
@@ -160,6 +169,9 @@ describe("actions-update", () => {
             expect(emit).toHaveBeenCalledWith("item-is-being-uploaded");
             expect(createNewVersion).toHaveBeenCalled();
             expect(uploadVersion).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
+                root: true,
+            });
         });
 
         it("handles error when there is a problem with the version creation", async () => {
@@ -223,6 +235,7 @@ describe("actions-update", () => {
             context.state.folder_content = [{ id: 45 } as Embedded];
 
             postEmbeddedFile.mockImplementation(() => {});
+            getItem.mockResolvedValue(item);
 
             await createNewEmbeddedFileVersionFromModal(context, [
                 item,
@@ -236,6 +249,9 @@ describe("actions-update", () => {
             expect(postEmbeddedFile).toHaveBeenCalled();
             expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", {
                 item: { ...item, updated: true },
+            });
+            expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
+                root: true,
             });
         });
         it("handles error when there is a problem with the update", async () => {
