@@ -312,12 +312,18 @@ describe("Store mutations", () => {
     });
 
     describe("replaceUploadingFileWithActualFile", () => {
-        it("should replace the fake item by the actual item in the folder content", () => {
+        it("should replace the fake item by the actual item in the folder content and current previewed item", () => {
             const fake_item = new FakeItemBuilder(46)
                 .withTitle("toto.txt")
                 .withParentId(42)
                 .withType("file")
                 .withFileType("plain/text")
+                .build();
+
+            const item = new ItemBuilder(46)
+                .withTitle("toto.txt")
+                .withParentId(42)
+                .withType("file")
                 .build();
 
             const actual_file = new ItemBuilder(46)
@@ -347,7 +353,7 @@ describe("Store mutations", () => {
                         .withType("file")
                         .withTitle("titi.txt")
                         .build(),
-                    fake_item,
+                    item,
                     new ItemBuilder(43)
                         .withParentId(42)
                         .withLevel(3)
@@ -355,6 +361,7 @@ describe("Store mutations", () => {
                         .withTitle("tutu.txt")
                         .build(),
                 ])
+                .withCurrentlyPreviewItem(item)
                 .build();
 
             mutations.replaceUploadingFileWithActualFile(state, [fake_item, actual_file]);
@@ -386,6 +393,39 @@ describe("Store mutations", () => {
                     .withTitle("tutu.txt")
                     .build(),
             ]);
+            expect(state.currently_previewed_item).toEqual(actual_file);
+        });
+
+        it("does not replace currently_previewed_item if it's not the uploaded file", () => {
+            const fake_item = new FakeItemBuilder(12)
+                .withTitle("toto.txt")
+                .withParentId(42)
+                .withType("file")
+                .withFileType("plain/text")
+                .build();
+
+            const item = new ItemBuilder(46)
+                .withTitle("toto.txt")
+                .withParentId(42)
+                .withType("file")
+                .build();
+
+            const actual_file = new ItemBuilder(12)
+                .withParentId(42)
+                .withLevel(3)
+                .withType("file")
+                .withTitle("toto.txt")
+                .build();
+
+            const state = new StateBuilder()
+                .withFolderContent([item])
+                .withCurrentlyPreviewItem(item)
+                .build();
+
+            mutations.replaceUploadingFileWithActualFile(state, [fake_item, actual_file]);
+
+            expect(state.folder_content).toEqual([item]);
+            expect(state.currently_previewed_item).toEqual(item);
         });
     });
 

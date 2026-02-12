@@ -267,6 +267,11 @@ export function replaceUploadingFileWithActualFile(
     state: State,
     [uploading_file, actual_file]: [FakeItem, Item],
 ): void {
+    const currently_previewed_item = state.currently_previewed_item;
+    if (currently_previewed_item?.id === uploading_file.id) {
+        state.currently_previewed_item = actual_file;
+    }
+
     const index = state.folder_content.findIndex((item) => item.id === uploading_file.id);
     if (index === -1) {
         return;

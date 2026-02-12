@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { FolderContentItem, State } from "../../src/type";
+import type { FolderContentItem, Item, State } from "../../src/type";
 
 export class StateBuilder {
     private is_loading_folder = false;
@@ -24,6 +24,7 @@ export class StateBuilder {
     private folder_content: Array<FolderContentItem> = [];
     private folded_by_map: { [key: number]: Array<number> } = {};
     private folded_items_ids: Array<number> = [];
+    private currently_previewed_item: Item | null = null;
 
     public thatIsLoadingFolder(is_loading_folder: boolean): this {
         this.is_loading_folder = is_loading_folder;
@@ -50,11 +51,16 @@ export class StateBuilder {
         return this;
     }
 
+    public withCurrentlyPreviewItem(item: Item): this {
+        this.currently_previewed_item = item;
+        return this;
+    }
+
     public build(): State {
         return {
             current_folder: null,
             current_folder_ascendant_hierarchy: [],
-            currently_previewed_item: null,
+            currently_previewed_item: this.currently_previewed_item,
             files_uploads_list: [],
             folded_by_map: this.folded_by_map,
             folded_items_ids: this.folded_items_ids,
