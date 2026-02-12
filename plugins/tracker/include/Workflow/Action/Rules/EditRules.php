@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Artifact\Workflow\GlobalRules\GlobalRulesHistoryEntry;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
@@ -224,9 +224,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
     {
         $title = dgettext('tuleap-tracker', 'Define global date rules');
 
-        $assets = new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
-        $GLOBALS['Response']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'global-rules-style'));
-        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($assets, 'global-rules.js'));
+        $assets = new IncludeViteAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
+        $GLOBALS['Response']->addCssAsset(CssViteAsset::fromFileName($assets, 'styles/global-rules.scss'));
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset($assets, 'src/global-rules.ts'));
 
         $this->displayHeaderBurningParrot($layout, $title);
 

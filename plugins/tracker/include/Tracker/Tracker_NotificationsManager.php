@@ -335,10 +335,6 @@ class Tracker_NotificationsManager
                 $all_user_groups_presenter
             )
         );
-        $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset(
-            new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
-            'notifications.js'
-        ));
     }
 
     private function displayAdminNotificationUnsubcribers()

@@ -111,9 +111,9 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
@@ -1416,12 +1416,12 @@ class Tracker implements Tracker_Dispatchable_Interface
                     ->isBurningParrot();
 
                 if ($is_burning_parrot) {
-                    $javascript_asset = new JavascriptAsset(
-                        new IncludeAssets(
+                    $javascript_asset = new JavascriptViteAsset(
+                        new IncludeViteAssets(
                             __DIR__ . '/../scripts/tracker-admin/frontend-assets',
                             '/assets/trackers/tracker-admin'
                         ),
-                        'semantics-homepage.js'
+                        'src/semantics/homepage.ts',
                     );
                 }
 
@@ -1628,9 +1628,9 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     protected function displayAdminOptions(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
-        $assets = new IncludeAssets(__DIR__ . '/../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
-        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($assets, 'general-settings.js'));
-        $GLOBALS['HTML']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'general-settings-style'));
+        $assets = new IncludeViteAssets(__DIR__ . '/../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($assets, 'src/general-settings.ts'));
+        $GLOBALS['HTML']->addCssAsset(CssViteAsset::fromFileName($assets, 'styles/general-settings.scss'));
 
         $this->displayWarningGeneralsettings();
         $this->displayAdminItemHeaderBurningParrot($layout, 'editoptions', dgettext('tuleap-tracker', 'General settings'));
@@ -1665,14 +1665,14 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
     {
-        $assets = new IncludeAssets(
+        $assets = new IncludeViteAssets(
             __DIR__ . '/../scripts/tracker-admin/frontend-assets',
             '/assets/trackers/tracker-admin'
         );
 
-        $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'colorpicker'));
-        $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'datepicker'));
-        $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'TrackerAdminFields.js'));
+        $GLOBALS['HTML']->addCssAsset(CssViteAsset::fromFileName($assets, 'styles/colorpicker.scss'));
+        $GLOBALS['HTML']->addCssAsset(CssViteAsset::fromFileName($assets, 'styles/datepicker.scss'));
+        $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/TrackerAdminFields.js'));
 
         $this->displayAdminHeader($layout, 'editformElements', $title);
     }

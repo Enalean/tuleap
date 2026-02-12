@@ -93,10 +93,10 @@ class TrackerSemanticManager
 
     public function displayAdminSemantic(TrackerManager $tracker_manager, $request, $current_user)
     {
-        $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
+        $assets = new \Tuleap\Layout\IncludeViteAssets(__DIR__ . '/../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
         $layout = $GLOBALS['HTML'];
         assert($layout instanceof \Tuleap\Layout\BaseLayout);
-        $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'semantics-homepage.js'));
+        $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/semantics/homepage.ts'));
 
         $title = dgettext('tuleap-tracker', 'Manage Semantic');
         $this->tracker->displayWarningArtifactByEmailSemantic();

@@ -26,10 +26,11 @@ use TrackerFactory;
 use TrackerManager;
 use Tuleap\HTTPRequest;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 
 class NotificationsAdminSettingsDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
@@ -59,17 +60,15 @@ class NotificationsAdminSettingsDisplayController implements DispatchableWithReq
             );
             $layout->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
         }
-        $include_assets =  new IncludeAssets(
+        $include_assets =  new IncludeViteAssets(
             __DIR__ . '/../../../../../scripts/tracker-admin/frontend-assets',
             '/assets/trackers/tracker-admin'
         );
 
-        $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                $include_assets,
-                'notifications-style'
-            )
-        );
+        $layout->addCssAsset(CssViteAsset::fromFileName($include_assets, 'styles/notifications.scss'));
+        if ($tracker->getNotificationsLevel() !== Tracker::NOTIFICATIONS_LEVEL_DISABLED) {
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptViteAsset($include_assets, 'src/notifications/notifications.ts'));
+        }
 
         $csrf_token = $this->getCSRFToken($tracker);
 

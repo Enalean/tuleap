@@ -25,8 +25,8 @@ namespace Tuleap\Tracker\Permission\Fields\ByField;
 
 use Tracker_FormElementFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -91,14 +91,14 @@ class ByFieldController implements DispatchableWithRequest, DispatchableWithBurn
 
         $title = dgettext('tuleap-tracker', 'Manage Fields Permissions');
 
-        $tracker->displayAdminPermsHeader($tracker_manager, $title);
-
         $layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
-                'field-permissions.js'
+            new JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+                'src/field-permissions.ts',
             )
         );
+        $tracker->displayAdminPermsHeader($tracker_manager, $title);
+
         $this->renderer->renderToPage(
             'groups-by-field',
             new ByFieldPresenter(

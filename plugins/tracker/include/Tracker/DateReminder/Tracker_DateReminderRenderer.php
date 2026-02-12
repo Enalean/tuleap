@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\Tracker;
 
@@ -144,13 +144,13 @@ class Tracker_DateReminderRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration
      */
     public function editDateReminder($reminderId, CSRFSynchronizerToken $csrf_token)
     {
-        $javascript_assets = new IncludeAssets(
+        $javascript_assets = new IncludeViteAssets(
             __DIR__ . '/../../../scripts/tracker-admin/frontend-assets',
             '/assets/trackers/tracker-admin'
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $javascript_assets->getFileURL('update-notification-reminder.js')
+            $javascript_assets->getFileURL('src/notifications/update-notification-reminder.ts')
         );
 
         $output   = '';
@@ -612,13 +612,13 @@ class Tracker_DateReminderRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration
      */
     public function displayConfirmDelete(int $reminderId, CSRFSynchronizerToken $csrf_token): string
     {
-        $javascript_assets = new IncludeAssets(
+        $javascript_assets = new IncludeViteAssets(
             __DIR__ . '/../../../scripts/tracker-admin/frontend-assets',
             '/assets/trackers/tracker-admin'
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $javascript_assets->getFileURL('delete-notification-reminder.js')
+            $javascript_assets->getFileURL('src/notifications/delete-notification-reminder.ts')
         );
 
 
