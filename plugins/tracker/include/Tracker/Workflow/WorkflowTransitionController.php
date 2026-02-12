@@ -25,9 +25,9 @@ use TemplateRendererFactory;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -71,12 +71,12 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
             $layout->redirect(\trackerPlugin::TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }
 
-        $workflow_assets = new IncludeAssets(
+        $workflow_assets = new IncludeViteAssets(
             __DIR__ . '/../../../scripts/workflow-transitions/frontend-assets',
             '/assets/trackers/workflow-transitions'
         );
-        $layout->addJavascriptAsset(new JavascriptAsset($workflow_assets, 'tracker-workflow-transitions.js'));
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($workflow_assets, 'workflow'));
+        $layout->addJavascriptAsset(new JavascriptViteAsset($workflow_assets, 'src/index.js'));
+        $layout->addCssAsset(CssViteAsset::fromFileName($workflow_assets, 'themes/main.scss'));
 
         $event = new GetExternalPostActionPluginsEvent($tracker);
         $this->event_manager->processEvent($event);
