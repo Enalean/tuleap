@@ -70,7 +70,9 @@ export async function createNewFileVersion(
             false,
             null,
         ]);
-        item_to_update.updated = true;
+        const updated_item = await getItem(item.id);
+        item.updated = true;
+        context.commit("replaceFolderContentByItem", updated_item, { root: true });
         emitter.emit("item-has-just-been-updated", { item: item_to_update });
     } catch (exception) {
         context.commit("toggleCollapsedFolderHasUploadingContent", {
@@ -105,7 +107,9 @@ export const createNewFileVersionFromModal = async (
             is_file_locked,
             approval_table_action,
         ]);
+        const updated_item = await getItem(item.id);
         item.updated = true;
+        context.commit("replaceFolderContentByItem", updated_item, { root: true });
         emitter.emit("item-is-being-uploaded");
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -132,7 +136,9 @@ export const createNewEmbeddedFileVersionFromModal = async (
             is_file_locked,
             approval_table_action,
         );
+        const updated_item = await getItem(item.id);
         item.updated = true;
+        context.commit("replaceFolderContentByItem", updated_item, { root: true });
         emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
