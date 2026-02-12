@@ -18,13 +18,11 @@
  */
 
 @use "sass:color";
-@use "global-variables";
 @use "pkg:@tuleap/pie-chart";
 
 #siteadmin-homepage-container {
     display: flex;
     align-items: flex-start;
-    padding: global-variables.$top-floating-buttons-space 0 0;
 }
 
 .siteadmin-homepage-column {

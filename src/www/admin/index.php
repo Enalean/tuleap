@@ -270,6 +270,8 @@ $site_admin_warnings = new \Tuleap\Admin\SiteAdminWarnings(
 $siteadmin = new \Tuleap\Admin\AdminPageRenderer();
 $siteadmin->header(_('Site administration'));
 
+echo '<h1>' . _('Site administration') . '</h1>';
+
 global $feedback;
 echo html_feedback_top($feedback);
 
