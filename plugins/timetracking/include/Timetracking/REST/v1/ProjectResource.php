@@ -29,8 +29,6 @@ use Luracast\Restler\RestException;
 use Project;
 use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
-use Tracker_Rule_Date_Dao;
-use Tracker_Rule_Date_Factory;
 use TrackerFactory;
 use TransitionFactory;
 use Tuleap\Timetracking\Admin\AdminDao;
@@ -70,8 +68,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
-use Tuleap\Tracker\Workflow\WorkflowFieldUsageDecoratorsProvider;
-use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
 use Tuleap\User\Password\PasswordExpiredException;
 use UGroupManager;
 use UserManager;
@@ -150,13 +146,7 @@ class ProjectResource
                         $permissions_functions_wrapper
                     ),
                     new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance())),
-                    new ListOfLabelDecoratorsForFieldBuilder(
-                        new WorkflowFieldUsageDecoratorsProvider(
-                            new GlobalRulesUsageByFieldProvider(
-                                new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $form_element_factory)
-                            )
-                        )
-                    ),
+                    ListOfLabelDecoratorsForFieldBuilder::build(),
                 ),
                 new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
                 new WorkflowRestBuilder(),

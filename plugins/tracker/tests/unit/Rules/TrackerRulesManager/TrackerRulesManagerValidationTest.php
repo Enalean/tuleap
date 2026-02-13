@@ -35,6 +35,8 @@ use TrackerFactory;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByFieldStub;
+use Tuleap\Tracker\Test\Stub\Workflow\ProvideGlobalRulesUsageByFieldStub;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
@@ -76,6 +78,8 @@ class TrackerRulesManagerValidationTest extends TestCase
                 $this->createMock(Tracker_Rule_List_Factory::class),
                 $this->createMock(Tracker_Rule_Date_Factory::class),
                 $this->createMock(Tracker_RuleFactory::class),
+                ProvideGlobalRulesUsageByFieldStub::withGlobalRules(),
+                ProvideFieldDependenciesUsageByFieldStub::withFieldDependencies(),
             ])->getMock();
 
         $tracker_rule_date  = $this->createMock(Tracker_Rule_Date::class);

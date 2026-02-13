@@ -48,7 +48,7 @@ final class WorkflowMenuPresenterBuilder
                         'global-rules',
                     ),
                     new WorkflowMenuItem(
-                        $this->buildLegacyUrl(Workflow::FUNC_ADMIN_DEPENDENCIES, $tracker),
+                        WorkflowUrlBuilder::buildFieldDependenciesUrl($tracker),
                         dgettext('tuleap-tracker', 'Field dependencies'),
                         'field-dependencies',
                     ),

@@ -30,6 +30,8 @@ use Tracker_RulesManager;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByFieldStub;
+use Tuleap\Tracker\Test\Stub\Workflow\ProvideGlobalRulesUsageByFieldStub;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
@@ -76,6 +78,8 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
                 $this->createMock(\Tracker_Rule_List_Factory::class),
                 $this->createMock(\Tracker_Rule_Date_Factory::class),
                 $this->rule_factory,
+                ProvideGlobalRulesUsageByFieldStub::withGlobalRules(),
+                ProvideFieldDependenciesUsageByFieldStub::withFieldDependencies(),
             ])->getMock();
 
         $this->frozen_fields_dao->method('isFieldUsedInPostAction')->willReturnMap([

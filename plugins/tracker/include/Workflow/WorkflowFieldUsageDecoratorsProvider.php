@@ -24,11 +24,13 @@ namespace Tuleap\Tracker\Workflow;
 
 use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByField;
 
 readonly class WorkflowFieldUsageDecoratorsProvider
 {
     public function __construct(
-        private ProvideGlobalRulesUsageByField $workflow_usage_provider,
+        private ProvideGlobalRulesUsageByField $global_rules_usage,
+        private ProvideFieldDependenciesUsageByField $field_dependencies_usage,
     ) {
     }
 
@@ -41,6 +43,15 @@ readonly class WorkflowFieldUsageDecoratorsProvider
         );
     }
 
+    private function getFieldDependenciesLabelDecorator(TrackerField $field): LabelDecorator
+    {
+        return LabelDecorator::buildWithUrl(
+            dgettext('tuleap-tracker', 'Field dependencies'),
+            dgettext('tuleap-tracker', 'This field is used by field dependencies'),
+            WorkflowUrlBuilder::buildFieldDependenciesUrl($field->getTracker()),
+        );
+    }
+
     /**
      * @return LabelDecorator[]
      */
@@ -48,8 +59,12 @@ readonly class WorkflowFieldUsageDecoratorsProvider
     {
         $decorators = [];
 
-        if ($this->workflow_usage_provider->isFieldUsedInGlobalRules($field)) {
+        if ($this->global_rules_usage->isFieldUsedInGlobalRules($field)) {
             $decorators[] = $this->getGlobalRulesLabelDecorator($field);
+        }
+
+        if ($this->field_dependencies_usage->isFieldUsedInFieldDependencies($field)) {
+            $decorators[] = $this->getFieldDependenciesLabelDecorator($field);
         }
 
         return $decorators;

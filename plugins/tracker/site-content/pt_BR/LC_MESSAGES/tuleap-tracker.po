@@ -3672,6 +3672,9 @@ msgid ""
 "This field is the title of the artifact. It is not allowed to masschange it."
 msgstr ""
 
+msgid "This field is used by field dependencies"
+msgstr ""
+
 msgid "This field is used by global rules"
 msgstr ""
 

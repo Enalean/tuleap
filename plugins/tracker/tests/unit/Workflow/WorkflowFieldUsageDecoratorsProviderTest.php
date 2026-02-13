@@ -22,43 +22,81 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByFieldStub;
 use Tuleap\Tracker\Test\Stub\Workflow\ProvideGlobalRulesUsageByFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
 {
-    public function testGetLabelDecoratorsReturnsEmptyArrayWhenFieldIsNotUsedInGlobalRules(): void
+    private static function getExpectedGlobalRulesLabelDecorator(): LabelDecorator
     {
-        $field = $this->createMock(TrackerField::class);
-
-        $provider = new WorkflowFieldUsageDecoratorsProvider(ProvideGlobalRulesUsageByFieldStub::withoutGlobalRules());
-
-        self::assertSame([], $provider->getLabelDecorators($field));
+        return LabelDecorator::buildWithUrl(
+            dgettext('tuleap-tracker', 'Global rules'),
+            dgettext('tuleap-tracker', 'This field is used by global rules'),
+            WorkflowUrlBuilder::buildGlobalRulesUrl(TrackerTestBuilder::aTracker()->build())
+        );
     }
 
-    public function testGetLabelDecoratorsReturnsGlobalRulesDecoratorWhenFieldIsUsedInGlobalRules(): void
+    private static function getExpectedFieldDependenciesLabelDecorator(): LabelDecorator
     {
+        return LabelDecorator::buildWithUrl(
+            dgettext('tuleap-tracker', 'Field dependencies'),
+            dgettext('tuleap-tracker', 'This field is used by field dependencies'),
+            WorkflowUrlBuilder::buildFieldDependenciesUrl(TrackerTestBuilder::aTracker()->build())
+        );
+    }
+
+    /**
+     * @param LabelDecorator[] $expected_label_decorators
+     */
+    #[DataProvider('getFields')]
+    public function testWorkflowDecorators(
+        bool $has_global_rules,
+        bool $has_field_dependencies,
+        array $expected_label_decorators,
+    ): void {
         $tracker = TrackerTestBuilder::aTracker()->build();
 
         $field = $this->createMock(TrackerField::class);
         $field->method('getTracker')->willReturn($tracker);
 
-        $provider = new WorkflowFieldUsageDecoratorsProvider(ProvideGlobalRulesUsageByFieldStub::withGlobalRules());
+        $global_rules_usage_provider = $has_global_rules
+            ? ProvideGlobalRulesUsageByFieldStub::withGlobalRules()
+            : ProvideGlobalRulesUsageByFieldStub::withoutGlobalRules();
 
-        $decorators = $provider->getLabelDecorators($field);
+        $field_dependencies_usage_provider = $has_field_dependencies
+            ? ProvideFieldDependenciesUsageByFieldStub::withFieldDependencies()
+            : ProvideFieldDependenciesUsageByFieldStub::withoutFieldDependencies();
 
-        self::assertCount(1, $decorators);
-        self::assertInstanceOf(LabelDecorator::class, $decorators[0]);
+        $decorators_provider = new WorkflowFieldUsageDecoratorsProvider(
+            $global_rules_usage_provider,
+            $field_dependencies_usage_provider
+        );
 
-        $expected_url = WorkflowUrlBuilder::buildGlobalRulesUrl($tracker);
+        self::assertEquals($expected_label_decorators, $decorators_provider->getLabelDecorators($field));
+    }
 
-        self::assertSame(dgettext('tuleap-tracker', 'Global rules'), $decorators[0]->label);
-        self::assertSame(dgettext('tuleap-tracker', 'This field is used by global rules'), $decorators[0]->description);
-        self::assertNull($decorators[0]->icon);
-        self::assertSame($expected_url, $decorators[0]->url);
+    public static function getFields(): iterable
+    {
+        yield 'no global rules, no field dependencies' => [false, false, []];
+
+        yield 'global rules, no field dependencies' => [true, false, [self::getExpectedGlobalRulesLabelDecorator()]];
+
+        yield 'no global rules, field dependencies' => [
+            false,
+            true,
+            [self::getExpectedFieldDependenciesLabelDecorator()],
+        ];
+
+        yield 'global rules, field dependencies' => [
+            true,
+            true,
+            [self::getExpectedGlobalRulesLabelDecorator(), self::getExpectedFieldDependenciesLabelDecorator()],
+        ];
     }
 }

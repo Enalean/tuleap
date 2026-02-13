@@ -24,6 +24,8 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\Workflow\FieldDependencies\FieldDependenciesUsageByFieldProvider;
+use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -449,6 +451,9 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
 
     public function getGlobalRulesManager(Tracker $tracker)
     {
+        $rule_list_factory = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory()));
+        $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $this->formelement_factory);
+
         return new Tracker_RulesManager(
             $tracker,
             $this->formelement_factory,
@@ -457,9 +462,11 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
             new TrackerRulesDateValidator($this->formelement_factory, $this->logger),
             $this->tracker_factory,
             $this->logger,
-            new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory())),
-            new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $this->formelement_factory),
+            $rule_list_factory,
+            $rule_date_factory,
             new Tracker_RuleFactory(new Tracker_RuleDao()),
+            new GlobalRulesUsageByFieldProvider($rule_date_factory),
+            new FieldDependenciesUsageByFieldProvider($rule_list_factory),
         );
     }
 

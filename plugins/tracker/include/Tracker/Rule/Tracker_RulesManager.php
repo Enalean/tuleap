@@ -23,12 +23,13 @@ use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
-use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByField;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\ProvideGlobalRulesUsageByField;
 
 /**
 * Manager of rules
@@ -54,6 +55,8 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         private readonly Tracker_Rule_List_Factory $rule_list_factory,
         private readonly Tracker_Rule_Date_Factory $rule_date_factory,
         private readonly Tracker_RuleFactory $rule_factory,
+        private readonly ProvideGlobalRulesUsageByField $global_rules_usage_provider,
+        private readonly ProvideFieldDependenciesUsageByField $field_dependencies_usage_provider,
     ) {
     }
 
@@ -573,19 +576,10 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         return $html;
     }
 
-    /** @return bool */
-    public function isUsedInFieldDependency(TrackerFormElement $field)
+    public function isUsedInFieldDependency(TrackerField $field): bool
     {
-        $field_id   = $field->getId();
-        $list_rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());
-        $date_rules = $this->getAllDateRulesByTrackerId($this->tracker->getId());
-        $rules      = array_merge($list_rules, $date_rules);
-        foreach ($rules as $rule) {
-            if ($rule->isUsedInRule($field->getId())) {
-                return true;
-            }
-        }
-        return false;
+        return $this->global_rules_usage_provider->isFieldUsedInGlobalRules($field)
+            || $this->field_dependencies_usage_provider->isFieldUsedInFieldDependencies($field);
     }
 
     /**
