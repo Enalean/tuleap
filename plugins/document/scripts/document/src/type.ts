@@ -217,6 +217,9 @@ export interface Uploadable {
     uploader?: Upload;
     is_uploading_new_version: boolean;
     is_uploading_in_collapsed_folder: boolean;
+    file_properties: FileProperties | null;
+    lock_info: LockInfo | null;
+    updated?: boolean;
 }
 
 export interface FakeItem extends Uploadable {
