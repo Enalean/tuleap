@@ -25,6 +25,8 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_FormElementFactory;
 use Tracker_REST_FormElementRepresentation;
+use Tracker_Rule_Date_Dao;
+use Tracker_Rule_Date_Factory;
 use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -48,6 +50,8 @@ use Tuleap\Tracker\REST\FormElement\RestFieldUseHandler;
 use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\FieldCannotBeMovedFault;
 use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\FieldNotSavedFault;
 use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\PATCHMoveTrackerFieldHandler;
+use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
+use Tuleap\Tracker\Workflow\WorkflowFieldUsageDecoratorsProvider;
 use UserManager;
 
 class TrackerFieldsResource extends AuthenticatedResource
@@ -190,7 +194,13 @@ class TrackerFieldsResource extends AuthenticatedResource
             $form_element_factory->getType($updated_field),
             [],
             null,
-            new ListOfLabelDecoratorsForFieldBuilder()->getLabelDecorators($field),
+            new ListOfLabelDecoratorsForFieldBuilder(
+                new WorkflowFieldUsageDecoratorsProvider(
+                    new GlobalRulesUsageByFieldProvider(
+                        new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $form_element_factory)
+                    )
+                )
+            )->getLabelDecorators($field),
         );
     }
 

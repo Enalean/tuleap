@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\WorkflowUrlBuilder;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class WorkflowManager
 {
@@ -30,12 +32,7 @@ class WorkflowManager
     {
         $workflow_factory = WorkflowFactory::instance();
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
-            $token             = new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
-                [
-                    'tracker' => $this->tracker->getId(),
-                    'func'    => Workflow::FUNC_ADMIN_RULES,
-                ]
-            ));
+            $token             = new CSRFSynchronizerToken(WorkflowUrlBuilder::buildGlobalRulesUrl($this->tracker));
             $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance());
             $action            = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $rule_date_factory, $token, new ProjectHistoryDao(), TemplateRendererFactory::build());
         } elseif ($request->get('func') == Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS) {

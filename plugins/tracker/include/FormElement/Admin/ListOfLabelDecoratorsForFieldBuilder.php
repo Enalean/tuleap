@@ -25,15 +25,23 @@ namespace Tuleap\Tracker\FormElement\Admin;
 use Override;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
+use Tuleap\Tracker\Workflow\WorkflowFieldUsageDecoratorsProvider;
 
 final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOfLabelDecoratorsForField
 {
+    public function __construct(public WorkflowFieldUsageDecoratorsProvider $workflow_field_usage_decorators)
+    {
+    }
+
     #[Override]
     public function getLabelDecorators(TrackerFormElement $form_element): array
     {
         $decorators = [];
         if ($form_element instanceof TrackerField) {
-            $decorators = $form_element->getUsagesInSemantics()->getLabelDecorators();
+            $decorators = array_merge(
+                $form_element->getUsagesInSemantics()->getLabelDecorators(),
+                $this->workflow_field_usage_decorators->getLabelDecorators($form_element)
+            );
         }
 
         if ($form_element->hasNotifications()) {

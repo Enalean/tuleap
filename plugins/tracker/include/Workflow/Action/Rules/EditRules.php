@@ -25,6 +25,7 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Artifact\Workflow\GlobalRules\GlobalRulesHistoryEntry;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\Workflow\WorkflowUrlBuilder;
 
 require_once __DIR__ . '/../../../../../../src/www/include/html.php';
 
@@ -48,12 +49,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         private readonly TemplateRendererFactory $template_renderer_factory,
     ) {
         parent::__construct($tracker);
-        $this->url_query = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
-            [
-                'tracker' => (int) $this->tracker->id,
-                'func'    => Workflow::FUNC_ADMIN_RULES,
-            ]
-        );
+        $this->url_query = WorkflowUrlBuilder::buildGlobalRulesUrl($tracker);
     }
 
     private function shouldAddOrDeleteRules(\Tuleap\HTTPRequest $request): bool

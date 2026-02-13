@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Admin;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
@@ -29,37 +30,39 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Workflow\ProvideGlobalRulesUsageByFieldStub;
+use Tuleap\Tracker\Workflow\WorkflowFieldUsageDecoratorsProvider;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ListOfLabelDecoratorsForFieldBuilderTest extends TestCase
 {
-    public function testDecorators(): void
+    #[DataProvider('getFields')]
+    public function testDecorators(bool $has_semantic, bool $has_workflow, bool $has_notifications, int $expected_count): void
     {
-        $builder = new ListOfLabelDecoratorsForFieldBuilder();
-        self::assertCount(0, $builder->getLabelDecorators($this->getFormElementWithoutSemanticNorNotifications()));
-        self::assertCount(1, $builder->getLabelDecorators($this->getFormElementWithSemanticButWithoutNotifications()));
-        self::assertCount(1, $builder->getLabelDecorators($this->getFormElementWithNotificationsButWithoutSemantic()));
-        self::assertCount(2, $builder->getLabelDecorators($this->getFormElementWithSemanticAndNotifications()));
+        $builder = new ListOfLabelDecoratorsForFieldBuilder(new WorkflowFieldUsageDecoratorsProvider(
+            $has_workflow
+                ? ProvideGlobalRulesUsageByFieldStub::withGlobalRules()
+                : ProvideGlobalRulesUsageByFieldStub::withoutGlobalRules()
+        ));
+
+        $field = $this->getFormElement($has_semantic, $has_notifications);
+
+        self::assertCount($expected_count, $builder->getLabelDecorators($field));
     }
 
-    private function getFormElementWithoutSemanticNorNotifications(): TrackerField
+    public static function getFields(): iterable
     {
-        return $this->getFormElement(false, false);
-    }
+        yield 'no semantic, no workflow, no notification' => [false, false, false, 0];
 
-    private function getFormElementWithSemanticButWithoutNotifications(): TrackerField
-    {
-        return $this->getFormElement(true, false);
-    }
+        yield 'only semantic' => [true, false, false, 1];
+        yield 'only workflow' => [false, true, false, 1];
+        yield 'only notification' => [false, false, true, 1];
 
-    private function getFormElementWithNotificationsButWithoutSemantic(): TrackerField
-    {
-        return $this->getFormElement(false, true);
-    }
+        yield 'semantic and workflow' => [true, true, false, 2];
+        yield 'semantic and notification' => [true, false, true, 2];
+        yield 'workflow and notification' => [false, true, true, 2];
 
-    private function getFormElementWithSemanticAndNotifications(): TrackerField
-    {
-        return $this->getFormElement(true, true);
+        yield 'semantic and workflow and notification' => [true, true, true, 3];
     }
 
     private function getFormElement(bool $has_semantic, bool $has_notifications): TrackerField
