@@ -34,6 +34,8 @@ final class SiteDeployRealtime
     {
         $file = '/var/lib/tuleap/tuleap-realtime-key';
 
+        \ForgeConfig::loadInSequence();
+
         $application_user_name = \ForgeConfig::getApplicationUserLogin();
         $application_user      = posix_getpwnam($application_user_name);
         if ($application_user === false) {
