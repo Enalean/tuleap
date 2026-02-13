@@ -18,23 +18,25 @@
   -->
 
 <template>
-    <label-for-field v-bind:field="field" />
-    <div class="tlp-form-element-append">
-        <input
-            type="text"
-            class="tlp-input"
-            placeholder="0"
-            v-bind:value="field.specific_properties.default_value"
-        />
+    <div class="tlp-form-element">
+        <label-for-field v-bind:field="field" />
+        <div class="tlp-form-element-append">
+            <input
+                type="text"
+                class="tlp-input"
+                placeholder="0"
+                v-bind:value="field.specific_properties.default_value"
+            />
 
-        <button
-            class="tlp-append tlp-button-primary tlp-button-outline"
-            v-bind:aria-label="$gettext('Auto-compute')"
-            disabled
-        >
-            <i class="fa-solid fa-rotate-right tlp-button-icon" aria-hidden="true"></i>
-            {{ $gettext("Auto-compute") }}
-        </button>
+            <button
+                class="tlp-append tlp-button-primary tlp-button-outline"
+                v-bind:aria-label="$gettext('Auto-compute')"
+                disabled
+            >
+                <i class="fa-solid fa-rotate-right tlp-button-icon" aria-hidden="true"></i>
+                {{ $gettext("Auto-compute") }}
+            </button>
+        </div>
     </div>
 </template>
 

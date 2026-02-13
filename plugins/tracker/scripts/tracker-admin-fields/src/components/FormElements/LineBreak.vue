@@ -19,12 +19,14 @@
 
 <template>
     <div class="tlp-form-element">
+        <label-for-field v-bind:field="field" />
         <i class="fa-solid fa-paragraph" role="img" v-bind:aria-label="field.label"></i>
     </div>
 </template>
 
 <script setup lang="ts">
 import type { LineBreakStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import LabelForField from "./LabelForField.vue";
 
 defineProps<{
     field: LineBreakStructure;
