@@ -42,6 +42,7 @@ use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\Plugin\ListeningToEventClass;
@@ -337,14 +338,14 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             if ($agiledashboard_plugin && $agiledashboard_plugin->currentRequestIsForPlugin()) {
                 $tracker_legacy_assets = new IncludeAssets(__DIR__ . '/../../tracker/scripts/legacy/frontend-assets', '/assets/trackers/legacy');
                 $layout->addJavascriptAsset(new JavascriptAsset($tracker_legacy_assets, 'tracker.js'));
-                $layout->addJavascriptAsset(
-                    new JavascriptAsset(
-                        new IncludeAssets(
+                $layout->includeFooterJavascriptFile(
+                    new JavascriptViteAsset(
+                        new IncludeViteAssets(
                             __DIR__ . '/../../tracker/scripts/legacy-modal-v2/frontend-assets',
                             '/assets/trackers/legacy-modal-v2'
                         ),
-                        'modal-v2.js'
-                    )
+                        'src/main.js',
+                    )->getFileURL(),
                 );
             }
             $cardwall_assets = new IncludeAssets(
