@@ -70,9 +70,8 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
      * @param int $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return BacklogRepresentation
      */
-    public function getBacklog($id, $limit = 10, $offset = 0)
+    public function getBacklog(int $id, int $limit = 10, int $offset = 0): BacklogRepresentation
     {
         $this->checkAccess();
 
