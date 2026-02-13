@@ -222,7 +222,7 @@ use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ArtifactLinkFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
-use Tuleap\Tracker\FormElement\TrackerFormElement;
+use Tuleap\Tracker\FormElement\TrackerFormElementHistoryEntry;
 use Tuleap\Tracker\Hierarchy\HierarchyHistoryEntry;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
@@ -1086,7 +1086,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             'tracker_date_reminder_edit',
             'tracker_date_reminder_delete',
             'tracker_date_reminder_sent',
-            TrackerFormElement::PROJECT_HISTORY_UPDATE,
+            TrackerFormElementHistoryEntry::Update->value,
+            TrackerFormElementHistoryEntry::Unused->value,
             ArtifactDeletor::PROJECT_HISTORY_ARTIFACT_DELETED,
             MarkTrackerAsDeletedController::PROJECT_HISTORY_TRACKER_DELETION_KEY,
             HierarchyHistoryEntry::HierarchyUpdate->value,

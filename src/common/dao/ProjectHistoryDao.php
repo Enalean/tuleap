@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\dao\AddHistory;
+
 /**
  *  Data Access Object for Project history
  */
-class ProjectHistoryDao extends \Tuleap\DB\DataAccessObject
+class ProjectHistoryDao extends \Tuleap\DB\DataAccessObject implements AddHistory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function getHistory(
         \Project $project,
@@ -114,6 +116,7 @@ class ProjectHistoryDao extends \Tuleap\DB\DataAccessObject
         );
     }
 
+    #[Override]
     public function addHistory(
         \Project $project,
         \PFUser $project_admin,
