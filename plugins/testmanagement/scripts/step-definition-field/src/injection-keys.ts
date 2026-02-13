@@ -18,6 +18,8 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { Step } from "./Step";
 
 export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project_id");
 export const FIELD_ID: StrictInjectionKey<number> = Symbol("field_id");
+export const EMPTY_STEP: StrictInjectionKey<Step> = Symbol("empty_step");

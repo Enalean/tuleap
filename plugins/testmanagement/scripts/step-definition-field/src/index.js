@@ -24,7 +24,7 @@ import { createApp } from "vue";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
-import { PROJECT_ID, FIELD_ID } from "./injection-keys.ts";
+import { PROJECT_ID, FIELD_ID, EMPTY_STEP } from "./injection-keys.ts";
 
 document.addEventListener("DOMContentLoaded", async () => {
     for (const mount_point of document.querySelectorAll(".ttm-definition-step-mount-point")) {
@@ -33,13 +33,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         createApp(StepDefinitionField, {
             initial_steps,
-            empty_step: JSON.parse(mount_point.dataset.emptyStep),
             upload_url: mount_point.dataset.uploadUrl,
             upload_field_name: mount_point.dataset.uploadFieldName,
             upload_max_size: mount_point.dataset.uploadMaxSize,
         })
             .provide(PROJECT_ID, Number(getAttributeOrThrow(mount_point, "data-project-id")))
             .provide(FIELD_ID, Number(getAttributeOrThrow(mount_point, "data-field-id")))
+            .provide(EMPTY_STEP, JSON.parse(getAttributeOrThrow(mount_point, "data-empty-step")))
             .use(VueDOMPurifyHTML)
             .use(
                 await initVueGettext(
