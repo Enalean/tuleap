@@ -50,7 +50,7 @@
 .draggable-handle-container {
     display: flex;
     align-items: center;
-    padding: var(--tlp-small-spacing);
+    padding: 0 var(--tlp-small-spacing) 0 0;
 }
 
 .draggable-handle {
