@@ -24,6 +24,13 @@ msgstr "Ajouter un autre fichier"
 msgid "Add fields"
 msgstr "Ajouter des champs"
 
+msgid ""
+"An error occurred during one of your last actions. Please refresh the page "
+"to get back in a consistent state."
+msgstr ""
+"Une erreur est survenue durant l'une de vos dernières actions. Veuillez "
+"rafraîchir la page pour revenir dans un état cohérent."
+
 msgid "An error occurred while retrieving the current user."
 msgstr "Une erreur est survenue lors du chargement de l'utilisateur courant."
 
@@ -141,6 +148,9 @@ msgstr "Introuvable"
 msgid "One column layout"
 msgstr "Agencement sur une colonne"
 
+msgid "Oops, an error occurred!"
+msgstr "Oups, une erreur est survenue !"
+
 msgid "Open list"
 msgstr "Liste ouverte"
 
@@ -158,6 +168,9 @@ msgstr "Bouton radio"
 
 msgid "Rank"
 msgstr "Rang"
+
+msgid "Refresh"
+msgstr "Rafraîchir"
 
 msgid "Save"
 msgstr "Sauvegarder"
