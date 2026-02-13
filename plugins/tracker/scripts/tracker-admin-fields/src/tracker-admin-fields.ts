@@ -27,6 +27,7 @@ import "./styles/tracker-admin-fields.scss";
 import { PROJECT_ID } from "./type";
 import {
     CURRENT_USER,
+    FIELDS,
     IS_USER_LOADING,
     TRACKER_COLOR,
     TRACKER_ID,
@@ -58,7 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     createApp(FieldsUsage, {
-        fields: JSON.parse(getAttributeOrThrow(mount_point, "data-fields")),
         structure: JSON.parse(getAttributeOrThrow(mount_point, "data-structure")),
         has_error,
     })
@@ -76,5 +76,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(TRACKER_ID, parseInt(getAttributeOrThrow(mount_point, "data-tracker-id"), 10))
         .provide(TRACKER_SHORTNAME, getAttributeOrThrow(mount_point, "data-tracker-shortname"))
         .provide(TRACKER_COLOR, getAttributeOrThrow(mount_point, "data-tracker-color"))
+        .provide(FIELDS, JSON.parse(getAttributeOrThrow(mount_point, "data-fields")))
         .mount(mount_point);
 });

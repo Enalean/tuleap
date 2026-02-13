@@ -40,6 +40,9 @@ export function getRouter(base_uri: string): Router {
                 components: {
                     sidebar: FieldEdition,
                 },
+                props: {
+                    sidebar: (route) => ({ field_id: Number(route.params.field_id) }),
+                },
             },
             {
                 path: "/:catchAll(.*)",
