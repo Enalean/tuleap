@@ -1178,7 +1178,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $tracker_factory      = $this->getTrackerFactory();
         $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
         $hierarchical_tracker = $factory->getWithChildren($this);
-        $controller           = new HierarchyController(
+        return new HierarchyController(
             $request,
             $hierarchical_tracker,
             $factory,
@@ -1188,10 +1188,9 @@ class Tracker implements Tracker_Dispatchable_Interface
             EventManager::instance(),
             new ProjectHistoryDao(),
             $GLOBALS['Response'],
-            new CSRFSynchronizerToken('/plugins/tracker/?' . http_build_query(['tracker' => $this->getId(), 'func' => HierarchyController::HIERARCHY_VIEW]))
+            new CSRFSynchronizerToken('/plugins/tracker/?' . http_build_query(['tracker' => $this->getId(), 'func' => HierarchyController::HIERARCHY_VIEW])),
+            $tracker_factory,
         );
-
-        return $controller;
     }
 
     public function createFormElement($type, $formElement_data, $user)
