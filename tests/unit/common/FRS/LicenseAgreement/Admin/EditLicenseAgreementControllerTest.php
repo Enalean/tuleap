@@ -25,89 +25,66 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use CSRFSynchronizerToken;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
-use ServiceFile;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EditLicenseAgreementControllerTest extends TestCase
 {
     private EditLicenseAgreementController $controller;
-    /**
-     * @var MockObject&Project
-     */
-    private $project;
-    /**
-     * @var MockObject&ServiceFile
-     */
-    private $service_file;
-    /**
-     * @var MockObject&TemplateRendererFactory
-     */
-    private $renderer_factory;
+    private Project&Stub $project;
+    private TemplateRendererFactory&Stub $renderer_factory;
     private \Tuleap\HTTPRequest $request;
     private PFUser $current_user;
-    /**
-     * @var MockObject&LicenseAgreementFactory
-     */
-    private $factory;
-    /**
-     * @var MockObject&BaseLayout
-     */
-    private $layout;
-    /**
-     * @var MockObject&LicenseAgreementControllersHelper
-     */
-    private $helper;
-    /**
-     * @var MockObject&ProjectRetriever
-     */
-    private $project_retriever;
+    private LicenseAgreementFactory&Stub $factory;
+    private TestLayout $layout;
+    private LicenseAgreementControllersHelper&Stub $helper;
+    private ProjectRetriever&Stub $project_retriever;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->layout = $this->createMock(BaseLayout::class);
+        $this->layout = new TestLayout(new LayoutInspector());
 
         $this->current_user = new PFUser(['language_id' => 'en_US']);
 
         $this->request = new \Tuleap\HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->project = $this->createConfiguredMock(Project::class, ['getID' => '101']);
-        $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
+        $this->project = $this->createConfiguredStub(Project::class, ['getID' => '101']);
 
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
         $this->project_retriever->expects($this->once())->method('getProjectFromId')
             ->with('101')
             ->willReturn($this->project);
 
-        $this->renderer_factory = $this->createMock(TemplateRendererFactory::class);
+        $this->renderer_factory = $this->createStub(TemplateRendererFactory::class);
 
-        $this->helper = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->helper = $this->createStub(LicenseAgreementControllersHelper::class);
         $this->helper->method('assertCanAccess')->with($this->project, $this->current_user);
         $this->helper->method('renderHeader')->with($this->project);
 
-        $this->factory = $this->createMock(LicenseAgreementFactory::class);
+        $this->factory = $this->createStub(LicenseAgreementFactory::class);
 
-        $assets = $this->createMock(IncludeAssets::class);
+        $assets = $this->createStub(IncludeAssets::class);
         $assets->method('getFileURL');
         $this->controller = new EditLicenseAgreementController(
             $this->project_retriever,
             $this->helper,
             $this->renderer_factory,
             $this->factory,
-            $this->createMock(CSRFSynchronizerToken::class),
+            $this->createStub(CSRFSynchronizerToken::class),
             $assets,
             $assets,
         );
@@ -121,12 +98,9 @@ final class EditLicenseAgreementControllerTest extends TestCase
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
         }))->willReturn($content_renderer);
 
-        $this->layout->method('includeFooterJavascriptFile');
-        $this->layout->method('footer');
-
         $license = new LicenseAgreement(1, 'some title', 'some content');
         $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn($license);
-        $this->factory->expects($this->once())->method('canBeDeleted')->with($this->project, $license)->willReturn(true);
+        $this->factory->method('canBeDeleted')->with($this->project, $license)->willReturn(true);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
     }
@@ -138,9 +112,6 @@ final class EditLicenseAgreementControllerTest extends TestCase
         $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
         }))->willReturn($content_renderer);
-
-        $this->layout->method('includeFooterJavascriptFile');
-        $this->layout->method('footer');
 
         $this->factory->method('getLicenseAgreementById')->with($this->project, 0)->willReturn(new DefaultLicenseAgreement());
 

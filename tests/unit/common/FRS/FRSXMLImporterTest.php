@@ -20,7 +20,9 @@
  */
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\FRS\FRSPermission;
+use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\UploadedLinksUpdater;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -44,87 +46,48 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory // phpcs:ignore P
     public function __construct()
     {
         parent::__construct();
-        $this->setFileForge(['/bin/true']);
+        $this->setFileForge(['true']);
     }
 }
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses
+final class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses
 {
     use \Tuleap\TemporaryTestDirectory;
     use \Tuleap\GlobalLanguageMock;
     use \Tuleap\ForgeConfigSandbox;
 
-    /**
-     * @var MockObject&\Tuleap\FRS\UploadedLinksDao
-     */
-    protected $link_dao;
-    /**
-     * @var MockObject&\Tuleap\FRS\FRSPermissionManager
-     */
-    protected $frs_permission_creator;
+    protected \Tuleap\FRS\UploadedLinksDao&Stub $link_dao;
+    protected FRSPermissionCreator&MockObject $frs_permission_creator;
     private FRSPackageFactoryMock $package_factory;
-    /**
-     * @var MockObject&FRSReleaseFactory
-     */
-    private $release_factory;
+    private FRSReleaseFactory&Stub $release_factory;
     private FRSXMLImporterTest_FRSFileFactory $file_factory;
-    /**
-     * @var MockObject&FRSPackageDao
-     */
-    private $package_dao;
-    /**
-     * @var MockObject&PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var MockObject&FRSReleaseDao
-     */
-    private $release_dao;
-    /**
-     * @var MockObject&FRSFileDao
-     */
-    private $file_dao;
-    /**
-     * @var MockObject&FRSProcessorDao
-     */
-    private $processor_dao;
-    /**
-     * @var MockObject&FRSFileTypeDao
-     */
-    private $filetype_dao;
-    /**
-     * @var MockObject&\User\XML\Import\IFindUserFromXMLReference
-     */
-    private $user_finder;
-    /**
-     * @var MockObject&UserManager
-     */
-    private $user_manager;
-    /**
-     * @var MockObject&UGroupDao
-     */
-    private $ugroup_dao;
-    /**
-     * @var MockObject&XMLImportHelper
-     */
-    private $xml_import_helper;
+    private FRSPackageDao&MockObject $package_dao;
+    private PermissionsManager&Stub $permissions_manager;
+    private FRSReleaseDao&MockObject $release_dao;
+    private FRSFileDao&MockObject $file_dao;
+    private FRSProcessorDao&Stub $processor_dao;
+    private FRSFileTypeDao&Stub $filetype_dao;
+    private \User\XML\Import\IFindUserFromXMLReference&Stub $user_finder;
+    private UserManager&Stub $user_manager;
+    private UGroupDao&Stub $ugroup_dao;
+    private XMLImportHelper&Stub $xml_import_helper;
     private FRSXMLImporter $frs_importer;
 
     #[\Override]
     protected function setUp(): void
     {
         $this->package_factory = new FRSPackageFactoryMock();
-        $this->release_factory = $this->createPartialMock(FRSReleaseFactory::class, [
-            'getFRSReleaseFromDb',
-        ]);
+        $this->release_factory = $this->getStubBuilder(FRSReleaseFactory::class)
+            ->onlyMethods(['getFRSReleaseFromDb'])
+            ->getStub();
         $this->file_factory    = new FRSXMLImporterTest_FRSFileFactory();
 
         $this->package_dao          = $this->createMock(FRSPackageDao::class);
         $this->package_factory->dao = $this->package_dao;
         FRSPackageFactory::setInstance($this->package_factory);
 
-        $this->permissions_manager = $this->createMock(PermissionsManager::class);
+        $this->permissions_manager = $this->createStub(PermissionsManager::class);
         PermissionsManager::setInstance($this->permissions_manager);
 
         $this->release_dao          = $this->createMock(FRSReleaseDao::class);
@@ -135,26 +98,25 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $this->file_factory->dao             = $this->file_dao;
         $this->file_factory->release_factory = $this->release_factory;
 
-        $this->processor_dao = $this->createMock(FRSProcessorDao::class);
-        $this->filetype_dao  = $this->createMock(FRSFileTypeDao::class);
+        $this->processor_dao = $this->createStub(FRSProcessorDao::class);
+        $this->filetype_dao  = $this->createStub(FRSFileTypeDao::class);
 
-        $this->user_finder  = $this->createMock(\User\XML\Import\IFindUserFromXMLReference::class);
-        $this->user_manager = $this->createMock(UserManager::class);
+        $this->user_finder  = $this->createStub(\User\XML\Import\IFindUserFromXMLReference::class);
+        $this->user_manager = $this->createStub(UserManager::class);
         UserManager::setInstance($this->user_manager);
 
-        $this->ugroup_dao = $this->createMock(UGroupDao::class);
+        $this->ugroup_dao = $this->createStub(UGroupDao::class);
         $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn(null);
 
-        $this->xml_import_helper      = $this->createMock(XMLImportHelper::class);
+        $this->xml_import_helper      = $this->createStub(XMLImportHelper::class);
         $this->frs_permission_creator = $this->createMock(\Tuleap\FRS\FRSPermissionCreator::class);
 
-        $this->link_dao = $this->createMock(\Tuleap\FRS\UploadedLinksDao::class);
-        $frs_log        = $this->createMock(FRSLog::class);
+        $this->link_dao = $this->createStub(\Tuleap\FRS\UploadedLinksDao::class);
+        $frs_log        = $this->createStub(FRSLog::class);
         $frs_log->method('addLog');
         $links_updater = new UploadedLinksUpdater($this->link_dao, $frs_log);
 
-        $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
-        $logger->method('log');
+        $logger = new \Psr\Log\NullLogger();
 
         $this->frs_importer = new FRSXMLImporter(
             $logger,
@@ -169,7 +131,7 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
             $this->filetype_dao
         );
 
-        $em = $this->createMock(EventManager::class);
+        $em = $this->createStub(EventManager::class);
         $em->method('processEvent');
         $em->method('addListener');
         EventManager::setInstance($em);
@@ -207,6 +169,10 @@ XML;
         $this->package_dao->expects($this->once())->method('createFromArray')->with($expected_package_array);
 
         $this->permissions_manager->method('savePermissions');
+        $this->frs_permission_creator->expects($this->never())->method('savePermissions');
+
+        $this->release_dao->expects($this->never())->method('createFromArray');
+        $this->file_dao->expects($this->never())->method('createFromArray');
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
@@ -244,6 +210,10 @@ XML;
         </project>
 XML;
 
+        $this->package_dao->expects($this->never())->method('createFromArray');
+        $this->release_dao->expects($this->never())->method('createFromArray');
+        $this->file_dao->expects($this->never())->method('createFromArray');
+
         $xml_element = new SimpleXMLElement($xml);
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
@@ -275,7 +245,7 @@ XML;
 
         $expected_package_array = $this->getDefaultPackage('package');
         $package_id             = 1337;
-        $this->package_dao->method('createFromArray')->with($expected_package_array)->willReturn($package_id);
+        $this->package_dao->expects($this->once())->method('createFromArray')->with($expected_package_array)->willReturn($package_id);
 
         $expected_release_array = [
             'release_id' => 0,
@@ -291,6 +261,9 @@ XML;
         $this->release_dao->expects($this->once())->method('createFromArray')->with($expected_release_array);
 
         $this->permissions_manager->method('savePermissions');
+        $this->frs_permission_creator->expects($this->never())->method('savePermissions');
+        $this->file_dao->expects($this->never())->method('createFromArray');
+
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
@@ -320,15 +293,17 @@ XML;
 
         $user_id    = 42;
         $package_id = 1337;
-        $release    = $this->createMock(FRSRelease::class);
+        $release    = $this->createStub(FRSRelease::class);
 
         $release->method('getGroupId')->willReturn(123);
         $this->user_finder->method('getUser')->willReturn(new PFUser(['user_id' => $user_id]));
-        $this->package_dao->method('createFromArray')->willReturn($package_id);
-        $this->release_dao->method('createFromArray')->willReturn(47);
+        $this->package_dao->expects($this->once())->method('createFromArray')->willReturn($package_id);
+        $this->release_dao->expects($this->once())->method('createFromArray')->willReturn(47);
         $this->release_factory->method('getFRSReleaseFromDb')->willReturn($release);
 
         $this->permissions_manager->method('savePermissions');
+        $this->frs_permission_creator->expects($this->never())->method('savePermissions');
+        $this->file_dao->expects($this->never())->method('createFromArray');
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
@@ -430,7 +405,7 @@ XML;
         $expected_file_array_with_id['id'] = $file_id;
         $this->file_dao->method('searchById')->with($file_id)->willReturn(TestHelper::arrayToDar($expected_file_array_with_id));
 
-        $release = $this->createMock(FRSRelease::class);
+        $release = $this->createStub(FRSRelease::class);
         $release->method('getGroupId')->willReturn(123);
         $release->method('getPackageID');
         $release->method('getReleaseID');
@@ -439,6 +414,7 @@ XML;
         $this->permissions_manager->method('savePermissions');
         $this->file_dao->method('isMarkedToBeRestored');
         $this->user_manager->method('getCurrentUser');
+        $this->frs_permission_creator->expects($this->never())->method('savePermissions');
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
@@ -508,11 +484,14 @@ XML;
 
         $this->link_dao->method('create')->willReturn(true);
 
-        $release = $this->createMock(FRSRelease::class);
+        $release = $this->createStub(FRSRelease::class);
         $release->method('getGroupId')->willReturn(123);
         $this->release_factory->method('getFRSReleaseFromDb')->willReturn($release);
 
         $this->permissions_manager->method('savePermissions');
+
+        $this->frs_permission_creator->expects($this->never())->method('savePermissions');
+        $this->file_dao->expects($this->never())->method('createFromArray');
 
         $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);

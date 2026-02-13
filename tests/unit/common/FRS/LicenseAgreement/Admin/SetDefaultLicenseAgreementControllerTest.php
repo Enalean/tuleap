@@ -26,14 +26,17 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 use CSRFSynchronizerToken;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\InvalidLicenseAgreementException;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
+use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -41,31 +44,13 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
 {
     private PFUser $current_user;
     private \Tuleap\HTTPRequest $request;
-    /**
-     * @var MockObject&LicenseAgreementControllersHelper
-     */
-    private $helper;
-    /**
-     * @var MockObject&ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var MockObject&Project
-     */
-    private $project;
-    /**
-     * @var MockObject&LicenseAgreementFactory
-     */
-    private $factory;
-    /**
-     * @var MockObject&CSRFSynchronizerToken
-     */
-    private $csrf_token;
+    private LicenseAgreementControllersHelper&MockObject $helper;
+    private ProjectRetriever&MockObject $project_retriever;
+    private Project&Stub $project;
+    private LicenseAgreementFactory&MockObject $factory;
+    private CSRFSynchronizerToken&MockObject $csrf_token;
     private SetDefaultLicenseAgreementController $controller;
-    /**
-     * @var MockObject&BaseLayout
-     */
-    private $layout;
+    private TestLayout $layout;
 
     #[\Override]
     protected function setUp(): void
@@ -75,9 +60,9 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
         $this->request = new \Tuleap\HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->layout = $this->createMock(BaseLayout::class);
+        $this->layout = new TestLayout(new LayoutInspector());
 
-        $this->project           = $this->createConfiguredMock(Project::class, ['getID' => '101']);
+        $this->project           = $this->createConfiguredStub(Project::class, ['getID' => '101']);
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
         $this->project_retriever->expects($this->once())->method('getProjectFromId')
             ->with('101')
@@ -110,7 +95,7 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
 
         $this->factory->expects($this->once())->method('setProjectDefault')->with($this->project, $custom_agreement);
 
-        $this->layout->expects($this->once())->method('redirect');
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/file/101/admin/license-agreements'));
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -119,16 +104,15 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
     {
         $this->request->set('default_agreement', (string) NoLicenseToApprove::ID);
 
-        $this->helper->method('assertCanAccess');
-        $this->csrf_token->method('check');
+        $this->helper->expects($this->once())->method('assertCanAccess');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $license = new NoLicenseToApprove();
         $this->factory->method('getLicenseAgreementById')->with($this->project, NoLicenseToApprove::ID)->willReturn($license);
 
         $this->factory->expects($this->once())->method('setProjectDefault')->with($this->project, $license);
 
-        $this->layout->expects($this->once())->method('redirect');
-
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/file/101/admin/license-agreements'));
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
 
@@ -136,23 +120,25 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
     {
         $this->request->set('default_agreement', (string) DefaultLicenseAgreement::ID);
 
-        $this->helper->method('assertCanAccess');
-        $this->csrf_token->method('check');
+        $this->helper->expects($this->once())->method('assertCanAccess');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $license = new DefaultLicenseAgreement();
         $this->factory->method('getLicenseAgreementById')->with($this->project, DefaultLicenseAgreement::ID)->willReturn($license);
 
         $this->factory->expects($this->once())->method('setProjectDefault')->with($this->project, $license);
 
-        $this->layout->expects($this->once())->method('redirect');
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/file/101/admin/license-agreements'));
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
 
     public function testItRaisesAnErrorIfNoDefaultAgreement(): void
     {
-        $this->helper->method('assertCanAccess');
-        $this->csrf_token->method('check');
+        $this->helper->expects($this->once())->method('assertCanAccess');
+        $this->csrf_token->expects($this->once())->method('check');
+
+        $this->factory->expects($this->never())->method('getLicenseAgreementById');
 
         $this->expectException(InvalidLicenseAgreementException::class);
 
@@ -163,10 +149,10 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
     {
         $this->request->set('default_agreement', '6');
 
-        $this->helper->method('assertCanAccess');
-        $this->csrf_token->method('check');
+        $this->helper->expects($this->once())->method('assertCanAccess');
+        $this->csrf_token->expects($this->once())->method('check');
 
-        $this->factory->method('getLicenseAgreementById')->with($this->project, 6)->willReturn(null);
+        $this->factory->expects($this->once())->method('getLicenseAgreementById')->with($this->project, 6)->willReturn(null);
 
         $this->expectException(InvalidLicenseAgreementException::class);
 

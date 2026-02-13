@@ -21,9 +21,10 @@
 use Tuleap\Project\ProjectAccessSuspendedException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+final class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
     private $request;
     private $url_verification;
@@ -33,9 +34,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
     {
         parent::setUp();
 
-        $this->request       = $this->createMock(\Tuleap\HTTPRequest::class);
-        $GLOBALS['Language'] = $this->createMock(BaseLanguage::class);
-        $GLOBALS['Language']->method('getText');
+        $this->request = $this->createStub(\Tuleap\HTTPRequest::class);
 
         $this->url_verification = $this->createPartialMock(URLVerification::class, [
             'verifyRequest',
@@ -64,7 +63,6 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
         parent::tearDown();
 
         unset($GLOBALS['group_id']);
-        unset($GLOBALS['Language']);
     }
 
     public function testAssertValidUrlWithException(): void
@@ -78,7 +76,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
 
     public function testAssertValidUrlWithNoRedirection(): void
     {
-        $url = $this->createMock(URL::class);
+        $url = $this->createStub(URL::class);
         $url->method('getGroupIdFromUrl');
         $this->url_verification->method('getUrl')->willReturn($url);
         $this->url_verification->method('isException')->willReturn(false);
@@ -94,7 +92,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
 
     public function testAssertValidUrlWithRedirection(): void
     {
-        $url = $this->createMock(URL::class);
+        $url = $this->createStub(URL::class);
         $url->method('getGroupIdFromUrl');
         $this->url_verification->method('getUrl')->willReturn($url);
 
@@ -116,7 +114,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
         $this->url_verification->expects($this->never())->method('displayPrivateProjectError');
         $this->url_verification->method('isException');
         $this->url_verification->method('getUrlChunks');
-        $url = $this->createMock(URL::class);
+        $url = $this->createStub(URL::class);
         $url->method('getGroupIdFromUrl');
         $this->url_verification->method('getUrl')->willReturn($url);
         $this->url_verification->method('checkRestrictedAccess');
@@ -129,7 +127,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
     {
         $GLOBALS['group_id'] = 1;
         $project             = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withStatusSuspended()->build();
-        $project_manager     = $this->createMock(ProjectManager::class);
+        $project_manager     = $this->createStub(ProjectManager::class);
         $project_manager->method('getProject')->willReturn($project);
         $this->url_verification->method('getProjectManager')->willReturn($project_manager);
         $this->url_verification->method('userCanAccessProject')->willThrowException(new Project_AccessDeletedException());
@@ -139,7 +137,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
         $this->url_verification->expects($this->never())->method('displayPrivateProjectError');
         $this->url_verification->method('isException');
         $this->url_verification->method('getUrlChunks');
-        $url = $this->createMock(URL::class);
+        $url = $this->createStub(URL::class);
         $url->method('getGroupIdFromUrl');
         $this->url_verification->method('getUrl')->willReturn($url);
 
@@ -152,7 +150,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
         $project             = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()
             ->withStatusSuspended()
             ->build();
-        $project_manager     = $this->createMock(ProjectManager::class);
+        $project_manager     = $this->createStub(ProjectManager::class);
         $project_manager->method('getProject')->willReturn($project);
         $this->url_verification->method('getProjectManager')->willReturn($project_manager);
         $this->url_verification->method('userCanAccessProject')->willThrowException(new ProjectAccessSuspendedException($project));
@@ -160,7 +158,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
         $this->url_verification->expects($this->once())->method('displaySuspendedProjectError');
         $this->url_verification->method('isException');
         $this->url_verification->method('getUrlChunks');
-        $url = $this->createMock(URL::class);
+        $url = $this->createStub(URL::class);
         $url->method('getGroupIdFromUrl');
         $this->url_verification->method('getUrl')->willReturn($url);
 
@@ -171,7 +169,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
     {
         $GLOBALS['group_id'] = 1;
         $project             = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withId(101)->build();
-        $project_manager     = $this->createMock(ProjectManager::class);
+        $project_manager     = $this->createStub(ProjectManager::class);
         $project_manager->method('getProject')->willReturn($project);
         $this->url_verification->method('getProjectManager')->willReturn($project_manager);
         $this->url_verification->method('userCanAccessProject');
@@ -181,7 +179,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
         $this->url_verification->expects($this->never())->method('displayPrivateProjectError');
         $this->url_verification->method('isException');
         $this->url_verification->method('getUrlChunks');
-        $url = $this->createMock(URL::class);
+        $url = $this->createStub(URL::class);
         $url->method('getGroupIdFromUrl');
         $this->url_verification->method('getUrl')->willReturn($url);
 
@@ -190,7 +188,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
 
     public function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject(): void
     {
-        $url = $this->createMock(URL::class);
+        $url = $this->createStub(URL::class);
         $url->method('getGroupIdFromUrl');
         $this->url_verification->method('getUrl')->willReturn($url);
 
@@ -206,7 +204,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
 
     public function testNoGroupIdFallsbackOnUserAccessCheck(): void
     {
-        $url = $this->createMock(URL::class);
+        $url = $this->createStub(URL::class);
         $url->method('getGroupIdFromUrl')->willReturn(false);
         $this->url_verification->method('getUrl')->willReturn($url);
 
@@ -224,7 +222,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
         $this->url_verification->expects($this->once())->method('userCanAccessProject')->with(self::anything(), $project);
         $this->url_verification->method('isException');
         $this->url_verification->method('getUrlChunks');
-        $url = $this->createMock(URL::class);
+        $url = $this->createStub(URL::class);
         $url->method('getGroupIdFromUrl');
         $this->url_verification->method('getUrl')->willReturn($url);
 

@@ -25,33 +25,24 @@ namespace Tuleap\FRS;
 use FRSPackage;
 use FRSPackageFactory;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FRSPackagePermissionManagerTest extends TestCase
 {
-    /**
-     * @var MockObject&FRSPackageFactory
-     */
-    private $package_factory;
+    private FRSPackageFactory&Stub $package_factory;
 
 
-    /**
-     * @var PackagePermissionManager
-     */
-    private $package_permission_manager;
+    private PackagePermissionManager $package_permission_manager;
 
-    /**
-     * @var PFUser
-     */
-    private $user;
+    private PFUser $user;
 
     #[\Override]
     public function setUp(): void
     {
-        $this->package_factory = $this->createMock(FRSPackageFactory::class);
+        $this->package_factory = $this->createStub(FRSPackageFactory::class);
 
         $this->package_permission_manager = new PackagePermissionManager(
             $this->package_factory

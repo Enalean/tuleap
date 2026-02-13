@@ -32,14 +32,11 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class LicenseAgreementFactoryTest extends TestCase
+final class LicenseAgreementFactoryTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    /**
-     * @var MockObject&LicenseAgreementDao
-     */
-    private $dao;
+    private LicenseAgreementDao&MockObject $dao;
     private LicenseAgreementFactory $factory;
     private Project $project;
     private FRSPackage $package;
@@ -55,6 +52,8 @@ class LicenseAgreementFactoryTest extends TestCase
 
     public function testGetLicenseAgreementOnNonExistingPackageShouldRaiseAnException(): void
     {
+        $this->dao->expects($this->never())->method('getLicenseAgreementForPackage');
+
         $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->factory->getLicenseAgreementForPackage(new FRSPackage([]));
@@ -71,6 +70,8 @@ class LicenseAgreementFactoryTest extends TestCase
     public function testItCannotDisableLicenseApprovalWhenPlatformMandatesOne(): void
     {
         ForgeConfig::set('sys_frs_license_mandatory', true);
+
+        $this->dao->expects($this->never())->method('resetLicenseAgreementForPackage');
 
         $this->expectException(InvalidLicenseAgreementException::class);
 
@@ -221,7 +222,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
         $this->dao->expects($this->never())->method('save');
 
-        $this->factory->duplicate($this->createMock(FRSPackageFactory::class), $this->project, $template_project, []);
+        $this->factory->duplicate($this->createStub(FRSPackageFactory::class), $this->project, $template_project, []);
     }
 
     public function testItDuplicatesLicenseAgreementsFromTemplateWithAgreementsAndDefault(): void
@@ -257,7 +258,7 @@ class LicenseAgreementFactoryTest extends TestCase
                 )
             );
 
-        $this->factory->duplicate($this->createMock(FRSPackageFactory::class), $this->project, $template_project, []);
+        $this->factory->duplicate($this->createStub(FRSPackageFactory::class), $this->project, $template_project, []);
     }
 
     public function testItDuplicatesLicenseAgreementsFromTemplateWithAgreementsAndDefaultTemplateSiteLicenseAgreement(): void
@@ -293,7 +294,7 @@ class LicenseAgreementFactoryTest extends TestCase
                 )
             );
 
-        $this->factory->duplicate($this->createMock(FRSPackageFactory::class), $this->project, $template_project, []);
+        $this->factory->duplicate($this->createStub(FRSPackageFactory::class), $this->project, $template_project, []);
     }
 
     public function testItDuplicatesTheLicensesAssociatedToPackages(): void
@@ -309,7 +310,7 @@ class LicenseAgreementFactoryTest extends TestCase
         $this->dao->method('create')->willReturn(12);
         $this->dao->method('setProjectDefault');
 
-        $frs_package_factory = $this->createMock(FRSPackageFactory::class);
+        $frs_package_factory = $this->createStub(FRSPackageFactory::class);
         $packages            = [];
         $package_ids         = [350, 1001, 470, 1002];
         foreach ($package_ids as $package_id) {

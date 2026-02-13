@@ -19,18 +19,18 @@
  *
  */
 
-class URLRedirectTest extends \PHPUnit\Framework\TestCase //phpcs:ignore
+final class URLRedirectTest extends \PHPUnit\Framework\TestCase //phpcs:ignore
 {
     use \Tuleap\ForgeConfigSandbox;
 
-    private $url_redirect;
+    private URLRedirect $url_redirect;
 
     #[\Override]
     public function setUp(): void
     {
         ForgeConfig::set('sys_default_domain', 'example.com');
 
-        $this->url_redirect = new URLRedirect($this->createMock(\EventManager::class));
+        $this->url_redirect = new URLRedirect($this->createStub(\EventManager::class));
     }
 
     public function testItCreatesALoginURLReturningToTheCurrentPage(): void

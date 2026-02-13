@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
-use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\UpdatePasswordController;
@@ -35,49 +35,47 @@ use UserManager;
 final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
+    use GlobalResponseMock;
     use ForgeConfigSandbox;
 
-    /**
-     * @var
-     */
-    private $url_verification;
+    private \URLVerification $url_verification;
 
     #[\Override]
     protected function setUp(): void
     {
         $fifteen_days_ago = new \DateTimeImmutable('15 days ago');
         $user             = UserTestBuilder::aUser()->withId(110)->withLastPwdUpdate((string) $fifteen_days_ago->getTimestamp())->build();
-        $user_manager     = $this->createMock(UserManager::class);
+        $user_manager     = $this->createStub(UserManager::class);
         $user_manager->method('getCurrentUserWithLoggedInInformation')->willReturn(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
         UserManager::setInstance($user_manager);
 
         \ForgeConfig::set('sys_password_lifetime', '10');
-        $GLOBALS['Response'] = $this->createMock(BaseLayout::class);
 
         $this->url_verification = new \URLVerification();
-        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();
-        unset($GLOBALS['Response']);
     }
 
     public function testExpiredPasswordShouldRedirectToUpdatePasswordPage(): void
     {
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR, 'Please update your password first');
-        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(DisplaySecurityController::URL);
+        $this->expectExceptionObject(new LayoutInspectorRedirection(DisplaySecurityController::URL));
 
-        $this->url_verification->assertValidUrl(
-            [
-                'HTTPS'       => 'On',
-                'SCRIPT_NAME' => 'index.php',
-                'REQUEST_URI' => '/my',
-            ],
-            HTTPRequestBuilder::get()->build()
-        );
+        try {
+            $this->url_verification->assertValidUrl(
+                [
+                    'HTTPS'       => 'On',
+                    'SCRIPT_NAME' => 'index.php',
+                    'REQUEST_URI' => '/my',
+                ],
+                HTTPRequestBuilder::get()->build()
+            );
+        } finally {
+            $this->assertEquals(['Please update your password first'], $this->global_response->getFeedbackErrors());
+        }
     }
 
     public function testExpiredPasswordShouldAllowToBrowseChangePasswordPage(): void

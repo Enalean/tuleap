@@ -26,6 +26,7 @@ namespace Tuleap;
 
 use ForgeAccess;
 use ForgeConfig;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
@@ -36,20 +37,19 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    private $urlVerification;
+    private \URLVerification&Stub $urlVerification;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        $em = $this->createMock(\EventManager::class);
+        $em = $this->createStub(\EventManager::class);
         $em->method('processEvent');
 
-        $this->urlVerification = $this->createPartialMock(\URLVerification::class, [
-            'getEventManager',
-            'getCurrentUser',
-        ]);
+        $this->urlVerification = $this->getStubBuilder(\URLVerification::class)
+            ->onlyMethods(['getEventManager', 'getCurrentUser'])
+            ->getStub();
         $this->urlVerification->method('getEventManager')->willReturn($em);
     }
 

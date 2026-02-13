@@ -24,11 +24,12 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use CSRFSynchronizerToken;
 use PHPUnit\Framework\MockObject\MockObject;
-use Project;
+use PHPUnit\Framework\MockObject\Stub;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -36,35 +37,20 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class AddLicenseAgreementControllerTest extends TestCase
 {
     private AddLicenseAgreementController $controller;
-    /**
-     * @var MockObject&ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var MockObject&LicenseAgreementControllersHelper
-     */
-    private $helper;
-    /**
-     * @var MockObject&TemplateRenderer
-     */
-    private $renderer;
-    /**
-     * @var MockObject&CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var MockObject&IncludeAssets
-     */
-    private $assets;
+    private ProjectRetriever&Stub $project_retriever;
+    private LicenseAgreementControllersHelper&MockObject $helper;
+    private TemplateRenderer&MockObject $renderer;
+    private CSRFSynchronizerToken&Stub $csrf_token;
+    private IncludeAssets&Stub $assets;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->project_retriever = $this->createMock(ProjectRetriever::class);
+        $this->project_retriever = $this->createStub(ProjectRetriever::class);
         $this->helper            = $this->createMock(LicenseAgreementControllersHelper::class);
         $this->renderer          = $this->createMock(TemplateRenderer::class);
-        $this->csrf_token        = $this->createMock(CSRFSynchronizerToken::class);
-        $this->assets            = $this->createMock(IncludeAssets::class);
+        $this->csrf_token        = $this->createStub(CSRFSynchronizerToken::class);
+        $this->assets            = $this->createStub(IncludeAssets::class);
         $this->controller        = new AddLicenseAgreementController(
             $this->project_retriever,
             $this->helper,
@@ -77,9 +63,8 @@ final class AddLicenseAgreementControllerTest extends TestCase
 
     public function testProcessRenders(): void
     {
-        $project = $this->createMock(Project::class);
-        $project->method('getID')->willReturn(102);
-        $this->project_retriever->expects($this->once())->method('getProjectFromId')->with('102')->willReturn($project);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
+        $this->project_retriever->method('getProjectFromId')->with('102')->willReturn($project);
         $current_user = UserTestBuilder::buildWithDefaults();
         $request      = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->expects($this->once())->method('getCurrentUser')->willReturn($current_user);

@@ -25,7 +25,7 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use CSRFSynchronizerToken;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use TemplateRenderer;
 use TemplateRendererFactory;
@@ -33,67 +33,50 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ListLicenseAgreementsControllerTest extends TestCase
 {
     private ListLicenseAgreementsController $controller;
-    /**
-     * @var MockObject&ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var MockObject&Project
-     */
-    private $project;
-    /**
-     * @var MockObject&TemplateRendererFactory
-     */
-    private $renderer_factory;
+    private ProjectRetriever&Stub $project_retriever;
+    private Project $project;
+    private TemplateRendererFactory&Stub $renderer_factory;
     private \Tuleap\HTTPRequest $request;
     private PFUser $current_user;
-    /**
-     * @var MockObject&LicenseAgreementFactory
-     */
-    private $factory;
-    /**
-     * @var MockObject&BaseLayout
-     */
-    private $layout;
-    /**
-     * @var MockObject&LicenseAgreementControllersHelper
-     */
-    private $helper;
+    private LicenseAgreementFactory&Stub $factory;
+    private BaseLayout&Stub $layout;
+    private LicenseAgreementControllersHelper&Stub $helper;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->layout       = $this->createMock(BaseLayout::class);
+        $this->layout       = $this->createStub(BaseLayout::class);
         $this->current_user = new PFUser(['language_id' => 'en_US']);
 
         $this->request = new \Tuleap\HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->project           = $this->createConfiguredMock(Project::class, ['getID' => '101']);
+        $this->project           = ProjectTestBuilder::aProject()->withId(101)->build();
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
         $this->project_retriever->expects($this->once())->method('getProjectFromId')
             ->with('101')
             ->willReturn($this->project);
 
-        $this->renderer_factory = $this->createMock(TemplateRendererFactory::class);
+        $this->renderer_factory = $this->createStub(TemplateRendererFactory::class);
 
-        $this->helper = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->helper = $this->createStub(LicenseAgreementControllersHelper::class);
         $this->helper->method('assertCanAccess')->with($this->project, $this->current_user);
 
-        $this->factory = $this->createMock(LicenseAgreementFactory::class);
+        $this->factory = $this->createStub(LicenseAgreementFactory::class);
 
         $this->controller = new ListLicenseAgreementsController(
             $this->project_retriever,
             $this->helper,
             $this->renderer_factory,
             $this->factory,
-            $this->createMock(CSRFSynchronizerToken::class),
+            $this->createStub(CSRFSynchronizerToken::class),
         );
     }
 

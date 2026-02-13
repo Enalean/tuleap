@@ -27,10 +27,11 @@ use FRSPackageFactory;
 use FRSRelease;
 use Project;
 use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FRSReleaseTest extends TestCase
+final class FRSReleaseTest extends TestCase
 {
     public function testIsActive(): void
     {
@@ -95,9 +96,9 @@ class FRSReleaseTest extends TestCase
 
     public function testGetProjectWithGroupIdSet(): void
     {
-        $r = $this->createPartialMock(FRSRelease::class, [
-            '_getProjectManager',
-        ]);
+        $r = $this->getStubBuilder(FRSRelease::class)
+            ->onlyMethods(['_getProjectManager'])
+            ->getStub();
         $r->setGroupID(123);
 
         $p = new Project(['group_id' => 101]);
@@ -112,10 +113,9 @@ class FRSReleaseTest extends TestCase
 
     public function testGetProjectWithNeitherProjectNorGroupID(): void
     {
-        $r = $this->createPartialMock(FRSRelease::class, [
-            '_getFRSPackageFactory',
-            '_getProjectManager',
-        ]);
+        $r = $this->getStubBuilder(FRSRelease::class)
+            ->onlyMethods(['_getFRSPackageFactory', '_getProjectManager'])
+            ->getStub();
         $r->setPackageId(696);
 
         $pkg = new FRSPackage(['group_id' => 123]);
@@ -134,9 +134,9 @@ class FRSReleaseTest extends TestCase
 
     public function testGetGroupIdWithoutProjectSet(): void
     {
-        $r = $this->createPartialMock(FRSRelease::class, [
-            '_getFRSPackageFactory',
-        ]);
+        $r = $this->getStubBuilder(FRSRelease::class)
+            ->onlyMethods(['_getFRSPackageFactory'])
+            ->getStub();
         $r->setPackageId(696);
 
         $pkg = new FRSPackage(['group_id' => 123]);
@@ -152,10 +152,8 @@ class FRSReleaseTest extends TestCase
     {
         $r = new FRSRelease();
 
-        $p = $this->createMock(Project::class);
-        $p->method('getID')->willReturn(123);
-        $r->setProject($p);
+        $r->setProject(ProjectTestBuilder::aProject()->withId(123)->build());
 
-        self::assertSame($r->getGroupID(), 123);
+        self::assertSame('123', $r->getGroupID());
     }
 }

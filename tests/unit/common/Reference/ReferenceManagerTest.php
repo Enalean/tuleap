@@ -23,7 +23,7 @@ namespace Tuleap\Reference;
 
 use EventManager;
 use ForgeConfig;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use ProjectManager;
 use ReferenceDao;
 use ReferenceManager;
@@ -44,27 +44,27 @@ final class ReferenceManagerTest extends TestCase
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    private ReferenceManager&MockObject $rm;
-    private UserManager&MockObject $user_manager;
-    private ProjectManager&MockObject $project_manager;
-    private GetProjectIdForSystemReference&MockObject $get_project_id_for_system_reference;
+    private ReferenceManager&Stub $rm;
+    private UserManager&Stub $user_manager;
+    private ProjectManager&Stub $project_manager;
+    private GetProjectIdForSystemReference&Stub $get_project_id_for_system_reference;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->project_manager = $this->createStub(ProjectManager::class);
 
-        $event_manager = $this->createMock(EventManager::class);
+        $event_manager = $this->createStub(EventManager::class);
         $event_manager->method('dispatch');
         $event_manager->method('processEvent');
         EventManager::setInstance($event_manager);
         ProjectManager::setInstance($this->project_manager);
-        $this->user_manager = $this->createMock(UserManager::class);
+        $this->user_manager = $this->createStub(UserManager::class);
         UserManager::setInstance($this->user_manager);
         $this->user_manager->method('getCurrentUser');
 
-        $this->get_project_id_for_system_reference = $this->createMock(GetProjectIdForSystemReference::class);
-        $this->rm                                  = $this->getMockBuilder(ReferenceManager::class)
+        $this->get_project_id_for_system_reference = $this->createStub(GetProjectIdForSystemReference::class);
+        $this->rm                                  = $this->getStubBuilder(ReferenceManager::class)
             ->setConstructorArgs([
                 $this->get_project_id_for_system_reference,
             ])
@@ -72,7 +72,7 @@ final class ReferenceManagerTest extends TestCase
                 '_getReferenceDao',
                 '_getCrossReferenceDao',
             ])
-            ->getMock();
+            ->getStub();
         ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, 'example.com');
     }
 
@@ -94,7 +94,7 @@ final class ReferenceManagerTest extends TestCase
     {
         $GLOBALS['Language']->method('getOverridableText')->willReturn('some text');
 
-        $dao = $this->createMock(ReferenceDao::class);
+        $dao = $this->createStub(ReferenceDao::class);
         $dao->method('searchActiveByGroupID')->willReturnCallback(static fn (...$parameters): FakeDataAccessResult => match ((int) $parameters[0]) {
             100, 1 => TestHelper::arrayToDar([
                 'id'                 => 1,
@@ -124,7 +124,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testExtractRegexp(): void
     {
-        $this->rm->method('_getReferenceDao')->willReturn($this->createMock(ReferenceDao::class));
+        $this->rm->method('_getReferenceDao')->willReturn($this->createStub(ReferenceDao::class));
 
         self::assertCount(0, $this->rm->_extractAllMatches('art 123'), 'No sharp sign');
         self::assertCount(0, $this->rm->_extractAllMatches('art#123'), 'No space');
@@ -227,7 +227,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItInsertsLinkForReferences(): void
     {
-        $reference_dao                = $this->createMock(ReferenceDao::class);
+        $reference_dao                = $this->createStub(ReferenceDao::class);
         $data_access_result_reference = $this->createStub(LegacyDataAccessResultInterface::class);
         $data_access_result_reference->method('getRow')->willReturn(
             [

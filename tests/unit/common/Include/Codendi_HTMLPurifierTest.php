@@ -40,9 +40,8 @@ final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpc
 
     public function testStripLightForbidden(): void
     {
-        $p   = $this->createPartialMock(\Codendi_HTMLPurifier::class, [
-            'getReferenceManager',
-        ]);
+        $p = $this->getStubBuilder(\Codendi_HTMLPurifier::class)->onlyMethods(['getReferenceManager'])->getStub();
+        $this->getStubBuilder(\Codendi_HTMLPurifier::class)->onlyMethods(['getReferenceManager'])->getStub();
         $rm  = $this->createMock(\ReferenceManager::class);
         $val = 'bugtest #123';
         $rm->expects($this->once())->method('insertReferences')->willReturn($val);
@@ -136,9 +135,8 @@ final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpc
 
     public function testMakeLinks(): void
     {
-        $p = $this->createPartialMock(\Codendi_HTMLPurifier::class, [
-            'getReferenceManager',
-        ]);
+        $p = $this->getStubBuilder(\Codendi_HTMLPurifier::class)->onlyMethods(['getReferenceManager'])->getStub();
+
         self::assertEquals('', $p->purify('', CODENDI_PURIFIER_BASIC));
         self::assertEquals('<a href="https://www.example.com">https://www.example.com</a>', $p->purify('https://www.example.com', CODENDI_PURIFIER_BASIC));
         self::assertEquals('"<a href="https://www.example.com">https://www.example.com</a>"', $p->purify('"https://www.example.com"', CODENDI_PURIFIER_BASIC));
@@ -150,7 +148,7 @@ final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpc
         self::assertEquals('&lt;<a href="mailto:john.doe@example.com">john.doe@example.com</a>&gt;', $p->purify('<john.doe@example.com>', CODENDI_PURIFIER_BASIC));
         self::assertEquals('<a href="ssh://gitolite@example.com/tuleap/stable.git">ssh://gitolite@example.com/tuleap/stable.git</a>', $p->purify('ssh://gitolite@example.com/tuleap/stable.git', CODENDI_PURIFIER_BASIC));
         self::assertEquals('<a href="https://sub_domain.example.com">https://sub_domain.example.com</a>', $p->purify('https://sub_domain.example.com', CODENDI_PURIFIER_BASIC));
-        $reference_manager = $this->createMock(ReferenceManager::class);
+        $reference_manager = $this->createStub(ReferenceManager::class);
         $reference_manager->method('insertReferences')->willReturnCallback(function (string &$data, int $group_id) {
             $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
         });
@@ -167,13 +165,11 @@ final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpc
 
     public function testItDoesNotDoubleEscapeLinks(): void
     {
-        $reference_manager = $this->createMock(ReferenceManager::class);
+        $reference_manager = $this->createStub(ReferenceManager::class);
         $reference_manager->method('insertReferences')->willReturnCallback(function (string &$data, int $group_id) {
             $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
         });
-        $p = $this->createPartialMock(\Codendi_HTMLPurifier::class, [
-            'getReferenceManager',
-        ]);
+        $p = $this->getStubBuilder(\Codendi_HTMLPurifier::class)->onlyMethods(['getReferenceManager'])->getStub();
         $p->method('getReferenceManager')->willReturn($reference_manager);
 
         $html     = 'Text with <a href="http://tuleap.net/">link</a> and a reference to art #1';

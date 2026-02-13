@@ -20,7 +20,7 @@
  */
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SiteCacheTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class SiteCacheTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\GlobalLanguageMock;
@@ -38,10 +38,9 @@ class SiteCacheTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.C
         $lang_dir  = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'tuleap_lang_dir';
 
         ForgeConfig::set('codendi_cache_dir', $cache_dir);
-        $logger              = new \Psr\Log\NullLogger();
-        $GLOBALS['Language'] = $this->createMock(\BaseLanguage::class);
+        $logger = new \Psr\Log\NullLogger();
         $GLOBALS['Language']->method('getCacheDirectory')->willReturn($lang_dir);
-        $GLOBALS['HTML'] = $this->createMock(\Layout::class);
+        $GLOBALS['HTML'] = $this->createStub(\Layout::class);
 
         $site_cache = new SiteCache($logger);
         $site_cache->restoreCacheDirectories();
