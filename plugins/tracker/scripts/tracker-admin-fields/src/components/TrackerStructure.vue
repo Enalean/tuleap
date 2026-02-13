@@ -43,6 +43,7 @@ import { getSuccessfulDropContextTransformer } from "../helpers/SuccessfulDropCo
 import { getFieldsMover } from "../helpers/FieldsMover";
 import { ROOT_CONTAINER_ID } from "../type";
 import { getDropRulesEnforcer } from "../helpers/DropRulesEnforcer";
+import { saveNewFieldsOrder } from "../helpers/save-new-fields-order";
 
 const tracker_root = strictInject(TRACKER_ROOT);
 const post_field_update_callback = strictInject(POST_FIELD_DND_CALLBACK);
@@ -83,6 +84,7 @@ onMounted(() => {
             context_transformer
                 .transformSuccessfulDropContext(context)
                 .andThen(fields_mover.moveField)
+                .asyncAndThen(saveNewFieldsOrder)
                 .match(post_field_update_callback, (fault) => {
                     /* eslint-disable-next-line no-console */
                     console.error(`[tracker-admin-fields] Unable to move element: ${fault}`);
