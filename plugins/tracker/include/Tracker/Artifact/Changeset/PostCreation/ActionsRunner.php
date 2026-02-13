@@ -32,6 +32,8 @@ use Tracker_Artifact_MailGateway_RecipientFactory;
 use Tracker_FormElementFactory;
 use Tracker_GlobalNotificationDao;
 use Tracker_REST_TrackerRestBuilder;
+use Tracker_Rule_Date_Dao;
+use Tracker_Rule_Date_Factory;
 use TransitionFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -97,6 +99,8 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\WorkflowFieldUsageDecoratorsProvider;
+use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
@@ -236,7 +240,13 @@ class ActionsRunner
                                 $permissions_functions_wrapper,
                             ),
                             new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder($event_manager)),
-                            new ListOfLabelDecoratorsForFieldBuilder(),
+                            new ListOfLabelDecoratorsForFieldBuilder(
+                                new WorkflowFieldUsageDecoratorsProvider(
+                                    new GlobalRulesUsageByFieldProvider(
+                                        new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $form_element_factory)
+                                    )
+                                )
+                            ),
                         ),
                         new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
                         new WorkflowRestBuilder(),

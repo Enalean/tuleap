@@ -43,7 +43,7 @@ final class WorkflowMenuPresenterBuilder
                         'transitions',
                     ),
                     new WorkflowMenuItem(
-                        $this->buildLegacyUrl(Workflow::FUNC_ADMIN_RULES, $tracker),
+                        WorkflowUrlBuilder::buildGlobalRulesUrl($tracker),
                         dgettext('tuleap-tracker', 'Global rules'),
                         'global-rules',
                     ),

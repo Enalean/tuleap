@@ -312,8 +312,10 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
+use Tuleap\Tracker\Workflow\WorkflowFieldUsageDecoratorsProvider;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
@@ -1894,7 +1896,13 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     new ArtifactLinksUsageDao(),
                     new SystemTypePresenterBuilder(\EventManager::instance()),
                 ),
-                new ListOfLabelDecoratorsForFieldBuilder(),
+                new ListOfLabelDecoratorsForFieldBuilder(
+                    new WorkflowFieldUsageDecoratorsProvider(
+                        new GlobalRulesUsageByFieldProvider(
+                            new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $formelement_factory)
+                        )
+                    )
+                ),
             ),
             new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'),
         );

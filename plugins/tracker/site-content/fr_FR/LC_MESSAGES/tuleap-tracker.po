@@ -4179,6 +4179,9 @@ msgstr ""
 "Ce champ est le titre de l'artifact. Il est interdit de le mettre "
 "massivement à jour."
 
+msgid "This field is used by global rules"
+msgstr "Ce champ est utilisé par les règles globales"
+
 msgid "This field is used by the following trackers:"
 msgstr "Ce champ est utilisé par les trackers suivants :"
 
