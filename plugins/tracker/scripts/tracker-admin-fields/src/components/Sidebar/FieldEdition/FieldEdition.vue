@@ -27,6 +27,7 @@
                 <not-found v-if="field === undefined" />
                 <field-edition-body v-else v-bind:field="field" />
             </div>
+            <field-edition-footer v-if="field" />
         </div>
     </sidebar-container>
 </template>
@@ -40,6 +41,7 @@ import { useGettext } from "vue3-gettext";
 import FieldEditionBody from "./FieldEditionBody.vue";
 import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
 import NotFound from "../../NotFound.vue";
+import FieldEditionFooter from "./FieldEditionFooter.vue";
 
 const { $gettext } = useGettext();
 

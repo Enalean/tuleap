@@ -27,6 +27,7 @@
 
 <style scoped lang="scss">
 .tlp-pane {
+    height: fit-content;
     margin: 0;
 }
 </style>
