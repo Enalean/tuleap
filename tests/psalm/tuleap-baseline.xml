@@ -35220,7 +35220,6 @@
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$force_absolute_ranking]]></code>
@@ -35273,7 +35272,6 @@
       <code><![CDATA[duplicate]]></code>
       <code><![CDATA[getUsedUserClosedListFieldById]]></code>
       <code><![CDATA[mapNewParentsAfterDuplication]]></code>
-      <code><![CDATA[save]]></code>
       <code><![CDATA[searchById]]></code>
       <code><![CDATA[searchByParentId]]></code>
       <code><![CDATA[searchByTrackerId]]></code>
@@ -36924,6 +36922,11 @@
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getValue]]></code>
     </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/RetrieveAnyTypeOfUsedFormElementById.php">
+    <MissingParamType>
+      <code><![CDATA[$form_element_id]]></code>
+    </MissingParamType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/RetrieveFieldById.php">
     <MissingParamType>
@@ -42101,6 +42104,7 @@
       <code><![CDATA[$force_absolute_ranking]]></code>
       <code><![CDATA[$form_element_data]]></code>
       <code><![CDATA[$form_element_data]]></code>
+      <code><![CDATA[$form_element_id]]></code>
       <code><![CDATA[$form_element_id]]></code>
       <code><![CDATA[$form_element_id]]></code>
       <code><![CDATA[$form_element_id]]></code>
@@ -53129,6 +53133,11 @@
     <PossiblyFalseIterator>
       <code><![CDATA[file($log_dir . '/manifest.log', FILE_IGNORE_NEW_LINES)]]></code>
     </PossiblyFalseIterator>
+  </file>
+  <file src="plugins/tracker/tests/unit/Test/Stub/FormElement/Field/RetrieveAnyTypeOfUsedFormElementByIdStub.php">
+    <MissingParamType>
+      <code><![CDATA[$form_element_id]]></code>
+    </MissingParamType>
   </file>
   <file src="plugins/tracker/tests/unit/Test/Stub/RetrieveFieldByIdStub.php">
     <MissingParamType>

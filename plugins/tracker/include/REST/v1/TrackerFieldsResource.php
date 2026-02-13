@@ -28,6 +28,7 @@ use Tracker_REST_FormElementRepresentation;
 use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -44,6 +45,9 @@ use Tuleap\Tracker\FormElement\TrackerFieldAdder;
 use Tuleap\Tracker\FormElement\TrackerFieldRemover;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\REST\FormElement\RestFieldUseHandler;
+use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\FieldCannotBeMovedFault;
+use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\FieldNotSavedFault;
+use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\PATCHMoveTrackerFieldHandler;
 use UserManager;
 
 class TrackerFieldsResource extends AuthenticatedResource
@@ -96,6 +100,14 @@ class TrackerFieldsResource extends AuthenticatedResource
      * &nbsp;"new_values": ["new01", "new02"]<br/>
      * }
      * </pre>
+     *  To move a field:
+     *  <pre>
+     *  {<br>
+     *  &nbsp;"move": { "parent_id": int | null, "next_sibling_id": int | null }<br/>
+     *  }
+     *  </pre>
+     * note: When parent_id is null, the field will be moved at the root of the tracker. When next_sibling_id is null,
+     * the field will be moved at the end of the parent container field.
      *
      * @url PATCH {id}
      *
@@ -127,13 +139,14 @@ class TrackerFieldsResource extends AuthenticatedResource
             throw new RestException(403, 'User is not tracker administrator.');
         }
 
+        $field_dao = new FieldDao();
         if ($patch->label !== null) {
             $label = trim($patch->label);
             if ($label === '') {
                 throw new RestException(400, 'Label cannot be empty.');
             }
             $field->label = $label;
-            new FieldDao()->save($field);
+            $field_dao->save($field);
         }
 
         $form_element_factory = Tracker_FormElementFactory::instance();
@@ -156,9 +169,25 @@ class TrackerFieldsResource extends AuthenticatedResource
             $field->getBind()->process($request, true);
         }
 
+        if ($patch->move) {
+            new PATCHMoveTrackerFieldHandler(
+                $form_element_factory,
+                $field_dao,
+            )
+                ->handle($field, $patch->move)
+                ->mapErr(function (Fault $fault) {
+                    throw match ($fault::class) {
+                        FieldCannotBeMovedFault::class => new RestException(400, (string) $fault),
+                        FieldNotSavedFault::class => new RestException(500, (string) $fault),
+                    };
+                });
+        }
+
+        $updated_field = $this->getFormElement($id, $user);
+
         return Tracker_REST_FormElementRepresentation::build(
-            $field,
-            $form_element_factory->getType($field),
+            $updated_field,
+            $form_element_factory->getType($updated_field),
             [],
             null,
             new ListOfLabelDecoratorsForFieldBuilder()->getLabelDecorators($field),

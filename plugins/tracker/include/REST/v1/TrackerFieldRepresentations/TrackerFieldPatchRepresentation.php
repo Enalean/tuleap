@@ -20,6 +20,8 @@
 
 namespace Tuleap\REST\v1\TrackerFieldRepresentations;
 
+use Tuleap\Tracker\REST\v1\TrackerFieldRepresentations\MoveTrackerFieldsPATCHRepresentation;
+
 /**
  * @psalm-immutable
  */
@@ -40,10 +42,16 @@ class TrackerFieldPatchRepresentation
      */
     public ?bool $use_it = null;
 
-    public function __construct(?string $label, array $new_values, ?bool $use_it)
+    /**
+     * @var MoveTrackerFieldsPATCHRepresentation | null {@type Tuleap\Tracker\REST\v1\TrackerFieldRepresentations\MoveTrackerFieldsPATCHRepresentation} {@required false}
+     */
+    public ?MoveTrackerFieldsPATCHRepresentation $move = null;
+
+    public function __construct(?string $label, array $new_values, ?bool $use_it, ?MoveTrackerFieldsPATCHRepresentation $move)
     {
         $this->label      = $label;
         $this->new_values = $new_values;
         $this->use_it     = $use_it;
+        $this->move       = $move;
     }
 }

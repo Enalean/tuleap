@@ -62,7 +62,7 @@ final class RestFieldUseHandlerTest extends TestCase
 
     public function testItDoesNothingIfWeDoNotWantToUpdateTheUsageOfTheField(): void
     {
-        $patch = new TrackerFieldPatchRepresentation(null, [], null);
+        $patch = new TrackerFieldPatchRepresentation(null, [], null, null);
 
         $this->tracker_factory->expects($this->never())->method('getTriggerRulesManager');
 
@@ -75,7 +75,7 @@ final class RestFieldUseHandlerTest extends TestCase
 
     public function testItEnablesTheUsageOfTheField(): void
     {
-        $patch = new TrackerFieldPatchRepresentation(null, [], true);
+        $patch = new TrackerFieldPatchRepresentation(null, [], true, null);
 
         $this->tracker_factory->expects($this->never())->method('getTriggerRulesManager');
         $this->field = StringFieldBuilder::aStringField(1)->unused()->build();
@@ -89,7 +89,7 @@ final class RestFieldUseHandlerTest extends TestCase
 
     public function testItThrowsExceptionIfTheGivenFieldIsUsedInTrigger(): void
     {
-        $patch = new TrackerFieldPatchRepresentation(null, [], false);
+        $patch = new TrackerFieldPatchRepresentation(null, [], false, null);
 
         $this->rules_manager->method('isUsedInTrigger')->willReturn(true);
         $this->tracker_factory->expects($this->once())->method('getTriggerRulesManager')->willReturn($this->rules_manager);
@@ -106,7 +106,7 @@ final class RestFieldUseHandlerTest extends TestCase
 
     public function testItDisablesTheUsageOfTheField(): void
     {
-        $patch = new TrackerFieldPatchRepresentation(null, [], false);
+        $patch = new TrackerFieldPatchRepresentation(null, [], false, null);
 
         $this->tracker_factory->expects($this->once())->method('getTriggerRulesManager')->willReturn($this->rules_manager);
         $this->rules_manager->method('isUsedInTrigger')->willReturn(false);
