@@ -132,12 +132,12 @@ import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 import { postInterpretCommonMark } from "./api/rest-querier";
 import type { Step } from "./Step";
 import type { TextEditorInterface } from "@tuleap/plugin-tracker-rich-text-editor";
-import { PROJECT_ID } from "./injection-keys";
+import { PROJECT_ID, FIELD_ID } from "./injection-keys";
 
 const project_id = strictInject(PROJECT_ID);
+const field_id = strictInject(FIELD_ID);
 
-const { field_id, is_dragging, upload_url, upload_field_name, upload_max_size } = useState([
-    "field_id",
+const { is_dragging, upload_url, upload_field_name, upload_max_size } = useState([
     "is_dragging",
     "upload_url",
     "upload_field_name",
@@ -167,11 +167,9 @@ const editors = ref<Array<TextEditorInterface>>([]);
 const raw_description = ref(props.step.raw_description);
 const raw_expected_results = ref(props.step.raw_expected_results);
 
-const description_id = computed(
-    () => "field_description_" + props.step.uuid + "_" + field_id.value,
-);
+const description_id = computed(() => "field_description_" + props.step.uuid + "_" + field_id);
 const expected_results_id = computed(
-    () => "field_expected_results_" + props.step.uuid + "_" + field_id.value,
+    () => "field_expected_results_" + props.step.uuid + "_" + field_id,
 );
 const description_help_id = computed(() => description_id.value + "-help");
 const expected_results_help_id = computed(() => expected_results_id.value + "-help");

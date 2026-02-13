@@ -60,14 +60,18 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useMutations, useState } from "vuex-composition-helpers";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import StepDefinitionEntry from "./StepDefinitionEntry.vue";
 import type { Step } from "./Step";
+import { FIELD_ID } from "./injection-keys";
 
-const { steps, is_dragging, field_id } = useState<{
+const field_id = strictInject(FIELD_ID);
+
+const { steps, is_dragging } = useState<{
     steps: Array<Step>;
     is_dragging: boolean;
-    field_id: number;
-}>(["steps", "is_dragging", "field_id"]);
+}>(["steps", "is_dragging"]);
+
 const { addStep, moveStep } = useMutations(["addStep", "moveStep"]);
 
 const dragged_step = ref<Step | null>(null);

@@ -61,7 +61,6 @@ const { toggleIsDragging, addStep } = useMutations(["toggleIsDragging", "addStep
 
 const props = defineProps<{
     initial_steps: Array<Step>;
-    artifact_field_id: number;
     empty_step: Step;
     upload_url: string;
     upload_field_name: string;
@@ -74,7 +73,6 @@ const areThereAtLeastTwoSteps = computed(() => steps.value.length > 1);
 onBeforeMount(() => {
     useStore().commit("initStepField", [
         props.initial_steps,
-        props.artifact_field_id,
         props.empty_step,
         props.upload_url,
         props.upload_field_name,

@@ -25,7 +25,7 @@ import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
 import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
 import * as tuleap_api from "./api/rest-querier.ts";
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
-import { PROJECT_ID } from "./injection-keys.ts";
+import { PROJECT_ID, FIELD_ID } from "./injection-keys.ts";
 
 vi.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
     return {
@@ -47,7 +47,6 @@ function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
             ...getGlobalTestOptions({
                 state: {
                     is_dragging: false,
-                    field_id: 18,
                 },
             }),
             directives: {
@@ -55,6 +54,7 @@ function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
             },
             provide: {
                 [PROJECT_ID.valueOf()]: project_id,
+                [FIELD_ID.valueOf()]: 18,
             },
         },
         propsData: {

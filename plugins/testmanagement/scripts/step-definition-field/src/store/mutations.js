@@ -20,12 +20,11 @@ import { v4 as uuid } from "uuid";
 
 export function initStepField(
     state,
-    [steps, field_id, empty_step, upload_url, upload_field_name, upload_max_size],
+    [steps, empty_step, upload_url, upload_field_name, upload_max_size],
 ) {
     state.steps = steps.map((step) => {
         return { ...step, uuid: uuid(), is_deleted: false };
     });
-    state.field_id = field_id;
     state.empty_step = empty_step;
     state.upload_url = upload_url;
     state.upload_field_name = upload_field_name;
