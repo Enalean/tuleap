@@ -24,13 +24,18 @@ namespace Tuleap\Tracker\Workflow;
 
 use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByField;
+use Tuleap\Tracker\Workflow\Trigger\ProvideParentsTriggersUsageByField;
+use Tuleap\Tracker\Workflow\Trigger\ProvideTriggersUsageByField;
 
 readonly class WorkflowFieldUsageDecoratorsProvider
 {
     public function __construct(
         private ProvideGlobalRulesUsageByField $global_rules_usage,
         private ProvideFieldDependenciesUsageByField $field_dependencies_usage,
+        private ProvideTriggersUsageByField $triggers_usage,
+        private ProvideParentsTriggersUsageByField $parents_triggers_usage,
     ) {
     }
 
@@ -52,6 +57,24 @@ readonly class WorkflowFieldUsageDecoratorsProvider
         );
     }
 
+    private function getTriggersLabelDecorator(TrackerField $field): LabelDecorator
+    {
+        return LabelDecorator::buildWithUrl(
+            dgettext('tuleap-tracker', 'Triggers'),
+            dgettext('tuleap-tracker', 'This field is used by triggers'),
+            WorkflowUrlBuilder::buildTriggersUrl($field->getTracker()),
+        );
+    }
+
+    private function getParentTriggersLabelDecorator(Tracker $parent_tracker): LabelDecorator
+    {
+        return LabelDecorator::buildWithUrl(
+            dgettext('tuleap-tracker', 'Parent triggers'),
+            dgettext('tuleap-tracker', 'This field is used by parent triggers'),
+            WorkflowUrlBuilder::buildTriggersUrl($parent_tracker),
+        );
+    }
+
     /**
      * @return LabelDecorator[]
      */
@@ -65,6 +88,18 @@ readonly class WorkflowFieldUsageDecoratorsProvider
 
         if ($this->field_dependencies_usage->isFieldUsedInFieldDependencies($field)) {
             $decorators[] = $this->getFieldDependenciesLabelDecorator($field);
+        }
+
+        if ($this->triggers_usage->isFieldUsedInCurrentTrackerTriggers($field)) {
+            $decorators[] = $this->getTriggersLabelDecorator($field);
+        }
+
+        if ($this->parents_triggers_usage->isFieldUsedInParentTrackerTriggers($field)) {
+            $this->parents_triggers_usage->getParentTracker($field)->apply(
+                function (Tracker $tracker) use (&$decorators): void {
+                    $decorators[] = $this->getParentTriggersLabelDecorator($tracker);
+                }
+            );
         }
 
         return $decorators;

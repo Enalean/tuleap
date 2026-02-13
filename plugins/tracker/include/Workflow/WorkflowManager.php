@@ -61,11 +61,6 @@ class WorkflowManager
 
     private function getCrossTrackerTriggerCSRFToken(): \Tuleap\Request\CSRFSynchronizerTokenInterface
     {
-        return new CSRFSynchronizerToken(\trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(
-            [
-                'tracker' => $this->tracker->getId(),
-                'func'    => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
-            ]
-        ));
+        return new CSRFSynchronizerToken(WorkflowUrlBuilder::buildTriggersUrl($this->tracker));
     }
 }

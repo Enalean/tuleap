@@ -29,6 +29,8 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByFieldStub;
 use Tuleap\Tracker\Test\Stub\Workflow\ProvideGlobalRulesUsageByFieldStub;
+use Tuleap\Tracker\Test\Stub\Workflow\Trigger\ProvideParentsTriggersUsageByFieldStub;
+use Tuleap\Tracker\Test\Stub\Workflow\Trigger\ProvideTriggersUsageByFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
@@ -51,6 +53,24 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
         );
     }
 
+    private static function getExpectedTriggersLabelDecorator(): LabelDecorator
+    {
+        return LabelDecorator::buildWithUrl(
+            dgettext('tuleap-tracker', 'Triggers'),
+            dgettext('tuleap-tracker', 'This field is used by triggers'),
+            WorkflowUrlBuilder::buildTriggersUrl(TrackerTestBuilder::aTracker()->build())
+        );
+    }
+
+    private static function getExpectedParentTriggersLabelDecorator(): LabelDecorator
+    {
+        return LabelDecorator::buildWithUrl(
+            dgettext('tuleap-tracker', 'Parent triggers'),
+            dgettext('tuleap-tracker', 'This field is used by parent triggers'),
+            WorkflowUrlBuilder::buildTriggersUrl(TrackerTestBuilder::aTracker()->build())
+        );
+    }
+
     /**
      * @param LabelDecorator[] $expected_label_decorators
      */
@@ -58,6 +78,8 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
     public function testWorkflowDecorators(
         bool $has_global_rules,
         bool $has_field_dependencies,
+        bool $has_triggers,
+        bool $has_parent_triggers,
         array $expected_label_decorators,
     ): void {
         $tracker = TrackerTestBuilder::aTracker()->build();
@@ -73,9 +95,19 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             ? ProvideFieldDependenciesUsageByFieldStub::withFieldDependencies()
             : ProvideFieldDependenciesUsageByFieldStub::withoutFieldDependencies();
 
+        $triggers_usage_provider = $has_triggers
+            ? ProvideTriggersUsageByFieldStub::withTriggers()
+            : ProvideTriggersUsageByFieldStub::withoutTriggers();
+
+        $parent_triggers_usage_provider = $has_parent_triggers
+            ? ProvideParentsTriggersUsageByFieldStub::withParentTriggers()
+            : ProvideParentsTriggersUsageByFieldStub::withoutParentTriggers();
+
         $decorators_provider = new WorkflowFieldUsageDecoratorsProvider(
             $global_rules_usage_provider,
-            $field_dependencies_usage_provider
+            $field_dependencies_usage_provider,
+            $triggers_usage_provider,
+            $parent_triggers_usage_provider
         );
 
         self::assertEquals($expected_label_decorators, $decorators_provider->getLabelDecorators($field));
@@ -83,20 +115,91 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
 
     public static function getFields(): iterable
     {
-        yield 'no global rules, no field dependencies' => [false, false, []];
+        yield 'no global rules, no field dependencies, no triggers, no parent triggers' => [false, false, false, false, []];
 
-        yield 'global rules, no field dependencies' => [true, false, [self::getExpectedGlobalRulesLabelDecorator()]];
+        yield 'global rules only' => [
+            true,
+            false,
+            false,
+            false,
+            [self::getExpectedGlobalRulesLabelDecorator()],
+        ];
 
-        yield 'no global rules, field dependencies' => [
+        yield 'field dependencies only' => [
             false,
             true,
+            false,
+            false,
             [self::getExpectedFieldDependenciesLabelDecorator()],
         ];
 
-        yield 'global rules, field dependencies' => [
+        yield 'triggers only' => [
+            false,
+            false,
+            true,
+            false,
+            [self::getExpectedTriggersLabelDecorator()],
+        ];
+
+        yield 'parent triggers only' => [
+            false,
+            false,
+            false,
+            true,
+            [self::getExpectedParentTriggersLabelDecorator()],
+        ];
+
+        yield 'global rules and field dependencies' => [
             true,
             true,
+            false,
+            false,
             [self::getExpectedGlobalRulesLabelDecorator(), self::getExpectedFieldDependenciesLabelDecorator()],
+        ];
+
+        yield 'global rules and triggers' => [
+            true,
+            false,
+            true,
+            false,
+            [self::getExpectedGlobalRulesLabelDecorator(), self::getExpectedTriggersLabelDecorator()],
+        ];
+
+        yield 'global rules and parent triggers' => [
+            true,
+            false,
+            false,
+            true,
+            [self::getExpectedGlobalRulesLabelDecorator(), self::getExpectedParentTriggersLabelDecorator(),],
+        ];
+
+        yield 'field dependencies, triggers' => [
+            false,
+            true,
+            true,
+            false,
+            [self::getExpectedFieldDependenciesLabelDecorator(), self::getExpectedTriggersLabelDecorator()],
+        ];
+
+        yield 'triggers, parent triggers' => [
+            false,
+            false,
+            true,
+            true,
+            [self::getExpectedTriggersLabelDecorator(), self::getExpectedParentTriggersLabelDecorator()],
+        ];
+
+        yield 'global rules, field dependencies, triggers and parent triggers' => [
+            true,
+            true,
+            true,
+            true,
+            [
+                self::getExpectedGlobalRulesLabelDecorator(),
+                self::getExpectedFieldDependenciesLabelDecorator(),
+                self::getExpectedTriggersLabelDecorator(),
+                self::getExpectedParentTriggersLabelDecorator(),
+            ],
         ];
     }
 }

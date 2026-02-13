@@ -31,7 +31,7 @@ class TriggersDao extends DataAccessObject
         return $this->isTrackerTargetOfTriggers($tracker_id) || $this->isTrackerSourceOfTriggers($tracker_id);
     }
 
-    private function isTrackerTargetOfTriggers(int $tracker_id): bool
+    public function isTrackerTargetOfTriggers(int $tracker_id): bool
     {
         $sql = ' SELECT COUNT(*)
                 FROM tracker_workflow_trigger_rule_trg_field_static_value
@@ -43,7 +43,7 @@ class TriggersDao extends DataAccessObject
         return $this->getDB()->single($sql, [$tracker_id]) > 0;
     }
 
-    private function isTrackerSourceOfTriggers(int $tracker_id): bool
+    public function isTrackerSourceOfTriggers(int $tracker_id): bool
     {
         $sql = 'SELECT COUNT(*)
                 FROM tracker_workflow_trigger_rule_static_value
