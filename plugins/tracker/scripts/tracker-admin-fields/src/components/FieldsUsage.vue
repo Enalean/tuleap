@@ -18,9 +18,9 @@
   -->
 
 <template>
-    <section>
+    <section class="field-usage">
         <router-view name="sidebar" />
-        <div class="tlp-framed">
+        <div>
             <error-state v-if="has_error" />
             <h2>{{ $gettext("Fields usage") }}</h2>
 
@@ -66,8 +66,10 @@ provide(POST_FIELD_DND_CALLBACK, update);
 </script>
 
 <style lang="scss" scoped>
-section {
+.field-usage {
     display: grid;
-    grid-template-columns: 250px 1fr;
+    grid-template-columns: 300px 1fr;
+    gap: var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing);
 }
 </style>

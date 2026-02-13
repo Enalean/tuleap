@@ -175,14 +175,6 @@ const matching = computed(() =>
 </script>
 
 <style scoped lang="scss">
-.tlp-pane {
-    margin: 0;
-    border-top: 0;
-    border-bottom: 0;
-    border-left: 0;
-    border-radius: 0;
-}
-
 .tlp-card {
     display: flex;
     gap: var(--tlp-small-spacing);
