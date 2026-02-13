@@ -193,8 +193,11 @@ pkgs.symlinkJoin {
   name = "all-mediawiki-tuleap-flavor-rpm";
   paths = [
     (buildMediawikiTuleapFlavorRPM mediawikiCurrent [
-      (./. + "/mediawiki-extensions-current-lts/mpdf-extension-mpdf-8.patch")
+      ./mediawiki-extensions-current-lts/mpdf-extension-mpdf-8.patch
+      ./mediawiki-patches/drop-myisam.patch
     ])
-    (buildMediawikiTuleapFlavorRPM mediawiki135 [ ])
+    (buildMediawikiTuleapFlavorRPM mediawiki135 [
+      ./mediawiki-patches/drop-myisam-1.35.patch
+    ])
   ];
 }
