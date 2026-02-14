@@ -66,6 +66,9 @@ msgstr "Configuration du champ"
 msgid "Field..."
 msgstr "Champ..."
 
+msgid "Fields"
+msgstr "Champs"
+
 msgid "Fields usage"
 msgstr "Utilisation des champs"
 
@@ -95,6 +98,9 @@ msgstr "Dernière mise à jour par"
 
 msgid "Last update date"
 msgstr "Date de mise à jour"
+
+msgid "Layout & structure"
+msgstr "Organisation & structure"
 
 msgid "Line break"
 msgstr "Saut de ligne"
