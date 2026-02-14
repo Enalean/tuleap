@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { UserBoundListField, UserBoundListItem } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    UserBoundListField,
+    UserBoundListFieldGroupListItem,
+    UserBoundListItem,
+} from "@tuleap/plugin-tracker-rest-api-types";
 import { LIST_BIND_USERS } from "@tuleap/plugin-tracker-constants";
 import type { ListType } from "./lists-types";
 
@@ -28,8 +32,10 @@ export class UserBoundListFieldTestBuilder {
     private required = false;
     private readonly type: ListType;
     private default_value: ReadonlyArray<UserBoundListItem> = [];
-    private readonly bindings = {
+
+    private bindings = {
         type: LIST_BIND_USERS,
+        list: [{ id: "955" }],
     };
 
     private values: ReadonlyArray<UserBoundListItem> = [];
@@ -44,6 +50,16 @@ export class UserBoundListFieldTestBuilder {
 
     public withValues(...values: ReadonlyArray<UserBoundListItem>): UserBoundListFieldTestBuilder {
         this.values = values;
+        return this;
+    }
+
+    public withABindingGroupList(
+        ...list: Array<UserBoundListFieldGroupListItem>
+    ): UserBoundListFieldTestBuilder {
+        this.bindings = {
+            type: LIST_BIND_USERS,
+            list,
+        };
         return this;
     }
 

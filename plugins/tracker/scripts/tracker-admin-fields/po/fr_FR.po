@@ -129,6 +129,9 @@ msgstr "Id dans le tracker"
 msgid "Permissions on artifact"
 msgstr "Permissions sur l'artifact"
 
+msgid "Please use a select box or multi select box instead."
+msgstr "Merci d'utiliser une liste de choix ou une liste à choix multiple."
+
 msgid "Radio"
 msgstr "Bouton radio"
 
@@ -173,6 +176,10 @@ msgstr "Agencement sur trois colonnes"
 
 msgid "Two columns layout"
 msgstr "Agencement sur deux colonnes"
+
+msgid "You cannot bind this field to all registered users"
+msgstr ""
+"Vous ne pouvez pas lier ce champ à l'ensemble des utilisateurs enregistrés"
 
 msgid "→ Create a new value %{ name }…"
 msgstr "→ Créer une nouvelle valeur %{ name } …"

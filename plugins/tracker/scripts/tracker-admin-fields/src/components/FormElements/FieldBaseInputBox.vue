@@ -20,6 +20,16 @@
 <template>
     <div class="tlp-form-element">
         <label-for-field v-bind:field="field" />
+        <div
+            v-if="isRegisteredUsersGroup()"
+            class="tlp-alert-danger"
+            data-test="registered-users-group-error"
+        >
+            <p class="tlp-alert-title">
+                {{ $gettext("You cannot bind this field to all registered users") }}
+            </p>
+            {{ $gettext("Please use a select box or multi select box instead.") }}
+        </div>
         <label
             class="tlp-label"
             v-bind:class="[
@@ -51,19 +61,21 @@
 <script setup lang="ts">
 import type { ListFieldItem, ListFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import {
-    listFieldValue,
     isStaticListValue,
     isUserBoundListValue,
+    listFieldValue,
 } from "../../helpers/list-field-value";
 import LabelForField from "./LabelForField.vue";
 import type {
     CheckBoxFieldIdentifier,
     RadioButtonFieldIdentifier,
 } from "@tuleap/plugin-tracker-constants";
-import { CHECKBOX_FIELD } from "@tuleap/plugin-tracker-constants";
+import { CHECKBOX_FIELD, LIST_BIND_USERS } from "@tuleap/plugin-tracker-constants";
 import ColorBadge from "./ColorBadge.vue";
 import UserBadge from "./UserBadge.vue";
 import { hasColorValue } from "../../helpers/color-helper";
+
+const REGISTERED_MEMBERS_GROUP = "2";
 
 const props = defineProps<{
     field: ListFieldStructure;
@@ -97,6 +109,13 @@ function getInputTypeClass(): string {
 
 function isDefaultValue(value: ListFieldItem): boolean {
     return props.field.default_value.some((default_value) => value.id === default_value.id);
+}
+
+function isRegisteredUsersGroup(): boolean {
+    return (
+        props.field.bindings.type === LIST_BIND_USERS &&
+        props.field.bindings.list[0].id === REGISTERED_MEMBERS_GROUP
+    );
 }
 </script>
 

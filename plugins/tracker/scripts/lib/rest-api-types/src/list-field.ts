@@ -75,9 +75,14 @@ export type StaticBoundListField = CommonListFieldStructure & {
 export type UserBoundListField = CommonListFieldStructure & {
     readonly bindings: {
         readonly type: UsersBindIdentifier;
+        readonly list: ReadonlyArray<UserBoundListFieldGroupListItem>;
     };
     readonly default_value: ReadonlyArray<UserBoundListItem>;
     readonly values: ReadonlyArray<UserBoundListItem>;
+};
+
+export type UserBoundListFieldGroupListItem = {
+    id: string;
 };
 
 export type UserGroupBoundListField = CommonListFieldStructure & {
