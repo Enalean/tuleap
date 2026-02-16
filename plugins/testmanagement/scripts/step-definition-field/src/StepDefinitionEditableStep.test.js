@@ -25,7 +25,13 @@ import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
 import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
 import * as tuleap_api from "./api/rest-querier.ts";
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
-import { PROJECT_ID, FIELD_ID } from "./injection-keys.ts";
+import {
+    PROJECT_ID,
+    FIELD_ID,
+    UPLOAD_URL,
+    UPLOAD_FIELD_NAME,
+    UPLOAD_MAX_SIZE,
+} from "./injection-keys.ts";
 
 vi.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
     return {
@@ -55,6 +61,9 @@ function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
             provide: {
                 [PROJECT_ID.valueOf()]: project_id,
                 [FIELD_ID.valueOf()]: 18,
+                [UPLOAD_URL.valueOf()]: "",
+                [UPLOAD_FIELD_NAME.valueOf()]: "",
+                [UPLOAD_MAX_SIZE.valueOf()]: "",
             },
         },
         propsData: {

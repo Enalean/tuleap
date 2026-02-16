@@ -18,13 +18,10 @@
  */
 import { v4 as uuid } from "uuid";
 
-export function initStepField(state, [steps, upload_url, upload_field_name, upload_max_size]) {
+export function initStepField(state, steps) {
     state.steps = steps.map((step) => {
         return { ...step, uuid: uuid(), is_deleted: false };
     });
-    state.upload_url = upload_url;
-    state.upload_field_name = upload_field_name;
-    state.upload_max_size = upload_max_size;
 }
 
 export function setStepDeleted(state, [step, is_deleted]) {
