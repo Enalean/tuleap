@@ -17,25 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { type ResultAsync } from "neverthrow";
-import { uri, patchJSON } from "@tuleap/fetch-result";
-import {
-    SaveNewFieldOrderFaultBuilder,
-    type SaveNewFieldOrderFault,
-} from "./SaveNewFieldOrderFaultBuilder";
+import { Fault } from "@tuleap/fault";
 
-export type MoveFieldsAPIRequestParams = {
-    field_id: number;
-    parent_id: number | null;
-    next_sibling_id: number | null;
+export type SaveNewFieldOrderFault = Fault & {
+    isSaveNewFieldOrderFault(): true;
 };
 
-export const saveNewFieldsOrder = (
-    move: MoveFieldsAPIRequestParams,
-): ResultAsync<null, SaveNewFieldOrderFault> =>
-    patchJSON<null>(uri`/api/v1/tracker_fields/${move.field_id}`, {
-        move: {
-            parent_id: move.parent_id,
-            next_sibling_id: move.next_sibling_id,
-        },
-    }).mapErr(SaveNewFieldOrderFaultBuilder.buildFromFault);
+export const isSaveNewFieldOrderFault = (fault: Fault): boolean =>
+    "isSaveNewFieldOrderFault" in fault && fault.isSaveNewFieldOrderFault() === true;
+
+export const SaveNewFieldOrderFaultBuilder = {
+    buildFromFault: (fault: Fault): SaveNewFieldOrderFault => {
+        return {
+            isSaveNewFieldOrderFault: () => true,
+            ...Fault.fromMessage(String(fault)),
+        };
+    },
+};

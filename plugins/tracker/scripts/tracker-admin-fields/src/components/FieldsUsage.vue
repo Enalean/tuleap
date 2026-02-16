@@ -21,6 +21,10 @@
     <section class="field-usage">
         <router-view name="sidebar" />
         <div>
+            <refresh-after-error-modal
+                v-if="refresh_after_error_fault !== null"
+                v-bind:fault="refresh_after_error_fault"
+            />
             <error-state v-if="has_error" />
             <h2>{{ $gettext("Fields usage") }}</h2>
 
@@ -42,8 +46,15 @@ import { mapContentStructureToFields } from "../helpers/map-content-structure-to
 import type { ElementWithChildren } from "../type";
 import { RouterView } from "vue-router";
 import ErrorState from "./ErrorState.vue";
-import { POST_FIELD_DND_CALLBACK, TRACKER_ROOT, FIELDS } from "../injection-symbols";
+import {
+    OPEN_REFRESH_AFTER_FAULT_MODAL,
+    POST_FIELD_DND_CALLBACK,
+    TRACKER_ROOT,
+    FIELDS,
+} from "../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import RefreshAfterErrorModal from "./RefreshAfterErrorModal.vue";
+import type { Fault } from "@tuleap/fault";
 
 const { $gettext } = useGettext();
 
@@ -60,9 +71,13 @@ const key = ref(0);
 const update = (): void => {
     key.value += 1;
 };
+const refresh_after_error_fault = ref<Fault | null>(null);
 
 provide(TRACKER_ROOT, tracker_root);
 provide(POST_FIELD_DND_CALLBACK, update);
+provide(OPEN_REFRESH_AFTER_FAULT_MODAL, (fault: Fault) => {
+    refresh_after_error_fault.value = fault;
+});
 </script>
 
 <style lang="scss" scoped>

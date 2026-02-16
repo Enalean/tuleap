@@ -20,18 +20,21 @@
 import { describe, it, expect, vi } from "vitest";
 import * as fetch_result from "@tuleap/fetch-result";
 import { uri } from "@tuleap/fetch-result";
-import { okAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import type { MoveFieldsAPIRequestParams } from "./save-new-fields-order";
 import { saveNewFieldsOrder } from "./save-new-fields-order";
+import { isSaveNewFieldOrderFault } from "./SaveNewFieldOrderFaultBuilder";
+
+const move_fields_request: MoveFieldsAPIRequestParams = {
+    field_id: 100,
+    parent_id: 90,
+    next_sibling_id: 91,
+};
 
 describe("save-new-fields-order", () => {
     it("Given a MoveFieldsAPIRequestParams object, Then it should make a PATCH request to the api", async () => {
         const patch = vi.spyOn(fetch_result, "patchJSON").mockReturnValue(okAsync(null));
-        const move_fields_request: MoveFieldsAPIRequestParams = {
-            field_id: 100,
-            parent_id: 90,
-            next_sibling_id: 91,
-        };
 
         const result = await saveNewFieldsOrder(move_fields_request);
 
@@ -46,5 +49,18 @@ describe("save-new-fields-order", () => {
                 },
             },
         ]);
+    });
+
+    it("When an error occurres, Then it should return a SaveNewFieldOrderFault", async () => {
+        const api_fault = Fault.fromMessage("Nope");
+        vi.spyOn(fetch_result, "patchJSON").mockReturnValue(errAsync(api_fault));
+
+        const result = await saveNewFieldsOrder(move_fields_request);
+
+        if (!result.isErr()) {
+            throw new Error("Expected an error.");
+        }
+        expect(isSaveNewFieldOrderFault(result.error));
+        expect(String(result.error)).toBe(String(api_fault));
     });
 });
