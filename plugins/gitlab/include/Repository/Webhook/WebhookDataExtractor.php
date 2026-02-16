@@ -68,7 +68,7 @@ final readonly class WebhookDataExtractor
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_NAME_KEY],
-                $webhook_content[self::PROJECT_KEY][self::PROJECT_DESCRIPTION_KEY],
+                $webhook_content[self::PROJECT_KEY][self::PROJECT_DESCRIPTION_KEY] ?? '',
                 $webhook_content,
             );
         }
@@ -81,7 +81,7 @@ final readonly class WebhookDataExtractor
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
                 $webhook_content,
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_NAME_KEY],
-                $webhook_content[self::PROJECT_KEY][self::PROJECT_DESCRIPTION_KEY],
+                $webhook_content[self::PROJECT_KEY][self::PROJECT_DESCRIPTION_KEY] ?? '',
             );
         }
 
@@ -93,7 +93,7 @@ final readonly class WebhookDataExtractor
             $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
             $webhook_content,
             $webhook_content[self::PROJECT_KEY][self::PROJECT_NAME_KEY],
-            $webhook_content[self::PROJECT_KEY][self::PROJECT_DESCRIPTION_KEY],
+            $webhook_content[self::PROJECT_KEY][self::PROJECT_DESCRIPTION_KEY] ?? '',
         );
     }
 
