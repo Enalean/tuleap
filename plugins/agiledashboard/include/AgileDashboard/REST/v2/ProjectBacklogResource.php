@@ -34,6 +34,7 @@ use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
@@ -106,7 +107,7 @@ class ProjectBacklogResource
     /**
      * Get the backlog with the items that can be planned in a top-milestone of a given project
      */
-    public function get(PFUser $user, Project $project, $limit, $offset)
+    public function get(PFUser $user, Project $project, int $limit, int $offset): BacklogRepresentation
     {
         try {
             $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
@@ -126,21 +127,20 @@ class ProjectBacklogResource
             SubmissionPermissionVerifier::instance(),
         );
 
-        foreach ($backlog_items as $backlog_item) {
+        $backlog_items_to_process = array_slice(iterator_to_array($backlog_items), $offset, $limit);
+        foreach ($backlog_items_to_process as $backlog_item) {
             $backlog_item_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 
         $this->sendAllowHeaders();
         $this->sendPaginationHeaders($limit, $offset, count($backlog_items));
 
-        $contents = array_slice($backlog_item_representations, $offset, $limit);
-
         $accepted_trackers                   = $this->getAcceptedTrackers($user, $project);
         $has_user_priority_change_permission = $this->hasUserPriorityChangePermission($user, $project);
 
         $parent_trackers = $this->parent_tracker_retriever->getCreatableParentTrackers($top_milestone, $user, $accepted_trackers);
 
-        return BacklogRepresentation::build($contents, $accepted_trackers, $parent_trackers, $has_user_priority_change_permission);
+        return BacklogRepresentation::build($backlog_item_representations, $accepted_trackers, $parent_trackers, $has_user_priority_change_permission);
     }
 
     private function hasUserPriorityChangePermission(PFUser $user, Project $project)
@@ -159,7 +159,7 @@ class ProjectBacklogResource
         $this->sendAllowHeaders();
     }
 
-    private function getBacklogItems(PFUser $user, Planning_VirtualTopMilestone $top_milestone)
+    private function getBacklogItems(PFUser $user, Planning_VirtualTopMilestone $top_milestone): IBacklogItemCollection
     {
         $backlog_unassigned = $this->backlog_factory->getSelfBacklog($top_milestone);
 
