@@ -50,7 +50,6 @@ const config_for_legacy_scripts = {
                 "./src/TrackerAdminRichTextEditor.js",
                 "./src/TrackerArtifact.js",
                 "./src/TrackerArtifactLink.js",
-                "./src/TrackerCreate.js",
                 "./src/TrackerFormElementFieldPermissions.js",
                 "./src/SubmissionKeeper.js",
                 "./src/TrackerFieldDependencies.js",
