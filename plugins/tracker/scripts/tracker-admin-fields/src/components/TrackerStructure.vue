@@ -49,6 +49,7 @@ import { ROOT_CONTAINER_ID } from "../type";
 import { getDropRulesEnforcer } from "../helpers/DropRulesEnforcer";
 import { saveNewFieldsOrder } from "../helpers/save-new-fields-order";
 import { isSaveNewFieldOrderFault } from "../helpers/SaveNewFieldOrderFaultBuilder";
+import { useDragAutoscrollWithDraggableEvents } from "@tuleap/drag-autoscroll";
 
 const tracker_root = strictInject(TRACKER_ROOT);
 const post_field_update_callback = strictInject(POST_FIELD_DND_CALLBACK);
@@ -57,6 +58,7 @@ const container = useTemplateRef<HTMLElement>("container");
 const drop_rules_enforcer = getDropRulesEnforcer(tracker_root);
 const context_transformer = getSuccessfulDropContextTransformer(tracker_root);
 const fields_mover = getFieldsMover();
+const drag_autoscroll = useDragAutoscrollWithDraggableEvents();
 
 let drek: Drekkenov | undefined = undefined;
 
@@ -74,7 +76,7 @@ onMounted(() => {
             Boolean(handle.closest("[data-not-drag-handle]")),
         isConsideredInDropzone: (child: Element) => child.hasAttribute("draggable"),
         doesDropzoneAcceptDraggable: drop_rules_enforcer.isDropPossible,
-        onDragStart: (): void => {},
+        onDragStart: drag_autoscroll.start,
         onDragEnter(context: PossibleDropCallbackParameter): void {
             context.source_dropzone.classList.remove(
                 "tracker-admin-fields-container-dropzone-hover",
@@ -100,7 +102,9 @@ onMounted(() => {
                     throw new Error(`[tracker-admin-fields] Unable to move element: ${fault}`);
                 });
         },
-        cleanupAfterDragCallback: (): void => {},
+        cleanupAfterDragCallback: (): void => {
+            drag_autoscroll.stop();
+        },
     });
 });
 

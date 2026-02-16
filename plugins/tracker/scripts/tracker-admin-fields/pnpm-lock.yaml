@@ -20,6 +20,9 @@ dependencies:
   '@tuleap/drag-and-drop':
     specifier: workspace:^
     version: link:../../../../lib/frontend/drag-and-drop
+  '@tuleap/drag-autoscroll':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/drag-autoscroll
   '@tuleap/fault':
     specifier: workspace:^
     version: link:../../../../lib/frontend/fault

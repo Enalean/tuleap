@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { useDragAutoscrollWithPointerEvents } from "@tuleap/drag-autoscroll";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-export const drag_autoscroll_service = useDragAutoscrollWithPointerEvents();
+export default vite.defineLibConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "DragAutoscroll",
+        },
+    },
+    plugins: [viteDtsPlugin()],
+});
