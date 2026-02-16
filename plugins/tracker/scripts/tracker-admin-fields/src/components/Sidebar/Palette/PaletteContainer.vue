@@ -160,14 +160,6 @@ const categories: ReadonlyArray<CategoryOfPaletteFields> = [
                 icon: "fa-regular fa-square",
             },
             {
-                label: $gettext("Column"),
-                icon: "fa-solid fa-table-columns",
-            },
-            {
-                label: $gettext("Line break"),
-                icon: "fa-solid fa-arrow-turn-down fa-rotate-90",
-            },
-            {
                 label: $gettext("Separator"),
                 icon: "fa-solid fa-minus",
             },
