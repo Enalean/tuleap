@@ -159,7 +159,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAsksProjectManagerForTheProject(): void
     {
-        $this->project_manager->method('getValidProjectByShortNameOrId')->with(122)->willReturn($this->project);
+        $this->project_manager->method('getValidProjectByShortNameOrId')->willReturn($this->project);
         $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path);
@@ -304,19 +304,19 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getValidProjectByShortNameOrId')->willReturn($this->project);
 
         $user_01 = UserTestBuilder::aUser()->withLdapId('ldap_01')->withUserName('user_01')->withId(101)->build();
-        $this->user_manager->method('getUserByIdentifier')->with('ldapId:ldap_01')->willReturn($user_01);
+        $this->user_manager->method('getUserByIdentifier')->willReturn($user_01);
 
-        $this->ugroup_manager->method('getUGroupByName')->with($this->project, 'ug01')->willReturn(null);
-        $this->ugroup_manager->method('createEmptyUgroup')->with(122, 'ug01', 'descr01')->willReturn(555);
+        $this->ugroup_manager->method('getUGroupByName')->willReturn(null);
+        $this->ugroup_manager->method('createEmptyUgroup')->willReturnMap([['122', 'ug01', 'descr01', 555]]);
         $this->ugroup_manager->method('getDynamicUGoupIdByName');
         $this->ugroup_manager->method('getDynamicUGoupByName');
 
         $ug01 = $this->createMock(\ProjectUGroup::class);
-        $this->ugroup_manager->method('getById')->with(555)->willReturn($ug01);
+        $this->ugroup_manager->method('getById')->willReturnMap([[555, $ug01]]);
         $ug01->expects($this->once())->method('addUser');
         $ug01->method('getId')->willReturn(555);
 
-        $this->sync_members->method('enable')->with($this->project);
+        $this->sync_members->method('enable');
 
         $this->event_manager->expects($this->once())->method('processEvent');
 
@@ -334,11 +334,11 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_member_ugroup = ProjectUGroupTestBuilder::buildProjectMembersWith($user);
 
-        $this->ugroup_manager->method('getDynamicUGoupByName')->with($this->project, 'project_members')->willReturn($project_member_ugroup);
+        $this->ugroup_manager->method('getDynamicUGoupByName')->willReturn($project_member_ugroup);
         $this->ugroup_manager->method('getDynamicUGoupIdByName');
         $this->ugroup_manager->method('getUGroupByName')->willReturn($project_member_ugroup);
         $this->project_manager->method('getValidProjectByShortNameOrId')->willReturn($this->project);
-        $this->user_manager->method('getUserByIdentifier')->with('ldapId:ldap_01')->willReturn($user);
+        $this->user_manager->method('getUserByIdentifier')->willReturn($user);
 
         $this->event_manager->expects($this->once())->method('processEvent');
 

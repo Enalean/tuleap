@@ -89,7 +89,7 @@ final class GitActionsDeleteTest extends TestCase
         $this->controller->method('getRequest');
 
         $git_repository_factory = $this->createStub(GitRepositoryFactory::class);
-        $git_repository_factory->method('getRepositoryById')->with($this->repository_id)->willReturn($this->repository);
+        $git_repository_factory->method('getRepositoryById')->willReturn($this->repository);
 
         $git_plugin->method('areFriendlyUrlsActivated')->willReturn(false);
 

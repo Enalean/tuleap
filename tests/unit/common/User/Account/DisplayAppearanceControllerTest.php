@@ -59,7 +59,7 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             }
         };
 
-        $GLOBALS['Language']->method('gettext')->with('system', 'datefmt_short')->willReturn('d/m/Y');
+        $GLOBALS['Language']->method('gettext')->willReturnMap([['system', 'datefmt_short', 'd/m/Y']]);
 
         $this->appearance_builder = $this->createMock(AppearancePresenterBuilder::class);
         $this->csrf_token         = new CSRFSynchronizerToken('some_url', 'token_name', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());
@@ -74,6 +74,10 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItThrowExceptionForAnonymous(): void
     {
+        $this->appearance_builder
+            ->expects($this->never())
+            ->method('getAppareancePresenterForUser');
+
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(

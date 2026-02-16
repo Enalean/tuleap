@@ -46,7 +46,6 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $invalid_id = '0';
         $this->project_manager
             ->method('getProject')
-            ->with($invalid_id)
             ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
@@ -61,7 +60,6 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(true);
         $this->project_manager
             ->method('getProject')
-            ->with($project_id)
             ->willReturn($error_project);
 
         $this->expectException(NotFoundException::class);
@@ -76,7 +74,6 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
         $this->project_manager
             ->method('getProject')
-            ->with($project_id)
             ->willReturn($project);
 
         $result = $this->project_retriever->getProjectFromId($project_id);
@@ -88,7 +85,6 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $notfound = 'notfound';
         $this->project_manager
             ->method('getValidProjectByShortNameOrId')
-            ->with($notfound)
             ->willThrowException(new \Project_NotFoundException());
 
         $this->expectException(NotFoundException::class);
@@ -101,7 +97,6 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager
             ->method('getValidProjectByShortNameOrId')
-            ->with($name)
             ->willReturn($project);
 
         self::assertSame($project, $this->project_retriever->getProjectFromName($name));

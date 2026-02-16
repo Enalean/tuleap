@@ -26,7 +26,7 @@ use ForgeConfig;
 use Override;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Date\TimezoneWrapper;
 use Tuleap\ForgeConfigSandbox;
@@ -48,7 +48,7 @@ final class DateFormatterTest extends TestCase
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    private DateField&MockObject $field;
+    private DateField&Stub $field;
     private DateFormatter $date_formatter;
 
     #[Override]
@@ -56,12 +56,14 @@ final class DateFormatterTest extends TestCase
     {
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
 
-        $this->field          = $this->createMock(DateField::class);
+        $this->field = $this->createStub(DateField::class);
+        $this->field->method('getLabel');
+
         $user                 = UserTestBuilder::anActiveUser()->withTimezone('Europe/Paris')->build();
         $this->date_formatter = new DateFormatter($this->field, ProvideCurrentUserStub::buildWithUser($user));
 
-        $user_manager = $this->createMock(UserManager::class);
-        $user_manager->method('getUserById')->with(105)->willReturn($user);
+        $user_manager = $this->createStub(UserManager::class);
+        $user_manager->method('getUserById')->willReturn($user);
         UserManager::setInstance($user_manager);
     }
 
@@ -89,7 +91,6 @@ final class DateFormatterTest extends TestCase
     public function testItDoesNotValidateNotWellFormedValue(): void
     {
         $value = '2014/09/03';
-        $this->field->expects($this->once())->method('getLabel');
 
         self::assertFalse($this->date_formatter->validate($value));
     }
@@ -104,7 +105,7 @@ final class DateFormatterTest extends TestCase
             ->withTimestamp((int) strtotime('2025-09-06 00:00 Europe/Paris'))
             ->build();
         $artifact  = ArtifactTestBuilder::anArtifact(652)->build();
-        $GLOBALS['Language']->method('getText')->with('system', 'datefmt_short')->willReturn('Y-m-d');
+        $GLOBALS['Language']->method('getText')->willReturnMap([['system', 'datefmt_short', 'Y-m-d']]);
         TimezoneWrapper::wrapTimezone('America/Los_Angeles', function () use ($artifact, $value, $expected): void {
             self::assertSame($expected, $this->date_formatter->fetchArtifactValueReadOnly($artifact, $value));
         });

@@ -41,7 +41,6 @@ final class ProjectByNameRetrieverMiddlewareTest extends \Tuleap\Test\PHPUnit\Te
             ->build();
         $project_retriever
             ->method('getProjectFromName')
-            ->with('acme')
             ->willReturn($project);
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse();

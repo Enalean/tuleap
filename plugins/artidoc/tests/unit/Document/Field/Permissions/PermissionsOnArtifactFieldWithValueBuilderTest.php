@@ -96,7 +96,7 @@ final class PermissionsOnArtifactFieldWithValueBuilderTest extends TestCase
             ])
             ->build();
 
-        $GLOBALS['Language']->method('getText')->with(self::isString(), 'ugroup_project_members')->willReturn('Project Members');
+        $GLOBALS['Language']->method('getText')->willReturn('Project Members');
 
         self::assertEquals(
             new PermissionsOnArtifactFieldWithValue(

@@ -51,8 +51,7 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
 
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt')
-            ->willReturn('d/m/Y H:i');
+            ->willReturnMap([['system', 'datefmt', 'd/m/Y H:i']]);
     }
 
     public function testNullIfFeatureIsNotEnabled(): void
@@ -64,8 +63,8 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
             $configuration,
             PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
             new TlpRelativeDatePresenterBuilder(),
-            $this->createMock(CSRFSynchronizerTokenProvider::class),
-            $this->createMock(InviteBuddiesPresenterBuilder::class),
+            $this->createStub(CSRFSynchronizerTokenProvider::class),
+            $this->createStub(InviteBuddiesPresenterBuilder::class),
         );
 
         self::assertNull(

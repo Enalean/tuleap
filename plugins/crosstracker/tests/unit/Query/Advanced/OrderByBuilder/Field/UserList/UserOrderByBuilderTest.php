@@ -34,7 +34,7 @@ final class UserOrderByBuilderTest extends TestCase
     public function testNoPreferences(): void
     {
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn(false);
+        $user->method('getPreference')->willReturn(false);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             "CONCAT(alias.realname, ' (', alias.user_name, ')') ASC",
@@ -45,7 +45,7 @@ final class UserOrderByBuilderTest extends TestCase
     public function testPreferenceLogin(): void
     {
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn((string) UserHelper::PREFERENCES_LOGIN);
+        $user->method('getPreference')->willReturn((string) UserHelper::PREFERENCES_LOGIN);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             'CONCAT(alias.user_name) ASC',
@@ -56,7 +56,7 @@ final class UserOrderByBuilderTest extends TestCase
     public function testPreferenceRealname(): void
     {
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn((string) UserHelper::PREFERENCES_REAL_NAME);
+        $user->method('getPreference')->willReturn((string) UserHelper::PREFERENCES_REAL_NAME);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             'CONCAT(alias.realname) ASC',
@@ -67,7 +67,7 @@ final class UserOrderByBuilderTest extends TestCase
     public function testPreferenceLoginRealname(): void
     {
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn((string) UserHelper::PREFERENCES_LOGIN_AND_NAME);
+        $user->method('getPreference')->willReturn((string) UserHelper::PREFERENCES_LOGIN_AND_NAME);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             "CONCAT(alias.user_name, ' (', alias.realname, ')') ASC",
@@ -78,7 +78,7 @@ final class UserOrderByBuilderTest extends TestCase
     public function testPreferenceRealnameLogin(): void
     {
         $user = $this->createStub(PFUser::class);
-        $user->method('getPreference')->with(PFUser::PREFERENCE_NAME_DISPLAY_USERS)->willReturn((string) UserHelper::PREFERENCES_NAME_AND_LOGIN);
+        $user->method('getPreference')->willReturn((string) UserHelper::PREFERENCES_NAME_AND_LOGIN);
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             "CONCAT(alias.realname, ' (', alias.user_name, ')') ASC",

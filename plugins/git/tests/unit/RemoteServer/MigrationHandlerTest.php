@@ -34,6 +34,7 @@ use Git_SystemEventManager;
 use GitRepository;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use ProjectHistoryDao;
 use ProjectManager;
 use Tuleap\Git\AsynchronousEvents\GitRepositoryChangeTask;
@@ -54,10 +55,10 @@ final class MigrationHandlerTest extends TestCase
 {
     private Git_SystemEventManager&MockObject $git_system_event_manager;
     private MigrationHandler $handler;
-    private Git_RemoteServer_GerritServerFactory&MockObject $server_factory;
-    private Git_Driver_Gerrit_GerritDriverFactory&MockObject $driver_factory;
-    private Git_Driver_Gerrit_ProjectCreatorStatus&MockObject $project_creator_status;
-    private ProjectManager&MockObject $project_manager;
+    private Git_RemoteServer_GerritServerFactory&Stub $server_factory;
+    private Git_Driver_Gerrit_GerritDriverFactory&Stub $driver_factory;
+    private Git_Driver_Gerrit_ProjectCreatorStatus&Stub $project_creator_status;
+    private ProjectManager&Stub $project_manager;
     private PFUser $user;
     private GitRepository $repository;
     private EnqueueTaskStub $enqueuer;
@@ -67,11 +68,11 @@ final class MigrationHandlerTest extends TestCase
     {
         $this->git_system_event_manager = $this->createMock(Git_SystemEventManager::class);
         $this->enqueuer                 = new EnqueueTaskStub();
-        $this->server_factory           = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
-        $this->driver_factory           = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
-        $project_history_dao            = $this->createMock(ProjectHistoryDao::class);
-        $this->project_creator_status   = $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class);
-        $this->project_manager          = $this->createMock(ProjectManager::class);
+        $this->server_factory           = $this->createStub(Git_RemoteServer_GerritServerFactory::class);
+        $this->driver_factory           = $this->createStub(Git_Driver_Gerrit_GerritDriverFactory::class);
+        $project_history_dao            = $this->createStub(ProjectHistoryDao::class);
+        $this->project_creator_status   = $this->createStub(Git_Driver_Gerrit_ProjectCreatorStatus::class);
+        $this->project_manager          = $this->createStub(ProjectManager::class);
 
         $this->handler = new MigrationHandler(
             $this->git_system_event_manager,
@@ -125,7 +126,7 @@ final class MigrationHandlerTest extends TestCase
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->server_factory->method('getServerById')->with(1)->willReturn($this->repository);
+        $this->server_factory->method('getServerById')->willReturn($this->repository);
         $this->server_factory->method('getAvailableServersForProject')->willReturn([]);
         $this->project_creator_status->method('getStatus');
 
@@ -144,7 +145,7 @@ final class MigrationHandlerTest extends TestCase
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->server_factory->method('getServerById')->with(1)->willReturn($this->repository);
+        $this->server_factory->method('getServerById')->willReturn($this->repository);
         $this->server_factory->method('getAvailableServersForProject')->willReturn([]);
         $this->project_creator_status->method('getStatus');
 
@@ -163,7 +164,7 @@ final class MigrationHandlerTest extends TestCase
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->server_factory->method('getServerById')->with(1)->willReturn($this->repository);
+        $this->server_factory->method('getServerById')->willReturn($this->repository);
         $this->server_factory->method('getAvailableServersForProject')->willReturn([1 => $this->repository]);
         $this->project_creator_status->method('getStatus');
 
@@ -180,7 +181,7 @@ final class MigrationHandlerTest extends TestCase
         $remote_server_id   = 1;
         $gerrit_template_id = 'none';
 
-        $this->server_factory->method('getServerById')->with(1)->willReturn($this->repository);
+        $this->server_factory->method('getServerById')->willReturn($this->repository);
         $this->server_factory->method('getAvailableServersForProject')->willReturn([1 => $this->repository]);
         $this->project_creator_status->method('getStatus');
 
@@ -207,7 +208,7 @@ final class MigrationHandlerTest extends TestCase
 
     public function testItThrowsAnExceptionIfRepositoryIsNotMigrated(): void
     {
-        $repository = $this->createMock(GitRepository::class);
+        $repository = $this->createStub(GitRepository::class);
         $repository->method('isMigratedToGerrit')->willReturn(false);
         $disconnect_option = '';
 
@@ -253,7 +254,7 @@ final class MigrationHandlerTest extends TestCase
         $repository->method('getId')->willReturn(123);
         $driver->method('isDeletePluginEnabled');
         $this->server_factory->method('getServerById')->willReturn($server);
-        $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
+        $this->driver_factory->method('getDriver')->willReturn($driver);
 
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectReadOnly');
@@ -280,7 +281,7 @@ final class MigrationHandlerTest extends TestCase
         $repository->method('getId')->willReturn(123);
         $driver->method('isDeletePluginEnabled');
         $this->server_factory->method('getServerById')->willReturn($server);
-        $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
+        $this->driver_factory->method('getDriver')->willReturn($driver);
 
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects($this->once())->method('queueRemoteProjectReadOnly');
@@ -300,14 +301,14 @@ final class MigrationHandlerTest extends TestCase
         $driver            = $this->createStub(Git_Driver_Gerrit::class);
         $disconnect_option = 'delete';
 
-        $driver->method('isDeletePluginEnabled')->with($server)->willReturn(true);
+        $driver->method('isDeletePluginEnabled')->willReturn(true);
         $repository->method('getBackend')->willReturn($backend);
         $repository->method('getRemoteServerId');
         $repository->method('getName');
         $repository->method('getProjectId');
         $repository->method('getId')->willReturn(123);
         $this->server_factory->method('getServerById')->willReturn($server);
-        $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
+        $this->driver_factory->method('getDriver')->willReturn($driver);
 
         $this->git_system_event_manager->expects($this->once())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectReadOnly');
@@ -327,11 +328,11 @@ final class MigrationHandlerTest extends TestCase
         $driver            = $this->createStub(Git_Driver_Gerrit::class);
         $disconnect_option = 'delete';
 
-        $driver->method('isDeletePluginEnabled')->with($server)->willReturn(false);
+        $driver->method('isDeletePluginEnabled')->willReturn(false);
         $repository->method('getBackend')->willReturn($backend);
         $repository->method('getRemoteServerId');
         $this->server_factory->method('getServerById')->willReturn($server);
-        $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
+        $this->driver_factory->method('getDriver')->willReturn($driver);
 
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects($this->never())->method('queueRemoteProjectReadOnly');

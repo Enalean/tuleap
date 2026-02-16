@@ -58,12 +58,10 @@ final class InvitationCleanerTest extends TestCase
 
         $GLOBALS['Language']
             ->method('getContent')
-            ->with('mail/html_template', 'en_US', null, '.php')
-            ->willReturn(__DIR__ . '/../../../../site-content/en_US/mail/html_template.php');
+            ->willReturnMap([['mail/html_template', 'en_US', null, '.php', __DIR__ . '/../../../../site-content/en_US/mail/html_template.php']]);
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt_short')
-            ->willReturn('d/m/Y');
+            ->willReturnMap([['system', 'datefmt_short', 'd/m/Y']]);
 
         $this->jane = UserTestBuilder::aUser()
             ->withId(self::JANE_ID)

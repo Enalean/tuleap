@@ -69,8 +69,10 @@ final class GitRepositoryManagerDeleteAllRepositoriesTest extends TestCase
 
     public function testItDeletesNothingWhenThereAreNoRepositories(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $this->repository_factory->method('getAllRepositories')
-            ->with($this->project)->willReturn([]);
+            ->willReturn([]);
 
         $this->git_repository_manager->deleteProjectRepositories($this->project);
     }

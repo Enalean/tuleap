@@ -81,7 +81,7 @@ final class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 
             return [];
         });
-        $dao->method('searchDynamicAndStaticByGroupId')->with(123)->willReturn($ugroup_definitions);
+        $dao->method('searchDynamicAndStaticByGroupId')->willReturnMap([[123, $ugroup_definitions]]);
 
         $this->ugroup_manager = new UGroupManager($dao);
     }

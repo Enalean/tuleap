@@ -34,7 +34,6 @@ use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use XML_RNGValidator;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -42,7 +41,6 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    private ProjectManager&Stub $project_manager;
     private XML_RNGValidator&Stub $xml_rngvalidator;
     private ServiceManager&Stub $service_manager;
     private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
@@ -64,9 +62,6 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->service_manager = $this->createStub(ServiceManager::class);
         $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $git_service,]);
-
-        $this->project_manager = $this->createStub(ProjectManager::class);
-        $this->project_manager->method('getProject')->with(100)->willReturn(ProjectTestBuilder::aProject()->build());
     }
 
     public function testItHasBasicMetadataFromProject(): void

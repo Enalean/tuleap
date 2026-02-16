@@ -64,10 +64,10 @@ final class DateFieldTest extends TestCase
     protected function setUp(): void
     {
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'UTC');
-        $user_manager = $this->createMock(UserManager::class);
+        $user_manager = $this->createStub(UserManager::class);
         UserManager::setInstance($user_manager);
         $user = UserTestBuilder::anActiveUser()->withTimezone('UTC')->build();
-        $user_manager->method('getUserById')->with(105)->willReturn($user);
+        $user_manager->method('getUserById')->willReturn($user);
         $user_manager->method('getCurrentUser')->willReturn($user);
     }
 
@@ -145,7 +145,7 @@ final class DateFieldTest extends TestCase
 
     public function testGetChangesetValue(): void
     {
-        $value_dao = $this->createMock(DateValueDao::class);
+        $value_dao = $this->createStub(DateValueDao::class);
         $dar       = TestHelper::arrayToDar(['id' => 123, 'field_id' => 1, 'value' => '1221221466']);
         $value_dao->method('searchById')->willReturn($dar);
 
@@ -160,7 +160,7 @@ final class DateFieldTest extends TestCase
 
     public function testGetChangesetValueDoesntExist(): void
     {
-        $value_dao = $this->createMock(DateValueDao::class);
+        $value_dao = $this->createStub(DateValueDao::class);
         $dar       = TestHelper::arrayToDar(false);
         $value_dao->method('searchById')->willReturn($dar);
 
@@ -611,7 +611,7 @@ final class DateFieldTest extends TestCase
 
     public function testFieldDateShouldSendAMailWithAReadableDateEnUS(): void
     {
-        $GLOBALS['Language']->method('getText')->with('system', 'datefmt_short')->willReturn('Y-m-d');
+        $GLOBALS['Language']->method('getText')->willReturnMap([['system', 'datefmt_short', 'Y-m-d']]);
         $GLOBALS['Language']->method('getLanguageFromAcceptLanguage')->willReturn('en_US');
 
         $user     = UserTestBuilder::buildWithDefaults();
@@ -630,7 +630,7 @@ final class DateFieldTest extends TestCase
 
     public function testFieldDateShouldSendAMailWithAReadableDatefrFR(): void
     {
-        $GLOBALS['Language']->method('getText')->with('system', 'datefmt_short')->willReturn('d/m/Y');
+        $GLOBALS['Language']->method('getText')->willReturnMap([['system', 'datefmt_short', 'd/m/Y']]);
         $GLOBALS['Language']->method('getLanguageFromAcceptLanguage')->willReturn('fr_FR');
 
         $user     = UserTestBuilder::buildWithDefaults();

@@ -68,7 +68,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('setOwner');
         $widget->method('isUnique');
         $widget->method('create');
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
         $this->widget_dao->expects($this->once())->method('createLine')->with(10001, ProjectDashboardController::DASHBOARD_TYPE, 1);
 
@@ -105,7 +105,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('setOwner');
         $widget->method('isUnique');
         $widget->method('create');
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
         $this->widget_dao->method('createLine')->willReturn(12);
         $this->widget_dao->expects($this->once())->method('createColumn')->with(12, 1);
@@ -146,7 +146,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('isUnique');
         $widget->method('create');
 
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
         $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1);
 
@@ -184,7 +184,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('setOwner');
         $widget->method('isUnique');
         $widget->method('create');
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
         $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1);
 
@@ -398,7 +398,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('isUnique')->willReturn(true);
         $widget->method('setOwner');
         $widget->method('create');
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectheartbeat')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
         $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1);
 
@@ -444,7 +444,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('isUnique')->willReturn(true);
         $widget->method('setOwner');
         $widget->method('create');
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectheartbeat')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
         $matcher = self::exactly(2);
 
         $this->widget_dao->expects($matcher)->method('insertWidgetInColumnWithRank')->willReturnCallback(function (...$parameters) use ($matcher) {
@@ -495,7 +495,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
         $this->dao->method('save');
 
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn(null);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn(null);
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -527,7 +527,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('isUnique');
         $widget->method('setOwner');
         $widget->method('create');
-        $this->widget_factory->method('getInstanceByWidgetName')->with('myprojects')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
         $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
 
@@ -795,7 +795,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('isUnique');
         $widget->method('setOwner');
 
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectrss')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
         $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('projectrss', 35, 122, 1);
 
@@ -840,7 +840,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('getId')->willReturn('projectimageviewer');
         $widget->method('create')->willThrowException(new \Exception('foo'));
 
-        $this->widget_factory->method('getInstanceByWidgetName')->with('projectimageviewer')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
         $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
 

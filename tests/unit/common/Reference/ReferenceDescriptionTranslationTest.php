@@ -33,7 +33,7 @@ final class ReferenceDescriptionTranslationTest extends TestCase
 
     public function testReferenceDescriptionNotLookingLikeAnInternalDescriptionIsNotTranslated(): void
     {
-        $reference            = $this->createMock(Reference::class);
+        $reference            = $this->createStub(Reference::class);
         $expected_description = 'My reference description';
         $reference->method('getDescription')->willReturn($expected_description);
 
@@ -44,28 +44,28 @@ final class ReferenceDescriptionTranslationTest extends TestCase
 
     public function testPluginReferenceDescriptionIsTranslated(): void
     {
-        $reference = $this->createMock(Reference::class);
+        $reference = $this->createStub(Reference::class);
         $reference->method('getDescription')->willReturn('plugin_aaaaa:myref_build_desc_key');
 
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);
 
         $expected_translation = 'Plugin ref description';
         $GLOBALS['Language']->method('hasText')->willReturn(true);
-        $GLOBALS['Language']->method('getOverridableText')->with('plugin_aaaaa', 'myref_build_desc_key')->willReturn($expected_translation);
+        $GLOBALS['Language']->method('getOverridableText')->willReturnMap([['plugin_aaaaa', 'myref_build_desc_key', $expected_translation]]);
 
         self::assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
 
     public function testProjectReferenceDescriptionIsTranslated(): void
     {
-        $reference = $this->createMock(Reference::class);
+        $reference = $this->createStub(Reference::class);
         $reference->method('getDescription')->willReturn('projectref_desc_key');
 
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);
 
         $expected_translation = 'Project ref description';
         $GLOBALS['Language']->method('hasText')->willReturn(true);
-        $GLOBALS['Language']->method('getOverridableText')->with('project_reference', 'projectref_desc_key')->willReturn($expected_translation);
+        $GLOBALS['Language']->method('getOverridableText')->willReturnMap([['project_reference', 'projectref_desc_key', $expected_translation]]);
 
         self::assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
@@ -74,7 +74,7 @@ final class ReferenceDescriptionTranslationTest extends TestCase
     #[\PHPUnit\Framework\Attributes\TestWith(['project_ref_notfound_desc_key'])]
     public function testDescriptionLookingLikeInternalDescriptionButNotExistingIsNotTranslated(string $raw_description): void
     {
-        $reference = $this->createMock(Reference::class);
+        $reference = $this->createStub(Reference::class);
         $reference->method('getDescription')->willReturn($raw_description);
 
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Git\Gitolite;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Project;
 use Project_NotFoundException;
 use ProjectManager;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -52,7 +51,7 @@ final class RegenerateConfigurationCommandTest extends TestCase
 
         $project_1 = ProjectTestBuilder::aProject()->withId(999)->build();
         $project_2 = ProjectTestBuilder::aProject()->withId(888)->build();
-        $this->project_manager->method('getProjectsByStatus')->with(Project::STATUS_ACTIVE)->willReturn([$project_1, $project_2]);
+        $this->project_manager->method('getProjectsByStatus')->willReturn([$project_1, $project_2]);
 
         $command_tester->execute(['--all' => true, 'project_ids' => ['102', '103']]);
         self::assertSame(0, $command_tester->getStatusCode());

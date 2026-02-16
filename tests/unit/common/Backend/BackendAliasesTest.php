@@ -77,7 +77,9 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRunNewaliasesCommand(): void
     {
-        $this->backend->method('system')->with('/usr/bin/newaliases > /dev/null')->willReturn(true);
+        $this->expectNotToPerformAssertions();
+
+        $this->backend->method('system')->willReturnMap([['/usr/bin/newaliases > /dev/null', true]]);
         $this->backend->update();
     }
 

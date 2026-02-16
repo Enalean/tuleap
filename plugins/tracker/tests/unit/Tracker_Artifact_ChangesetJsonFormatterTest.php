@@ -33,8 +33,7 @@ final class Tracker_Artifact_ChangesetJsonFormatterTest extends \Tuleap\Test\PHP
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt')
-            ->willReturn('d/m/Y H:i');
+            ->willReturnMap([['system', 'datefmt', 'd/m/Y H:i']]);
 
         $artifact  = ArtifactTestBuilder::anArtifact(101)->build();
         $timestamp = mktime(1, 1, 1, 9, 25, 2013);

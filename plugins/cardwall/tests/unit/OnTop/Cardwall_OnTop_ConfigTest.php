@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Cardwall\Test\Builders\ColumnTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -31,14 +33,8 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    /**
-     * @var Artifact&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $artifact;
-    /**
-     * @var Cardwall_OnTop_Config&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $config;
+    private Artifact&Stub $artifact;
+    private Cardwall_OnTop_Config&MockObject $config;
     private Cardwall_OnTop_Config_TrackerMappingStatus $mapping;
 
     #[\Override]
@@ -62,12 +58,12 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
             102 => $mapping_ongoing,
             103 => $mapping_done,
         ];
-        $this->mapping  = new Cardwall_OnTop_Config_TrackerMappingStatus($this->createStub(\Tuleap\Tracker\Tracker::class), [], $value_mappings, $this->createMock(SelectboxField::class));
+        $this->mapping  = new Cardwall_OnTop_Config_TrackerMappingStatus($this->createStub(\Tuleap\Tracker\Tracker::class), [], $value_mappings, $this->createStub(SelectboxField::class));
 
         $this->config = $this->createPartialMock(\Cardwall_OnTop_Config::class, ['getMappingFor']);
 
-        $this->artifact = $this->createMock(Artifact::class);
-        $this->artifact->method('getTracker')->willReturn($this->createMock(Tracker::class));
+        $this->artifact = $this->createStub(Artifact::class);
+        $this->artifact->method('getTracker')->willReturn($this->createStub(Tracker::class));
         $this->artifact->method('getLastChangeset')->willReturn(new Tracker_Artifact_Changeset_Null());
     }
 
@@ -82,7 +78,7 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
             ColumnTestBuilder::aColumn()->withLabel('of')->build(),
             ColumnTestBuilder::aColumn()->withLabel('columns')->build(),
         ]);
-        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn($columns);
+        $column_factory->method('getDashboardColumns')->willReturn($columns);
         $tracker_mapping_factory->expects($this->once())->method('getMappings')->with($tracker, $columns)->willReturn('whatever');
 
         $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
@@ -98,7 +94,7 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
         $column_factory          = $this->createStub(\Tuleap\Cardwall\OnTop\Config\ColumnFactory::class);
         $tracker_mapping_factory = $this->createStub(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
         $tracker_mapping_factory->method('getMappings')->willReturn([]);
-        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn(new ColumnCollection());
+        $column_factory->method('getDashboardColumns')->willReturn(new ColumnCollection());
         $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
 
         self::assertNull($config->getMappingFor($mapping_tracker));
@@ -112,9 +108,9 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
         $dao                     = $this->createStub(\Cardwall_OnTop_Dao::class);
         $column_factory          = $this->createStub(\Tuleap\Cardwall\OnTop\Config\ColumnFactory::class);
         $mapping                 = $this->createStub(\Cardwall_OnTop_Config_TrackerMapping::class);
-        $tracker_mapping_factory = $this->createMock(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
+        $tracker_mapping_factory = $this->createStub(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
         $tracker_mapping_factory->method('getMappings')->willReturn([99 => $mapping]);
-        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn(new ColumnCollection());
+        $column_factory->method('getDashboardColumns')->willReturn(new ColumnCollection());
         $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
         self::assertEquals($mapping, $config->getMappingFor($mapping_tracker));
     }
@@ -134,9 +130,9 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
     {
         $this->config->method('getMappingFor')->willReturn($this->mapping);
 
-        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $field->method('getFirstValueFor')->willReturn('In Progress');
-        $field_provider = $this->createMock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
+        $field_provider = $this->createStub(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->method('getField')->willReturn($field);
         $column = new Cardwall_Column(11, 'Ongoing', '');
 
@@ -147,9 +143,9 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
     {
         $this->config->method('getMappingFor')->willReturn($this->mapping);
 
-        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $field->method('getFirstValueFor')->willReturn('Todo');
-        $field_provider = $this->createMock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
+        $field_provider = $this->createStub(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->method('getField')->willReturn($field);
         $column = new Cardwall_Column(11, 'Ongoing', '');
 
@@ -160,9 +156,9 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
     {
         $this->config->method('getMappingFor')->willReturn($this->mapping);
 
-        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $field->method('getFirstValueFor')->willReturn(null);
-        $field_provider = $this->createMock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
+        $field_provider = $this->createStub(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->method('getField')->willReturn($field);
         $column = new Cardwall_Column(10, 'Todo', '');
 
@@ -173,9 +169,9 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
     {
         $this->config->method('getMappingFor')->willReturn($this->mapping);
 
-        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $field->method('getFirstValueFor')->willReturn('Ongoing');
-        $field_provider = $this->createMock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
+        $field_provider = $this->createStub(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->method('getField')->willReturn($field);
         $column = new Cardwall_Column(11, 'Ongoing', '');
 
@@ -186,9 +182,9 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
     {
         $this->config->method('getMappingFor')->willReturn($this->mapping);
 
-        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $field->method('getFirstValueFor')->willReturn(null);
-        $field_provider = $this->createMock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
+        $field_provider = $this->createStub(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->method('getField')->willReturn($field);
         $column = new Cardwall_Column(100, 'Ongoing', '');
 

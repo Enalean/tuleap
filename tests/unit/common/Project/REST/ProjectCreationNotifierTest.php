@@ -57,12 +57,14 @@ final class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->register_mail
             ->method('getMailNotificationProject')
-            ->with(
+            ->willReturnMap([[
                 'New project registered: new_project',
                 false,
                 false,
-                $this->project
-            )->willReturn($mail);
+                $this->project,
+                $mail,
+            ],
+            ]);
 
         $this->project_creation_notifier->notifySiteAdmin($this->project);
 
@@ -76,12 +78,14 @@ final class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->register_mail
             ->method('getMailNotificationProject')
-            ->with(
+            ->willReturnMap([[
                 'New project registered: new_project',
                 false,
                 false,
-                $this->project
-            )->willReturn($mail);
+                $this->project,
+                $mail,
+            ],
+            ]);
 
         $this->project_creation_notifier->notifySiteAdmin($this->project);
 

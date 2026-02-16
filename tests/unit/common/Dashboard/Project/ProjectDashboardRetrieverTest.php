@@ -48,7 +48,7 @@ final class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGetsAllDashboards()
     {
-        $this->dao->method('searchAllProjectDashboards')->with(1)->willReturn(\TestHelper::arrayToDar([
+        $this->dao->method('searchAllProjectDashboards')->willReturn(\TestHelper::arrayToDar([
             'id' => 1,
             'project_id' => 1,
             'name' => 'dashboard_one',
@@ -64,7 +64,7 @@ final class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnEmptyIfThereAreNoDashboards()
     {
-        $this->dao->method('searchAllProjectDashboards')->with(2)->willReturn(\TestHelper::emptyDar());
+        $this->dao->method('searchAllProjectDashboards')->willReturn(\TestHelper::emptyDar());
         $result = $this->project_retriever->getAllProjectDashboards($this->project_without_dashboard);
 
         self::assertEmpty($result);

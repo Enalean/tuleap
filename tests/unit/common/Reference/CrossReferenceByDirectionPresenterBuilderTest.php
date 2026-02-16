@@ -24,16 +24,15 @@ namespace Tuleap\Reference;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
 {
-    private EventDispatcherInterface&Stub $event_dispatcher;
     private \ReferenceManager&Stub $reference_manager;
     private CrossReferencePresenterFactory&MockObject $factory;
     private CrossReferenceByNatureInCoreOrganizer&MockObject $core_organizer;
@@ -42,20 +41,9 @@ final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->event_dispatcher  = $this->createStub(EventDispatcherInterface::class);
         $this->reference_manager = $this->createStub(\ReferenceManager::class);
         $this->factory           = $this->createMock(CrossReferencePresenterFactory::class);
         $this->core_organizer    = $this->createMock(CrossReferenceByNatureInCoreOrganizer::class);
-        $project_manager         = $this->createStub(\ProjectManager::class);
-
-        $this->builder = new CrossReferenceByDirectionPresenterBuilder(
-            $this->event_dispatcher,
-            $this->reference_manager,
-            $this->factory,
-            $project_manager,
-            $this->createStub(ProjectAccessChecker::class),
-            $this->core_organizer,
-        );
     }
 
     public function testBuild(): void
@@ -81,20 +69,30 @@ final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
             ->method('getAvailableNatures')
             ->willReturn($available_natures);
 
-        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
-
-        $this->event_dispatcher
-            ->method('dispatch')
-            ->with(self::isInstanceOf(CrossReferenceByNatureOrganizer::class))
-            ->willReturn($by_nature_organizer);
-
         $this->core_organizer->expects($this->exactly(2))->method('organizeCoreReferences');
-        $by_nature_organizer->expects($this->exactly(2))->method('organizeRemainingCrossReferences');
 
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->expects($this->exactly(2))->method('organizeRemainingCrossReferences');
         $by_nature_organizer->expects($this->exactly(2))->method('getNatures')->willReturn([]);
 
 
-        $presenter = $this->builder->build('PageName', 'wiki', 102, $user);
+        $this->builder = new CrossReferenceByDirectionPresenterBuilder(
+            EventDispatcherStub::withCallback(
+                function (object $event) use ($by_nature_organizer): object {
+                    if ($event instanceof CrossReferenceByNatureOrganizer) {
+                        return $by_nature_organizer;
+                    }
+
+                    return $event;
+                }
+            ),
+            $this->reference_manager,
+            $this->factory,
+            $this->createStub(\ProjectManager::class),
+            $this->createStub(ProjectAccessChecker::class),
+            $this->core_organizer,
+        );
+        $presenter     = $this->builder->build('PageName', 'wiki', 102, $user);
 
         self::assertEquals([], $presenter->sources_by_nature);
         self::assertEquals([], $presenter->targets_by_nature);

@@ -106,12 +106,11 @@ final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $app = new OAuth2App(1, 'Name', 'https://example.com', true, ProjectTestBuilder::aProject()->build());
         $this->app_factory->method('getAppMatchingClientId')
-            ->with(self::callback(
-                static function (ClientIdentifier $identifier) use ($app): bool {
-                    return $identifier->getInternalId() === ClientIdentifier::fromOAuth2App($app)->getInternalId();
+            ->willReturnCallback(
+                static fn (ClientIdentifier $identifier) => match ($identifier->getInternalId()) {
+                    ClientIdentifier::fromOAuth2App($app)->getInternalId() => $app
                 }
-            ))
-            ->willReturn($app);
+            );
 
         return $app;
     }

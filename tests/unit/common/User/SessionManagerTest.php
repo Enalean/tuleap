@@ -60,7 +60,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $session_identifier = '1.random_string';
 
-        $this->session_dao->method('searchById')->with('1', self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->willReturn(null);
+        $this->session_dao->method('searchById')->willReturn(null);
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
 
@@ -75,7 +75,15 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $session_token      = 'token';
         $session_identifier = "$session_id.$session_token";
 
-        $this->session_dao->method('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->willReturn(['session_hash' => 'expected_token']);
+        $this->session_dao->method('searchById')->willReturnMap([[
+            $session_id,
+            self::CURRENT_TIME,
+            self::SESSION_LIFETIME_2_WEEKS,
+            [
+                'session_hash' => 'expected_token',
+            ],
+        ],
+        ]);
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS, 'User agent');
@@ -90,9 +98,15 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $hashed_session_token = hash(SessionManager::HASH_ALGORITHM, $session_token);
         $session_identifier   = "$session_id.$session_token";
 
-        $this->session_dao->method('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->willReturn([
-            'session_hash' => $hashed_session_token,
-            'user_id'      => '101',
+        $this->session_dao->method('searchById')->willReturnMap([[
+            $session_id,
+            self::CURRENT_TIME,
+            self::SESSION_LIFETIME_2_WEEKS,
+            [
+                'session_hash' => $hashed_session_token,
+                'user_id'      => '101',
+            ],
+        ],
         ]);
 
         $this->user_manager->method('getUserById')->willReturn(null);
@@ -121,7 +135,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $session_dao->expects($this->once())->method('updateUserAgentByID');
         $user = $this->createMock(\PFUser::class);
-        $this->user_manager->method('getUserById')->with($user_id)->willReturn($user);
+        $this->user_manager->method('getUserById')->willReturn($user);
 
         $user->expects($this->once())->method('setSessionId')->with($session_id);
         $user->expects($this->once())->method('setSessionHash')->with("$session_id.$session_token");

@@ -46,8 +46,7 @@ final class CommentPresenterTest extends TestCase
         $this->user_helper = $this->createMock(UserHelper::class);
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt')
-            ->willReturn('d/m/Y H:i');
+            ->willReturnMap([['system', 'datefmt', 'd/m/Y H:i']]);
         $this->user_helper->expects($this->once())->method('getLinkOnUserFromUserId')
             ->with(101)
             ->willReturn('<a href="https://example.com">A user</a>');

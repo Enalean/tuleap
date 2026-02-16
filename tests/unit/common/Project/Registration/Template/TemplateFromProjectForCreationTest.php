@@ -71,7 +71,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
         $this->url_verification->method('userCanAccessProject')->willReturn(true);
 
-        $this->project_manager->method('getProject')->with($project_id)->willReturn($project);
+        $this->project_manager->method('getProject')->willReturn($project);
 
         return $project;
     }
@@ -89,7 +89,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
         $project->method('getID')->willReturn($representation->template_id);
         $project->method('isError')->willReturn(true);
 
-        $this->project_manager->method('getProject')->with($representation->template_id)->willReturn($project);
+        $this->project_manager->method('getProject')->willReturn($project);
 
         $this->expectException(ProjectTemplateIDInvalidException::class);
         TemplateFromProjectForCreation::fromRESTRepresentation(
@@ -110,7 +110,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
         $project->method('isActive')->willReturn(false);
         $project->method('isSystem')->willReturn(false);
 
-        $this->project_manager->method('getProject')->with($representation->template_id)->willReturn($project);
+        $this->project_manager->method('getProject')->willReturn($project);
 
         $this->expectException(ProjectTemplateNotActiveException::class);
         TemplateFromProjectForCreation::fromRESTRepresentation(
@@ -131,8 +131,8 @@ final class TemplateFromProjectForCreationTest extends TestCase
         $project->method('isActive')->willReturn(true);
         $project->method('isTemplate')->willReturn(false);
 
-        $this->project_manager->method('getProject')->with($representation->template_id)->willReturn($project);
-        $this->user->method('isAdmin')->with($representation->template_id)->willReturn(false);
+        $this->project_manager->method('getProject')->willReturn($project);
+        $this->user->method('isAdmin')->willReturn(false);
         $this->user->method('getId')->willReturn(102);
 
         $this->expectException(InsufficientPermissionToUseProjectAsTemplateException::class);
@@ -156,7 +156,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
         $this->url_verification->method('userCanAccessProject')->willThrowException(new \Project_AccessPrivateException());
 
-        $this->project_manager->method('getProject')->with($representation->template_id)->willThrowException(new InsufficientPermissionToUseCompanyTemplateException($project));
+        $this->project_manager->method('getProject')->willThrowException(new InsufficientPermissionToUseCompanyTemplateException($project));
 
         $this->expectException(InsufficientPermissionToUseCompanyTemplateException::class);
         TemplateFromProjectForCreation::fromRESTRepresentation(

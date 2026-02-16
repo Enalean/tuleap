@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\DateFormatter;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
@@ -31,44 +31,45 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
     use \Tuleap\GlobalLanguageMock;
     use \Tuleap\GlobalResponseMock;
 
-    private Tracker_FormElementFactory&MockObject $factory;
+    private Tracker_FormElementFactory&Stub $factory;
 
-    private DateField&MockObject $field;
+    private DateField&Stub $field;
 
     private PFUser $current_user;
 
     #[\Override]
     protected function setUp(): void
     {
-        $GLOBALS['Language']->method('getText')->with('system', 'datefmt_short')->willReturn(DateFormatter::DATE_FORMAT);
+        $GLOBALS['Language']->method('getText')
+            ->willReturnMap([['system', 'datefmt_short', DateFormatter::DATE_FORMAT]]);
 
         $this->current_user = UserTestBuilder::buildWithDefaults();
 
-        $this->field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
+        $this->field = $this->createStub(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $this->field->method('getId')->willReturn(102);
         $this->field->method('getLabel')->willReturn('Close Date');
-        $this->field->method('userCanRead')->with($this->current_user)->willReturn(true);
-        $this->field->method('userCanUpdate')->with($this->current_user)->willReturn(true);
+        $this->field->method('userCanRead')->willReturn(true);
+        $this->field->method('userCanUpdate')->willReturn(true);
 
-        $this->factory = $this->createMock(\Tracker_FormElementFactory::class);
-        $this->factory->method('getFormElementById')->with($this->field->getId())->willReturn($this->field);
+        $this->factory = $this->createStub(\Tracker_FormElementFactory::class);
+        $this->factory->method('getFormElementById')->willReturn($this->field);
     }
 
     public function testBeforeShouldSetTheDate(): void
     {
-        $this->field->method('formatDate')->with($_SERVER['REQUEST_TIME'])->willReturn('date-of-today');
+        $this->field->method('formatDate')->willReturn('date-of-today');
 
         $expected = $this->field->formatDate($_SERVER['REQUEST_TIME']);
 
         $fields_data = ['field_id' => 'value'];
-        $transition  = $this->createMock(\Transition::class);
+        $transition  = $this->createStub(\Transition::class);
         $id          = 1;
         $value_type  = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
 
-        $post_action = $this->getMockBuilder(\Transition_PostAction_Field_Date::class)
+        $post_action = $this->getStubBuilder(\Transition_PostAction_Field_Date::class)
             ->setConstructorArgs([$transition, $id, $this->field, $value_type])
             ->onlyMethods(['getFormElementFactory'])
-            ->getMock();
+            ->getStub();
         $post_action->method('getFormElementFactory')->willReturn($this->factory);
 
         $post_action->before($fields_data, $this->current_user);
@@ -77,7 +78,7 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testBeforeShouldClearTheDate(): void
     {
-        $transition  = $this->createMock(\Transition::class);
+        $transition  = $this->createStub(\Transition::class);
         $field_id    = $this->field->getId();
         $id          = 1;
         $fields_data = [
@@ -86,10 +87,10 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
         ];
         $value_type  = Transition_PostAction_Field_Date::CLEAR_DATE;
 
-        $post_action = $this->getMockBuilder(\Transition_PostAction_Field_Date::class)
+        $post_action = $this->getStubBuilder(\Transition_PostAction_Field_Date::class)
             ->setConstructorArgs([$transition, $id, $this->field, $value_type])
             ->onlyMethods(['getFormElementFactory'])
-            ->getMock();
+            ->getStub();
         $post_action->method('getFormElementFactory')->willReturn($this->factory);
 
         $this->field->method('formatDate');
@@ -100,18 +101,18 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testBeforeShouldBypassAndSetTheDate(): void
     {
-        $this->field->method('formatDate')->with($_SERVER['REQUEST_TIME'])->willReturn('date-of-today');
+        $this->field->method('formatDate')->willReturn('date-of-today');
 
         $fields_data = ['field_id' => 'value'];
-        $transition  = $this->createMock(\Transition::class);
+        $transition  = $this->createStub(\Transition::class);
         $field_id    = $this->field->getId();
         $id          = 1;
         $value_type  = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
 
-        $post_action = $this->getMockBuilder(\Transition_PostAction_Field_Date::class)
+        $post_action = $this->getStubBuilder(\Transition_PostAction_Field_Date::class)
             ->setConstructorArgs([$transition, $id, $this->field, $value_type])
             ->onlyMethods(['getFormElementFactory'])
-            ->getMock();
+            ->getStub();
         $post_action->method('getFormElementFactory')->willReturn($this->factory);
 
         $post_action->before($fields_data, $this->current_user);
@@ -121,7 +122,7 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
     public function testBeforeShouldBypassAndClearTheDate(): void
     {
         $submitted_timestamp = 1317817376;
-        $transition          = $this->createMock(\Transition::class);
+        $transition          = $this->createStub(\Transition::class);
         $field_id            = $this->field->getId();
         $id                  = 1;
         $fields_data         = [
@@ -130,10 +131,10 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
         ];
         $value_type          = Transition_PostAction_Field_Date::CLEAR_DATE;
 
-        $post_action = $this->getMockBuilder(\Transition_PostAction_Field_Date::class)
+        $post_action = $this->getStubBuilder(\Transition_PostAction_Field_Date::class)
             ->setConstructorArgs([$transition, $id, $this->field, $value_type])
             ->onlyMethods(['getFormElementFactory'])
-            ->getMock();
+            ->getStub();
         $post_action->method('getFormElementFactory')->willReturn($this->factory);
 
         $this->field->method('formatDate');
@@ -144,25 +145,25 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testBeforeShouldNOTDisplayFeedback(): void
     {
-        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $field->method('getId')->willReturn(102);
         $field->method('getLabel')->willReturn('Close Date');
-        $field->method('userCanRead')->with($this->current_user)->willReturn(false);
+        $field->method('userCanRead')->willReturn(false);
         $field->method('formatDate');
 
 
         $expected    = $field->formatDate($_SERVER['REQUEST_TIME']);
-        $transition  = $this->createMock(\Transition::class);
+        $transition  = $this->createStub(\Transition::class);
         $field_id    = $field->getId();
         $id          = 1;
         $fields_data = [
             'field_id' => 'value',
         ];
         $value_type  = Transition_PostAction_Field_Date::CLEAR_DATE;
-        $post_action = $this->getMockBuilder(\Transition_PostAction_Field_Date::class)
+        $post_action = $this->getStubBuilder(\Transition_PostAction_Field_Date::class)
             ->setConstructorArgs([$transition, $id, $field, $value_type])
             ->onlyMethods(['getFormElementFactory'])
-            ->getMock();
+            ->getStub();
         $post_action->method('getFormElementFactory')->willReturn($this->factory);
         $post_action->before($fields_data, $this->current_user);
         $this->assertEquals($expected, $fields_data[$field_id]);

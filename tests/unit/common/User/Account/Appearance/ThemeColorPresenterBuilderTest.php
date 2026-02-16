@@ -39,7 +39,6 @@ final class ThemeColorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $theme_variant
             ->method('getVariantColorForUser')
-            ->with($user)
             ->willReturn(ThemeVariantColor::Green);
 
         $builder = new ThemeColorPresenterBuilder($theme_variant);

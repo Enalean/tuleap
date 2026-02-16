@@ -568,7 +568,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             </git>
         </project>
         XML;
-        $this->permission_dao->method('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 4);
+        $this->permission_dao->method('addPermission')->willReturnMap([[Git::PERM_ADMIN, $this->project->getId(), 4, true]]);
         self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
@@ -590,7 +590,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $result = [];
         $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn($result);
 
-        $this->permission_dao->method('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 3);
+        $this->permission_dao->method('addPermission')->willReturnMap([[Git::PERM_ADMIN, $this->project->getId(), 3, true]]);
 
         self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }

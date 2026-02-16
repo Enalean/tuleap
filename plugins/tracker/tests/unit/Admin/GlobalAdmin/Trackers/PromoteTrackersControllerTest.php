@@ -73,7 +73,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $project_manager->method('getProject')->with('102')->willReturn($project);
+        $project_manager->method('getProject')->willReturn($project);
 
         $this->csrf = $this->createMock(\CSRFSynchronizerToken::class);
         $this->token_provider->method('getCSRF')->willReturn($this->csrf);

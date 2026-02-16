@@ -131,11 +131,11 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
         );
     }
 
-    public function testItAddEmptyPackages()
+    public function testItAddEmptyPackages(): void
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
         $this->permission_ugroup_retriever->method('getAllUGroupForObject')->willReturn([ProjectUGroup::PROJECT_ADMIN]);
-        $this->ugroup_representation_builder->method('build')->with($this->project, ProjectUGroup::PROJECT_ADMIN)->willReturn(
+        $this->ugroup_representation_builder->method('build')->willReturn(
             $this->project_admin_representation
         );
 
@@ -154,7 +154,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
         $this->assertEquals($expected_packages, $representation);
     }
 
-    public function testItAddReleasesPermissions()
+    public function testItAddReleasesPermissions(): void
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
@@ -217,14 +217,11 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
         $this->assertEquals($expected_packages, $representation);
     }
 
-    public function testItFilterOnAGroupWeFindCorrespondingPackagesAndReleases()
+    public function testItFilterOnAGroupWeFindCorrespondingPackagesAndReleases(): void
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
-        $this->ugroup_representation_builder->method('build')->with(
-            $this->equalTo($this->project),
-            ProjectUGroup::PROJECT_ADMIN
-        )->willReturn(
+        $this->ugroup_representation_builder->method('build')->willReturn(
             $this->project_admin_representation
         );
 
@@ -275,7 +272,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
         $this->assertEquals($expected_packages, $representation);
     }
 
-    public function testItFilterInReleasesEvenIfPackageHasNotThePermission()
+    public function testItFilterInReleasesEvenIfPackageHasNotThePermission(): void
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
@@ -329,11 +326,13 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
-        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->with(
-            $this->equalTo($this->project),
-            $this->equalTo($this->package_id),
-            FRSPackage::PERM_READ
-        )->willReturn([ProjectUGroup::PROJECT_MEMBERS]);
+        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->willReturnMap([[
+            $this->project,
+            $this->package_id,
+            FRSPackage::PERM_READ,
+            [ProjectUGroup::PROJECT_MEMBERS],
+        ],
+        ]);
 
         $this->release_factory->method('getFRSReleasesFromDb')->willReturn([]);
 
@@ -345,7 +344,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
         $this->assertEquals($expected_packages, $representation);
     }
 
-    public function testItDoesNotDisplayReleaseWhenPackageHasTheFilteredPermissionAndTheReleaseHasNotTheFilteredPermission()
+    public function testItDoesNotDisplayReleaseWhenPackageHasTheFilteredPermissionAndTheReleaseHasNotTheFilteredPermission(): void
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 

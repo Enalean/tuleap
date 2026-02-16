@@ -23,7 +23,6 @@ namespace Tuleap\ForgeAccess;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Config\ConfigDao;
-use Event;
 use EventManager;
 use ForgeAccess;
 use ForgeAccess_ForgePropertiesManager;
@@ -36,19 +35,19 @@ final class ForgePropertiesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ForgeAccess_ForgePropertiesManager $forge_properties_manager;
     private ProjectManager&MockObject $project_manager;
-    private ConfigDao&Stub $config_dao;
+    private ConfigDao&MockObject $config_dao;
     private PermissionsManager&Stub $permissions_manager;
     private EventManager&Stub $event_manager;
-    private FRSPermissionCreator&Stub $frs_permissions_manager;
+    private FRSPermissionCreator&MockObject $frs_permissions_manager;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->config_dao              = $this->createStub(ConfigDao::class);
+        $this->config_dao              = $this->createMock(ConfigDao::class);
         $this->project_manager         = $this->createMock(ProjectManager::class);
         $this->permissions_manager     = $this->createStub(PermissionsManager::class);
         $this->event_manager           = $this->createStub(EventManager::class);
-        $this->frs_permissions_manager = $this->createStub(FRSPermissionCreator::class);
+        $this->frs_permissions_manager = $this->createMock(FRSPermissionCreator::class);
 
         $this->forge_properties_manager = new ForgeAccess_ForgePropertiesManager(
             $this->config_dao,
@@ -61,6 +60,8 @@ final class ForgePropertiesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUnknownAccessValueIsRejected(): void
     {
+        $this->config_dao->expects($this->never())->method('save');
+        $this->frs_permissions_manager->expects($this->never())->method('updateSiteAccess');
         $this->project_manager->expects($this->never())->method('disableAllowRestrictedForAll');
 
         $this->expectException(UnknownForgeAccessValueException::class);
@@ -70,11 +71,11 @@ final class ForgePropertiesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateFromRestrictedToAnonymous(): void
     {
-        $this->config_dao->method('save')->with(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        $this->config_dao->expects($this->once())->method('save')->with(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $this->event_manager->method('processEvent')->with(Event::SITE_ACCESS_CHANGE, ['old_value' => ForgeAccess::ANONYMOUS, 'new_value' => ForgeAccess::RESTRICTED]);
+        $this->event_manager->method('processEvent');
 
-        $this->frs_permissions_manager->method('updateSiteAccess')->with(ForgeAccess::ANONYMOUS);
+        $this->frs_permissions_manager->expects($this->once())->method('updateSiteAccess')->with(ForgeAccess::ANONYMOUS);
 
         $this->permissions_manager->method('disableRestrictedAccess');
 

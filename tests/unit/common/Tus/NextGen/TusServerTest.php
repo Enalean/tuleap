@@ -80,7 +80,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('HEAD');
-        $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('1.0.0');
+        $incoming_request->method('getHeaderLine')->willReturnMap([['Tus-Resumable', '1.0.0']]);
 
         $file_information = $this->createStub(TusFileInformation::class);
         $file_information->method('getLength')->willReturn(123456);
@@ -114,7 +114,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $upload_request = $this->createStub(ServerRequestInterface::class);
         $upload_request->method('getMethod')->willReturn('PATCH');
-        $upload_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
+        $upload_request->method('hasHeader')->willReturnMap([['Upload-Offset', true]]);
 
         $upload_request->method('getHeaderLine')->willReturnMap([
             ['Upload-Offset', (string) $upload_offset],
@@ -176,7 +176,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('HEAD');
-        $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('0.2.2');
+        $incoming_request->method('getHeaderLine')->willReturnMap([['Tus-Resumable', '0.2.2']]);
 
         $response = $server->handle($incoming_request);
 
@@ -191,7 +191,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
-        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
+        $incoming_request->method('hasHeader')->willReturnMap([['Upload-Offset', true]]);
 
         $incoming_request->method('getHeaderLine')->willReturnMap([
             ['Upload-Offset', '10'],
@@ -219,7 +219,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
-        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(false);
+        $incoming_request->method('hasHeader')->willReturnMap([['Upload-Offset', false]]);
 
         $incoming_request->method('getHeaderLine')->willReturnMap([
             ['Tus-Resumable', '1.0.0'],
@@ -261,7 +261,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
-        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
+        $incoming_request->method('hasHeader')->willReturnMap([['Upload-Offset', true]]);
 
         $incoming_request->method('getHeaderLine')->willReturnMap([
             ['Upload-Offset', '0'],
@@ -289,7 +289,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
-        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
+        $incoming_request->method('hasHeader')->willReturnMap([['Upload-Offset', true]]);
 
         $incoming_request->method('getHeaderLine')->willReturnMap([
             ['Upload-Offset', '0'],
@@ -341,7 +341,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('DELETE');
-        $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('1.0.0');
+        $incoming_request->method('getHeaderLine')->willReturnMap([['Tus-Resumable', '1.0.0']]);
 
         $this->file_information_provider->method('getFileInformation')->willReturn($this->createStub(TusFileInformation::class));
 
@@ -359,7 +359,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('DELETE');
-        $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('1.0.0');
+        $incoming_request->method('getHeaderLine')->willReturnMap([['Tus-Resumable', '1.0.0']]);
 
         $response = $server->handle($incoming_request);
 
@@ -377,7 +377,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incomplete_upload_request = $this->createStub(ServerRequestInterface::class);
         $incomplete_upload_request->method('getMethod')->willReturn('PATCH');
-        $incomplete_upload_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
+        $incomplete_upload_request->method('hasHeader')->willReturnMap([['Upload-Offset', true]]);
 
         $incomplete_upload_request->method('getHeaderLine')->willReturnMap([
             ['Upload-Offset', '0'],
@@ -410,7 +410,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $incoming_request = $this->createStub(ServerRequestInterface::class);
         $incoming_request->method('getMethod')->willReturn('PATCH');
-        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
+        $incoming_request->method('hasHeader')->willReturnMap([['Upload-Offset', true]]);
 
         $incoming_request->method('getHeaderLine')->willReturnMap([
             ['Upload-Offset', '0'],

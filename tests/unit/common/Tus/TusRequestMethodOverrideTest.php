@@ -32,7 +32,7 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testMethodCanBeOverridden(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('PATCH');
+        $request->method('getHeaderLine')->willReturnMap([['X-Http-Method-Override', 'PATCH']]);
         $request->method('getMethod')->willReturn('POST');
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
@@ -46,7 +46,7 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testMethodIsLeftUntouchedWhenThereIsNoOverrideHeader(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('');
+        $request->method('getHeaderLine')->willReturnMap([['X-Http-Method-Override', '']]);
 
         $request->expects($this->never())->method('withMethod');
 
@@ -59,7 +59,7 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRequestIsRejectedIfTheMethodToOverrideIsNotAllowed(): void
     {
         $request = $this->createStub(ServerRequestInterface::class);
-        $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('PATCH');
+        $request->method('getHeaderLine')->willReturnMap([['X-Http-Method-Override', 'PATCH']]);
         $request->method('getMethod')->willReturn('GET');
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
@@ -73,7 +73,7 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRequestIsRejectedIfTheRequestedOverrideMethodIsNotAllowed(): void
     {
         $request = $this->createStub(ServerRequestInterface::class);
-        $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('LOCK');
+        $request->method('getHeaderLine')->willReturnMap([['X-Http-Method-Override', 'LOCK']]);
         $request->method('getMethod')->willReturn('PATCH');
 
         $response_factory = HTTPFactoryBuilder::responseFactory();

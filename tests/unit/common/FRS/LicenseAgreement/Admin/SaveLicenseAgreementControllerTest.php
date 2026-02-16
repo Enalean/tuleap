@@ -69,19 +69,19 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->service_file = $this->createStub(\ServiceFile::class);
         $this->project      = $this->createConfiguredStub(Project::class, ['getID' => '101']);
-        $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
+        $this->project->method('getService')->willReturnMap([[\Service::FILE, $this->service_file]]);
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
         $this->project_retriever->expects($this->once())->method('getProjectFromId')
             ->with('101')
             ->willReturn($this->project);
 
         $this->permissions_manager = $this->createStub(FRSPermissionManager::class);
-        $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(true);
+        $this->permissions_manager->method('isAdmin')->willReturn(true);
 
         $this->factory = $this->createMock(LicenseAgreementFactory::class);
 
-        $this->helper = $this->createStub(LicenseAgreementControllersHelper::class);
-        $this->helper->method('assertCanAccess')->with($this->project, $this->current_user);
+        $this->helper = $this->createMock(LicenseAgreementControllersHelper::class);
+        $this->helper->expects($this->once())->method('assertCanAccess')->with($this->project, $this->current_user);
 
         $this->controller = new SaveLicenseAgreementController(
             $this->project_retriever,

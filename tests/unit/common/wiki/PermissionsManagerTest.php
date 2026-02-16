@@ -48,7 +48,7 @@ final class Wiki_PermissionsManagerTest extends TestCase //phpcs:ignore PSR1.Cla
 
         $this->permission_manager = $this->createStub(PermissionsManager::class);
         $project_manager          = $this->createStub(ProjectManager::class);
-        $project_manager->method('getProject')->with(200)->willReturn($this->project);
+        $project_manager->method('getProject')->willReturn($this->project);
 
         $this->wiki_permissions_manager = new Wiki_PermissionsManager(
             $this->permission_manager,

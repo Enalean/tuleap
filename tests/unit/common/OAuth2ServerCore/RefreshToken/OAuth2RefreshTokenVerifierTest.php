@@ -41,7 +41,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private SplitTokenVerificationStringHasher&Stub $hasher;
     private OAuth2RefreshTokenDAO&MockObject $dao;
     private OAuth2ScopeRetriever&Stub $scope_retriever;
-    private OAuth2AuthorizationCodeRevoker&Stub $auth_code_revoker;
+    private OAuth2AuthorizationCodeRevoker&MockObject $auth_code_revoker;
     private OAuth2RefreshTokenVerifier $verifier;
 
     #[\Override]
@@ -50,7 +50,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->hasher            = $this->createStub(SplitTokenVerificationStringHasher::class);
         $this->dao               = $this->createMock(OAuth2RefreshTokenDAO::class);
         $this->scope_retriever   = $this->createStub(OAuth2ScopeRetriever::class);
-        $this->auth_code_revoker = $this->createStub(OAuth2AuthorizationCodeRevoker::class);
+        $this->auth_code_revoker = $this->createMock(OAuth2AuthorizationCodeRevoker::class);
         $this->verifier          = new OAuth2RefreshTokenVerifier(
             $this->hasher,
             $this->dao,
@@ -79,6 +79,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects($this->once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
         $this->scope_retriever->method('getScopesBySplitToken')->willReturn([OAuth2TestScope::fromItself()]);
+        $this->auth_code_revoker->expects($this->never())->method('revokeByAuthCodeId');
 
         $verified_refresh_token = $this->verifier->getRefreshToken($app, $refresh_token);
 
@@ -93,6 +94,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
         $this->dao->expects($this->once())->method('searchRefreshTokenByID')->willReturn(null);
+        $this->auth_code_revoker->expects($this->never())->method('revokeByAuthCodeId');
 
         $this->expectException(OAuth2RefreshTokenNotFoundException::class);
         $this->verifier->getRefreshToken($this->buildApp(), $refresh_token);
@@ -110,6 +112,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(false);
+        $this->auth_code_revoker->expects($this->never())->method('revokeByAuthCodeId');
 
         $this->expectException(InvalidOAuth2RefreshTokenException::class);
         $this->verifier->getRefreshToken($this->buildApp(), $refresh_token);
@@ -130,7 +133,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);
-        $this->auth_code_revoker->method('revokeByAuthCodeId')->with(12);
+        $this->auth_code_revoker->expects($this->once())->method('revokeByAuthCodeId')->with(12);
 
         $this->expectException(OAuth2RefreshTokenReusedException::class);
         $this->verifier->getRefreshToken($this->buildApp(), $refresh_token);
@@ -150,6 +153,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);
+        $this->auth_code_revoker->expects($this->never())->method('revokeByAuthCodeId');
 
         $this->expectException(OAuth2RefreshTokenExpiredException::class);
         $this->verifier->getRefreshToken($this->buildApp(), $refresh_token);
@@ -173,6 +177,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects($this->once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
         $this->scope_retriever->method('getScopesBySplitToken')->willReturn([]);
+        $this->auth_code_revoker->expects($this->never())->method('revokeByAuthCodeId');
 
         $this->expectException(OAuth2RefreshTokenNoValidScopeFound::class);
         $this->verifier->getRefreshToken($app, $refresh_token);
@@ -196,6 +201,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects($this->once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
         $this->scope_retriever->method('getScopesBySplitToken')->willReturn([]);
+        $this->auth_code_revoker->expects($this->never())->method('revokeByAuthCodeId');
 
         $this->expectException(OAuth2RefreshTokenDoesNotCorrespondToExpectedAppException::class);
         $this->verifier->getRefreshToken($app, $refresh_token);

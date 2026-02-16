@@ -78,8 +78,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with('global', 'none')
-            ->willReturn('None');
+            ->willReturnMap([['global', 'none', 'None']]);
 
         $report      = $this->buildReportWithCriteria();
         $report_json = $this->builder->buildReportCriteriaJson($report);
@@ -133,7 +132,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildReportWithCriteria(): Tracker_Report
     {
-        $report                    = $this->createMock(Tracker_Report::class);
+        $report                    = $this->createStub(Tracker_Report::class);
         $report->is_in_expert_mode = false;
 
         $criteria = [
@@ -169,7 +168,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildStringCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $string_field = $this->createMock(StringField::class);
+        $string_field = $this->createStub(StringField::class);
 
         $criterion_string = new Tracker_Report_Criteria(
             1,
@@ -185,7 +184,6 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $string_field
             ->method('getCriteriaValue')
-            ->with($criterion_string)
             ->willReturn('Test');
 
         return $criterion_string;
@@ -193,7 +191,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildAdvancedDateCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $date_field = $this->createMock(DateField::class);
+        $date_field = $this->createStub(DateField::class);
 
         $criterion_date = new Tracker_Report_Criteria(
             2,
@@ -209,7 +207,6 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $date_field
             ->method('getCriteriaValue')
-            ->with($criterion_date)
             ->willReturn([
                 'op' => '=',
                 'from_date' => '1627768800',
@@ -221,7 +218,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildUserListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $list_user_field = $this->createMock(ListField::class);
+        $list_user_field = $this->createStub(ListField::class);
 
         $criterion_user_list = new Tracker_Report_Criteria(
             3,
@@ -231,7 +228,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             0
         );
 
-        $user_bind = $this->createMock(ListFieldUserBind::class);
+        $user_bind = $this->createStub(ListFieldUserBind::class);
         $user_bind
             ->method('getValue')
             ->willReturnMap([
@@ -245,7 +242,6 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $list_user_field
             ->method('getCriteriaValue')
-            ->with($criterion_user_list)
             ->willReturn(['101', '102']);
 
         $list_user_field
@@ -257,7 +253,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildUserGroupListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $list_groups_field = $this->createMock(ListField::class);
+        $list_groups_field = $this->createStub(ListField::class);
 
         $criterion_groups_list = new Tracker_Report_Criteria(
             4,
@@ -267,13 +263,13 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             0
         );
 
-        $ugroup_01 = $this->createMock(ProjectUGroup::class);
+        $ugroup_01 = $this->createStub(ProjectUGroup::class);
         $ugroup_01->method('getTranslatedName')->willReturn('Ugroup01');
 
-        $ugroup_02 = $this->createMock(ProjectUGroup::class);
+        $ugroup_02 = $this->createStub(ProjectUGroup::class);
         $ugroup_02->method('getTranslatedName')->willReturn('Ugroup02');
 
-        $group_bind = $this->createMock(ListFieldUserGroupBind::class);
+        $group_bind = $this->createStub(ListFieldUserGroupBind::class);
         $group_bind
             ->method('getValue')
             ->willReturnMap([
@@ -287,7 +283,6 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $list_groups_field
             ->method('getCriteriaValue')
-            ->with($criterion_groups_list)
             ->willReturn(['115', '172']);
 
         $list_groups_field
@@ -299,7 +294,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildStaticListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $list_static_field = $this->createMock(ListField::class);
+        $list_static_field = $this->createStub(ListField::class);
 
         $criterion_static_list = new Tracker_Report_Criteria(
             5,
@@ -309,7 +304,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             0
         );
 
-        $static_bind = $this->createMock(ListFieldStaticBind::class);
+        $static_bind = $this->createStub(ListFieldStaticBind::class);
         $static_bind
             ->method('getValue')
             ->willReturnMap([
@@ -323,7 +318,6 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $list_static_field
             ->method('getCriteriaValue')
-            ->with($criterion_static_list)
             ->willReturn(['100', '299', '300']);
 
         $list_static_field
@@ -335,7 +329,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildStaticOpenListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $open_list_static_field = $this->createMock(OpenListField::class);
+        $open_list_static_field = $this->createStub(OpenListField::class);
 
         $criterion_open_list_static = new Tracker_Report_Criteria(
             6,
@@ -351,13 +345,11 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $open_list_static_field
             ->method('getCriteriaValue')
-            ->with($criterion_open_list_static)
             ->willReturn('b14,b15,!abc');
 
         $uuid_factory = new DatabaseUUIDV7Factory();
         $open_list_static_field
             ->method('extractCriteriaValue')
-            ->with('b14,b15,!abc')
             ->willReturn([
                 ListStaticValueBuilder::aStaticValue('a')->withId(14)->build(),
                 ListStaticValueBuilder::aStaticValue('b')->withId(15)->build(),
@@ -372,7 +364,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildNotSetListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $list_static_field = $this->createMock(ListField::class);
+        $list_static_field = $this->createStub(ListField::class);
 
         $criterion_static_list = new Tracker_Report_Criteria(
             5,
@@ -388,7 +380,6 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $list_static_field
             ->method('getCriteriaValue')
-            ->with($criterion_static_list)
             ->willReturn('');
 
         return $criterion_static_list;
@@ -396,7 +387,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildNotSetOpenListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $open_list_static_field = $this->createMock(OpenListField::class);
+        $open_list_static_field = $this->createStub(OpenListField::class);
 
         $criterion_open_list_static = new Tracker_Report_Criteria(
             8,
@@ -412,7 +403,6 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $open_list_static_field
             ->method('getCriteriaValue')
-            ->with($criterion_open_list_static)
             ->willReturn('');
 
         return $criterion_open_list_static;
@@ -420,7 +410,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildListCriterionWithInvalidValue(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $field = $this->createMock(ListField::class);
+        $field = $this->createStub(ListField::class);
 
         $criterion_with_invalid_value = new Tracker_Report_Criteria(
             5,
@@ -441,7 +431,6 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $field
             ->method('getCriteriaValue')
-            ->with($criterion_with_invalid_value)
             ->willReturn(['404']);
 
         return $criterion_with_invalid_value;
@@ -475,7 +464,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildNotSetDateCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $date_field = $this->createMock(DateField::class);
+        $date_field = $this->createStub(DateField::class);
 
         $criterion_date = new Tracker_Report_Criteria(
             9,
@@ -491,7 +480,6 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
         $date_field
             ->method('getCriteriaValue')
-            ->with($criterion_date)
             ->willReturn([]);
 
         return $criterion_date;

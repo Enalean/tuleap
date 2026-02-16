@@ -47,7 +47,7 @@ final class UGroupManagerGetUGroupWithMembersTest extends \Tuleap\Test\PHPUnit\T
     public function testItReturnsAUGroupWithMembers(): void
     {
         $ugroup = $this->createMock(\ProjectUGroup::class);
-        $this->ugroup_manager->method('getUGroup')->with($this->project, $this->ugroup_id)->willReturn($ugroup);
+        $this->ugroup_manager->method('getUGroup')->willReturn($ugroup);
 
         $ugroup->expects($this->once())->method('getMembers');
 

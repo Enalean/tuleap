@@ -50,7 +50,7 @@ final class RejectNonHTTPSRequestMiddlewareTest extends \Tuleap\Test\PHPUnit\Tes
 
         $handler           = $this->createStub(RequestHandlerInterface::class);
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
-        $handler->method('handle')->with($server_request)->willReturn($expected_response);
+        $handler->method('handle')->willReturn($expected_response);
 
         $response = $this->middleware->process($server_request, $handler);
         self::assertEquals($expected_response, $response);

@@ -67,13 +67,13 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_user          = UserTestBuilder::aUser()->withId(102)->build();
         $required_scope         = $this->buildRequiredScope();
         $expected_authorization = new GrantedAuthorization($expected_user, [$required_scope]);
-        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
+        $this->user_manager->method('getUserById')->willReturn($expected_user);
 
         $access_token = new SplitToken(
             1,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->method('searchAccessToken')->with($access_token->getID())->willReturn(
+        $this->dao->method('searchAccessToken')->willReturn(
             [
                 'user_id'         => $expected_user->getId(),
                 'verifier'        => 'expected_hashed_verification_string',
@@ -93,7 +93,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $access_token = $this->createStub(SplitToken::class);
         $access_token->method('getID')->willReturn(404);
 
-        $this->dao->method('searchAccessToken')->with($access_token->getID())->willReturn(null);
+        $this->dao->method('searchAccessToken')->willReturn(null);
 
         $this->expectException(OAuth2AccessTokenNotFoundException::class);
         $this->verifier->getGrantedAuthorization($access_token, $this->buildRequiredScope());
@@ -106,7 +106,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             new SplitTokenVerificationString(new ConcealedString('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'))
         );
 
-        $this->dao->method('searchAccessToken')->with($access_token->getID())->willReturn(
+        $this->dao->method('searchAccessToken')->willReturn(
             ['user_id' => 102, 'verifier' => 'expected_hashed_verification_string']
         );
         $this->hasher->method('verifyHash')->willReturn(false);
@@ -122,7 +122,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
 
-        $this->dao->method('searchAccessToken')->with($access_token->getID())->willReturn(
+        $this->dao->method('searchAccessToken')->willReturn(
             [
                 'user_id'         => 102,
                 'verifier'        => 'expected_hashed_verification_string',
@@ -143,7 +143,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             3,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->method('searchAccessToken')->with($access_token->getID())->willReturn(
+        $this->dao->method('searchAccessToken')->willReturn(
             [
                 'user_id'         => 404,
                 'verifier'        => 'expected_hashed_verification_string',
@@ -162,13 +162,13 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testVerificationFailsWhenTheRequiredScopeCannotBeApproved(AuthenticationScope ...$scopes_matching_access_token): void
     {
         $expected_user = new \PFUser(['user_id' => 103, 'language_id' => 'en']);
-        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
+        $this->user_manager->method('getUserById')->willReturn($expected_user);
 
         $access_token = new SplitToken(
             4,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->method('searchAccessToken')->with($access_token->getID())->willReturn(
+        $this->dao->method('searchAccessToken')->willReturn(
             [
                 'user_id'         => $expected_user->getId(),
                 'verifier'        => 'expected_hashed_verification_string',

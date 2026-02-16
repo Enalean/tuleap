@@ -297,8 +297,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $GLOBALS['Language']
             ->method('getContent')
-            ->with('include/restricted_user_permissions', 'en_US')
-            ->willReturn($default_file);
+            ->willReturnMap([['include/restricted_user_permissions', 'en_US', $default_file]]);
 
         $this->assertEquals(ForgeConfig::getSuperPublicProjectsFromRestrictedFile(), []);
     }
@@ -309,8 +308,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $GLOBALS['Language']
             ->method('getContent')
-            ->with('include/restricted_user_permissions', 'en_US')
-            ->willReturn($customised_file);
+            ->willReturnMap([['include/restricted_user_permissions', 'en_US', $customised_file]]);
 
         $this->assertEquals(ForgeConfig::getSuperPublicProjectsFromRestrictedFile(), [123, 456]);
     }
@@ -321,8 +319,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $GLOBALS['Language']
             ->method('getContent')
-            ->with('include/restricted_user_permissions', 'en_US')
-            ->willReturn($customised_file);
+            ->willReturnMap([['include/restricted_user_permissions', 'en_US', $customised_file]]);
 
         ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
 

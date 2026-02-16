@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Dashboard\Project;
 
 use SimpleXMLElement;
+use Tuleap\Event\Dispatchable;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 
@@ -70,13 +71,15 @@ final class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImp
         $widget->method('isUnique');
         $widget->method('create');
 
-        $this->event_manager->method('processEvent')->with(self::callback(function (ConfigureAtXMLImport $event) {
-            $event->setContentId(35);
-            $event->setWidgetIsConfigured();
+        $this->event_manager->method('processEvent')->willReturnCallback(function (Dispatchable|string $event) {
+            if ($event instanceof ConfigureAtXMLImport) {
+                $event->setContentId(35);
+                $event->setWidgetIsConfigured();
+            }
             return true;
-        }));
+        });
 
-        $this->widget_factory->method('getInstanceByWidgetName')->with('plugin_agiledashboard_projects_kanban')->willReturn($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturnMap([['plugin_agiledashboard_projects_kanban', $widget]]);
 
         $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('kanban', 35, 122, 1);
 

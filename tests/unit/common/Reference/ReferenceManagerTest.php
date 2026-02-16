@@ -286,7 +286,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItInsertsLinkForMentionAtTheBeginningOfTheString(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('username')->willReturn(UserTestBuilder::aUser()->withUserName('username')->build());
+        $this->user_manager->method('getUserByUserName')->willReturn(UserTestBuilder::aUser()->withUserName('username')->build());
 
         $html = '@username';
         $this->rm->insertReferences($html, 0);
@@ -295,7 +295,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItDoesNotInsertsLinkForUserThatDoNotExist(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('username')->willReturn(null);
+        $this->user_manager->method('getUserByUserName')->willReturn(null);
 
         $html = '@username';
         $this->rm->insertReferences($html, 0);
@@ -304,7 +304,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItInsertsLinkForMentionAtTheMiddleOfTheString(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('username')->willReturn(UserTestBuilder::aUser()->withUserName('username')->build());
+        $this->user_manager->method('getUserByUserName')->willReturn(UserTestBuilder::aUser()->withUserName('username')->build());
 
         $html = '/cc @username';
         $this->rm->insertReferences($html, 0);
@@ -313,7 +313,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItInsertsLinkForMentionWhenPointAtTheMiddle(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('user.name')->willReturn(UserTestBuilder::aUser()->withUserName('user.name')->build());
+        $this->user_manager->method('getUserByUserName')->willReturn(UserTestBuilder::aUser()->withUserName('user.name')->build());
 
         $html = '/cc @user.name';
         $this->rm->insertReferences($html, 0);
@@ -322,7 +322,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItInsertsLinkForMentionWhenHyphenAtTheMiddle(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('user-name')->willReturn(UserTestBuilder::aUser()->withUserName('user-name')->build());
+        $this->user_manager->method('getUserByUserName')->willReturn(UserTestBuilder::aUser()->withUserName('user-name')->build());
 
         $html = '/cc @user-name';
         $this->rm->insertReferences($html, 0);
@@ -331,7 +331,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItInsertsLinkForMentionWhenUnderscoreAtTheMiddle(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('user_name')->willReturn(UserTestBuilder::aUser()->withUserName('user_name')->build());
+        $this->user_manager->method('getUserByUserName')->willReturn(UserTestBuilder::aUser()->withUserName('user_name')->build());
 
         $html = '/cc @user_name';
         $this->rm->insertReferences($html, 0);
@@ -340,7 +340,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItDoesNotInsertsLinkIfInvalidCharacterAtBeginning(): void
     {
-        $this->user_manager->method('getUserByUserName')->with('1username')->willReturn(UserTestBuilder::buildWithDefaults());
+        $this->user_manager->method('getUserByUserName')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $html = '@1username';
         $this->rm->insertReferences($html, 0);
