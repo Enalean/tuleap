@@ -11,6 +11,7 @@
     "@tuleap/date-helper": "workspace:^",
     "@tuleap/dom": "workspace:^",
     "@tuleap/drag-and-drop": "workspace:^",
+    "@tuleap/drag-autoscroll": "workspace:^",
     "@tuleap/fault": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/gettext": "workspace:^",

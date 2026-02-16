@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, it, expect, vi, type MockInstance } from "vitest";
 import {
-    DragAutoscrollService,
+    getDragAutoscroll,
     calculateScrollSpeed,
     SCROLL_ZONE_SIZE,
     MAX_SCROLL_SPEED,
     MIN_SCROLL_SPEED,
-    type IDragAutoscrollService,
-} from "./drag-autoscroll-service";
+    type DragAutoscroll,
+} from "./drag-autoscroll";
 
-describe("DragAutoscrollService", () => {
+describe("drag-autoscroll", () => {
     describe("calculateScrollSpeed()", () => {
         it("should return MAX_SCROLL_SPEED when distance is 0 (at the edge)", () => {
             expect(calculateScrollSpeed(0, SCROLL_ZONE_SIZE)).toBe(MAX_SCROLL_SPEED);
@@ -43,85 +44,87 @@ describe("DragAutoscrollService", () => {
         });
     });
 
-    describe("Service Instance", () => {
-        let service: IDragAutoscrollService;
-        let add_event_listener_spy: jest.SpyInstance;
-        let remove_event_listener_spy: jest.SpyInstance;
-        let scroll_by_mock: jest.SpyInstance;
+    describe("DragAutoscroll Instance", () => {
+        let drag_autoscroll: DragAutoscroll;
+        let add_event_listener_spy: MockInstance;
+        let remove_event_listener_spy: MockInstance;
+        let scroll_by_mock: MockInstance;
+
+        const track_pointer_event = "pointermove";
 
         beforeEach(() => {
-            jest.useFakeTimers();
+            vi.useFakeTimers();
 
             Object.defineProperty(window, "innerHeight", { writable: true, value: 1000 });
 
-            scroll_by_mock = jest.spyOn(window, "scrollBy").mockImplementation();
+            scroll_by_mock = vi.spyOn(window, "scrollBy").mockImplementation((): void => {});
 
-            add_event_listener_spy = jest.spyOn(document, "addEventListener");
-            remove_event_listener_spy = jest.spyOn(document, "removeEventListener");
+            add_event_listener_spy = vi.spyOn(document, "addEventListener");
+            remove_event_listener_spy = vi.spyOn(document, "removeEventListener");
 
-            service = DragAutoscrollService(window);
+            drag_autoscroll = getDragAutoscroll(window, track_pointer_event);
         });
 
         describe("Lifecycle & Events", () => {
             describe("start()", () => {
-                it("should add pointermove event listener", () => {
-                    service.start();
+                it("should add the provided event listener", () => {
+                    drag_autoscroll.start();
                     expect(add_event_listener_spy).toHaveBeenCalledWith(
-                        "pointermove",
+                        track_pointer_event,
                         expect.any(Function),
                     );
                 });
 
                 it("should trigger scrolling loop when started in a scroll zone", () => {
-                    service.start();
+                    drag_autoscroll.start();
 
                     const handle_pointer_move = add_event_listener_spy.mock.calls[0][1] as (event: {
                         clientY: number;
                     }) => void;
                     handle_pointer_move({ clientY: 0 });
 
-                    jest.runOnlyPendingTimers();
+                    vi.runOnlyPendingTimers();
 
                     expect(scroll_by_mock).toHaveBeenCalled();
                 });
 
                 it("should not double the scroll speed/calls if started twice", () => {
-                    service.start();
+                    drag_autoscroll.start();
                     const handle_pointer_move = add_event_listener_spy.mock.calls[0][1] as (event: {
                         clientY: number;
                     }) => void;
                     handle_pointer_move({ clientY: 0 });
 
-                    service.start();
+                    drag_autoscroll.start();
 
                     scroll_by_mock.mockClear();
-                    jest.runOnlyPendingTimers();
+                    vi.runOnlyPendingTimers();
 
                     expect(scroll_by_mock).toHaveBeenCalledTimes(1);
                 });
             });
 
             describe("stop()", () => {
-                it("should remove the exact same pointermove event listener that was added", () => {
-                    service.start();
+                it("should remove the exact same provided event listener that was added", () => {
+                    drag_autoscroll.start();
                     const added_handler = add_event_listener_spy.mock.calls[0][1];
 
-                    service.stop();
+                    drag_autoscroll.stop();
 
                     expect(remove_event_listener_spy).toHaveBeenCalledWith(
-                        "pointermove",
+                        track_pointer_event,
                         added_handler,
                     );
                 });
 
                 it("should stop scrolling even if time passes", () => {
-                    service.start();
-                    jest.runOnlyPendingTimers();
+                    drag_autoscroll.start();
+                    vi.runOnlyPendingTimers();
                     scroll_by_mock.mockClear();
 
-                    service.stop();
+                    drag_autoscroll.stop();
 
-                    jest.runOnlyPendingTimers();
+                    vi.runOnlyPendingTimers();
 
                     expect(scroll_by_mock).not.toHaveBeenCalled();
                 });
@@ -132,7 +135,7 @@ describe("DragAutoscrollService", () => {
             let handle_pointer_move: (event: { clientY: number }) => void;
 
             beforeEach(() => {
-                service.start();
+                drag_autoscroll.start();
                 handle_pointer_move = add_event_listener_spy.mock.calls[0][1] as (event: {
                     clientY: number;
                 }) => void;
@@ -140,14 +143,14 @@ describe("DragAutoscrollService", () => {
 
             it("should NOT scroll when pointer is in the middle of the screen", () => {
                 handle_pointer_move({ clientY: 500 });
-                jest.runOnlyPendingTimers();
+                vi.runOnlyPendingTimers();
 
                 expect(scroll_by_mock).not.toHaveBeenCalled();
             });
 
             it("should scroll UP (negative delta) when pointer is in the top zone", () => {
                 handle_pointer_move({ clientY: 10 });
-                jest.runOnlyPendingTimers();
+                vi.runOnlyPendingTimers();
 
                 expect(scroll_by_mock).toHaveBeenCalled();
                 const scroll_args = scroll_by_mock.mock.calls[0];
@@ -156,7 +159,7 @@ describe("DragAutoscrollService", () => {
 
             it("should scroll DOWN (positive delta) when pointer is in the bottom zone", () => {
                 handle_pointer_move({ clientY: 990 });
-                jest.runOnlyPendingTimers();
+                vi.runOnlyPendingTimers();
 
                 expect(scroll_by_mock).toHaveBeenCalled();
                 const scroll_args = scroll_by_mock.mock.calls[0];

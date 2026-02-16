@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { useDragAutoscrollWithPointerEvents } from "@tuleap/drag-autoscroll";
-
-export const drag_autoscroll_service = useDragAutoscrollWithPointerEvents();
+export {
+    useDragAutoscrollWithPointerEvents,
+    useDragAutoscrollWithDraggableEvents,
+} from "./drag-autoscroll";
