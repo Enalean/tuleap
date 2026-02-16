@@ -20,28 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow;
+namespace Tuleap\Tracker\Workflow\FieldDependencies;
 
-use Tuleap\Tracker\Tracker;
-use Workflow;
+use Override;
+use Tracker_Rule_List_Factory;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-final class WorkflowUrlBuilder
+final readonly class FieldDependenciesUsageByFieldProvider implements ProvideFieldDependenciesUsageByField
 {
-    private static function buildUrl(Tracker $tracker, string $func): string
+    public function __construct(private Tracker_Rule_List_Factory $rule_list_factory)
     {
-        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
-            'tracker' => $tracker->getId(),
-            'func'    => $func,
-        ]);
     }
 
-    public static function buildGlobalRulesUrl(Tracker $tracker): string
+    #[Override]
+    public function isFieldUsedInFieldDependencies(TrackerField $field): bool
     {
-        return self::buildUrl($tracker, Workflow::FUNC_ADMIN_RULES);
-    }
-
-    public static function buildFieldDependenciesUrl(Tracker $tracker): string
-    {
-        return self::buildUrl($tracker, Workflow::FUNC_ADMIN_DEPENDENCIES);
+        return array_any(
+            $this->rule_list_factory->searchByTrackerId($field->getTrackerId()),
+            fn($rule): bool => $rule->isUsedInRule($field->getId())
+        );
     }
 }

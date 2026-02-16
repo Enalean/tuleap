@@ -20,28 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow;
+namespace Tuleap\Tracker\Workflow\FieldDependencies;
 
-use Tuleap\Tracker\Tracker;
-use Workflow;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-final class WorkflowUrlBuilder
+interface ProvideFieldDependenciesUsageByField
 {
-    private static function buildUrl(Tracker $tracker, string $func): string
-    {
-        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
-            'tracker' => $tracker->getId(),
-            'func'    => $func,
-        ]);
-    }
-
-    public static function buildGlobalRulesUrl(Tracker $tracker): string
-    {
-        return self::buildUrl($tracker, Workflow::FUNC_ADMIN_RULES);
-    }
-
-    public static function buildFieldDependenciesUrl(Tracker $tracker): string
-    {
-        return self::buildUrl($tracker, Workflow::FUNC_ADMIN_DEPENDENCIES);
-    }
+    public function isFieldUsedInFieldDependencies(TrackerField $field): bool;
 }

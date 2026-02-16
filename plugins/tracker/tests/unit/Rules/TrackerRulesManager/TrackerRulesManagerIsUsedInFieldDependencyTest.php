@@ -38,6 +38,8 @@ use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Workflow\FieldDependencies\FieldDependenciesUsageByFieldProvider;
+use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -61,6 +63,8 @@ final class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
         $tracker_rules_list_validator = $this->createMock(TrackerRulesListValidator::class);
         $tracker_rules_date_validator = $this->createMock(TrackerRulesDateValidator::class);
         $tracker_factory              = $this->createMock(TrackerFactory::class);
+        $rule_list_factory            = $this->createMock(Tracker_Rule_List_Factory::class);
+        $rule_date_factory            = $this->createMock(Tracker_Rule_Date_Factory::class);
 
         $this->tracker_rules_manager = $this->getMockBuilder(Tracker_RulesManager::class)
             ->onlyMethods(['getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'])
@@ -71,9 +75,11 @@ final class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
                 $tracker_rules_date_validator,
                 $tracker_factory,
                 new NullLogger(),
-                $this->createMock(Tracker_Rule_List_Factory::class),
-                $this->createMock(Tracker_Rule_Date_Factory::class),
+                $rule_list_factory,
+                $rule_date_factory,
                 $this->createMock(Tracker_RuleFactory::class),
+                new GlobalRulesUsageByFieldProvider($rule_date_factory),
+                new FieldDependenciesUsageByFieldProvider($rule_list_factory),
             ])->getMock();
 
         $this->a_field_not_used_in_rules = SelectboxFieldBuilder::aSelectboxField(14)->build();
@@ -95,8 +101,8 @@ final class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
             ->setTargetFieldId($target_field_date->getId())
             ->setComparator('<');
 
-        $this->tracker_rules_manager->method('getAllListRulesByTrackerWithOrder')->willReturn([$rules_list]);
-        $this->tracker_rules_manager->method('getAllDateRulesByTrackerId')->willReturn([$rules_date]);
+        $rule_list_factory->method('searchByTrackerId')->willReturn([$rules_list]);
+        $rule_date_factory->method('searchByTrackerId')->willReturn([$rules_date]);
     }
 
     public function testItReturnsTrueIfTheFieldIsUsedInARuleList()

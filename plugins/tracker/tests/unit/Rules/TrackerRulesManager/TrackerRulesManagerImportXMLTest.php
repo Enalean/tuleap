@@ -30,6 +30,8 @@ use Tracker_RulesManager;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByFieldStub;
+use Tuleap\Tracker\Test\Stub\Workflow\ProvideGlobalRulesUsageByFieldStub;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -67,7 +69,9 @@ XML;
             new NullLogger(),
             $list_factory,
             $date_factory,
-            $this->createMock(Tracker_RuleFactory::class)
+            $this->createMock(Tracker_RuleFactory::class),
+            ProvideGlobalRulesUsageByFieldStub::withGlobalRules(),
+            ProvideFieldDependenciesUsageByFieldStub::withFieldDependencies()
         );
 
         $manager->exportToXml($sax_object, $xmlMapping);

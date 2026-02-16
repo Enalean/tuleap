@@ -23,14 +23,35 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Admin;
 
 use Override;
+use Tracker_FormElement_Field_List_BindFactory;
+use Tracker_FormElementFactory;
+use Tracker_Rule_Date_Dao;
+use Tracker_Rule_Date_Factory;
+use Tracker_Rule_List_Dao;
+use Tracker_Rule_List_Factory;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
+use Tuleap\Tracker\Workflow\FieldDependencies\FieldDependenciesUsageByFieldProvider;
+use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\WorkflowFieldUsageDecoratorsProvider;
 
 final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOfLabelDecoratorsForField
 {
     public function __construct(public WorkflowFieldUsageDecoratorsProvider $workflow_field_usage_decorators)
     {
+    }
+
+    public static function build(): self
+    {
+        return new self(new WorkflowFieldUsageDecoratorsProvider(
+            new GlobalRulesUsageByFieldProvider(
+                new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance())
+            ),
+            new FieldDependenciesUsageByFieldProvider(
+                new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory())),
+            )
+        ));
     }
 
     #[Override]
