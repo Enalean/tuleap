@@ -25,6 +25,7 @@ describe("CheckboxFieldController", () => {
         const checkbox_one = {
             id: 1,
             label: "One",
+            is_hidden: false,
         };
 
         const presenter = CheckboxFieldController(
@@ -36,14 +37,17 @@ describe("CheckboxFieldController", () => {
                     {
                         id: 2,
                         label: "Two",
+                        is_hidden: false,
                     },
                     {
                         id: 3,
                         label: "Three",
+                        is_hidden: false,
                     },
                     {
                         id: 4,
                         label: "Four",
+                        is_hidden: false,
                     },
                 ],
                 required: true,

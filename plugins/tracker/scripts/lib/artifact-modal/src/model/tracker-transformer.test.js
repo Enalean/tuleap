@@ -300,7 +300,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
             });
 
             describe("containing list fields", () => {
-                it(", when I transform the tracker, then the field's selectable values will NOT contain any hidden value", () => {
+                it(", when I transform the tracker, then the field's selectable values will contain also hidden value, they are filtered later", () => {
                     const tracker = {
                         fields: [
                             {
@@ -310,7 +310,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                                 values: [
                                     { id: 53, is_hidden: true },
                                     { id: 70, is_hidden: false },
-                                    { id: 53, is_hidden: true },
+                                    { id: 54, is_hidden: true },
                                     { id: 46, is_hidden: false },
                                     { id: 35, is_hidden: false },
                                 ],
@@ -351,7 +351,9 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                     expect(transformed_tracker.fields[0].values).toStrictEqual([
                         { id: 100, label: "None" },
+                        { id: 53, is_hidden: true },
                         { id: 70, is_hidden: false },
+                        { id: 54, is_hidden: true },
                         { id: 46, is_hidden: false },
                         { id: 35, is_hidden: false },
                     ]);
@@ -359,11 +361,14 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                         { id: 100, label: "None" },
                         { id: 40, is_hidden: false },
                         { id: 41, is_hidden: false },
+                        { id: 20, is_hidden: true },
                     ]);
                     expect(transformed_tracker.fields[2].values).toStrictEqual([
                         { id: 80, is_hidden: false },
+                        { id: 42, is_hidden: true },
                     ]);
                     expect(transformed_tracker.fields[3].values).toStrictEqual([
+                        { id: 34, is_hidden: true },
                         { id: 63, is_hidden: false },
                     ]);
                 });

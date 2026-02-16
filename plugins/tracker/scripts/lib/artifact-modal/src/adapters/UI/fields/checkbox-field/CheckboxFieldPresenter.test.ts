@@ -29,18 +29,22 @@ describe("CheckboxFieldPresenter", () => {
                     {
                         id: 1,
                         label: "One",
+                        is_hidden: false,
                     },
                     {
                         id: 2,
                         label: "Two",
+                        is_hidden: false,
                     },
                     {
                         id: 3,
                         label: "Three",
+                        is_hidden: false,
                     },
                     {
                         id: 4,
                         label: "Four",
+                        is_hidden: false,
                     },
                 ],
                 required: true,
@@ -58,21 +62,25 @@ describe("CheckboxFieldPresenter", () => {
                 id: 1,
                 label: "One",
                 is_checked: false,
+                is_hidden: false,
             },
             {
                 id: 2,
                 label: "Two",
                 is_checked: false,
+                is_hidden: false,
             },
             {
                 id: 3,
                 label: "Three",
                 is_checked: true,
+                is_hidden: false,
             },
             {
                 id: 4,
                 label: "Four",
                 is_checked: true,
+                is_hidden: false,
             },
         ]);
     });

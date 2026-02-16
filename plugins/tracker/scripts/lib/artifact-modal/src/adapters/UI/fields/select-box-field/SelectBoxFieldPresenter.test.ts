@@ -47,11 +47,13 @@ describe("SelectBoxFieldPresenter", () => {
             id: 1051,
             label: "Open",
             value_color: "acid-green",
+            is_hidden: false,
         };
         const value_2 = {
             id: 1052,
             label: "Close",
             value_color: "fiesta-red",
+            is_hidden: false,
         };
         const field = {
             field_id: 105,
@@ -71,6 +73,7 @@ describe("SelectBoxFieldPresenter", () => {
                 id: "1052",
                 label: "Close",
                 value_color: "fiesta-red",
+                is_hidden: false,
             },
         ]);
     });
@@ -133,6 +136,7 @@ describe("SelectBoxFieldPresenter", () => {
                 id: "1052",
                 label: "User 1052",
                 avatar_url: "url/to/avatar/1052",
+                is_hidden: false,
             },
         ]);
     });

@@ -40,6 +40,7 @@ export type HostElement = InternalRadioButtonsField & HTMLElement;
 export interface RadioButtonValue {
     id: number;
     label: string;
+    is_hidden: boolean;
 }
 
 export const onInput = (host: HostElement, event: Event): void => {
@@ -81,23 +82,25 @@ export const renderRadioButtonsField = (
                 ${getNone()}
             </label>
         `}
-        ${host.values.map(
-            (value) => html`
-                <label class="tlp-label tlp-radio" data-test="radiobutton-field-value">
-                    <input
-                        type="radio"
-                        name="${host.name}"
-                        oninput="${onInput}"
-                        value="${value.id}"
-                        data-test="radiobutton-field-input"
-                        required="${host.required}"
-                        disabled="${host.disabled}"
-                        checked="${host.value === String(value.id)}"
-                    />
-                    ${value.label}
-                </label>
-            `,
-        )}
+        ${host.values
+            .filter((value) => host.value === String(value.id) || !value.is_hidden)
+            .map(
+                (value) => html`
+                    <label class="tlp-label tlp-radio" data-test="radiobutton-field-value">
+                        <input
+                            type="radio"
+                            name="${host.name}"
+                            oninput="${onInput}"
+                            value="${value.id}"
+                            data-test="radiobutton-field-input"
+                            required="${host.required}"
+                            disabled="${host.disabled}"
+                            checked="${host.value === String(value.id)}"
+                        />
+                        ${value.label}
+                    </label>
+                `,
+            )}
     </div>
 `;
 

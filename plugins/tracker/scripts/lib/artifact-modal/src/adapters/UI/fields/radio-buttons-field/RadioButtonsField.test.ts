@@ -79,8 +79,8 @@ describe(`RadioButtonsField`, () => {
     it(`checks matching radio button when given a bind_value_id`, () => {
         const host = getHost();
         host.values = [
-            { id: 505, label: "rondache" },
-            { id: 704, label: "pearlitic" },
+            { id: 505, label: "rondache", is_hidden: false },
+            { id: 704, label: "pearlitic", is_hidden: false },
         ];
         host.value = "505";
         const target = render(host);

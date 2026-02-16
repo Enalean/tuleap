@@ -27,4 +27,5 @@ export interface CheckboxFieldType {
 export interface CheckboxFieldValue {
     readonly id: number;
     readonly label: string;
+    readonly is_hidden: boolean;
 }
