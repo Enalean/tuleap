@@ -697,7 +697,7 @@ packages:
     engines: {node: '>=20.0.0'}
     dependencies:
       '@types/markdown-it': 14.1.2
-      markdown-it: 14.1.0
+      markdown-it: 14.1.1
     dev: true
 
   /@mdit-vue/plugin-frontmatter@3.0.2:
@@ -707,7 +707,7 @@ packages:
       '@mdit-vue/types': 3.0.2
       '@types/markdown-it': 14.1.2
       gray-matter: 4.0.3
-      markdown-it: 14.1.0
+      markdown-it: 14.1.1
     dev: true
 
   /@mdit-vue/types@3.0.2:
@@ -1056,7 +1056,7 @@ packages:
       markdown-it-async:
         optional: true
     dependencies:
-      markdown-it: 14.1.0
+      markdown-it: 14.1.1
       shiki: 3.22.0
     dev: true
 
@@ -1101,7 +1101,7 @@ packages:
       floating-vue: 5.2.2(vue@3.5.28)
       lz-string: 1.5.0
       magic-string: 0.30.21
-      markdown-it: 14.1.0
+      markdown-it: 14.1.1
       mdast-util-from-markdown: 2.0.2
       mdast-util-gfm: 3.1.0
       mdast-util-to-hast: 13.2.1
@@ -1162,9 +1162,9 @@ packages:
       lz-string: 1.5.0
       magic-string: 0.30.21
       magic-string-stack: 1.1.0
-      markdown-it: 14.1.0
+      markdown-it: 14.1.1
       markdown-it-footnote: 4.0.0
-      markdown-it-mdc: 0.2.10(markdown-it@14.1.0)
+      markdown-it-mdc: 0.2.10(markdown-it@14.1.1)
       mlly: 1.8.0
       monaco-editor: 0.55.1
       obug: 2.1.1
@@ -3444,25 +3444,25 @@ packages:
     resolution: {integrity: sha512-sITME+kf799vMeO/ww/CjH6q+c05f6TLpn6VOmmWCGNqPJzSh+uFgZoMB9s0plNtW6afy63qglNAC3MhrhP/gg==}
     dependencies:
       '@types/markdown-it': 14.1.2
-      markdown-it: 14.1.0
+      markdown-it: 14.1.1
     dev: true
 
   /markdown-it-footnote@4.0.0:
     resolution: {integrity: sha512-WYJ7urf+khJYl3DqofQpYfEYkZKbmXmwxQV8c8mO/hGIhgZ1wOe7R4HLFNwqx7TjILbnC98fuyeSsin19JdFcQ==}
     dev: true
 
-  /markdown-it-mdc@0.2.10(markdown-it@14.1.0):
+  /markdown-it-mdc@0.2.10(markdown-it@14.1.1):
     resolution: {integrity: sha512-DEZTbc2OJqA0pjxWAYEje2Hl35EwPB80moqcIcB/axgH77WbVdyWEqdJ/jbYN5fZlxZgqDxc9SdBGLulRy+A1Q==}
     peerDependencies:
       '@types/markdown-it': '*'
       markdown-it: ^14.0.0
     dependencies:
-      markdown-it: 14.1.0
+      markdown-it: 14.1.1
       yaml: 2.8.2
     dev: true
 
-  /markdown-it@14.1.0:
-    resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
+  /markdown-it@14.1.1:
+    resolution: {integrity: sha512-BuU2qnTti9YKgK5N+IeMubp14ZUKUUw7yeJbkjtosvHiP0AZ5c8IAgEMk79D0eC8F23r4Ac/q8cAIFdm2FtyoA==}
     hasBin: true
     dependencies:
       argparse: /@types/argparse@2.0.17
@@ -4736,7 +4736,7 @@ packages:
       '@mdit-vue/plugin-frontmatter': 3.0.2
       '@mdit-vue/types': 3.0.2
       '@types/markdown-it': 14.1.2
-      markdown-it: 14.1.0
+      markdown-it: 14.1.1
       markdown-it-async: 2.2.0
       unplugin: 2.3.11
       unplugin-utils: 0.3.1
