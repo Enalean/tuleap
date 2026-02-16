@@ -3690,6 +3690,9 @@ msgstr ""
 msgid "This field is used by triggers"
 msgstr ""
 
+msgid "This field is used by workflow conditions"
+msgstr ""
+
 msgid "This file has been removed meantime."
 msgstr ""
 
@@ -4235,6 +4238,9 @@ msgid "When you use @ to mention someone, they will get an email notification."
 msgstr ""
 
 msgid "Workflow"
+msgstr ""
+
+msgid "Workflow condition"
 msgstr ""
 
 #, php-format

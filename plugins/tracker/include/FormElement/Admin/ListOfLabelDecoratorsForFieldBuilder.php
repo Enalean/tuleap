@@ -45,6 +45,7 @@ use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Workflow\FieldDependencies\FieldDependenciesUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
+use Tuleap\Tracker\Workflow\Transition\Condition\WorkflowConditionUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\Trigger\ParentsTriggersUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsDao;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
@@ -53,6 +54,7 @@ use Tuleap\Tracker\Workflow\Trigger\TriggersUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowFieldUsageDecoratorsProvider;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
+use Workflow_Transition_ConditionFactory;
 
 final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOfLabelDecoratorsForField
 {
@@ -89,7 +91,8 @@ final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOf
                 new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory())),
             ),
             new TriggersUsageByFieldProvider($trigger_rule_manager, $triggers_dao),
-            new ParentsTriggersUsageByFieldProvider($trigger_rule_manager, $triggers_dao, new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance()))
+            new ParentsTriggersUsageByFieldProvider($trigger_rule_manager, $triggers_dao, new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance())),
+            new WorkflowConditionUsageByFieldProvider(Workflow_Transition_ConditionFactory::build()),
         ));
     }
 
