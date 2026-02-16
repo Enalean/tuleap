@@ -53,7 +53,7 @@ final class WorkflowMenuPresenterBuilder
                         'field-dependencies',
                     ),
                     new WorkflowMenuItem(
-                        $this->buildLegacyUrl(Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS, $tracker),
+                        WorkflowUrlBuilder::buildTriggersUrl($tracker),
                         dgettext('tuleap-tracker', 'Triggers'),
                         'triggers',
                     ),

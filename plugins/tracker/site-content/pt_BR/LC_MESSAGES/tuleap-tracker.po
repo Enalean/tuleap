@@ -2265,6 +2265,9 @@ msgstr ""
 msgid "Parent artifact:"
 msgstr ""
 
+msgid "Parent triggers"
+msgstr ""
+
 msgid "Paste the patch here (text only)"
 msgstr ""
 
@@ -3678,7 +3681,13 @@ msgstr ""
 msgid "This field is used by global rules"
 msgstr ""
 
+msgid "This field is used by parent triggers"
+msgstr ""
+
 msgid "This field is used by the following trackers:"
+msgstr ""
+
+msgid "This field is used by triggers"
 msgstr ""
 
 msgid "This file has been removed meantime."

@@ -20,33 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow;
+namespace Tuleap\Tracker\Test\Stub\Workflow\Trigger;
 
-use Tuleap\Tracker\Tracker;
-use Workflow;
+use Override;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\Workflow\Trigger\ProvideTriggersUsageByField;
 
-final class WorkflowUrlBuilder
+final readonly class ProvideTriggersUsageByFieldStub implements ProvideTriggersUsageByField
 {
-    private static function buildUrl(Tracker $tracker, string $func): string
+    private function __construct(private bool $has_triggers)
     {
-        return \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query([
-            'tracker' => $tracker->getId(),
-            'func'    => $func,
-        ]);
     }
 
-    public static function buildGlobalRulesUrl(Tracker $tracker): string
+    public static function withTriggers(): self
     {
-        return self::buildUrl($tracker, Workflow::FUNC_ADMIN_RULES);
+        return new self(true);
     }
 
-    public static function buildFieldDependenciesUrl(Tracker $tracker): string
+    public static function withoutTriggers(): self
     {
-        return self::buildUrl($tracker, Workflow::FUNC_ADMIN_DEPENDENCIES);
+        return new self(false);
     }
 
-    public static function buildTriggersUrl(Tracker $tracker): string
+    #[Override]
+    public function isFieldUsedInCurrentTrackerTriggers(TrackerField $field): bool
     {
-        return self::buildUrl($tracker, Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS);
+        return $this->has_triggers;
     }
 }
