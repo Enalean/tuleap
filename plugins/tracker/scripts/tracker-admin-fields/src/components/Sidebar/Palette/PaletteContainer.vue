@@ -34,10 +34,12 @@
                         v-model="search"
                     />
                 </div>
-                <div class="tlp-card" v-for="field of matching" v-bind:key="field.label">
-                    <i v-bind:class="field.icon" aria-hidden="true"></i>
-                    {{ field.label }}
-                </div>
+                <palette-category
+                    v-for="category of matching"
+                    v-bind:key="category.label"
+                    v-bind:category="category"
+                    v-bind:search="search"
+                />
             </div>
         </div>
     </sidebar-container>
@@ -47,129 +49,144 @@
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import SidebarContainer from "../SidebarContainer.vue";
+import type { CategoryOfPaletteFields } from "./type";
+import PaletteCategory from "./PaletteCategory.vue";
 
 const { $gettext } = useGettext();
 
-const fields = [
+const categories: ReadonlyArray<CategoryOfPaletteFields> = [
     {
-        label: $gettext("String"),
-        icon: "fa-solid fa-t",
+        label: $gettext("Fields"),
+        fields: [
+            {
+                label: $gettext("String"),
+                icon: "fa-solid fa-t",
+            },
+            {
+                label: $gettext("Text"),
+                icon: "fa-solid fa-t",
+            },
+            {
+                label: $gettext("Integer"),
+                icon: "fa-solid fa-3",
+            },
+            {
+                label: $gettext("Float"),
+                icon: "fa-solid fa-3",
+            },
+            {
+                label: $gettext("Date"),
+                icon: "fa-solid fa-calendar-days",
+            },
+            {
+                label: $gettext("Selectbox"),
+                icon: "fa-solid fa-list",
+            },
+            {
+                label: $gettext("Multi selectbox"),
+                icon: "fa-solid fa-list",
+            },
+            {
+                label: $gettext("Open list"),
+                icon: "fa-solid fa-list",
+            },
+            {
+                label: $gettext("Radio"),
+                icon: "fa-regular fa-circle-dot",
+            },
+            {
+                label: $gettext("Checkbox"),
+                icon: "fa-regular fa-square-check",
+            },
+            {
+                label: $gettext("File upload"),
+                icon: "fa-solid fa-upload",
+            },
+            {
+                label: $gettext("Artifact link"),
+                icon: "fa-solid fa-link",
+            },
+            {
+                label: $gettext("Permissions on artifact"),
+                icon: "fa-solid fa-lock",
+            },
+            {
+                label: $gettext("Shared field"),
+                icon: "fa-solid fa-shapes",
+            },
+            {
+                label: $gettext("Last update by"),
+                icon: "fa-solid fa-user",
+            },
+            {
+                label: $gettext("Last update date"),
+                icon: "fa-solid fa-calendar-days",
+            },
+            {
+                label: $gettext("Submitted by"),
+                icon: "fa-solid fa-user",
+            },
+            {
+                label: $gettext("Submitted on"),
+                icon: "fa-solid fa-calendar-days",
+            },
+            {
+                label: $gettext("Artifact id"),
+                icon: "fa-solid fa-hashtag",
+            },
+            {
+                label: $gettext("Per tracker id"),
+                icon: "fa-solid fa-hashtag",
+            },
+            {
+                label: $gettext("Cross references"),
+                icon: "fa-solid fa-arrows-turn-to-dots",
+            },
+            {
+                label: $gettext("Computed value"),
+                icon: "fa-solid fa-calculator",
+            },
+            {
+                label: $gettext("Rank"),
+                icon: "fa-solid fa-arrow-up-short-wide",
+            },
+        ].toSorted((a, b) => a.label.localeCompare(b.label)),
     },
     {
-        label: $gettext("Text"),
-        icon: "fa-solid fa-t",
-    },
-    {
-        label: $gettext("Integer"),
-        icon: "fa-solid fa-3",
-    },
-    {
-        label: $gettext("Float"),
-        icon: "fa-solid fa-3",
-    },
-    {
-        label: $gettext("Date"),
-        icon: "fa-solid fa-calendar-days",
-    },
-    {
-        label: $gettext("Selectbox"),
-        icon: "fa-solid fa-list",
-    },
-    {
-        label: $gettext("Multi selectbox"),
-        icon: "fa-solid fa-list",
-    },
-    {
-        label: $gettext("Open list"),
-        icon: "fa-solid fa-list",
-    },
-    {
-        label: $gettext("Radio"),
-        icon: "fa-regular fa-circle-dot",
-    },
-    {
-        label: $gettext("Checkbox"),
-        icon: "fa-regular fa-square-check",
-    },
-    {
-        label: $gettext("File upload"),
-        icon: "fa-solid fa-upload",
-    },
-    {
-        label: $gettext("Artifact link"),
-        icon: "fa-solid fa-link",
-    },
-    {
-        label: $gettext("Permissions on artifact"),
-        icon: "fa-solid fa-lock",
-    },
-    {
-        label: $gettext("Shared field"),
-        icon: "fa-solid fa-shapes",
-    },
-    {
-        label: $gettext("Last update by"),
-        icon: "fa-solid fa-user",
-    },
-    {
-        label: $gettext("Last update date"),
-        icon: "fa-solid fa-calendar-days",
-    },
-    {
-        label: $gettext("Submitted by"),
-        icon: "fa-solid fa-user",
-    },
-    {
-        label: $gettext("Submitted on"),
-        icon: "fa-solid fa-calendar-days",
-    },
-    {
-        label: $gettext("Artifact id"),
-        icon: "fa-solid fa-hashtag",
-    },
-    {
-        label: $gettext("Per tracker id"),
-        icon: "fa-solid fa-hashtag",
-    },
-    {
-        label: $gettext("Cross references"),
-        icon: "fa-solid fa-arrows-turn-to-dots",
-    },
-    {
-        label: $gettext("Computed value"),
-        icon: "fa-solid fa-calculator",
-    },
-    {
-        label: $gettext("Rank"),
-        icon: "fa-solid fa-arrow-up-short-wide",
-    },
-    {
-        label: $gettext("Fieldset"),
-        icon: "fa-regular fa-square",
-    },
-    {
-        label: $gettext("Column"),
-        icon: "fa-solid fa-table-columns",
-    },
-    {
-        label: $gettext("Line break"),
-        icon: "fa-solid fa-arrow-turn-down fa-rotate-90",
-    },
-    {
-        label: $gettext("Separator"),
-        icon: "fa-solid fa-minus",
-    },
-    {
-        label: $gettext("Static text"),
-        icon: "fa-solid fa-align-left",
+        label: $gettext("Layout & structure"),
+        fields: [
+            {
+                label: $gettext("Fieldset"),
+                icon: "fa-regular fa-square",
+            },
+            {
+                label: $gettext("Column"),
+                icon: "fa-solid fa-table-columns",
+            },
+            {
+                label: $gettext("Line break"),
+                icon: "fa-solid fa-arrow-turn-down fa-rotate-90",
+            },
+            {
+                label: $gettext("Separator"),
+                icon: "fa-solid fa-minus",
+            },
+            {
+                label: $gettext("Static text"),
+                icon: "fa-solid fa-align-left",
+            },
+        ].toSorted((a, b) => a.label.localeCompare(b.label)),
     },
 ];
+
 const search = ref("");
 const matching = computed(() =>
     search.value.trim() === ""
-        ? fields
-        : fields.filter((field) =>
-              field.label.toLowerCase().includes(search.value.trim().toLowerCase()),
+        ? categories
+        : categories.filter((category) =>
+              category.fields.some((field) =>
+                  field.label.toLowerCase().includes(search.value.trim().toLowerCase()),
+              ),
           ),
 );
 </script>
