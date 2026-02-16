@@ -35,3 +35,4 @@ export const TRACKER_ROOT: StrictInjectionKey<Ref<ElementWithChildren>> = Symbol
 export const POST_FIELD_DND_CALLBACK: StrictInjectionKey<() => void> = Symbol();
 export const FIELDS: StrictInjectionKey<ReadonlyArray<StructureFields>> = Symbol();
 export const OPEN_REFRESH_AFTER_FAULT_MODAL: StrictInjectionKey<(fault: Fault) => void> = Symbol();
+export const DRAGGED_FIELD_ID: StrictInjectionKey<Ref<null | number>> = Symbol();

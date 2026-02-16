@@ -31,6 +31,7 @@
 import { onBeforeUnmount, onMounted, useTemplateRef } from "vue";
 import DisplayFormElements from "./DisplayFormElements.vue";
 import type {
+    DragCallbackParameter,
     DragDropCallbackParameter,
     Drekkenov,
     PossibleDropCallbackParameter,
@@ -38,6 +39,7 @@ import type {
 } from "@tuleap/drag-and-drop";
 import { init } from "@tuleap/drag-and-drop";
 import {
+    DRAGGED_FIELD_ID,
     OPEN_REFRESH_AFTER_FAULT_MODAL,
     POST_FIELD_DND_CALLBACK,
     TRACKER_ROOT,
@@ -50,10 +52,12 @@ import { getDropRulesEnforcer } from "../helpers/DropRulesEnforcer";
 import { saveNewFieldsOrder } from "../helpers/save-new-fields-order";
 import { isSaveNewFieldOrderFault } from "../helpers/SaveNewFieldOrderFaultBuilder";
 import { useDragAutoscrollWithDraggableEvents } from "@tuleap/drag-autoscroll";
+import { getAttributeOrThrow } from "@tuleap/dom";
 
 const tracker_root = strictInject(TRACKER_ROOT);
 const post_field_update_callback = strictInject(POST_FIELD_DND_CALLBACK);
 const openRefreshAfterFaultModal = strictInject(OPEN_REFRESH_AFTER_FAULT_MODAL);
+const dragged_field_id = strictInject(DRAGGED_FIELD_ID);
 const container = useTemplateRef<HTMLElement>("container");
 const drop_rules_enforcer = getDropRulesEnforcer(tracker_root);
 const context_transformer = getSuccessfulDropContextTransformer(tracker_root);
@@ -76,7 +80,13 @@ onMounted(() => {
             Boolean(handle.closest("[data-not-drag-handle]")),
         isConsideredInDropzone: (child: Element) => child.hasAttribute("draggable"),
         doesDropzoneAcceptDraggable: drop_rules_enforcer.isDropPossible,
-        onDragStart: drag_autoscroll.start,
+        onDragStart: (context: DragCallbackParameter): void => {
+            drag_autoscroll.start();
+            dragged_field_id.value = Number.parseInt(
+                getAttributeOrThrow(context.dragged_element, "data-element-id"),
+                10,
+            );
+        },
         onDragEnter(context: PossibleDropCallbackParameter): void {
             context.source_dropzone.classList.remove(
                 "tracker-admin-fields-container-dropzone-hover",
@@ -89,6 +99,7 @@ onMounted(() => {
             );
         },
         onDrop(context: SuccessfulDropCallbackParameter): void {
+            dragged_field_id.value = null;
             context_transformer
                 .transformSuccessfulDropContext(context)
                 .andThen(fields_mover.moveField)
