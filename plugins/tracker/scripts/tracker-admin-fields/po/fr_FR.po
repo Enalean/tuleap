@@ -36,6 +36,9 @@ msgstr "Liens entre artifacts"
 msgid "Auto-compute"
 msgstr "Calcul automatique"
 
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Checkbox"
 msgstr "Case à cocher"
 
@@ -56,6 +59,9 @@ msgstr "Agencement personnalisé"
 
 msgid "Date"
 msgstr "Date"
+
+msgid "Delete"
+msgstr "Supprimer"
 
 msgid "Display in & out references"
 msgstr "Liste des objets étant référencés par l'artifact ou le référençant"
@@ -90,6 +96,9 @@ msgstr "Fichier à téléverser"
 msgid "Float"
 msgstr "Flottant"
 
+msgid "Id"
+msgstr "Id"
+
 msgid "Integer"
 msgstr "Entier"
 
@@ -113,6 +122,9 @@ msgstr "Déplacer l'élément"
 
 msgid "Multi selectbox"
 msgstr "Liste à choix multiple"
+
+msgid "Name"
+msgstr "Nom"
 
 msgid "No fields"
 msgstr "Aucun champ"
@@ -146,6 +158,9 @@ msgstr "Bouton radio"
 
 msgid "Rank"
 msgstr "Rang"
+
+msgid "Save"
+msgstr "Sauvegarder"
 
 msgid "Selectbox"
 msgstr "Liste de choix"

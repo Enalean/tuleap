@@ -18,27 +18,39 @@
   -->
 
 <template>
-    <div class="tlp-property">
-        <label class="tlp-label">{{ $gettext("Id") }}</label>
-        <p>{{ field.field_id }}</p>
-    </div>
-
-    <div class="tlp-form-element">
-        <label class="tlp-label" for="field-label">{{ $gettext("Label") }}</label>
-        <input type="text" class="tlp-input" id="field-label" v-bind:value="field.label" />
-    </div>
-
-    <div class="tlp-form-element">
-        <label class="tlp-label" for="field-name">{{ $gettext("Name") }}</label>
-        <input type="text" class="tlp-input" id="field-name" v-bind:value="field.name" />
+    <div class="tlp-pane-section-submit tlp-pane-section">
+        <button
+            type="button"
+            disabled
+            class="tlp-button-danger tlp-button-outline"
+            v-bind:title="$gettext('Delete')"
+        >
+            <i class="fa-regular fa-trash-alt" role="img" v-bind:aria-label="$gettext('Delete')" />
+        </button>
+        <span class="spacer"></span>
+        <button
+            v-on:click="router.push({ name: 'fields-usage' })"
+            class="tlp-button-primary tlp-button-outline"
+            type="button"
+        >
+            {{ $gettext("Cancel") }}
+        </button>
+        <button type="button" disabled class="tlp-button-primary">
+            {{ $gettext("Save") }}
+        </button>
     </div>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import { useGettext } from "vue3-gettext";
-import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 
+const router = useRouter();
 const { $gettext } = useGettext();
-
-defineProps<{ field: StructureFields }>();
 </script>
+
+<style lang="scss" scoped>
+.spacer {
+    flex: 1 0 auto;
+}
+</style>
