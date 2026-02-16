@@ -75,7 +75,7 @@ final class CheckboxField extends MultiSelectboxField
         $selected_values_ids = ($value && $value instanceof Tracker_Artifact_ChangesetValue_List)
             ? array_keys($value->getListValues())
             : [];
-        $visible_values      = $this->getBind()->getAllVisibleValues();
+        $visible_values      = $this->getBind()->getAllValues();
         if (empty($visible_values)) {
             return $this->getNoValueLabel();
         }
@@ -88,9 +88,12 @@ final class CheckboxField extends MultiSelectboxField
                 continue;
             }
             $checked = in_array($bind_id, $selected_values_ids);
-            $html   .= '<li>';
-            $html   .= '<span class="tracker-read-only-checkbox-list-item">' . ($checked ? '[x]' : '[ ]') . '</span> ' . $this->getBind()->formatChangesetValueWithoutLink($bind_value);
-            $html   .= '</li>';
+            if (! $checked && $bind_value->isHidden()) {
+                continue;
+            }
+            $html .= '<li>';
+            $html .= '<span class="tracker-read-only-checkbox-list-item">' . ($checked ? '[x]' : '[ ]') . '</span> ' . $this->getBind()->formatChangesetValueWithoutLink($bind_value);
+            $html .= '</li>';
         }
         $html .= '</ul>';
         return $html;
