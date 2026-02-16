@@ -47,12 +47,19 @@ const matching = computed(() =>
 .category,
 .field {
     display: flex;
-    margin: 0 0 var(--tlp-medium-spacing);
     cursor: move;
     gap: var(--tlp-small-spacing);
 }
 
+.category {
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
 .field {
     margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 </style>
