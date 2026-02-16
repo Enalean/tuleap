@@ -52,9 +52,6 @@ msgstr "Case à cocher"
 msgid "Close"
 msgstr "Fermer"
 
-msgid "Column"
-msgstr "Colonne"
-
 msgid "Computed value"
 msgstr "Valeur calculée"
 
@@ -120,9 +117,6 @@ msgstr "Date de mise à jour"
 
 msgid "Layout & structure"
 msgstr "Organisation & structure"
-
-msgid "Line break"
-msgstr "Saut de ligne"
 
 msgid "Move element"
 msgstr "Déplacer l'élément"
