@@ -18,39 +18,83 @@
   -->
 
 <template>
-    <div class="label">
-        <span class="tlp-label">
-            {{ field.label }}
-            <i
-                class="fa-solid fa-asterisk"
-                aria-hidden="true"
-                v-if="field.required"
-                data-test="required"
-            ></i>
-        </span>
-        <list-of-label-decorators v-bind:field="field" />
+    <div class="label-container">
+        <div class="label">
+            <span class="tlp-label" v-if="should_label_be_displayed">
+                {{ field.label }}
+                <i
+                    class="fa-solid fa-asterisk"
+                    aria-hidden="true"
+                    v-if="field.required"
+                    data-test="required"
+                ></i>
+            </span>
+            <list-of-label-decorators v-bind:field="field" />
+        </div>
+        <router-link
+            v-bind:to="{ name: 'field-edition', params: { field_id: field.field_id } }"
+            class="tlp-button-primary tlp-button-mini edit-button"
+        >
+            <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
+            {{ $gettext("Edit") }}
+        </router-link>
     </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 import ListOfLabelDecorators from "./ListOfLabelDecorators.vue";
+import { LINE_BREAK, SEPARATOR, STATIC_RICH_TEXT } from "@tuleap/plugin-tracker-constants";
 
-defineProps<{
+const props = defineProps<{
     field: StructureFields;
 }>();
+
+const should_label_be_displayed = computed(
+    () => [LINE_BREAK, SEPARATOR, STATIC_RICH_TEXT].includes(props.field.type) === false,
+);
 </script>
 
 <style lang="scss" scoped>
+.label-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 var(--tlp-small-spacing);
+    gap: var(--tlp-medium-spacing);
+}
+
+.fieldset-title > .label-container {
+    margin: 0;
+}
+
 .label {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin: 0 0 var(--tlp-small-spacing);
     gap: var(--tlp-small-spacing);
 }
 
 .tlp-label {
     margin: 0 var(--tlp-small-spacing) 0 0;
+}
+
+.edit-button {
+    transition: opacity 250ms ease-in-out;
+    opacity: 0;
+
+    &:focus {
+        opacity: 1;
+    }
+}
+
+.draggable-wrapper > .draggable-form-element > .tlp-property:hover,
+.draggable-wrapper > .draggable-form-element > .tlp-form-element:hover,
+.tlp-pane:hover > .tlp-pane-container > .tlp-pane-header > .tlp-pane-title {
+    /* stylelint-disable-next-line selector-max-compound-selectors */
+    > .label-container > .edit-button {
+        opacity: 1;
+    }
 }
 </style>

@@ -60,6 +60,9 @@ msgstr "Date"
 msgid "Display in & out references"
 msgstr "Liste des objets étant référencés par l'artifact ou le référençant"
 
+msgid "Edit"
+msgstr "Éditer"
+
 msgid "Field configuration"
 msgstr "Configuration du champ"
 

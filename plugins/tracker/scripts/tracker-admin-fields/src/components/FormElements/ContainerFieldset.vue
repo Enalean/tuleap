@@ -27,7 +27,7 @@
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
                     <div class="tlp-pane-header fieldset-header">
-                        <h1 class="tlp-pane-title">
+                        <h1 class="tlp-pane-title fieldset-title">
                             <label-for-field v-bind:field="fieldset.field" />
                         </h1>
                         <fieldset-layout v-bind:fieldset="fieldset" />
@@ -75,8 +75,13 @@ defineProps<{
 .fieldset-header {
     display: flex;
     grid-column: span 2;
+    align-items: center;
     justify-content: space-between;
     gap: var(--tlp-medium-spacing);
+}
+
+.fieldset-title {
+    flex: 1 0 auto;
 }
 
 .tlp-pane-container {

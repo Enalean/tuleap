@@ -18,11 +18,15 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-dompurify-html="field.default_value"></div>
+    <div class="tlp-form-element">
+        <label-for-field v-bind:field="field" />
+        <div v-dompurify-html="field.default_value"></div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import type { StaticRichTextStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import LabelForField from "./LabelForField.vue";
 
 defineProps<{
     field: StaticRichTextStructure;

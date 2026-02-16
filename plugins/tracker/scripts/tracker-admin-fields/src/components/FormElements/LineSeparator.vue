@@ -19,12 +19,14 @@
 
 <template>
     <div class="tlp-form-element">
+        <label-for-field v-bind:field="field" />
         <hr />
     </div>
 </template>
 
 <script setup lang="ts">
 import type { SeparatorStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import LabelForField from "./LabelForField.vue";
 
 defineProps<{
     field: SeparatorStructure;
