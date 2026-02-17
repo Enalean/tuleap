@@ -23,7 +23,7 @@ import type { TransformedDropContext } from "./SuccessfulDropContextTransformer"
 import { getFieldIndexInParent } from "./get-element-index";
 import { isColumn } from "./is-column";
 import type { MoveFieldsAPIRequestParams } from "./save-new-fields-order";
-import { isColumnWrapper } from "./is-column-wrapper";
+import { buildMoveFieldsAPIRequestParams } from "./build-move-fields-api-request-params";
 
 export type FieldsMover = {
     moveField(
@@ -31,67 +31,48 @@ export type FieldsMover = {
     ): Result<MoveFieldsAPIRequestParams, Fault>;
 };
 
-export const getFieldsMover = (): FieldsMover => {
-    const buildMoveFieldsAPIRequestParams = (
-        moved_element: TransformedDropContext["moved_element"],
-        destination_parent: TransformedDropContext["destination_parent"],
-        next_sibling: TransformedDropContext["next_sibling"],
-    ): MoveFieldsAPIRequestParams => {
-        return {
-            field_id: moved_element.field.field_id,
-            parent_id: isColumn(destination_parent) ? destination_parent.field.field_id : null,
-            next_sibling_id:
-                next_sibling !== null && !isColumnWrapper(next_sibling)
-                    ? next_sibling.field.field_id
-                    : null,
-        };
-    };
+export const getFieldsMover = (): FieldsMover => ({
+    moveField({
+        moved_element,
+        next_sibling,
+        destination_parent,
+        source_parent,
+    }: TransformedDropContext): Result<MoveFieldsAPIRequestParams, Fault> {
+        if (isColumn(moved_element)) {
+            return err(Fault.fromMessage(`Element #${moved_element.field.field_id} is a column.`));
+        }
 
-    return {
-        moveField({
-            moved_element,
-            next_sibling,
-            destination_parent,
-            source_parent,
-        }: TransformedDropContext): Result<MoveFieldsAPIRequestParams, Fault> {
-            if (isColumn(moved_element)) {
-                return err(
-                    Fault.fromMessage(`Element #${moved_element.field.field_id} is a column.`),
-                );
-            }
+        return getFieldIndexInParent(source_parent, moved_element)
+            .andThen((index): Result<null, Fault> => {
+                source_parent.children.splice(index, 1);
+                return ok(null);
+            })
+            .andThen((): Result<MoveFieldsAPIRequestParams, Fault> => {
+                if (next_sibling) {
+                    return getFieldIndexInParent(destination_parent, next_sibling).andThen(
+                        (index): Result<MoveFieldsAPIRequestParams, Fault> => {
+                            destination_parent.children.splice(index, 0, moved_element);
 
-            return getFieldIndexInParent(source_parent, moved_element)
-                .andThen((index): Result<null, Fault> => {
-                    source_parent.children.splice(index, 1);
-                    return ok(null);
-                })
-                .andThen((): Result<MoveFieldsAPIRequestParams, Fault> => {
-                    if (next_sibling) {
-                        return getFieldIndexInParent(destination_parent, next_sibling).andThen(
-                            (index): Result<MoveFieldsAPIRequestParams, Fault> => {
-                                destination_parent.children.splice(index, 0, moved_element);
-
-                                return ok(
-                                    buildMoveFieldsAPIRequestParams(
-                                        moved_element,
-                                        destination_parent,
-                                        next_sibling,
-                                    ),
-                                );
-                            },
-                        );
-                    }
-
-                    destination_parent.children.push(moved_element);
-
-                    return ok(
-                        buildMoveFieldsAPIRequestParams(
-                            moved_element,
-                            destination_parent,
-                            next_sibling,
-                        ),
+                            return ok(
+                                buildMoveFieldsAPIRequestParams(
+                                    moved_element,
+                                    destination_parent,
+                                    next_sibling,
+                                ),
+                            );
+                        },
                     );
-                });
-        },
-    };
-};
+                }
+
+                destination_parent.children.push(moved_element);
+
+                return ok(
+                    buildMoveFieldsAPIRequestParams(
+                        moved_element,
+                        destination_parent,
+                        next_sibling,
+                    ),
+                );
+            });
+    },
+});
