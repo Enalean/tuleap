@@ -28,6 +28,7 @@ use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByField;
 use Tuleap\Tracker\Workflow\PostAction\ProvideWorkflowActionUsageByField;
 use Tuleap\Tracker\Workflow\Transition\Condition\ProvideWorkflowConditionUsageByField;
+use Tuleap\Tracker\Workflow\Transition\ProvideWorkflowTransitionUsageByField;
 use Tuleap\Tracker\Workflow\Trigger\ProvideParentsTriggersUsageByField;
 use Tuleap\Tracker\Workflow\Trigger\ProvideTriggersUsageByField;
 
@@ -40,6 +41,7 @@ readonly class WorkflowFieldUsageDecoratorsProvider
         private ProvideParentsTriggersUsageByField $parents_triggers_usage,
         private ProvideWorkflowConditionUsageByField $condition_usage,
         private ProvideWorkflowActionUsageByField $action_usage,
+        private ProvideWorkflowTransitionUsageByField $transition_usage,
     ) {
     }
 
@@ -97,6 +99,15 @@ readonly class WorkflowFieldUsageDecoratorsProvider
         );
     }
 
+    private function getWorkflowTransitionsLabelDecorator(TrackerField $field): LabelDecorator
+    {
+        return LabelDecorator::buildWithUrl(
+            dgettext('tuleap-tracker', 'Workflow transition'),
+            dgettext('tuleap-tracker', 'This field is used by workflow transitions'),
+            WorkflowUrlBuilder::buildTransitionsUrl($field->getTracker()),
+        );
+    }
+
     /**
      * @return LabelDecorator[]
      */
@@ -130,6 +141,10 @@ readonly class WorkflowFieldUsageDecoratorsProvider
 
         if ($this->action_usage->isFieldUsedInWorkflowActions($field)) {
             $decorators[] = $this->getWorkflowActionsLabelDecorator($field);
+        }
+
+        if ($this->transition_usage->isFieldUsedInWorkflowTransitions($field)) {
+            $decorators[] = $this->getWorkflowTransitionsLabelDecorator($field);
         }
 
         return $decorators;

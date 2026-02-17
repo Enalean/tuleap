@@ -3696,6 +3696,9 @@ msgstr ""
 msgid "This field is used by workflow conditions"
 msgstr ""
 
+msgid "This field is used by workflow transitions"
+msgstr ""
+
 msgid "This file has been removed meantime."
 msgstr ""
 
@@ -4251,6 +4254,9 @@ msgstr ""
 
 #, php-format
 msgid "Workflow mode is incompatible with PostAction of type %s"
+msgstr ""
+
+msgid "Workflow transition"
 msgstr ""
 
 msgid "XML file doesn't have correct format"
