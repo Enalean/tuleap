@@ -49,6 +49,7 @@ use Tuleap\Tracker\Workflow\FieldDependencies\FieldDependenciesUsageByFieldProvi
 use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\PostAction\WorkflowActionUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\Transition\Condition\WorkflowConditionUsageByFieldProvider;
+use Tuleap\Tracker\Workflow\Transition\WorkflowTransitionUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\Trigger\ParentsTriggersUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsDao;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
@@ -58,6 +59,7 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowFieldUsageDecoratorsProvider;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 use Workflow_Transition_ConditionFactory;
+use WorkflowFactory;
 
 final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOfLabelDecoratorsForField
 {
@@ -99,7 +101,10 @@ final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOf
             new WorkflowActionUsageByFieldProvider(new Transition_PostActionFactory(
                 EventManager::instance(),
                 BackendLogger::getDefaultLogger(),
-            ))
+            )),
+            new WorkflowTransitionUsageByFieldProvider(
+                WorkflowFactory::instance()
+            ),
         ));
     }
 
