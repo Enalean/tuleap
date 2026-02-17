@@ -34,6 +34,7 @@
         <router-link
             v-bind:to="{ name: 'field-edition', params: { field_id: field.field_id } }"
             class="tlp-button-primary tlp-button-mini edit-button"
+            data-not-drag-handle="true"
         >
             <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
             {{ $gettext("Edit") }}
