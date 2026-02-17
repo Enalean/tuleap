@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <div v-bind:data-element-id="field_id" class="draggable-wrapper" draggable="true">
+    <div
+        v-bind:data-element-id="field_id"
+        class="draggable-wrapper"
+        v-bind:class="{ 'drek-hide': dragged_field_id === field_id }"
+        draggable="true"
+    >
         <div class="draggable-form-element">
             <slot></slot>
         </div>
@@ -33,8 +38,12 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { DRAGGED_FIELD_ID } from "../injection-symbols";
 
 const { $gettext } = useGettext();
+
+const dragged_field_id = strictInject(DRAGGED_FIELD_ID);
 
 defineProps<{ field_id: number }>();
 </script>

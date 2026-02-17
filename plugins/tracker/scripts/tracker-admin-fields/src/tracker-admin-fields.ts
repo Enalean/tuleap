@@ -18,7 +18,7 @@
  */
 
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { createApp } from "vue";
+import { createApp, ref } from "vue";
 import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { getAttributeOrThrow } from "@tuleap/dom";
@@ -27,6 +27,7 @@ import "./styles/tracker-admin-fields.scss";
 import { PROJECT_ID } from "./type";
 import {
     CURRENT_USER,
+    DRAGGED_FIELD_ID,
     FIELDS,
     IS_USER_LOADING,
     TRACKER_COLOR,
@@ -77,5 +78,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(TRACKER_SHORTNAME, getAttributeOrThrow(mount_point, "data-tracker-shortname"))
         .provide(TRACKER_COLOR, getAttributeOrThrow(mount_point, "data-tracker-color"))
         .provide(FIELDS, JSON.parse(getAttributeOrThrow(mount_point, "data-fields")))
+        .provide(DRAGGED_FIELD_ID, ref(null))
         .mount(mount_point);
 });
