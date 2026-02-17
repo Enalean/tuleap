@@ -17,15 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
 @use "sass:map";
 @use "./color-map";
 
 @each $color-name, $colors in color-map.$color-map {
     .tlp-swatch-#{$color-name} {
         --primary-color: #{map.get($colors, "primary")};
-        --secondary-color: #{map.get($colors, "secondary")};
-        --border-color: #{map.get($colors, "border")};
-        --text-color: #{map.get($colors, "text")};
+        --secondary-color: light-dark(
+            #{map.get($colors, "secondary")},
+            #{color.scale(map.get($colors, "primary"), $lightness: - 65%)}
+        );
+        --border-color: light-dark(#{map.get($colors, "border")}, #{map.get($colors, "primary")});
+        --text-color: light-dark(#{map.get($colors, "text")}, #{map.get($colors, "text-on-dark")});
         --text-on-dark-color: #{map.get($colors, "text-on-dark")};
         --accessibility-pattern: url("#{map.get($colors, "pattern")}");
     }
