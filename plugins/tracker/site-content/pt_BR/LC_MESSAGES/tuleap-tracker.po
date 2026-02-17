@@ -3690,6 +3690,9 @@ msgstr ""
 msgid "This field is used by triggers"
 msgstr ""
 
+msgid "This field is used by workflow actions"
+msgstr ""
+
 msgid "This field is used by workflow conditions"
 msgstr ""
 
@@ -4238,6 +4241,9 @@ msgid "When you use @ to mention someone, they will get an email notification."
 msgstr ""
 
 msgid "Workflow"
+msgstr ""
+
+msgid "Workflow action"
 msgstr ""
 
 msgid "Workflow condition"

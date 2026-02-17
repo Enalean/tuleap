@@ -4197,6 +4197,9 @@ msgstr "Ce champ est utilisé par les trackers suivants :"
 msgid "This field is used by triggers"
 msgstr "Ce champ est utilisé par les déclencheurs"
 
+msgid "This field is used by workflow actions"
+msgstr "Ce champ est utilisé par les actions de workflow"
+
 msgid "This field is used by workflow conditions"
 msgstr "Ce champ est utilisé par les conditions de workflow"
 
@@ -4820,6 +4823,9 @@ msgstr ""
 
 msgid "Workflow"
 msgstr "Workflow"
+
+msgid "Workflow action"
+msgstr "Action de workflow"
 
 msgid "Workflow condition"
 msgstr "Condition de workflow"

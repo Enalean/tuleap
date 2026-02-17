@@ -28,6 +28,7 @@ use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByFieldStub;
+use Tuleap\Tracker\Test\Stub\Workflow\PostAction\ProvideWorkflowActionUsageByFieldStub;
 use Tuleap\Tracker\Test\Stub\Workflow\ProvideGlobalRulesUsageByFieldStub;
 use Tuleap\Tracker\Test\Stub\Workflow\Transition\Condition\ProvideWorkflowConditionUsageByFieldStub;
 use Tuleap\Tracker\Test\Stub\Workflow\Trigger\ProvideParentsTriggersUsageByFieldStub;
@@ -81,6 +82,15 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
         );
     }
 
+    private static function getExpectedWorkflowActionsLabelDecorator(): LabelDecorator
+    {
+        return LabelDecorator::buildWithUrl(
+            dgettext('tuleap-tracker', 'Workflow action'),
+            dgettext('tuleap-tracker', 'This field is used by workflow actions'),
+            WorkflowUrlBuilder::buildTransitionsUrl(TrackerTestBuilder::aTracker()->build())
+        );
+    }
+
     /**
      * @param LabelDecorator[] $expected_label_decorators
      */
@@ -91,6 +101,7 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
         bool $has_triggers,
         bool $has_parent_triggers,
         bool $has_workflow_condition,
+        bool $has_workflow_action,
         array $expected_label_decorators,
     ): void {
         $tracker = TrackerTestBuilder::aTracker()->build();
@@ -114,16 +125,21 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             ? ProvideParentsTriggersUsageByFieldStub::withParentTriggers()
             : ProvideParentsTriggersUsageByFieldStub::withoutParentTriggers();
 
-        $workflow_usage_provider = $has_workflow_condition
+        $workflow_condition_usage_provider = $has_workflow_condition
             ? ProvideWorkflowConditionUsageByFieldStub::withWorkflowCondition()
             : ProvideWorkflowConditionUsageByFieldStub::withoutWorkflowCondition();
+
+        $workflow_action_usage_provider = $has_workflow_action
+            ? ProvideWorkflowActionUsageByFieldStub::withWorkflowAction()
+            : ProvideWorkflowActionUsageByFieldStub::withoutWorkflowAction();
 
         $decorators_provider = new WorkflowFieldUsageDecoratorsProvider(
             $global_rules_usage_provider,
             $field_dependencies_usage_provider,
             $triggers_usage_provider,
             $parent_triggers_usage_provider,
-            $workflow_usage_provider
+            $workflow_condition_usage_provider,
+            $workflow_action_usage_provider
         );
 
         self::assertEquals($expected_label_decorators, $decorators_provider->getLabelDecorators($field));
@@ -131,10 +147,19 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
 
     public static function getFields(): iterable
     {
-        yield 'no global rules, no field dependencies, no triggers, no parent triggers' => [false, false, false, false, false, []];
+        yield 'no global rules, no field dependencies, no triggers, no parent triggers' => [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            [],
+        ];
 
         yield 'global rules only' => [
             true,
+            false,
             false,
             false,
             false,
@@ -148,6 +173,7 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             false,
             false,
             false,
+            false,
             [self::getExpectedFieldDependenciesLabelDecorator()],
         ];
 
@@ -155,6 +181,7 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             false,
             false,
             true,
+            false,
             false,
             false,
             [self::getExpectedTriggersLabelDecorator()],
@@ -166,6 +193,7 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             false,
             true,
             false,
+            false,
             [self::getExpectedParentTriggersLabelDecorator()],
         ];
 
@@ -175,12 +203,24 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             false,
             false,
             true,
+            false,
             [self::getExpectedWorkflowConditionsLabelDecorator()],
+        ];
+
+        yield 'workflow actions only' => [
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            [self::getExpectedWorkflowActionsLabelDecorator()],
         ];
 
         yield 'global rules and field dependencies' => [
             true,
             true,
+            false,
             false,
             false,
             false,
@@ -193,6 +233,7 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             true,
             false,
             false,
+            false,
             [self::getExpectedGlobalRulesLabelDecorator(), self::getExpectedTriggersLabelDecorator()],
         ];
 
@@ -202,6 +243,7 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             false,
             true,
             false,
+            false,
             [self::getExpectedGlobalRulesLabelDecorator(), self::getExpectedParentTriggersLabelDecorator(),],
         ];
 
@@ -209,6 +251,7 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             false,
             true,
             true,
+            false,
             false,
             false,
             [self::getExpectedFieldDependenciesLabelDecorator(), self::getExpectedTriggersLabelDecorator()],
@@ -220,10 +263,12 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
             true,
             true,
             false,
+            false,
             [self::getExpectedTriggersLabelDecorator(), self::getExpectedParentTriggersLabelDecorator()],
         ];
 
         yield 'global rules, field dependencies, triggers, parent triggers, workflow conditions' => [
+            true,
             true,
             true,
             true,
@@ -235,6 +280,7 @@ class WorkflowFieldUsageDecoratorsProviderTest extends TestCase
                 self::getExpectedTriggersLabelDecorator(),
                 self::getExpectedParentTriggersLabelDecorator(),
                 self::getExpectedWorkflowConditionsLabelDecorator(),
+                self::getExpectedWorkflowActionsLabelDecorator(),
             ],
         ];
     }
