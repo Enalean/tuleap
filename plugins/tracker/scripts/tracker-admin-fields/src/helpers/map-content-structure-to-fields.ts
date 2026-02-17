@@ -46,17 +46,21 @@ export function mapContentStructureToFields(
         }
 
         if (field.type === CONTAINER_COLUMN) {
+            const column_with_content = {
+                field,
+                ...mapContentStructureToFields(child.content, fields),
+            };
+
             if (column_wrapper === null) {
                 column_wrapper = {
                     identifier: uuidv4(),
-                    columns: [],
+                    columns: [column_with_content],
                 };
                 children.push(column_wrapper);
+                continue;
             }
-            column_wrapper.columns.push({
-                field,
-                ...mapContentStructureToFields(child.content, fields),
-            });
+
+            column_wrapper.columns.push(column_with_content);
         } else {
             column_wrapper = null;
             children.push({

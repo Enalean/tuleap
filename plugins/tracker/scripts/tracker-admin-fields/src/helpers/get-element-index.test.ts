@@ -20,7 +20,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { v4 as uuidv4 } from "uuid";
 import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
-import type { ColumnWrapper, Field, Fieldset } from "../type";
+import type { Column, ColumnWrapper, Field, Fieldset } from "../type";
 import { getFieldIndexInParent } from "./get-element-index";
 
 describe("get-element-index", () => {
@@ -29,7 +29,7 @@ describe("get-element-index", () => {
     const column_wrapper_identifier = uuidv4();
 
     beforeEach(() => {
-        column_wrapper = { identifier: column_wrapper_identifier, columns: [] };
+        column_wrapper = { identifier: column_wrapper_identifier, columns: [{} as Column] };
         field_2 = { field: { field_id: 124 } } as Field;
         field_1 = { field: { field_id: 123 } } as Field;
         parent = {

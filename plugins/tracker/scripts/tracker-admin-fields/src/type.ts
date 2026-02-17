@@ -33,7 +33,7 @@ export const ROOT_CONTAINER_ID: ContainerId = "root";
 
 export interface ColumnWrapper {
     readonly identifier: string;
-    readonly columns: Array<Column>;
+    readonly columns: [Column, ...Column[]];
 }
 
 export interface Field {
