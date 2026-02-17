@@ -27,34 +27,41 @@ const getOptionsTemplates = (
     bind_value_ids: ReadonlyArray<BindValueId>,
     select_box_options: ReadonlyArray<SelectBoxOptionPresenter>,
 ): UpdateFunction<SelectBoxField>[] => {
-    return select_box_options.map((option) => {
-        const is_selected = bind_value_ids.some(
-            (bind_value_id) => String(bind_value_id) === option.id,
-        );
-        if ("value_color" in option) {
-            return html`<option
-                value="${option.id}"
-                selected="${is_selected}"
-                data-color-value="${option.value_color}"
-            >
+    return select_box_options
+        .filter((option) => {
+            const is_selected = bind_value_ids.some(
+                (bind_value_id) => String(bind_value_id) === option.id,
+            );
+            return is_selected || !option.is_hidden;
+        })
+        .map((option) => {
+            const is_selected = bind_value_ids.some(
+                (bind_value_id) => String(bind_value_id) === option.id,
+            );
+            if ("value_color" in option) {
+                return html`<option
+                    value="${option.id}"
+                    selected="${is_selected}"
+                    data-color-value="${option.value_color}"
+                >
+                    ${option.label}
+                </option>`;
+            }
+
+            if ("avatar_url" in option) {
+                return html`<option
+                    value="${option.id}"
+                    selected="${is_selected}"
+                    data-avatar-url="${option.avatar_url}"
+                >
+                    ${option.label}
+                </option>`;
+            }
+
+            return html`<option value="${option.id}" selected="${is_selected}">
                 ${option.label}
             </option>`;
-        }
-
-        if ("avatar_url" in option) {
-            return html`<option
-                value="${option.id}"
-                selected="${is_selected}"
-                data-avatar-url="${option.avatar_url}"
-            >
-                ${option.label}
-            </option>`;
-        }
-
-        return html`<option value="${option.id}" selected="${is_selected}">
-            ${option.label}
-        </option>`;
-    });
+        });
 };
 
 export const onSelectChange = (host: SelectBoxField, event: Event): void => {

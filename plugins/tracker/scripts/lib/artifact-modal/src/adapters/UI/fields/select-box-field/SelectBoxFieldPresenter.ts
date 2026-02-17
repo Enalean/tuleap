@@ -33,6 +33,7 @@ export interface SelectBoxFieldPresenter {
 type SelectBoxBaseOptionPresenter = {
     readonly id: string;
     readonly label: string;
+    readonly is_hidden: boolean;
 };
 
 type SelectBoxUserOptionPresenter = SelectBoxBaseOptionPresenter & {
@@ -53,6 +54,7 @@ const buildOptionPresenter = (value: ListFieldItem): SelectBoxOptionPresenter =>
         return {
             id: String(value.id),
             label: value.label,
+            is_hidden: false,
             avatar_url: value.user_reference.avatar_url,
         };
     }
@@ -61,11 +63,12 @@ const buildOptionPresenter = (value: ListFieldItem): SelectBoxOptionPresenter =>
         return {
             id: String(value.id),
             label: value.label,
+            is_hidden: value.is_hidden,
             value_color: value.value_color,
         };
     }
 
-    return { id: String(value.id), label: value.label };
+    return { id: String(value.id), label: value.label, is_hidden: false };
 };
 
 function buildSelectBoxOptions(

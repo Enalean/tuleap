@@ -130,14 +130,10 @@ const isStaticValue = (
     value: OpenListBindValueObject,
 ): value is OpenListValueRepresentation | StaticValueRepresentation => !isUserValue(value);
 
-const isVisibleValue = (value: OpenListValueRepresentation | StaticValueRepresentation): boolean =>
-    !value.is_hidden;
-
 const mapToStaticValueModel = (
     bind_value_objects: readonly OpenListBindValueObject[],
 ): StaticValueModelItem[] => {
-    const static_values = bind_value_objects.filter(isStaticValue);
-    return static_values.filter(isVisibleValue);
+    return bind_value_objects.filter(isStaticValue);
 };
 
 const isUserGroupValue = (value: OpenListBindValueObject): value is UserGroupRepresentation =>

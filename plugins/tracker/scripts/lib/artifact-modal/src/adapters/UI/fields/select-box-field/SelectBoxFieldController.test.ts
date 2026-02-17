@@ -131,6 +131,7 @@ describe("SelectBoxFieldController", () => {
                     {
                         id: option_2.value,
                         label: "option 2",
+                        is_hidden: false,
                     },
                 ],
             });

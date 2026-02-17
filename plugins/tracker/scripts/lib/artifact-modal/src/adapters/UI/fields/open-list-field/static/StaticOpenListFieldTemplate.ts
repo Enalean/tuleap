@@ -57,13 +57,15 @@ export const renderStaticOpenListField = (
                 data-test="static-open-list-field-select"
                 data-role="select-element"
             >
-                ${host.presenter.values.map(
-                    (field_value) => html`
-                        <option value="${field_value.id}" selected="${field_value.selected}">
-                            ${field_value.label}
-                        </option>
-                    `,
-                )}
+                ${host.presenter.values
+                    .filter((value) => value.selected || !value.is_hidden)
+                    .map(
+                        (field_value) => html`
+                            <option value="${field_value.id}" selected="${field_value.selected}">
+                                ${field_value.label}
+                            </option>
+                        `,
+                    )}
             </select>
             ${host.presenter.is_required_and_empty &&
             html`<p class="tlp-text-danger" data-test="static-open-list-field-error">

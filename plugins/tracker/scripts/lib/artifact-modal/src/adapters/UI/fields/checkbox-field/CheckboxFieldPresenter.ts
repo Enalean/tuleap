@@ -31,6 +31,7 @@ export interface CheckboxFieldValuePresenter {
     readonly id: number;
     readonly label: string;
     readonly is_checked: boolean;
+    readonly is_hidden: boolean;
 }
 
 function buildValues(

@@ -39,10 +39,10 @@ describe("CheckboxField", () => {
                 field_id: 1060,
                 label: "Numbers",
                 values: [
-                    { id: 1, label: "One" },
-                    { id: 2, label: "Two" },
-                    { id: 3, label: "Three" },
-                    { id: 4, label: "Four" },
+                    { id: 1, label: "One", is_hidden: false },
+                    { id: 2, label: "Two", is_hidden: false },
+                    { id: 3, label: "Three", is_hidden: false },
+                    { id: 4, label: "Four", is_hidden: false },
                 ],
                 required: true,
             },
@@ -50,7 +50,7 @@ describe("CheckboxField", () => {
             false,
         );
         value_index = 0;
-        value = { id: 1, label: "One", is_checked: true };
+        value = { id: 1, label: "One", is_checked: true, is_hidden: false };
     });
 
     const getHost = (): HostElement => {
@@ -82,7 +82,7 @@ describe("CheckboxField", () => {
 
     it(`dispatches a bubbling "change" event when its inner checkbox is changed
         so that the modal shows a warning when closed`, () => {
-        value = { id: 1, label: "One", is_checked: false };
+        value = { id: 1, label: "One", is_checked: false, is_hidden: false };
         const host = getHost();
         const checkbox = renderCheckbox(host);
         let is_bubbling = false;

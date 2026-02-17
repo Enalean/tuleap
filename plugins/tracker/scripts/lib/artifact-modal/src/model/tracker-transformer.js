@@ -64,19 +64,16 @@ function transformFields(all_fields) {
 function transformField(field) {
     switch (field.type) {
         case "sb":
-            field.values = filterHiddenValues(field.values);
             field.values = displayI18NLabelIfAvailable(field.values);
             field.values = addNoneValueInSelectboxField(field);
             break;
         case "msb":
-            field.values = filterHiddenValues(field.values);
             field.values = displayI18NLabelIfAvailable(field.values);
             field.values = addNoneValueInMultiSelectboxField(field);
             field.filtered_values = { ...field.values };
             break;
         case "cb":
         case "rb":
-            field.values = filterHiddenValues(field.values);
             field.values = displayI18NLabelIfAvailable(field.values);
             break;
         case "tbl":
@@ -93,12 +90,6 @@ function transformField(field) {
     }
 
     return field;
-}
-
-function filterHiddenValues(field_values) {
-    return field_values.filter((field_value) => {
-        return !field_value.is_hidden;
-    });
 }
 
 function displayI18NLabelIfAvailable(field_values) {

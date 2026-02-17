@@ -78,9 +78,9 @@ export const CheckboxField = define<CheckboxField>({
                 html`<i class="fas fa-asterisk" aria-hidden="true"></i>`}
             </label>
 
-            ${host.field_presenter.checkbox_values.map((value, index) =>
-                buildCheckbox(host, value, index),
-            )}
+            ${host.field_presenter.checkbox_values
+                .filter((value) => value.is_checked || !value.is_hidden)
+                .map((value, index) => buildCheckbox(host, value, index))}
         </div>
     `,
 });
