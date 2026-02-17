@@ -77,11 +77,7 @@ class Transition_PostActionSubFactories
      */
     public function isFieldUsedInPostActions(TrackerField $field)
     {
-        foreach ($this->factories as $factory) {
-            if ($factory->isFieldUsedInPostActions($field)) {
-                return true;
-            }
-        }
+        return array_any($this->factories, fn($factory) => $factory->isFieldUsedInPostActions($field));
     }
 
     /**

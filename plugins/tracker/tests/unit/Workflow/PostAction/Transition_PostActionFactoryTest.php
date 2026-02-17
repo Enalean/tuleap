@@ -236,7 +236,7 @@ final class Transition_PostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->event_manager->expects($this->once())->method('processEvent');
 
-        $this->assertNull($this->factory->isFieldUsedInPostActions($field));
+        $this->assertFalse($this->factory->isFieldUsedInPostActions($field));
     }
 
     public function testItReturnsTrueIfAtLeastOneOfTheSubFactoryReturnsTrue(): void
