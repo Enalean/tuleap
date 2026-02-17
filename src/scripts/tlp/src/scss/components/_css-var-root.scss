@@ -103,6 +103,22 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
         var(--tlp-dark-color-transparent-50),
         var(--tlp-neutral-light-color-transparent-40)
     );
+    --tlp-info-text-color: light-dark(
+        var(--tlp-info-dark-color),
+        var(--tlp-info-color-on-dark-background)
+    );
+    --tlp-success-text-color: light-dark(
+        var(--tlp-success-dark-color),
+        var(--tlp-success-color-on-dark-background)
+    );
+    --tlp-warning-text-color: light-dark(
+        var(--tlp-warning-dark-color),
+        var(--tlp-warning-color-on-dark-background)
+    );
+    --tlp-danger-text-color: light-dark(
+        var(--tlp-danger-dark-color),
+        var(--tlp-danger-color-on-dark-background)
+    );
     --tlp-table-row-background-odd: light-dark(#{common.$tlp-white-color}, var(--tlp-dark-color));
     --tlp-table-row-background-even: light-dark(
         #{color.mix($tlp-background-color, common.$tlp-white-color, 50%)},
@@ -518,5 +534,19 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-form-element-placeholder-color: light-dark(
         var(--tlp-neutral-dark-color-darker-10),
         var(--tlp-dimmed-color-lighter-30)
+    );
+
+    // Floating elements (flyovers)
+    --tlp-floating-element-background: light-dark(
+        var(--tlp-white-color),
+        var(--tlp-dark-color-lighter-10)
+    );
+    --tlp-floating-element-header-dark: light-dark(
+        var(--tlp-dark-color-darker-20),
+        var(--tlp-dark-color-lighter-20)
+    );
+    --tlp-floating-element-dark: light-dark(
+        var(--tlp-dark-color),
+        var(--tlp-dark-color-lighter-20)
     );
 }
