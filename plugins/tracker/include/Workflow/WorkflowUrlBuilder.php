@@ -49,4 +49,9 @@ final class WorkflowUrlBuilder
     {
         return self::buildUrl($tracker, Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS);
     }
+
+    public static function buildTransitionsUrl(Tracker $tracker): string
+    {
+        return self::buildUrl($tracker, Workflow::FUNC_ADMIN_TRANSITIONS);
+    }
 }

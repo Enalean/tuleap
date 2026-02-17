@@ -4197,6 +4197,9 @@ msgstr "Ce champ est utilisé par les trackers suivants :"
 msgid "This field is used by triggers"
 msgstr "Ce champ est utilisé par les déclencheurs"
 
+msgid "This field is used by workflow conditions"
+msgstr "Ce champ est utilisé par les conditions de workflow"
+
 msgid "This file has been removed meantime."
 msgstr "Ce fichier a été supprimé entre temps."
 
@@ -4817,6 +4820,9 @@ msgstr ""
 
 msgid "Workflow"
 msgstr "Workflow"
+
+msgid "Workflow condition"
+msgstr "Condition de workflow"
 
 #, php-format
 msgid "Workflow mode is incompatible with PostAction of type %s"
