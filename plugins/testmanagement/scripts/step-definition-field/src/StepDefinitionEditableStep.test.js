@@ -19,7 +19,7 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { nextTick } from "vue";
+import { nextTick, ref } from "vue";
 import { shallowMount } from "@vue/test-utils";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
 import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
@@ -31,6 +31,7 @@ import {
     UPLOAD_URL,
     UPLOAD_FIELD_NAME,
     UPLOAD_MAX_SIZE,
+    IS_DRAGGING,
 } from "./injection-keys.ts";
 
 vi.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
@@ -50,11 +51,7 @@ const project_id = 102;
 function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
     return shallowMount(StepDefinitionEditableStep, {
         global: {
-            ...getGlobalTestOptions({
-                state: {
-                    is_dragging: false,
-                },
-            }),
+            ...getGlobalTestOptions(),
             directives: {
                 "dompurify-html": vi.fn(),
             },
@@ -64,6 +61,7 @@ function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
                 [UPLOAD_URL.valueOf()]: "",
                 [UPLOAD_FIELD_NAME.valueOf()]: "",
                 [UPLOAD_MAX_SIZE.valueOf()]: "",
+                [IS_DRAGGING.valueOf()]: ref(false),
             },
         },
         propsData: {

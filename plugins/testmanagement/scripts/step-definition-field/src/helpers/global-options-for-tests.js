@@ -18,10 +18,9 @@
  */
 
 import { createGettext } from "vue3-gettext";
-import { createStore } from "vuex";
 
-export function getGlobalTestOptions(store_options = {}) {
+export function getGlobalTestOptions() {
     return {
-        plugins: [createGettext({ silent: true }), createStore(store_options)],
+        plugins: [createGettext({ silent: true })],
     };
 }

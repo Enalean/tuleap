@@ -63,16 +63,15 @@ import { useMutations, useState } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import StepDefinitionEntry from "./StepDefinitionEntry.vue";
 import type { Step } from "./Step";
-import { EMPTY_STEP, FIELD_ID } from "./injection-keys";
+import { EMPTY_STEP, FIELD_ID, IS_DRAGGING } from "./injection-keys";
 
 const field_id = strictInject(FIELD_ID);
 const empty_step = strictInject(EMPTY_STEP);
+const is_dragging = strictInject(IS_DRAGGING);
 
-const { steps, is_dragging } = useState<{
+const { steps } = useState<{
     steps: Array<Step>;
-    is_dragging: boolean;
-}>(["steps", "is_dragging"]);
-
+}>(["steps"]);
 const { addStep, moveStep } = useMutations(["addStep", "moveStep"]);
 
 const dragged_step = ref<Step | null>(null);

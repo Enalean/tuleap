@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Ref } from "vue";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { Step } from "./Step";
 
@@ -26,3 +27,4 @@ export const EMPTY_STEP: StrictInjectionKey<Step> = Symbol("empty_step");
 export const UPLOAD_URL: StrictInjectionKey<string> = Symbol("upload_url");
 export const UPLOAD_FIELD_NAME: StrictInjectionKey<string> = Symbol("upload_field_name");
 export const UPLOAD_MAX_SIZE: StrictInjectionKey<string> = Symbol("upload_max_size");
+export const IS_DRAGGING: StrictInjectionKey<Ref<boolean>> = Symbol("is_dragging");

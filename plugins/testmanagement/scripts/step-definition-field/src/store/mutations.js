@@ -36,10 +36,6 @@ export function moveStep(state, [step_to_move, index]) {
     state.steps.splice(index, 0, step_to_move);
 }
 
-export function toggleIsDragging(state) {
-    state.is_dragging = !state.is_dragging;
-}
-
 export function addStep(state, [index, empty_step]) {
     const step = { ...empty_step };
     step.uuid = uuid();
