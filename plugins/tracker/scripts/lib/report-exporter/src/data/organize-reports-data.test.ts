@@ -86,7 +86,7 @@ describe("organize-reports-data", () => {
             },
         ];
 
-        const getReportArtifactsMock = vi.spyOn(rest_querier, "getReportArtifacts");
+        const getReportArtifactsMock = vi.spyOn(rest_querier, "getReportArtifactsOld");
         getReportArtifactsMock.mockImplementation(
             (report_id: number): Promise<ArtifactForCrossReportDocGen[]> => {
                 if (report_id === 1) {
@@ -102,7 +102,7 @@ describe("organize-reports-data", () => {
             },
         );
 
-        const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifacts");
+        const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifactsOld");
         getLinkedArtifactsMock.mockImplementation(
             (artifact_id: number): Promise<LinkedArtifactsResponse[]> => {
                 if (artifact_id === 74) {
@@ -124,6 +124,7 @@ describe("organize-reports-data", () => {
         const organized_reports_data: OrganizedReportsData = await organizeReportsData({
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
@@ -131,6 +132,7 @@ describe("organize-reports-data", () => {
             },
             second_level: {
                 tracker_name: "tracker02",
+                tracker_id: 24,
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [""],
@@ -138,6 +140,7 @@ describe("organize-reports-data", () => {
             },
             third_level: {
                 tracker_name: "tracker03",
+                tracker_id: 25,
                 report_id: 3,
                 report_name: "report03",
                 all_columns: false,
@@ -223,7 +226,7 @@ describe("organize-reports-data", () => {
             } as ArtifactForCrossReportDocGen,
         ];
 
-        const getReportArtifactsMock = vi.spyOn(rest_querier, "getReportArtifacts");
+        const getReportArtifactsMock = vi.spyOn(rest_querier, "getReportArtifactsOld");
         getReportArtifactsMock.mockImplementation(
             (report_id: number): Promise<ArtifactForCrossReportDocGen[]> => {
                 if (report_id === 1) {
@@ -236,7 +239,7 @@ describe("organize-reports-data", () => {
             },
         );
 
-        const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifacts");
+        const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifactsOld");
         getLinkedArtifactsMock.mockImplementation(
             (artifact_id: number): Promise<LinkedArtifactsResponse[]> => {
                 if (artifact_id === 74) {
@@ -252,6 +255,7 @@ describe("organize-reports-data", () => {
         const organized_reports_data: OrganizedReportsData = await organizeReportsData({
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
@@ -259,6 +263,7 @@ describe("organize-reports-data", () => {
             },
             second_level: {
                 tracker_name: "tracker02",
+                tracker_id: 24,
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
@@ -340,7 +345,7 @@ describe("organize-reports-data", () => {
             } as ArtifactForCrossReportDocGen,
         ];
 
-        const getReportArtifactsMock = vi.spyOn(rest_querier, "getReportArtifacts");
+        const getReportArtifactsMock = vi.spyOn(rest_querier, "getReportArtifactsOld");
         getReportArtifactsMock.mockImplementation(
             (report_id: number): Promise<ArtifactForCrossReportDocGen[]> => {
                 if (report_id === 1) {
@@ -353,7 +358,7 @@ describe("organize-reports-data", () => {
             },
         );
 
-        const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifacts");
+        const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifactsOld");
         getLinkedArtifactsMock.mockImplementation(
             (
                 artifact_id: number,
@@ -375,6 +380,7 @@ describe("organize-reports-data", () => {
         const organized_reports_data: OrganizedReportsData = await organizeReportsData({
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child", "another"],
@@ -382,6 +388,7 @@ describe("organize-reports-data", () => {
             },
             second_level: {
                 tracker_name: "tracker02",
+                tracker_id: 24,
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
@@ -426,11 +433,14 @@ describe("organize-reports-data", () => {
     });
     it("generates empty organized data if no artifact found", async (): Promise<void> => {
         const artifacts_report_response: ArtifactForCrossReportDocGen[] = [];
-        vi.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
+        vi.spyOn(rest_querier, "getReportArtifactsOld").mockResolvedValue(
+            artifacts_report_response,
+        );
 
         const organized_reports_data: OrganizedReportsData = await organizeReportsData({
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: [],

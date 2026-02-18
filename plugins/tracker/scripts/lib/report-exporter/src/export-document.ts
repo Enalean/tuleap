@@ -20,8 +20,9 @@
 import type { ReportSection } from "./data/data-formator";
 import { formatData } from "./data/data-formator";
 
-interface ExportLevelSetting {
+export interface ExportLevelSetting {
     readonly tracker_name: string;
+    readonly tracker_id: number;
     readonly report_id: number;
     readonly report_name: string;
     readonly table_renderer_id?: number | undefined;

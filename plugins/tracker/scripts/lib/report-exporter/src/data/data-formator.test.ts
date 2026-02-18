@@ -60,6 +60,7 @@ describe("data-formator", () => {
         const formatted_data = await formatData({
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
@@ -67,6 +68,7 @@ describe("data-formator", () => {
             },
             second_level: {
                 tracker_name: "tracker02",
+                tracker_id: 24,
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
@@ -74,6 +76,7 @@ describe("data-formator", () => {
             },
             third_level: {
                 tracker_name: "tracker03",
+                tracker_id: 25,
                 report_id: 3,
                 report_name: "report03",
                 all_columns: false,
@@ -141,6 +144,7 @@ describe("data-formator", () => {
         const formatted_data = await formatData({
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
@@ -148,6 +152,7 @@ describe("data-formator", () => {
             },
             second_level: {
                 tracker_name: "tracker02",
+                tracker_id: 24,
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
@@ -155,6 +160,7 @@ describe("data-formator", () => {
             },
             third_level: {
                 tracker_name: "tracker03",
+                tracker_id: 25,
                 report_id: 3,
                 report_name: "report03",
                 all_columns: false,
@@ -218,6 +224,7 @@ describe("data-formator", () => {
         const formatted_data = await formatData({
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
@@ -225,6 +232,7 @@ describe("data-formator", () => {
             },
             second_level: {
                 tracker_name: "tracker02",
+                tracker_id: 24,
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
@@ -267,6 +275,7 @@ describe("data-formator", () => {
         const formatted_data = await formatData({
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
@@ -299,6 +308,7 @@ describe("data-formator", () => {
         const formatted_data = await formatData({
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: [],
@@ -328,6 +338,7 @@ describe("data-formator", () => {
         const export_settings: ExportSettings = {
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
@@ -335,6 +346,7 @@ describe("data-formator", () => {
             },
             second_level: {
                 tracker_name: "tracker02",
+                tracker_id: 23,
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
@@ -367,6 +379,7 @@ describe("data-formator", () => {
         const export_settings: ExportSettings = {
             first_level: {
                 tracker_name: "tracker01",
+                tracker_id: 23,
                 report_id: 1,
                 report_name: "report01",
                 artifact_link_types: ["_is_child"],
@@ -374,6 +387,7 @@ describe("data-formator", () => {
             },
             second_level: {
                 tracker_name: "tracker02",
+                tracker_id: 24,
                 report_id: 2,
                 report_name: "report02",
                 artifact_link_types: [],
@@ -381,6 +395,7 @@ describe("data-formator", () => {
             },
             third_level: {
                 tracker_name: "tracker03",
+                tracker_id: 25,
                 report_id: 3,
                 report_name: "report03",
                 all_columns: false,

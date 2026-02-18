@@ -8,6 +8,12 @@ dependencies:
   '@tuleap/concurrency-limit-pool':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/concurrency-limit-pool
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fetch-result
   '@tuleap/option':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/option
@@ -17,12 +23,18 @@ dependencies:
   '@tuleap/plugin-docgen-xlsx':
     specifier: workspace:*
     version: link:../../../../document_generation/scripts/lib/xlsx
+  '@tuleap/plugin-tracker-constants':
+    specifier: workspace:*
+    version: link:../constants
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:*
     version: link:../rest-api-types
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-fetch
+  neverthrow:
+    specifier: 6.0.0
+    version: 6.0.0
   xlsx:
     specifier: git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#8a7cfd47bde8258c0d91df6a737bf0136699cdf8
     version: tuleap.net/plugins/git/tuleap/deps/sheetjs/8a7cfd47bde8258c0d91df6a737bf0136699cdf8
@@ -33,6 +45,10 @@ devDependencies:
     version: link:../../../../../lib/frontend/build-system-configurator
 
 packages:
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false
 
   tuleap.net/plugins/git/tuleap/deps/sheetjs/8a7cfd47bde8258c0d91df6a737bf0136699cdf8:
     resolution: {commit: 8a7cfd47bde8258c0d91df6a737bf0136699cdf8, repo: https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git, type: git}

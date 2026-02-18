@@ -20,6 +20,10 @@
     "@tuleap/plugin-docgen-xlsx": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/plugin-tracker-constants": "workspace:*",
+    "@tuleap/fault": "workspace:*",
+    "neverthrow": "6.0.0",
     "xlsx": "git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#8a7cfd47bde8258c0d91df6a737bf0136699cdf8"
   },
   "devDependencies": {

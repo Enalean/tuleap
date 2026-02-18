@@ -147,6 +147,7 @@ async function startExport(): Promise<void> {
     let export_settings: ExportSettings = {
         first_level: {
             tracker_name: props.properties.current_tracker_name,
+            tracker_id: props.properties.current_tracker_id,
             report_id: selected_report_level_1.value.id,
             report_name: selected_report_level_1.value.label,
             artifact_link_types: artifact_link_types_level_1.value,
@@ -158,6 +159,7 @@ async function startExport(): Promise<void> {
             ...export_settings,
             second_level: {
                 tracker_name: selected_tracker_level_2.value.label,
+                tracker_id: selected_tracker_level_2.value.id,
                 report_id: selected_report_level_2.value.id,
                 report_name: selected_report_level_2.value.label,
                 artifact_link_types: artifact_link_types_level_2.value,
@@ -170,6 +172,7 @@ async function startExport(): Promise<void> {
             ...export_settings,
             third_level: {
                 tracker_name: selected_tracker_level_3.value.label,
+                tracker_id: selected_tracker_level_3.value.id,
                 report_id: selected_report_level_3.value.id,
                 report_name: selected_report_level_3.value.label,
                 all_columns: false,

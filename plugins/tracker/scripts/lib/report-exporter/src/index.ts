@@ -19,6 +19,7 @@
 
 export { downloadDocument } from "./export-document";
 export type { ExportSettings } from "./export-document";
-
+export { downloadData } from "./download-data";
+export type { DownloadSettings, DownloadLevelSettings } from "./download-data";
 export { downloadXLSX } from "./download-xlsx";
 export { downloadCSV } from "./download-csv";
