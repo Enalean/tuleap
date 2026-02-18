@@ -4072,11 +4072,17 @@ msgstr ""
 msgid "Unused elements"
 msgstr ""
 
+msgid "Unused field"
+msgstr ""
+
 msgid "Update"
 msgstr "Atualizar"
 
 #, php-format
 msgid "Update Field '%1$s'"
+msgstr ""
+
+msgid "Update field"
 msgstr ""
 
 msgid "Update semantic"

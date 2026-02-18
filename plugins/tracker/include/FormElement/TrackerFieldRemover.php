@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
+use DateTimeImmutable;
+use PFUser;
 use TrackerFactory;
+use Tuleap\dao\AddHistory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -35,14 +38,17 @@ use Tuleap\Tracker\FormElement\Field\RemoveField;
  */
 final readonly class TrackerFieldRemover
 {
-    public function __construct(private RemoveField $form_element_factory, private TrackerFactory $tracker_factory)
-    {
+    public function __construct(
+        private RemoveField $form_element_factory,
+        private TrackerFactory $tracker_factory,
+        private AddHistory $project_history_dao,
+    ) {
     }
 
     /**
      * @return Ok<null>|Err<Fault>
      */
-    public function remove(TrackerFormElement $field): Ok|Err
+    public function remove(TrackerFormElement $field, PFUser $current_user): Ok|Err
     {
         if (! $field->isUsed()) {
             return Result::ok(null);
@@ -53,6 +59,17 @@ final readonly class TrackerFieldRemover
             return Result::err(FieldUsedInTriggerFault::build());
         }
         $this->form_element_factory->removeFormElement($field->id);
+
+        $project              = $field->getTracker()->getProject();
+        $project_history_enum = TrackerFormElementHistoryEntry::build(TrackerFormElementHistoryEntry::Unused->value);
+
+        $this->project_history_dao->addHistory(
+            $project,
+            $current_user,
+            new DateTimeImmutable(),
+            $project_history_enum->getLabel(),
+            $project_history_enum->getValue($field),
+        );
         return Result::ok(null);
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\FormElement;
 
 use Luracast\Restler\RestException;
+use PFUser;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
 use Tuleap\Tracker\FormElement\TrackerFieldAdder;
@@ -38,7 +39,7 @@ final readonly class RestFieldUseHandler
     /**
      * @throws \Luracast\Restler\RestException
      */
-    public function handle(TrackerFormElement $field, TrackerFieldPatchRepresentation $patch): void
+    public function handle(TrackerFormElement $field, TrackerFieldPatchRepresentation $patch, PFUser $current_user): void
     {
         if ($patch->use_it === null) {
             return;
@@ -49,7 +50,7 @@ final readonly class RestFieldUseHandler
         }
 
         if ($patch->use_it === false) {
-            $this->field_remover->remove($field)->mapErr(
+            $this->field_remover->remove($field, $current_user)->mapErr(
                 static fn(Fault $fault) => throw new RestException(
                     400,
                     (string) $fault

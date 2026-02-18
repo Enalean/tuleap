@@ -24,17 +24,22 @@ namespace Tuleap\Tracker\REST\FormElement;
 
 use Luracast\Restler\RestException;
 use Override;
+use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tracker_Workflow_Trigger_RulesManager;
 use TrackerFactory;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
+use Tuleap\Stubs\AddHistoryStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\TrackerFieldAdder;
 use Tuleap\Tracker\FormElement\TrackerFieldRemover;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\AddFieldStub;
 use Tuleap\Tracker\Test\Stub\RemoveFieldStub;
 
@@ -47,14 +52,22 @@ final class RestFieldUseHandlerTest extends TestCase
     private AddFieldStub $form_element_factory_add;
     private TrackerFactory&MockObject $tracker_factory;
     private Tracker_Workflow_Trigger_RulesManager&Stub $rules_manager;
+    private PFUser $current_user;
+    private AddHistoryStub $history_dao;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->field =  StringFieldBuilder::aStringField(1)->build();
+        $project     = ProjectTestBuilder::aProject()->build();
+        $tracker     = TrackerTestBuilder::aTracker()->withProject($project)->build();
+        $this->field =  StringFieldBuilder::aStringField(1)->inTracker($tracker)->build();
+
+        $this->current_user = UserTestBuilder::buildWithDefaults();
 
         $this->form_element_factory_remove = RemoveFieldStub::build();
         $this->form_element_factory_add    = AddFieldStub::build();
+
+        $this->history_dao = AddHistoryStub::build();
 
         $this->tracker_factory = $this->createMock(TrackerFactory::class);
         $this->rules_manager   = $this->createStub(Tracker_Workflow_Trigger_RulesManager::class);
@@ -66,8 +79,8 @@ final class RestFieldUseHandlerTest extends TestCase
 
         $this->tracker_factory->expects($this->never())->method('getTriggerRulesManager');
 
-        $field_remove_handler = new RestFieldUseHandler(new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory), new TrackerFieldAdder($this->form_element_factory_add));
-        $field_remove_handler->handle($this->field, $patch);
+        $field_remove_handler = new RestFieldUseHandler(new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory, $this->history_dao), new TrackerFieldAdder($this->form_element_factory_add));
+        $field_remove_handler->handle($this->field, $patch, $this->current_user);
 
         self::assertSame(0, $this->form_element_factory_remove->call_count);
         self::assertSame(0, $this->form_element_factory_add->call_count);
@@ -80,8 +93,8 @@ final class RestFieldUseHandlerTest extends TestCase
         $this->tracker_factory->expects($this->never())->method('getTriggerRulesManager');
         $this->field = StringFieldBuilder::aStringField(1)->unused()->build();
 
-        $field_remove_handler = new RestFieldUseHandler(new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory), new TrackerFieldAdder($this->form_element_factory_add));
-        $field_remove_handler->handle($this->field, $patch);
+        $field_remove_handler = new RestFieldUseHandler(new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory, $this->history_dao), new TrackerFieldAdder($this->form_element_factory_add));
+        $field_remove_handler->handle($this->field, $patch, $this->current_user);
 
         self::assertSame(0, $this->form_element_factory_remove->call_count);
         self::assertSame(1, $this->form_element_factory_add->call_count);
@@ -96,8 +109,8 @@ final class RestFieldUseHandlerTest extends TestCase
 
         $this->expectException(RestException::class);
 
-        $field_remove_handler = new RestFieldUseHandler(new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory), new TrackerFieldAdder($this->form_element_factory_add));
-        $field_remove_handler->handle($this->field, $patch);
+        $field_remove_handler = new RestFieldUseHandler(new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory, $this->history_dao), new TrackerFieldAdder($this->form_element_factory_add));
+        $field_remove_handler->handle($this->field, $patch, $this->current_user);
 
 
         self::assertSame(1, $this->form_element_factory_remove->call_count);
@@ -111,8 +124,8 @@ final class RestFieldUseHandlerTest extends TestCase
         $this->tracker_factory->expects($this->once())->method('getTriggerRulesManager')->willReturn($this->rules_manager);
         $this->rules_manager->method('isUsedInTrigger')->willReturn(false);
 
-        $field_remove_handler = new RestFieldUseHandler(new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory), new TrackerFieldAdder($this->form_element_factory_add));
-        $field_remove_handler->handle($this->field, $patch);
+        $field_remove_handler = new RestFieldUseHandler(new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory, $this->history_dao), new TrackerFieldAdder($this->form_element_factory_add));
+        $field_remove_handler->handle($this->field, $patch, $this->current_user);
 
         self::assertSame(1, $this->form_element_factory_remove->call_count);
         self::assertSame(0, $this->form_element_factory_add->call_count);

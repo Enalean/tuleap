@@ -4615,12 +4615,18 @@ msgstr ""
 msgid "Unused elements"
 msgstr "Elements inutilisés"
 
+msgid "Unused field"
+msgstr "Champ inutilisé"
+
 msgid "Update"
 msgstr "Mettre à jour"
 
 #, php-format
 msgid "Update Field '%1$s'"
 msgstr "Modifier le champ '%1$s'"
+
+msgid "Update field"
+msgstr "Mis à jour du champ"
 
 msgid "Update semantic"
 msgstr "Mettre à jour la sémantique"

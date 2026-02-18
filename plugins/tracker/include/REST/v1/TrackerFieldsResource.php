@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST\v1;
 use ForgeConfig;
 use Luracast\Restler\RestException;
 use PFUser;
+use ProjectHistoryDao;
 use Tracker_FormElementFactory;
 use Tracker_REST_FormElementRepresentation;
 use TrackerFactory;
@@ -151,7 +152,10 @@ class TrackerFieldsResource extends AuthenticatedResource
 
         $form_element_factory = Tracker_FormElementFactory::instance();
 
-        new RestFieldUseHandler(new TrackerFieldRemover($form_element_factory, TrackerFactory::instance()), new TrackerFieldAdder($form_element_factory))->handle($field, $patch);
+        new RestFieldUseHandler(
+            new TrackerFieldRemover($form_element_factory, TrackerFactory::instance(), new ProjectHistoryDao()),
+            new TrackerFieldAdder($form_element_factory)
+        )->handle($field, $patch, $user);
 
         if ($patch->new_values !== null) {
             if (! $form_element_factory->isFieldASimpleListField($field)) {

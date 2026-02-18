@@ -23,11 +23,13 @@ namespace Tuleap\Tracker\FormElement;
 
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
+use DateTimeImmutable;
 use EventManager;
 use Feedback;
 use PermissionsManager;
 use PFUser;
 use ProjectHistoryDao;
+use ProjectManager;
 use RuntimeException;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
@@ -73,8 +75,6 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
     public const string REST_PERMISSION_READ   = 'read';
     public const string REST_PERMISSION_UPDATE = 'update';
     public const string REST_PERMISSION_SUBMIT = 'submit';
-
-    public const string PROJECT_HISTORY_UPDATE = 'tracker_formelement_update';
 
     public const string XML_ID_PREFIX          = 'F';
     public const string XML_TAG_EXTERNAL_FIELD = 'externalField';
@@ -305,9 +305,13 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
                 $this->processUpdate($layout, $request, $current_user);
                 break;
             case Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE:
-                $field_remover = new TrackerFieldRemover($this->getFormElementFactory(), TrackerFactory::instance());
+                $field_remover = new TrackerFieldRemover(
+                    $this->getFormElementFactory(),
+                    TrackerFactory::instance(),
+                    new ProjectHistoryDao()
+                );
 
-                $field_remover->remove($this)->match(
+                $field_remover->remove($this, $current_user)->match(
                     static function () {
                         $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field removed'));
                     },
@@ -350,12 +354,22 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
             if (! isset($formElement_data['specific_properties']) || ! is_array($formElement_data['specific_properties']) || $this->storeProperties($formElement_data['specific_properties'])) {
                 //Then store the formElement itself
                 if (Tracker_FormElementFactory::instance()->updateFormElement($this, $formElement_data)) {
-                    $history_dao = new ProjectHistoryDao();
-                    $history_dao->groupAddHistory(
-                        self::PROJECT_HISTORY_UPDATE,
-                        '#' . $this->getId() . ' ' . $this->getLabel() . ' (' . $this->getTracker()->getName() . ')',
-                        $this->getTracker()->getProject()->getId()
+                    $project               = ProjectManager::instance()->getProjectById(
+                        (int) $this->getTracker()->getProject()->getId()
                     );
+                    $history_dao           = new ProjectHistoryDao();
+                    $project_history_entry = TrackerFormElementHistoryEntry::build(
+                        TrackerFormElementHistoryEntry::Update->value
+                    );
+
+                    $history_dao->addHistory(
+                        $project,
+                        $current_user,
+                        new DateTimeImmutable(),
+                        $project_history_entry->getLabel(),
+                        $project_history_entry->getValue($this),
+                    );
+
                     $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field updated'));
                     if ($request->isAjax()) {
                         echo $this->fetchAdminFormElement();
