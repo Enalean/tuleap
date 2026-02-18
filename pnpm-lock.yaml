@@ -141,9 +141,6 @@ devDependencies:
   json-loader:
     specifier: ^0.5.7
     version: 0.5.7
-  lodash.map:
-    specifier: 4.6.0
-    version: 4.6.0
   mini-css-extract-plugin:
     specifier: ^2.7.6
     version: 2.7.6(webpack@5.105.0)
