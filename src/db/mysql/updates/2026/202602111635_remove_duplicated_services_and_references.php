@@ -120,7 +120,7 @@ final class b202602111635_remove_duplicated_services_and_references extends \Tul
                 is_in_new_tab,
                 icon
             )
-            SELECT duplicate.service_id,
+            SELECT DISTINCT duplicate.service_id,
                    duplicate.group_id,
                    duplicate.label,
                    duplicate.description,
