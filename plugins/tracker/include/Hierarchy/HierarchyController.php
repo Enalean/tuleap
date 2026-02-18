@@ -33,6 +33,7 @@ use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Tracker;
 use Valid_UInt;
 
@@ -52,6 +53,7 @@ final readonly class HierarchyController
         private \ProjectHistoryDao $project_history_dao,
         private BaseLayout $layout,
         private CSRFSynchronizerTokenInterface $csrf_token,
+        private RetrieveTracker $tracker_retriever,
     ) {
         $this->renderer = TemplateRendererFactory::build()->getRenderer(__DIR__);
     }
@@ -121,7 +123,6 @@ final readonly class HierarchyController
         if (! $this->request->validArray($vChildren) && $this->request->exist('children')) {
             $this->layout->addFeedback('error', dgettext('tuleap-tracker', 'Your request contains invalid data, cowardly doing nothing (children parameter)'));
             $this->redirectToAdminHierarchy();
-            return;
         }
         /** @var string[]|false $request_children */
         $request_children = $this->request->get('children');
@@ -144,7 +145,30 @@ final readonly class HierarchyController
                 $event->getErrorMessage(),
             );
             $this->redirectToAdminHierarchy();
-            return;
+        }
+
+        $wanted_children_involved_in_triggers = [];
+        foreach ($wanted_children as $wanted_child) {
+            if ($this->tracker_workflow_trigger_rules_dao->searchForTriggeringTracker($wanted_child)->rowCount() !== 0) {
+                $wanted_children_involved_in_triggers[] = $wanted_child;
+            }
+        }
+        if ($wanted_children_involved_in_triggers !== []) {
+            $tracker_names        = array_filter(array_map(
+                fn(int $id) => $this->tracker_retriever->getTrackerById($id)?->getName() ?? '',
+                $wanted_children_involved_in_triggers,
+            ));
+            $tracker_names_string = implode(', ', $tracker_names);
+            $this->layout->addFeedback(
+                'error',
+                sprintf(dngettext(
+                    'tuleap-tracker',
+                    'The tracker %s is involved in cross-tracker triggers, you cannot change its hierarchy.',
+                    'The trackers %s are involved in cross-tracker triggers, you cannot change their hierarchy.',
+                    count($tracker_names),
+                ), $tracker_names_string),
+            );
+            $this->redirectToAdminHierarchy();
         }
 
         $children_used_in_trigger_rules = $this->getChildrenUsedInTriggerRules();
@@ -189,6 +213,9 @@ final readonly class HierarchyController
         $this->redirectToAdminHierarchy();
     }
 
+    /**
+     * @return never-return
+     */
     private function redirectToAdminHierarchy(): void
     {
         $redirect = http_build_query(

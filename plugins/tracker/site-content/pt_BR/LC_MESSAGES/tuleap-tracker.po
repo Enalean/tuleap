@@ -3462,6 +3462,16 @@ msgstr[0] ""
 msgstr[1] ""
 
 #, php-format
+msgid ""
+"The tracker %s is involved in cross-tracker triggers, you cannot change its "
+"hierarchy."
+msgid_plural ""
+"The trackers %s are involved in cross-tracker triggers, you cannot change "
+"their hierarchy."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
 msgid "The tracker '%1$s' cannot be created."
 msgstr ""
 

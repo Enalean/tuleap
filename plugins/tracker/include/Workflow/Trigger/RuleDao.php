@@ -42,6 +42,19 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject  // phpcs:ignor
         return $this->retrieve($sql);
     }
 
+    public function searchForTriggeringTracker(int $tracker_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql        = <<<SQL
+            SELECT trigger_field_value.rule_id
+            FROM tracker_workflow_trigger_rule_trg_field_static_value AS trigger_field_value
+            INNER JOIN tracker_field_list_bind_static_value AS value ON value.id = trigger_field_value.value_id
+            INNER JOIN tracker_field AS field ON field.id = value.field_id
+            WHERE field.tracker_id = $tracker_id
+            SQL;
+        return $this->retrieve($sql);
+    }
+
     public function searchTriggeringTrackersByTargetTrackerID(int $target_tracker_id)
     {
         $target_tracker_id = $this->da->escapeInt($target_tracker_id);

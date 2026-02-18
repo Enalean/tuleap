@@ -48132,7 +48132,9 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -48169,6 +48171,7 @@
       <code><![CDATA[searchForTargetByRuleId]]></code>
       <code><![CDATA[searchForTargetTracker]]></code>
       <code><![CDATA[searchForTriggeringFieldByRuleId]]></code>
+      <code><![CDATA[searchForTriggeringTracker]]></code>
       <code><![CDATA[searchTriggeringTrackersByTargetTrackerID]]></code>
       <code><![CDATA[searchTriggersByFieldId]]></code>
     </MissingReturnType>

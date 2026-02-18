@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Hierarchy;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
+use TestHelper;
 use Tracker_Hierarchy_HierarchicalTracker;
 use Tracker_Hierarchy_HierarchicalTrackerFactory;
 use Tracker_Workflow_Trigger_RulesDao;
@@ -38,6 +39,7 @@ use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -87,7 +89,11 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->event_manager,
             $this->project_history_dao,
             LayoutBuilder::buildWithInspector($this->layout_inspector),
-            CSRFSynchronizerTokenStub::buildSelf()
+            CSRFSynchronizerTokenStub::buildSelf(),
+            RetrieveTrackerStub::withTrackers(
+                TrackerTestBuilder::aTracker()->withId(147)->withName('User Stories')->build(),
+                TrackerTestBuilder::aTracker()->withId(148)->withName('Tasks')->build(),
+            ),
         );
     }
 
@@ -174,6 +180,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function updateWithNoTrigger(\Tuleap\HTTPRequest $request): void
     {
         $this->trigger_rules_dao->method('searchTriggeringTrackersByTargetTrackerID')->willReturn([]);
+        $this->trigger_rules_dao->method('searchForTriggeringTracker')->willReturn(TestHelper::emptyDar());
         $this->buildController($request)->update();
     }
 
@@ -283,6 +290,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withParam('children', ['147'])
             ->build();
 
+        $this->trigger_rules_dao->method('searchForTriggeringTracker')->willReturn(TestHelper::emptyDar());
         $this->trigger_rules_dao->method('searchTriggeringTrackersByTargetTrackerID')
             ->willReturn([['tracker_id' => 258]]);
         $child_tracker              = TrackerTestBuilder::aTracker()->withId(258)->build();
@@ -309,6 +317,30 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildController($request)->update();
             $this->fail('Should have been redirected');
         } catch (LayoutInspectorRedirection) {
+        }
+    }
+
+    public function testTrackersInvolvedInTriggersRulesCannotBeAddedToTheChildren(): void
+    {
+        $request = HTTPRequestBuilder::get()
+            ->withParam('children', ['147', '148'])
+            ->build();
+
+        $this->trigger_rules_dao->method('searchForTriggeringTracker')->willReturn(TestHelper::argListToDar([
+            ['rule_id' => 35],
+        ]));
+        $this->trigger_rules_dao->method('searchTriggeringTrackersByTargetTrackerID')->willReturn([]);
+
+        try {
+            $this->buildController($request)->update();
+            $this->fail('Should have been redirected');
+        } catch (LayoutInspectorRedirection) {
+            self::assertSame([
+                [
+                    'level'   => 'error',
+                    'message' => 'The trackers User Stories, Tasks are involved in cross-tracker triggers, you cannot change their hierarchy.',
+                ],
+            ], $this->layout_inspector->getFeedback());
         }
     }
 
