@@ -19,18 +19,43 @@
 
 <template>
     <div class="category">
-        <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+        <button
+            type="button"
+            class="expand-collapse"
+            v-bind:title="title"
+            v-on:click="toggle"
+            data-test="expand-collapse"
+        >
+            <i
+                class="fa-fw fa-solid fa-caret-down"
+                v-if="is_open"
+                role="img"
+                v-bind:aria-label="title"
+            ></i>
+            <i
+                class="fa-fw fa-solid fa-caret-right"
+                v-else
+                role="img"
+                v-bind:aria-label="title"
+            ></i>
+        </button>
+        <i class="fa-regular fa-folder-open" v-if="is_open" aria-hidden="true"></i>
+        <i class="fa-solid fa-folder" v-else aria-hidden="true"></i>
         {{ category.label }}
     </div>
-    <div class="field" v-for="field of matching" v-bind:key="field.label">
-        <i class="fa-fw" v-bind:class="field.icon" aria-hidden="true"></i>
-        {{ field.label }}
-    </div>
+    <template v-if="is_open">
+        <div class="field" v-for="field of matching" v-bind:key="field.label">
+            <span class="fa-fw" aria-hidden="true"></span>
+            <i class="fa-fw" v-bind:class="field.icon" aria-hidden="true"></i>
+            {{ field.label }}
+        </div>
+    </template>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import type { CategoryOfPaletteFields } from "./type";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ category: CategoryOfPaletteFields; search: string }>();
 
@@ -41,25 +66,45 @@ const matching = computed(() =>
               field.label.toLowerCase().includes(props.search.trim().toLowerCase()),
           ),
 );
+
+const { $gettext } = useGettext();
+
+const is_open = ref(true);
+const title = computed(() => (is_open.value ? $gettext("Collapse") : $gettext("Expand")));
+
+function toggle(): void {
+    is_open.value = !is_open.value;
+}
+
+watch(
+    () => props.search,
+    () => {
+        is_open.value = true;
+    },
+);
 </script>
 
 <style scoped lang="scss">
 .category,
 .field {
     display: flex;
+    margin: 0 0 var(--tlp-medium-spacing);
     cursor: move;
     gap: var(--tlp-small-spacing);
 }
 
-.category {
-    margin: 0 0 var(--tlp-medium-spacing);
+.field:last-child {
+    margin-bottom: 0;
 }
 
-.field {
-    margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+.expand-collapse {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 1rem;
 
-    &:last-child {
-        margin-bottom: 0;
+    &:focus {
+        box-shadow: var(--tlp-shadow-focus);
     }
 }
 </style>

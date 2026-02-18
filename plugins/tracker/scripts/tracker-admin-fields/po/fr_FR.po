@@ -52,6 +52,9 @@ msgstr "Case à cocher"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Collapse"
+msgstr "Réduire"
+
 msgid "Computed value"
 msgstr "Valeur calculée"
 
@@ -72,6 +75,9 @@ msgstr "Liste des objets étant référencés par l'artifact ou le référençan
 
 msgid "Edit"
 msgstr "Éditer"
+
+msgid "Expand"
+msgstr "Étendre"
 
 msgid "Field configuration"
 msgstr "Configuration du champ"
