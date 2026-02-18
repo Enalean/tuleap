@@ -20,20 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\Test\Stub\FormElement;
 
-final class TrackerFieldAdder
+use Override;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
+use Tuleap\Tracker\FormElement\UseFormElement;
+
+final class UseFormElementStub implements UseFormElement
 {
-    public function __construct(private UseFormElement $dao)
+    private(set) int $call_count = 0;
+
+    private function __construct()
     {
     }
 
-    public function add(TrackerFormElement $field): void
+    public static function build(): self
     {
-        if ($field->isUsed()) {
-            return;
-        }
+        return new self();
+    }
 
-        $this->dao->useFormElement($field);
+    #[Override]
+    public function useFormElement(TrackerFormElement $form_element): void
+    {
+        $this->call_count++;
     }
 }

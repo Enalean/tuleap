@@ -1605,9 +1605,6 @@ msgstr ""
 msgid "Field"
 msgstr "Champs"
 
-msgid "Field added to the form"
-msgstr "Champ ajouté au formulaire"
-
 msgid "Field deleted"
 msgstr "Champ détruit"
 

@@ -1415,9 +1415,6 @@ msgstr ""
 msgid "Field"
 msgstr ""
 
-msgid "Field added to the form"
-msgstr ""
-
 msgid "Field deleted"
 msgstr ""
 
