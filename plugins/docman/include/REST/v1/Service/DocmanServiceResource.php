@@ -40,7 +40,6 @@ use Tuleap\Docman\Version\VersionRetrieverFromApprovalTableVisitor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserHelper;
@@ -99,7 +98,7 @@ final class DocmanServiceResource extends AuthenticatedResource
                     $ugroup_manager
                 ),
                 $html_purifier,
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
                 $version_factory,
                 new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
                 new ItemIconPresenterBuilder(\EventManager::instance(), $version_factory),

@@ -25,7 +25,6 @@ use Tuleap\Notification\Notification;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -348,7 +347,7 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      */
     public function getMonitoringListHTML($fileModuleId, $um, $user_helper, CSRFSynchronizerToken $csrf_token): string
     {
-        $user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao());
         $purifier                 = Codendi_HTMLPurifier::instance();
 
         $html                 = '<h2>' . $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_people_title') . '</h2>';

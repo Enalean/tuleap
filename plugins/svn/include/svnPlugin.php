@@ -152,7 +152,6 @@ use Tuleap\SVN\SVNAccessFileReader;
 use Tuleap\SVNCore\SvnCoreAccess;
 use Tuleap\SystemEvent\RootPostEventsActionsEvent;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -587,7 +586,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     new UgroupsToNotifyDao(),
                     new UsersToNotifyDao(),
                     UserManager::instance(),
-                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    new UserAvatarUrlProvider(new AvatarHashDao()),
                     new UserGroupsPresenterBuilder(),
                     new CollectionOfUserToBeNotifiedPresenterBuilder($this->getUserNotifyDao()),
                     new CollectionOfUgroupToBeNotifiedPresenterBuilder($this->getUGroupNotifyDao()),

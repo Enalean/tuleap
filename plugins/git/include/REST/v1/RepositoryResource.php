@@ -102,7 +102,6 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 
@@ -328,7 +327,7 @@ class RepositoryResource extends AuthenticatedResource
         $metadata_retriever = new CommitMetadataRetriever($status_retriever, $this->user_manager);
         $url_manager        = new Git_GitRepositoryUrlManager($git_plugin);
 
-        $this->commit_representation_builder = new GitCommitRepresentationBuilder($metadata_retriever, $url_manager, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
+        $this->commit_representation_builder = new GitCommitRepresentationBuilder($metadata_retriever, $url_manager, new UserAvatarUrlProvider(new AvatarHashDao()));
     }
 
     /**

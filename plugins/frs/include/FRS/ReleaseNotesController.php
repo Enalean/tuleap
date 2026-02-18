@@ -48,7 +48,6 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
@@ -91,7 +90,7 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
                 __DIR__ . '/../../frontend-assets',
                 '/assets/frs'
             ),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             CachedSemanticStatusRetriever::instance(),
         );
     }

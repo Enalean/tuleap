@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Avatar;
 
+use Tuleap\Option\Option;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
@@ -41,12 +42,20 @@ final class AvatarHashDaoTest extends TestIntegrationTestCase
         $dao->store($alice, $first_hash);
         $dao->store($alice, $second_hash);
 
-        self::assertSame($second_hash, $dao->retrieve($alice)->unwrapOr(null));
-        self::assertSame(null, $dao->retrieve($bob)->unwrapOr(null));
+        self::assertSame($second_hash, $dao->retrieve($alice)->avatar_hash->unwrapOr(null));
+        self::assertSame(null, $dao->retrieve($bob)->avatar_hash->unwrapOr(null));
+        self::assertEquals(
+            [new UserAvatarHash($alice, Option::fromValue($second_hash)), new UserAvatarHash($bob, Option::nothing(\Psl\Type\string()))],
+            $dao->retrieveHashes($alice, $bob)
+        );
 
         $dao->delete($alice);
 
-        self::assertSame(null, $dao->retrieve($alice)->unwrapOr(null));
-        self::assertSame(null, $dao->retrieve($bob)->unwrapOr(null));
+        self::assertSame(null, $dao->retrieve($alice)->avatar_hash->unwrapOr(null));
+        self::assertSame(null, $dao->retrieve($bob)->avatar_hash->unwrapOr(null));
+        self::assertEquals(
+            [new UserAvatarHash($bob, Option::nothing(\Psl\Type\string())), new UserAvatarHash($alice, Option::nothing(\Psl\Type\string()))],
+            $dao->retrieveHashes($bob, $alice)
+        );
     }
 }

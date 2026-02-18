@@ -125,7 +125,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use WrapperLogger;
@@ -187,7 +186,7 @@ class ExecutionsResource
             $artifact_dao
         );
 
-        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao());
 
         $assigned_to_representation_builder = new AssignedToRepresentationBuilder(
             $this->formelement_factory,

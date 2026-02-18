@@ -44,7 +44,6 @@ use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 
@@ -97,14 +96,14 @@ class DefinitionsResource
                         CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                     ),
                     new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
-                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    new UserAvatarUrlProvider(new AvatarHashDao()),
                 ),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
                 $this->user_manager,
                 $this->user_manager,
             ),
             \Tuleap\Tracker\Artifact\PriorityManager::build(),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             CachedSemanticStatusRetriever::instance(),
             $this->user_manager,
             $this->user_manager,

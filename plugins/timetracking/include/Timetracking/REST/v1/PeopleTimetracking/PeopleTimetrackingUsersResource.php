@@ -28,7 +28,6 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Timetracking\Widget\People\ViewableUsersForManagerProviderDao;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -68,7 +67,7 @@ final class PeopleTimetrackingUsersResource extends AuthenticatedResource
         $user_manager = \UserManager::instance();
 
         $handler = new UsersGETHandler(
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             new ViewableUsersForManagerProviderDao($user_manager),
             $user_manager,
             new User_ForgeUserGroupPermissionsManager(

@@ -58,7 +58,6 @@ use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use Workflow_Transition_ConditionFactory;
@@ -130,14 +129,14 @@ class ProjectResource
                         CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                     ),
                     new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
-                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    new UserAvatarUrlProvider(new AvatarHashDao()),
                 ),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
                 $user_manager,
                 $user_manager,
             ),
             \Tuleap\Tracker\Artifact\PriorityManager::build(),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             CachedSemanticStatusRetriever::instance(),
             $user_manager,
             $user_manager,

@@ -29,7 +29,6 @@ use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\UserRepresentation;
 use UserHelper;
@@ -210,7 +209,7 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
             $user         = $user_manager->getUserByUserName($this->getUsername());
         }
 
-        return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
+        return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao()));
     }
 
     public function getFullRESTValueForAnonymous(Tracker_Artifact_Changeset $changeset)
@@ -219,7 +218,7 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
         $user->setEmail($changeset->getEmail());
         $user->setRealName($changeset->getEmail());
 
-        return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
+        return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao()));
     }
 
     private function getUserUrl()

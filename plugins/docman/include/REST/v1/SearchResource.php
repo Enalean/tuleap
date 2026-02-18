@@ -60,7 +60,6 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserHelper;
@@ -274,7 +273,7 @@ final class SearchResource extends AuthenticatedResource
 
         $html_purifier = Codendi_HTMLPurifier::instance();
 
-        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao());
 
         $representation_builder = new ItemRepresentationBuilder(
             $item_dao,

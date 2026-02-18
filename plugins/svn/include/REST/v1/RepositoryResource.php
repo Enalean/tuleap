@@ -72,7 +72,6 @@ use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVN\SvnPermissionManager;
 use Tuleap\SVN\Repository;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 
@@ -236,7 +235,7 @@ class RepositoryResource extends AuthenticatedResource
                 $this->user_manager,
                 $ugroup_to_notify_dao,
                 $this->ugroup_manager,
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
             )
         );
 

@@ -22,22 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Avatar;
 
-use Tuleap\Option\Option;
-
 final readonly class UserAvatarUrlProvider implements ProvideUserAvatarUrl, ProvideDefaultUserAvatarUrl
 {
-    public function __construct(private AvatarHashStorage $storage, private ComputeAvatarHash $compute_avatar_hash)
+    public function __construct(private AvatarHashStorage $storage)
     {
     }
 
     #[\Override]
     public function getAvatarUrl(\PFUser $user): string
     {
-        if ($user->isAnonymous() || ! $user->hasAvatar()) {
-            return $this->getDefaultAvatarUrl();
+        return $this->getAvatarUrls($user)[0]?->avatar_url ?? $this->getDefaultAvatarUrl();
+    }
+
+    #[\Override]
+    public function getAvatarUrls(\PFUser ...$users): array
+    {
+        $avatar_urls = [];
+
+        $base_server_url = \Tuleap\ServerHostname::HTTPSUrl();
+
+        $user_avatar_hashes = $this->storage->retrieveHashes(...$users);
+        foreach ($user_avatar_hashes as $user_avatar_hash) {
+            $avatar_urls[] = new UserAvatarUrl(
+                $user_avatar_hash->user,
+                $base_server_url . $this->getAbsoluteUrl($user_avatar_hash),
+            );
         }
 
-        return \Tuleap\ServerHostname::HTTPSUrl() . $this->getAbsoluteUrl($user);
+        return $avatar_urls;
     }
 
     #[\Override]
@@ -46,32 +58,17 @@ final readonly class UserAvatarUrlProvider implements ProvideUserAvatarUrl, Prov
         return \Tuleap\ServerHostname::HTTPSUrl() . \PFUser::DEFAULT_AVATAR_URL;
     }
 
-    private function getAbsoluteUrl(\PFUser $user): string
+    private function getAbsoluteUrl(UserAvatarHash $user_avatar_hash): string
     {
-        return $this->getAvatarFileHash($user)
+        $user = $user_avatar_hash->user;
+        if ($user->isAnonymous() || ! $user->hasAvatar()) {
+            return \PFUser::DEFAULT_AVATAR_URL;
+        }
+
+        return $user_avatar_hash->avatar_hash
             ->match(
                 static fn(string $hash) => '/users/' . urlencode($user->getUserName()) . '/avatar-' . $hash . '.png',
                 static fn() => '/users/' . urlencode($user->getUserName()) . '/avatar.png',
             );
-    }
-
-    /**
-     * @return Option<string>
-     */
-    private function getAvatarFileHash(\PFUser $user): Option
-    {
-        return $this->storage
-            ->retrieve($user)
-            ->orElse(function () use ($user) {
-                $avatar_file_path = $user->getAvatarFilePath();
-                if (! is_file($avatar_file_path)) {
-                    return Option::nothing(\Psl\Type\string());
-                }
-
-                $hash = $this->compute_avatar_hash->computeAvatarHash($avatar_file_path);
-                $this->storage->store($user, $hash);
-
-                return Option::fromValue($hash);
-            });
     }
 }

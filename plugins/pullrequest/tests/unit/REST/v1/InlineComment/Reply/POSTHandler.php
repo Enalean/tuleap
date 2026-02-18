@@ -56,7 +56,6 @@ use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 final class POSTHandler extends TestCase
@@ -221,7 +220,7 @@ final class POSTHandler extends TestCase
                     ThreadColorUpdaterStub::withCallCount()
                 )
             ),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
         );
 
         return $handler->handle(

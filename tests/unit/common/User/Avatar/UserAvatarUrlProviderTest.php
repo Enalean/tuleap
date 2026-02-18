@@ -46,7 +46,7 @@ final class UserAvatarUrlProviderTest extends TestCase
     {
         $storage = AvatarHashStorageStub::withoutStoredHash();
 
-        $provider = new UserAvatarUrlProvider($storage, new ComputeAvatarHash());
+        $provider = new UserAvatarUrlProvider($storage);
 
         self::assertSame(
             $this->getExpected(\PFUser::DEFAULT_AVATAR_URL),
@@ -58,7 +58,7 @@ final class UserAvatarUrlProviderTest extends TestCase
     {
         $storage = AvatarHashStorageStub::withoutStoredHash();
 
-        $provider = new UserAvatarUrlProvider($storage, new ComputeAvatarHash());
+        $provider = new UserAvatarUrlProvider($storage);
 
         $user = UserTestBuilder::aUser()
             ->withId(101)
@@ -76,7 +76,7 @@ final class UserAvatarUrlProviderTest extends TestCase
     {
         $storage = AvatarHashStorageStub::withoutStoredHash();
 
-        $provider = new UserAvatarUrlProvider($storage, new ComputeAvatarHash());
+        $provider = new UserAvatarUrlProvider($storage);
 
         $user = UserTestBuilder::aUser()
             ->withId(101)
@@ -94,7 +94,7 @@ final class UserAvatarUrlProviderTest extends TestCase
     {
         $storage = AvatarHashStorageStub::withoutStoredHash();
 
-        $provider = new UserAvatarUrlProvider($storage, new ComputeAvatarHash());
+        $provider = new UserAvatarUrlProvider($storage);
 
         $user = UserTestBuilder::aUser()
             ->withId(101)
@@ -107,12 +107,8 @@ final class UserAvatarUrlProviderTest extends TestCase
         file_put_contents($path, 'png content');
 
         self::assertSame(
-            $this->getExpected('/users/jdoe/avatar-47c5980ff911e17a2e60e068e79fbfc52c7f36e518a38a37e4dfc69650138bd7.png'),
+            $this->getExpected('/users/jdoe/avatar.png'),
             $provider->getAvatarUrl($user),
-        );
-        self::assertSame(
-            '47c5980ff911e17a2e60e068e79fbfc52c7f36e518a38a37e4dfc69650138bd7',
-            $storage->getNewStoredHash(),
         );
     }
 
@@ -120,7 +116,7 @@ final class UserAvatarUrlProviderTest extends TestCase
     {
         $storage = AvatarHashStorageStub::withStoredHash('47c5980ff911e17a2e60e068e79fbfc52c7f36e518a38a37e4dfc69650138bd7');
 
-        $provider = new UserAvatarUrlProvider($storage, new ComputeAvatarHash());
+        $provider = new UserAvatarUrlProvider($storage);
 
         $user = UserTestBuilder::aUser()
             ->withId(101)
@@ -137,8 +133,8 @@ final class UserAvatarUrlProviderTest extends TestCase
         );
     }
 
-    private function getExpected(string $epected): string
+    private function getExpected(string $expected): string
     {
-        return self::HTTPS_HOST_IN_TESTS . $epected;
+        return self::HTTPS_HOST_IN_TESTS . $expected;
     }
 }

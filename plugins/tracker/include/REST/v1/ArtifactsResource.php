@@ -197,7 +197,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserManager;
@@ -262,9 +261,9 @@ class ArtifactsResource extends AuthenticatedResource
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                 ),
                 new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
             ),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             $this->user_manager,
             $this->user_manager,
         );

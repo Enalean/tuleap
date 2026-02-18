@@ -42,7 +42,6 @@ use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
@@ -199,9 +198,9 @@ final class ReleaseRepresentation
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                 ),
                 new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
             ),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             $user_manager,
             $user_manager,
         );

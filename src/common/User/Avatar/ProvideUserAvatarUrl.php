@@ -23,4 +23,9 @@ namespace Tuleap\User\Avatar;
 interface ProvideUserAvatarUrl
 {
     public function getAvatarUrl(\PFUser $user): string;
+
+    /**
+     * @return list<UserAvatarUrl>
+     */
+    public function getAvatarUrls(\PFUser ...$users): array;
 }

@@ -175,7 +175,6 @@ use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
@@ -1579,7 +1578,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
             $this->getUGroupToNotifyDao(),
             new DocmanItemsRequestBuilder($user_manager, ProjectManager::instance()),
             new JSONResponseBuilder($response_factory, $stream_factory),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             new SapiEmitter(),
         );
     }
@@ -1604,7 +1603,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
                 new OwnerDao(),
                 $this->getUserManager(),
                 UserHelper::instance(),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
             ),
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),

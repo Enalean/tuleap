@@ -123,7 +123,6 @@ use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeExternalFieldXMLUpdateEvent;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -474,7 +473,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             $this->getBackendLogger(),
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            MercureJWTGeneratorBuilder::build(MercureJWTGeneratorBuilder::DEFAULTPATH, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())),
+            MercureJWTGeneratorBuilder::build(MercureJWTGeneratorBuilder::DEFAULTPATH, new UserAvatarUrlProvider(new AvatarHashDao())),
             UserManager::instance(),
             new \Tuleap\TestManagement\ConfigConformanceValidator(new Config(new Dao(), TrackerFactory::instance())),
             new SapiEmitter(),
@@ -532,7 +531,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             new Valid_UInt(),
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
             new AdminTrackersRetriever($tracker_factory, $this->getTrackerChecker(), $config),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             new ProjectHistoryDao()
         );
 

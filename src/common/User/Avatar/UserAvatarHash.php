@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\Avatar;
 
-interface AvatarHashStorage
+use Tuleap\Option\Option;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class UserAvatarHash
 {
-    public function retrieve(\PFUser $user): UserAvatarHash;
-
     /**
-     * @return list<UserAvatarHash>
+     * @param Option<string> $avatar_hash
      */
-    public function retrieveHashes(\PFUser ...$users): array;
-
-    public function store(\PFUser $user, string $hash): void;
+    public function __construct(
+        public \PFUser $user,
+        public Option $avatar_hash,
+    ) {
+    }
 }

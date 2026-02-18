@@ -52,7 +52,6 @@ use Tuleap\Timetracking\Widget\People\VerifierChain\ManagerHasRestReadOnlyAdminP
 use Tuleap\Timetracking\Widget\People\VerifierChain\ManagerIsSeeingTheirOwnTimeVerifier;
 use Tuleap\Timetracking\Widget\People\ViewableUserRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\Widget\WidgetFactory;
 use UGroupManager;
@@ -215,7 +214,7 @@ final class PeopleTimetrackingWidgetResource extends AuthenticatedResource
                     }
                     return QueryPUTResultRepresentation::fromUserList(
                         $users,
-                        new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())
+                        new UserAvatarUrlProvider(new AvatarHashDao())
                     );
                 },
                 function (Fault $fault) {
@@ -277,7 +276,7 @@ final class PeopleTimetrackingWidgetResource extends AuthenticatedResource
             new UserTimesForManagerProviderDao(\Tracker_ArtifactFactory::instance()),
             new ListOfTimeSpentInArtifactFilter($verifier_chain),
             new TimeSpentInArtifactByUserGrouper(),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             new UserTimesTimeframeRetriever(
                 $dao,
                 $dao,

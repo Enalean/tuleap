@@ -134,7 +134,6 @@ use Tuleap\TrackerFunctions\WASM\ExecuteWASMResponse;
 use Tuleap\TrackerFunctions\WASM\FindWASMFunctionPath;
 use Tuleap\TrackerFunctions\WASM\ProcessWASMResponse;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\WebAssembly\FFIWASMCaller;
 use Tuleap\WebAssembly\WasmtimeCacheConfigurationBuilder;
@@ -198,7 +197,7 @@ final class tracker_functionsPlugin extends Plugin
                         CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
                     ),
                     new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
-                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    new UserAvatarUrlProvider(new AvatarHashDao()),
                 ),
                 new Tracker_REST_TrackerRestBuilder(
                     new StructureRepresentationBuilder($form_element_factory),
@@ -232,7 +231,7 @@ final class tracker_functionsPlugin extends Plugin
                     new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance()),
                     TrackersPermissionsRetriever::build()
                 ),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
                 new UGroupManager(),
             ),
             new FindWASMFunctionPath(),

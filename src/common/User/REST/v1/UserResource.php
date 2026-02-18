@@ -50,7 +50,6 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\Admin\UserStatusChecker;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryEntry;
@@ -103,7 +102,7 @@ class UserResource extends AuthenticatedResource
         $this->ugroup_literalizer   = new UGroupLiteralizer();
         $this->user_group_retriever = new UserGroupRetriever(new \UGroupManager());
 
-        $this->user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $this->user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao());
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()

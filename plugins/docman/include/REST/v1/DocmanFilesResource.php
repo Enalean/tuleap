@@ -67,7 +67,6 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserManager;
@@ -587,7 +586,7 @@ final class DocmanFilesResource extends AuthenticatedResource
             new CoAuthorDao(),
             UserManager::instance(),
             new \Docman_ApprovalTableFactoriesFactory(),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             new VersionOpenHrefVisitor(),
         );
 

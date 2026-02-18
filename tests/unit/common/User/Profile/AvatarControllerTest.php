@@ -43,6 +43,7 @@ final class AvatarControllerTest extends TestCase
 
     private \UserManager&\PHPUnit\Framework\MockObject\Stub $user_manager;
     private AvatarController $avatar_controller;
+    private AvatarHashStorageStub $avatar_hash_storage;
 
     #[\Override]
     protected function setUp(): void
@@ -50,23 +51,23 @@ final class AvatarControllerTest extends TestCase
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         ForgeConfig::set('sys_avatar_path', vfsStream::setup()->url());
 
-        $storage                 = AvatarHashStorageStub::withStoredHash('expected_hash');
-        $compute_avatar_hash     = new ComputeAvatarHash();
-        $response_factory        = HTTPFactoryBuilder::responseFactory();
-        $this->user_manager      = $this->createStub(\UserManager::class);
-        $this->avatar_controller = new AvatarController(
+        $this->avatar_hash_storage = AvatarHashStorageStub::withoutStoredHash();
+        $compute_avatar_hash       = new ComputeAvatarHash();
+        $response_factory          = HTTPFactoryBuilder::responseFactory();
+        $this->user_manager        = $this->createStub(\UserManager::class);
+        $this->avatar_controller   = new AvatarController(
             new NoopSapiEmitter(),
             new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory()),
             $response_factory,
             new CurrentRequestUserProviderStub(UserTestBuilder::anAnonymousUser()->build()),
             $this->user_manager,
-            new AvatarGenerator($storage, $compute_avatar_hash),
-            $storage,
+            new AvatarGenerator($this->avatar_hash_storage, $compute_avatar_hash),
+            $this->avatar_hash_storage,
             $compute_avatar_hash
         );
     }
 
-    public function testRetrievesUserAvatarUsingANonPermanentURL(): void
+    public function testRetrievesUserAvatarUsingANonPermanentURLWithoutAnAvatarFile(): void
     {
         $user = UserTestBuilder::anActiveUser()->withUserName('user1')->withRealName('User 1')->build();
 
@@ -84,23 +85,27 @@ final class AvatarControllerTest extends TestCase
         self::assertStringContainsString("PNG\r\n", $response->getBody()->read(8));
     }
 
-    public function testRetrievesUserAvatarUsingAPermanentURL(): void
+    public function testRetrievesUserAvatarUsingAPermanentURLWithoutHavingTheAvatarHashStoredInDB(): void
     {
         $user = UserTestBuilder::anActiveUser()->withUserName('user1')->withRealName('User 1')->build();
 
+        $fake_avatar_content = 'PNG_CONTENT';
+        \Psl\File\write($user->getAvatarFilePath(), $fake_avatar_content);
+        $avatar_hash = hash('sha256', $fake_avatar_content);
+
         $request = (new NullServerRequest())
             ->withAttribute('name', $user->getUserName())
-            ->withAttribute('hash', 'expected_hash');
+            ->withAttribute('hash', $avatar_hash);
 
         $this->user_manager->method('getUserByUserName')->willReturn($user);
-        $this->user_manager->method('updateDb');
 
         $response = $this->avatar_controller->handle($request);
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('image/png', $response->getHeaderLine('Content-Type'));
         self::assertSame('max-age=31536000,immutable', $response->getHeaderLine('Cache-Control'));
-        self::assertStringContainsString("PNG\r\n", $response->getBody()->read(8));
+        self::assertSame($fake_avatar_content, $response->getBody()->getContents());
+        self::assertSame($avatar_hash, $this->avatar_hash_storage->getNewStoredHash());
     }
 
     public function testRedirectsWhenTheUserAvatarHashIsSomethingElseThanTheProvidedValue(): void
@@ -117,7 +122,7 @@ final class AvatarControllerTest extends TestCase
         $response = $this->avatar_controller->handle($request);
 
         self::assertSame(301, $response->getStatusCode());
-        self::assertStringEndsWith('/users/user1/avatar-expected_hash.png', $response->getHeaderLine('Location'));
+        self::assertStringEndsWith('/users/user1/avatar-' . $this->avatar_hash_storage->getNewStoredHash() . '.png', $response->getHeaderLine('Location'));
         self::assertEmpty($response->getHeaderLine('Cache-Control'));
     }
 

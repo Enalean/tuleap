@@ -138,7 +138,6 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use URLVerification;
 use UserManager;
@@ -245,7 +244,7 @@ class PullRequestsResource extends AuthenticatedResource
         $this->commit_representation_builder = new GitCommitRepresentationBuilder(
             $metadata_retriever,
             $url_manager,
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
         );
     }
 
@@ -298,7 +297,7 @@ class PullRequestsResource extends AuthenticatedResource
             new EnhancedCodeBlockExtension(new CodeBlockFeatures())
         );
 
-        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao());
 
         $pr_representation_factory = new PullRequestRepresentationFactory(
             $this->access_control_verifier,
@@ -652,7 +651,7 @@ class PullRequestsResource extends AuthenticatedResource
                 new \Tuleap\PullRequest\InlineComment\Dao(),
                 $this->user_manager,
                 new SingleRepresentationBuilder($purifier, $content_interpretor),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
             );
             $git_repository_source  = $this->getRepository($pull_request->getRepositoryId());
             $inline_comments        = $inline_comment_builder->getForFile($pull_request, $path, $git_repository_source->getProjectId());
@@ -744,7 +743,7 @@ class PullRequestsResource extends AuthenticatedResource
             $this->git_repository_factory,
             $comment_creator,
             new SingleRepresentationBuilder($purifier, $content_interpreter),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
         );
         return $handler->handle($comment_data, $user, $post_date, $pull_request)
             ->match(
@@ -930,7 +929,7 @@ class PullRequestsResource extends AuthenticatedResource
                     new EnhancedCodeBlockExtension(new CodeBlockFeatures())
                 );
 
-                $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+                $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao());
 
                 $pr_representation_factory = new PullRequestRepresentationFactory(
                     $this->access_control_verifier,
@@ -1067,7 +1066,7 @@ class PullRequestsResource extends AuthenticatedResource
             UserManager::instance(),
             new CommentRepresentationBuilder($purifier, $content_interpreter),
             new SingleRepresentationBuilder($purifier, $content_interpreter),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
         );
 
         $paginated_timeline_representation = $paginated_timeline_representation_builder->getPaginatedTimelineRepresentation(
@@ -1135,7 +1134,7 @@ class PullRequestsResource extends AuthenticatedResource
             $this->comment_factory,
             $this->user_manager,
             new CommentRepresentationBuilder($purifier, $content_interpreter),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
         );
 
         $paginated_comments_representations = $paginated_comments_representations_builder->getPaginatedCommentsRepresentations(
@@ -1204,7 +1203,7 @@ class PullRequestsResource extends AuthenticatedResource
             $this->git_repository_factory,
             $creator,
             new CommentRepresentationBuilder($purifier, $content_interpretor),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
         );
 
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $pull_request_id);
@@ -1252,7 +1251,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $reviewer_retrievers = new ReviewerRetriever($this->user_manager, new ReviewerDAO(), $this->permission_checker);
 
-        return ReviewersRepresentation::fromUsers(new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()), ...$reviewer_retrievers->getReviewers($pull_request));
+        return ReviewersRepresentation::fromUsers(new UserAvatarUrlProvider(new AvatarHashDao()), ...$reviewer_retrievers->getReviewers($pull_request));
     }
 
     /**

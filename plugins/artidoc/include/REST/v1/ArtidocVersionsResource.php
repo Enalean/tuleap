@@ -84,7 +84,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserHelper;
 use UserManager;
@@ -192,7 +191,7 @@ final class ArtidocVersionsResource extends AuthenticatedResource
             ),
         );
 
-        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao());
         $user_manager            = UserManager::instance();
         $purifier                = Codendi_HTMLPurifier::instance();
         $text_value_interpreter  = new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier));

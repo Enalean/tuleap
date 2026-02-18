@@ -34,7 +34,6 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 require_once __DIR__ . '/../include/pre.php';
@@ -351,7 +350,7 @@ $invited_by_builder         = new InvitedByPresenterBuilder(
     ),
     $user_manager,
     $project_manager,
-    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+    new UserAvatarUrlProvider(new AvatarHashDao()),
 );
 
 
