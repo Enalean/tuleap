@@ -98,7 +98,6 @@ onMounted(() => {
             );
         },
         onDrop(context: SuccessfulDropCallbackParameter): void {
-            dragged_field_id.value = null;
             context_transformer
                 .transformSuccessfulDropContext(context)
                 .andThen(fields_mover.moveField)
@@ -113,6 +112,7 @@ onMounted(() => {
                 });
         },
         cleanupAfterDragCallback: (): void => {
+            dragged_field_id.value = null;
             drag_autoscroll.stop();
         },
     });
