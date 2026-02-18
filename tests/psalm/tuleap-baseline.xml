@@ -7660,8 +7660,6 @@
       <code><![CDATA[current]]></code>
       <code><![CDATA[current]]></code>
       <code><![CDATA[current]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[isError]]></code>
       <code><![CDATA[next]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
@@ -7678,13 +7676,13 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[rewind]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
       <code><![CDATA[valid]]></code>
       <code><![CDATA[valid]]></code>
       <code><![CDATA[valid]]></code>
@@ -7716,14 +7714,12 @@
       <code><![CDATA[$rank]]></code>
       <code><![CDATA[$rank]]></code>
       <code><![CDATA[$row]]></code>
-      <code><![CDATA[$sql]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$valueId]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_createAndReturnId]]></code>
       <code><![CDATA[create]]></code>
       <code><![CDATA[createElement]]></code>
       <code><![CDATA[createMetadataElementBond]]></code>
@@ -7738,7 +7734,6 @@
       <code><![CDATA[updateFromRow]]></code>
     </MissingReturnType>
     <PossiblyFalseReference>
-      <code><![CDATA[getRow]]></code>
       <code><![CDATA[rewind]]></code>
     </PossiblyFalseReference>
     <RedundantFunctionCall>
