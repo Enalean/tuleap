@@ -7463,8 +7463,6 @@
   </file>
   <file src="plugins/docman/include/Docman_MetadataDao.php">
     <DeprecatedMethod>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[isError]]></code>
       <code><![CDATA[parent::__construct($da)]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
@@ -7474,10 +7472,9 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$da]]></code>
@@ -7502,7 +7499,6 @@
       <code><![CDATA[$onlyUsed]]></code>
       <code><![CDATA[$row]]></code>
       <code><![CDATA[$special]]></code>
-      <code><![CDATA[$sql]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$useIt]]></code>
@@ -7513,7 +7509,6 @@
       <code><![CDATA[$notDeletedStmt]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_createAndReturnId]]></code>
       <code><![CDATA[create]]></code>
       <code><![CDATA[delete]]></code>
       <code><![CDATA[searchByGroupId]]></code>
@@ -7523,9 +7518,6 @@
       <code><![CDATA[updateById]]></code>
       <code><![CDATA[updateFromRow]]></code>
     </MissingReturnType>
-    <PossiblyFalseReference>
-      <code><![CDATA[getRow]]></code>
-    </PossiblyFalseReference>
   </file>
   <file src="plugins/docman/include/Docman_MetadataFactory.php">
     <MissingParamType>
