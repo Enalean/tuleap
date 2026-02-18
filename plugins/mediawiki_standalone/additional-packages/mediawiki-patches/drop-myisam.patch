@@ -1,0 +1,79 @@
+From 94772f179cdcdcc965f939993f48ce6862055bba Mon Sep 17 00:00:00 2001
+From: Thomas Gerbet <thomas.gerbet@enalean.com>
+Date: Fri, 13 Feb 2026 10:14:35 +0100
+Subject: [PATCH] Drop MyISAM, use InnoDB
+
+Tuleap does not support MySQL 5.x anymore.
+We can use InnoDB tables and that is a requirement in some environments
+like Azure DB.
+---
+ .../patch-searchindex-pk-titlelength.json                     | 4 ++--
+ maintenance/archives/patch-searchindex.sql                    | 2 +-
+ maintenance/tables-generated.sql                              | 2 +-
+ maintenance/tables.json                                       | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/maintenance/abstractSchemaChanges/patch-searchindex-pk-titlelength.json b/maintenance/abstractSchemaChanges/patch-searchindex-pk-titlelength.json
+index 9ff3bce5542..69b8f2cfdf4 100644
+--- a/maintenance/abstractSchemaChanges/patch-searchindex-pk-titlelength.json
++++ b/maintenance/abstractSchemaChanges/patch-searchindex-pk-titlelength.json
+@@ -64,7 +64,7 @@
+ 		"name": "searchindex",
+ 		"pk": [],
+ 		"table_options": [
+-			"ENGINE=MyISAM",
++			"ENGINE=InnoDB",
+ 			"DEFAULT CHARSET=utf8"
+ 		]
+ 	},
+@@ -124,7 +124,7 @@
+ 		"name": "searchindex",
+ 		"pk": [ "si_page" ],
+ 		"table_options": [
+-			"ENGINE=MyISAM",
++			"ENGINE=InnoDB",
+ 			"DEFAULT CHARSET=utf8mb4"
+ 		]
+ 	}
+diff --git a/maintenance/archives/patch-searchindex.sql b/maintenance/archives/patch-searchindex.sql
+index 2571c359653..23c75939cd6 100644
+--- a/maintenance/archives/patch-searchindex.sql
++++ b/maintenance/archives/patch-searchindex.sql
+@@ -19,7 +19,7 @@ CREATE TABLE /*$wgDBprefix*/searchindex (
+ 
+   UNIQUE KEY (si_page)
+ 
+-) ENGINE=MyISAM;
++) ENGINE=InnoDB;
+ 
+ -- Copying data into new table...
+ INSERT INTO /*$wgDBprefix*/searchindex
+diff --git a/maintenance/tables-generated.sql b/maintenance/tables-generated.sql
+index f7f9e45ec7c..cb387e04638 100644
+--- a/maintenance/tables-generated.sql
++++ b/maintenance/tables-generated.sql
+@@ -864,7 +864,7 @@ CREATE TABLE /*_*/searchindex (
+   FULLTEXT INDEX si_title (si_title),
+   FULLTEXT INDEX si_text (si_text),
+   PRIMARY KEY(si_page)
+-) ENGINE = MyISAM DEFAULT CHARSET = utf8mb4;
++) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+ 
+ 
+ CREATE TABLE /*_*/linktarget (
+diff --git a/maintenance/tables.json b/maintenance/tables.json
+index 5a1bd74e016..95637b76759 100644
+--- a/maintenance/tables.json
++++ b/maintenance/tables.json
+@@ -3684,7 +3684,7 @@
+ 		],
+ 		"pk": [ "si_page" ],
+ 		"table_options": [
+-			"ENGINE=MyISAM",
++			"ENGINE=InnoDB",
+ 			"DEFAULT CHARSET=utf8mb4"
+ 		]
+ 	},
+-- 
+2.51.2
+
