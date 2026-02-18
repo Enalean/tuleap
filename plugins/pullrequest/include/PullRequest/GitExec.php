@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest;
 
 use Git_Command_Exception;
 use Git_Exec;
+use Tuleap\Git\GitPHP\TreeDiff;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 
 class GitExec extends Git_Exec
@@ -56,7 +57,7 @@ class GitExec extends Git_Exec
         $output = [];
 
         $this->gitCmdWithOutput(
-            'diff --no-renames --name-status ' . escapeshellarg($dest_reference) . '...' . escapeshellarg($src_reference),
+            'diff --no-renames --name-status ' . escapeshellarg($this->getSourceCommitForDiff($dest_reference, $src_reference)) . '..' . escapeshellarg($src_reference),
             $output
         );
 
@@ -68,9 +69,9 @@ class GitExec extends Git_Exec
      */
     public function getModifiedFilesLineStat($ref_base, $ref_compare)
     {
-        $ref_base    = escapeshellarg($ref_base);
+        $ref_base    = escapeshellarg($this->getSourceCommitForDiff($ref_base, $ref_compare));
         $ref_compare = escapeshellarg($ref_compare);
-        $cmd         = "diff --no-renames --numstat $ref_base...$ref_compare";
+        $cmd         = "diff --no-renames --numstat $ref_base..$ref_compare";
         $output      = [];
 
         $this->gitCmdWithOutput($cmd, $output);
@@ -116,6 +117,7 @@ class GitExec extends Git_Exec
 
     /**
      * @return array
+     * @throws Git_Command_Exception
      */
     public function mergeBase($first_commit_reference, $second_commit_reference)
     {
@@ -124,7 +126,14 @@ class GitExec extends Git_Exec
         $first_commit_reference  = escapeshellarg($first_commit_reference);
         $second_commit_reference = escapeshellarg($second_commit_reference);
 
-        $this->gitCmdWithOutput("merge-base -- $first_commit_reference $second_commit_reference", $output);
+        try {
+            $this->gitCmdWithOutput("merge-base -- $first_commit_reference $second_commit_reference", $output);
+        } catch (Git_Command_Exception $exception) {
+            if ($exception->getCode() === 1) {
+                return [];
+            }
+            throw $exception;
+        }
 
         return $output;
     }
@@ -198,9 +207,9 @@ class GitExec extends Git_Exec
     public function unidiffFromCommonAncestor($file_path, $old_rev, $new_rev)
     {
         $file_path = escapeshellarg($file_path);
-        $old_rev   = escapeshellarg($old_rev);
+        $old_rev   = escapeshellarg($this->getSourceCommitForDiff($old_rev, $new_rev));
         $new_rev   = escapeshellarg($new_rev);
-        $cmd       = "diff -U9999999 $old_rev...$new_rev -- $file_path";
+        $cmd       = "diff -U9999999 $old_rev..$new_rev -- $file_path";
 
         $this->gitCmdWithOutput($cmd, $output);
         return $output;
@@ -220,6 +229,17 @@ class GitExec extends Git_Exec
     {
         $output = null;
         $this->execAsGitoliteGroup('update-ref -d -- ' . escapeshellarg($reference), $output);
+    }
+
+    /**
+     * @throws Git_Command_Exception
+     */
+    private function getSourceCommitForDiff(string $destination_ref, string $source_ref): string
+    {
+        $merge_base = $this->mergeBase($source_ref, $destination_ref);
+        return $merge_base === [] ?
+            TreeDiff::EMPTY_TREE_HASH :
+            $merge_base[0];
     }
 
     private function parseDiffNumStatOutput($output)
