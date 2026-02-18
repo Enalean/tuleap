@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
 use Tuleap\Tracker\Tracker;
@@ -233,7 +232,7 @@ class Tracker_RuleFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
     {
         if (! $this->list_factory) {
             $listDao            = $this->getListDao();
-            $bind_factory       = new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory());
+            $bind_factory       = new Tracker_FormElement_Field_List_BindFactory();
             $this->list_factory =  new Tracker_Rule_List_Factory($listDao, $bind_factory);
         }
 

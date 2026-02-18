@@ -52,7 +52,6 @@ use Tracker_RulesManager;
 use TrackerFactory;
 use TransitionFactory;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Option\Option;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -632,7 +631,7 @@ abstract class TrackerField extends TrackerFormElement implements Tracker_Report
             return [];
         }
         $tracker_formelement_factory = Tracker_FormElementFactory::instance();
-        $rule_list_factory           = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory()));
+        $rule_list_factory           = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory());
         $rule_date_factory           = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $tracker_formelement_factory);
         $logger                      = new \Tuleap\Tracker\Workflow\WorkflowBackendLogger(BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
         $tracker_rules_manager       = new Tracker_RulesManager(
@@ -1052,7 +1051,7 @@ abstract class TrackerField extends TrackerFormElement implements Tracker_Report
     public function isUsedInFieldDependency()
     {
         $tracker_formelement_factory = Tracker_FormElementFactory::instance();
-        $rule_list_factory           = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory()));
+        $rule_list_factory           = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory());
         $rule_date_factory           = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $tracker_formelement_factory);
 
         return new GlobalRulesUsageByFieldProvider($rule_date_factory)->isFieldUsedInGlobalRules($this) ||

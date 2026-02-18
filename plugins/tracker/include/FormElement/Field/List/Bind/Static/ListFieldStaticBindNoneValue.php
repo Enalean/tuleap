@@ -20,8 +20,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\List\Bind\Static;
 
-use Tuleap\DB\DatabaseUUIDV7Factory;
-
 final class ListFieldStaticBindNoneValue extends ListFieldStaticBindValue
 {
     public const int    VALUE_ID     = 100;
@@ -35,7 +33,6 @@ final class ListFieldStaticBindNoneValue extends ListFieldStaticBindValue
         $rank        = 0;
         $is_hidden   = false;
 
-        $uuid_factory = new DatabaseUUIDV7Factory();
-        parent::__construct($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $id, $label, $description, $rank, $is_hidden);
+        parent::__construct($id, $label, $description, $rank, $is_hidden);
     }
 }

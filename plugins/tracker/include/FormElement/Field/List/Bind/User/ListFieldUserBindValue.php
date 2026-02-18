@@ -42,27 +42,27 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
     protected $display_name;
     private $hp;
 
-    public function __construct(\Tuleap\DB\UUID $uuid, $id, $user_name = null, $display_name = null, private readonly ?PFUser $user = null)
+    public function __construct($id, $user_name = null, $display_name = null, private readonly ?PFUser $user = null)
     {
         if ($user !== null) {
-            parent::__construct($uuid, (int) $user->getId(), false);
+            parent::__construct((int) $user->getId(), false);
             $this->user_name = $user->getUserName();
         } else {
-            parent::__construct($uuid, $id, false);
+            parent::__construct($id, false);
             $this->user_name = $user_name;
         }
         $this->display_name = $display_name;
         $this->hp           = Codendi_HTMLPurifier::instance();
     }
 
-    public static function fromUser(\Tuleap\DB\UUID $uuid, PFUser $user, string $full_name): self
+    public static function fromUser(PFUser $user, string $full_name): self
     {
-        return new self($uuid, -1, null, $full_name, $user);
+        return new self(-1, null, $full_name, $user);
     }
 
-    public static function fromId(\Tuleap\DB\UUID $uuid, int $id): self
+    public static function fromId(int $id): self
     {
-        return new self($uuid, $id);
+        return new self($id);
     }
 
     public function getUsername()

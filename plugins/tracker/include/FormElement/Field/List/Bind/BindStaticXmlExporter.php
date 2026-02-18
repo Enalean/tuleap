@@ -49,7 +49,7 @@ final readonly class BindStaticXmlExporter
         foreach ($values as $value) {
             $this->exportValueAsXml(
                 $child,
-                $value->getUuid(),
+                $value->getXMLID(),
                 (string) $value->getId(),
                 $value->getLabel(),
                 (bool) $value->isHidden(),

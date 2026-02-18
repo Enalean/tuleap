@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use Tracker_FormElement_Field_List_OpenValue;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 
 final class OpenListValueBuilder
 {
@@ -54,7 +53,6 @@ final class OpenListValueBuilder
 
     public function build(): Tracker_FormElement_Field_List_OpenValue
     {
-        $uuid_factory = new DatabaseUUIDV7Factory();
-        return new Tracker_FormElement_Field_List_OpenValue($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $this->id, $this->value, $this->is_hidden);
+        return new Tracker_FormElement_Field_List_OpenValue($this->id, $this->value, $this->is_hidden);
     }
 }

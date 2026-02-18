@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
 use ProjectUGroup;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 use UserHelper;
 
@@ -37,7 +36,6 @@ class BindListUserValueGetter
         private BindDefaultValueDao $bind_defaultvalue_dao,
         private UserHelper $user_helper,
         private readonly PlatformUsersGetter $platform_users_getter,
-        private readonly DatabaseUUIDV7Factory $uuid_factory,
     ) {
     }
 
@@ -189,7 +187,6 @@ class BindListUserValueGetter
         $values = [];
         foreach ($rows as $row) {
             $values[$row['user_id']] = new ListFieldUserBindValue(
-                $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
                 $row['user_id'],
                 $row['user_name'],
                 $row['full_name']

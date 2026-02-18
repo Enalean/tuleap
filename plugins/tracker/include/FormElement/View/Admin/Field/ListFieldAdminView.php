@@ -44,7 +44,7 @@ class ListFieldAdminView extends FieldAdminView
     #[\Override]
     public function fetchAfterAdminCreateForm()
     {
-        $bf    = new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $bf    = new Tracker_FormElement_Field_List_BindFactory();
         $html  = '';
         $html .= '<tr valign="top"><td colspan="2">';
         $html .= $bf->fetchCreateABind($this->formElement);

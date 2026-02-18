@@ -26,7 +26,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_BindValue;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
@@ -51,7 +50,7 @@ final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ign
         $decorator   = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 0, 0, 0, 'inca-silver');
         $this->field = SelectboxFieldBuilder::aSelectboxField(42)->build();
         $this->bind  = $this->getMockBuilder(ListFieldStaticBind::class)
-            ->setConstructorArgs([new DatabaseUUIDV7Factory(), $this->field, '', [], [], $decorator])
+            ->setConstructorArgs([$this->field, '', [], [], $decorator])
             ->onlyMethods(['getAllValues', 'getAllVisibleValues'])
             ->getMock();
 
@@ -139,7 +138,7 @@ final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ign
         ];
 
         $bind = $this->getMockBuilder(ListFieldUserBind::class)
-            ->setConstructorArgs([new DatabaseUUIDV7Factory(), $field, [], [], $decorator])
+            ->setConstructorArgs([$field, [], [], $decorator])
             ->onlyMethods(['getAllValues'])
             ->getMock();
 
@@ -158,7 +157,7 @@ final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ign
     public function testItReturnOnlyValidDefaultValues(): void
     {
         $bind = $this->getMockBuilder(ListFieldUserBind::class)
-            ->setConstructorArgs([new DatabaseUUIDV7Factory(), $this->field, [], [112 => true, 0 => 103, 111 => true], []])
+            ->setConstructorArgs([$this->field, [], [112 => true, 0 => 103, 111 => true], []])
             ->onlyMethods(['getAllValues'])
             ->getMock();
 

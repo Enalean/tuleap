@@ -98,7 +98,7 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $bind_value = $this->createMock(\Tracker_FormElement_Field_List_BindValue::class);
         $bind_value->method('getId')->willReturn(456);
         $this->value_for_changeset_provider->method('getStatusValueForChangeset')->willReturn($bind_value);
-        $bind = new \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind(new \Tuleap\DB\DatabaseUUIDV7Factory(), $this->field, false, [$this->bind_value], [], []);
+        $bind = new \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind($this->field, false, [$this->bind_value], [], []);
         $this->field->method('getBind')->willReturn($bind);
 
         $this->assertNull($this->color_provider->provideColor($this->changeset, $this->tracker, $this->user));
@@ -109,7 +109,7 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker->method('getStatusField')->willReturn($this->field);
         $bind_value = $this->createMock(\Tracker_FormElement_Field_List_BindValue::class);
         $bind_value->method('getId')->willReturn(456);
-        $bind = new \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind(new \Tuleap\DB\DatabaseUUIDV7Factory(), $this->field, false, [$this->bind_value], [], [$this->field->getId() => new \Tracker_FormElement_Field_List_BindDecorator($this->field->getId(), $this->bind_value->getId(), 234, 456, 123, null)]);
+        $bind = new \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind($this->field, false, [$this->bind_value], [], [$this->field->getId() => new \Tracker_FormElement_Field_List_BindDecorator($this->field->getId(), $this->bind_value->getId(), 234, 456, 123, null)]);
         $this->value_for_changeset_provider->method('getStatusValueForChangeset')->willReturn($bind_value);
         $this->field->method('getBind')->willReturn($bind);
 
@@ -121,7 +121,7 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker->method('getStatusField')->willReturn($this->field);
         $bind_value = $this->createMock(\Tracker_FormElement_Field_List_BindValue::class);
         $bind_value->method('getId')->willReturn($this->field->getId());
-        $bind = new \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind(new \Tuleap\DB\DatabaseUUIDV7Factory(), $this->field, false, [$this->bind_value], [], [$this->field->getId() => new \Tracker_FormElement_Field_List_BindDecorator($this->field->getId(), $this->bind_value->getId(), null, null, null, 'flamingo-pink')]);
+        $bind = new \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind($this->field, false, [$this->bind_value], [], [$this->field->getId() => new \Tracker_FormElement_Field_List_BindDecorator($this->field->getId(), $this->bind_value->getId(), null, null, null, 'flamingo-pink')]);
         $this->value_for_changeset_provider->method('getStatusValueForChangeset')->willReturn($bind_value);
         $this->field->method('getBind')->willReturn($bind);
 

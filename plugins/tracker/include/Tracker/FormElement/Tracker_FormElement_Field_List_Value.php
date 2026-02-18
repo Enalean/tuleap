@@ -40,7 +40,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
     protected $is_hidden = false;
 
 
-    public function __construct(private \Tuleap\DB\UUID $uuid, $id, $is_hidden = false)
+    public function __construct($id, $is_hidden = false)
     {
         $this->id        = $id;
         $this->is_hidden = $is_hidden;
@@ -145,8 +145,11 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
         return intval($this->getId());
     }
 
-    public function getUuid(): string
+    /**
+     * @return non-empty-string
+     */
+    public function getXMLID(): string
     {
-        return self::XML_ID_PREFIX . $this->uuid->toString();
+        return self::XML_ID_PREFIX . '_' . $this->getId() . '_' . spl_object_id($this);
     }
 }

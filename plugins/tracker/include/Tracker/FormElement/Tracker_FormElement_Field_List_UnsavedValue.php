@@ -23,9 +23,9 @@ final class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElem
 {
     protected $label;
 
-    public function __construct(\Tuleap\DB\UUID $uuid, $id)
+    public function __construct($id)
     {
-        parent::__construct($uuid, $id);
+        parent::__construct($id);
     }
 
     public function __toString(): string

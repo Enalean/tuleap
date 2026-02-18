@@ -33,9 +33,9 @@ final class ListFieldUserGroupBindValue extends Tracker_FormElement_Field_List_B
      */
     protected $ugroup;
 
-    public function __construct(\Tuleap\DB\UUID $uuid, $id, ProjectUGroup $ugroup, $is_hidden)
+    public function __construct($id, ProjectUGroup $ugroup, $is_hidden)
     {
-        parent::__construct($uuid, $id, $is_hidden);
+        parent::__construct($id, $is_hidden);
         $this->ugroup = $ugroup;
     }
 

@@ -43,9 +43,9 @@ class ListFieldStaticBindValue extends Tracker_FormElement_Field_List_BindValue
      */
     protected $rank;
 
-    public function __construct(\Tuleap\DB\UUID $uuid, $id, $label, $description, $rank, $is_hidden)
+    public function __construct($id, $label, $description, $rank, $is_hidden)
     {
-        parent::__construct($uuid, $id, $is_hidden);
+        parent::__construct($id, $is_hidden);
         $this->setLabel($label);
         $this->description = $description;
         $this->rank        = $rank;

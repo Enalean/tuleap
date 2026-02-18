@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 
@@ -59,7 +58,6 @@ final class ListUserValueBuilder
 
     public function build(): ListFieldUserBindValue
     {
-        $uuid_factory = new DatabaseUUIDV7Factory();
-        return new ListFieldUserBindValue($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $this->id, $this->user_name, $this->displayed_name);
+        return new ListFieldUserBindValue($this->id, $this->user_name, $this->displayed_name);
     }
 }

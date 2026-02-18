@@ -29,7 +29,6 @@ use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_InvalidFieldValueException;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\UGroupRetriever;
@@ -72,9 +71,9 @@ class ListFieldUserGroupBind extends ListFieldBind
      */
     protected $value_dao;
 
-    public function __construct(public DatabaseUUIDV7Factory $uuid_factory, $field, $values, $default_values, $decorators, UGroupRetriever $ugroup_manager, BindUgroupsValueDao $value_dao)
+    public function __construct($field, $values, $default_values, $decorators, UGroupRetriever $ugroup_manager, BindUgroupsValueDao $value_dao)
     {
-        parent::__construct($uuid_factory, $field, $default_values, $decorators);
+        parent::__construct($field, $default_values, $decorators);
         $this->values           = $values;
         $this->ugroup_retriever = $ugroup_manager;
         $this->value_dao        = $value_dao;
@@ -187,9 +186,9 @@ class ListFieldUserGroupBind extends ListFieldBind
         if ($ugroup) {
             $is_hidden = isset($row['is_hidden']) ? $row['is_hidden'] : false;
 
-            return new ListFieldUserGroupBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $row['id'], $ugroup, $is_hidden);
+            return new ListFieldUserGroupBindValue($row['id'], $ugroup, $is_hidden);
         }
-        return new ListFieldUserGroupBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), -1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
+        return new ListFieldUserGroupBindValue(-1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
     }
 
     /**
@@ -581,7 +580,7 @@ class ListFieldUserGroupBind extends ListFieldBind
         $items = $root->addChild('items');
         foreach ($this->values as $value) {
             $item = $items->addChild('item');
-            $uuid = $value->getUuid();
+            $uuid = $value->getXMLID();
             $item->addAttribute('ID', $uuid);
             $xmlMapping['values'][$uuid] = $value->getId();
             $item->addAttribute('label', $value->getUGroupName());
@@ -858,7 +857,7 @@ class ListFieldUserGroupBind extends ListFieldBind
         $row = $this->value_dao->searchById($bindvalue_id);
 
         if (! $row) {
-            return new ListFieldUserGroupBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), -1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
+            return new ListFieldUserGroupBindValue(-1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
         }
 
         return $this->getValueFromRow($row);
