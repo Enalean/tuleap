@@ -102,6 +102,11 @@ reason = "Fixed in 0.19.3 but scanner is not correctly resolving our current ver
 id = "GHSA-5pgg-2g8v-p4x9" # CVE-2024-22363
 reason = "Fixed in 0.20.2 but scanner is not correctly resolving our current version (0.20.2)"
 
+# ajv, transitive dep of eslint
+[[IgnoredVulns]]
+id = "GHSA-2g4f-4pwh-qvx6" # CVE-2025-69873
+reason = "ReDoS. Only used at build time. Waiting for upstream fix, fixed versions have breaking changes."
+
 # wasmtime
 ## instant
 [[IgnoredVulns]]
