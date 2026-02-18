@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -25,7 +25,7 @@ export class SyntaxHighlightElement extends HTMLElement {
         }
 
         const observeChangeOfContents = (
-            syntaxHighlightElement: (element: Element) => void,
+            syntaxHighlightElement: (element: HTMLElement) => void,
         ): void => {
             const mutation_observer = new MutationObserver((mutations: Array<MutationRecord>) => {
                 if (mutations.length === 0) {
@@ -50,10 +50,8 @@ export class SyntaxHighlightElement extends HTMLElement {
         const intersection_observer = new IntersectionObserver(async (entries) => {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
-                    // This is needed to force Prism to not highlight everything when its module is loaded
-                    window.Prism = window.Prism || { manual: true };
-                    const { syntaxHighlightElement } = await import("./prism");
-                    syntaxHighlightElement(code_block);
+                    const { syntaxHighlightElement } = await import("./shiki-highlight");
+                    await syntaxHighlightElement(code_block);
                     intersection_observer.unobserve(this);
 
                     observeChangeOfContents(syntaxHighlightElement);
