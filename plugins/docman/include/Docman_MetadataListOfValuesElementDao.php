@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_MetadataListOfValuesElementDao extends DataAccessObject
+class Docman_MetadataListOfValuesElementDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function serachByValueId($id)
     {
@@ -173,7 +173,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
             $rank,
             $this->da->quoteSmart($status)
         );
-        return $this->_createAndReturnId($sql);
+        return $this->updateAndGetLastId($sql);
     }
 
     public function createMetadataElementBond($metadataId, $elementId)
@@ -187,7 +187,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
             $metadataId,
             $elementId
         );
-        return $this->_createAndReturnId($sql);
+        return $this->updateAndGetLastId($sql);
     }
 
     public function create($metadataId, $name, $description, $rank, $status)
@@ -202,20 +202,6 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
                 return false;
             }
         }
-    }
-
-    public function _createAndReturnId($sql)
-    {
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar = $this->retrieve('SELECT LAST_INSERT_ID() AS id');
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        }
-        return $inserted;
     }
 
     public function updateElement($metadataId, $valueId, $name, $description, $rank, $status)
