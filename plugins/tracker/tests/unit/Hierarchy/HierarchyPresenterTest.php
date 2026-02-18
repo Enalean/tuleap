@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Hierarchy;
 
+use TestHelper;
 use Tracker_Hierarchy_HierarchicalTracker;
+use Tracker_Workflow_Trigger_RulesDao;
 use TreeNode;
+use Tuleap\FakeDataAccessResult;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -42,20 +45,29 @@ final class HierarchyPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
             [2 => $task],
         );
 
+        $dao       = $this->createStub(Tracker_Workflow_Trigger_RulesDao::class);
         $presenter = new HierarchyPresenter(
             $tracker,
             $possible_children,
             new TreeNode(),
             [],
+            $dao,
             CSRFSynchronizerTokenStub::buildSelf()
+        );
+        $dao->method('searchForTriggeringTracker')->willReturnCallback(
+            static fn(int $tracker_id): FakeDataAccessResult => $tracker_id === 1
+                ? TestHelper::argListToDar([['rule_id' => 23]])
+                : TestHelper::emptyDar()
         );
 
         $attributes = $presenter->getPossibleChildren();
         self::assertSame('Stories', $attributes[0]['name']);
         self::assertSame(1, $attributes[0]['id']);
-        self::assertSame('', $attributes[0]['selected']);
+        self::assertSame(false, $attributes[0]['selected']);
+        self::assertSame(true, $attributes[0]['disabled']);
         self::assertSame('Tasks', $attributes[1]['name']);
         self::assertSame(2, $attributes[1]['id']);
-        self::assertSame('selected="selected"', $attributes[1]['selected']);
+        self::assertSame(true, $attributes[1]['selected']);
+        self::assertSame(false, $attributes[1]['disabled']);
     }
 }

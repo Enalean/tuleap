@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Hierarchy;
 
 use Tracker_Hierarchy_HierarchicalTracker;
+use Tracker_Workflow_Trigger_RulesDao;
 use TreeNode;
 use TreeNode_InjectPaddingInTreeNodeVisitor;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
@@ -46,6 +47,7 @@ final readonly class HierarchyPresenter
         array $possible_children,
         public TreeNode $hierarchy,
         array $trackers_used_in_trigger_rules,
+        private Tracker_Workflow_Trigger_RulesDao $tracker_workflow_trigger_rules_dao,
         public CSRFSynchronizerTokenInterface $csrf_token,
     ) {
         $this->possible_children = array_values($possible_children);
@@ -80,23 +82,24 @@ final readonly class HierarchyPresenter
         $possible_children = [];
 
         foreach ($this->possible_children as $possible_child) {
-            $selected = $this->getSelectedAttribute($possible_child);
-
             $possible_children[] = [
                 'id'       => $possible_child->getId(),
                 'name'     => $possible_child->getName(),
-                'selected' => $selected,
+                'selected' => $this->isSelected($possible_child),
+                'disabled' => $this->isDisabled($possible_child),
             ];
         }
 
         return $possible_children;
     }
 
-    private function getSelectedAttribute(Tracker $possible_child): string
+    private function isSelected(Tracker $possible_child): bool
     {
-        if ($this->tracker->hasChild($possible_child)) {
-            return 'selected="selected"';
-        }
-        return '';
+        return $this->tracker->hasChild($possible_child);
+    }
+
+    private function isDisabled(Tracker $possible_child): bool
+    {
+        return $this->tracker_workflow_trigger_rules_dao->searchForTriggeringTracker($possible_child->getId())->rowCount() !== 0;
     }
 }

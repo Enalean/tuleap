@@ -83,6 +83,7 @@ final readonly class HierarchyController
             $this->factory->getPossibleChildren($this->tracker),
             $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker()),
             $this->getChildrenUsedInTriggerRules(),
+            $this->tracker_workflow_trigger_rules_dao,
             $this->csrf_token,
         );
     }

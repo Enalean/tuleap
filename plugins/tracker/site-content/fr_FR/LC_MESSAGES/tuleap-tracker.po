@@ -4270,6 +4270,13 @@ msgid "This tracker has no workflow."
 msgstr "Ce tracker n'a pas de workflow."
 
 msgid ""
+"This tracker is involved in cross-tracker triggers, you cannot change its "
+"hierarchy."
+msgstr ""
+"Ce tracker est impliqué dans des règles globales sur les déclencheurs, vous "
+"ne pouvez pas changer sa hiérarchie."
+
+msgid ""
 "This tracker's notifications are disabled, when you use @ to mention "
 "someone, no email will be sent."
 msgstr ""

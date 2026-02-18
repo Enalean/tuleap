@@ -3755,6 +3755,11 @@ msgid "This tracker has no workflow."
 msgstr ""
 
 msgid ""
+"This tracker is involved in cross-tracker triggers, you cannot change its "
+"hierarchy."
+msgstr ""
+
+msgid ""
 "This tracker's notifications are disabled, when you use @ to mention "
 "someone, no email will be sent."
 msgstr ""
