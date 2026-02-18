@@ -24,7 +24,7 @@
         v-bind:class="{ 'drek-hide': dragged_field_id === field_id }"
         draggable="true"
     >
-        <div class="draggable-form-element">
+        <div class="draggable-form-element" draggable="true" data-not-drag-handle="true">
             <slot></slot>
         </div>
         <div class="draggable-handle-container" aria-hidden="true">
@@ -50,11 +50,14 @@ defineProps<{ field_id: number }>();
 
 <style lang="scss" scoped>
 .draggable-wrapper {
-    padding: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     transition: background 250ms ease-in-out;
 
     &:hover {
         background: var(--tlp-main-color-hover-background);
     }
+}
+
+.draggable-form-element {
+    padding: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 }
 </style>

@@ -26,7 +26,7 @@
     >
         <div class="draggable-form-element">
             <section class="tlp-pane">
-                <div class="tlp-pane-container">
+                <div class="tlp-pane-container" draggable="true" data-not-drag-handle="true">
                     <div class="tlp-pane-header fieldset-header">
                         <h1 class="tlp-pane-title fieldset-title">
                             <label-for-field v-bind:field="fieldset.field" />
@@ -42,12 +42,12 @@
                             v-if="fieldset.children.length"
                         />
                     </div>
-                    <div class="draggable-handle-container" aria-hidden="true">
-                        <i
-                            class="fa-solid fa-grip-vertical draggable-handle"
-                            v-bind:title="$gettext('Move element')"
-                        ></i>
-                    </div>
+                </div>
+                <div class="draggable-handle-container" aria-hidden="true">
+                    <i
+                        class="fa-solid fa-grip-vertical draggable-handle"
+                        v-bind:title="$gettext('Move element')"
+                    ></i>
                 </div>
             </section>
         </div>
