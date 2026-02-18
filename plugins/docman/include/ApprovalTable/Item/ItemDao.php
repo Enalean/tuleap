@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableItemDao extends DataAccessObject
+class Docman_ApprovalTableItemDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function getTableByItemId($item_id, $fields = '*')
     {
@@ -93,7 +93,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
             $this->da->quoteSmart($description) . ', ' .
             $this->da->escapeInt($status) . ', ' .
             $this->da->escapeInt($notification) . ')';
-        return $this->_createAndReturnId($sql);
+        return $this->updateAndGetLastId($sql);
     }
 
     public function deleteTable($tableId)
@@ -156,20 +156,6 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
         } else {
             return -1;
         }
-    }
-
-    public function _createAndReturnId($sql)
-    {
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar = $this->retrieve('SELECT LAST_INSERT_ID() AS id');
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        }
-        return $inserted;
     }
 
     /**

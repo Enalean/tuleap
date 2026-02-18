@@ -5357,17 +5357,14 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[isError]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
     </DeprecatedMethod>
     <FalsableReturnStatement>
       <code><![CDATA[$this->retrieve($sql)]]></code>
@@ -5391,7 +5388,6 @@
       <code><![CDATA[$notificationOccurence]]></code>
       <code><![CDATA[$orderBy]]></code>
       <code><![CDATA[$owner]]></code>
-      <code><![CDATA[$sql]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$status]]></code>
@@ -5406,7 +5402,6 @@
       <code><![CDATA[$where]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_createAndReturnId]]></code>
       <code><![CDATA[createTable]]></code>
       <code><![CDATA[deleteTable]]></code>
       <code><![CDATA[getTableByItemId]]></code>
@@ -5417,9 +5412,6 @@
       <code><![CDATA[tableExist]]></code>
       <code><![CDATA[updateTable]]></code>
     </MissingReturnType>
-    <PossiblyFalseReference>
-      <code><![CDATA[getRow]]></code>
-    </PossiblyFalseReference>
     <UndefinedMethod>
       <code><![CDATA[getTableById]]></code>
     </UndefinedMethod>
@@ -5840,6 +5832,7 @@
       <code><![CDATA[rowCount]]></code>
       <code><![CDATA[rowCount]]></code>
       <code><![CDATA[rowCount]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$date]]></code>

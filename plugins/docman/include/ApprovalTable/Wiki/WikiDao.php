@@ -117,7 +117,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao // phpcs:i
             $this->da->quoteSmart($description) . ', ' .
             $this->da->escapeInt($status) . ', ' .
             $this->da->escapeInt($notification) . ')';
-        return $this->_createAndReturnId($sql);
+        return $this->updateAndGetLastId($sql);
     }
 
     /**
