@@ -237,8 +237,8 @@ body.has-sidebar {
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     overflow: hidden;
     border: 0;
-    background: var(--tlp-white-color);
-    color: var(--tlp-dark-color);
+    background: var(--tlp-floating-element-background);
+    color: var(--tlp-typo-default-text-color);
     font-family: var(--tlp-font-family);
     font-size: 0.8125rem;
     font-weight: 500;

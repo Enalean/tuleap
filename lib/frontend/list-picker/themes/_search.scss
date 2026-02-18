@@ -32,6 +32,7 @@
     > .list-picker-search-field {
         height: var(--tlp-form-element-small-height);
         padding: 0 4px;
+        border: 1px solid var(--tlp-form-element-border-color);
         border-radius: var(--tlp-medium-radius);
 
         &:focus {

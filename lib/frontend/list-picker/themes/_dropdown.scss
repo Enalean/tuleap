@@ -28,7 +28,7 @@
     border-bottom: 1px solid var(--tlp-main-color);
     border-left: 1px solid var(--tlp-main-color);
     border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
-    background-color: var(--tlp-white-color);
+    background-color: var(--tlp-floating-element-background);
     box-shadow: var(--tlp-flyover-shadow);
 
     &.list-picker-dropdown-over-modal {
@@ -77,4 +77,8 @@
     line-height: normal;
     list-style: none;
     user-select: none;
+}
+
+.list-picker-multiple-search-section > .list-picker-search-field {
+    background: none;
 }
