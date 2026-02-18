@@ -551,16 +551,12 @@
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$size]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[get]]></code>
       <code><![CDATA[getAcceptedTrackers]]></code>
-      <code><![CDATA[getBacklogItems]]></code>
       <code><![CDATA[hasUserPriorityChangePermission]]></code>
       <code><![CDATA[options]]></code>
       <code><![CDATA[sendAllowHeaders]]></code>
@@ -8449,45 +8445,6 @@
       <code><![CDATA[setSort]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_ReportDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[isError]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$advancedSearch]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$groupId]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$image]]></code>
-      <code><![CDATA[$isDefault]]></code>
-      <code><![CDATA[$itemId]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$scope]]></code>
-      <code><![CDATA[$sql]]></code>
-      <code><![CDATA[$title]]></code>
-      <code><![CDATA[$userId]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[create]]></code>
-      <code><![CDATA[createAndReturnId]]></code>
-      <code><![CDATA[deleteById]]></code>
-      <code><![CDATA[searchById]]></code>
-    </MissingReturnType>
-    <PossiblyFalseReference>
-      <code><![CDATA[getRow]]></code>
-    </PossiblyFalseReference>
-  </file>
   <file src="plugins/docman/include/Docman_SettingsBo.php">
     <MissingParamType>
       <code><![CDATA[$dstGroupId]]></code>
@@ -9667,12 +9624,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$approval_table_action]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/docman/include/REST/v1/DocmanItemsRequestBuilder.php">
-    <MissingReturnType>
-      <code><![CDATA[checkItemAccessibility]]></code>
-      <code><![CDATA[checkProjectAccessibility]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/docman/include/REST/v1/DocmanItemsResource.php">
     <MissingReturnType>
@@ -42106,8 +42057,6 @@
       <code><![CDATA[$form_element_data]]></code>
       <code><![CDATA[$form_element_id]]></code>
       <code><![CDATA[$form_element_id]]></code>
-      <code><![CDATA[$form_element_id]]></code>
-      <code><![CDATA[$form_element_id]]></code>
       <code><![CDATA[$form_element_type]]></code>
       <code><![CDATA[$icon]]></code>
       <code><![CDATA[$id]]></code>
@@ -42155,7 +42104,6 @@
       <code><![CDATA[$used_formElements]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[addFormElement]]></code>
       <code><![CDATA[augmentFieldsDataWithDefaultValue]]></code>
       <code><![CDATA[canReadAllTargets]]></code>
       <code><![CDATA[clearCaches]]></code>
@@ -42185,7 +42133,6 @@
       <code><![CDATA[getValueMappingFromFieldMapping]]></code>
       <code><![CDATA[isFieldUniqueAndAlreadyUsed]]></code>
       <code><![CDATA[originalFieldIsInTemplateProject]]></code>
-      <code><![CDATA[removeFormElement]]></code>
       <code><![CDATA[typeIsValid]]></code>
       <code><![CDATA[updateFormElement]]></code>
       <code><![CDATA[userCanReadSharedField]]></code>
@@ -45980,9 +45927,6 @@
       <code><![CDATA[valueHasSource]]></code>
       <code><![CDATA[valueHasTarget]]></code>
     </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$rule->isUsedInRule($field->getId())]]></code>
-    </RiskyTruthyFalsyComparison>
     <UndefinedMethod>
       <code><![CDATA[getVisibleValuesPlusNoneIfAny]]></code>
       <code><![CDATA[getVisibleValuesPlusNoneIfAny]]></code>
@@ -47370,9 +47314,6 @@
       <code><![CDATA[$target_field]]></code>
       <code><![CDATA[$target_field_id]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$this->tracker->id]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getComparatorFromAddRequest]]></code>
       <code><![CDATA[getComparatorFromRequestParameter]]></code>
@@ -47682,9 +47623,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/PostActionSubFactories.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[bool]]></code>
-    </InvalidNullableReturnType>
     <MissingReturnType>
       <code><![CDATA[duplicate]]></code>
     </MissingReturnType>
@@ -53609,7 +53547,6 @@
   </file>
   <file src="plugins/tracker/tests/unit/Workflow/PostAction/Field/Transition_PostAction_Field_DateTest.php">
     <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -76343,14 +76280,6 @@
     </TooManyArguments>
   </file>
   <file src="tests/unit/common/Dashboard/Project/ProjectDashboardRetrieverTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$this->project_with_a_dashboard]]></code>
-      <code><![CDATA[$this->project_without_dashboard]]></code>
-    </InvalidArgument>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->createMock(\Project::class)]]></code>
-      <code><![CDATA[$this->createMock(\Project::class)]]></code>
-    </InvalidPropertyAssignmentValue>
     <MissingReturnType>
       <code><![CDATA[testItGetsAllDashboards]]></code>
       <code><![CDATA[testItReturnsAnEmptyIfThereAreNoDashboards]]></code>
@@ -76362,10 +76291,6 @@
             'name' => 'dashboard_one',
         ])]]></code>
     </TooManyArguments>
-    <UndefinedDocblockClass>
-      <code><![CDATA[Project]]></code>
-      <code><![CDATA[Project]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="tests/unit/common/Dashboard/Project/ProjectDashboardSaverTest.php">
     <NoInterfaceProperties>
@@ -76720,28 +76645,10 @@
     </MissingReturnType>
   </file>
   <file src="tests/unit/common/FRS/FRSReleaseFactoryTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
     <MissingParamType>
       <code><![CDATA[$canReadPackage]]></code>
       <code><![CDATA[$can_read_release]]></code>
     </MissingParamType>
-  </file>
-  <file src="tests/unit/common/FRS/FRSReleasePermissionManagerTest.php">
-    <InvalidClass>
-      <code><![CDATA[FRSRelease]]></code>
-      <code><![CDATA[MockObject&FrsRelease]]></code>
-    </InvalidClass>
   </file>
   <file src="tests/unit/common/FRS/FRSXMLImporterTest.php">
     <InternalMethod>
@@ -76752,9 +76659,6 @@
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </InvalidOperand>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->createMock(\Tuleap\FRS\FRSPermissionCreator::class)]]></code>
-    </InvalidPropertyAssignmentValue>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
@@ -76811,13 +76715,6 @@
       <code><![CDATA[$package]]></code>
       <code><![CDATA[$package_id]]></code>
     </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[testItAddEmptyPackages]]></code>
-      <code><![CDATA[testItAddReleasesPermissions]]></code>
-      <code><![CDATA[testItDoesNotDisplayReleaseWhenPackageHasTheFilteredPermissionAndTheReleaseHasNotTheFilteredPermission]]></code>
-      <code><![CDATA[testItFilterInReleasesEvenIfPackageHasNotThePermission]]></code>
-      <code><![CDATA[testItFilterOnAGroupWeFindCorrespondingPackagesAndReleases]]></code>
-    </MissingReturnType>
     <UndefinedMethod>
       <code><![CDATA[method]]></code>
       <code><![CDATA[method]]></code>
@@ -76858,9 +76755,6 @@
       <code><![CDATA[$this->project->getID()]]></code>
       <code><![CDATA[$this->project->getID()]]></code>
     </PossiblyInvalidOperand>
-    <RedundantCast>
-      <code><![CDATA[(int) ProjectUGroup::PROJECT_MEMBERS]]></code>
-    </RedundantCast>
     <UndefinedMethod>
       <code><![CDATA[method]]></code>
       <code><![CDATA[method]]></code>
@@ -76994,11 +76888,6 @@
       <code><![CDATA[$target_dir]]></code>
     </MissingPropertyType>
   </file>
-  <file src="tests/unit/common/Include/URLRedirectTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$url_redirect]]></code>
-    </MissingPropertyType>
-  </file>
   <file src="tests/unit/common/Include/URLVerification_AssertValidUrlTest.php">
     <MissingPropertyType>
       <code><![CDATA[$request]]></code>
@@ -77007,28 +76896,6 @@
     <TooManyArguments>
       <code><![CDATA[new ProjectAccessSuspendedException($project)]]></code>
     </TooManyArguments>
-  </file>
-  <file src="tests/unit/common/Include/UrlVerification/URLVerificationExpiredPasswordTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$url_verification]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="tests/unit/common/Include/UrlVerification/URLVerificationPermissionsOverriderAnonymousPlatformTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$server]]></code>
-      <code><![CDATA[$url_verification]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="tests/unit/common/Include/UrlVerification/URLVerificationPermissionsOverriderRestrictedPlatformTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$server]]></code>
-      <code><![CDATA[$url_verification]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="tests/unit/common/Include/UrlVerification/URLVerificationWithAnonymousTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$urlVerification]]></code>
-    </MissingPropertyType>
   </file>
   <file src="tests/unit/common/InviteBuddy/AccountCreationFeedbackTest.php">
     <PossiblyInvalidArgument>
