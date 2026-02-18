@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_MetadataDao extends DataAccessObject
+class Docman_MetadataDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $deletedStmt;
     public $notDeletedStmt;
@@ -144,7 +144,7 @@ class Docman_MetadataDao extends DataAccessObject
             $useIt
         );
 
-        $mdId = $this->_createAndReturnId($sql);
+        $mdId = $this->updateAndGetLastId($sql);
         if ($mdId !== false) {
             //update label
             $row     = ['field_id' => $mdId,
@@ -159,20 +159,6 @@ class Docman_MetadataDao extends DataAccessObject
         } else {
             return false;
         }
-    }
-
-    public function _createAndReturnId($sql)
-    {
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar = $this->retrieve('SELECT LAST_INSERT_ID() AS id');
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        }
-        return $inserted;
     }
 
     public function delete($id)
