@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_MetadataValueDao extends DataAccessObject
+class Docman_MetadataValueDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function searchById($fieldId, $itemId)
     {
@@ -36,7 +36,7 @@ class Docman_MetadataValueDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function _matchSqlType($type, $value, &$field, &$dataType, &$escapedValue)
+    public function _matchSqlType($type, $value, &$field, &$dataType, &$escapedValue) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         switch ($type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
@@ -110,24 +110,10 @@ class Docman_MetadataValueDao extends DataAccessObject
                 $val
             );
 
-            return $this->_createAndReturnId($sql);
+            return $this->updateAndGetLastId($sql);
         } else {
             return false;
         }
-    }
-
-    public function _createAndReturnId($sql)
-    {
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar = $this->retrieve('SELECT LAST_INSERT_ID() AS id');
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        }
-        return $inserted;
     }
 
     public function updateValue($itemId, $fieldId, $type, $value)

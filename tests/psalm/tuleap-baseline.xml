@@ -7859,14 +7859,11 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[isError]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
@@ -7874,7 +7871,7 @@
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$dataType]]></code>
@@ -7902,7 +7899,6 @@
       <code><![CDATA[$loveId]]></code>
       <code><![CDATA[$newValue]]></code>
       <code><![CDATA[$previousValue]]></code>
-      <code><![CDATA[$sql]]></code>
       <code><![CDATA[$srcItemId]]></code>
       <code><![CDATA[$srcItemId]]></code>
       <code><![CDATA[$type]]></code>
@@ -7914,7 +7910,6 @@
       <code><![CDATA[$value]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_createAndReturnId]]></code>
       <code><![CDATA[_matchSqlType]]></code>
       <code><![CDATA[create]]></code>
       <code><![CDATA[delete]]></code>
@@ -7928,9 +7923,6 @@
       <code><![CDATA[updateToListOfValueElementDefault]]></code>
       <code><![CDATA[updateValue]]></code>
     </MissingReturnType>
-    <PossiblyFalseReference>
-      <code><![CDATA[getRow]]></code>
-    </PossiblyFalseReference>
   </file>
   <file src="plugins/docman/include/Docman_MetadataValueFactory.php">
     <DeprecatedMethod>
