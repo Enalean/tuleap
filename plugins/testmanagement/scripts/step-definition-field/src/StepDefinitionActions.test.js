@@ -18,7 +18,6 @@
  *
  */
 
-import { describe, expect, test } from "vitest";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
 import { shallowMount } from "@vue/test-utils";
 import {
@@ -48,7 +47,7 @@ const getWrapper = (props = {}) => {
 
 describe(`StepDefinitionActions`, () => {
     describe("Display of the CommonMark buttons", () => {
-        test(`displays the 'Preview' and the syntax helper buttons when the CommonMark/Markdown value is selected or not disabled`, () => {
+        it(`displays the 'Preview' and the syntax helper buttons when the CommonMark/Markdown value is selected or not disabled`, () => {
             const wrapper = getWrapper({
                 step: { description_format: TEXT_FORMAT_COMMONMARK },
                 disabled: false,
@@ -58,7 +57,7 @@ describe(`StepDefinitionActions`, () => {
             expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBe(true);
         });
 
-        test(`does not display the 'Preview' and the syntax helper buttons when the step is deleted even if the format is CommonMark/Markdown`, () => {
+        it(`does not display the 'Preview' and the syntax helper buttons when the step is deleted even if the format is CommonMark/Markdown`, () => {
             const wrapper = getWrapper({
                 step: { description_format: TEXT_FORMAT_COMMONMARK },
                 disabled: true,
@@ -68,7 +67,7 @@ describe(`StepDefinitionActions`, () => {
             expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBe(false);
         });
 
-        test.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT]])(
+        it.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT]])(
             `does not display the buttons when the selected format is %s`,
             (selected_format) => {
                 const wrapper = getWrapper({
@@ -82,7 +81,7 @@ describe(`StepDefinitionActions`, () => {
         );
     });
     describe(`Selection of the right format`, () => {
-        test.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT], [TEXT_FORMAT_COMMONMARK]])(
+        it.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT], [TEXT_FORMAT_COMMONMARK]])(
             `selects the '%s' format according the prop 'value' value`,
             (value) => {
                 const wrapper = getWrapper({
@@ -96,7 +95,7 @@ describe(`StepDefinitionActions`, () => {
         );
     });
     describe("Enabling of the selectbox", () => {
-        test(`Enable the selectbox when we are in edit mode AND if the step is not disabled`, () => {
+        it(`Enable the selectbox when we are in edit mode AND if the step is not disabled`, () => {
             const wrapper = getWrapper({ disabled: false, is_in_preview_mode: false });
 
             expect(
@@ -104,7 +103,7 @@ describe(`StepDefinitionActions`, () => {
             ).toBe(false);
         });
 
-        test.each([
+        it.each([
             [true, false],
             [true, true],
             [false, true],

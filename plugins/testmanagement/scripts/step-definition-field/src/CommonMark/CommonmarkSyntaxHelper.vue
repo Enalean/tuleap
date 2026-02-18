@@ -72,7 +72,7 @@
                         <td>
                             <img
                                 class="popover-image-indentation"
-                                src="../assets/image_example_commonmark.png"
+                                src="assets/image_example_commonmark.png"
                             />
                         </td>
                     </tr>
