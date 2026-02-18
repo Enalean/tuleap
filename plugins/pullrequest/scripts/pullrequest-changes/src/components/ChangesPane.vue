@@ -24,13 +24,18 @@
                 <tuleap-pull-request-title v-bind:pull_request_id="pull_request_id" />
                 <changes-tabs />
                 <section class="tlp-pane-section">
-                    <template v-if="!is_loading_files">
-                        <files-selector
-                            v-if="selected_file && files.length > 0"
-                            v-bind:files="files"
-                            v-bind:selected_file="selected_file"
-                            v-on:file-selected="displaySelectedFile"
-                        />
+                    <template v-if="!is_loading">
+                        <div class="selectors" v-if="selected_file && files.length > 0">
+                            <files-selector
+                                v-bind:files="files"
+                                v-bind:selected_file="selected_file"
+                                v-on:file-selected="displaySelectedFile"
+                            />
+                            <file-diff-type-selector
+                                v-bind:current_diff_mode="current_diff_mode"
+                                v-on:diff-mode-changed="toggleDiffMode"
+                            />
+                        </div>
                         <div
                             v-else-if="files.length === 0 && !loading_error"
                             class="tlp-alert-warning"
@@ -50,7 +55,7 @@
                             {{ error_message }}
                         </div>
                     </template>
-                    <app-skeleton v-else />
+                    <selectors-skeletons v-else />
                 </section>
             </div>
         </div>
@@ -62,15 +67,23 @@ import { provide, computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useGettext } from "vue3-gettext";
 import type { Fault } from "@tuleap/fault";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { extractPullRequestIdFromRouteParams } from "../router/pull-request-id-extractor";
 import { extractFilePathFromRouteParams } from "../router/pull-request-file-name-extractor";
-import { getFiles, type PullRequestFile } from "../api/rest-querier";
-import { PULL_REQUEST_ID_KEY } from "../constants";
+import {
+    getFiles,
+    getUserPreferenceForDiffDisplayMode,
+    type PullRequestFile,
+} from "../api/rest-querier";
+import { CURRENT_USER_ID_KEY, PULL_REQUEST_ID_KEY } from "../constants";
+import type { PullRequestDiffMode } from "./file-diffs/diff-modes";
+import { SIDE_BY_SIDE_DIFF } from "./file-diffs/diff-modes";
 import FilesSelector from "./files-selector/FilesSelector.vue";
 import ChangesTabs from "./ChangesTabs.vue";
+import SelectorsSkeletons from "./SelectorsSkeletons.vue";
+import FileDiffTypeSelector from "./file-diffs/FileDiffTypeSelector.vue";
 
 import "@tuleap/plugin-pullrequest-title";
-import AppSkeleton from "./AppSkeleton.vue";
 
 const { $gettext, interpolate } = useGettext();
 const route = useRoute();
@@ -78,10 +91,13 @@ const router = useRouter();
 
 const pull_request_id = extractPullRequestIdFromRouteParams(route.params);
 const current_file_path = extractFilePathFromRouteParams(route.params);
-const is_loading_files = ref(true);
+const is_loading = ref(true);
 const loading_error = ref<Fault | null>(null);
 const files = ref<readonly PullRequestFile[]>([]);
 const selected_file = ref<PullRequestFile | undefined>();
+const current_diff_mode = ref<PullRequestDiffMode>(SIDE_BY_SIDE_DIFF);
+
+const user_id = strictInject(CURRENT_USER_ID_KEY);
 
 provide(PULL_REQUEST_ID_KEY, pull_request_id);
 
@@ -99,8 +115,20 @@ const displaySelectedFile = (file: PullRequestFile): void => {
     selected_file.value = file;
 };
 
-getFiles(pull_request_id).match(
-    (files_collection) => {
+const toggleDiffMode = (mode: PullRequestDiffMode): void => {
+    current_diff_mode.value = mode;
+};
+
+const handleFault = (fault: Fault): void => {
+    loading_error.value = fault;
+    is_loading.value = false;
+};
+
+Promise.all([
+    getUserPreferenceForDiffDisplayMode(user_id).match((mode) => {
+        current_diff_mode.value = mode;
+    }, handleFault),
+    getFiles(pull_request_id).match((files_collection) => {
         files.value = files_collection;
 
         if (files_collection.length > 0) {
@@ -117,14 +145,10 @@ getFiles(pull_request_id).match(
                 },
             );
         }
-
-        is_loading_files.value = false;
-    },
-    (fault) => {
-        loading_error.value = fault;
-        is_loading_files.value = false;
-    },
-);
+    }, handleFault),
+]).finally(() => {
+    is_loading.value = false;
+});
 </script>
 
 <style scoped lang="scss">
@@ -147,5 +171,11 @@ getFiles(pull_request_id).match(
 .tlp-alert-danger,
 .tlp-alert-warning {
     flex: 1;
+}
+
+.selectors {
+    display: flex;
+    flex: 1;
+    gap: var(--tlp-small-spacing);
 }
 </style>

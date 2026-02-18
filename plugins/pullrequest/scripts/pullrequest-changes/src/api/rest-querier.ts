@@ -19,8 +19,10 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { getJSON, uri } from "@tuleap/fetch-result";
+import { getJSON, uri, patchJSON } from "@tuleap/fetch-result";
 import { Option } from "@tuleap/option";
+import type { PullRequestDiffMode } from "../components/file-diffs/diff-modes";
+import { USER_DIFF_DISPLAY_MODE_PREFERENCE } from "../components/file-diffs/diff-modes";
 
 export type PullRequestFileStatus = "M" | "A" | "D";
 
@@ -68,5 +70,27 @@ export const getFiles = (
                 lines_removed: buildLinesStatOption(file.lines_removed),
             }),
         );
+    });
+};
+
+type UserDiffPreference = {
+    key: typeof USER_DIFF_DISPLAY_MODE_PREFERENCE;
+    value: PullRequestDiffMode;
+};
+export const getUserPreferenceForDiffDisplayMode = (
+    user_id: number,
+): ResultAsync<PullRequestDiffMode, Fault> => {
+    return getJSON<UserDiffPreference>(uri`/api/v1/users/${user_id}/preferences`, {
+        params: { key: USER_DIFF_DISPLAY_MODE_PREFERENCE },
+    }).map((preference: { value: PullRequestDiffMode }) => preference.value);
+};
+
+export const setUserPreferenceForDiffDisplayMode = (
+    user_id: number,
+    preferred_mode: PullRequestDiffMode,
+): ResultAsync<never, Fault> => {
+    return patchJSON(uri`/api/v1/users/${user_id}/preferences`, {
+        key: USER_DIFF_DISPLAY_MODE_PREFERENCE,
+        value: preferred_mode,
     });
 };
