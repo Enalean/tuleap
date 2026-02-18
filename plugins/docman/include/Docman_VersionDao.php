@@ -22,7 +22,7 @@
 /**
  *  Data Access Object for Docman_VersionDao
  */
-class Docman_VersionDao extends DataAccessObject
+class Docman_VersionDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
     * Gets all tables of the db
@@ -207,7 +207,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * create a row in the table plugin_docman_version
-    * @return true or id(auto_increment) if there is no error
+    * @return false|int or id(auto_increment) if there is no error
     */
     public function create($item_id, $number, $user_id, $label, $changelog, $date, $filename, $filesize, $filetype, $path)
     {
@@ -224,7 +224,7 @@ class Docman_VersionDao extends DataAccessObject
             $this->da->quoteSmart($filetype),
             $this->da->quoteSmart($path)
         );
-        return $this->_createAndReturnId($sql);
+        return $this->updateAndGetLastId($sql);
     }
 
     public function createFromRow(array $row)
@@ -247,24 +247,10 @@ class Docman_VersionDao extends DataAccessObject
             $sql = 'INSERT INTO plugin_docman_version '
                 . '(' . implode(', ', $arg) . ')'
                 . ' VALUES (' . implode(', ', $values) . ')';
-            return $this->_createAndReturnId($sql);
+            return $this->updateAndGetLastId($sql);
         } else {
             return false;
         }
-    }
-
-    public function _createAndReturnId($sql)
-    {
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar = $this->retrieve('SELECT LAST_INSERT_ID() AS id');
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        }
-        return $inserted;
     }
 
     /**

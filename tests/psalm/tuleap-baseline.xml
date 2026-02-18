@@ -8774,8 +8774,6 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[getRow]]></code>
       <code><![CDATA[getRow]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[isError]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[quoteLikeValueSurround]]></code>
@@ -8832,7 +8830,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[rowCount]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
@@ -8840,7 +8837,8 @@
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
     </DeprecatedMethod>
     <FalsableReturnStatement>
       <code><![CDATA[$this->retrieve($sql)]]></code>
@@ -8899,18 +8897,13 @@
       <code><![CDATA[$number]]></code>
       <code><![CDATA[$path]]></code>
       <code><![CDATA[$path]]></code>
-      <code><![CDATA[$sql]]></code>
       <code><![CDATA[$table]]></code>
       <code><![CDATA[$userId]]></code>
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_createAndReturnId]]></code>
       <code><![CDATA[createFromRow]]></code>
     </MissingReturnType>
-    <PossiblyFalseReference>
-      <code><![CDATA[getRow]]></code>
-    </PossiblyFalseReference>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
