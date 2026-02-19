@@ -93,7 +93,7 @@
       "argparse": "npm:@types/argparse@^2",
       "esbuild": "^0.25.1",
       "qs": "^6.14.1",
-      "systeminformation": "^5.27.14",
+      "systeminformation": "^5.31.1",
       "abab": "npm:@nolyfill/abab@^1",
       "array-includes": "npm:@nolyfill/array-includes@^1",
       "array.prototype.findlastindex": "npm:@nolyfill/array.prototype.findlastindex@^1",
