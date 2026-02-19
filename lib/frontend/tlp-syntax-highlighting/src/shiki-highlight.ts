@@ -23,6 +23,7 @@ import { markPotentiallyDangerousBidirectionalUnicodeText } from "./bidirectiona
 import DOMPurify from "dompurify";
 
 const LIGHT_THEME = "github-light-default";
+const DARK_THEME = "github-dark-default";
 
 let highlighter: HighlighterGeneric<BundledLanguage, BundledTheme> | null = null;
 
@@ -48,7 +49,7 @@ export async function syntaxHighlightElement(element: HTMLElement): Promise<void
 
     if (highlighter === null) {
         highlighter = await createHighlighter({
-            themes: [LIGHT_THEME],
+            themes: [LIGHT_THEME, DARK_THEME],
             langs: [],
             engine: createJavaScriptRegexEngine(),
         });
@@ -63,7 +64,11 @@ export async function syntaxHighlightElement(element: HTMLElement): Promise<void
     host.innerHTML = DOMPurify.sanitize(
         highlighter.codeToHtml(element.textContent, {
             lang: used_language,
-            theme: LIGHT_THEME,
+            themes: {
+                light: LIGHT_THEME,
+                dark: DARK_THEME,
+            },
+            defaultColor: "light-dark()",
             transformers: [{ postprocess: markPotentiallyDangerousBidirectionalUnicodeText }],
         }),
     );
