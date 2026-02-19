@@ -40,6 +40,7 @@ $datepicker-arrow-size: 10px;
     animation: $flatpickr-animation;
     border: 0;
     border-radius: var(--tlp-large-radius);
+    background: var(--tlp-floating-element-background);
     box-shadow: var(--tlp-flyover-shadow);
     font-family: var(--tlp-font-family);
 
@@ -54,7 +55,12 @@ $datepicker-arrow-size: 10px;
 
     // stylelint-disable-next-line selector-class-pattern
     &.arrowTop::after {
-        border-bottom-color: var(--tlp-main-color);
+        border-bottom-color: light-dark(var(--tlp-main-color), var(--tlp-dark-color-lighter-20));
+    }
+
+    // stylelint-disable-next-line selector-class-pattern
+    &.arrowBottom::after {
+        border-top-color: var(--tlp-floating-element-background);
     }
 }
 
@@ -62,7 +68,7 @@ $datepicker-arrow-size: 10px;
     align-items: center;
     justify-content: space-around;
     border-radius: var(--tlp-large-radius) var(--tlp-large-radius) 0 0;
-    background: var(--tlp-main-color);
+    background: light-dark(var(--tlp-main-color), var(--tlp-dark-color-lighter-20));
     color: var(--tlp-white-color);
 
     .flatpickr-prev-month,
@@ -82,7 +88,7 @@ $datepicker-arrow-size: 10px;
         font-size: 16px;
 
         &:hover {
-            background: var(--tlp-white-color);
+            background: var(--tlp-floating-element-background);
             color: var(--tlp-main-color);
         }
 
@@ -137,13 +143,13 @@ $datepicker-arrow-size: 10px;
 }
 
 .flatpickr-weekdays {
-    background: var(--tlp-main-color);
+    background: light-dark(var(--tlp-main-color), var(--tlp-dark-color-lighter-20));
     color: var(--tlp-white-color);
 }
 
 // stylelint-disable-next-line selector-no-qualifying-type
 span.flatpickr-weekday {
-    background: var(--tlp-main-color);
+    background: light-dark(var(--tlp-main-color), var(--tlp-dark-color-lighter-20));
     color: var(--tlp-white-color-transparent-30);
     font-weight: 600;
 }
@@ -151,8 +157,16 @@ span.flatpickr-weekday {
 .flatpickr-weekwrapper {
     flex: 1 1 auto;
 
+    .flatpickr-weeks {
+        box-shadow: 1px 0 var(--tlp-border-color);
+    }
+
     .flatpickr-weekday {
         color: var(--tlp-main-color);
+
+        &:first-of-type {
+            color: transparent;
+        }
     }
 
     // stylelint-disable selector-no-qualifying-type
@@ -169,7 +183,7 @@ span.flatpickr-weekday {
 .flatpickr-day {
     max-width: 40px;
     height: 40px;
-    color: #050505;
+    color: var(--tlp-typo-default-text-color);
     line-height: 38px;
 
     &:hover {
@@ -219,4 +233,51 @@ span.flatpickr-weekday {
             }
         }
     }
+}
+
+// stylelint-disable-next-line selector-class-pattern
+.flatpickr-calendar.hasTime {
+    .flatpickr-time {
+        border-top: 1px solid var(--tlp-border-color);
+        background: var(--tlp-floating-element-background);
+    }
+
+    .flatpickr-time input {
+        background: transparent;
+        color: var(--tlp-typo-default-text-color);
+
+        &:hover {
+            background: light-dark(var(--tlp-background-color), var(--tlp-dark-color-lighter-20));
+        }
+    }
+
+    .flatpickr-time .flatpickr-time-separator {
+        color: var(--tlp-typo-default-text-color);
+    }
+
+    // stylelint-disable selector-class-pattern
+    .flatpickr-time .arrowUp,
+    .flatpickr-time .arrowDown {
+        border: 1px solid var(--tlp-border-color);
+
+        &:hover {
+            background: light-dark(
+                var(--tlp-background-color-darker-10),
+                var(--tlp-dark-color-lighter-20)
+            );
+        }
+    }
+
+    .flatpickr-time .arrowUp {
+        &::after {
+            border-bottom-color: var(--tlp-dimmed-color);
+        }
+    }
+
+    .flatpickr-time .arrowDown {
+        &::after {
+            border-top-color: var(--tlp-dimmed-color);
+        }
+    }
+    // stylelint-enable selector-class-pattern
 }
