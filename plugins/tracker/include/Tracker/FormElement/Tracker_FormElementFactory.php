@@ -24,7 +24,6 @@ use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\FormElement\Container\Column\ColumnContainer;
 use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
-use Tuleap\Tracker\FormElement\Field\AddField;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
@@ -75,7 +74,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements AddField, RemoveField, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElementFactory implements RemoveField, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string FIELD_STRING_TYPE                 = 'string';
     public const string FIELD_TEXT_TYPE                   = 'text';
@@ -1324,42 +1323,6 @@ class Tracker_FormElementFactory implements AddField, RemoveField, RetrieveUsedF
             //remove the field from its container
             $form_element->parent_id = 0;
             $success                 = $this->getDao()->save($form_element);
-        }
-        return $success;
-    }
-
-    #[Override]
-    public function addFormElement(int $form_element_id): bool
-    {
-        $success = false;
-        if ($form_element = $this->getFormElementById($form_element_id)) {
-            $form_element->use_it = true;
-            $form_element->rank   = 'beginning';
-
-            if ($success = $this->getDao()->save($form_element)) {
-                unset($this->formElements_by_parent[$form_element->parent_id]);
-                //Set permissions if no permission set
-                $perms = $form_element->getPermissionsByUgroupId();
-                //WARNING : here must be transformed the permissions array structure in order to pass it to the function that process form data permissions
-                //see this::createFormElement to know how to convert permissions data
-                if (empty($perms)) {
-                    //Set default permissions
-                    $permissions = [ $form_element_id =>
-                         [
-                             ProjectUGroup::ANONYMOUS        => plugin_tracker_permission_get_input_value_from_permission(TrackerField::PERMISSION_READ),
-                             ProjectUGroup::REGISTERED       => plugin_tracker_permission_get_input_value_from_permission(TrackerField::PERMISSION_SUBMIT),
-                             ProjectUGroup::PROJECT_MEMBERS  => plugin_tracker_permission_get_input_value_from_permission(TrackerField::PERMISSION_UPDATE),
-                         ],
-                    ];
-                    $tracker     = $form_element->getTracker();
-                    plugin_tracker_permission_process_update_fields_permissions(
-                        $tracker->getGroupID(),
-                        $tracker->getID(),
-                        $this->getUsedFields($tracker),
-                        $permissions
-                    );
-                }
-            }
         }
         return $success;
     }

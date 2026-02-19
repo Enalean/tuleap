@@ -26,17 +26,17 @@ use Override;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
-use Tuleap\Tracker\Test\Stub\AddFieldStub;
+use Tuleap\Tracker\Test\Stub\FormElement\UseFormElementStub;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class TrackerFieldAdderTest extends TestCase
 {
-    private AddFieldStub $form_element_factory;
+    private UseFormElementStub $form_element_factory;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->form_element_factory = AddFieldStub::build();
+        $this->form_element_factory = UseFormElementStub::build();
     }
 
     public function testItDoesNothingWhenTheCurrentFieldIsAlreadyUsed(): void

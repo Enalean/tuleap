@@ -40,7 +40,7 @@ use Tuleap\Tracker\FormElement\TrackerFieldAdder;
 use Tuleap\Tracker\FormElement\TrackerFieldRemover;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\AddFieldStub;
+use Tuleap\Tracker\Test\Stub\FormElement\UseFormElementStub;
 use Tuleap\Tracker\Test\Stub\RemoveFieldStub;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -49,7 +49,7 @@ final class RestFieldUseHandlerTest extends TestCase
     private StringField $field;
 
     private RemoveFieldStub $form_element_factory_remove;
-    private AddFieldStub $form_element_factory_add;
+    private UseFormElementStub $form_element_factory_add;
     private TrackerFactory&MockObject $tracker_factory;
     private Tracker_Workflow_Trigger_RulesManager&Stub $rules_manager;
     private PFUser $current_user;
@@ -65,7 +65,7 @@ final class RestFieldUseHandlerTest extends TestCase
         $this->current_user = UserTestBuilder::buildWithDefaults();
 
         $this->form_element_factory_remove = RemoveFieldStub::build();
-        $this->form_element_factory_add    = AddFieldStub::build();
+        $this->form_element_factory_add    = UseFormElementStub::build();
 
         $this->history_dao = AddHistoryStub::build();
 

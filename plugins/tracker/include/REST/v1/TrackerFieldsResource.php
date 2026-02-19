@@ -45,6 +45,7 @@ use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\TrackerFieldAdder;
 use Tuleap\Tracker\FormElement\TrackerFieldRemover;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
+use Tuleap\Tracker\FormElement\UsageDao;
 use Tuleap\Tracker\REST\FormElement\RestFieldUseHandler;
 use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\FieldCannotBeMovedFault;
 use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\FieldNotSavedFault;
@@ -151,10 +152,15 @@ class TrackerFieldsResource extends AuthenticatedResource
         }
 
         $form_element_factory = Tracker_FormElementFactory::instance();
+        $usage_dao            = new UsageDao();
 
         new RestFieldUseHandler(
-            new TrackerFieldRemover($form_element_factory, TrackerFactory::instance(), new ProjectHistoryDao()),
-            new TrackerFieldAdder($form_element_factory)
+            new TrackerFieldRemover(
+                $form_element_factory,
+                TrackerFactory::instance(),
+                new ProjectHistoryDao()
+            ),
+            new TrackerFieldAdder($usage_dao),
         )->handle($field, $patch, $user);
 
         if ($patch->new_values !== null) {
