@@ -132,11 +132,11 @@
     &[aria-selected="true"] {
         position: relative;
         padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
-        color: var(--tlp-main-color-hover-background);
+        color: var(--tlp-main-color);
 
         &:focus,
         &:hover {
-            color: var(--tlp-main-color);
+            color: var(--tlp-typo-default-text-color);
         }
     }
 }
