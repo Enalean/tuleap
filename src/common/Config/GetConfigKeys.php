@@ -29,6 +29,7 @@ use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\CookieManager;
 use Tuleap\Date\OpeningDaysRetriever;
 use Tuleap\DB\DBConfig;
+use Tuleap\DB\DBProxy;
 use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Event\Dispatchable;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
@@ -82,6 +83,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         HelpDropdownPresenterBuilder::class,
         BrowserDeprecationMessage::class,
         DBConfig::class,
+        DBProxy::class,
         ServerHostname::class,
         ProjectExportController::class,
         MailTransportBuilder::class,

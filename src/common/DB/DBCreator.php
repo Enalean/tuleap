@@ -26,26 +26,28 @@ use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\Factory;
 use PDO;
 
-class DBCreator
+readonly class DBCreator
 {
-    /**
-     * @var string
-     */
-    private $database_name;
-
-    public function __construct(string $database_name)
+    public function __construct(private string $database_name)
     {
-        $this->database_name = $database_name;
     }
 
     public function createDB(): EasyDB
     {
         return Factory::fromArray([
-            DBConfig::getPDODSN($this->database_name),
+            $this->getPDODSN(),
             \ForgeConfig::get(DBConfig::CONF_DBUSER),
             \ForgeConfig::get(DBConfig::CONF_DBPASSWORD),
             $this->getOptions(),
         ]);
+    }
+
+    private function getPDODSN(): string
+    {
+        if (DBProxy::instance()->should_use_proxy) {
+            return DBConfig::getPDODSNThroughProxy($this->database_name);
+        }
+        return DBConfig::getPDODSN($this->database_name);
     }
 
     private function getOptions(): array
