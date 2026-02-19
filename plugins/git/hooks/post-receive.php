@@ -42,7 +42,6 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Queue\EnqueueTask;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
@@ -121,7 +120,7 @@ $post_receive = new PostReceive(
         ),
         new \Tuleap\Git\Webhook\WebhookFactory($webhook_dao),
         $logger,
-        new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+        new UserAvatarUrlProvider(new AvatarHashDao()),
     ),
     new \Tuleap\Git\Hook\PostReceiveMailSender(
         $git_repository_url_manager,

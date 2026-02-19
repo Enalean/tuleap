@@ -145,7 +145,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use Workflow_Transition_ConditionFactory;
@@ -240,7 +239,7 @@ final class KanbanResource extends AuthenticatedResource
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger()
         );
-        $this->mercure_client            = ClientBuilder::build(ClientBuilder::DEFAULTPATH, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
+        $this->mercure_client            = ClientBuilder::build(ClientBuilder::DEFAULTPATH, new UserAvatarUrlProvider(new AvatarHashDao()));
         $this->structure_realtime_kanban = new KanbanStructureRealTimeMercure($this->mercure_client);
         $this->permissions_serializer    = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())

@@ -55,7 +55,6 @@ use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\RESTLogger;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
@@ -82,7 +81,7 @@ final class DocmanItemsApprovalTableResource extends AuthenticatedResource
         $this->version_factory          = new Docman_VersionFactory();
         $this->factories_factory        = new Docman_ApprovalTableFactoriesFactory();
         $this->approval_table_retriever = new ApprovalTableRetriever($this->factories_factory, $this->version_factory);
-        $this->user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $this->user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao());
     }
 
     /**

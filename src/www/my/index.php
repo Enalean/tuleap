@@ -43,7 +43,6 @@ use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Dashboard\Widget\WidgetMinimizor;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\Widget\WidgetFactory;
 
@@ -89,9 +88,9 @@ $router                     = new UserDashboardRouter(
                 new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
             ),
             UserManager::instance(),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
         ),
-        new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+        new UserAvatarUrlProvider(new AvatarHashDao()),
     ),
     new WidgetDashboardController(
         $csrf_token,

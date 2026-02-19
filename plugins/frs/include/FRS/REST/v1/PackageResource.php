@@ -36,7 +36,6 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserManager;
@@ -225,7 +224,7 @@ class PackageResource extends AuthenticatedResource
                 $current_user,
                 $this->uploaded_link_retriever,
                 $this->release_permissions_for_groups_builder,
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
                 CachedSemanticStatusRetriever::instance(),
             );
 

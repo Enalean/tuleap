@@ -43,7 +43,6 @@ use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\Admin\UserStatusBuilder;
 use Tuleap\User\Admin\UserStatusChecker;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\Password\Change\PasswordChanger;
@@ -345,7 +344,7 @@ $invited_by_builder         = new InvitedByPresenterBuilder(
     ),
     $um,
     ProjectManager::instance(),
-    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+    new UserAvatarUrlProvider(new AvatarHashDao()),
 );
 $invited_by                 = $invite_buddy_configuration->isFeatureEnabled()
     ? $invited_by_builder->getInvitedByPresenter($user, $site_administrator)

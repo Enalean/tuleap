@@ -163,7 +163,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use Workflow_Transition_ConditionFactory;
@@ -264,7 +263,7 @@ class CampaignsResource
             $event_manager
         );
 
-        $this->provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $this->provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao());
 
         $assigned_to_representation_builder = new AssignedToRepresentationBuilder(
             $this->formelement_factory,
@@ -314,12 +313,12 @@ class CampaignsResource
                         new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
                         $this->provide_user_avatar_url,
                     ),
-                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    new UserAvatarUrlProvider(new AvatarHashDao()),
                     $this->user_manager,
                     $this->user_manager,
                 ),
                 \Tuleap\Tracker\Artifact\PriorityManager::build(),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
                 CachedSemanticStatusRetriever::instance(),
                 $this->user_manager,
                 $this->user_manager,

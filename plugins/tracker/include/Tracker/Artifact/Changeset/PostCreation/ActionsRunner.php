@@ -98,7 +98,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\Webhook\Emitter as WebhookEmitter;
 use UGroupManager;
@@ -215,7 +214,7 @@ class ActionsRunner
                                 )
                             )
                         ),
-                        new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                        new UserAvatarUrlProvider(new AvatarHashDao()),
                     ),
                     new Tracker_REST_TrackerRestBuilder(
                         new StructureRepresentationBuilder($form_element_factory),
@@ -251,7 +250,7 @@ class ActionsRunner
                         new ParentInHierarchyRetriever(new HierarchyDAO(), \TrackerFactory::instance()),
                         TrackersPermissionsRetriever::build()
                     ),
-                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    new UserAvatarUrlProvider(new AvatarHashDao()),
                     $ugroup_manager,
                 ),
             ),

@@ -45,7 +45,6 @@ use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\UserListValueRepresentation;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\UserRepresentation;
 use UserDao;
@@ -990,7 +989,7 @@ class ListFieldUserBind extends ListFieldBind
 
         $rest_array = [];
         foreach ($bind_values as $value) {
-            $representation = \Tuleap\User\REST\UserRepresentation::build($value->getUser(), new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
+            $representation = \Tuleap\User\REST\UserRepresentation::build($value->getUser(), new UserAvatarUrlProvider(new AvatarHashDao()));
             $rest_array[]   = $representation;
         }
         return $rest_array;
@@ -1043,7 +1042,7 @@ class ListFieldUserBind extends ListFieldBind
             $user->setEmail($value->getLabel());
         }
 
-        return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
+        return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao()));
     }
 
     #[\Override]

@@ -43,7 +43,6 @@ use Tuleap\Tracker\Tracker\dao\TrackerGlobalNotificationDao;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupDao;
 use UGroupManager;
@@ -94,7 +93,6 @@ trait NotificationsAdminSettingsControllerCommon
                 \UserHelper::instance(),
                 new UserAvatarUrlProvider(
                     new AvatarHashDao(),
-                    new ComputeAvatarHash()
                 )
             ),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),

@@ -53,7 +53,6 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserHelper;
@@ -295,7 +294,7 @@ final class DocmanItemsResource extends AuthenticatedResource
         Header::sendPaginationHeaders($limit, $offset, $page->total, self::MAX_LIMIT);
 
         return array_map(
-            static fn(LogEntry $entry): LogEntryRepresentation => LogEntryRepresentation::fromEntry($entry, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())),
+            static fn(LogEntry $entry): LogEntryRepresentation => LogEntryRepresentation::fromEntry($entry, new UserAvatarUrlProvider(new AvatarHashDao())),
             $page->entries,
         );
     }
@@ -384,7 +383,7 @@ final class DocmanItemsResource extends AuthenticatedResource
                 new UGroupManager()
             ),
             $html_purifier,
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             $version_factory,
             new NotificationBuilders(new ResponseFeedbackWrapper(), $project)->buildNotificationManager(),
             new ItemIconPresenterBuilder($this->event_manager, $version_factory),

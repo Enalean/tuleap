@@ -51,7 +51,6 @@ use Tuleap\PullRequest\REST\v1\Comment\PATCHCommentHandler;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 
@@ -132,7 +131,7 @@ final class PullRequestCommentsResource extends AuthenticatedResource
             $git_repository_factory,
             ReferenceManager::instance(),
             $event_dispatcher,
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
         );
 
         $current_user = UserManager::instance()->getCurrentUser();

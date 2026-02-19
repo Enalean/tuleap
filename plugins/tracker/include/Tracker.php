@@ -252,7 +252,6 @@ use Tuleap\Tracker\Workflow\WorkflowMenuPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\Widget\WidgetFactory;
 use UGroupDao;
@@ -1935,7 +1934,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                 \UserHelper::instance(),
                 new UserAvatarUrlProvider(
                     new AvatarHashDao(),
-                    new ComputeAvatarHash()
                 )
             ),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),

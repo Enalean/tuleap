@@ -82,9 +82,14 @@ final class AvatarController extends DispatchablePSR15Compatible implements Disp
 
         return $this->avatar_hash_storage
             ->retrieve($user)
+            ->avatar_hash
             ->orElse(
                 /** @return Option<string> */
-                fn(): Option => Option::fromValue($this->compute_avatar_hash->computeAvatarHash($user_avatar_path))
+                function () use ($user, $user_avatar_path): Option {
+                    $current_hash = $this->compute_avatar_hash->computeAvatarHash($user_avatar_path);
+                    $this->avatar_hash_storage->store($user, $current_hash);
+                    return Option::fromValue($current_hash);
+                }
             )->mapOr(
                 function (string $current_hash) use ($request, $hash, $user): ResponseInterface {
                     if ($current_hash === $hash || $hash === '') {

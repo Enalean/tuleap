@@ -61,7 +61,6 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserManager;
@@ -357,7 +356,7 @@ class DocmanLinksResource extends AuthenticatedResource
         $item_representation_builder = new VersionRepresentationCollectionBuilder(
             new LinkVersionDao(),
             UserManager::instance(),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
             new VersionOpenHrefVisitor(),
         );
 

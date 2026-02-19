@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Test\Stubs\User\Avatar;
 
 use Tuleap\Option\Option;
+use Tuleap\User\Avatar\UserAvatarHash;
 
 final class AvatarHashStorageStub implements \Tuleap\User\Avatar\AvatarHashStorage
 {
@@ -43,9 +44,21 @@ final class AvatarHashStorageStub implements \Tuleap\User\Avatar\AvatarHashStora
     }
 
     #[\Override]
-    public function retrieve(\PFUser $user): Option
+    public function retrieve(\PFUser $user): UserAvatarHash
     {
-        return $this->hash;
+        return new UserAvatarHash($user, $this->hash);
+    }
+
+    #[\Override]
+    public function retrieveHashes(\PFUser ...$users): array
+    {
+        $avatar_hashes = [];
+
+        foreach ($users as $user) {
+            $avatar_hashes[] = $this->retrieve($user);
+        }
+
+        return $avatar_hashes;
     }
 
     #[\Override]

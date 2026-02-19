@@ -30,7 +30,6 @@ use Tuleap\Timetracking\Widget\People\PredefinedTimePeriod;
 use Tuleap\Timetracking\Widget\People\PeopleDao;
 use Tuleap\Timetracking\Widget\People\PeopleTimetrackingWidgetConfig;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use Widget;
@@ -90,7 +89,6 @@ class PeopleTimetrackingWidget extends Widget
             UserManager::instance(),
             new UserAvatarUrlProvider(
                 new AvatarHashDao(),
-                new ComputeAvatarHash()
             ),
         );
         $renderer      = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);

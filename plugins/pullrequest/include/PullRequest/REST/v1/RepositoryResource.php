@@ -47,7 +47,6 @@ use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
@@ -182,7 +181,7 @@ class RepositoryResource extends AuthenticatedResource
             ),
             $gitolite_access_URL_generator,
             \pullrequestPlugin::getLogger(),
-            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserAvatarUrlProvider(new AvatarHashDao()),
         );
     }
 
@@ -220,7 +219,7 @@ class RepositoryResource extends AuthenticatedResource
             new \Tuleap\PullRequest\REST\v1\Authors\GETHandler(
                 UserManager::instance(),
                 new PullRequestDao(),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
             )
         )->handle($repository, $limit, $offset)->match(
             function (RepositoryPullRequestsAuthorsRepresentation $representations) use ($limit, $offset) {
@@ -267,7 +266,7 @@ class RepositoryResource extends AuthenticatedResource
             new \Tuleap\PullRequest\REST\v1\Reviewers\GETHandler(
                 UserManager::instance(),
                 new ReviewerDAO(),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
             )
         )->handle($repository, $limit, $offset)->match(
             function (RepositoryPullRequestsReviewersRepresentation $representation) use ($limit, $offset) {

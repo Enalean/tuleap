@@ -238,7 +238,6 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\Password\PasswordExpirationChecker;
 use Tuleap\User\PasswordVerifier;
@@ -2413,7 +2412,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 UserManager::instance(),
                 EventManager::instance(),
                 new ProjectFlagsBuilder(new ProjectFlagsDao()),
-                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                new UserAvatarUrlProvider(new AvatarHashDao()),
             ),
             new \Tuleap\Layout\JavascriptViteAsset(
                 new \Tuleap\Layout\IncludeViteAssets(

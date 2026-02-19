@@ -320,7 +320,6 @@ use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 use Tuleap\User\Account\NotificationsSectionsCollector;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
@@ -1608,7 +1607,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 \UserHelper::instance(),
                 new UserAvatarUrlProvider(
                     new AvatarHashDao(),
-                    new ComputeAvatarHash()
                 )
             ),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),

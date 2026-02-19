@@ -60,7 +60,6 @@ use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 
@@ -141,7 +140,7 @@ class KanbanColumnsResource
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
 
-        $this->mercure_client             = ClientBuilder::build(ClientBuilder::DEFAULTPATH, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
+        $this->mercure_client             = ClientBuilder::build(ClientBuilder::DEFAULTPATH, new UserAvatarUrlProvider(new AvatarHashDao()));
         $this->kanban_structural_realtime = new KanbanStructureRealTimeMercure($this->mercure_client);
     }
 

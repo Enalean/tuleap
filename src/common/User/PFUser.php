@@ -21,7 +21,6 @@
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\Avatar\AvatarHashDao;
-use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 
@@ -1236,7 +1235,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getAvatarUrl()
     {
         if (! $this->avatar_url) {
-            $user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+            $user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao());
             $this->avatar_url         = $user_avatar_url_provider->getAvatarUrl($this);
         }
 
@@ -1249,9 +1248,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     }
 
     /**
-     * @return string
+     * @psalm-return non-empty-string
      */
-    public function getAvatarFilePath()
+    public function getAvatarFilePath(): string
     {
         return ForgeConfig::get('sys_avatar_path') .
             DIRECTORY_SEPARATOR .

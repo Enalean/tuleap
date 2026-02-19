@@ -22,20 +22,45 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Avatar;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
 
 final class AvatarHashDao extends DataAccessObject implements AvatarHashStorage, AvatarHashStorageDeletor
 {
     #[\Override]
-    public function retrieve(\PFUser $user): Option
+    public function retrieve(\PFUser $user): UserAvatarHash
     {
-        $hash = $this->getDB()->cell('SELECT hash FROM user_avatar_hash WHERE user_id = ?', $user->getId());
-        if ($hash === false) {
-            return Option::nothing(\Psl\Type\string());
+        return $this->retrieveHashes($user)[0] ?? new UserAvatarHash($user, Option::nothing(\Psl\Type\string()));
+    }
+
+    #[\Override]
+    public function retrieveHashes(\PFUser ...$users): array
+    {
+        $user_ids = \Psl\Vec\map($users, static fn (\PFUser $user): int => (int) $user->getId());
+        if ($user_ids === []) {
+            return [];
         }
 
-        return Option::fromValue($hash);
+        $users_ids_statement = EasyStatement::open()->in('user_id IN (?*)', $user_ids);
+
+        /** @psalm-var array<int,string> $rows */
+        $rows = $this->getDB()->safeQuery(
+            "SELECT user_id, hash FROM user_avatar_hash WHERE hash IS NOT NULL AND $users_ids_statement",
+            $users_ids_statement->values(),
+            \PDO::FETCH_KEY_PAIR
+        );
+
+        $results = [];
+
+        foreach ($users as $user) {
+            $results[] = new UserAvatarHash(
+                $user,
+                Option::fromNullable($rows[(int) $user->getId()] ?? null)
+            );
+        }
+
+        return $results;
     }
 
     #[\Override]
