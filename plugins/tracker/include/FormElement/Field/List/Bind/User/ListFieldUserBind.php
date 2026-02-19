@@ -68,9 +68,9 @@ class ListFieldUserBind extends ListFieldBind
     protected $values;
 
 
-    public function __construct(public \Tuleap\DB\DatabaseUUIDV7Factory $uuid_factory, $field, $value_function, $default_values, $decorators)
+    public function __construct($field, $value_function, $default_values, $decorators)
     {
-        parent::__construct($uuid_factory, $field, $default_values, $decorators);
+        parent::__construct($field, $default_values, $decorators);
 
         if (! empty($value_function)) {
             $this->value_function = explode(',', $value_function);
@@ -182,7 +182,7 @@ class ListFieldUserBind extends ListFieldBind
         $uh     = UserHelper::instance();
         $values = [];
         foreach ($this->getDao()->searchChangesetValues($changeset_id, $this->field->id, $uh->getDisplayNameSQLQuery(), $uh->getDisplayNameSQLOrder()) as $row) {
-            $values[] = new ListFieldUserBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $row['id'], $row['user_name'], $row['full_name']);
+            $values[] = new ListFieldUserBindValue($row['id'], $row['user_name'], $row['full_name']);
         }
         return $values;
     }
@@ -194,7 +194,7 @@ class ListFieldUserBind extends ListFieldBind
     public function getValue($value_id)
     {
         if ($value_id == 100) {
-            $v = new ListFieldUserBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), 0);
+            $v = new ListFieldUserBindValue(0);
         } else {
             $vs = $this->getAllValues();
             $v  = null;
@@ -295,7 +295,7 @@ class ListFieldUserBind extends ListFieldBind
     protected function getAllValuesByUGroupList($ugroups)
     {
         if ($this->values === null) {
-            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance(), $this->uuid_factory);
+            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
             $this->values = $value_getter->getSubsetOfUsersValueWithUserIds(
                 $ugroups,
                 [],
@@ -322,7 +322,7 @@ class ListFieldUserBind extends ListFieldBind
             return [];
         }
 
-        $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance(), $this->uuid_factory);
+        $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
         return $value_getter->getSubsetOfUsersValueWithUserIds(
             $this->value_function,
             $bindvalue_ids,
@@ -348,7 +348,7 @@ class ListFieldUserBind extends ListFieldBind
     public function getAllValuesWithActiveUsersOnly(): array
     {
         if ($this->values === null) {
-            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance(), $this->uuid_factory);
+            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
             $this->values = $value_getter->getActiveUsersValue(
                 $this->value_function,
                 $this->field
@@ -373,7 +373,7 @@ class ListFieldUserBind extends ListFieldBind
         if (! isset($this->additionnal_values[$value_id])) {
             $this->additionnal_values[$value_id] = null;
             if ($user = $this->userManager->getUserById($value_id)) {
-                $this->additionnal_values[$value_id] = new ListFieldUserBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $user->getId());
+                $this->additionnal_values[$value_id] = new ListFieldUserBindValue($user->getId());
             }
         }
         return $this->additionnal_values[$value_id];
@@ -390,7 +390,6 @@ class ListFieldUserBind extends ListFieldBind
     public function getValueFromRow($row)
     {
         return new ListFieldUserBindValue(
-            $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
             $row['id'],
             $row['user_name'],
             $row['full_name'],
@@ -1059,6 +1058,6 @@ class ListFieldUserBind extends ListFieldBind
     #[\Override]
     public function getBindValueById($bindvalue_id): Tracker_FormElement_Field_List_BindValue
     {
-        return new ListFieldUserBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $bindvalue_id);
+        return new ListFieldUserBindValue($bindvalue_id);
     }
 }

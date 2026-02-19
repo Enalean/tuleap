@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_OpenValue;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
@@ -55,10 +54,8 @@ final class ListStaticBindBuilder
      */
     public function withStaticValues(array $values_labels, array $hidden_values = []): self
     {
-        $uuid_factory = new DatabaseUUIDV7Factory();
         foreach ($values_labels as $id => $label) {
             $bind_value = new ListFieldStaticBindValue(
-                $uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()),
                 $id,
                 $label,
                 'A static bind value',
@@ -99,7 +96,6 @@ final class ListStaticBindBuilder
     public function build(): ListFieldStaticBind
     {
         $bind = new class (
-            new DatabaseUUIDV7Factory(),
             $this->field,
             false,
             $this->bind_values,

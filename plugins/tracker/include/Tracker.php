@@ -103,7 +103,6 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\HTTPRequest;
@@ -422,7 +421,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->notifications_level          = (int) $notifications_level;
         $this->enable_emailgateway          = $enable_emailgateway;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
-        $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory()));
+        $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
         $this->renderer                     = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
         $this->color                        = $color;
     }

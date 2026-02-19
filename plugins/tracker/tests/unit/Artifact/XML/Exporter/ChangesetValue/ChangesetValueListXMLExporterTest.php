@@ -26,7 +26,6 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_List;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
@@ -61,7 +60,6 @@ final class ChangesetValueListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
         $bind_static = new ListFieldStaticBind(
-            new DatabaseUUIDV7Factory(),
             null,
             null,
             null,

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
@@ -266,7 +265,6 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
         $target_field_value = ListStaticValueBuilder::aStaticValue('Target Value Label')->withId($this->target_value_id)->build();
 
         $target_bind_static = new ListFieldStaticBind(
-            new DatabaseUUIDV7Factory(),
             null,
             null,
             [$target_field_value],
@@ -283,7 +281,6 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
 
         $trigger_field_value_1 = ListStaticValueBuilder::aStaticValue('Triggering Value Label')->withId(852)->build();
         $trigger_bind_static   = new ListFieldStaticBind(
-            new DatabaseUUIDV7Factory(),
             null,
             null,
             [$trigger_field_value_1],

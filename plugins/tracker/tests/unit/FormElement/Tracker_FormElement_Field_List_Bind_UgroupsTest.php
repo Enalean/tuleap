@@ -25,7 +25,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use SimpleXMLElement;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUgroupsValueDao;
@@ -56,27 +55,26 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
         $this->value_dao         = $this->createMock(BindUgroupsValueDao::class);
         $this->default_value_dao = $this->createMock(BindDefaultValueDao::class);
         $this->field             = SelectboxFieldBuilder::aSelectboxField(10)->build();
-        $uuid_factory            = new DatabaseUUIDV7Factory();
 
         $integrators_ugroup_id          = 103;
         $integrators_ugroup_name        = 'Integrators';
         $integrators_ugroup             = new ProjectUGroup(
             ['ugroup_id' => $integrators_ugroup_id, 'name' => $integrators_ugroup_name]
         );
-        $this->integrators_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($integrators_ugroup)->withId(345)->withUUId($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()))->build();
+        $this->integrators_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($integrators_ugroup)->withId(345)->build();
 
         $customers_ugroup_id          = 104;
         $customers_ugroup_name        = 'Customers';
         $customers_ugroup             = new ProjectUGroup(
             ['ugroup_id' => $customers_ugroup_id, 'name' => $customers_ugroup_name]
         );
-        $this->customers_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($customers_ugroup)->withId(687)->withUUId($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()))->build();
+        $this->customers_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($customers_ugroup)->withId(687)->build();
 
         $project_members_ugroup_name        = 'ugroup_project_members_name_key';
         $project_members_ugroup             = new ProjectUGroup(
             ['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'name' => $project_members_ugroup_name]
         );
-        $this->project_members_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($project_members_ugroup)->withId(4545)->withUUId($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()))->build();
+        $this->project_members_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($project_members_ugroup)->withId(4545)->build();
 
         $hidden_ugroup_id          = 105;
         $hidden_ugroup_name        = 'Unused ProjectUGroup';
@@ -91,7 +89,6 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
         array $default_values = [],
     ): ListFieldUserGroupBind {
         $bind = new ListFieldUserGroupBind(
-            new DatabaseUUIDV7Factory(),
             $this->field,
             $values,
             $default_values,
@@ -189,7 +186,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
 
         $bind_ugroup->exportBindToXml($root, $xml_mapping, false, $this->createStub(UserXMLExporter::class));
         $items = $root->default_values->children();
-        self::assertEquals($this->customers_ugroup_value->getUuid(), (string) $items->value['REF']);
+        self::assertEquals($this->customers_ugroup_value->getXMLID(), (string) $items->value['REF']);
     }
 
     public function testItSavesNothingWhenNoValue(): void

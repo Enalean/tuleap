@@ -24,36 +24,25 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use ProjectUGroup;
-use Tuleap\DB\DatabaseUUIDV7Factory;
-use Tuleap\DB\UUID;
 use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBindValue;
 
 final class ListUserGroupValueBuilder
 {
     private int $id         = 1;
     private bool $is_hidden = false;
-    private UUID $uuid;
 
-    private function __construct(private readonly ProjectUGroup $value, UUID $uuid)
+    private function __construct(private readonly ProjectUGroup $value)
     {
-        $this->uuid = $uuid;
     }
 
     public static function aUserGroupValue(ProjectUGroup $value): self
     {
-        $uuid_factory = new DatabaseUUIDV7Factory();
-        return new self($value, $uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()));
+        return new self($value);
     }
 
     public function withId(int $id): self
     {
         $this->id = $id;
-        return $this;
-    }
-
-    public function withUUId(UUID $uuid): self
-    {
-        $this->uuid = $uuid;
         return $this;
     }
 
@@ -65,6 +54,6 @@ final class ListUserGroupValueBuilder
 
     public function build(): ListFieldUserGroupBindValue
     {
-        return new ListFieldUserGroupBindValue($this->uuid, $this->id, $this->value, $this->is_hidden);
+        return new ListFieldUserGroupBindValue($this->id, $this->value, $this->is_hidden);
     }
 }

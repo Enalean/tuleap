@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticDao;
@@ -54,7 +53,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
     private $ugroups_value_dao;
     private \Psr\Log\LoggerInterface $logger;
 
-    public function __construct(private readonly DatabaseUUIDV7Factory $uuid_factory, ?UGroupManager $ugroup_manager = null, ?\Psr\Log\LoggerInterface $logger = null)
+    public function __construct(?UGroupManager $ugroup_manager = null, ?\Psr\Log\LoggerInterface $logger = null)
     {
         $this->ugroup_manager = $ugroup_manager ? $ugroup_manager : new UGroupManager();
         $this->logger         = $logger ?? BackendLogger::getDefaultLogger();
@@ -98,7 +97,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
             );
         }
 
-        $bind = new ListFieldNullBind($this->uuid_factory, $field);
+        $bind = new ListFieldNullBind($field);
         switch ($type) {
             case self::STATIK:
                 $dao = new BindStaticDao();
@@ -114,13 +113,13 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                             $row_value['is_hidden']
                         );
                     }
-                    $bind = new ListFieldStaticBind($this->uuid_factory, $field, $row['is_rank_alpha'], $values, $default_value, $decorators);
+                    $bind = new ListFieldStaticBind($field, $row['is_rank_alpha'], $values, $default_value, $decorators);
                 }
                 break;
             case self::USERS:
                 $dao = new BindUsersDao();
                 if ($row = $dao->searchByFieldId($field->id)->getRow()) {
-                    $bind = new ListFieldUserBind($this->uuid_factory, $field, $row['value_function'], $default_value, $decorators);
+                    $bind = new ListFieldUserBind($field, $row['value_function'], $default_value, $decorators);
                 }
                 break;
             case self::UGROUPS:
@@ -133,7 +132,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                         $row_value['is_hidden']
                     );
                 }
-                $bind = new ListFieldUserGroupBind($this->uuid_factory, $field, array_filter($values), $default_value, $decorators, $this->ugroup_manager, $this->getUgroupsValueDao());
+                $bind = new ListFieldUserGroupBind($field, array_filter($values), $default_value, $decorators, $this->ugroup_manager, $this->getUgroupsValueDao());
                 break;
             default:
                 $this->logger->warning('Unknown bind "' . $type . '"');
@@ -209,7 +208,6 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
         switch ($row['type']) {
             case self::STATIK:
                 return new ListFieldStaticBind(
-                    $this->uuid_factory,
                     $row['field'],
                     $row['is_rank_alpha'],
                     $row['values'],
@@ -218,7 +216,6 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                 );
             case self::USERS:
                 return new ListFieldUserBind(
-                    $this->uuid_factory,
                     $row['field'],
                     $row['value_function'],
                     $row['default_values'],
@@ -226,7 +223,6 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                 );
             case self::UGROUPS:
                 return new ListFieldUserGroupBind(
-                    $this->uuid_factory,
                     $row['field'],
                     $row['values'],
                     $row['default_values'],
@@ -236,7 +232,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                 );
             default:
                 $this->logger->warning('Unknown bind "' . $row['type'] . '"');
-                return new ListFieldNullBind($this->uuid_factory, $row['field']);
+                return new ListFieldNullBind($row['field']);
         }
     }
 
@@ -318,7 +314,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                         if ($ugroup) {
                             $ID              = (string) $item['ID'];
                             $is_hidden       = isset($item['is_hidden']) && (int) $item['is_hidden'] ? 1 : 0;
-                            $values[$ID]     = new ListFieldUserGroupBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $ID, $ugroup, $is_hidden);
+                            $values[$ID]     = new ListFieldUserGroupBindValue($ID, $ugroup, $is_hidden);
                             $xmlMapping[$ID] = $values[$ID];
                         }
                     }
@@ -341,7 +337,6 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                     $user = $user_finder->getUser($default_value);
 
                     $row['default_values'][$user->getId()] = new ListFieldUserBindValue(
-                        $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
                         $user->getId()
                     );
                 }
@@ -358,7 +353,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
      */
     public function getStaticValueInstance($id, $label, $description, $rank, $is_hidden)
     {
-        return new ListFieldStaticBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $id, $label, $description, $rank, $is_hidden);
+        return new ListFieldStaticBindValue($id, $label, $description, $rank, $is_hidden);
     }
 
     /**
@@ -370,7 +365,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
     {
         $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
         if ($ugroup) {
-            return new ListFieldUserGroupBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $id, $ugroup, $is_hidden);
+            return new ListFieldUserGroupBindValue($id, $ugroup, $is_hidden);
         }
     }
 
@@ -450,19 +445,19 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
             case self::STATIK:
                 $dao = new BindStaticDao();
                 if ($dao->save($field->getId(), 0)) {
-                    $bind = new ListFieldStaticBind($this->uuid_factory, $field, 0, [], [], []);
+                    $bind = new ListFieldStaticBind($field, 0, [], [], []);
                     $bind->process($bind_data, 'no redirect');
                 }
                 break;
             case self::USERS:
                 $dao = new BindUsersDao();
                 if ($dao->save($field->getId(), [])) {
-                    $bind = new ListFieldUserBind($this->uuid_factory, $field, '', [], []);
+                    $bind = new ListFieldUserBind($field, '', [], []);
                     $bind->process($bind_data, 'no redirect');
                 }
                 break;
             case self::UGROUPS:
-                $bind = new ListFieldUserGroupBind($this->uuid_factory, $field, [], [], [], $this->ugroup_manager, $this->getUgroupsValueDao());
+                $bind = new ListFieldUserGroupBind($field, [], [], [], $this->ugroup_manager, $this->getUgroupsValueDao());
                 $bind->process($bind_data, 'no redirect');
                 break;
             default:

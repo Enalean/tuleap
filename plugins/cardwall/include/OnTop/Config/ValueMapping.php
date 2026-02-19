@@ -43,7 +43,7 @@ class Cardwall_OnTop_Config_ValueMapping // phpcs:ignore PSR1.Classes.ClassDecla
 
     public function getXMLValueId(): string
     {
-        return $this->value->getUuid();
+        return $this->value->getXMLID();
     }
 
     public function getValueLabel()

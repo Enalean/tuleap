@@ -190,7 +190,7 @@ final class LastUpdateByField extends ListField implements Tracker_FormElement_F
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $last_modified_by = $changeset->getArtifact()->getLastModifiedBy();
-        $value            = new ListFieldUserBindValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $last_modified_by);
+        $value            = new ListFieldUserBindValue($last_modified_by);
         if ($changeset->getArtifact()->wasLastModifiedByAnonymous()) {
             $submitted_by_value = $value->getFullRESTValueForAnonymous($changeset);
         } else {
@@ -241,7 +241,7 @@ final class LastUpdateByField extends ListField implements Tracker_FormElement_F
         if ($artifact->wasLastModifiedByAnonymous()) {
             $label = $purifier->purify($artifact->getLastModifiedBy());
         } else {
-            $bind_value = new ListFieldUserBindValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $artifact->getLastModifiedBy());
+            $bind_value = new ListFieldUserBindValue($artifact->getLastModifiedBy());
             $label      = $purifier->purify($bind_value->getLabel());
         }
 
@@ -274,7 +274,7 @@ final class LastUpdateByField extends ListField implements Tracker_FormElement_F
         ?Tracker_Artifact_ChangesetValue $value = null,
         string $format = 'text',
     ): string {
-        $bind_value = new ListFieldUserBindValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $artifact->getLastModifiedBy());
+        $bind_value = new ListFieldUserBindValue($artifact->getLastModifiedBy());
 
         switch ($format) {
             case 'html':
@@ -313,7 +313,7 @@ final class LastUpdateByField extends ListField implements Tracker_FormElement_F
     {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
-        $fake_value = new ListFieldUserBindValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), UserManager::instance()->getCurrentUser()->getId());
+        $fake_value = new ListFieldUserBindValue(UserManager::instance()->getCurrentUser()->getId());
         $html      .= $purifier->purify($fake_value->getLabel()) . '<br />';
         $html      .= '<span class="tracker-admin-form-element-help">';
         $html      .= dgettext('tuleap-tracker', 'The field is automatically set to the last person who modified the artifact');
@@ -342,7 +342,7 @@ final class LastUpdateByField extends ListField implements Tracker_FormElement_F
             return $changeset->getEmail();
         }
 
-        return $this->getBind()->formatChangesetValue(new ListFieldUserBindValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $value));
+        return $this->getBind()->formatChangesetValue(new ListFieldUserBindValue($value));
     }
 
     #[Override]
@@ -357,7 +357,7 @@ final class LastUpdateByField extends ListField implements Tracker_FormElement_F
     #[Override]
     public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
-        $value = new ListFieldUserBindValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $artifact->getLastModifiedBy());
+        $value = new ListFieldUserBindValue($artifact->getLastModifiedBy());
         return $value->fetchCard($display_preferences);
     }
 
@@ -369,7 +369,7 @@ final class LastUpdateByField extends ListField implements Tracker_FormElement_F
     #[Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
-        return $this->getBind()->formatChangesetValueForCSV(new ListFieldUserBindValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $value));
+        return $this->getBind()->formatChangesetValueForCSV(new ListFieldUserBindValue($value));
     }
 
     /**

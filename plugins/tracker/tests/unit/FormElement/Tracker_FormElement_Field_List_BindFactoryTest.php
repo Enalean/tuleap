@@ -30,7 +30,6 @@ use ProjectUGroup;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_BindFactory;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -150,7 +149,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //ph
     public function testItRaisesAnErrorIfUnkownType(): void
     {
         $logger  = new TestLogger();
-        $factory = new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory(), $this->createStub(UGroupManager::class), $logger);
+        $factory = new Tracker_FormElement_Field_List_BindFactory($this->createStub(UGroupManager::class), $logger);
 
         self::assertInstanceOf(
             ListFieldNullBind::class,
@@ -183,7 +182,6 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //ph
             });
 
         $bind_factory = $this->getMockBuilder(Tracker_FormElement_Field_List_BindFactory::class)
-            ->setConstructorArgs([new DatabaseUUIDV7Factory()])
             ->onlyMethods(['getUgroupManager'])
             ->getMock();
         $bind_factory->method('getUgroupManager')->willReturn($ugroup_manager);
@@ -270,7 +268,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //ph
 
     protected function getListBindFactory(UGroupManager $ugroup_manager, Project $project, SimpleXMLElement $xml): ListFieldBind
     {
-        $bind_factory = new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory(), $ugroup_manager);
+        $bind_factory = new Tracker_FormElement_Field_List_BindFactory($ugroup_manager);
 
         $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
         $field   = SelectboxFieldBuilder::aSelectboxField(456)->inTracker($tracker)->build();

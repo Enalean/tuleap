@@ -87,7 +87,7 @@ class Tracker_Workflow_Trigger_RulesManager
             foreach ($triggers as $trigger) {
                 $trigger_xml = $triggers_xml->addChild('trigger');
                 $trigger_xml->addChild('field_id')->addAttribute('REF', $trigger->getField()->getXMLId());
-                $trigger_xml->addChild('field_value_id')->addAttribute('REF', $trigger->getValue()->getUuid());
+                $trigger_xml->addChild('field_value_id')->addAttribute('REF', $trigger->getValue()->getXMLID());
             }
 
             $cdata = new \XML_SimpleXMLCDATAFactory();

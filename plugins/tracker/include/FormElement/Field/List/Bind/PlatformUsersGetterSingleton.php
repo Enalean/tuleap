@@ -31,14 +31,14 @@ final class PlatformUsersGetterSingleton implements PlatformUsersGetter
 
     private ?array $registered_users;
 
-    public function __construct(private readonly PlatformUsersGetterDao $dao, private readonly \UserManager $user_manager, private readonly \Tuleap\DB\DatabaseUUIDV7Factory $uuid_factory)
+    public function __construct(private readonly PlatformUsersGetterDao $dao, private readonly \UserManager $user_manager)
     {
     }
 
     public static function instance(): self
     {
         if (! isset(self::$instance)) {
-            self::$instance = new self(new PlatformUsersGetterDao(), \UserManager::instance(), new \Tuleap\DB\DatabaseUUIDV7Factory());
+            self::$instance = new self(new PlatformUsersGetterDao(), \UserManager::instance());
         }
         return self::$instance;
     }
@@ -53,7 +53,6 @@ final class PlatformUsersGetterSingleton implements PlatformUsersGetter
             $this->registered_users = [];
             foreach ($this->dao->getRegisteredUsers($user_helper->getDisplayNameSQLQuery(), $user_helper->getDisplayNameSQLOrder()) as $row) {
                 $this->registered_users[$row['user_id']] = ListFieldUserBindValue::fromUser(
-                    $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
                     $this->user_manager->getUserInstanceFromRow($row),
                     $row['full_name']
                 );

@@ -40,7 +40,6 @@ use Tracker_Workflow_Trigger_RulesProcessor;
 use Tracker_Workflow_WorkflowUser;
 use TrackerFactory;
 use Transition_PostActionFactory;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -93,7 +92,7 @@ final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOf
                 new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $form_element_factory)
             ),
             new FieldDependenciesUsageByFieldProvider(
-                new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory())),
+                new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory()),
             ),
             new TriggersUsageByFieldProvider($trigger_rule_manager, $triggers_dao),
             new ParentsTriggersUsageByFieldProvider($trigger_rule_manager, $triggers_dao, new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance())),

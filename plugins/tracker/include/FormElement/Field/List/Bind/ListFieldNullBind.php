@@ -34,9 +34,9 @@ class ListFieldNullBind extends ListFieldBind
 {
     public const string TYPE = 'null';
 
-    public function __construct(public \Tuleap\DB\DatabaseUUIDV7Factory $uuid_factory, $field)
+    public function __construct($field)
     {
-        parent::__construct($this->uuid_factory, $field, [], []);
+        parent::__construct($field, [], []);
     }
 
     /**

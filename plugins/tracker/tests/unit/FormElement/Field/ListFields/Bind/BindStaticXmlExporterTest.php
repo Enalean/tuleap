@@ -82,10 +82,10 @@ final class BindStaticXmlExporterTest extends TestCase
         self::assertNotNull($decorators_node);
 
         $decorator_A = $decorators_node[0];
-        self::assertTlpColor($value_a->getUuid(), 'inca-silver', $decorator_A);
+        self::assertTlpColor($value_a->getXMLID(), 'inca-silver', $decorator_A);
 
         $decorator_B = $decorators_node[1];
-        self::assertLegacyColor($value_b->getUuid(), '123', '456', '789', $decorator_B);
+        self::assertLegacyColor($value_b->getXMLID(), '123', '456', '789', $decorator_B);
     }
 
     public function testItExportBindWithTLPNoneValue(): void
@@ -109,7 +109,7 @@ final class BindStaticXmlExporterTest extends TestCase
         self::assertNotNull($decorators_node);
 
         $decorator_none = $decorators_node[0];
-        self::assertTlpColor($none_value->getUuid(), 'inca-silver', $decorator_none);
+        self::assertTlpColor($none_value->getXMLID(), 'inca-silver', $decorator_none);
     }
 
     public function testItExportBindWithLegacyNoneValue(): void
@@ -133,7 +133,7 @@ final class BindStaticXmlExporterTest extends TestCase
         self::assertNotNull($decorators_node);
 
         $decorator_none = $decorators_node[0];
-        self::assertLegacyColor($none_value->getUuid(), '123', '456', '789', $decorator_none);
+        self::assertLegacyColor($none_value->getXMLID(), '123', '456', '789', $decorator_none);
     }
 
     private function assertLabelAttributeIsSame(string $expected_value, SimpleXMLElement $value_node): void

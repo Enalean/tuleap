@@ -451,7 +451,7 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
 
     public function getGlobalRulesManager(Tracker $tracker)
     {
-        $rule_list_factory = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory()));
+        $rule_list_factory = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory());
         $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $this->formelement_factory);
 
         return new Tracker_RulesManager(

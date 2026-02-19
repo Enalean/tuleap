@@ -1307,7 +1307,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
 
     public function getBindFactory(): Tracker_FormElement_Field_List_BindFactory
     {
-        return new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        return new Tracker_FormElement_Field_List_BindFactory();
     }
 
     #[Override]

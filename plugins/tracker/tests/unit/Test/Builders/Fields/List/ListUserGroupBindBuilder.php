@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUgroupsValueDao;
 
@@ -65,7 +64,6 @@ final class ListUserGroupBindBuilder
     public function build(): \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind
     {
         $bind = new \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind(
-            new DatabaseUUIDV7Factory(),
             $this->field,
             $this->bind_values,
             [],
