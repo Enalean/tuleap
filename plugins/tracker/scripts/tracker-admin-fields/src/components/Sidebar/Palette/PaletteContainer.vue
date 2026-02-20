@@ -189,4 +189,8 @@ const matching = computed(() =>
     gap: var(--tlp-small-spacing);
     cursor: move;
 }
+
+.tlp-pane-section {
+    overflow-y: scroll;
+}
 </style>

@@ -18,16 +18,50 @@
   -->
 
 <template>
-    <section class="tlp-pane">
+    <section class="tlp-pane" ref="sidebar-container">
         <slot></slot>
     </section>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useTemplateRef, onMounted, onBeforeUnmount } from "vue";
+
+const sidebar = useTemplateRef("sidebar-container");
+const y_to_viewport_offset_in_px = 16;
+const sticky_top = `${y_to_viewport_offset_in_px}px`;
+
+function isSidebarStickingToViewportTopEdge(top: number): boolean {
+    return top === y_to_viewport_offset_in_px;
+}
+
+function setSidebarMaxHeight(): void {
+    if (!sidebar.value) {
+        return;
+    }
+
+    const { top } = sidebar.value.getBoundingClientRect();
+    const max_height = isSidebarStickingToViewportTopEdge(top)
+        ? window.innerHeight - y_to_viewport_offset_in_px * 2
+        : window.innerHeight - top - y_to_viewport_offset_in_px;
+
+    sidebar.value.style.maxHeight = `${max_height}px`;
+}
+
+onMounted(() => {
+    document.addEventListener("scroll", setSidebarMaxHeight, { passive: true });
+    setSidebarMaxHeight();
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener("scroll", setSidebarMaxHeight);
+});
+</script>
 
 <style scoped lang="scss">
 .tlp-pane {
-    height: fit-content;
+    position: sticky;
+    top: v-bind("sticky_top");
+    align-self: start;
     margin: 0;
 }
 </style>
