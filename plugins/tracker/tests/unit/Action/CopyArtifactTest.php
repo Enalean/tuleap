@@ -23,6 +23,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporter;
@@ -165,6 +166,7 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->logger,
             $this->tracker_factory,
             $this->event_manager,
+            new DBTransactionExecutorPassthrough(),
         );
 
         $this->default_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
