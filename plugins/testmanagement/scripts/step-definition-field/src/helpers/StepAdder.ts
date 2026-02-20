@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2019-present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2026 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as mutations from "./mutations.js";
-import * as getters from "./getters.js";
-import state from "./state.js";
+import type { Ref } from "vue";
+import { v4 as uuid } from "uuid";
+import type { Step } from "../Step";
 
-import { createStore } from "vuex";
+export function addStep(steps: Ref<Array<Step>>, index: number, empty_step: Step): void {
+    const step = { ...empty_step };
+    step.uuid = uuid();
+    step.is_deleted = false;
 
-export function createInitializedStore() {
-    return createStore({
-        state,
-        mutations,
-        getters,
-    });
+    steps.value.splice(index, 0, step);
 }

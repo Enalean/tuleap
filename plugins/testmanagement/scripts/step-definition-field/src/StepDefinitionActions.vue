@@ -99,7 +99,7 @@ const emit = defineEmits<{
     (e: "interpret-content-event"): void;
 }>();
 
-function input(event: Event) {
+function input(event: Event): void {
     if (!(event.target instanceof HTMLSelectElement)) {
         return;
     }

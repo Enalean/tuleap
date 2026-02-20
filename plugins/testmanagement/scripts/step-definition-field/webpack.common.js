@@ -35,7 +35,7 @@ const rule_vue_loader = {
 export default [
     {
         entry: {
-            "step-definition-field": "./src/index.js",
+            "step-definition-field": "./src/index.ts",
             "step-definition-style": "./themes/FlamingParrot/style.scss",
         },
         context: __dirname,

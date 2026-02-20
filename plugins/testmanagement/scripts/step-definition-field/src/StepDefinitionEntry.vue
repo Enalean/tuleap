@@ -59,15 +59,15 @@ const props = defineProps<{
 
 const reactive_step = ref<Step>(props.step);
 
-function updateDescription(new_description: string) {
+function updateDescription(new_description: string): void {
     reactive_step.value.raw_description = new_description;
 }
 
-function updateExpectedResults(new_expected_result: string) {
+function updateExpectedResults(new_expected_result: string): void {
     reactive_step.value.raw_expected_results = new_expected_result;
 }
 
-function toggleRTE(new_format: TextFieldFormat) {
+function toggleRTE(new_format: TextFieldFormat): void {
     reactive_step.value.description_format = new_format;
 }
 </script>

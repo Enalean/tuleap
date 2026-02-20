@@ -20,6 +20,7 @@
 
 import StepDefinitionActions from "./StepDefinitionActions.vue";
 import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
@@ -27,15 +28,16 @@ import {
 } from "@tuleap/plugin-tracker-constants";
 import CommonmarkPreviewButton from "./CommonMark/CommonmarkPreviewButton.vue";
 import CommonmarkSyntaxHelper from "./CommonMark/CommonmarkSyntaxHelper.vue";
-import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
+import { getGlobalTestOptions } from "./helpers/global-options-for-test";
+import type { Step } from "./Step";
 
-const getWrapper = (props = {}) => {
+const getWrapper = (props = {}): VueWrapper<InstanceType<typeof StepDefinitionActions>> => {
     return shallowMount(StepDefinitionActions, {
         global: {
             ...getGlobalTestOptions(),
         },
         propsData: {
-            step: {},
+            step: {} as Step,
             disabled: false,
             format_select_id: "",
             is_in_preview_mode: false,
@@ -88,9 +90,10 @@ describe(`StepDefinitionActions`, () => {
                     step: { description_format: value },
                 });
                 expect(
-                    wrapper.find("[data-test=ttm-definition-step-description-format-" + value + "]")
-                        .element.selected,
-                ).toBe(true);
+                    wrapper
+                        .find("[data-test=ttm-definition-step-description-format-" + value + "]")
+                        .attributes("selected"),
+                ).toBeDefined();
             },
         );
     });
@@ -99,8 +102,10 @@ describe(`StepDefinitionActions`, () => {
             const wrapper = getWrapper({ disabled: false, is_in_preview_mode: false });
 
             expect(
-                wrapper.find("[data-test=ttm-definition-step-description-format]").element.disabled,
-            ).toBe(false);
+                wrapper
+                    .find("[data-test=ttm-definition-step-description-format]")
+                    .attributes("disabled"),
+            ).toBeUndefined();
         });
 
         it.each([
@@ -113,9 +118,10 @@ describe(`StepDefinitionActions`, () => {
                 const wrapper = getWrapper({ disabled, is_in_preview_mode });
 
                 expect(
-                    wrapper.find("[data-test=ttm-definition-step-description-format]").element
-                        .disabled,
-                ).toBe(true);
+                    wrapper
+                        .find("[data-test=ttm-definition-step-description-format]")
+                        .attributes("disabled"),
+                ).toBeDefined();
             },
         );
     });

@@ -24,12 +24,7 @@
             {{ $gettext("There isn't any step defined yet. Start by adding one.") }}
         </p>
         <div>
-            <button
-                type="button"
-                class="btn btn-primary"
-                v-on:click="addStep([0, empty_step])"
-                data-test="add-step"
-            >
+            <button type="button" class="btn btn-primary" v-on:click="onClick" data-test="add-step">
                 <i class="fa-solid fa-plus"></i>
                 {{ $gettext("Add step") }}
             </button>
@@ -38,12 +33,15 @@
 </template>
 
 <script setup lang="ts">
-import { useMutations } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { EMPTY_STEP, FIELD_ID } from "./injection-keys";
+import { EMPTY_STEP, FIELD_ID, STEPS } from "./injection-keys";
+import { addStep } from "./helpers/StepAdder";
 
 const empty_step = strictInject(EMPTY_STEP);
-
+const steps = strictInject(STEPS);
 const field_id = strictInject(FIELD_ID);
-const { addStep } = useMutations(["addStep"]);
+
+function onClick(): void {
+    addStep(steps, 0, empty_step);
+}
 </script>

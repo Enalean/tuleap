@@ -21,7 +21,7 @@
     <button
         class="tlp-button-secondary tlp-button-outline tlp-button-small"
         type="button"
-        v-on:click="setStepDeleted([step, false])"
+        v-on:click="onClick"
     >
         <i class="fa fa-undo"></i>
         {{ $gettext("Undo deletion") }}
@@ -29,12 +29,18 @@
 </template>
 
 <script setup lang="ts">
-import { useMutations } from "vuex-composition-helpers";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Step } from "./Step";
+import { setStepDeleted } from "./helpers/StepRemover";
+import { STEPS } from "./injection-keys";
 
-const { setStepDeleted } = useMutations(["setStepDeleted"]);
+const steps = strictInject(STEPS);
 
-defineProps<{
+const props = defineProps<{
     step: Step;
 }>();
+
+function onClick(): void {
+    setStepDeleted(steps, props.step, false);
+}
 </script>

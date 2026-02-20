@@ -20,10 +20,12 @@
 
 import { nextTick, ref } from "vue";
 import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
-import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
-import * as tuleap_api from "./api/rest-querier.ts";
+import { getGlobalTestOptions } from "./helpers/global-options-for-test";
+import * as tuleap_api from "./api/rest-querier";
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
     PROJECT_ID,
     FIELD_ID,
@@ -31,14 +33,23 @@ import {
     UPLOAD_FIELD_NAME,
     UPLOAD_MAX_SIZE,
     IS_DRAGGING,
-} from "./injection-keys.ts";
+} from "./injection-keys";
+import type { Step } from "./Step";
+
+type MockedContent = {
+    getContent(): string;
+};
+
+type MockedRichTextEditor = {
+    createRichTextEditor(): MockedContent;
+};
 
 jest.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
     return {
         RichTextEditorFactory: {
-            forFlamingParrotWithExistingFormatSelector: () => ({
-                createRichTextEditor: () => ({
-                    getContent: () => "some fabulous content",
+            forFlamingParrotWithExistingFormatSelector: (): MockedRichTextEditor => ({
+                createRichTextEditor: (): MockedContent => ({
+                    getContent: (): string => "some fabulous content",
                 }),
             }),
         },
@@ -47,7 +58,9 @@ jest.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
 
 const project_id = 102;
 
-function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
+function getComponentInstance(
+    description_format: TextFieldFormat = TEXT_FORMAT_COMMONMARK,
+): VueWrapper<InstanceType<typeof StepDefinitionEditableStep>> {
     return shallowMount(StepDefinitionEditableStep, {
         global: {
             ...getGlobalTestOptions(),
@@ -68,7 +81,7 @@ function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
                 raw_description: "raw description",
                 raw_expected_results: "raw expected results",
                 description_format,
-            },
+            } as Step,
         },
     });
 }
@@ -190,7 +203,7 @@ describe("StepDefinitionEditableStep", () => {
             });
 
             it("does not retrieve the RTE content if the format is not HTML", () => {
-                const wrapper = getComponentInstance({});
+                const wrapper = getComponentInstance({} as TextFieldFormat);
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(

@@ -45,7 +45,7 @@
                     <button
                         type="button"
                         class="btn btn-primary"
-                        v-on:click="addStep([index + 1, empty_step])"
+                        v-on:click="onClick(index)"
                         data-test="add-step"
                     >
                         <i class="fa-solid fa-plus"></i>
@@ -59,20 +59,17 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useMutations, useState } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import StepDefinitionEntry from "./StepDefinitionEntry.vue";
 import type { Step } from "./Step";
-import { EMPTY_STEP, FIELD_ID, IS_DRAGGING } from "./injection-keys";
+import { EMPTY_STEP, FIELD_ID, IS_DRAGGING, STEPS } from "./injection-keys";
+import { addStep } from "./helpers/StepAdder";
+import { moveStep } from "./helpers/StepMover";
 
 const field_id = strictInject(FIELD_ID);
 const empty_step = strictInject(EMPTY_STEP);
 const is_dragging = strictInject(IS_DRAGGING);
-
-const { steps } = useState<{
-    steps: Array<Step>;
-}>(["steps"]);
-const { addStep, moveStep } = useMutations(["addStep", "moveStep"]);
+const steps = strictInject(STEPS);
 
 const dragged_step = ref<Step | null>(null);
 const hovered_step = ref<Step | null>(null);
@@ -82,13 +79,13 @@ const hasNoStepRemaining = computed(
     () => steps.value.filter((step: Step) => step.is_deleted).length === steps.value.length,
 );
 
-function onDragEnd() {
+function onDragEnd(): void {
     dragged_step.value = null;
     hovered_step.value = null;
     dragged_step_index.value = 0;
 }
 
-function onDragStart(event: DragEvent, step: Step, index: number) {
+function onDragStart(event: DragEvent, step: Step, index: number): void {
     if (!event.dataTransfer) {
         return;
     }
@@ -99,11 +96,14 @@ function onDragStart(event: DragEvent, step: Step, index: number) {
     dragged_step.value = { ...step };
 }
 
-function onDrop(index: number) {
-    moveStep([dragged_step.value, index]);
+function onDrop(index: number): void {
+    if (!dragged_step.value) {
+        return;
+    }
+    moveStep(steps, dragged_step.value, index);
 }
 
-function onDragOver(step: Step) {
+function onDragOver(step: Step): void {
     if (step.uuid !== dragged_step.value?.uuid) {
         hovered_step.value = { ...step };
     } else {
@@ -111,7 +111,7 @@ function onDragOver(step: Step) {
     }
 }
 
-function getDragndropClasses(step: Step, index: number) {
+function getDragndropClasses(step: Step, index: number): string {
     if (!hovered_step.value || hovered_step.value.uuid !== step.uuid) {
         return "";
     }
@@ -124,5 +124,9 @@ function getDragndropClasses(step: Step, index: number) {
         "ttm-definition-step-draggable-drop-" +
         (index < dragged_step_index.value ? "before" : "after")
     );
+}
+
+function onClick(index: number): void {
+    addStep(steps, index + 1, empty_step);
 }
 </script>
