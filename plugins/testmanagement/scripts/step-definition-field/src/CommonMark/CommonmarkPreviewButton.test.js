@@ -18,13 +18,12 @@
  *
  */
 
-import { describe, expect, test } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import CommonmarkPreviewButton from "./CommonmarkPreviewButton.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
 
 describe("CommonmarkPreviewButton", () => {
-    test.each([
+    it.each([
         ["Edit", true, "fa-pencil-alt"],
         ["Preview", false, "fa-eye"],
     ])(
@@ -50,7 +49,7 @@ describe("CommonmarkPreviewButton", () => {
         },
     );
 
-    test("disables the button and display the spinner when the preview is loading", () => {
+    it("disables the button and display the spinner when the preview is loading", () => {
         const wrapper = shallowMount(CommonmarkPreviewButton, {
             global: {
                 ...getGlobalTestOptions(),

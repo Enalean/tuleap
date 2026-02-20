@@ -18,7 +18,6 @@
  *
  */
 
-import { describe, expect, it, vi } from "vitest";
 import { nextTick, ref } from "vue";
 import { shallowMount } from "@vue/test-utils";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
@@ -34,7 +33,7 @@ import {
     IS_DRAGGING,
 } from "./injection-keys.ts";
 
-vi.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
+jest.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
     return {
         RichTextEditorFactory: {
             forFlamingParrotWithExistingFormatSelector: () => ({
@@ -53,7 +52,7 @@ function getComponentInstance(description_format = TEXT_FORMAT_COMMONMARK) {
         global: {
             ...getGlobalTestOptions(),
             directives: {
-                "dompurify-html": vi.fn(),
+                "dompurify-html": jest.fn(),
             },
             provide: {
                 [PROJECT_ID.valueOf()]: project_id,
@@ -123,7 +122,7 @@ describe("StepDefinitionEditableStep", () => {
     });
     describe("The preview event handling", () => {
         it(`interprets the CommonMark when the user switch to the preview mode`, async () => {
-            vi.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
+            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
 
             const wrapper = getComponentInstance();
 
@@ -145,7 +144,7 @@ describe("StepDefinitionEditableStep", () => {
         });
 
         it(`does not interpret the CommonMark when the user switch to the edit mode`, async () => {
-            vi.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
+            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
 
             const wrapper = getComponentInstance();
             wrapper.vm.is_in_preview_mode = true;
@@ -158,7 +157,9 @@ describe("StepDefinitionEditableStep", () => {
 
         it(`cannot interpret the CommonMark because the route failed to interpret the content`, async () => {
             const expected_error_text = new Error("FAIL!");
-            vi.spyOn(tuleap_api, "postInterpretCommonMark").mockRejectedValue(expected_error_text);
+            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockRejectedValue(
+                expected_error_text,
+            );
 
             const wrapper = getComponentInstance();
             const promise = wrapper.vm.togglePreview();
