@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Dao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Tracker\Artifact\PaginatedArtifactRows;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
@@ -141,11 +142,12 @@ final class ArtifactDaoTest extends TestIntegrationTestCase
 
     public function testGetLinkedOpenArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(): void
     {
-        $this->assertResults(
+        $this->assertPaginatedResults(
             [
                 $this->child_artifact,
                 $this->linked_artifact,
             ],
+            2,
             $this->dao->getLinkedOpenArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(
                 $this->parent_artifact,
                 [$this->tracker_child_id],
@@ -153,15 +155,15 @@ final class ArtifactDaoTest extends TestIntegrationTestCase
                 [],
                 100,
                 0,
-            )
+            ),
         );
-        self::assertSame(2, $this->dao->foundRows());
 
-        $this->assertResults(
+        $this->assertPaginatedResults(
             [
                 $this->child_artifact,
                 $this->not_linked_artifact,
             ],
+            3,
             $this->dao->getLinkedOpenArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(
                 $this->parent_artifact,
                 [$this->tracker_child_id],
@@ -171,12 +173,12 @@ final class ArtifactDaoTest extends TestIntegrationTestCase
                 0,
             )
         );
-        self::assertSame(3, $this->dao->foundRows());
 
-        $this->assertResults(
+        $this->assertPaginatedResults(
             [
                 $this->linked_artifact,
             ],
+            3,
             $this->dao->getLinkedOpenArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(
                 $this->parent_artifact,
                 [$this->tracker_child_id],
@@ -186,7 +188,6 @@ final class ArtifactDaoTest extends TestIntegrationTestCase
                 2,
             )
         );
-        self::assertSame(3, $this->dao->foundRows());
     }
 
     private function assertResults(array $expected, array $actual): void
@@ -195,5 +196,11 @@ final class ArtifactDaoTest extends TestIntegrationTestCase
             static fn(array $row): int => $row['id'],
             $actual,
         ));
+    }
+
+    private function assertPaginatedResults(array $expected, int $expected_total_size, PaginatedArtifactRows $actual): void
+    {
+        $this->assertResults($expected, $actual->artifact_rows);
+        self::assertSame($expected_total_size, $actual->total_size);
     }
 }

@@ -186,7 +186,7 @@ class DescendantItemsFinder
             $offset
         );
 
-        return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
+        return $this->getItemsForUser($user, $result->artifact_rows, $result->total_size);
     }
 
     public function getMilestoneUnplannedBacklogItemsWithLimitAndOffset(
