@@ -19,6 +19,11 @@
     "@vue/test-utils": "^2.4.1",
     "vue-loader": "17.2.2"
   },
+  "pnpm": {
+    "overrides": {
+      "minimatch": "^10.2.1"
+    }
+  },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "webpack --config webpack.prod.js",

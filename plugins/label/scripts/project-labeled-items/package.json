@@ -21,6 +21,11 @@
     "@vitejs/plugin-vue": "^6.0.3",
     "@vue/test-utils": "^2.2.10"
   },
+  "pnpm": {
+    "overrides": {
+      "minimatch": "^10.2.1"
+    }
+  },
   "scripts": {
     "build": "vite build",
     "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
