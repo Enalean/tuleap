@@ -31,6 +31,7 @@ use PFUser;
 use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectManager;
+use ProjectUGroup;
 use TestHelper;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\FakeDataAccessResult;
@@ -212,6 +213,22 @@ final class FRSPackageFactoryTest extends TestCase
     {
         $this->stubDBResponsesForPackages(FRSPackage::STATUS_HIDDEN, $this->package_id);
         $this->frs_permission_manager->method('isAdmin')->willReturn(true);
+        self::assertTrue($this->frs_package_factory->userCanRead($this->package_id, $this->user_id));
+    }
+
+    public function testPackageWithGivenPermissionCanStillBeReadByProjectAdmin(): void
+    {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
+        $this->frs_permission_manager->method('userCanRead')->willReturn(true);
+        $this->frs_permission_manager->method('isAdmin')->willReturn(true);
+
+        $this->user->method('getUgroups')->willReturn([ProjectUGroup::PROJECT_ADMIN]);
+
+        $this->permission_manager = $this->createStub(PermissionsManager::class);
+        $this->permission_manager->method('userHasPermission')->willReturn(false);
+        $this->permission_manager->method('isPermissionExist')->willReturn(true);
+        $this->frs_package_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
+
         self::assertTrue($this->frs_package_factory->userCanRead($this->package_id, $this->user_id));
     }
 

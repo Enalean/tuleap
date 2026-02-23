@@ -370,7 +370,7 @@ class FRSPackageFactory
 
         if ($package->isActive()) {
             return $frs_permission_manager->userCanRead($project, $user) &&
-                $this->userCanReadPackage($package, $user);
+                $this->userCanReadPackage($project, $package, $user);
         }
 
         return false;
@@ -388,9 +388,13 @@ class FRSPackageFactory
         return $user;
     }
 
-    private function userCanReadPackage(FRSPackage $package, PFUser $user): bool
+    private function userCanReadPackage(Project $project, FRSPackage $package, PFUser $user): bool
     {
         $global_permission_manager = $this->getPermissionsManager();
+
+        if ($this->getFRSPermissionManager()->isAdmin($project, $user)) {
+            return true;
+        }
 
         $user_groups = $user->getUgroups($package->getGroupID());
 
