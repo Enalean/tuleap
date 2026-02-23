@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Reference\ExtractAndSaveCrossReferences;
@@ -516,7 +517,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
                 $row['nature'],
                 $row['is_active'],
                 $row['group_id'],
-                $val
+                Option::fromNullable($val === null ? null : (int) $val),
             );
         } else {
             $reference = new Reference(

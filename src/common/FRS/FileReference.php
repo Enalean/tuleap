@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS;
 
+use Tuleap\Option\Option;
 use Tuleap\Request\NotFoundException;
 
 class FileReference extends \Reference
 {
-    private $reference_value;
-
+    /**
+     * @param Option<int> $reference_value
+     */
     public function __construct(
         $myid,
         $mykeyword,
@@ -39,7 +41,7 @@ class FileReference extends \Reference
         $nature,
         $myis_active,
         $mygroup_id,
-        $reference_value,
+        private readonly Option $reference_value,
     ) {
         parent::__construct(
             $myid,
@@ -52,28 +54,29 @@ class FileReference extends \Reference
             $myis_active,
             $mygroup_id,
         );
-        $this->reference_value = $reference_value;
     }
 
     #[\Override]
     public function getLink(): string
     {
-        if (! $this->reference_value) {
-            throw new NotFoundException(self::class . ': no reference value found for ' . $this->reference_value);
-        }
-        $file_factory = new \FRSFileFactory();
-        $file         = $file_factory->getFRSFileFromDb($this->reference_value);
-        if (! $file) {
-            throw new NotFoundException(self::class . ': no valid file found for ' . $this->reference_value);
-        }
-        $package_factory = new \FRSPackageFactory();
-        $package         = $package_factory->getFRSPackageByFileIdFromDb($this->reference_value);
-        if (! $package) {
-            throw new NotFoundException(self::class . ': no valid package found for ' . $this->reference_value);
-        }
-        if (! $package->getApproveLicense()) {
-            return '/file/download/' . urlencode((string) $file->getFileID());
-        }
-        return '/file/shownotes.php?release_id=' . urlencode((string) $file->getReleaseID());
+        return $this->reference_value->match(
+            function (int $file_id): string {
+                $file_factory = new \FRSFileFactory();
+                $file         = $file_factory->getFRSFileFromDb($file_id);
+                if (! $file) {
+                    throw new NotFoundException(self::class . ': no valid file found for ' . $file_id);
+                }
+                $package_factory = new \FRSPackageFactory();
+                $package         = $package_factory->getFRSPackageByFileIdFromDb($file_id);
+                if (! $package) {
+                    throw new NotFoundException(self::class . ': no valid package found for ' . $file_id);
+                }
+                if (! $package->getApproveLicense()) {
+                    return '/file/download/' . urlencode((string) $file->getFileID());
+                }
+                return '/file/shownotes.php?release_id=' . urlencode((string) $file->getReleaseID());
+            },
+            fn (): string => '/file/download/$1',
+        );
     }
 }
