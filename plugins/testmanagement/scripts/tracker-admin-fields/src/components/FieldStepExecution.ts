@@ -17,5 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./components/FieldStepExecution";
-import "./components/FieldStepDefinition";
+import { define, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
+import "./TestmanagementSteps";
+
+export const TAG = "tuleap-field-ttmstepexec";
+
+export type FieldStepExecution = Readonly<{
+    render(): HTMLElement;
+}>;
+
+export type InternalFieldStepExecution = Readonly<FieldStepExecution> & {};
+
+export type HostElement = InternalFieldStepExecution & HTMLElement;
+
+const renderFieldStepExecution = (): UpdateFunction<InternalFieldStepExecution> => html`
+    <tuleap-test-management-steps are_results_badges_displayed="${true}" />
+`;
+
+define<InternalFieldStepExecution>({
+    tag: TAG,
+    render: renderFieldStepExecution,
+});

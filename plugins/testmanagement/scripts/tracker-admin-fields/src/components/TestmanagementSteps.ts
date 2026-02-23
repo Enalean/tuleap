@@ -23,11 +23,17 @@ import { gettext_provider } from "../gettext-provider";
 import "./StepDefinitionArrow";
 import style from "./test-management-steps.scss?inline";
 
-export const TAG = "tuleap-field-ttmstepexec";
+export const TAG = "tuleap-test-management-steps";
 
-type TestManagementSteps = Readonly<{
-    render(): HTMLElement;
-}>;
+type TestManagementSteps = {
+    are_results_badges_displayed: boolean;
+};
+
+type InternalTestManagementSteps = TestManagementSteps &
+    Readonly<{
+        render(): HTMLElement;
+    }>;
+
 type Status = "passed" | "failed";
 type StepWithResult = {
     description: string;
@@ -64,7 +70,9 @@ function getBadgeLabel(status: Status): string {
     return gettext_provider.gettext("Passed");
 }
 
-const renderTestmanagementSteps = (): UpdateFunction<TestManagementSteps> =>
+const renderTestmanagementSteps = (
+    host: InternalTestManagementSteps,
+): UpdateFunction<InternalTestManagementSteps> =>
     html`
         <div class="steps">
             ${steps_with_results.map(
@@ -78,11 +86,16 @@ const renderTestmanagementSteps = (): UpdateFunction<TestManagementSteps> =>
                                 ${gettext_provider.gettext("Expected results")}
                                 <div class="step-expected">${step.expected_results}</div>
                             </section>
-                            <span
-                                class="step-execution-status ${getStatusBadgeClasses(step.status)}"
-                            >
-                                ${getBadgeLabel(step.status)}
-                            </span>
+                            ${host.are_results_badges_displayed &&
+                            html`
+                                <span
+                                    class="step-execution-status ${getStatusBadgeClasses(
+                                        step.status,
+                                    )}"
+                                >
+                                    ${getBadgeLabel(step.status)}
+                                </span>
+                            `}
                         </div>
                     </div>
                 `,
@@ -90,7 +103,10 @@ const renderTestmanagementSteps = (): UpdateFunction<TestManagementSteps> =>
         </div>
     `.style(style);
 
-define<TestManagementSteps>({
+define<InternalTestManagementSteps>({
     tag: TAG,
+    are_results_badges_displayed: {
+        value: false,
+    },
     render: renderTestmanagementSteps,
 });
