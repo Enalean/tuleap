@@ -1,0 +1,9 @@
+{
+    "name": "tracker_encryption",
+    "gettext-ts": {
+        "tracker-admin-fields": {
+            "src": "scripts/tracker-admin-fields/src",
+            "po": "scripts/tracker-admin-fields/po"
+        }
+    }
+}

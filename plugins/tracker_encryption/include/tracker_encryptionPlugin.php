@@ -22,9 +22,12 @@
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\MarkTrackerAsDeletedController;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
+use Tuleap\Tracker\FormElement\Admin\ExternalTrackerAdminFieldEvent;
 use Tuleap\Tracker\Tracker;
 use Tuleap\TrackerEncryption\Dao\TrackerPublicKeyDao;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
@@ -236,6 +239,20 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
             dgettext(
                 'tuleap-tracker_encryption',
                 'This artifact cannot be moved because the tracker uses encrypted fields.'
+            )
+        );
+    }
+
+    #[ListeningToEventClass]
+    public function getTrackerAdminFieldAssets(ExternalTrackerAdminFieldEvent $event): void
+    {
+        $event->addViteAssets(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../scripts/tracker-admin-fields/frontend-assets',
+                    '/assets/tracker_encryption/tracker-admin-fields'
+                ),
+                'src/index.ts'
             )
         );
     }
