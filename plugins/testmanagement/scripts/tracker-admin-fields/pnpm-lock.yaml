@@ -1,0 +1,32 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/gettext':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/gettext
+  '@tuleap/tlp-badge':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-badge
+  hybrids:
+    specifier: ^9.1.22
+    version: 9.1.22
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/po-gettext-plugin
+
+packages:
+
+  /hybrids@9.1.22:
+    resolution: {integrity: sha512-SsUk8GyP4g1zdSa+Da1tT+PCv1m/4yNPCjKzHOawEjJIl/Dyoyid5t6rtLX09ma+PANQ/FWyXzlhZJlLaeLpeg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dev: false

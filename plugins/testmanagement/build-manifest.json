@@ -11,5 +11,11 @@
             "src": "scripts/step-definition-field/src",
             "po": "scripts/step-definition-field/po"
         }
+    },
+    "gettext-ts": {
+        "tracker-admin-fields": {
+            "src": "scripts/tracker-admin-fields/src",
+            "po": "scripts/tracker-admin-fields/po"
+        }
     }
 }

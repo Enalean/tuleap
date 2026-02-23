@@ -1896,6 +1896,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 ListOfLabelDecoratorsForFieldBuilder::build(),
             ),
             new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'),
+            \EventManager::instance(),
         );
     }
 

@@ -33,6 +33,7 @@ use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
@@ -103,6 +104,7 @@ use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
+use Tuleap\Tracker\FormElement\Admin\ExternalTrackerAdminFieldEvent;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -1074,6 +1076,20 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
 
         $event->setTrackerIds(
             $dao->filterTrackerIdsThatAreUsedForTestExecution($event->getTrackerIds())
+        );
+    }
+
+    #[ListeningToEventClass]
+    public function getTrackerAdminFieldAssets(ExternalTrackerAdminFieldEvent $event): void
+    {
+        $event->addViteAssets(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../scripts/tracker-admin-fields/frontend-assets',
+                    '/assets/testmanagement/tracker-admin-fields'
+                ),
+                'src/index.ts'
+            )
         );
     }
 }
