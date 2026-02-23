@@ -55,11 +55,6 @@
     "@vue/test-utils": "^2.3.2",
     "prosemirror-view": "^1.33.8"
   },
-  "pnpm": {
-    "overrides": {
-      "minimatch": "^10.2.1"
-    }
-  },
   "scripts": {
     "build": "vite build",
     "watch": "NODE_ENV=development vite build --watch --mode development --minify false",

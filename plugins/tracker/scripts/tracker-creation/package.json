@@ -30,11 +30,6 @@
     "@vue/test-utils": "^2.4.6",
     "jquery": "^3.6.0"
   },
-  "pnpm": {
-    "overrides": {
-      "minimatch": "^10.2.1"
-    }
-  },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",

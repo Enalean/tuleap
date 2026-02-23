@@ -33,11 +33,6 @@
     "jest-environment-jsdom": "^29.7.0",
     "vue-demi": "0.14.10"
   },
-  "pnpm": {
-    "overrides": {
-      "minimatch": "^10.2.1"
-    }
-  },
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",

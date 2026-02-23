@@ -21,11 +21,6 @@
     "@vitejs/plugin-vue": "4.6.2",
     "@vue/test-utils": "^2.4.1"
   },
-  "pnpm": {
-    "overrides": {
-      "minimatch": "^10.2.1"
-    }
-  },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
