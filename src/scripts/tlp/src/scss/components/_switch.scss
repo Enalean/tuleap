@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 @use "sass:math";
 
 $tlp-switch-height: 24px;
@@ -25,8 +24,9 @@ $tlp-switch-large-height: 48px;
 $tlp-switch-large-width: 96px;
 $tlp-switch-mini-height: 16px;
 $tlp-switch-mini-width: 40px;
-$tlp-switch-background: var(--tlp-neutral-dark-color);
+$tlp-switch-background: light-dark(var(--tlp-neutral-dark-color), var(--tlp-dimmed-color));
 $tlp-switch-button-background: var(--tlp-white-color);
+$tlp-switch-button-reactive-background: light-dark(var(--tlp-white-color), var(--tlp-dark-color));
 $tlp-switch-button-width: 37px;
 $tlp-switch-large-button-width: 57px;
 $tlp-switch-mini-button-width: 22px;
@@ -87,8 +87,8 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 *
             color 200ms,
             width 200ms;
         border-radius: math.div($tlp-switch-height - (2 * $tlp-switch-button-padding), 2);
-        background-color: $tlp-switch-button-background;
-        color: #ffffff;
+        background-color: $tlp-switch-button-reactive-background;
+        color: transparent;
         font-family: "Font Awesome 6 Free";
         font-size: 11px;
         font-weight: 600;
@@ -132,6 +132,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 *
 
     &::after {
         left: 25px;
+        background-color: $tlp-switch-button-background;
         color: var(--tlp-main-color);
     }
 }
