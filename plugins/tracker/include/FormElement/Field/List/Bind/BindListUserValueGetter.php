@@ -25,6 +25,8 @@ namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
 use ProjectUGroup;
 use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use Tuleap\User\ProvideUserFromRow;
 use UserHelper;
 
 class BindListUserValueGetter
@@ -36,6 +38,8 @@ class BindListUserValueGetter
         private BindDefaultValueDao $bind_defaultvalue_dao,
         private UserHelper $user_helper,
         private readonly PlatformUsersGetter $platform_users_getter,
+        private readonly ProvideUserFromRow $user_from_row_provider,
+        private readonly ProvideUserAvatarUrl $user_avatar_url_provider,
     ) {
     }
 
@@ -184,12 +188,22 @@ class BindListUserValueGetter
             return [];
         }
 
+        $users          = [];
+        $users_fullname = [];
+        foreach ($rows as $user_row) {
+            $users[]                                    = $this->user_from_row_provider->getUserInstanceFromRow($user_row);
+            $users_fullname[(int) $user_row['user_id']] = $user_row['full_name'];
+        }
+        $users_with_avatar = $this->user_avatar_url_provider->getAvatarUrls(...$users);
+
         $values = [];
-        foreach ($rows as $row) {
-            $values[$row['user_id']] = new ListFieldUserBindValue(
-                $row['user_id'],
-                $row['user_name'],
-                $row['full_name']
+
+        foreach ($users_with_avatar as $user_with_avatar) {
+            $user             = $user_with_avatar->user;
+            $user_id          = (int) $user->getId();
+            $values[$user_id] = ListFieldUserBindValue::fromUser(
+                $user_with_avatar,
+                $users_fullname[$user_id] ?? $user->getUserName(),
             );
         }
 

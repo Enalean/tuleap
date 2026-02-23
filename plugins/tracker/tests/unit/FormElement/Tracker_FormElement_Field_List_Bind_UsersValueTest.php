@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -74,7 +74,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TestCase 
         $user_manager = $this->createMock(UserManager::class);
         $user_manager->method('getUserById')->with(12)->willReturn($user);
 
-        $user_helper = $this->createMock(UserHelper::class);
+        $user_helper = $this->createStub(UserHelper::class);
         $user_helper->method('getDisplayNameFromUserId')->willReturn('Thomas A. Anderson (neo)');
 
         $value = $this->getListBindUserValue();
@@ -84,13 +84,13 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TestCase 
         $json = $value->fetchFormattedForJson();
         self::assertEquals(
             [
-                'id'           => '12',
+                'id'           => 12,
                 'label'        => 'Thomas A. Anderson (neo)',
                 'is_hidden'    => false,
                 'username'     => 'neo',
                 'realname'     => 'Le roi arthur',
                 'avatar_url'   => 'https://example.com',
-                'display_name' => 'Le roi arthur (neo)',
+                'display_name' => 'Thomas A. Anderson (neo)',
             ],
             $json
         );
@@ -103,11 +103,12 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TestCase 
         self::assertNull($json);
     }
 
-    private function getListBindUserValue(): ListFieldUserBindValue&MockObject
+    private function getListBindUserValue(): ListFieldUserBindValue&Stub
     {
-        $bind = $this->createPartialMock(ListFieldUserBindValue::class, [
-            'getId', 'getUserManager', 'getUserHelper',
-        ]);
+        $bind = $this->getStubBuilder(ListFieldUserBindValue::class)
+            ->setConstructorArgs([-1, null, null, null])
+            ->onlyMethods(['getId', 'getUserManager', 'getUserHelper'])
+            ->getStub();
         $bind->method('getId')->willReturn(12);
         return $bind;
     }

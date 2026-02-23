@@ -24,21 +24,28 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
 use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
+use Tuleap\User\ProvideUserFromRow;
 
 final class PlatformUsersGetterSingleton implements PlatformUsersGetter
 {
     private static ?self $instance;
 
-    private ?array $registered_users;
+    private ?array $registered_users = null;
 
-    public function __construct(private readonly PlatformUsersGetterDao $dao, private readonly \UserManager $user_manager)
-    {
+    public function __construct(
+        private readonly PlatformUsersGetterDao $dao,
+        private readonly ProvideUserFromRow $user_from_row_provider,
+        private readonly ProvideUserAvatarUrl $user_avatar_url_provider,
+    ) {
     }
 
     public static function instance(): self
     {
         if (! isset(self::$instance)) {
-            self::$instance = new self(new PlatformUsersGetterDao(), \UserManager::instance());
+            self::$instance = new self(new PlatformUsersGetterDao(), \UserManager::instance(), new UserAvatarUrlProvider(new AvatarHashDao()));
         }
         return self::$instance;
     }
@@ -49,15 +56,28 @@ final class PlatformUsersGetterSingleton implements PlatformUsersGetter
     #[\Override]
     public function getRegisteredUsers(\UserHelper $user_helper): array
     {
-        if (! isset($this->registered_users)) {
-            $this->registered_users = [];
-            foreach ($this->dao->getRegisteredUsers($user_helper->getDisplayNameSQLQuery(), $user_helper->getDisplayNameSQLOrder()) as $row) {
-                $this->registered_users[$row['user_id']] = ListFieldUserBindValue::fromUser(
-                    $this->user_manager->getUserInstanceFromRow($row),
-                    $row['full_name']
-                );
-            }
+        if ($this->registered_users !== null) {
+            return $this->registered_users;
         }
+
+        $users_fullname = [];
+        $users          = [];
+
+        foreach ($this->dao->getRegisteredUsers($user_helper->getDisplayNameSQLQuery(), $user_helper->getDisplayNameSQLOrder()) as $row) {
+            $users_fullname[$row['user_id']] = $row['full_name'];
+            $users[]                         = $this->user_from_row_provider->getUserInstanceFromRow($row);
+        }
+
+        $this->registered_users = [];
+        foreach ($this->user_avatar_url_provider->getAvatarUrls(...$users) as $user_with_avatar) {
+            $user                             = $user_with_avatar->user;
+            $user_id                          = (int) $user->getId();
+            $this->registered_users[$user_id] = ListFieldUserBindValue::fromUser(
+                $user_with_avatar,
+                $users_fullname[$user_id] ?? $user->getUserName(),
+            );
+        }
+
         return $this->registered_users;
     }
 }

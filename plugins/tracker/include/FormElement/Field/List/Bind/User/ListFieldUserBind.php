@@ -284,6 +284,17 @@ class ListFieldUserBind extends ListFieldBind
         return $ugroups;
     }
 
+    private function buildBindListUserValueGetter(): BindListUserValueGetter
+    {
+        return new BindListUserValueGetter(
+            $this->getDefaultValueDao(),
+            UserHelper::instance(),
+            PlatformUsersGetterSingleton::instance(),
+            $this->userManager,
+            new UserAvatarUrlProvider(new AvatarHashDao()),
+        );
+    }
+
     /**
      * Get all values to be displayed in the field depending of a ugroup list
      *
@@ -294,7 +305,7 @@ class ListFieldUserBind extends ListFieldBind
     protected function getAllValuesByUGroupList($ugroups)
     {
         if ($this->values === null) {
-            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
+            $value_getter = $this->buildBindListUserValueGetter();
             $this->values = $value_getter->getSubsetOfUsersValueWithUserIds(
                 $ugroups,
                 [],
@@ -321,7 +332,7 @@ class ListFieldUserBind extends ListFieldBind
             return [];
         }
 
-        $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
+        $value_getter = $this->buildBindListUserValueGetter();
         return $value_getter->getSubsetOfUsersValueWithUserIds(
             $this->value_function,
             $bindvalue_ids,
@@ -347,7 +358,7 @@ class ListFieldUserBind extends ListFieldBind
     public function getAllValuesWithActiveUsersOnly(): array
     {
         if ($this->values === null) {
-            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
+            $value_getter = $this->buildBindListUserValueGetter();
             $this->values = $value_getter->getActiveUsersValue(
                 $this->value_function,
                 $this->field
