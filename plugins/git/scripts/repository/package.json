@@ -24,6 +24,11 @@
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/javascript-time-ago": "^2.0.1"
   },
+  "pnpm": {
+    "overrides": {
+      "minimatch": "^10.2.1"
+    }
+  },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",

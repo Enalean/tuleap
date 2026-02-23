@@ -31,6 +31,11 @@
     "@vue/test-utils": "^2.4.6",
     "neverthrow": "6.0.0"
   },
+  "pnpm": {
+    "overrides": {
+      "minimatch": "^10.2.1"
+    }
+  },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",

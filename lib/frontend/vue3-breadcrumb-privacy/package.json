@@ -29,6 +29,11 @@
     "@vue/test-utils": "^2.0.0",
     "vue": "^3.4.38"
   },
+  "pnpm": {
+    "overrides": {
+      "minimatch": "^10.2.1"
+    }
+  },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",

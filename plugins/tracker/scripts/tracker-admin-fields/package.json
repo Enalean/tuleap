@@ -37,6 +37,11 @@
     "vue-router": "^5.0.2",
     "vue3-gettext": "^2.4.0"
   },
+  "pnpm": {
+    "overrides": {
+      "minimatch": "^10.2.1"
+    }
+  },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/mention": "workspace:*",
