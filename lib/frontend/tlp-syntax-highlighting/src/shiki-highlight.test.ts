@@ -53,7 +53,7 @@ describe("Shiki", () => {
             code_content,
             expect.objectContaining({
                 lang: "bash",
-                theme: "github-light-default",
+                themes: { light: "github-light-default", dark: "github-dark-default" },
             }),
         );
     });
@@ -72,7 +72,7 @@ describe("Shiki", () => {
             code_content,
             expect.objectContaining({
                 lang: "text",
-                theme: "github-light-default",
+                themes: { light: "github-light-default", dark: "github-dark-default" },
             }),
         );
     });
@@ -92,7 +92,7 @@ describe("Shiki", () => {
             code_content,
             expect.objectContaining({
                 lang: "text",
-                theme: "github-light-default",
+                themes: { light: "github-light-default", dark: "github-dark-default" },
             }),
         );
     });
