@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use PFUser;
 use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
+use Tuleap\User\Avatar\UserAvatarUrl;
 
 final class ListUserBindBuilder
 {
@@ -47,7 +48,10 @@ final class ListUserBindBuilder
     public function withUsers(array $user_list): self
     {
         foreach ($user_list as $user) {
-            $bind_value = \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue::fromUser($user, $user->getUserName());
+            $bind_value = \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue::fromUser(
+                new UserAvatarUrl($user, '/fake/avatar/url.png'),
+                $user->getUserName()
+            );
 
             $this->bind_values[] = $bind_value;
         }

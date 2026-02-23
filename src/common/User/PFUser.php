@@ -1203,25 +1203,28 @@ class PFUser implements PFO_User, IHaveAnSSHKey
       *
       * @return string html
       */
-    public function fetchHtmlAvatar()
+    public function fetchHtmlAvatar(?\Tuleap\User\Avatar\UserAvatarUrl $user_avatar_url_precomputed = null): string
     {
         $purifier    = Codendi_HTMLPurifier::instance();
         $user_helper = new UserHelper();
 
         $title   = $purifier->purify($user_helper->getDisplayNameFromUser($this));
-        $user_id = $this->getId();
+        $user_id = (int) $this->getId();
 
         $html = '<div class="avatar"
                         title="' . $title . '"
-                        data-user-id = "' . $user_id . '"
+                        data-user-id = "' . $purifier->purify($user_id) . '"
                     >';
 
-        $url = $this->getAvatarUrl();
 
-        if ($url) {
-            $alternate_text = $purifier->purify(_('User avatar'));
-            $html          .= '<img src="' . $url . '" alt="' . $alternate_text . '" />';
+        if ($user_avatar_url_precomputed !== null && (int) $user_avatar_url_precomputed->user->getId() === $user_id) {
+            $url = $user_avatar_url_precomputed->avatar_url;
+        } else {
+            $url = $this->getAvatarUrl();
         }
+
+        $alternate_text = $purifier->purify(_('User avatar'));
+        $html          .= '<img loading="lazy" src="' . $purifier->purify($url) . '" alt="' . $alternate_text . '" />';
 
         $html .= '</div>';
         return $html;
@@ -1232,7 +1235,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
       * @return string url
       * @deprecated Use UserAvatarUrlProvider::getAvatarUrl() instead
       */
-    public function getAvatarUrl()
+    public function getAvatarUrl(): string
     {
         if (! $this->avatar_url) {
             $user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao());

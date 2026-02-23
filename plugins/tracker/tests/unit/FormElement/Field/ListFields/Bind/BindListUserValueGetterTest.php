@@ -27,8 +27,9 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use TestHelper;
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideUserFromRowStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindListUserValueGetter;
 use Tuleap\Tracker\FormElement\Field\List\Bind\PlatformUsersGetter;
@@ -49,11 +50,11 @@ final class BindListUserValueGetterTest extends TestCase
     {
         $this->default_dao     = $this->createMock(BindDefaultValueDao::class);
         $this->user_helper     = $this->createMock(UserHelper::class);
-        $platform_users_getter = $this->createMock(PlatformUsersGetter::class);
+        $platform_users_getter = $this->createStub(PlatformUsersGetter::class);
         $platform_users_getter->method('getRegisteredUsers')->willReturn([]);
 
         $this->getter = $this->getMockBuilder(BindListUserValueGetter::class)
-            ->setConstructorArgs([$this->default_dao, $this->user_helper, $platform_users_getter, new DatabaseUUIDV7Factory()])
+            ->setConstructorArgs([$this->default_dao, $this->user_helper, $platform_users_getter, ProvideUserFromRowStub::build(), ProvideUserAvatarUrlStub::build()])
             ->onlyMethods(['getUGroupUtilsDynamicMembers', 'getAllMembersOfStaticGroup'])
             ->getMock();
     }

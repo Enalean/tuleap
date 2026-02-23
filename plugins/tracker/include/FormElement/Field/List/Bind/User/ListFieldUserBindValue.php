@@ -29,6 +29,7 @@ use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\UserAvatarUrl;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\UserRepresentation;
 use UserHelper;
@@ -41,8 +42,9 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
     protected $display_name;
     private $hp;
 
-    public function __construct($id, $user_name = null, $display_name = null, private readonly ?PFUser $user = null)
+    public function __construct($id, $user_name = null, $display_name = null, private readonly ?UserAvatarUrl $user_with_avatar = null)
     {
+        $user = $this->user_with_avatar?->user;
         if ($user !== null) {
             parent::__construct((int) $user->getId(), false);
             $this->user_name = $user->getUserName();
@@ -54,7 +56,7 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
         $this->hp           = Codendi_HTMLPurifier::instance();
     }
 
-    public static function fromUser(PFUser $user, string $full_name): self
+    public static function fromUser(UserAvatarUrl $user, string $full_name): self
     {
         return new self(-1, null, $full_name, $user);
     }
@@ -82,11 +84,19 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
         return $this->getUserHelper()->getDisplayNameFromUserId($this->getId());
     }
 
+    private function getUserAvatarURL(): string
+    {
+        if ($this->user_with_avatar !== null) {
+            return $this->user_with_avatar->avatar_url;
+        }
+        return $this->getUser()->getAvatarUrl();
+    }
+
     #[\Override]
     public function getDataset(ListField $field): array
     {
         return [
-            'data-avatar-url' => $this->getUser()->getAvatarUrl(),
+            'data-avatar-url' => $this->getUserAvatarURL(),
         ];
     }
 
@@ -97,8 +107,8 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
 
     public function getUser(): PFUser
     {
-        if (isset($this->user)) {
-            return $this->user;
+        if ($this->user_with_avatar !== null) {
+            return $this->user_with_avatar->user;
         }
         return $this->getUserManager()->getUserById($this->getId());
     }
@@ -128,7 +138,7 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
         return $this->getLink();
     }
 
-    public function fetchCard(Tracker_CardDisplayPreferences $display_preferences)
+    public function fetchCard(Tracker_CardDisplayPreferences $display_preferences): string
     {
         if ($this->getId() == 100) {
             return '';
@@ -138,20 +148,19 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
 
         $user = $this->getUser();
         if ($display_preferences->shouldDisplayAvatars()) {
-            $html .= $user->fetchHtmlAvatar();
+            $html .= $user->fetchHtmlAvatar($this->user_with_avatar);
         }
-        $html .= $this->fetchUserDisplayName($user);
+        $html .= $this->fetchUserDisplayName();
 
         $html .= '</div>';
 
         return $html;
     }
 
-    private function fetchUserDisplayName(PFUser $user)
+    private function fetchUserDisplayName(): string
     {
-        $user_helper = new UserHelper();
-        $name        = $this->hp->purify($user_helper->getDisplayNameFromUser($user));
-        $user_id     = $this->getId();
+        $name    = $this->hp->purify($this->getLabel());
+        $user_id = $this->hp->purify($this->getId());
 
         $html  = '<div class="realname"
                        title="' . $name . '"
@@ -178,8 +187,8 @@ class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
 
         $json['username']     = $this->getUsername();
         $json['realname']     = $this->getUser()->getRealName();
-        $json['avatar_url']   = $this->getUser()->getAvatarUrl();
-        $json['display_name'] = UserHelper::instance()->getDisplayNameFromUser($this->getUser());
+        $json['avatar_url']   = $this->getUserAvatarURL();
+        $json['display_name'] = $this->getLabel();
 
         return $json;
     }
