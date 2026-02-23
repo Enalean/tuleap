@@ -28,6 +28,25 @@
             <error-state v-if="has_error" />
             <h2>{{ $gettext("Fields usage") }}</h2>
 
+            <div class="tlp-alert-info">
+                <p class="tlp-alert-title">
+                    {{ $gettext("This section is under heavy development") }}
+                </p>
+                <p>
+                    {{
+                        $gettext(
+                            "The new interface for field usage management is a work in progress.",
+                        )
+                    }}
+                    {{
+                        $gettext(
+                            "You can drag'n drop existing fields to change layout, change are saved immediately.",
+                        )
+                    }}
+                    {{ $gettext("You cannot add new fields or modify field properties yet.") }}
+                </p>
+            </div>
+
             <tracker-structure v-if="tracker_root.children.length > 0" v-bind:key="key" />
 
             <empty-state v-if="tracker_root.children.length === 0" />

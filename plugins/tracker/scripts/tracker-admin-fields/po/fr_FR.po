@@ -145,6 +145,9 @@ msgstr "Aucun"
 msgid "Not found"
 msgstr "Introuvable"
 
+msgid "Not implemented yet"
+msgstr "Pas encore implémenté"
+
 msgid "One column layout"
 msgstr "Agencement sur une colonne"
 
@@ -202,8 +205,15 @@ msgstr "Date de création"
 msgid "Text"
 msgstr "Texte"
 
+msgid "The new interface for field usage management is a work in progress."
+msgstr ""
+"La nouvelle interface pour la gestion des champs est un travail en cours."
+
 msgid "The resource you are requesting does not exist or has been removed."
 msgstr "La ressource que vous demandez n'existe pas ou a été supprimée."
+
+msgid "This section is under heavy development"
+msgstr "Cette section est en cours de développement"
 
 msgid "This tracker does not have any field yet."
 msgstr "Ce tracker n'a pas encore de champ."
@@ -213,6 +223,18 @@ msgstr "Agencement sur trois colonnes"
 
 msgid "Two columns layout"
 msgstr "Agencement sur deux colonnes"
+
+msgid ""
+"You can drag'n drop existing fields to change layout, change are saved "
+"immediately."
+msgstr ""
+"Vous pouvez glisser-déposer des champs existants afin de changer la "
+"structure, les changements sont sauvegardés immédiatement."
+
+msgid "You cannot add new fields or modify field properties yet."
+msgstr ""
+"Vous ne pouvez pas encore ajouter de nouveaux champs ou modifier les "
+"propriétés des champs."
 
 msgid "You cannot bind this field to all registered users"
 msgstr ""

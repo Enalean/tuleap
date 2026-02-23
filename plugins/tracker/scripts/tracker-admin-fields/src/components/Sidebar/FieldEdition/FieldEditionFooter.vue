@@ -23,7 +23,7 @@
             type="button"
             disabled
             class="tlp-button-danger tlp-button-outline"
-            v-bind:title="$gettext('Delete')"
+            v-bind:title="$gettext('Not implemented yet')"
         >
             <i class="fa-regular fa-trash-alt" role="img" v-bind:aria-label="$gettext('Delete')" />
         </button>
@@ -35,7 +35,12 @@
         >
             {{ $gettext("Cancel") }}
         </button>
-        <button type="button" disabled class="tlp-button-primary">
+        <button
+            type="button"
+            disabled
+            class="tlp-button-primary"
+            v-bind:title="$gettext('Not implemented yet')"
+        >
             {{ $gettext("Save") }}
         </button>
     </div>
