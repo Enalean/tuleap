@@ -82,7 +82,9 @@ use Tuleap\Docman\Reference\DocumentFromReferenceValueFinder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\DocmanItemsRequestBuilder;
+use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\Folders\ComputeFolderSizeVisitor;
+use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 use Tuleap\Docman\Settings\ForbidWritersSettings;
 use Tuleap\Docman\Settings\SettingsDAO;
@@ -1391,6 +1393,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         );
         $current_user_provider    = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
         $version_factory          = new Docman_VersionFactory();
+        $project_manager          = ProjectManager::instance();
         return FileUploadController::build(
             new VersionDataStore(
                 new VersionBeingUploadedInformationProvider(
@@ -1413,11 +1416,13 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
                     new Docman_FileStorage($root_path),
                     new Docman_MIMETypeDetector(),
                     UserManager::instance(),
-                    $this->getDocmanLockFactory(),
-                    new ApprovalTableUpdater($approval_table_retriever, new Docman_ApprovalTableFactoriesFactory()),
-                    $approval_table_retriever,
-                    new ApprovalTableUpdateActionChecker($approval_table_retriever),
-                    new PostUpdateFileHandler($version_factory, new DocmanItemsEventAdder($event_manager), ProjectManager::instance(), $event_manager),
+                    new DocmanItemUpdator(
+                        new ApprovalTableUpdater($approval_table_retriever, new Docman_ApprovalTableFactoriesFactory()),
+                        new ApprovalTableUpdateActionChecker($approval_table_retriever),
+                        new PostUpdateEventAdder($project_manager, new DocmanItemsEventAdder($event_manager), $event_manager),
+                        new Docman_ItemFactory(),
+                        $this->getDocmanLockFactory(),
+                    )
                 ),
                 new VersionUploadCanceler($path_allocator, $version_to_upload_dao),
                 new FileBeingUploadedLocker($path_allocator)
