@@ -16,12 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import moment from "moment";
 
 export function formatDateValue(date: string | number | null): string {
     if (!date) {
         return "";
     }
 
-    return moment(date, "YYYY-MM-DD").format("YYYY-MM-DD");
+    const parsed = new Date(date);
+    if (isNaN(parsed.getTime())) {
+        return "";
+    }
+    return parsed.toISOString().split("T")[0];
 }

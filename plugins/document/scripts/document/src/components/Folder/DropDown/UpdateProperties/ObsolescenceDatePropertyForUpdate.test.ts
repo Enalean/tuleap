@@ -22,7 +22,6 @@ import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ObsolescenceDatePropertyForUpdate from "./ObsolescenceDatePropertyForUpdate.vue";
-import moment from "moment/moment";
 import DateFlatPicker from "../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { nextTick } from "vue";
@@ -96,11 +95,12 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
                 .get("[data-test=document-obsolescence-date-select-update]")
                 .trigger("change");
 
-            const current_date = moment().format("YYYY-MM-DD");
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 4).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
 
-            const expected_date = moment(current_date, "YYYY-MM-DD")
-                .add(3, "M")
-                .format("YYYY-MM-DD");
+            const expected_date = `${year}-${month}-${day}`;
 
             expect(wrapper.find("[data-test=obsolescence-date-property]").exists()).toBeTruthy();
             checkSelectedDateIsCorrect(wrapper, "3");

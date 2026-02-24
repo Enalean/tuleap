@@ -17,18 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment from "moment";
-import { formatFromPhpToMoment } from "@tuleap/date-helper";
-
-export function formatDateUsingPreferredUserFormat(
-    date: string,
-    user_preferred_format: string,
-): string {
-    return moment(date).format(formatFromPhpToMoment(user_preferred_format));
-}
-
-export const isDateValid = (date: string): boolean => moment(date).isValid();
+export const isDateValid = (date: string): boolean => !isNaN(Date.parse(date));
 
 export function isToday(date: string): boolean {
-    return moment().diff(date, "days") === 0;
+    const today = new Date();
+    const target = new Date(date);
+    return (
+        today.getFullYear() === target.getFullYear() &&
+        today.getMonth() === target.getMonth() &&
+        today.getDate() === target.getDate()
+    );
 }

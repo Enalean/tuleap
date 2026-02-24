@@ -33,20 +33,18 @@
 import { computed } from "vue";
 import { relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { RELATIVE_DATES_DISPLAY, USER_LOCALE, USER_TIMEZONE } from "../../configuration-keys";
-import { IntlFormatter } from "@tuleap/date-helper";
+import { DATE_FORMATTER, RELATIVE_DATES_DISPLAY, USER_LOCALE } from "../../configuration-keys";
 
 const props = defineProps<{
     date: string;
 }>();
 
 const user_locale = strictInject(USER_LOCALE);
-const user_timezone = strictInject(USER_TIMEZONE);
 const relative_dates_display = strictInject(RELATIVE_DATES_DISPLAY);
-const formatter = IntlFormatter(user_locale, user_timezone, "date");
+const date_formatter = strictInject(DATE_FORMATTER);
 
 const date_without_time = computed((): string => {
-    return formatter.format(props.date);
+    return date_formatter.format(props.date);
 });
 
 const relative_date_preference = computed((): string => {
