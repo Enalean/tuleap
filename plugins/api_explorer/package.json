@@ -31,8 +31,7 @@
       "json-stable-stringify": "npm:@nolyfill/json-stable-stringify@^1",
       "side-channel": "npm:@nolyfill/side-channel@^1",
       "typed-array-buffer": "npm:@nolyfill/typed-array-buffer@^1",
-      "which-typed-array": "npm:@nolyfill/which-typed-array@^1",
-      "minimatch": "^10.2.1"
+      "which-typed-array": "npm:@nolyfill/which-typed-array@^1"
     }
   }
 }

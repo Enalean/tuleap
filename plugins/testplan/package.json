@@ -37,8 +37,7 @@
   "pnpm": {
     "overrides": {
       "isarray": "npm:@nolyfill/isarray@^1",
-      "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
-      "minimatch": "^10.2.1"
+      "safe-buffer": "npm:@nolyfill/safe-buffer@^1"
     }
   },
   "scripts": {

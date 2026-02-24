@@ -18,11 +18,6 @@
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@vitejs/plugin-vue": "^6.0.3"
   },
-  "pnpm": {
-    "overrides": {
-      "minimatch": "^10.2.1"
-    }
-  },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
