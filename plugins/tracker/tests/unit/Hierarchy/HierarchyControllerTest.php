@@ -115,16 +115,14 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->method('getPossibleChildren')->with($this->hierarchical_tracker)
             ->willReturn($possible_children);
         $this->factory->method('getHierarchy')->willReturn($this->getHierarchyAsTreeNode([]));
+        $this->trigger_rules_dao->method('searchForTriggeringTracker')->willReturn(TestHelper::emptyDar());
 
         $presenter = $this->buildPresenter($request);
 
-        $this->assertEquals(
-            [
-                ['id' => 11, 'name' => 'Bugs', 'selected' => false],
-                ['id' => 22, 'name' => 'Tasks', 'selected' => false],
-            ],
-            $presenter->getPossibleChildren()
-        );
+        self::assertSame([
+            ['id' => 11, 'name' => 'Bugs', 'selected' => false, 'disabled' => false],
+            ['id' => 22, 'name' => 'Tasks', 'selected' => false, 'disabled' => false],
+        ], $presenter->getPossibleChildren());
     }
 
     private function getHierarchyAsTreeNode(array $hierarchy): TreeNode

@@ -57,7 +57,16 @@
                                     multiple="multiple"
                             >
                                 {{# getPossibleChildren }}
-                                    <option value="{{ id }}"{{ selected }}>{{ name }}</option>
+                                    <option
+                                        value="{{ id }}"
+                                        {{# selected }}selected{{/ selected }}
+                                        {{# disabled }}
+                                        disabled
+                                        title="{{# dgettext }} tuleap-tracker | This tracker is involved in cross-tracker triggers, you cannot change its hierarchy. {{/ dgettext }}"
+                                        {{/ disabled }}
+                                    >
+                                        {{ name }}
+                                    </option>
                                 {{/ getPossibleChildren }}
                             </select>
                         </div>
