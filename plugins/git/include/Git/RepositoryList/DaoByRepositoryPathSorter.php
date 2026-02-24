@@ -22,11 +22,7 @@ namespace Tuleap\Git\RepositoryList;
 
 class DaoByRepositoryPathSorter
 {
-    /**
-     *
-     * @return array
-     */
-    public function sort(array $repository_list_results)
+    public function sort(array $repository_list_results): array
     {
         $results_to_sort = $repository_list_results;
         usort(

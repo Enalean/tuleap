@@ -24,14 +24,12 @@ namespace Tuleap\Git\REST\v1;
 
 use GitDao;
 use GitRepository;
-use GitRepositoryFactory;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 
-final class PaginatedRepositoriesRetriever
+final readonly class PaginatedRepositoriesRetriever
 {
     public function __construct(
         private GitDao $dao,
-        private GitRepositoryFactory $factory,
         private AccessControlVerifier $access_control_verifier,
     ) {
     }
@@ -53,7 +51,7 @@ final class PaginatedRepositoriesRetriever
     ): array {
         $repositories    = [];
         $repository_list = $this->dao->getPaginatedOpenRepositories(
-            $project->getID(),
+            (int) $project->getID(),
             $scope,
             $owner_id,
             $order_by,
@@ -61,10 +59,9 @@ final class PaginatedRepositoriesRetriever
             $offset
         );
 
-        $total_number_repositories = $this->dao->foundRows();
-        foreach ($repository_list as $row) {
-            $repository = $this->getRepositoryFromRow($row);
-            if ($repository && $repository->userCanRead($user)) {
+        $total_number_repositories = $repository_list->total_items;
+        foreach ($repository_list->items as $repository) {
+            if ($repository->userCanRead($user)) {
                 $repositories[] = $repository;
             }
         }
@@ -90,7 +87,7 @@ final class PaginatedRepositoriesRetriever
     ): array {
         $repositories    = [];
         $repository_list = $this->dao->getPaginatedOpenRepositories(
-            $project->getID(),
+            (int) $project->getID(),
             $scope,
             $owner_id,
             $order_by,
@@ -98,23 +95,13 @@ final class PaginatedRepositoriesRetriever
             $offset
         );
 
-        $total_number_repositories = $this->dao->foundRows();
-        foreach ($repository_list as $row) {
-            $repository = $this->getRepositoryFromRow($row);
-            if ($repository && $this->access_control_verifier->canWrite($user, $repository, $branch_name)) {
+        $total_number_repositories = $repository_list->total_items;
+        foreach ($repository_list->items as $repository) {
+            if ($this->access_control_verifier->canWrite($user, $repository, $branch_name)) {
                 $repositories[] = $repository;
             }
         }
 
         return $repositories;
-    }
-
-    private function getRepositoryFromRow(array $row): ?GitRepository
-    {
-        if (empty($row)) {
-            return null;
-        }
-
-        return $this->factory->instanciateFromRow($row);
     }
 }

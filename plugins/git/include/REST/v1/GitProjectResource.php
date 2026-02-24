@@ -27,7 +27,6 @@ use Git_RemoteServer_GerritServerFactory;
 use Git_SystemEventManager;
 use GitPermissionsManager;
 use GitRepository;
-use GitRepositoryFactory;
 use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
@@ -231,11 +230,9 @@ final class GitProjectResource extends AuthenticatedResource
             throw new RestException(400, $e->getMessage());
         }
 
-        $git_dao            = new \GitDao();
-        $repository_factory = new GitRepositoryFactory($git_dao, ProjectManager::instance());
-        $retriever          = new PaginatedRepositoriesRetriever(
+        $git_dao   = new \GitDao();
+        $retriever = new PaginatedRepositoriesRetriever(
             $git_dao,
-            $repository_factory,
             new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command())
         );
 
