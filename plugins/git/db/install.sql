@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `ci_token` TEXT NULL,
   `allow_artifact_closure` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY  (`repository_id`),
+  INDEX idx_deletion_project_scope(repository_deletion_date, project_id, repository_scope),
+  INDEX idx_creation_user(repository_creation_user_id),
   INDEX idx_project_repository(project_id, repository_id),
   INDEX idx_repository_creation_date(repository_creation_date)
 );

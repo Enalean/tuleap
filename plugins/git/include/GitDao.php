@@ -380,11 +380,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         );
     }
 
-    /**
-     * @deprecated Should use GitRepository::getInstanceFrom row instead.
-     * @param type $result
-     */
-    public function hydrateRepositoryObject(GitRepository $repository, $result)
+    public function hydrateRepositoryObject(GitRepository $repository, array $result): void
     {
         $repository->setName($result[self::REPOSITORY_NAME]);
         $repository->setPath($result[self::REPOSITORY_PATH]);
@@ -631,11 +627,14 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         return true;
     }
 
-    public function getPaginatedOpenRepositories($project_id, $scope, $owner_id, $order_by, $limit, $offset)
+    /**
+     * @return \Tuleap\DB\PaginatedItems<GitRepository>
+     */
+    public function getPaginatedOpenRepositories(int $project_id, string $scope, int $owner_id, string $order_by, int $limit, int $offset): \Tuleap\DB\PaginatedItems
     {
         $additional_where_statement = EasyStatement::open();
 
-        $additional_where_statement->with('repository_deletion_date IS NULL');
+        $additional_where_statement->with('repository_deletion_date = "0000-00-00 00:00:00"');
         $additional_where_statement->andWith('project_id = ?', $project_id);
 
         if ($scope) {
@@ -644,6 +643,11 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
 
         if ($owner_id) {
             $additional_where_statement->andWith('repository_creation_user_id = ?', $owner_id);
+        }
+
+        $total_rows = $this->getDB()->single("SELECT COUNT(*) FROM plugin_git WHERE $additional_where_statement", $additional_where_statement->values());
+        if ($total_rows === 0) {
+            return new \Tuleap\DB\PaginatedItems([], 0);
         }
 
         $limit_parameters = [$limit, $offset];
@@ -656,7 +660,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         }
         $query_parameters = array_merge($additional_where_statement->values(), $limit_parameters);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS
+        $sql = "SELECT
                   git.repository_id,
                   git.repository_name,
                   git.repository_description,
@@ -717,14 +721,23 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
             // timezone than the session of PHP-FPM that has registered the value 'repository_creation_date'
         }
         try {
-            $results = $this->getDB()->safeQuery($sql, $query_parameters);
+            /** @var array<array<string,scalar>> $rows */
+            $rows = $this->getDB()->safeQuery($sql, $query_parameters);
 
             if ($order_by === self::ORDER_BY_PATH) {
                 $sorter = new \Tuleap\Git\RepositoryList\DaoByRepositoryPathSorter();
-                return array_slice($sorter->sort($results), $offset, $limit);
+                $rows   = array_slice($sorter->sort($rows), $offset, $limit);
             }
 
-            return $results;
+            $repositories = [];
+
+            foreach ($rows as $row) {
+                $repository = new GitRepository();
+                $this->hydrateRepositoryObject($repository, $row);
+                $repositories[] = $repository;
+            }
+
+            return new \Tuleap\DB\PaginatedItems($repositories, $total_rows);
         } finally {
             $this->getDB()->run('SET time_zone = ?', $current_mysql_timezone);
         }
@@ -763,7 +776,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
                 WHERE repository_parent_id = ?
                   AND repository_creation_user_id = ?
                   AND repository_scope = 'I'
-                  AND repository_deletion_date IS NULL";
+                  AND repository_deletion_date = '0000-00-00 00:00:00'";
 
         return $this->getDB()->run($sql, $repository_id, $user_id);
     }

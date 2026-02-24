@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\REST\v1;
 
+use GitDao;
 use GitRepository;
+use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\DB\PaginatedItems;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -30,9 +33,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PaginatedRepositoriesRetrieverTest extends TestCase
 {
-    private \PHPUnit\Framework\MockObject\MockObject|GitDao $dao;
-    private \PHPUnit\Framework\MockObject\MockObject|\GitRepositoryFactory $factory;
-    private \Tuleap\Git\Permissions\AccessControlVerifier|\PHPUnit\Framework\MockObject\MockObject $access_control_verifier;
+    private GitDao&Stub $dao;
+    private \Tuleap\Git\Permissions\AccessControlVerifier&Stub $access_control_verifier;
     private PaginatedRepositoriesRetriever $retriever;
 
     #[\Override]
@@ -40,11 +42,10 @@ final class PaginatedRepositoriesRetrieverTest extends TestCase
     {
         parent::setUp();
 
-        $this->dao                     = $this->createMock(\GitDao::class);
-        $this->access_control_verifier = $this->createMock(\Tuleap\Git\Permissions\AccessControlVerifier::class);
-        $this->factory                 = $this->createMock(\GitRepositoryFactory::class);
+        $this->dao                     = $this->createStub(\GitDao::class);
+        $this->access_control_verifier = $this->createStub(\Tuleap\Git\Permissions\AccessControlVerifier::class);
 
-        $this->retriever = new PaginatedRepositoriesRetriever($this->dao, $this->factory, $this->access_control_verifier);
+        $this->retriever = new PaginatedRepositoriesRetriever($this->dao, $this->access_control_verifier);
     }
 
     public function testGetPaginatedRepositoriesUserCanSeeReturnsNothing(): void
@@ -54,10 +55,7 @@ final class PaginatedRepositoriesRetrieverTest extends TestCase
 
         $this->dao
             ->method('getPaginatedOpenRepositories')
-            ->willReturn([]);
-        $this->dao
-            ->method('foundRows')
-            ->willReturn(0);
+            ->willReturn(new PaginatedItems([], 0));
 
         self::assertEmpty(
             $this->retriever->getPaginatedRepositoriesUserCanSee(
@@ -79,26 +77,14 @@ final class PaginatedRepositoriesRetrieverTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $user    = UserTestBuilder::aUser()->build();
 
+        $readable_repository = $this->createStub(GitRepository::class);
+        $readable_repository->method('userCanRead')->willReturn(true);
+        $unreadable_repository = $this->createStub(GitRepository::class);
+        $unreadable_repository->method('userCanRead')->willReturn(false);
+
         $this->dao
             ->method('getPaginatedOpenRepositories')
-            ->willReturn([
-                ['repository_id' => 101],
-                ['repository_id' => 102],
-            ]);
-        $this->dao
-            ->method('foundRows')
-            ->willReturn(2);
-
-        $readable_repository = $this->createMock(GitRepository::class);
-        $readable_repository->method('userCanRead')->willReturn(true);
-        $unreadable_repository = $this->createMock(GitRepository::class);
-        $unreadable_repository->method('userCanRead')->willReturn(false);
-        $this->factory
-            ->method('instanciateFromRow')
-            ->willReturnMap([
-                [['repository_id' => 101], $readable_repository],
-                [['repository_id' => 102], $unreadable_repository],
-            ]);
+            ->willReturn(new PaginatedItems([$readable_repository, $unreadable_repository], 2));
 
         self::assertEquals(
             [$readable_repository],
@@ -123,10 +109,7 @@ final class PaginatedRepositoriesRetrieverTest extends TestCase
 
         $this->dao
             ->method('getPaginatedOpenRepositories')
-            ->willReturn([]);
-        $this->dao
-            ->method('foundRows')
-            ->willReturn(0);
+            ->willReturn(new PaginatedItems([], 0));
 
         self::assertEmpty(
             $this->retriever->getPaginatedRepositoriesUserCanCreateGivenBranch(
@@ -149,24 +132,12 @@ final class PaginatedRepositoriesRetrieverTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $user    = UserTestBuilder::aUser()->build();
 
+        $a_repository       = $this->createStub(GitRepository::class);
+        $another_repository = $this->createStub(GitRepository::class);
+
         $this->dao
             ->method('getPaginatedOpenRepositories')
-            ->willReturn([
-                ['repository_id' => 101],
-                ['repository_id' => 102],
-            ]);
-        $this->dao
-            ->method('foundRows')
-            ->willReturn(2);
-
-        $a_repository       = $this->createMock(GitRepository::class);
-        $another_repository = $this->createMock(GitRepository::class);
-        $this->factory
-            ->method('instanciateFromRow')
-            ->willReturnMap([
-                [['repository_id' => 101], $a_repository],
-                [['repository_id' => 102], $another_repository],
-            ]);
+            ->willReturn(new PaginatedItems([$a_repository, $another_repository], 2));
 
         $this->access_control_verifier
             ->method('canWrite')
