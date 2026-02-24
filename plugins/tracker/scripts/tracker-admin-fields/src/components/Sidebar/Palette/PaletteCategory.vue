@@ -44,7 +44,12 @@
         {{ category.label }}
     </div>
     <template v-if="is_open">
-        <div class="field" v-for="field of matching" v-bind:key="field.label">
+        <div
+            class="field"
+            v-for="field of matching"
+            v-bind:key="field.label"
+            v-bind:title="$gettext('Not implemented yet')"
+        >
             <span class="fa-fw" aria-hidden="true"></span>
             <i class="fa-fw" v-bind:class="field.icon" aria-hidden="true"></i>
             {{ field.label }}
@@ -89,8 +94,12 @@ watch(
 .field {
     display: flex;
     margin: 0 0 var(--tlp-medium-spacing);
-    cursor: move;
     gap: var(--tlp-small-spacing);
+}
+
+.field {
+    color: var(--tlp-dimmed-color);
+    cursor: not-allowed;
 }
 
 .field:last-child {
