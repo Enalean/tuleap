@@ -1038,6 +1038,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $logger,
                     TrackerFactory::instance(),
                     EventManager::instance(),
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -3396,8 +3397,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             $logger
         );
 
+        $db_connection         = DBFactory::getMainTuleapDBConnection();
+        $transaction_executor  = new DBTransactionExecutorWithConnection($db_connection);
         $new_changeset_creator = new NewChangesetCreator(
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            $transaction_executor,
             $artifact_changeset_saver,
             $after_new_changeset_handler,
             $workflow_retriever,
@@ -3441,7 +3444,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             new TypeDao(),
             new ExternalFieldsExtractor($event_manager),
             new TrackerPrivateCommentUGroupExtractor(new TrackerPrivateCommentUGroupEnabledDao(), new UGroupManager()),
-            DBFactory::getMainTuleapDBConnection(),
+            $db_connection,
+            $transaction_executor,
         );
     }
 

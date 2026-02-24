@@ -46,6 +46,7 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
@@ -170,6 +171,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
             $this->external_field_extractor,
             $this->private_comment_extractor,
             $this->db_connection,
+            new DBTransactionExecutorPassthrough(),
         );
         $this->external_field_extractor->method('extractExternalFieldsFromArtifact');
     }
@@ -196,6 +198,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
                 $this->external_field_extractor,
                 $this->private_comment_extractor,
                 $this->db_connection,
+                new DBTransactionExecutorPassthrough(),
             ])->onlyMethods(['importFromXML'])->getMock();
         $importer->expects($this->once())->method('importFromXML')
             ->with(
@@ -2287,6 +2290,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
             $this->createStub(ExternalFieldsExtractor::class),
             $private_comment_extractor,
             $this->db_connection,
+            new DBTransactionExecutorPassthrough(),
         );
 
         $xml_element = new SimpleXMLElement(

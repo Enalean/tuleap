@@ -19,6 +19,9 @@
  */
 
 use Tuleap\Color\ColorName;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -60,89 +63,31 @@ class TrackerXmlImport
 {
     public const int DEFAULT_NOTIFICATIONS_LEVEL = 0;
 
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
-    /** @var EventManager */
-    private $event_manager;
-
-    /** @var HierarchyDAO */
-    private $hierarchy_dao;
-
-    /** @var XML_RNGValidator */
-    private $rng_validator;
-
-    /** @var Tracker_Workflow_Trigger_RulesManager */
-    private $trigger_rulesmanager;
-
-    private $xml_fields_mapping = [];
-
-    /**
-     * @var array
-     */
-    private $renderers_xml_mapping     = [];
-    private array $reports_xml_mapping = [];
-
-    /** @var Tracker_Artifact_XMLImport */
-    private $xml_import;
-
-    /** @var User\XML\Import\IFindUserFromXMLReference */
-    private $user_finder;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
-    /**
-     * @var ArtifactLinksUsageUpdater
-     */
-    private $artifact_links_usage_updater;
-
-    /**
-     * @var ArtifactLinksUsageDao
-     */
-    private $artifact_links_usage_dao;
-
-    /**
-     * @var ExternalFieldsExtractor
-     */
-    private $external_fields_extractor;
-    /**
-     * @var TrackerXmlImportFeedbackCollector
-     */
-    private $feedback_collector;
+    private array $xml_fields_mapping    = [];
+    private array $renderers_xml_mapping = [];
+    private array $reports_xml_mapping   = [];
 
     public function __construct(
-        TrackerFactory $tracker_factory,
-        EventManager $event_manager,
-        HierarchyDAO $hierarchy_dao,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly EventManager $event_manager,
+        private readonly HierarchyDAO $hierarchy_dao,
         private readonly GetInstanceFromXml $get_instance_from_xml,
-        XML_RNGValidator $rng_validator,
-        Tracker_Workflow_Trigger_RulesManager $trigger_rulesmanager,
-        Tracker_Artifact_XMLImport $xml_import,
-        User\XML\Import\IFindUserFromXMLReference $user_finder,
-        \Psr\Log\LoggerInterface $logger,
-        ArtifactLinksUsageUpdater $artifact_links_usage_updater,
-        ArtifactLinksUsageDao $artifact_links_usage_dao,
+        private readonly XML_RNGValidator $rng_validator,
+        private readonly Tracker_Workflow_Trigger_RulesManager $trigger_rulesmanager,
+        private readonly Tracker_Artifact_XMLImport $xml_import,
+        private readonly User\XML\Import\IFindUserFromXMLReference $user_finder,
+        private readonly \Psr\Log\LoggerInterface $logger,
+        private readonly ArtifactLinksUsageUpdater $artifact_links_usage_updater,
+        private readonly ArtifactLinksUsageDao $artifact_links_usage_dao,
         private readonly TrackerXMLFieldMappingFromExistingTracker $existing_tracker_field_mapping,
-        ExternalFieldsExtractor $external_fields_extractor,
-        TrackerXmlImportFeedbackCollector $feedback_collector,
+        private readonly ExternalFieldsExtractor $external_fields_extractor,
+        private readonly TrackerXmlImportFeedbackCollector $feedback_collector,
         private readonly CreateFromXml $from_xml_creator,
         private readonly InstantiateTrackerFromXml $instantiate_tracker_from_xml,
         private readonly OrderXmlTrackersByPriority $xml_trackers_by_priority_orderer,
         private readonly BuildTrackersHierarchy $hierarchy_builder,
+        private readonly DBTransactionExecutor $transaction_executor,
     ) {
-        $this->tracker_factory              = $tracker_factory;
-        $this->event_manager                = $event_manager;
-        $this->hierarchy_dao                = $hierarchy_dao;
-        $this->rng_validator                = $rng_validator;
-        $this->trigger_rulesmanager         = $trigger_rulesmanager;
-        $this->xml_import                   = $xml_import;
-        $this->user_finder                  = $user_finder;
-        $this->logger                       = $logger;
-        $this->artifact_links_usage_updater = $artifact_links_usage_updater;
-        $this->artifact_links_usage_dao     = $artifact_links_usage_dao;
-        $this->external_fields_extractor    = $external_fields_extractor;
-        $this->feedback_collector           = $feedback_collector;
     }
 
     /**
@@ -231,6 +176,7 @@ class TrackerXmlImport
             ),
             new XmlTrackersByPriorityOrderer(),
             new TrackersHierarchyBuilder(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
         );
     }
 
@@ -269,7 +215,6 @@ class TrackerXmlImport
         $created_trackers_objects = [];
         $artifacts_id_mapping     = new Tracker_XML_Importer_ArtifactImportedMapping();
         $changeset_id_mapping     = new ImportedChangesetMapping();
-        $url_mapping              = new CreatedFileURLMapping();
 
         $ordered_xml_trackers = $this->xml_trackers_by_priority_orderer->getAllXmlTrackersOrderedByPriority($xml_input);
 
@@ -299,24 +244,34 @@ class TrackerXmlImport
 
         $xml_field_values_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xml_fields_mapping);
 
-        $created_artifacts = $this->importBareArtifacts(
+        $this->transaction_executor->execute(function () use (
             $ordered_xml_trackers,
             $created_trackers_objects,
             $artifacts_id_mapping,
-            $tracker_import_config
-        );
-
-        $this->importChangesets(
-            $ordered_xml_trackers,
-            $created_trackers_objects,
+            $tracker_import_config,
             $extraction_path,
             $xml_field_values_mapping,
-            $artifacts_id_mapping,
-            $url_mapping,
-            $created_artifacts,
             $changeset_id_mapping,
-            $tracker_import_config
-        );
+        ) {
+            $created_artifacts = $this->importBareArtifacts(
+                $ordered_xml_trackers,
+                $created_trackers_objects,
+                $artifacts_id_mapping,
+                $tracker_import_config
+            );
+
+            $this->importChangesets(
+                $ordered_xml_trackers,
+                $created_trackers_objects,
+                $extraction_path,
+                $xml_field_values_mapping,
+                $artifacts_id_mapping,
+                new CreatedFileURLMapping(),
+                $created_artifacts,
+                $changeset_id_mapping,
+                $tracker_import_config
+            );
+        });
 
         // Deal with artifact link types after changesets import to keep the history of types
         $this->disableArtifactLinkTypes($xml_input, $project);

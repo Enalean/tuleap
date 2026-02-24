@@ -40,6 +40,7 @@ use Tuleap\DB\DBConnection;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
@@ -139,6 +140,7 @@ final class XmlImportTest extends TestCase
             $this->external_field_extractor,
             $this->private_comment_extractor,
             $db_connection,
+            new DBTransactionExecutorPassthrough(),
         );
     }
 

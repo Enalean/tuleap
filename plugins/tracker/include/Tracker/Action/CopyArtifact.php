@@ -19,6 +19,7 @@
  */
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporter;
@@ -31,66 +32,20 @@ use Tuleap\Tracker\Tracker;
 
 class Tracker_Action_CopyArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    /**
-     * @var Tracker_XML_Importer_ArtifactImportedMapping
-     */
-    private $artifacts_imported_mapping;
-
-    /**
-     * @var Tracker_XML_Updater_TemporaryFileXMLUpdater
-     */
-    private $file_updater;
-
-    /**
-     * @var Tracker_XML_Updater_ChangesetXMLUpdater
-     */
-    private $xml_updater;
-
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var Tracker_Artifact_XMLImport
-     */
-    private $xml_importer;
-
-    /**
-     * @var ArtifactXMLExporter
-     */
-    private $xml_exporter;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var Tracker_XML_Importer_CopyArtifactInformationsAggregator */
-    private $logger;
-
     public function __construct(
-        Tracker $tracker,
-        Tracker_ArtifactFactory $artifact_factory,
-        ArtifactXMLExporter $xml_exporter,
-        Tracker_Artifact_XMLImport $xml_importer,
-        Tracker_XML_Updater_ChangesetXMLUpdater $xml_updater,
-        Tracker_XML_Updater_TemporaryFileXMLUpdater $file_updater,
-        private ChildrenXMLExporter $children_xml_exporter,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_imported_mapping,
-        Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger,
-        private TrackerFactory $tracker_factory,
-        private EventDispatcherInterface $event_dispatcher,
+        private readonly Tracker $tracker,
+        private readonly Tracker_ArtifactFactory $artifact_factory,
+        private readonly ArtifactXMLExporter $xml_exporter,
+        private readonly Tracker_Artifact_XMLImport $xml_importer,
+        private readonly Tracker_XML_Updater_ChangesetXMLUpdater $xml_updater,
+        private readonly Tracker_XML_Updater_TemporaryFileXMLUpdater $file_updater,
+        private readonly ChildrenXMLExporter $children_xml_exporter,
+        private readonly Tracker_XML_Importer_ArtifactImportedMapping $artifacts_imported_mapping,
+        private readonly Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly EventDispatcherInterface $event_dispatcher,
+        private readonly DBTransactionExecutor $transaction_executor,
     ) {
-        $this->tracker                    = $tracker;
-        $this->artifact_factory           = $artifact_factory;
-        $this->xml_exporter               = $xml_exporter;
-        $this->xml_importer               = $xml_importer;
-        $this->xml_updater                = $xml_updater;
-        $this->file_updater               = $file_updater;
-        $this->artifacts_imported_mapping = $artifacts_imported_mapping;
-        $this->logger                     = $logger;
     }
 
     public function process(
@@ -168,15 +123,26 @@ class Tracker_Action_CopyArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.
             return;
         }
 
-        $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
-
         $no_child = count($xml_artifacts->artifact) == 1;
         if ($no_child) {
             $this->removeArtLinksValueNodeFromXML($xml_artifacts);
         }
 
-        $new_artifacts = $this->importBareArtifacts($current_user, $current_time, $xml_artifacts);
+        $new_artifacts = $this->transaction_executor->execute(function () use (
+            $current_user,
+            $current_time,
+            $xml_artifacts,
+            $from_changeset,
+        ) {
+            $new_artifacts = $this->importBareArtifacts($current_user, $current_time, $xml_artifacts);
+            if ($new_artifacts == null) {
+                return null;
+            }
 
+            $this->importChangesets($xml_artifacts, $new_artifacts, new TrackerXmlFieldsMapping_InSamePlatform());
+            $this->addSummaryCommentChangeset($new_artifacts[0], $current_user, $from_changeset);
+            return $new_artifacts;
+        });
         if ($new_artifacts == null) {
             $this->logsErrorAndRedirectToTracker(
                 sprintf(dgettext('tuleap-tracker', 'An error occured while creating a copy of the artifact #%1$s.'), $from_changeset->getArtifact()->getId())
@@ -184,8 +150,6 @@ class Tracker_Action_CopyArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.
             return;
         }
 
-        $this->importChangesets($xml_artifacts, $new_artifacts, $xml_field_mapping);
-        $this->addSummaryCommentChangeset($new_artifacts[0], $current_user, $from_changeset);
         $this->event_dispatcher->dispatch(
             new \Tuleap\Tracker\Action\AfterArtifactCopiedEvent(
                 $this->artifacts_imported_mapping,

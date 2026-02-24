@@ -35,6 +35,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -119,6 +120,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->instantiate_tracker_from_xml,
             new XmlTrackersByPriorityOrderer(),
             new TrackersHierarchyBuilder(),
+            new DBTransactionExecutorPassthrough(),
         );
 
         $this->external_validator->method('extractExternalFieldFromProjectElement');

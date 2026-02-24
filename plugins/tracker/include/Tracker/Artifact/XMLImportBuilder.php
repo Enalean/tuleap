@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
@@ -96,9 +98,10 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
             $logger
         );
 
-        $user_manager          = UserManager::instance();
+        $db_connection         = DBFactory::getMainTuleapDBConnection();
+        $transaction_executor  = new DBTransactionExecutorWithConnection($db_connection);
         $new_changeset_creator = new NewChangesetCreator(
-            new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
+            $transaction_executor,
             $artifact_changeset_saver,
             $after_new_changeset_handler,
             $workflow_retriever,
@@ -142,7 +145,8 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
             $type_dao,
             new ExternalFieldsExtractor($event_manager),
             new TrackerPrivateCommentUGroupExtractor(new TrackerPrivateCommentUGroupEnabledDao(), new UGroupManager()),
-            \Tuleap\DB\DBFactory::getMainTuleapDBConnection(),
+            $db_connection,
+            $transaction_executor,
         );
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
@@ -106,6 +107,7 @@ final class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PH
             $this->createMock(InstantiateTrackerFromXml::class),
             new XmlTrackersByPriorityOrderer(),
             new TrackersHierarchyBuilder(),
+            new DBTransactionExecutorPassthrough(),
         );
 
         $this->external_validator->method('extractExternalFieldFromProjectElement');

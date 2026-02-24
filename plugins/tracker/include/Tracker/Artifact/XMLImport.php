@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBConnection;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Option\Option;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -41,67 +43,24 @@ use Tuleap\XML\SimpleXMLElementBuilder;
 
 class Tracker_Artifact_XMLImport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    /** @var bool */
-    private $send_notifications;
-
-    /** @var XML_RNGValidator */
-    private $rng_validator;
-
-    /** @var TrackerArtifactCreator */
-    private $artifact_creator;
-
-    /** @var NewChangesetCreator */
-    private $new_changeset_creator;
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /** @var User\XML\Import\IFindUserFromXMLReference */
-    private $user_finder;
-
-    /** @var BindStaticValueDao */
-    private $static_value_dao;
-
-    /** @var WrapperLogger */
-    private $logger;
-
-    /** @var TypeDao  */
-    private $type_dao;
-
-    /**
-     * @var ExternalFieldsExtractor
-     */
-    private $external_fields_extractor;
-    /**
-     * @var TrackerPrivateCommentUGroupExtractor
-     */
-    private $private_comment_ugroup_extractor;
+    private WrapperLogger $logger;
 
     public function __construct(
-        XML_RNGValidator $rng_validator,
-        TrackerArtifactCreator $artifact_creator,
-        NewChangesetCreator $new_changeset_creator,
-        Tracker_FormElementFactory $formelement_factory,
-        User\XML\Import\IFindUserFromXMLReference $user_finder,
-        BindStaticValueDao $static_value_dao,
+        private readonly XML_RNGValidator $rng_validator,
+        private readonly TrackerArtifactCreator $artifact_creator,
+        private readonly NewChangesetCreator $new_changeset_creator,
+        private readonly Tracker_FormElementFactory $formelement_factory,
+        private readonly User\XML\Import\IFindUserFromXMLReference $user_finder,
+        private readonly BindStaticValueDao $static_value_dao,
         \Psr\Log\LoggerInterface $logger,
-        $send_notifications,
-        TypeDao $type_dao,
-        ExternalFieldsExtractor $external_fields_extractor,
-        TrackerPrivateCommentUGroupExtractor $private_comment_ugroup_extractor,
-        private \Tuleap\DB\DBConnection $db_connection,
+        private readonly bool $send_notifications,
+        private readonly TypeDao $type_dao,
+        private readonly ExternalFieldsExtractor $external_fields_extractor,
+        private readonly TrackerPrivateCommentUGroupExtractor $private_comment_ugroup_extractor,
+        private readonly DBConnection $db_connection,
+        private readonly DBTransactionExecutor $transaction_executor,
     ) {
-        $this->rng_validator                    = $rng_validator;
-        $this->artifact_creator                 = $artifact_creator;
-        $this->new_changeset_creator            = $new_changeset_creator;
-        $this->formelement_factory              = $formelement_factory;
-        $this->user_finder                      = $user_finder;
-        $this->static_value_dao                 = $static_value_dao;
-        $this->logger                           = new WrapperLogger($logger, 'XML import');
-        $this->send_notifications               = $send_notifications;
-        $this->type_dao                         = $type_dao;
-        $this->external_fields_extractor        = $external_fields_extractor;
-        $this->private_comment_ugroup_extractor = $private_comment_ugroup_extractor;
+        $this->logger = new WrapperLogger($logger, 'XML import');
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive, PFUser $user): void
@@ -137,30 +96,39 @@ class Tracker_Artifact_XMLImport // phpcs:ignore PSR1.Classes.ClassDeclaration.M
         CreatedFileURLMapping $url_mapping,
         TrackerXmlImportConfig $tracker_xml_config,
     ): ?bool {
-        $artifacts_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         try {
             $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml_element->asXml());
             $this->external_fields_extractor->extractExternalFieldsFromArtifact($partial_element);
 
             $this->rng_validator->validate($xml_element, realpath(__DIR__ . '/../../../resources/artifacts.rng'));
-            $artifacts = $this->importBareArtifactsFromXML(
+            return $this->transaction_executor->execute(function () use (
                 $tracker,
                 $xml_element,
-                $artifacts_id_mapping,
-                $tracker_xml_config
-            );
-
-            return $this->importArtifactChangesFromXML(
-                $tracker,
-                $xml_element,
+                $tracker_xml_config,
                 $extraction_path,
                 $xml_fields_mapping,
-                $artifacts_id_mapping,
                 $url_mapping,
-                $artifacts,
-                new ImportedChangesetMapping(),
-                $tracker_xml_config
-            );
+            ) {
+                $artifacts_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
+                $artifacts            = $this->importBareArtifactsFromXML(
+                    $tracker,
+                    $xml_element,
+                    $artifacts_id_mapping,
+                    $tracker_xml_config
+                );
+
+                return $this->importArtifactChangesFromXML(
+                    $tracker,
+                    $xml_element,
+                    $extraction_path,
+                    $xml_fields_mapping,
+                    $artifacts_id_mapping,
+                    $url_mapping,
+                    $artifacts,
+                    new ImportedChangesetMapping(),
+                    $tracker_xml_config
+                );
+            });
         } catch (Exception $exception) {
             $this->logger->error('' . $exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
             echo ('' . $exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
