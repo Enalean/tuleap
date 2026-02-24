@@ -31,6 +31,7 @@ describe("export-report-columns-spreadsheet", () => {
 
         await startDownloadExportAllReportColumnsSpreadsheet({
             current_tracker_name: "Tracker",
+            current_tracker_id: 23,
             current_report_id: 12,
             current_report_name: "Report",
             current_renderer_id: 136,

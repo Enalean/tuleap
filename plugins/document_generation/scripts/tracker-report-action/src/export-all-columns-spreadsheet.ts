@@ -21,6 +21,7 @@ import { downloadXLSX, downloadDocument } from "@tuleap/plugin-tracker-report-ex
 
 interface Properties {
     readonly current_tracker_name: string;
+    readonly current_tracker_id: number;
     readonly current_report_id: number;
     readonly current_report_name: string;
     readonly current_renderer_id: number;
@@ -33,6 +34,7 @@ export async function startDownloadExportAllColumnsSpreadsheet(
         {
             first_level: {
                 tracker_name: properties.current_tracker_name,
+                tracker_id: properties.current_tracker_id,
                 report_id: properties.current_report_id,
                 report_name: properties.current_report_name,
                 table_renderer_id: properties.current_renderer_id,

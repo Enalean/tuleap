@@ -1,0 +1,4453 @@
+[
+    {
+        "id": 211,
+        "uri": "artifacts/211",
+        "xref": "all_fields_tracker #211",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-20T16:35:26+01:00",
+        "html_url": "/plugins/tracker/?aid=211",
+        "changesets_uri": "artifacts/211/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "Hello World!"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 479,
+                        "label": "g",
+                        "color": null,
+                        "tlp_color": "red-wine",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [479]
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": 477,
+                        "label": "e",
+                        "color": null,
+                        "tlp_color": "acid-green",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [477]
+            },
+            {
+                "field_id": 1558,
+                "type": "int",
+                "label": "int_field",
+                "value": 12
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": [
+                    {
+                        "id": 101,
+                        "submitted_by": 102,
+                        "description": "Cute marmot",
+                        "name": "photo-1664205721306-728bf0f4c3e5.avif",
+                        "size": 792251,
+                        "type": "image/avif",
+                        "html_url": "/plugins/tracker/attachments/101-photo-1664205721306-728bf0f4c3e5.avif",
+                        "html_preview_url": null,
+                        "uri": "artifact_files/101"
+                    }
+                ]
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1585,
+                "type": "ttmstepdef",
+                "label": "step_definition",
+                "value": [
+                    {
+                        "id": 170,
+                        "description": "<p>Do something</p>\n",
+                        "description_format": "html",
+                        "commonmark_description": "Do something",
+                        "expected_results": "<p>It should work</p>\n",
+                        "expected_results_format": "html",
+                        "commonmark_expected_results": "It should work",
+                        "rank": 1
+                    },
+                    {
+                        "id": 171,
+                        "description": "<p>Do something else</p>\n",
+                        "description_format": "html",
+                        "commonmark_description": "Do something else",
+                        "expected_results": "<p>It should work too</p>\n",
+                        "expected_results_format": "html",
+                        "commonmark_expected_results": "It should work too",
+                        "rank": 2
+                    }
+                ]
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": 482,
+                        "label": "j",
+                        "color": null,
+                        "tlp_color": "clockwork-orange",
+                        "is_hidden": false
+                    },
+                    {
+                        "id": 484,
+                        "label": "l",
+                        "color": null,
+                        "tlp_color": "peggy-pink",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [482, 484]
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 1
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 211
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-20T16:35:26+01:00"
+            },
+            {
+                "field_id": 4004,
+                "type": "string",
+                "label": "string_field_2",
+                "value": "**extemporizing** art #210"
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [
+                    {
+                        "id": 9,
+                        "uri": "artifacts/9",
+                        "tracker": {
+                            "id": 9,
+                            "uri": "trackers/9",
+                            "label": "User Stories",
+                            "color": "lake-placid-blue",
+                            "project": {
+                                "id": 102,
+                                "uri": "projects/102",
+                                "label": "Project 1",
+                                "icon": "1️⃣"
+                            }
+                        },
+                        "type": null
+                    },
+                    {
+                        "id": 33,
+                        "uri": "artifacts/33",
+                        "tracker": {
+                            "id": 26,
+                            "uri": "trackers/26",
+                            "label": "Test 1",
+                            "color": "firemist-silver",
+                            "project": {
+                                "id": 106,
+                                "uri": "projects/106",
+                                "label": "Tuleap Functions",
+                                "icon": ""
+                            }
+                        },
+                        "type": "_covered_by"
+                    },
+                    {
+                        "id": 318,
+                        "uri": "artifacts/318",
+                        "tracker": {
+                            "id": 8,
+                            "uri": "trackers/8",
+                            "label": "Tasks",
+                            "color": "daphne-blue",
+                            "project": {
+                                "id": 102,
+                                "uri": "projects/102",
+                                "label": "Project 1",
+                                "icon": "1️⃣"
+                            }
+                        },
+                        "type": null
+                    }
+                ],
+                "reverse_links": [
+                    {
+                        "id": 8,
+                        "uri": "artifacts/8",
+                        "tracker": {
+                            "id": 6,
+                            "uri": "trackers/6",
+                            "label": "Releases",
+                            "color": "clockwork-orange",
+                            "project": {
+                                "id": 102,
+                                "uri": "projects/102",
+                                "label": "Project 1",
+                                "icon": "1️⃣"
+                            }
+                        },
+                        "type": "_covered_by"
+                    },
+                    {
+                        "id": 261,
+                        "uri": "artifacts/261",
+                        "tracker": {
+                            "id": 82,
+                            "uri": "trackers/82",
+                            "label": "All Fields Tracker",
+                            "color": "inca-silver",
+                            "project": {
+                                "id": 102,
+                                "uri": "projects/102",
+                                "label": "Project 1",
+                                "icon": "1️⃣"
+                            }
+                        },
+                        "type": "_covered_by"
+                    }
+                ]
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": 102,
+                        "uri": "users/102",
+                        "user_url": "/users/fred",
+                        "real_name": "Fred Bob",
+                        "display_name": "Fred Bob (fred)",
+                        "username": "fred",
+                        "ldap_id": "1",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                        "is_anonymous": false,
+                        "has_avatar": true,
+                        "email": "kevin.traini+dev_fred@enalean.com",
+                        "status": "A"
+                    }
+                ],
+                "bind_value_ids": [102]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": 103,
+                        "uri": "users/103",
+                        "user_url": "/users/alice",
+                        "real_name": "Alice",
+                        "display_name": "Alice (alice)",
+                        "username": "alice",
+                        "ldap_id": "",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/alice/avatar-ffd4e2f3c6a4d8d82038d9fe715bd583db57bc6c6a9e9895e9ebf94ddf2fa3c5.png",
+                        "is_anonymous": false,
+                        "has_avatar": true,
+                        "email": "kevin.traini+dev_fred@enalean.com",
+                        "status": "A"
+                    }
+                ],
+                "bind_value_ids": [103]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 101,
+                        "uri": "users/101",
+                        "user_url": "/users/admin",
+                        "real_name": "Site Administrator",
+                        "display_name": "Site Administrator (admin)",
+                        "username": "admin",
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/admin/avatar-fa59e2e9cde4ed2c68d9df85e5369d8afea33a2686fd89de57f0060a5bd402c1.png",
+                        "is_anonymous": false,
+                        "has_avatar": true,
+                        "email": "codendi-admin@tuleap-web.tuleap-aio-dev.docker",
+                        "status": "A"
+                    },
+                    {
+                        "id": 102,
+                        "uri": "users/102",
+                        "user_url": "/users/fred",
+                        "real_name": "Fred Bob",
+                        "display_name": "Fred Bob (fred)",
+                        "username": "fred",
+                        "ldap_id": "1",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                        "is_anonymous": false,
+                        "has_avatar": true,
+                        "email": "kevin.traini+dev_fred@enalean.com",
+                        "status": "A"
+                    }
+                ],
+                "bind_value_ids": [101, 102]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": 101,
+                        "uri": "users/101",
+                        "user_url": "/users/admin",
+                        "real_name": "Site Administrator",
+                        "display_name": "Site Administrator (admin)",
+                        "username": "admin",
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/admin/avatar-fa59e2e9cde4ed2c68d9df85e5369d8afea33a2686fd89de57f0060a5bd402c1.png",
+                        "is_anonymous": false,
+                        "has_avatar": true,
+                        "email": "codendi-admin@tuleap-web.tuleap-aio-dev.docker",
+                        "status": "A"
+                    },
+                    {
+                        "id": 102,
+                        "uri": "users/102",
+                        "user_url": "/users/fred",
+                        "real_name": "Fred Bob",
+                        "display_name": "Fred Bob (fred)",
+                        "username": "fred",
+                        "ldap_id": "1",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                        "is_anonymous": false,
+                        "has_avatar": true,
+                        "email": "kevin.traini+dev_fred@enalean.com",
+                        "status": "A"
+                    }
+                ],
+                "bind_value_ids": [101, 102]
+            },
+            {
+                "field_id": 1534,
+                "type": "float",
+                "label": "float_field",
+                "value": 2.56
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:40+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": "2026-02-03T00:00:00+01:00",
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o112",
+                        "label": "john@example.com"
+                    },
+                    {
+                        "id": 102,
+                        "uri": "users/102",
+                        "user_url": "/users/fred",
+                        "real_name": "Fred Bob",
+                        "display_name": "Fred Bob (fred)",
+                        "username": "fred",
+                        "ldap_id": "1",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                        "is_anonymous": false,
+                        "has_avatar": true,
+                        "email": "kevin.traini+dev_fred@enalean.com",
+                        "status": "A"
+                    }
+                ],
+                "bind_value_ids": ["john@example.com", "Fred Bob (fred)"],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    },
+                    {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    },
+                    {
+                        "id": "5",
+                        "uri": "user_groups/5",
+                        "label": "Registered and restricted users",
+                        "users_uri": "user_groups/5/users",
+                        "short_name": "authenticated_users",
+                        "key": "ugroup_authenticated_users_name_key"
+                    }
+                ],
+                "bind_value_ids": ["102_3", "102_4", "5"]
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    }
+                ],
+                "bind_value_ids": ["102_4"]
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    },
+                    {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    }
+                ],
+                "bind_value_ids": ["102_3", "102_4"]
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": "2026-02-19T17:08:00+01:00",
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ],
+                "bind_value_ids": ["Project members"],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non sagittis elit. Phasellus eget neque nec ipsum semper tristique. Maecenas sagittis lacus vel urna condimentum mattis. Aliquam fringilla, tortor eu eleifend cursus, augue arcu gravida sapien, sit amet elementum ex lorem vitae eros. Quisque viverra sodales orci vitae interdum. Vivamus viverra auctor magna. Suspendisse vitae libero interdum, suscipit lectus a, vestibulum sem.</p>",
+                "format": "html",
+                "post_processed_value": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non sagittis elit. Phasellus eget neque nec ipsum semper tristique. Maecenas sagittis lacus vel urna condimentum mattis. Aliquam fringilla, tortor eu eleifend cursus, augue arcu gravida sapien, sit amet elementum ex lorem vitae eros. Quisque viverra sodales orci vitae interdum. Vivamus viverra auctor magna. Suspendisse vitae libero interdum, suscipit lectus a, vestibulum sem.</p>"
+            },
+            {
+                "field_id": 1565,
+                "label": "permissions",
+                "type": "perm",
+                "granted_groups": ["registered_users", "Custom"],
+                "granted_groups_ids": ["2", "105"]
+            },
+            {
+                "field_id": 4009,
+                "type": "text",
+                "label": "text_field_2",
+                "value": "<h1><strong>Hello <em>World!</em></strong></h1>\n<p>See <a href=\"https://tuleap-web.tuleap-aio-dev.docker/goto?key=art&amp;val=213&amp;group_id=102\" title=\"Tracker Artifact\" class=\"cross-reference\">art #213</a></p>\n",
+                "format": "html",
+                "commonmark": "# **Hello _World!_**\r\n\r\nSee art #213",
+                "post_processed_value": "<h1><strong>Hello <em>World!</em></strong></h1>\n<p>See <a href=\"https://tuleap-web.tuleap-aio-dev.docker/goto?key=art&amp;val=213&amp;group_id=102\" title=\"Tracker Artifact\" class=\"cross-reference\">art #213</a></p>\n"
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ],
+                "bind_value_ids": ["102_3"]
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": [
+                    {
+                        "ref": "test_1 #33",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=test_1&val=33&group_id=106",
+                        "direction": "out"
+                    },
+                    {
+                        "ref": "task #318",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=task&val=318&group_id=102",
+                        "direction": "out"
+                    },
+                    {
+                        "ref": "story #9",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=story&val=9&group_id=102",
+                        "direction": "out"
+                    },
+                    {
+                        "ref": "art #213",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=art&val=213&group_id=102",
+                        "direction": "out"
+                    },
+                    {
+                        "ref": "art #210",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=art&val=210&group_id=102",
+                        "direction": "out"
+                    },
+                    {
+                        "ref": "all_fields_tracker #261",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=all_fields_tracker&val=261&group_id=102",
+                        "direction": "in"
+                    },
+                    {
+                        "ref": "rel #8",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=rel&val=8&group_id=102",
+                        "direction": "in"
+                    },
+                    {
+                        "ref": "all_fields_tracker #211",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=all_fields_tracker&val=211&group_id=102",
+                        "direction": "both"
+                    }
+                ]
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 249
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": null,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:40+01:00",
+        "status": "",
+        "full_status": null,
+        "is_open": false,
+        "title": "Hello World!",
+        "assignees": [
+            {
+                "id": 101,
+                "uri": "users/101",
+                "user_url": "/users/admin",
+                "real_name": "Site Administrator",
+                "display_name": "Site Administrator (admin)",
+                "username": "admin",
+                "ldap_id": null,
+                "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/admin/avatar-fa59e2e9cde4ed2c68d9df85e5369d8afea33a2686fd89de57f0060a5bd402c1.png",
+                "is_anonymous": false,
+                "has_avatar": true
+            },
+            {
+                "id": 102,
+                "uri": "users/102",
+                "user_url": "/users/fred",
+                "real_name": "Fred Bob",
+                "display_name": "Fred Bob (fred)",
+                "username": "fred",
+                "ldap_id": "1",
+                "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                "is_anonymous": false,
+                "has_avatar": true
+            }
+        ]
+    },
+    {
+        "id": 212,
+        "uri": "artifacts/212",
+        "xref": "all_fields_tracker #212",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-22T13:38:43+01:00",
+        "html_url": "/plugins/tracker/?aid=212",
+        "changesets_uri": "artifacts/212/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "world-dwelling"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 479,
+                        "label": "g",
+                        "color": null,
+                        "tlp_color": "red-wine",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [479]
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": 476,
+                        "label": "d",
+                        "color": null,
+                        "tlp_color": "coral-pink",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [476]
+            },
+            {
+                "field_id": 1558,
+                "type": "int",
+                "label": "int_field",
+                "value": 16384
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": [
+                    {
+                        "id": 102,
+                        "submitted_by": 102,
+                        "description": "A background",
+                        "name": "1363709.png",
+                        "size": 7340550,
+                        "type": "image/png",
+                        "html_url": "/plugins/tracker/attachments/102-1363709.png",
+                        "html_preview_url": "/plugins/tracker/attachments/preview/102-1363709.png",
+                        "uri": "artifact_files/102"
+                    }
+                ]
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": 473,
+                        "label": "a",
+                        "color": null,
+                        "tlp_color": "fiesta-red",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [473]
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1585,
+                "type": "ttmstepdef",
+                "label": "step_definition",
+                "value": [
+                    {
+                        "id": 173,
+                        "description": "<p>a</p>\n",
+                        "description_format": "html",
+                        "commonmark_description": "a",
+                        "expected_results": "<p>a</p>\n",
+                        "expected_results_format": "html",
+                        "commonmark_expected_results": "a",
+                        "rank": 1
+                    }
+                ]
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": 482,
+                        "label": "j",
+                        "color": null,
+                        "tlp_color": "clockwork-orange",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [482]
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 2
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 212
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-22T13:38:43+01:00"
+            },
+            {
+                "field_id": 4004,
+                "type": "string",
+                "label": "string_field_2",
+                "value": "rageproof"
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [
+                    {
+                        "id": 261,
+                        "uri": "artifacts/261",
+                        "tracker": {
+                            "id": 82,
+                            "uri": "trackers/82",
+                            "label": "All Fields Tracker",
+                            "color": "inca-silver",
+                            "project": {
+                                "id": 102,
+                                "uri": "projects/102",
+                                "label": "Project 1",
+                                "icon": "1️⃣"
+                            }
+                        },
+                        "type": "_covered_by"
+                    }
+                ],
+                "reverse_links": []
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1534,
+                "type": "float",
+                "label": "float_field",
+                "value": 6.022
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:40+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": 103,
+                        "uri": "users/103",
+                        "user_url": "/users/alice",
+                        "real_name": "Alice",
+                        "display_name": "Alice (alice)",
+                        "username": "alice",
+                        "ldap_id": "",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/alice/avatar-ffd4e2f3c6a4d8d82038d9fe715bd583db57bc6c6a9e9895e9ebf94ddf2fa3c5.png",
+                        "is_anonymous": false,
+                        "has_avatar": true,
+                        "email": "kevin.traini+dev_fred@enalean.com",
+                        "status": "A"
+                    }
+                ],
+                "bind_value_ids": ["Alice (alice)"],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ],
+                "bind_value_ids": ["102_3"]
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ],
+                "bind_value_ids": ["102_3"]
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ],
+                "bind_value_ids": ["102_3"]
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ],
+                "bind_value_ids": ["Project members"],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "<p><code>!false</code></p><p>It's fun because it's true!</p>",
+                "format": "html",
+                "post_processed_value": "<p><code>!false</code></p><p>It's fun because it's true!</p>"
+            },
+            {
+                "field_id": 1565,
+                "label": "permissions",
+                "type": "perm",
+                "granted_groups": [],
+                "granted_groups_ids": []
+            },
+            {
+                "field_id": 4009,
+                "type": "text",
+                "label": "text_field_2",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ],
+                "bind_value_ids": ["102_3"]
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": [
+                    {
+                        "ref": "all_fields_tracker #261",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=all_fields_tracker&val=261&group_id=102",
+                        "direction": "out"
+                    }
+                ]
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 250
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": 1,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:40+01:00",
+        "status": "a",
+        "full_status": {
+            "value": "a",
+            "color": "fiesta-red"
+        },
+        "is_open": true,
+        "title": "world-dwelling",
+        "assignees": []
+    },
+    {
+        "id": 213,
+        "uri": "artifacts/213",
+        "xref": "all_fields_tracker #213",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-27T11:42:39+01:00",
+        "html_url": "/plugins/tracker/?aid=213",
+        "changesets_uri": "artifacts/213/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "1"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1558,
+                "type": "int",
+                "label": "int_field",
+                "value": null
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": []
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1585,
+                "type": "ttmstepdef",
+                "label": "step_definition",
+                "value": []
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 3
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 213
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-27T11:42:39+01:00"
+            },
+            {
+                "field_id": 4004,
+                "type": "string",
+                "label": "string_field_2",
+                "value": ""
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [],
+                "reverse_links": []
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1534,
+                "type": "float",
+                "label": "float_field",
+                "value": null
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:40+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "<p>..</p>",
+                "format": "html",
+                "post_processed_value": "<p>..</p>"
+            },
+            {
+                "field_id": 1565,
+                "label": "permissions",
+                "type": "perm",
+                "granted_groups": [],
+                "granted_groups_ids": []
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": [
+                    {
+                        "ref": "all_fields_tracker #211",
+                        "url": "https://tuleap-web.tuleap-aio-dev.docker/goto?key=all_fields_tracker&val=211&group_id=102",
+                        "direction": "in"
+                    }
+                ]
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 251
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": null,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:40+01:00",
+        "status": "",
+        "full_status": null,
+        "is_open": false,
+        "title": "1",
+        "assignees": []
+    },
+    {
+        "id": 215,
+        "uri": "artifacts/215",
+        "xref": "all_fields_tracker #215",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-27T11:42:45+01:00",
+        "html_url": "/plugins/tracker/?aid=215",
+        "changesets_uri": "artifacts/215/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "3"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 480,
+                        "label": "h",
+                        "color": null,
+                        "tlp_color": "army-green",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [480]
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1558,
+                "type": "int",
+                "label": "int_field",
+                "value": null
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": []
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": 474,
+                        "label": "b",
+                        "color": null,
+                        "tlp_color": "neon-green",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [474]
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1585,
+                "type": "ttmstepdef",
+                "label": "step_definition",
+                "value": []
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 5
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 215
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-27T11:42:45+01:00"
+            },
+            {
+                "field_id": 4004,
+                "type": "string",
+                "label": "string_field_2",
+                "value": ""
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [],
+                "reverse_links": []
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1534,
+                "type": "float",
+                "label": "float_field",
+                "value": null
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:40+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1565,
+                "label": "permissions",
+                "type": "perm",
+                "granted_groups": [],
+                "granted_groups_ids": []
+            },
+            {
+                "field_id": 4009,
+                "type": "text",
+                "label": "text_field_2",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": []
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 253
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": null,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:40+01:00",
+        "status": "b",
+        "full_status": {
+            "value": "b",
+            "color": "neon-green"
+        },
+        "is_open": true,
+        "title": "3",
+        "assignees": []
+    },
+    {
+        "id": 216,
+        "uri": "artifacts/216",
+        "xref": "all_fields_tracker #216",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-27T11:42:48+01:00",
+        "html_url": "/plugins/tracker/?aid=216",
+        "changesets_uri": "artifacts/216/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "4"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 479,
+                        "label": "g",
+                        "color": null,
+                        "tlp_color": "red-wine",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [479]
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1558,
+                "type": "int",
+                "label": "int_field",
+                "value": null
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": []
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": 473,
+                        "label": "a",
+                        "color": null,
+                        "tlp_color": "fiesta-red",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [473]
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1585,
+                "type": "ttmstepdef",
+                "label": "step_definition",
+                "value": []
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 6
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 216
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-27T11:42:48+01:00"
+            },
+            {
+                "field_id": 4004,
+                "type": "string",
+                "label": "string_field_2",
+                "value": ""
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [],
+                "reverse_links": []
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1534,
+                "type": "float",
+                "label": "float_field",
+                "value": null
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:40+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1565,
+                "label": "permissions",
+                "type": "perm",
+                "granted_groups": [],
+                "granted_groups_ids": []
+            },
+            {
+                "field_id": 4009,
+                "type": "text",
+                "label": "text_field_2",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": []
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 254
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": null,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:40+01:00",
+        "status": "a",
+        "full_status": {
+            "value": "a",
+            "color": "fiesta-red"
+        },
+        "is_open": true,
+        "title": "4",
+        "assignees": []
+    },
+    {
+        "id": 217,
+        "uri": "artifacts/217",
+        "xref": "all_fields_tracker #217",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-27T11:42:49+01:00",
+        "html_url": "/plugins/tracker/?aid=217",
+        "changesets_uri": "artifacts/217/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "5"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 479,
+                        "label": "g",
+                        "color": null,
+                        "tlp_color": "red-wine",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [479]
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1558,
+                "type": "int",
+                "label": "int_field",
+                "value": null
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": [
+                    {
+                        "id": 104,
+                        "submitted_by": 102,
+                        "description": "",
+                        "name": "patch.diff",
+                        "size": 11905,
+                        "type": "text/x-patch",
+                        "html_url": "/plugins/tracker/attachments/104-patch.diff",
+                        "html_preview_url": null,
+                        "uri": "artifact_files/104"
+                    }
+                ]
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": 473,
+                        "label": "a",
+                        "color": null,
+                        "tlp_color": "fiesta-red",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [473]
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1585,
+                "type": "ttmstepdef",
+                "label": "step_definition",
+                "value": []
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 7
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 217
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-27T11:42:49+01:00"
+            },
+            {
+                "field_id": 4004,
+                "type": "string",
+                "label": "string_field_2",
+                "value": ""
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [],
+                "reverse_links": []
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1534,
+                "type": "float",
+                "label": "float_field",
+                "value": null
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:41+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1565,
+                "label": "permissions",
+                "type": "perm",
+                "granted_groups": [],
+                "granted_groups_ids": []
+            },
+            {
+                "field_id": 4009,
+                "type": "text",
+                "label": "text_field_2",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": []
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 255
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": null,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:41+01:00",
+        "status": "a",
+        "full_status": {
+            "value": "a",
+            "color": "fiesta-red"
+        },
+        "is_open": true,
+        "title": "5",
+        "assignees": []
+    },
+    {
+        "id": 218,
+        "uri": "artifacts/218",
+        "xref": "all_fields_tracker #218",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-27T11:42:52+01:00",
+        "html_url": "/plugins/tracker/?aid=218",
+        "changesets_uri": "artifacts/218/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "6"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 479,
+                        "label": "g",
+                        "color": null,
+                        "tlp_color": "red-wine",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [479]
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1558,
+                "type": "int",
+                "label": "int_field",
+                "value": null
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": []
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": 473,
+                        "label": "a",
+                        "color": null,
+                        "tlp_color": "fiesta-red",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [473]
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1585,
+                "type": "ttmstepdef",
+                "label": "step_definition",
+                "value": []
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 8
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 218
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-27T11:42:52+01:00"
+            },
+            {
+                "field_id": 4004,
+                "type": "string",
+                "label": "string_field_2",
+                "value": ""
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [],
+                "reverse_links": []
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1534,
+                "type": "float",
+                "label": "float_field",
+                "value": null
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:41+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1565,
+                "label": "permissions",
+                "type": "perm",
+                "granted_groups": [],
+                "granted_groups_ids": []
+            },
+            {
+                "field_id": 4009,
+                "type": "text",
+                "label": "text_field_2",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": []
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 256
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": null,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:41+01:00",
+        "status": "a",
+        "full_status": {
+            "value": "a",
+            "color": "fiesta-red"
+        },
+        "is_open": true,
+        "title": "6",
+        "assignees": []
+    },
+    {
+        "id": 219,
+        "uri": "artifacts/219",
+        "xref": "all_fields_tracker #219",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-27T11:42:53+01:00",
+        "html_url": "/plugins/tracker/?aid=219",
+        "changesets_uri": "artifacts/219/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "7"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 479,
+                        "label": "g",
+                        "color": null,
+                        "tlp_color": "red-wine",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [479]
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": []
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 9
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 219
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-27T11:42:53+01:00"
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [],
+                "reverse_links": []
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:41+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": []
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 257
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": null,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:41+01:00",
+        "status": "",
+        "full_status": null,
+        "is_open": false,
+        "title": "7",
+        "assignees": []
+    },
+    {
+        "id": 220,
+        "uri": "artifacts/220",
+        "xref": "all_fields_tracker #220",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-27T11:42:56+01:00",
+        "html_url": "/plugins/tracker/?aid=220",
+        "changesets_uri": "artifacts/220/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "8"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 479,
+                        "label": "g",
+                        "color": null,
+                        "tlp_color": "red-wine",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [479]
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": []
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 10
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 220
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-27T11:42:56+01:00"
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [],
+                "reverse_links": []
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:41+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": []
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 258
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": null,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:41+01:00",
+        "status": "",
+        "full_status": null,
+        "is_open": false,
+        "title": "8",
+        "assignees": []
+    },
+    {
+        "id": 221,
+        "uri": "artifacts/221",
+        "xref": "all_fields_tracker #221",
+        "tracker": {
+            "id": 82,
+            "uri": "trackers/82",
+            "label": "All Fields Tracker",
+            "color_name": "inca-silver",
+            "project": {
+                "id": 102,
+                "uri": "projects/102",
+                "label": "Project 1",
+                "icon": "1️⃣"
+            },
+            "cannot_create_reasons": null
+        },
+        "project": {
+            "id": 102,
+            "uri": "projects/102",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "submitted_by": 102,
+        "submitted_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "submitted_on": "2025-01-27T11:42:57+01:00",
+        "html_url": "/plugins/tracker/?aid=221",
+        "changesets_uri": "artifacts/221/changesets",
+        "values": [
+            {
+                "field_id": 1532,
+                "type": "string",
+                "label": "string_field",
+                "value": "9"
+            },
+            {
+                "field_id": 1550,
+                "label": "static_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": 479,
+                        "label": "g",
+                        "color": null,
+                        "tlp_color": "red-wine",
+                        "is_hidden": false
+                    }
+                ],
+                "bind_value_ids": [479]
+            },
+            {
+                "field_id": 1546,
+                "label": "static_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1553,
+                "label": "file_upload",
+                "type": "file",
+                "file_descriptions": []
+            },
+            {
+                "field_id": 1536,
+                "label": "static_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1561,
+                "label": "static_openlist",
+                "bind_value_objects": [
+                    {
+                        "id": "o272",
+                        "label": "1"
+                    }
+                ],
+                "bind_value_ids": ["1"],
+                "bind_type": "static",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1555,
+                "label": "static_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1571,
+                "type": "atid",
+                "label": "per_tracker_id",
+                "value": 11
+            },
+            {
+                "field_id": 1570,
+                "type": "aid",
+                "label": "artifact_id",
+                "value": 221
+            },
+            {
+                "field_id": 1572,
+                "type": "subon",
+                "label": "submitted_on",
+                "value": "2025-01-27T11:42:57+01:00"
+            },
+            {
+                "field_id": 1564,
+                "label": "Artifact links",
+                "type": "art_link",
+                "links": [],
+                "reverse_links": []
+            },
+            {
+                "field_id": 1537,
+                "label": "user_select",
+                "type": "sb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1547,
+                "label": "user_radio",
+                "type": "rb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1551,
+                "label": "user_multiselect",
+                "type": "msb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1556,
+                "label": "user_checkbox",
+                "type": "cb",
+                "values": [
+                    {
+                        "id": null,
+                        "uri": null,
+                        "user_url": null,
+                        "real_name": null,
+                        "display_name": "Anonymous user",
+                        "username": null,
+                        "ldap_id": null,
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/themes/common/images/avatar_default.png",
+                        "is_anonymous": true,
+                        "has_avatar": true,
+                        "email": null,
+                        "status": null
+                    }
+                ],
+                "bind_value_ids": [100]
+            },
+            {
+                "field_id": 1573,
+                "type": "lud",
+                "label": "last_update_date",
+                "value": "2026-02-09T12:27:41+01:00"
+            },
+            {
+                "field_id": 1535,
+                "label": "date_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": false
+            },
+            {
+                "field_id": 1562,
+                "label": "user_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "users",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1557,
+                "label": "user_group_checkbox",
+                "type": "cb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1574,
+                "type": "subby",
+                "label": "submitted_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1548,
+                "label": "user_group_radio",
+                "type": "rb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1575,
+                "type": "luby",
+                "label": "last_update_by",
+                "value": {
+                    "id": 102,
+                    "uri": "users/102",
+                    "user_url": "/users/fred",
+                    "real_name": "Fred Bob",
+                    "display_name": "Fred Bob (fred)",
+                    "username": "fred",
+                    "ldap_id": "1",
+                    "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+                    "is_anonymous": false,
+                    "has_avatar": true,
+                    "email": "kevin.traini+dev_fred@enalean.com",
+                    "status": "A"
+                }
+            },
+            {
+                "field_id": 1552,
+                "label": "user_group_multiselect",
+                "type": "msb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1542,
+                "label": "date_time_field",
+                "value": null,
+                "type": "date",
+                "is_time_displayed": true
+            },
+            {
+                "field_id": 1563,
+                "label": "user_group_openlist",
+                "bind_value_objects": [],
+                "bind_value_ids": [],
+                "bind_type": "ugroups",
+                "type": "tbl"
+            },
+            {
+                "field_id": 1533,
+                "type": "text",
+                "label": "text_field",
+                "value": "",
+                "format": "html",
+                "commonmark": "",
+                "post_processed_value": ""
+            },
+            {
+                "field_id": 1538,
+                "label": "user_group_select",
+                "type": "sb",
+                "values": [],
+                "bind_value_ids": []
+            },
+            {
+                "field_id": 1576,
+                "type": "cross",
+                "label": "cross_references",
+                "value": []
+            },
+            {
+                "field_id": 1580,
+                "type": "priority",
+                "label": "rank",
+                "value": 259
+            },
+            {
+                "field_id": 1581,
+                "type": "computed",
+                "label": "computed",
+                "is_autocomputed": false,
+                "value": null,
+                "manual_value": 0
+            }
+        ],
+        "values_by_field": null,
+        "last_update_by": 102,
+        "last_update_by_user": {
+            "id": 102,
+            "uri": "users/102",
+            "user_url": "/users/fred",
+            "real_name": "Fred Bob",
+            "display_name": "Fred Bob (fred)",
+            "username": "fred",
+            "ldap_id": "1",
+            "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png",
+            "is_anonymous": false,
+            "has_avatar": true
+        },
+        "last_modified_date": "2026-02-09T12:27:41+01:00",
+        "status": "",
+        "full_status": null,
+        "is_open": false,
+        "title": "9",
+        "assignees": []
+    }
+]

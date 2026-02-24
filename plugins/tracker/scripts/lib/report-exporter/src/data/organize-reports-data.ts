@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getLinkedArtifacts, getReportArtifacts } from "../api/rest-querier";
+import { getLinkedArtifactsOld, getReportArtifactsOld } from "../api/rest-querier";
 import type { ExportSettings } from "../export-document";
 import type {
     OrganizedReportsData,
@@ -36,7 +36,7 @@ export async function organizeReportsData(
     } = export_settings;
 
     const first_level_report_artifacts_responses: ArtifactForCrossReportDocGen[] =
-        await getReportArtifacts(
+        await getReportArtifactsOld(
             export_settings_first_level.report_id,
             true,
             export_settings_first_level.table_renderer_id,
@@ -111,11 +111,11 @@ async function retrieveLinkedArtifactsData(
     linked_artifacts_maps: Map<number, ReadonlyArray<number>>,
 ): Promise<void> {
     const following_level_report_artifacts_responses: ArtifactForCrossReportDocGen[] =
-        await getReportArtifacts(report_id, true, undefined, false);
+        await getReportArtifactsOld(report_id, true, undefined, false);
 
     await limitConcurrencyPool(5, artifact_ids, async (artifact_id: number): Promise<void> => {
         for (const artifact_link_type of artifact_link_types) {
-            const first_level_linked_artifacts_responses = await getLinkedArtifacts(
+            const first_level_linked_artifacts_responses = await getLinkedArtifactsOld(
                 artifact_id,
                 artifact_link_type,
             );

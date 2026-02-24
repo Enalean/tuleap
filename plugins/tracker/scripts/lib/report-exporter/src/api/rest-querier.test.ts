@@ -19,7 +19,7 @@
 
 import { describe, expect, it, vi } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
-import { getLinkedArtifacts, getReportArtifacts } from "./rest-querier";
+import { getLinkedArtifactsOld, getReportArtifactsOld } from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { ArtifactForCrossReportDocGen } from "../type";
 
@@ -43,7 +43,7 @@ describe("API querier", () => {
                 },
             });
 
-            await getReportArtifacts(report_id, report_has_changed, 136, false);
+            await getReportArtifactsOld(report_id, report_has_changed, 136, false);
 
             expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/tracker_reports/101/artifacts", {
                 params: {
@@ -69,7 +69,7 @@ describe("API querier", () => {
                 },
             });
 
-            await getReportArtifacts(101, true, 136, true);
+            await getReportArtifactsOld(101, true, 136, true);
 
             expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/tracker_reports/101/artifacts", {
                 params: {
@@ -98,7 +98,7 @@ describe("API querier", () => {
                 },
             });
 
-            await getLinkedArtifacts(artifact_id, artifact_link_type);
+            await getLinkedArtifactsOld(artifact_id, artifact_link_type);
 
             expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/artifacts/101/linked_artifacts", {
                 params: { limit: 10, direction: "forward", nature: "_is_child" },

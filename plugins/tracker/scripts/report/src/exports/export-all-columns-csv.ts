@@ -29,6 +29,7 @@ export async function startDownloadExportAllColumnsCSV(
         {
             first_level: {
                 tracker_name: properties.current_tracker_name,
+                tracker_id: properties.current_tracker_id,
                 report_id: properties.current_report_id,
                 report_name: properties.current_report_name,
                 table_renderer_id: properties.current_renderer_id,
@@ -40,4 +41,16 @@ export async function startDownloadExportAllColumnsCSV(
         },
         downloadCSV,
     );
+
+    // ---
+
+    // await downloadData({
+    //     first_level: {},
+    //     // ...
+    // }).andThen((data) =>
+    //     exportCSV(data, {
+    //         csv_separator: separator,
+    //         date_format,
+    //     }),
+    // ); // ResultAsync<void, Fault>
 }

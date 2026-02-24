@@ -1,0 +1,3697 @@
+{
+    "id": 82,
+    "uri": "trackers/82",
+    "html_url": "/plugins/tracker/?tracker=82",
+    "project": {
+        "id": 102,
+        "uri": "projects/102",
+        "label": "Project 1",
+        "icon": "1️⃣"
+    },
+    "label": "All Fields Tracker",
+    "description": "A tracker with all the fields",
+    "item_name": "all_fields_tracker",
+    "fields": [
+        {
+            "field_id": 1558,
+            "label": "int_field",
+            "name": "int_field",
+            "type": "int",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "maxchars": 0,
+                "size": 5,
+                "default_value": null
+            },
+            "label_decorators": [
+                {
+                    "label": "Progress",
+                    "description": "This field carries the total effort of \"Progress\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=progress"
+                },
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                },
+                {
+                    "label": "Initial Effort",
+                    "description": "This field carries the \"Initial Effort\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=initial_effort"
+                }
+            ]
+        },
+        {
+            "field_id": 1585,
+            "label": "step_definition",
+            "name": "step_definition",
+            "type": "ttmstepdef",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1561,
+            "label": "static_openlist",
+            "name": "static_openlist",
+            "type": "tbl",
+            "values": [
+                {
+                    "id": 485,
+                    "label": "m",
+                    "is_hidden": false,
+                    "value_color": "graffiti-yellow"
+                },
+                {
+                    "id": 486,
+                    "label": "n",
+                    "is_hidden": false,
+                    "value_color": "lilac-purple"
+                },
+                {
+                    "id": 487,
+                    "label": "o",
+                    "is_hidden": false,
+                    "value_color": "flamingo-pink"
+                },
+                {
+                    "id": "o111",
+                    "value_color": "",
+                    "label": "aa",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o113",
+                    "value_color": "",
+                    "label": "toto",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o114",
+                    "value_color": "",
+                    "label": "J'me présente",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o115",
+                    "value_color": "",
+                    "label": "titi",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o118",
+                    "value_color": "",
+                    "label": "tata",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o148",
+                    "value_color": "",
+                    "label": "blabla",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o178",
+                    "value_color": "",
+                    "label": "test",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o180",
+                    "value_color": "",
+                    "label": "test_2",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o182",
+                    "value_color": "",
+                    "label": "test_4",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o212",
+                    "value_color": "",
+                    "label": "bla",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o242",
+                    "value_color": "",
+                    "label": "Blo",
+                    "is_hidden": false
+                },
+                {
+                    "id": "o272",
+                    "value_color": "",
+                    "label": "1",
+                    "is_hidden": false
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "static",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "hint": "Type in a search term"
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ],
+            "hint": "Type in a search term"
+        },
+        {
+            "field_id": 1532,
+            "label": "string_field",
+            "name": "string_field",
+            "type": "string",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": "",
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "maxchars": 0,
+                "size": 30,
+                "default_value": ""
+            },
+            "label_decorators": [
+                {
+                    "label": "Title",
+                    "description": "This field carries the \"Title\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=title"
+                },
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1536,
+            "label": "static_select",
+            "name": "static_select",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 473,
+                    "label": "a",
+                    "is_hidden": false,
+                    "value_color": "fiesta-red"
+                },
+                {
+                    "id": 474,
+                    "label": "b",
+                    "is_hidden": false,
+                    "value_color": "neon-green"
+                },
+                {
+                    "id": 475,
+                    "label": "c",
+                    "is_hidden": false,
+                    "value_color": "lake-placid-blue"
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "static",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Status",
+                    "description": "This field carries the \"Status\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=status"
+                },
+                {
+                    "label": "Done",
+                    "description": "This field carries the \"Done\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=done"
+                },
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                },
+                {
+                    "label": "Cards color",
+                    "description": "This field carries the background color of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                },
+                {
+                    "label": "Field dependencies",
+                    "description": "This field is used by field dependencies",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-dependencies"
+                },
+                {
+                    "label": "Workflow transition",
+                    "description": "This field is used by workflow transitions",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-workflow-transitions"
+                }
+            ]
+        },
+        {
+            "field_id": 1546,
+            "label": "static_radio",
+            "name": "static_radio",
+            "type": "rb",
+            "values": [
+                {
+                    "id": 476,
+                    "label": "d",
+                    "is_hidden": false,
+                    "value_color": "coral-pink"
+                },
+                {
+                    "id": 477,
+                    "label": "e",
+                    "is_hidden": false,
+                    "value_color": "acid-green"
+                },
+                {
+                    "id": 478,
+                    "label": "f",
+                    "is_hidden": false,
+                    "value_color": "daphne-blue"
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "static",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1550,
+            "label": "static_multiselect",
+            "name": "static_multiselect",
+            "type": "msb",
+            "values": [
+                {
+                    "id": 479,
+                    "label": "g",
+                    "is_hidden": false,
+                    "value_color": "red-wine"
+                },
+                {
+                    "id": 480,
+                    "label": "h",
+                    "is_hidden": false,
+                    "value_color": "army-green"
+                },
+                {
+                    "id": 481,
+                    "label": "i",
+                    "is_hidden": false,
+                    "value_color": "deep-blue"
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "static",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "size": 7
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                },
+                {
+                    "label": "Field dependencies",
+                    "description": "This field is used by field dependencies",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-dependencies"
+                }
+            ]
+        },
+        {
+            "field_id": 1570,
+            "label": "artifact_id",
+            "name": "artifact_id",
+            "type": "aid",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": {
+                "can_submit": [],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": []
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1553,
+            "label": "file_upload",
+            "name": "file_upload",
+            "type": "file",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ],
+            "file_creation_uri": "tracker_fields/1553/files",
+            "max_size_upload": 67108864
+        },
+        {
+            "field_id": 1567,
+            "label": "Left",
+            "name": "left_1",
+            "type": "column",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1571,
+            "label": "per_tracker_id",
+            "name": "per_tracker_id",
+            "type": "atid",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": {
+                "can_submit": [],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": []
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1555,
+            "label": "static_checkbox",
+            "name": "static_checkbox",
+            "type": "cb",
+            "values": [
+                {
+                    "id": 482,
+                    "label": "j",
+                    "is_hidden": false,
+                    "value_color": "clockwork-orange"
+                },
+                {
+                    "id": 483,
+                    "label": "k",
+                    "is_hidden": false,
+                    "value_color": "ultra-violet"
+                },
+                {
+                    "id": 484,
+                    "label": "l",
+                    "is_hidden": false,
+                    "value_color": "peggy-pink"
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "static",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1540,
+            "label": "Left",
+            "name": "left",
+            "type": "column",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1544,
+            "label": "Select",
+            "name": "select",
+            "type": "column",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1551,
+            "label": "user_multiselect",
+            "name": "user_multiselect",
+            "type": "msb",
+            "values": [],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "users",
+                "list": [
+                    {
+                        "id": "2",
+                        "label": "registered_users"
+                    }
+                ]
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "size": 7
+            },
+            "label_decorators": [
+                {
+                    "label": "Contributor/assignee",
+                    "description": "This field carries the \"Contributor/assignee\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=contributor"
+                },
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1564,
+            "label": "Artifact links",
+            "name": "artifact_links",
+            "type": "art_link",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    }
+                ]
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "can_edit_reverse_links": 1
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                }
+            ],
+            "allowed_types": [
+                {
+                    "shortname": "_is_child",
+                    "forward_label": "Child",
+                    "reverse_label": "Parent"
+                },
+                {
+                    "shortname": "_covered_by",
+                    "forward_label": "is Covered by",
+                    "reverse_label": "Covers"
+                },
+                {
+                    "shortname": "is_child_trois",
+                    "forward_label": "Child3",
+                    "reverse_label": "Parent3"
+                },
+                {
+                    "shortname": "is_parent",
+                    "forward_label": "Parent2",
+                    "reverse_label": "Child2"
+                }
+            ]
+        },
+        {
+            "field_id": 1572,
+            "label": "submitted_on",
+            "name": "submitted_on",
+            "type": "subon",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": {
+                "can_submit": [],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": []
+            },
+            "default_value": "2026-02-24 10:30",
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                },
+                {
+                    "label": "Global rules",
+                    "description": "This field is used by global rules",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-workflow"
+                }
+            ],
+            "is_time_displayed": true
+        },
+        {
+            "field_id": 4004,
+            "label": "string_field_2",
+            "name": "string_field_2",
+            "type": "string",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": "",
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "maxchars": 0,
+                "size": 30,
+                "default_value": ""
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1537,
+            "label": "user_select",
+            "name": "user_select",
+            "type": "sb",
+            "values": [],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "users",
+                "list": [
+                    {
+                        "id": "2",
+                        "label": "registered_users"
+                    }
+                ]
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1556,
+            "label": "user_checkbox",
+            "name": "user_checkbox",
+            "type": "cb",
+            "values": [],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "users",
+                "list": [
+                    {
+                        "id": "2",
+                        "label": "registered_users"
+                    }
+                ]
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1547,
+            "label": "user_radio",
+            "name": "user_radio",
+            "type": "rb",
+            "values": [],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "users",
+                "list": [
+                    {
+                        "id": "2",
+                        "label": "registered_users"
+                    }
+                ]
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1573,
+            "label": "last_update_date",
+            "name": "last_update_date",
+            "type": "lud",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": {
+                "can_submit": [],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": []
+            },
+            "default_value": "2026-02-24 10:30",
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                },
+                {
+                    "label": "Global rules",
+                    "description": "This field is used by global rules",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-workflow"
+                }
+            ],
+            "is_time_displayed": true
+        },
+        {
+            "field_id": 1541,
+            "label": "Right",
+            "name": "right",
+            "type": "column",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1534,
+            "label": "float_field",
+            "name": "float_field",
+            "type": "float",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "maxchars": 0,
+                "size": 5,
+                "default_value": null
+            },
+            "label_decorators": [
+                {
+                    "label": "Progress",
+                    "description": "This field carries the remaining effort of \"Progress\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=progress"
+                },
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1545,
+            "label": "Radio",
+            "name": "radio",
+            "type": "column",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1568,
+            "label": "Right",
+            "name": "right_1",
+            "type": "column",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1575,
+            "label": "last_update_by",
+            "name": "last_update_by",
+            "type": "luby",
+            "values": [
+                {
+                    "id": 103,
+                    "label": "alice",
+                    "user_reference": {
+                        "id": 103,
+                        "uri": "users/103",
+                        "real_name": "Alice (alice)",
+                        "username": "alice",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/alice/avatar-ffd4e2f3c6a4d8d82038d9fe715bd583db57bc6c6a9e9895e9ebf94ddf2fa3c5.png"
+                    }
+                },
+                {
+                    "id": 102,
+                    "label": "fred",
+                    "user_reference": {
+                        "id": 102,
+                        "uri": "users/102",
+                        "real_name": "Fred Bob (fred)",
+                        "username": "fred",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png"
+                    }
+                },
+                {
+                    "id": 105,
+                    "label": "kevin.traini",
+                    "user_reference": {
+                        "id": 105,
+                        "uri": "users/105",
+                        "real_name": "Kevin Traini (kevin.traini)",
+                        "username": "kevin.traini",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/kevin.traini/avatar-01ec0d69ce43a381990011c38197fb568cc976cbff916ce50b2b63a3f956be5e.png"
+                    }
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "users",
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": {
+                "can_submit": [],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": []
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1562,
+            "label": "user_openlist",
+            "name": "user_openlist",
+            "type": "tbl",
+            "values": {
+                "resource": {
+                    "type": "users",
+                    "uri": "users/?query="
+                }
+            },
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "users",
+                "list": [
+                    {
+                        "id": "2",
+                        "label": "registered_users"
+                    }
+                ]
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "hint": "Type in a search term"
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ],
+            "hint": "Type in a search term"
+        },
+        {
+            "field_id": 1549,
+            "label": "MultiSelect",
+            "name": "multiselect",
+            "type": "column",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1552,
+            "label": "user_group_multiselect",
+            "name": "user_group_multiselect",
+            "type": "msb",
+            "values": [
+                {
+                    "id": 147,
+                    "label": "ugroup_project_members_name_key",
+                    "ugroup_reference": {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                },
+                {
+                    "id": 148,
+                    "label": "ugroup_project_admins_name_key",
+                    "ugroup_reference": {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    }
+                },
+                {
+                    "id": 149,
+                    "label": "ugroup_authenticated_users_name_key",
+                    "ugroup_reference": {
+                        "id": "5",
+                        "uri": "user_groups/5",
+                        "label": "Registered and restricted users",
+                        "users_uri": "user_groups/5/users",
+                        "short_name": "authenticated_users",
+                        "key": "ugroup_authenticated_users_name_key"
+                    }
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "ugroups",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "size": 7
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1574,
+            "label": "submitted_by",
+            "name": "submitted_by",
+            "type": "subby",
+            "values": [
+                {
+                    "id": 103,
+                    "label": "alice",
+                    "user_reference": {
+                        "id": 103,
+                        "uri": "users/103",
+                        "real_name": "Alice (alice)",
+                        "username": "alice",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/alice/avatar-ffd4e2f3c6a4d8d82038d9fe715bd583db57bc6c6a9e9895e9ebf94ddf2fa3c5.png"
+                    }
+                },
+                {
+                    "id": 102,
+                    "label": "fred",
+                    "user_reference": {
+                        "id": 102,
+                        "uri": "users/102",
+                        "real_name": "Fred Bob (fred)",
+                        "username": "fred",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/fred/avatar-06e3d3841bc66af596ab4874d89677129919bf54ca4948d27deeac58a9eab2d4.png"
+                    }
+                },
+                {
+                    "id": 105,
+                    "label": "kevin.traini",
+                    "user_reference": {
+                        "id": 105,
+                        "uri": "users/105",
+                        "real_name": "Kevin Traini (kevin.traini)",
+                        "username": "kevin.traini",
+                        "avatar_url": "https://tuleap-web.tuleap-aio-dev.docker/users/kevin.traini/avatar-01ec0d69ce43a381990011c38197fb568cc976cbff916ce50b2b63a3f956be5e.png"
+                    }
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "users",
+                "list": [
+                    {
+                        "id": 0,
+                        "label": "artifact_submitters"
+                    }
+                ]
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": {
+                "can_submit": [],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": []
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1557,
+            "label": "user_group_checkbox",
+            "name": "user_group_checkbox",
+            "type": "cb",
+            "values": [
+                {
+                    "id": 150,
+                    "label": "ugroup_project_members_name_key",
+                    "ugroup_reference": {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                },
+                {
+                    "id": 151,
+                    "label": "ugroup_project_admins_name_key",
+                    "ugroup_reference": {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    }
+                },
+                {
+                    "id": 152,
+                    "label": "ugroup_authenticated_users_name_key",
+                    "ugroup_reference": {
+                        "id": "5",
+                        "uri": "user_groups/5",
+                        "label": "Registered and restricted users",
+                        "users_uri": "user_groups/5/users",
+                        "short_name": "authenticated_users",
+                        "key": "ugroup_authenticated_users_name_key"
+                    }
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "ugroups",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1548,
+            "label": "user_group_radio",
+            "name": "user_group_radio",
+            "type": "rb",
+            "values": [
+                {
+                    "id": 144,
+                    "label": "ugroup_project_members_name_key",
+                    "ugroup_reference": {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                },
+                {
+                    "id": 145,
+                    "label": "ugroup_project_admins_name_key",
+                    "ugroup_reference": {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    }
+                },
+                {
+                    "id": 146,
+                    "label": "ugroup_authenticated_users_name_key",
+                    "ugroup_reference": {
+                        "id": "5",
+                        "uri": "user_groups/5",
+                        "label": "Registered and restricted users",
+                        "users_uri": "user_groups/5/users",
+                        "short_name": "authenticated_users",
+                        "key": "ugroup_authenticated_users_name_key"
+                    }
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "ugroups",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1535,
+            "label": "date_field",
+            "name": "date_field",
+            "type": "date",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": "2026-02-24",
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "default_value_type": 0,
+                "default_value_today": "today",
+                "default_value": 0,
+                "display_time": 0
+            },
+            "label_decorators": [
+                {
+                    "label": "Timeframe",
+                    "description": "This field carries the start date of \"Timeframe\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=timeframe"
+                },
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ],
+            "is_time_displayed": false
+        },
+        {
+            "field_id": 1533,
+            "label": "text_field",
+            "name": "text_field",
+            "type": "text",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": {
+                "format": "commonmark",
+                "content": ""
+            },
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "rows": 10,
+                "cols": 50,
+                "default_value": ""
+            },
+            "label_decorators": [
+                {
+                    "label": "Description",
+                    "description": "This field carries the \"Description\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=description"
+                },
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1563,
+            "label": "user_group_openlist",
+            "name": "user_group_openlist",
+            "type": "tbl",
+            "values": [
+                {
+                    "id": "102_3",
+                    "uri": "user_groups/102_3",
+                    "label": "Project members",
+                    "users_uri": "user_groups/102_3/users",
+                    "short_name": "project_members",
+                    "key": "ugroup_project_members_name_key"
+                },
+                {
+                    "id": "102_4",
+                    "uri": "user_groups/102_4",
+                    "label": "Project administrators",
+                    "users_uri": "user_groups/102_4/users",
+                    "short_name": "project_admins",
+                    "key": "ugroup_project_admins_name_key"
+                },
+                {
+                    "id": "5",
+                    "uri": "user_groups/5",
+                    "label": "Registered and restricted users",
+                    "users_uri": "user_groups/5/users",
+                    "short_name": "authenticated_users",
+                    "key": "ugroup_authenticated_users_name_key"
+                },
+                {
+                    "id": "102_11",
+                    "uri": "user_groups/102_11",
+                    "label": "file_manager_admins",
+                    "users_uri": "user_groups/102_11/users",
+                    "short_name": "file_manager_admins",
+                    "key": "ugroup_file_manager_admin_name_key"
+                },
+                {
+                    "id": "102_14",
+                    "uri": "user_groups/102_14",
+                    "label": "Wiki administrators",
+                    "users_uri": "user_groups/102_14/users",
+                    "short_name": "wiki_admins",
+                    "key": "ugroup_wiki_admin_name_key"
+                },
+                {
+                    "id": "105",
+                    "uri": "user_groups/105",
+                    "label": "Custom",
+                    "users_uri": "user_groups/105/users",
+                    "short_name": "Custom",
+                    "key": "Custom"
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "ugroups",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "hint": "Type in a search term"
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ],
+            "hint": "Type in a search term"
+        },
+        {
+            "field_id": 1560,
+            "label": "Line Break",
+            "name": "line_break",
+            "type": "linebreak",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1542,
+            "label": "date_time_field",
+            "name": "date_time_field",
+            "type": "date",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": "2026-02-24 10:30",
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "default_value_type": 0,
+                "default_value_today": "today",
+                "default_value": 0,
+                "display_time": 1
+            },
+            "label_decorators": [
+                {
+                    "label": "Timeframe",
+                    "description": "This field carries the end date of \"Timeframe\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=timeframe"
+                },
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ],
+            "is_time_displayed": true
+        },
+        {
+            "field_id": 4774,
+            "label": "Separator",
+            "name": "separator",
+            "type": "separator",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1582,
+            "label": "Intro",
+            "name": "intro",
+            "type": "staticrichtext",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": "<p><em><strong>This tracker holds all existing fields and semantics</strong></em></p>\n",
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "static_value": "<p><em><strong>This tracker holds all existing fields and semantics</strong></em></p>\r\n"
+            },
+            "label_decorators": []
+        },
+        {
+            "field_id": 1565,
+            "label": "permissions",
+            "name": "permissions",
+            "type": "perm",
+            "values": {
+                "is_used_by_default": false,
+                "ugroup_representations": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    },
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    },
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    },
+                    {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    },
+                    {
+                        "id": "105",
+                        "uri": "user_groups/105",
+                        "label": "Custom",
+                        "users_uri": "user_groups/105/users",
+                        "short_name": "Custom",
+                        "key": "Custom"
+                    }
+                ]
+            },
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 4009,
+            "label": "text_field_2",
+            "name": "text_field_2",
+            "type": "text",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": {
+                "format": "commonmark",
+                "content": ""
+            },
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "rows": 10,
+                "cols": 50,
+                "default_value": ""
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1554,
+            "label": "Checkbox",
+            "name": "checkbox",
+            "type": "column",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1538,
+            "label": "user_group_select",
+            "name": "user_group_select",
+            "type": "sb",
+            "values": [
+                {
+                    "id": 141,
+                    "label": "ugroup_project_members_name_key",
+                    "ugroup_reference": {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                },
+                {
+                    "id": 142,
+                    "label": "ugroup_project_admins_name_key",
+                    "ugroup_reference": {
+                        "id": "102_4",
+                        "uri": "user_groups/102_4",
+                        "label": "Project administrators",
+                        "users_uri": "user_groups/102_4/users",
+                        "short_name": "project_admins",
+                        "key": "ugroup_project_admins_name_key"
+                    }
+                },
+                {
+                    "id": 143,
+                    "label": "ugroup_authenticated_users_name_key",
+                    "ugroup_reference": {
+                        "id": "5",
+                        "uri": "user_groups/5",
+                        "label": "Registered and restricted users",
+                        "users_uri": "user_groups/5/users",
+                        "short_name": "authenticated_users",
+                        "key": "ugroup_authenticated_users_name_key"
+                    }
+                }
+            ],
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": "ugroups",
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": [],
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1576,
+            "label": "cross_references",
+            "name": "cross_references",
+            "type": "cross",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": {
+                "can_submit": [],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": []
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1580,
+            "label": "rank",
+            "name": "rank",
+            "type": "priority",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": {
+                "can_submit": [],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": []
+            },
+            "default_value": "",
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "maxchars": 0,
+                "size": 5,
+                "default_value": ""
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1559,
+            "label": "OpenList",
+            "name": "openlist",
+            "type": "column",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1581,
+            "label": "computed",
+            "name": "computed",
+            "type": "computed",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": {
+                "type": "manual_value",
+                "value": 0
+            },
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": {
+                "target_field_name": "computed",
+                "default_value": 0
+            },
+            "label_decorators": [
+                {
+                    "label": "Tooltip",
+                    "description": "This field is part of fields of \"Tooltip\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=tooltip"
+                },
+                {
+                    "label": "Cards fields",
+                    "description": "This field is part of fields of \"Cards\" semantic.",
+                    "icon": null,
+                    "url": "/plugins/tracker/?tracker=82&func=admin-semantic&semantic=plugin_cardwall_card_fields"
+                }
+            ]
+        },
+        {
+            "field_id": 1539,
+            "label": "Classic fields",
+            "name": "classic_fields",
+            "type": "fieldset",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 4945,
+            "label": "encrypted_field",
+            "name": "encrypted_field",
+            "type": "Encrypted",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read", "update", "create"],
+            "permissions_for_groups": {
+                "can_submit": [
+                    {
+                        "id": "2",
+                        "uri": "user_groups/2",
+                        "label": "Registered users",
+                        "users_uri": "user_groups/2/users",
+                        "short_name": "registered_users",
+                        "key": "ugroup_registered_users_name_key"
+                    }
+                ],
+                "can_read": [
+                    {
+                        "id": "1",
+                        "uri": "user_groups/1",
+                        "label": "Anonymous",
+                        "users_uri": "user_groups/1/users",
+                        "short_name": "all_users",
+                        "key": "ugroup_anonymous_users_name_key"
+                    }
+                ],
+                "can_update": [
+                    {
+                        "id": "102_3",
+                        "uri": "user_groups/102_3",
+                        "label": "Project members",
+                        "users_uri": "user_groups/102_3/users",
+                        "short_name": "project_members",
+                        "key": "ugroup_project_members_name_key"
+                    }
+                ]
+            },
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1543,
+            "label": "Lists",
+            "name": "lists",
+            "type": "fieldset",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1569,
+            "label": "Special fields",
+            "name": "special_fields",
+            "type": "fieldset",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1566,
+            "label": "Meta",
+            "name": "meta",
+            "type": "fieldset",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        },
+        {
+            "field_id": 1584,
+            "label": "Tests",
+            "name": "tests",
+            "type": "fieldset",
+            "values": null,
+            "required": false,
+            "collapsed": false,
+            "bindings": {
+                "type": null,
+                "list": []
+            },
+            "permissions": ["read"],
+            "permissions_for_groups": null,
+            "default_value": null,
+            "has_notifications": false,
+            "is_used": true,
+            "specific_properties": [],
+            "label_decorators": []
+        }
+    ],
+    "structure": [
+        {
+            "id": 1582,
+            "content": null
+        },
+        {
+            "id": 1539,
+            "content": [
+                {
+                    "id": 1540,
+                    "content": [
+                        {
+                            "id": 1532,
+                            "content": null
+                        },
+                        {
+                            "id": 4004,
+                            "content": null
+                        },
+                        {
+                            "id": 1533,
+                            "content": null
+                        },
+                        {
+                            "id": 4009,
+                            "content": null
+                        }
+                    ]
+                },
+                {
+                    "id": 1541,
+                    "content": [
+                        {
+                            "id": 1558,
+                            "content": null
+                        },
+                        {
+                            "id": 1534,
+                            "content": null
+                        },
+                        {
+                            "id": 1535,
+                            "content": null
+                        },
+                        {
+                            "id": 1542,
+                            "content": null
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 1543,
+            "content": [
+                {
+                    "id": 1544,
+                    "content": [
+                        {
+                            "id": 1536,
+                            "content": null
+                        },
+                        {
+                            "id": 1537,
+                            "content": null
+                        },
+                        {
+                            "id": 1538,
+                            "content": null
+                        }
+                    ]
+                },
+                {
+                    "id": 1545,
+                    "content": [
+                        {
+                            "id": 1546,
+                            "content": null
+                        },
+                        {
+                            "id": 1547,
+                            "content": null
+                        },
+                        {
+                            "id": 1548,
+                            "content": null
+                        }
+                    ]
+                },
+                {
+                    "id": 1549,
+                    "content": [
+                        {
+                            "id": 1550,
+                            "content": null
+                        },
+                        {
+                            "id": 1551,
+                            "content": null
+                        },
+                        {
+                            "id": 1552,
+                            "content": null
+                        }
+                    ]
+                },
+                {
+                    "id": 1560,
+                    "content": null
+                },
+                {
+                    "id": 4774,
+                    "content": null
+                },
+                {
+                    "id": 1554,
+                    "content": [
+                        {
+                            "id": 1555,
+                            "content": null
+                        },
+                        {
+                            "id": 1556,
+                            "content": null
+                        },
+                        {
+                            "id": 1557,
+                            "content": null
+                        }
+                    ]
+                },
+                {
+                    "id": 1559,
+                    "content": [
+                        {
+                            "id": 1561,
+                            "content": null
+                        },
+                        {
+                            "id": 1562,
+                            "content": null
+                        },
+                        {
+                            "id": 1563,
+                            "content": null
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 1569,
+            "content": [
+                {
+                    "id": 1553,
+                    "content": null
+                },
+                {
+                    "id": 1564,
+                    "content": null
+                },
+                {
+                    "id": 1565,
+                    "content": null
+                },
+                {
+                    "id": 1576,
+                    "content": null
+                },
+                {
+                    "id": 1580,
+                    "content": null
+                },
+                {
+                    "id": 1581,
+                    "content": null
+                },
+                {
+                    "id": 4945,
+                    "content": null
+                }
+            ]
+        },
+        {
+            "id": 1566,
+            "content": [
+                {
+                    "id": 1567,
+                    "content": [
+                        {
+                            "id": 1570,
+                            "content": null
+                        },
+                        {
+                            "id": 1572,
+                            "content": null
+                        },
+                        {
+                            "id": 1574,
+                            "content": null
+                        }
+                    ]
+                },
+                {
+                    "id": 1568,
+                    "content": [
+                        {
+                            "id": 1571,
+                            "content": null
+                        },
+                        {
+                            "id": 1573,
+                            "content": null
+                        },
+                        {
+                            "id": 1575,
+                            "content": null
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 1584,
+            "content": [
+                {
+                    "id": 1585,
+                    "content": null
+                }
+            ]
+        }
+    ],
+    "semantics": {
+        "title": {
+            "field_id": 1532
+        },
+        "description": {
+            "field_id": 1533
+        },
+        "status": {
+            "field_id": 1536,
+            "value_ids": [473, 474]
+        },
+        "contributor": {
+            "field_id": 1551
+        },
+        "timeframe": {
+            "start_date_field_id": 1535,
+            "end_date_field_id": 1542
+        },
+        "progress": {
+            "total_effort_field_id": 1558,
+            "remaining_effort_field_id": 1534
+        },
+        "initial_effort": {
+            "field_id": 1558
+        }
+    },
+    "workflow": {
+        "field_id": 1536,
+        "is_used": "0",
+        "is_legacy": false,
+        "is_advanced": false,
+        "rules": {
+            "dates": [
+                {
+                    "source_field_id": 1572,
+                    "target_field_id": 1573,
+                    "comparator": "≤"
+                }
+            ],
+            "lists": [
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 100,
+                    "target_field_id": 1550,
+                    "target_value_id": 100
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 100,
+                    "target_field_id": 1550,
+                    "target_value_id": 479
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 100,
+                    "target_field_id": 1550,
+                    "target_value_id": 480
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 100,
+                    "target_field_id": 1550,
+                    "target_value_id": 481
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 473,
+                    "target_field_id": 1550,
+                    "target_value_id": 100
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 473,
+                    "target_field_id": 1550,
+                    "target_value_id": 479
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 473,
+                    "target_field_id": 1550,
+                    "target_value_id": 480
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 473,
+                    "target_field_id": 1550,
+                    "target_value_id": 481
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 474,
+                    "target_field_id": 1550,
+                    "target_value_id": 100
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 474,
+                    "target_field_id": 1550,
+                    "target_value_id": 479
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 474,
+                    "target_field_id": 1550,
+                    "target_value_id": 480
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 474,
+                    "target_field_id": 1550,
+                    "target_value_id": 481
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 475,
+                    "target_field_id": 1550,
+                    "target_value_id": 100
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 475,
+                    "target_field_id": 1550,
+                    "target_value_id": 479
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 475,
+                    "target_field_id": 1550,
+                    "target_value_id": 480
+                },
+                {
+                    "source_field_id": 1536,
+                    "source_value_id": 475,
+                    "target_field_id": 1550,
+                    "target_value_id": 481
+                }
+            ]
+        },
+        "transitions": [
+            {
+                "id": 441,
+                "from_id": null,
+                "to_id": 473
+            },
+            {
+                "id": 442,
+                "from_id": 473,
+                "to_id": 474
+            },
+            {
+                "id": 443,
+                "from_id": 474,
+                "to_id": 475
+            },
+            {
+                "id": 444,
+                "from_id": 474,
+                "to_id": 473
+            },
+            {
+                "id": 699,
+                "from_id": null,
+                "to_id": 474
+            },
+            {
+                "id": 700,
+                "from_id": null,
+                "to_id": 475
+            },
+            {
+                "id": 701,
+                "from_id": 473,
+                "to_id": 475
+            },
+            {
+                "id": 702,
+                "from_id": 475,
+                "to_id": 474
+            },
+            {
+                "id": 703,
+                "from_id": 475,
+                "to_id": 473
+            }
+        ]
+    },
+    "permissions_for_groups": {
+        "can_access": [
+            {
+                "id": "2",
+                "uri": "user_groups/2",
+                "label": "Registered users",
+                "users_uri": "user_groups/2/users",
+                "short_name": "registered_users",
+                "key": "ugroup_registered_users_name_key"
+            }
+        ],
+        "can_access_submitted_by_user": [],
+        "can_access_assigned_to_group": [],
+        "can_access_submitted_by_group": [],
+        "can_admin": []
+    },
+    "parent": null,
+    "resources": [
+        {
+            "type": "reports",
+            "uri": "trackers/82/tracker_reports"
+        }
+    ],
+    "color_name": "inca-silver",
+    "notifications": {
+        "enabled": true
+    }
+}
