@@ -114,18 +114,3 @@ id = "RUSTSEC-2024-0384"
 reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
 
 ### TO BE FIXED
-# Go standard library
-[[IgnoredVulns]]
-id = "GO-2026-4340" # CVE-2025-61730
-reason = "No security impact for Tuleap"
-ignoreUntil = 2026-02-23
-
-[[IgnoredVulns]]
-id = "GO-2026-4341" # CVE-2025-61726
-reason = "No security impact for Tuleap"
-ignoreUntil = 2026-02-23
-
-[[IgnoredVulns]]
-id = "GO-2026-4337" # CVE-2025-68121
-reason = "No security impact for Tuleap"
-ignoreUntil = 2026-02-23
