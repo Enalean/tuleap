@@ -37,3 +37,5 @@ export const FIELDS: StrictInjectionKey<ReadonlyArray<StructureFields>> = Symbol
 export const OPEN_REFRESH_AFTER_FAULT_MODAL: StrictInjectionKey<(fault: Fault) => void> = Symbol();
 export const DRAGGED_FIELD_ID: StrictInjectionKey<Ref<null | number>> = Symbol();
 export const IS_LAYOUT_WARNING_DISPLAYED: StrictInjectionKey<Ref<boolean>> = Symbol();
+export const HANDLE_REMOVE_FIELD: StrictInjectionKey<(removed_field: StructureFields) => void> =
+    Symbol();

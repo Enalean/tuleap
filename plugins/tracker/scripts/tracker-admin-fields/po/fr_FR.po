@@ -120,6 +120,20 @@ msgstr "Flottant"
 msgid "Id"
 msgstr "Id"
 
+msgid ""
+"If you click on \"Delete\" button, the field will be DEFINITELY deleted, you "
+"cannot use it again."
+msgstr ""
+"Si vous cliquez sur le bouton  \"Supprimer\", le champ sera supprimé "
+"DEFINITIVEMENT, vous ne pourrez plus l'utiliser."
+
+msgid ""
+"If you click on \"Unuse\" button, the field will be disabled, it is possible "
+"to use it again later."
+msgstr ""
+"Si vous cliquez sur le bouton \"Inutiliser\", le champ sera inutilisé, il "
+"est possible de le réactiver par la suite."
+
 msgid "Important:"
 msgstr "Important :"
 
@@ -263,6 +277,15 @@ msgstr "Agencement sur trois colonnes"
 
 msgid "Two columns layout"
 msgstr "Agencement sur deux colonnes"
+
+msgid "Unuse"
+msgstr "Inutiliser"
+
+msgid "Unuse or delete the field"
+msgstr "Inutiliser ou supprimer le champ"
+
+msgid "Warning!"
+msgstr "Attention !"
 
 msgid ""
 "You can drag'n drop existing fields to change layout, change are saved "

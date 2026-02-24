@@ -19,14 +19,7 @@
 
 <template>
     <div class="tlp-pane-section-submit tlp-pane-section">
-        <button
-            type="button"
-            disabled
-            class="tlp-button-danger tlp-button-outline"
-            v-bind:title="$gettext('Not implemented yet')"
-        >
-            <i class="fa-regular fa-trash-alt" role="img" v-bind:aria-label="$gettext('Delete')" />
-        </button>
+        <field-remove-or-delete-element v-bind:field="field" />
         <span class="spacer"></span>
         <button
             v-on:click="router.push({ name: 'fields-usage' })"
@@ -49,9 +42,15 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useGettext } from "vue3-gettext";
+import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+import FieldRemoveOrDeleteElement from "./FieldRemoveOrDeleteElement.vue";
 
 const router = useRouter();
 const { $gettext } = useGettext();
+
+defineProps<{
+    field: StructureFields;
+}>();
 </script>
 
 <style lang="scss" scoped>

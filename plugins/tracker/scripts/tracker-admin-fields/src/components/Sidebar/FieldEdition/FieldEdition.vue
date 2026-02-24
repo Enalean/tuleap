@@ -27,7 +27,7 @@
                 <not-found v-if="field === undefined" />
                 <field-edition-body v-else v-bind:field="field" />
             </div>
-            <field-edition-footer v-if="field" />
+            <field-edition-footer v-if="field" v-bind:field="field" />
         </div>
     </sidebar-container>
 </template>

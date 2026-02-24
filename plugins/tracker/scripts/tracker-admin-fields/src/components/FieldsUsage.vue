@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { ref, provide } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { StructureFormat } from "@tuleap/plugin-tracker-rest-api-types";
+import type { StructureFields, StructureFormat } from "@tuleap/plugin-tracker-rest-api-types";
 import EmptyState from "./EmptyState.vue";
 import TrackerStructure from "./TrackerStructure.vue";
 import { mapContentStructureToFields } from "../helpers/map-content-structure-to-fields";
@@ -72,11 +72,13 @@ import {
     POST_FIELD_DND_CALLBACK,
     TRACKER_ROOT,
     FIELDS,
+    HANDLE_REMOVE_FIELD,
 } from "../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import RefreshAfterErrorModal from "./RefreshAfterErrorModal.vue";
 import type { Fault } from "@tuleap/fault";
 import TrackerLayoutWarning from "./TrackerLayoutWarning.vue";
+import { removeElementFromStructure } from "../helpers/remove-element-from-structure";
 
 const { $gettext } = useGettext();
 
@@ -88,6 +90,7 @@ const props = defineProps<{
 const fields = strictInject(FIELDS);
 
 const tracker_root = ref<ElementWithChildren>(mapContentStructureToFields(props.structure, fields));
+const current_structure = ref<readonly StructureFormat[]>(props.structure);
 
 const key = ref(0);
 const update = (): void => {
@@ -100,6 +103,14 @@ provide(POST_FIELD_DND_CALLBACK, update);
 provide(OPEN_REFRESH_AFTER_FAULT_MODAL, (fault: Fault) => {
     refresh_after_error_fault.value = fault;
 });
+provide(HANDLE_REMOVE_FIELD, handleRemoveField);
+
+function handleRemoveField(removed_field: StructureFields): void {
+    current_structure.value = removeElementFromStructure(current_structure.value, removed_field);
+    const filtered_fields = fields.filter((field) => field.field_id !== removed_field.field_id);
+    provide(FIELDS, filtered_fields);
+    tracker_root.value = mapContentStructureToFields(current_structure.value, filtered_fields);
+}
 </script>
 
 <style lang="scss" scoped>
