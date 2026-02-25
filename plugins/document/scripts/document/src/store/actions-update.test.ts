@@ -36,6 +36,7 @@ import type { Upload } from "tus-js-client";
 import emitter from "../helpers/emitter";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import * as RestQuerier from "../api/rest-querier";
+import { FolderBuilder } from "../../tests/builders/FolderBuilder";
 
 describe("actions-update", () => {
     let context: ActionContext<RootState, RootState>;
@@ -48,6 +49,7 @@ describe("actions-update", () => {
     let postNewFileVersionFromEmpty: MockInstance;
     let postLinkVersion: MockInstance;
     let getItem: MockInstance;
+    const current_folder = new FolderBuilder(8776).build();
 
     beforeEach(() => {
         context = {
@@ -55,6 +57,7 @@ describe("actions-update", () => {
             dispatch: vi.fn(),
             state: {
                 current_folder_ascendant_hierarchy: [],
+                current_folder,
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;
         emit = vi.spyOn(emitter, "emit");
@@ -376,18 +379,23 @@ describe("actions-update", () => {
 
     describe("createNewVersionFromEmpty -", () => {
         let context: ActionContext<RootState, RootState>;
+        const a_folder = new FolderBuilder(76554).build();
 
         beforeEach(() => {
             context = {
                 commit: vi.fn(),
                 dispatch: vi.fn(),
                 state: {
-                    folder_content: [{ id: 123, type: TYPE_EMPTY } as Empty],
+                    folder_content: [
+                        a_folder,
+                        { id: 123, type: TYPE_EMPTY, parent_id: a_folder.id } as Empty,
+                    ],
+                    current_folder,
                 } as unknown as RootState,
             } as unknown as ActionContext<RootState, RootState>;
         });
 
-        it("should update the empty document to link document", async () => {
+        it("Given user uses drop down on a subfolder element in tree view, then parent will be retrieved in folder_content state", async () => {
             const item_to_update = {
                 link_properties: {
                     link_url: "https://example.test",
@@ -396,6 +404,7 @@ describe("actions-update", () => {
             const item = {
                 id: 123,
                 type: TYPE_EMPTY,
+                parent_id: a_folder.id,
             } as Empty;
 
             const updated_item = {
@@ -418,10 +427,53 @@ describe("actions-update", () => {
                 "removeItemFromFolderContent",
                 updated_item,
             );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: updated_item,
+                parent: a_folder,
+            });
+
             expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
+                "updateCurrentItemForQuickLokDisplay",
                 updated_item,
             );
+        });
+
+        it("should update the empty document to link document", async () => {
+            const item_to_update = {
+                link_properties: {
+                    link_url: "https://example.test",
+                },
+            } as NewVersionFromEmptyInformation;
+            const item = {
+                id: 123,
+                type: TYPE_EMPTY,
+                parent_id: current_folder.id,
+            } as Empty;
+
+            const updated_item = {
+                id: 123,
+                type: TYPE_LINK,
+            } as Link;
+            getItem.mockResolvedValue(updated_item);
+            postNewLinkVersionFromEmpty.mockReturnValue(Promise.resolve());
+
+            await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
+
+            expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
+            expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
+            expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
+
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", {
+                item,
+            });
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item,
+            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: updated_item,
+                parent: current_folder,
+            });
 
             expect(context.commit).toHaveBeenCalledWith(
                 "updateCurrentItemForQuickLokDisplay",
@@ -438,6 +490,7 @@ describe("actions-update", () => {
             const item = {
                 id: 123,
                 type: TYPE_EMPTY,
+                parent_id: current_folder.id,
             } as Empty;
 
             const updated_item = {
@@ -458,10 +511,10 @@ describe("actions-update", () => {
                 "removeItemFromFolderContent",
                 updated_item,
             );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                updated_item,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: updated_item,
+                parent: current_folder,
+            });
 
             expect(context.commit).toHaveBeenCalledWith(
                 "updateCurrentItemForQuickLokDisplay",
@@ -478,6 +531,7 @@ describe("actions-update", () => {
             const item = {
                 id: 123,
                 type: TYPE_EMPTY,
+                parent_id: current_folder.id,
             } as Empty;
 
             const updated_item = {
@@ -502,10 +556,10 @@ describe("actions-update", () => {
                 "removeItemFromFolderContent",
                 updated_item,
             );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                updated_item,
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", {
+                new_item: updated_item,
+                parent: current_folder,
+            });
 
             expect(context.commit).toHaveBeenCalledWith(
                 "updateCurrentItemForQuickLokDisplay",

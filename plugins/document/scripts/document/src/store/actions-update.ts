@@ -39,7 +39,7 @@ import {
     postNewLinkVersionFromEmpty,
     postWiki,
 } from "../api/rest-querier";
-import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK } from "../constants";
+import { TYPE_EMBEDDED, TYPE_FILE, TYPE_FOLDER, TYPE_LINK } from "../constants";
 import { uploadVersionFromEmpty } from "./actions-helpers/upload-file";
 import { isEmpty, isFakeItem } from "../helpers/type-check-helper";
 import emitter from "../helpers/emitter";
@@ -242,8 +242,20 @@ export const createNewVersionFromEmpty = async (
         } else {
             emitter.emit("item-is-being-uploaded");
         }
+
+        const parent =
+            context.state.current_folder?.id === item.parent_id
+                ? context.state.current_folder
+                : context.state.folder_content.find(
+                      (folder_item) =>
+                          folder_item.id === item.parent_id && folder_item.type === TYPE_FOLDER,
+                  );
+
         context.commit("removeItemFromFolderContent", updated_item);
-        context.commit("addJustCreatedItemToFolderContent", updated_item);
+        context.commit("addJustCreatedItemToFolderContent", {
+            new_item: updated_item,
+            parent,
+        });
         context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
