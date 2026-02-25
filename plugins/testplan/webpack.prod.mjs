@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,14 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+import common from "./webpack.common.mjs";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 
-const jest_base_config = defineJestConfiguration();
-module.exports = {
-    ...jest_base_config,
-    transform: {
-        ...jest_base_config.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
-    },
-    displayName: "testplan",
-};
+export default webpack_configurator.extendProdConfiguration(common);

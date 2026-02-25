@@ -4,7 +4,6 @@
   "homepage": "https://www.tuleap.com",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "type": "module",
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/concurrency-limit-pool": "workspace:*",
@@ -31,8 +30,8 @@
     "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@vitejs/plugin-vue": "^6.0.4",
-    "@vue/test-utils": "^2.3"
+    "@vue/test-utils": "^2.3",
+    "vue-loader": "^17.2.2"
   },
   "pnpm": {
     "overrides": {
@@ -42,8 +41,8 @@
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
-    "build": "vite build",
-    "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
+    "build": "webpack --config webpack.prod.mjs",
+    "watch": "webpack --config webpack.dev.mjs --watch",
     "test": "jest"
   }
 }

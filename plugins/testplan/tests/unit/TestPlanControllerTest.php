@@ -27,7 +27,6 @@ use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Option\Option;
 use Tuleap\Request\NotFoundException;
@@ -72,6 +71,10 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&TestPlanPresenterBuilder
      */
     private mixed $presenter_builder;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets
+     */
+    private mixed $testplan_asset;
 
     private TestPlanController $controller;
 
@@ -92,15 +95,13 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->bread_crumbs_builder = $this->createMock(AllBreadCrumbsForMilestoneBuilder::class);
         $this->agiledashboard_asset = $this->createMock(IncludeAssets::class);
+        $this->testplan_asset       = $this->createMock(IncludeAssets::class);
         $this->presenter_builder    = $this->createMock(TestPlanPresenterBuilder::class);
 
         $this->controller = new TestPlanController(
             $this->renderer,
             $this->bread_crumbs_builder,
-            new IncludeViteAssets(
-                __DIR__ . '/../../frontend-assets',
-                '/assets/testplan',
-            ),
+            $this->testplan_asset,
             $this->testplan_pane_displayable,
             $this->visit_recorder,
             $this->milestone_factory,
@@ -261,11 +262,11 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->renderer->method('renderToPage')->with('test-plan', self::isInstanceOf(TestPlanPresenter::class));
 
         $this->agiledashboard_asset->method('getFileURL');
+        $this->testplan_asset->method('getFileURL');
 
-        $base_layout = $this->createStub(BaseLayout::class);
+        $base_layout = $this->createMock(BaseLayout::class);
         $base_layout->method('includeFooterJavascriptFile');
         $base_layout->method('addCssAsset');
-        $base_layout->method('addJavascriptAsset');
 
         $this->bread_crumbs_builder->method('getBreadcrumbs');
         $this->presenter_builder->method('getPresenter');

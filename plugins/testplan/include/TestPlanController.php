@@ -26,27 +26,67 @@ use AgileDashboardPlugin;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\HeaderConfigurationBuilder;
-use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-final readonly class TestPlanController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
+final class TestPlanController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
+    /**
+     * @var TemplateRenderer
+     */
+    private $renderer;
+    /**
+     * @var AllBreadCrumbsForMilestoneBuilder
+     */
+    private $bread_crumbs_builder;
+    /**
+     * @var TestPlanPaneDisplayable
+     */
+    private $testplan_pane_displayable;
+    /**
+     * @var VisitRecorder
+     */
+    private $visit_recorder;
+    /**
+     * @var \Planning_MilestoneFactory
+     */
+    private $milestone_factory;
+    /**
+     * @var TestPlanPresenterBuilder
+     */
+    private $presenter_builder;
+    /**
+     * @var IncludeAssets
+     */
+    private $testplan_assets;
+    /**
+     * @var TestPlanHeaderOptionsProvider
+     */
+    private $header_options_provider;
+
     public function __construct(
-        private TemplateRenderer $renderer,
-        private AllBreadCrumbsForMilestoneBuilder $bread_crumbs_builder,
-        private IncludeViteAssets $testplan_assets,
-        private TestPlanPaneDisplayable $testplan_pane_displayable,
-        private VisitRecorder $visit_recorder,
-        private \Planning_MilestoneFactory $milestone_factory,
-        private TestPlanPresenterBuilder $presenter_builder,
-        private TestPlanHeaderOptionsProvider $header_options_provider,
+        TemplateRenderer $renderer,
+        AllBreadCrumbsForMilestoneBuilder $bread_crumbs_builder,
+        IncludeAssets $testplan_assets,
+        TestPlanPaneDisplayable $testplan_pane_displayable,
+        VisitRecorder $visit_recorder,
+        \Planning_MilestoneFactory $milestone_factory,
+        TestPlanPresenterBuilder $presenter_builder,
+        TestPlanHeaderOptionsProvider $header_options_provider,
     ) {
+        $this->renderer                  = $renderer;
+        $this->bread_crumbs_builder      = $bread_crumbs_builder;
+        $this->testplan_assets           = $testplan_assets;
+        $this->testplan_pane_displayable = $testplan_pane_displayable;
+        $this->visit_recorder            = $visit_recorder;
+        $this->milestone_factory         = $milestone_factory;
+        $this->presenter_builder         = $presenter_builder;
+        $this->header_options_provider   = $header_options_provider;
     }
 
     #[\Override]
@@ -82,8 +122,7 @@ final readonly class TestPlanController implements DispatchableWithRequestNoAuth
 
         $this->visit_recorder->record($user, $milestone->getArtifact());
 
-        $layout->addCssAsset(CssViteAsset::fromFileName($this->testplan_assets, 'themes/testplan.scss'));
-        $layout->addJavascriptAsset(new JavascriptViteAsset($this->testplan_assets, 'scripts/test-plan/index.ts'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->testplan_assets, 'testplan-style'));
 
         $title = dgettext('tuleap-testmanagement', 'Tests') . ' - ' . $milestone->getArtifactTitle();
         $service->displayHeader(
@@ -111,6 +150,7 @@ final readonly class TestPlanController implements DispatchableWithRequestNoAuth
             $expand_backlog_item_id,
             $highlight_test_definition_id
         );
+        $layout->includeFooterJavascriptFile($this->testplan_assets->getFileURL('testplan.js'));
         $this->renderer->renderToPage('test-plan', $presenter);
         $service->displayFooter();
     }
