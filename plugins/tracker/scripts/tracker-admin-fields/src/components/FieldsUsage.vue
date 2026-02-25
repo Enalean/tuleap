@@ -47,6 +47,8 @@
                 </p>
             </div>
 
+            <tracker-layout-warning />
+
             <tracker-structure v-if="tracker_root.children.length > 0" v-bind:key="key" />
 
             <empty-state v-if="tracker_root.children.length === 0" />
@@ -74,6 +76,7 @@ import {
 import { strictInject } from "@tuleap/vue-strict-inject";
 import RefreshAfterErrorModal from "./RefreshAfterErrorModal.vue";
 import type { Fault } from "@tuleap/fault";
+import TrackerLayoutWarning from "./TrackerLayoutWarning.vue";
 
 const { $gettext } = useGettext();
 

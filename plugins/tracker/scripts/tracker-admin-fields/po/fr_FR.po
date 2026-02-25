@@ -88,6 +88,13 @@ msgstr "Champ..."
 msgid "Fields"
 msgstr "Champs"
 
+msgid "Fields can only be placed within a column inside a fieldset."
+msgstr ""
+"Les champs ne peuvent être placés que dans une colonne d’un groupe de champs."
+
+msgid "Fields should be placed within a column inside a fieldset."
+msgstr "Les champs doivent être placés dans une colonne d’un groupe de champs."
+
 msgid "Fields usage"
 msgstr "Utilisation des champs"
 
@@ -96,6 +103,13 @@ msgstr "Groupe de champs"
 
 msgid "Fieldset configuration"
 msgstr "Configuration du groupe de champs"
+
+msgid "Fieldsets can only be placed at the root level of the tracker."
+msgstr ""
+"Les groupes de champs ne peuvent être placés qu’au niveau racine du tracker."
+
+msgid "Fieldsets should be placed at the root level of the tracker."
+msgstr "Les groupes de champs doivent être placés au niveau racine du tracker."
 
 msgid "File description"
 msgstr "Description du fichier"
@@ -108,6 +122,9 @@ msgstr "Flottant"
 
 msgid "Id"
 msgstr "Id"
+
+msgid "Important:"
+msgstr "Important :"
 
 msgid "Integer"
 msgstr "Entier"
@@ -132,6 +149,16 @@ msgstr "Liste à choix multiple"
 
 msgid "Name"
 msgstr "Nom"
+
+msgid "Nested columns should be flattened."
+msgstr "Les colonnes imbriquées doivent être aplaties."
+
+msgid ""
+"New constraints have been introduced to ensure consistent artifact form "
+"layouts across the platform."
+msgstr ""
+"De nouvelles contraintes ont été introduites afin de garantir des mises en "
+"page cohérentes des formulaires d’artefacts sur l’ensemble de la plateforme. "
 
 msgid "No fields"
 msgstr "Aucun champ"
@@ -172,6 +199,11 @@ msgstr "Bouton radio"
 msgid "Rank"
 msgstr "Rang"
 
+msgid "Recommendation:"
+msgid_plural "Recommendations:"
+msgstr[0] "Recommandation :"
+msgstr[1] "Recommandations :"
+
 msgid "Refresh"
 msgstr "Rafraîchir"
 
@@ -205,6 +237,9 @@ msgstr "Date de création"
 msgid "Text"
 msgstr "Texte"
 
+msgid "The new constraints are as follows:"
+msgstr "Les nouvelles contraintes sont les suivantes :"
+
 msgid "The new interface for field usage management is a work in progress."
 msgstr ""
 "La nouvelle interface pour la gestion des champs est un travail en cours."
@@ -218,8 +253,16 @@ msgstr "Cette section est en cours de développement"
 msgid "This tracker does not have any field yet."
 msgstr "Ce tracker n'a pas encore de champ."
 
+msgid "This will provide a smoother user experience and simplify onboarding."
+msgstr ""
+"Cela permettra d’offrir une expérience utilisateur plus fluide et de "
+"simplifier l’onboarding."
+
 msgid "Three columns layout"
 msgstr "Agencement sur trois colonnes"
+
+msgid "Tracker layout evolution"
+msgstr "Évolution de la structure de tracker"
 
 msgid "Two columns layout"
 msgstr "Agencement sur deux colonnes"
@@ -239,6 +282,14 @@ msgstr ""
 msgid "You cannot bind this field to all registered users"
 msgstr ""
 "Vous ne pouvez pas lier ce champ à l'ensemble des utilisateurs enregistrés"
+
+msgid ""
+"Your current layout is not broken per se. You are encouraged, though not "
+"required, to update it to align with the new recommendations."
+msgstr ""
+"Votre mise en page actuelle n’est pas incorrecte en soi. Vous êtes "
+"encouragé(e), sans y être obligé(e), à la mettre à jour afin de l’aligner "
+"avec les nouvelles recommandations."
 
 msgid "→ Create a new value %{ name }…"
 msgstr "→ Créer une nouvelle valeur %{ name } …"
