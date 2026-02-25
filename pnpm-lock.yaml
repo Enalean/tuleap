@@ -28,6 +28,7 @@ overrides:
   safer-buffer: npm:@nolyfill/safer-buffer@^1
   es-set-tostringtag: npm:@nolyfill/es-set-tostringtag@^1
   string.prototype.trimend: npm:@nolyfill/string.prototype.trimend@^1
+  minimatch@9.0.1: ^9.0.7
 
 devDependencies:
   '@babel/core':
@@ -5418,7 +5419,7 @@ packages:
     dependencies:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
-      minimatch: 9.0.1
+      minimatch: 9.0.7
       semver: 7.7.2
     dev: true
 
@@ -7872,13 +7873,6 @@ packages:
   /minimatch@5.1.8:
     resolution: {integrity: sha512-7RN35vit8DeBclkofOVmBY0eDAZZQd1HzmukRdSyz95CRh8FT54eqnbj0krQr3mrHR6sfRyYkyhwBWjoV5uqlQ==}
     engines: {node: '>=10'}
-    dependencies:
-      brace-expansion: 2.0.2
-    dev: true
-
-  /minimatch@9.0.1:
-    resolution: {integrity: sha512-0jWhJpD/MdhPXwPuiRkCbfYfSKp2qnn2eOc279qI7f+osl/l+prKSrvhg157zSYvx/1nmgn2NqdT6k2Z7zSH9w==}
-    engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.2
     dev: true

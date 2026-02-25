@@ -44,5 +44,10 @@
     "build": "vite build",
     "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
     "test": "vitest"
+  },
+  "pnpm": {
+    "overrides": {
+      "minimatch@9.0.1": "^9.0.7"
+    }
   }
 }

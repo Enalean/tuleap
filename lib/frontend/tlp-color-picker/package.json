@@ -32,5 +32,10 @@
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false"
+  },
+  "pnpm": {
+    "overrides": {
+      "minimatch@9.0.1": "^9.0.7"
+    }
   }
 }
