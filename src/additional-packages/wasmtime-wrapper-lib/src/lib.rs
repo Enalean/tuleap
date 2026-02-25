@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use anyhow::{Result, anyhow};
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::path::Path;
@@ -24,8 +23,8 @@ use std::sync::Arc;
 use std::time::Instant;
 use wasmtime::*;
 use wasmtime_wasi::WasiCtxBuilder;
+use wasmtime_wasi::p1::WasiP1Ctx;
 use wasmtime_wasi::p2::pipe::{MemoryInputPipe, MemoryOutputPipe};
-use wasmtime_wasi::preview1::WasiP1Ctx;
 use wasmtime_wasi::{DirPerms, FilePerms};
 use wire::{
     ExecConfig, InternalErrorJson, Limitations, MountPoint, Stats, SuccessResponseJson,
@@ -174,7 +173,7 @@ fn compile_and_exec(
     possible_cache_config_file: &Option<String>,
     mount_points: &Vec<MountPoint>,
     limits: &Limitations,
-) -> Result<OutputAndStats, anyhow::Error> {
+) -> Result<OutputAndStats, wasmtime::Error> {
     let stdin = MemoryInputPipe::new(module_input_json.as_bytes().to_owned());
     let stdout = MemoryOutputPipe::new(16_777_215);
 
@@ -218,17 +217,22 @@ fn compile_and_exec(
 
     let mut store = Store::new(&engine, my_state);
     store.limiter(|state| &mut state.limits);
+    // Reduce the default value from 128 MiB to 32 MiB which should be more than enough for Tuleap use cases
+    store.set_hostcall_fuel(32 << 20);
 
-    wasmtime_wasi::preview1::add_to_linker_sync(&mut linker, |state: &mut StoreState| {
-        &mut state.wasi
-    })?;
+    wasmtime_wasi::p1::add_to_linker_sync(&mut linker, |state: &mut StoreState| &mut state.wasi)?;
 
     store.epoch_deadline_trap();
     store.set_epoch_deadline(1);
 
     let module = match load_module(&engine, &wasm_module_path) {
         Ok(m) => m,
-        Err(e) => return Err(anyhow!("Failed to load the wasm module: {}", e)),
+        Err(e) => {
+            return Err(wasmtime::format_err!(
+                "Failed to load the wasm module: {}",
+                e
+            ));
+        }
     };
 
     let instance = linker.instantiate(&mut store, &module)?;
@@ -247,7 +251,7 @@ fn compile_and_exec(
 
     let memory = instance
         .get_memory(&mut store, "memory")
-        .ok_or(anyhow::format_err!("failed to find `memory` export"))?;
+        .ok_or(wasmtime::format_err!("failed to find `memory` export"))?;
 
     let statistics = Stats {
         exec_time_as_seconds: exec_time,
@@ -258,7 +262,7 @@ fn compile_and_exec(
 
     let stdout_str = match String::from_utf8(stdout.contents().to_vec()) {
         Ok(s) => s,
-        Err(e) => return Err(anyhow!(e)),
+        Err(e) => return Err(wasmtime::format_err!(e)),
     };
 
     match res {
