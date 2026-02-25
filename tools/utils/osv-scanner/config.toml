@@ -73,11 +73,6 @@ reason = "ckeditor4 samples are not shipped."
 id = "GHSA-7r32-vfj5-c2jv" # CVE-2024-43407
 reason = "ckeditor4 code snippet GeSHi."
 
-# word-wrap
-[[IgnoredVulns]]
-id = "GHSA-j8xg-fqg3-53r7" # CVE-2023-26115
-reason = "ReDoS. No direct impact in our situation."
-
 # node-gettext
 [[IgnoredVulns]]
 id = "GHSA-g974-hxvm-x689" # CVE-2024-21528
