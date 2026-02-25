@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { BundledLanguage, BundledTheme, HighlighterGeneric, SpecialLanguage } from "shiki";
+import type { BundledLanguage, SpecialLanguage } from "shiki";
 import { bundledLanguages, createHighlighter, createJavaScriptRegexEngine } from "shiki";
 import { markPotentiallyDangerousBidirectionalUnicodeText } from "./bidirectional-unicode-text";
 import DOMPurify from "dompurify";
@@ -25,7 +25,11 @@ import DOMPurify from "dompurify";
 const LIGHT_THEME = "github-light-default";
 const DARK_THEME = "github-dark-default";
 
-let highlighter: HighlighterGeneric<BundledLanguage, BundledTheme> | null = null;
+export const highlighter_promise = createHighlighter({
+    themes: [LIGHT_THEME, DARK_THEME],
+    langs: [],
+    engine: createJavaScriptRegexEngine(),
+});
 
 function isABundledLanguage(language: string): language is BundledLanguage {
     return language in bundledLanguages;
@@ -47,18 +51,14 @@ export async function syntaxHighlightElement(element: HTMLElement): Promise<void
         return;
     }
 
-    if (highlighter === null) {
-        highlighter = await createHighlighter({
-            themes: [LIGHT_THEME, DARK_THEME],
-            langs: [],
-            engine: createJavaScriptRegexEngine(),
-        });
-    }
+    const highlighter = await highlighter_promise;
 
     const used_language: BundledLanguage | SpecialLanguage = isABundledLanguage(language)
         ? language
         : "text";
-    await highlighter.loadLanguage(used_language);
+    if (!highlighter.getLoadedLanguages().includes(used_language)) {
+        await highlighter.loadLanguage(used_language);
+    }
 
     const host = document.createElement("div");
     host.innerHTML = DOMPurify.sanitize(

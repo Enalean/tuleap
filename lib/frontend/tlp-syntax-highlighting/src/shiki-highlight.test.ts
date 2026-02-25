@@ -17,25 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { syntaxHighlightElement } from "./shiki-highlight";
-import * as shiki from "shiki";
-import type { BundledLanguage, BundledTheme, HighlighterGeneric } from "shiki";
+import { highlighter_promise, syntaxHighlightElement } from "./shiki-highlight";
 
-vi.mock("shiki");
+vi.mock(import("shiki"), async (original_import) => {
+    const original = await original_import();
+    return {
+        ...original,
+        createHighlighter: vi.fn().mockResolvedValue({
+            codeToHtml: vi.fn(),
+            loadLanguage: vi.fn(),
+            getLoadedLanguages: vi.fn(),
+        }),
+    };
+});
 
 describe("Shiki", () => {
+    let codeToHtml: MockInstance;
+    let loadLanguage: MockInstance;
+    let getLoadedLanguages: MockInstance;
     let doc: Document;
-    const codeToHtml = vi.fn();
-    const loadLanguage = vi.fn();
 
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.resetAllMocks();
-        vi.spyOn(shiki, "createHighlighter").mockResolvedValue({
-            codeToHtml,
-            loadLanguage,
-        } as unknown as HighlighterGeneric<BundledLanguage, BundledTheme>);
         doc = document.implementation.createHTMLDocument();
+        const highlighter = await highlighter_promise;
+        codeToHtml = highlighter.codeToHtml as unknown as MockInstance;
+        loadLanguage = highlighter.loadLanguage as unknown as MockInstance;
+        getLoadedLanguages = highlighter.getLoadedLanguages as unknown as MockInstance;
+
+        getLoadedLanguages.mockReturnValueOnce([]);
     });
 
     it("does the syntax highlighting of an element", async () => {
@@ -90,6 +102,45 @@ describe("Shiki", () => {
         expect(loadLanguage).toHaveBeenCalledWith("text");
         expect(codeToHtml).toHaveBeenCalledWith(
             code_content,
+            expect.objectContaining({
+                lang: "text",
+                themes: { light: "github-light-default", dark: "github-dark-default" },
+            }),
+        );
+    });
+
+    it("does not load same language twice", async () => {
+        getLoadedLanguages.mockReturnValueOnce(["text"]);
+
+        const pre_element_1 = doc.createElement("pre");
+        const element_1 = doc.createElement("code");
+        pre_element_1.appendChild(element_1);
+        const code_content_1 = "Some text";
+        element_1.textContent = code_content_1;
+
+        await syntaxHighlightElement(element_1);
+
+        const pre_element_2 = doc.createElement("pre");
+        const element_2 = doc.createElement("code");
+        pre_element_2.appendChild(element_2);
+        const code_content_2 = "Another text content";
+        element_2.textContent = code_content_2;
+
+        await syntaxHighlightElement(element_2);
+
+        expect(loadLanguage).toHaveBeenCalledExactlyOnceWith("text");
+        expect(codeToHtml).toHaveBeenCalledTimes(2);
+        expect(codeToHtml).toHaveBeenNthCalledWith(
+            1,
+            code_content_1,
+            expect.objectContaining({
+                lang: "text",
+                themes: { light: "github-light-default", dark: "github-dark-default" },
+            }),
+        );
+        expect(codeToHtml).toHaveBeenNthCalledWith(
+            2,
+            code_content_2,
             expect.objectContaining({
                 lang: "text",
                 themes: { light: "github-light-default", dark: "github-dark-default" },
