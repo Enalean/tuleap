@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div>
+    <div class="ttm-definition-steps">
         <input
             v-if="hasNoStepRemaining"
             type="hidden"
@@ -44,11 +44,11 @@
                 <div v-show="!is_dragging" class="ttm-definition-step-add-bar">
                     <button
                         type="button"
-                        class="btn btn-primary"
+                        class="tlp-button-primary"
                         v-on:click="onClick(index)"
                         data-test="add-step"
                     >
-                        <i class="fa-solid fa-plus"></i>
+                        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
                         {{ $gettext("Add step") }}
                     </button>
                 </div>

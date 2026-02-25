@@ -23,7 +23,7 @@
         type="button"
         v-on:click="onClick"
     >
-        <i class="fa fa-undo"></i>
+        <i class="fa-solid fa-undo tlp-button-icon" aria-hidden="true"></i>
         {{ $gettext("Undo deletion") }}
     </button>
 </template>

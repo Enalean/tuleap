@@ -24,7 +24,7 @@
             v-bind:step="reactive_step"
             v-bind:dynamic_rank="dynamic_rank"
         />
-        <div v-show="!is_dragging" class="ttm-definition-step-rank ttm-execution-step-rank-edition">
+        <div v-show="!is_dragging" class="tlp-badge-rounded tlp-badge-secondary">
             {{ dynamic_rank }}
         </div>
         <div v-show="!is_dragging" class="ttm-definition-step-description">

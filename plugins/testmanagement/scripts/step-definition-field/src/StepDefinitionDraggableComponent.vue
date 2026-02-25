@@ -19,8 +19,8 @@
 
 <template>
     <div class="ttm-definition-step draggable-step-definition">
-        <i class="step-definition-drag-icon"></i>
-        <div class="ttm-definition-step-rank ttm-execution-step-rank-edition">
+        <i class="fa-solid fa-grip-vertical" aria-hidden="true"></i>
+        <div class="tlp-badge-rounded tlp-badge-secondary">
             {{ dynamic_rank }}
         </div>
         <div
