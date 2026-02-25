@@ -31,7 +31,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
-use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\TestManagement\GetURIForMilestoneFromTTM;
 use Tuleap\TestPlan\REST\ResourcesInjector;
@@ -174,7 +174,7 @@ final class testplanPlugin extends Plugin
         return new TestPlanController(
             $this->buildTemplateRenderer(),
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
-            new IncludeViteAssets(
+            new IncludeAssets(
                 __DIR__ . '/../frontend-assets',
                 '/assets/testplan'
             ),
