@@ -3,7 +3,7 @@
         <i class="fa fa-cubes admin-sidebar-section-title-icon"></i> {{ plugins_section_title }}
     </h1>
 
-    <nav class="admin-sidebar-section-nav">
+    <nav class="admin-sidebar-section-nav" data-test="sidebar-plugins-section">
         <a href="/plugins/pluginsadministration/" class="admin-sidebar-section-nav-item">{{ plugins_manage_all }}</a>
         {{# plugins }}
             <a href="{{ href }}"
