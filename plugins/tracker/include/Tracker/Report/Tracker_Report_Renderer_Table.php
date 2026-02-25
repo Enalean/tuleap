@@ -56,7 +56,7 @@ use function Psl\Json\encode as json_encode;
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[FeatureFlagConfigKey('Switch between legacy csv export and new export which uses the API. 0 for no, other number for yes')]
-    #[ConfigKeyInt(0)]
+    #[ConfigKeyInt(1)]
     public const string USE_LEGACY_CSV_EXPORT = 'use_legacy_csv_export';
 
     public const int EXPORT_LIGHT = 1;
