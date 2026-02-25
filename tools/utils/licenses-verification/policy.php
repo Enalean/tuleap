@@ -121,6 +121,9 @@ const ALLOWED_LICENCES_SPECIFIC_USE_CASES = [
     'Apache-2.0/MIT' => [  // Dual licensing (MIT or Apache-2.0) of Rust crates, extraction issues
         'leb128',
     ],
+    'Apache-2.0 / MIT' => [  // Dual licensing (MIT or Apache-2.0) of Rust crates, extraction issues
+        'fnv',
+    ],
     'MIT/Apache-2.0' => [ // Dual licensing (MIT or Apache-2.0) of Rust crates, extraction issues
         'android_system_properties',
         'bitflags',
