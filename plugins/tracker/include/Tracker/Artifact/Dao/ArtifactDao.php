@@ -336,8 +336,52 @@ class ArtifactDao extends DataAccessObject
 
         if (count($additional_artifacts) === 0) {
             $sql = <<<SQL
-            WITH matched_artifacts AS (
-                SELECT COUNT(*) OVER () AS total_matched_artifacts, linked_art.*
+            SELECT COUNT(*) OVER () AS total_matched_artifacts, linked_art.*
+            FROM tracker_artifact parent_art
+                INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND f.use_it = 1)
+                INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
+                INNER JOIN tracker_artifact_priority_rank                  ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
+                 $exclude
+                INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
+                INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
+                LEFT JOIN (
+                    tracker_changeset_value AS CV2
+                    INNER JOIN tracker_semantic_title as ST ON (CV2.field_id = ST.field_id)
+                    INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
+                ) ON (C.id = CV2.changeset_id)
+                -- only those with open status
+                LEFT JOIN (
+                    tracker_semantic_status as SS
+                    INNER JOIN tracker_changeset_value AS CV3       ON (SS.field_id = CV3.field_id)
+                    INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
+                ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
+            WHERE parent_art.id = ?
+                $submile_null
+                AND $tracker_ids_statement
+                AND (
+                    SS.field_id IS NULL -- Use the status semantic only if it is defined
+                    OR
+                    CVL2.bindvalue_id = SS.open_value_id
+                )
+            GROUP BY (linked_art.id)
+            ORDER BY tracker_artifact_priority_rank.`rank` ASC
+            LIMIT ? OFFSET ?
+            SQL;
+
+            $rows = $this->getDB()->run($sql, ...[...$excluded_linked_ids, $artifact_id, ...$tracker_ids, $limit, $offset]);
+
+            $total = $rows[0]['total_matched_artifacts'] ?? 0;
+
+            return new PaginatedArtifactRows($rows, $total);
+        }
+
+        $additional_artifacts_statement = EasyStatement::open()->in('linked_art.id IN (?*)', $additional_artifacts);
+
+        $sql = <<<SQL
+            SELECT COUNT(*) OVER () AS total_matched_artifacts, matched_artifacts.* FROM (
+                SELECT linked_art.*, tracker_artifact_priority_rank.`rank`
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND f.use_it = 1)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
@@ -347,11 +391,6 @@ class ArtifactDao extends DataAccessObject
                      $exclude
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
                     INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
-                    LEFT JOIN (
-                        tracker_changeset_value AS CV2
-                        INNER JOIN tracker_semantic_title as ST ON (CV2.field_id = ST.field_id)
-                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
-                    ) ON (C.id = CV2.changeset_id)
                     -- only those with open status
                     LEFT JOIN (
                         tracker_semantic_status as SS
@@ -367,81 +406,36 @@ class ArtifactDao extends DataAccessObject
                         CVL2.bindvalue_id = SS.open_value_id
                     )
                 GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority_rank.`rank` ASC
-            )
-            SELECT * FROM matched_artifacts
+
+                UNION
+
+                SELECT linked_art.*, tracker_artifact_priority_rank.`rank`
+                FROM tracker_artifact AS linked_art
+                    INNER JOIN tracker_artifact_priority_rank ON (
+                        tracker_artifact_priority_rank.artifact_id = linked_art.id
+                        AND $additional_artifacts_statement
+                    )
+                    $exclude
+                    INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
+                    INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
+                    -- only those with open status
+                    LEFT JOIN (
+                        tracker_semantic_status as SS
+                        INNER JOIN tracker_changeset_value AS CV3       ON (SS.field_id = CV3.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
+                    ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
+                WHERE 1
+                    $submile_null
+                    AND $tracker_ids_statement
+                    AND (
+                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        OR
+                        CVL2.bindvalue_id = SS.open_value_id
+                    )
+                GROUP BY (linked_art.id)
+            ) AS matched_artifacts
+            ORDER BY matched_artifacts.`rank` ASC
             LIMIT ? OFFSET ?
-            SQL;
-
-            $rows = $this->getDB()->run($sql, ...[...$excluded_linked_ids, $artifact_id, ...$tracker_ids, $limit, $offset]);
-
-            $total = $rows[0]['total_matched_artifacts'] ?? 0;
-
-            return new PaginatedArtifactRows($rows, $total);
-        }
-
-        $additional_artifacts_statement = EasyStatement::open()->in('linked_art.id IN (?*)', $additional_artifacts);
-
-        $sql = <<<SQL
-            WITH matched_artifacts AS (
-                SELECT COUNT(*) OVER () AS total_matched_artifacts, R.* FROM (
-                    SELECT linked_art.*, tracker_artifact_priority_rank.`rank`
-                    FROM tracker_artifact parent_art
-                        INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND f.use_it = 1)
-                        INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
-                        INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
-                        INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
-                        INNER JOIN tracker_artifact_priority_rank                  ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
-                         $exclude
-                        INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
-                        INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
-                        -- only those with open status
-                        LEFT JOIN (
-                            tracker_semantic_status as SS
-                            INNER JOIN tracker_changeset_value AS CV3       ON (SS.field_id = CV3.field_id)
-                            INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
-                        ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
-                    WHERE parent_art.id = ?
-                        $submile_null
-                        AND $tracker_ids_statement
-                        AND (
-                            SS.field_id IS NULL -- Use the status semantic only if it is defined
-                            OR
-                            CVL2.bindvalue_id = SS.open_value_id
-                        )
-                    GROUP BY (linked_art.id)
-
-                    UNION
-
-                    SELECT linked_art.*, tracker_artifact_priority_rank.`rank`
-                    FROM tracker_artifact AS linked_art
-                        INNER JOIN tracker_artifact_priority_rank ON (
-                            tracker_artifact_priority_rank.artifact_id = linked_art.id
-                            AND $additional_artifacts_statement
-                        )
-                        $exclude
-                        INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
-                        INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
-                        -- only those with open status
-                        LEFT JOIN (
-                            tracker_semantic_status as SS
-                            INNER JOIN tracker_changeset_value AS CV3       ON (SS.field_id = CV3.field_id)
-                            INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
-                        ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
-                    WHERE 1
-                        $submile_null
-                        AND $tracker_ids_statement
-                        AND (
-                            SS.field_id IS NULL -- Use the status semantic only if it is defined
-                            OR
-                            CVL2.bindvalue_id = SS.open_value_id
-                        )
-                    GROUP BY (linked_art.id)
-                ) AS R
-        )
-        SELECT * FROM matched_artifacts
-        ORDER BY matched_artifacts.`rank` ASC
-        LIMIT ? OFFSET ?
         SQL;
 
         $rows = $this->getDB()->run(
