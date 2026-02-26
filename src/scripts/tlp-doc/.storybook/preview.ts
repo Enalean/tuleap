@@ -62,6 +62,7 @@ const getTheme = (color_name: string): string => {
 initialize();
 
 const preview: Preview = {
+    tags: ["autodocs"],
     parameters: {
         layout: "centered",
         backgrounds: {
