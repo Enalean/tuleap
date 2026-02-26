@@ -38,7 +38,6 @@ describe("Document", () => {
         project_unixname = "docman-" + getAntiCollisionNamePart();
         cy.projectAdministratorSession();
         cy.createNewPublicProject(project_unixname, "issues").as("project_id");
-        cy.visit(`${"/plugins/document/" + project_unixname + "/admin-search"}`);
 
         cy.projectAdministratorSession();
         project_name = "document-project-" + getAntiCollisionNamePart();

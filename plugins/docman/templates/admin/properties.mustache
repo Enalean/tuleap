@@ -78,7 +78,7 @@
                         {{# available_properties }}
                             <tr>
                                 <td>
-                                    <a href="{{ url }}">
+                                    <a href="{{ url }}" data-test="available-property">
                                         {{ name }}
                                     </a>
                                 </td>
@@ -161,7 +161,7 @@
             <label class="tlp-label" for="docman-admin-properties-create-type">
                 {{# dgettext }}tuleap-docman | Type{{/ dgettext }}
             </label>
-            <select class="tlp-select" id="docman-admin-properties-create-type" name="type">
+            <select class="tlp-select" id="docman-admin-properties-create-type" name="type" data-test="property-type">
                 <option value="{{ id_for_type_text }}">{{# dgettext }}tuleap-docman | Text{{/ dgettext }}</option>
                 <option value="{{ id_for_type_string }}">{{# dgettext }}tuleap-docman | String{{/ dgettext }}</option>
                 <option value="{{ id_for_type_date }}">{{# dgettext }}tuleap-docman | Date{{/ dgettext }}</option>

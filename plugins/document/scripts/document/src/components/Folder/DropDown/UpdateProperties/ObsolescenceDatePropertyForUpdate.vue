@@ -51,6 +51,7 @@
                     v-bind:required="selected_value === 'fixed'"
                     v-on:input="updateObsolescenceDateValue"
                     v-bind:value="date_value"
+                    data-test="obsolescence-date-input"
                 />
             </div>
         </div>

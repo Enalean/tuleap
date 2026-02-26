@@ -18,7 +18,11 @@
   -->
 
 <template>
-    <div v-if="is_obsolete" class="tlp-alert-warning">
+    <div
+        v-if="is_obsolete"
+        class="tlp-alert-warning"
+        data-test="document-quicklook-obsolescence-warning"
+    >
         {{ $gettext("This item is obsolete since %{ date }.", { date: formatted_full_date }) }}
     </div>
 </template>
