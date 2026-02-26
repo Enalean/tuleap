@@ -115,6 +115,10 @@ class ImmutableTagController
                     $immutable_tags_whitelist = trim($request->get('immutable-tags-whitelist'));
                     $this->immutable_tag_creator->save($repository, $immutable_tags_path, $immutable_tags_whitelist);
                 }
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::SUCCESS,
+                    dgettext('tuleap-svn', 'Immutable tags successfully saved.')
+                );
             } catch (CannotCreateImmuableTagException $exception) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,

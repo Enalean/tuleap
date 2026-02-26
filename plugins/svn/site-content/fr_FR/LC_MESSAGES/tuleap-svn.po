@@ -217,6 +217,9 @@ msgstr "Configuration des tags non modifiables"
 msgid "Immutable tags paths"
 msgstr "Chemin des tags non modifiables"
 
+msgid "Immutable tags successfully saved."
+msgstr "Les tags non modifiables ont été sauvegardés avec succès."
+
 msgid "Initial layout creation"
 msgstr "Création de la structure initiale"
 
