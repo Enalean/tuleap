@@ -47,15 +47,12 @@
 <script setup lang="ts">
 import ObsolescenceDatePropertyForCreate from "./ObsolescenceDatePropertyForCreate.vue";
 import CustomProperty from "../../PropertiesForCreateOrUpdate/CustomProperties/CustomProperty.vue";
-import { useStore } from "vuex-composition-helpers";
 import { computed, onMounted } from "vue";
 import type { Item } from "../../../../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { IS_OBSOLESCENCE_DATE_PROPERTY_USED, PROJECT } from "../../../../../configuration-keys";
 import type { DocumentProperties } from "../../../../../helpers/properties/document-properties";
 import { PROJECT_PROPERTIES } from "../../../../../injection-keys";
-
-const $store = useStore();
 
 const props = defineProps<{
     currentlyUpdatedItem: Item;
@@ -69,7 +66,7 @@ const project_properties = strictInject(PROJECT_PROPERTIES);
 
 onMounted((): void => {
     if (project_properties.value === null) {
-        props.document_properties.loadProjectProperties($store, project.id).map((properties) => {
+        props.document_properties.loadProjectProperties(project.id).map((properties) => {
             project_properties.value = properties;
             return null;
         });

@@ -17,41 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import type { Modal } from "@tuleap/tlp-modal";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GlobalErrorModal from "./GlobalErrorModal.vue";
-import type { Modal } from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import type { ErrorState } from "../../../store/error/module";
+import emitter from "../../../helpers/emitter";
+import { Fault } from "@tuleap/fault";
 
-let reset_error: vi.Mock;
-
-function createWrapper(error_message: string): VueWrapper<InstanceType<typeof GlobalErrorModal>> {
-    return shallowMount(GlobalErrorModal, {
-        global: {
-            ...getGlobalTestOptions({
-                modules: {
-                    error: {
-                        state: {
-                            global_modal_error_message: error_message,
-                        } as unknown as ErrorState,
-                        mutations: {
-                            resetErrors: reset_error,
-                        },
-                        namespaced: true,
-                    },
-                },
-            }),
-        },
-    });
-}
+vi.useFakeTimers();
 
 describe(`GlobalErrorModal`, () => {
-    beforeEach(() => {
-        reset_error = vi.fn();
-    });
+    function createWrapper(): VueWrapper<InstanceType<typeof GlobalErrorModal>> {
+        return shallowMount(GlobalErrorModal, {
+            global: {
+                ...getGlobalTestOptions({}),
+            },
+        });
+    }
+
     it(`shows the modal when mounted`, () => {
         const modal_show = vi.fn();
         vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
@@ -60,7 +46,8 @@ describe(`GlobalErrorModal`, () => {
                 addEventListener: vi.fn(),
             } as unknown as Modal;
         });
-        createWrapper("Full error message with details");
+        createWrapper();
+        emitter.emit("global-modal-error", Fault.fromMessage("Oh no!"));
         expect(modal_show).toHaveBeenCalledTimes(1);
     });
 
@@ -73,12 +60,28 @@ describe(`GlobalErrorModal`, () => {
         });
 
         const error_message = "Full error message with details";
-        const wrapper = createWrapper(error_message);
+        const wrapper = createWrapper();
+        emitter.emit("global-modal-error", Fault.fromMessage(error_message));
+        await vi.runOnlyPendingTimersAsync();
 
         await wrapper.get("[data-test=show-details]").trigger("click");
 
         const details = wrapper.get("[data-test=details]");
         expect(details.text()).toEqual(error_message);
+    });
+
+    it(`does not open the modal until emitter sent a message`, async () => {
+        const modal_show = vi.fn();
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+            return {
+                show: modal_show,
+                addEventListener: vi.fn(),
+            } as unknown as Modal;
+        });
+
+        createWrapper();
+        await vi.runOnlyPendingTimersAsync();
+        expect(modal_show).not.toHaveBeenCalled();
     });
 
     it(`warns user that something is wrong without any details`, () => {
@@ -89,21 +92,10 @@ describe(`GlobalErrorModal`, () => {
             } as unknown as Modal;
         });
 
-        const wrapper = createWrapper("");
+        const wrapper = createWrapper();
+        emitter.emit("global-modal-error", Fault.fromMessage(""));
         expect(wrapper.find("[data-test=show-details]").exists()).toBe(false);
         expect(wrapper.find("[data-test=details]").exists()).toBe(false);
-    });
-
-    it(`when I hide the modal, it resets the error`, () => {
-        vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
-            return {
-                show: vi.fn(),
-                addEventListener: (event_name: string, handler: () => void) => handler(),
-            } as unknown as Modal;
-        });
-        createWrapper("");
-
-        expect(reset_error).toHaveBeenCalled();
     });
 
     it(`when I click on the "reload" button, it reloads the page`, () => {
@@ -114,20 +106,12 @@ describe(`GlobalErrorModal`, () => {
             } as unknown as Modal;
         });
 
-        const location = window.location;
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        delete window.location;
-
-        window.location = {
-            reload: vi.fn(),
-        } as unknown as Location;
-        const wrapper = createWrapper("");
+        const reload = vi.fn();
+        vi.stubGlobal("location", { reload });
+        const wrapper = createWrapper();
+        emitter.emit("global-modal-error", Fault.fromMessage("Oh no!"));
         wrapper.get("[data-test=reload]").trigger("click");
 
-        expect(window.location.reload).toHaveBeenCalled();
-
-        window.location = location;
+        expect(reload).toHaveBeenCalled();
     });
 });

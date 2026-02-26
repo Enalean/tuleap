@@ -65,10 +65,7 @@ export type DocumentProperties = {
         current_folder: Folder,
         is_status_property_used: boolean,
     ): Promise<void>;
-    loadProjectProperties(
-        context: ActionContext<RootState, RootState>,
-        project_id: number,
-    ): ResultAsync<Array<Property>, Fault>;
+    loadProjectProperties(project_id: number): ResultAsync<Array<Property>, Fault>;
 };
 
 export const getDocumentProperties = (): DocumentProperties => {
@@ -228,12 +225,9 @@ export const getDocumentProperties = (): DocumentProperties => {
             );
         },
         updateProperties,
-        loadProjectProperties(
-            context: ActionContext<RootState, RootState>,
-            project_id: number,
-        ): ResultAsync<Array<Property>, Fault> {
+        loadProjectProperties(project_id: number): ResultAsync<Array<Property>, Fault> {
             return getProjectProperties(project_id).mapErr((fault) => {
-                context.dispatch("error/handleGlobalModalError", fault, { root: true });
+                emitter.emit("global-modal-error", fault);
                 return fault;
             });
         },

@@ -27,8 +27,6 @@ export function resetErrors(state: ErrorState): void {
     state.document_loading_error = null;
     state.has_document_lock_error = false;
     state.document_lock_error = null;
-    state.has_global_modal_error = false;
-    state.global_modal_error_message = null;
 }
 
 export function switchFolderPermissionError(state: ErrorState): void {
@@ -62,9 +60,4 @@ export function resetModalError(state: ErrorState): void {
 export function setLockError(state: ErrorState, error_message: string): void {
     state.has_document_lock_error = true;
     state.document_lock_error = error_message;
-}
-
-export function setGlobalModalErrorMessage(state: ErrorState, message: string): void {
-    state.has_global_modal_error = true;
-    state.global_modal_error_message = message;
 }

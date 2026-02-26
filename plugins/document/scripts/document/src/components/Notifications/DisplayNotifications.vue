@@ -59,8 +59,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, computed } from "vue";
-import { useActions, useStore } from "vuex-composition-helpers";
+import { computed, onBeforeMount, ref } from "vue";
+import { useActions } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Item, UserGroup } from "../../type";
 import { TYPE_FOLDER } from "../../constants";
@@ -69,8 +69,8 @@ import { NotificationsTab } from "../../helpers/details-tabs";
 import type { SubscriberList } from "../../api/notifications-rest-querier";
 import {
     FROM_PARENT,
-    TO_ITEM_AND_SUBHIERARCHY,
     getSubscribers,
+    TO_ITEM_AND_SUBHIERARCHY,
 } from "../../api/notifications-rest-querier";
 import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
 import IndividualNotifications from "./IndividualNotifications.vue";
@@ -80,7 +80,6 @@ import { loadProjectUserGroups } from "../../helpers/permissions/ugroups";
 const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
 
 const props = defineProps<{ item_id: number }>();
-const $store = useStore();
 
 const project_id = strictInject(PROJECT).id;
 const current_user_id = strictInject(USER_ID);
@@ -127,7 +126,7 @@ function updateSubscribers(): void {
         },
     );
 
-    loadProjectUserGroups($store, project_id).match(
+    loadProjectUserGroups(project_id).match(
         (user_groups) => {
             project_user_groups.value = user_groups;
         },
