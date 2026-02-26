@@ -67,6 +67,7 @@
             v-bind:item="item_to_update_permissions"
             data-test="document-permissions-item-modal"
             v-if="Object.keys(item_to_update_permissions).length > 0"
+            v-on:permissions-modal-closed="hidePermissionsModal"
         />
         <modal-max-archive-size-threshold-exceeded
             v-if="current_folder_size !== null"
@@ -305,6 +306,10 @@ function hideDownloadFolderModals(): void {
 
 function showUpdateItemPermissionsModal(event: ShowUpdatePermissionsModalEvent): void {
     item_to_update_permissions.value = event.detail.current_item;
+}
+
+function hidePermissionsModal(): void {
+    item_to_update_permissions.value = {};
 }
 
 function showDeleteItemModal(event: DeleteItemEvent): void {

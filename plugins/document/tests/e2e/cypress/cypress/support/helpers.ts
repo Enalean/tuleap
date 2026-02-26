@@ -40,3 +40,14 @@ export function deleteDocumentDisplayedInQuickLook(): void {
     cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
     cy.get("[data-test=document-confirm-deletion-button]").click();
 }
+
+export function assertTreeViewRowContains(
+    index: number,
+    item_name: string,
+    is_hidden: boolean,
+): void {
+    cy.get("[data-test=document-tree-content] tr").eq(index).find("td").eq(0).contains(item_name);
+    cy.get("[data-test=document-tree-content] tr")
+        .eq(index)
+        .should(is_hidden ? "have.class" : "not.have.class", "document-tree-item-hidden");
+}

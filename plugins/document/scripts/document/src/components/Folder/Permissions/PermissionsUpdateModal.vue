@@ -95,6 +95,10 @@ const props = defineProps<{
     item: Item;
 }>();
 
+const emit = defineEmits<{
+    (e: "permissions-modal-closed"): void;
+}>();
+
 const is_submitting_new_permissions = ref(false);
 const updated_permissions = ref({
     apply_permissions_on_children: false,
@@ -167,6 +171,7 @@ async function show(): Promise<void> {
 function reset(): void {
     setPermissionsToUpdateFromItem();
     $store.commit("error/resetModalError");
+    emit("permissions-modal-closed");
 }
 
 async function onSubmit(): Promise<void> {

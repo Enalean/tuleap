@@ -41,3 +41,51 @@ export function createAWikiDocument(
         },
     );
 }
+
+export function createFolderWithContent(folder_name: string, file_path: string): void {
+    cy.get("[data-test=document-header-actions]").within(() => {
+        cy.get("[data-test=document-item-action-new-button]").click();
+
+        cy.get("[data-test=document-new-folder-creation-button]").click();
+    });
+
+    cy.get("[data-test=document-new-folder-modal]").within(() => {
+        cy.get("[data-test=document-new-item-title]").type(folder_name);
+        cy.get("[data-test=document-modal-submit-button-create-folder]").click();
+    });
+
+    cy.get("[data-test=document-tree-content]")
+        .contains("tr", folder_name)
+        .within(() => {
+            cy.get("[data-test=toggle]").click();
+            // button is displayed on tr::hover, so we need to force click
+            cy.get("[data-test=document-drop-down-button]").click({ force: true });
+            cy.get("[data-test=document-folder-content-creation]").click();
+            // force is needed because button is displayed at hover
+            cy.get("[data-test=document-new-file-creation-button]").click({ force: true });
+        });
+
+    cy.get("[data-test=document-new-file-upload]").selectFile(file_path);
+    cy.get("[data-test=document-modal-submit-button-create-item]").click();
+}
+
+export function createSubfolderIntoFolderFromTreeViewRow(
+    folder_name: string,
+    subfolder_name: string,
+): void {
+    cy.get("[data-test=document-tree-content]")
+        .contains("tr", folder_name)
+        .within(() => {
+            cy.get("[data-test=toggle]").click();
+            // button is displayed on tr::hover, so we need to force click
+            cy.get("[data-test=document-drop-down-button]").click({ force: true });
+            cy.get("[data-test=document-folder-content-creation]").click();
+            // force is needed because button is displayed at hover
+            cy.get("[data-test=document-new-folder-creation-button]").click({ force: true });
+        });
+
+    cy.get("[data-test=document-new-folder-modal]").within(() => {
+        cy.get("[data-test=document-new-item-title]").type(subfolder_name);
+        cy.get("[data-test=document-modal-submit-button-create-folder]").click();
+    });
+}

@@ -20,11 +20,17 @@
 import type { ProjectServiceResponse } from "@tuleap/plugin-document-rest-api-types";
 import { disableSpecificErrorThrownByCkeditor } from "../support/disable-specific-error-thrown-by-ckeditor";
 import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+import {
+    createFolderWithContent,
+    createSubfolderIntoFolderFromTreeViewRow,
+} from "../support/create-document";
 
 describe("Writers", function () {
     let permission_project_name: string;
+    let folder_permissions_project_name: string;
     beforeEach(() => {
         permission_project_name = "document-perm-" + getAntiCollisionNamePart();
+        folder_permissions_project_name = "folder-perm-" + getAntiCollisionNamePart();
         disableSpecificErrorThrownByCkeditor();
     });
 
@@ -109,9 +115,7 @@ describe("Writers", function () {
         cy.get("[data-test=document-drop-down-button]").first().click();
         cy.get("[data-test=document-permissions]").first().click();
 
-        cy.get("[data-test=document-permission-Reader]").select("Project administrators");
-        cy.get("[data-test=document-permission-Writer]").select("Project administrators");
-        cy.get("[data-test=document-permission-Manager]").select("Project administrators");
+        setPermissionsToGroup("Project administrators");
 
         cy.get("[data-test=document-modal-submit-update-permissions]").click();
         cy.get("[data-test=document-folder-content-row]").click();
@@ -129,7 +133,7 @@ describe("Writers", function () {
     });
 
     it("should raise an error when user try to access to document admin page", function () {
-        cy.projectMemberSession();
+        cy.projectAdministratorSession();
         cy.visit("/my/");
         cy.request({
             url: `/plugins/document/${permission_project_name}/admin-search`,
@@ -138,4 +142,130 @@ describe("Writers", function () {
             expect(response.status).to.eq(404);
         });
     });
+
+    it(`Folder permissions inheritance`, () => {
+        cy.projectAdministratorSession();
+        cy.createNewPublicProject(folder_permissions_project_name, "issues");
+        cy.visitProjectService(folder_permissions_project_name, "Documents");
+
+        cy.intercept("GET", "/api/projects/*/user_groups*").as("getPermissions");
+        cy.intercept("PUT", "/api/docman_folders/*/permissions*").as("updatePermissions");
+
+        cy.log("Create a folder with some content");
+        createFolderWithContent("AA", "./_fixtures/aa.txt");
+        createSubfolderIntoFolderFromTreeViewRow("AA", "sub folder");
+
+        cy.log("Update permissions of root folder (Project Documentation)");
+        cy.get("[data-test=document-header-actions]").within(() => {
+            cy.get("[data-test=document-drop-down-button]").click({ force: true });
+            cy.get("[data-test=document-permissions]").click();
+        });
+        setPermissionsToGroup("Project administrators");
+
+        cy.get("[data-test=document-modal-submit-update-permissions]").click();
+        cy.wait("@updatePermissions");
+
+        cy.log("Check that only Project Documentation has its permissions updated");
+        cy.log("Update permissions of root folder (Project Documentation)");
+        cy.get("[data-test=document-header-actions]").within(() => {
+            cy.get("[data-test=document-drop-down-button]").click({ force: true });
+            cy.get("[data-test=document-permissions]").click();
+        });
+
+        cy.get("[data-test=document-permissions-item-modal]").within(() => {
+            cy.wait("@getPermissions");
+            assertSelectHasNoSelectedValue("Reader");
+            assertSelectHasNoSelectedValue("Writer");
+            assertPermissionSelect("Manager", "Project administrators");
+            cy.get("[data-test=close-modal]").click();
+        });
+
+        cy.get("[data-test=document-tree-content]")
+            .contains("tr", "AA")
+            .within(() => {
+                cy.get("[data-test=document-drop-down-button]").click({ force: true });
+                cy.get("[data-test=document-permissions]").click();
+            });
+
+        cy.get("[data-test=document-permissions-item-modal]").within(() => {
+            assertPermissionSelect("Reader", "Registered users");
+            assertPermissionSelect("Writer", "Project members");
+            assertPermissionSelect("Manager", "Project administrators");
+            cy.get("[data-test=close-modal]").click();
+        });
+
+        cy.log("Update permissions to whole subfolder content");
+        cy.get("[data-test=document-tree-content]")
+            .contains("tr", "AA")
+            .within(() => {
+                cy.get("[data-test=document-drop-down-button]").click({ force: true });
+                cy.get("[data-test=document-permissions]").click();
+            });
+
+        setPermissionsToGroup("Registered users");
+        cy.get("[data-test= checkbox-apply-permissions-on-children]").click();
+
+        cy.get("[data-test=document-modal-submit-update-permissions]").click();
+        cy.wait("@updatePermissions");
+
+        cy.log("Permission is properly applied on folder AA");
+        assertPermissionOfElement("AA");
+
+        cy.log("Open AA to check sub items permissions");
+        cy.get("[data-test=document-tree-content]")
+            .contains("tr", "AA")
+            .within(() => {
+                cy.get("[data-test=toggle]").click();
+            });
+
+        cy.log("Permission is properly applied on sub folder");
+        assertPermissionOfElement("sub folder");
+
+        cy.log("Permission is properly applied on aa.txt");
+        assertPermissionOfElement("aa.txt");
+
+        cy.log("Create a new item will automatically inherit permissions from parent folder");
+        cy.get("[data-test=document-tree-content]")
+            .contains("tr", "AA")
+            .within(() => {
+                cy.get("[data-test=document-new-empty-creation-button]").click({ force: true });
+            });
+        assertSelectHasNoSelectedValue("Reader");
+        assertSelectHasNoSelectedValue("Writer");
+        assertPermissionSelect("Manager", "Registered users");
+    });
 });
+
+function assertPermissionSelect(permission_level: string, expected_text: string): void {
+    cy.get(`[data-test=document-permission-${permission_level}]`)
+        .find("option:selected")
+        .should("have.text", expected_text);
+}
+
+function assertSelectHasNoSelectedValue(permission_level: string): void {
+    cy.get(`[data-test=document-permission-${permission_level}]`)
+        .invoke("val")
+        .should("have.length", 0);
+}
+
+function assertPermissionOfElement(item_name: string): void {
+    cy.get("[data-test=document-tree-content]")
+        .contains("tr", item_name)
+        .within(() => {
+            cy.get("[data-test=document-drop-down-button]").click({ force: true });
+            cy.get("[data-test=document-permissions]").click();
+        });
+
+    cy.get("[data-test=document-permissions-item-modal]").within(() => {
+        assertSelectHasNoSelectedValue("Reader");
+        assertSelectHasNoSelectedValue("Writer");
+        assertPermissionSelect("Manager", "Registered users");
+        cy.get("[data-test=close-modal]").click();
+    });
+}
+
+function setPermissionsToGroup(group_name: string): void {
+    cy.get("[data-test=document-permission-Reader]").select(group_name);
+    cy.get("[data-test=document-permission-Writer]").select(group_name);
+    cy.get("[data-test=document-permission-Manager]").select(group_name);
+}
