@@ -43,12 +43,10 @@ import {
 import emitter from "../emitter";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import { Option } from "@tuleap/option";
 
 export type DocumentProperties = {
-    getFolderProperties(
-        context: ActionContext<RootState, RootState>,
-        folder_item: Folder,
-    ): Promise<FolderProperties | null>;
+    getFolderProperties(folder_item: Folder): Promise<Option<FolderProperties>>;
     updateFolderProperties(
         context: ActionContext<RootState, RootState>,
         item: Folder,
@@ -190,17 +188,14 @@ export const getDocumentProperties = (): DocumentProperties => {
     };
 
     return {
-        async getFolderProperties(
-            context: ActionContext<RootState, RootState>,
-            folder_item: Folder,
-        ): Promise<FolderProperties | null> {
-            try {
-                const folder = await getItemWithSize(folder_item.id);
-                return folder.folder_properties;
-            } catch (exception) {
-                await context.dispatch("error/handleGlobalModalError", exception);
-                return null;
-            }
+        getFolderProperties(folder_item: Folder): Promise<Option<FolderProperties>> {
+            return getItemWithSize(folder_item.id).match(
+                (folder) => Option.fromValue(folder.folder_properties),
+                (fault): Option<FolderProperties> => {
+                    emitter.emit("global-modal-error", fault);
+                    return Option.nothing();
+                },
+            );
         },
         async updateFolderProperties(
             context: ActionContext<RootState, RootState>,

@@ -477,8 +477,6 @@ export async function postNewFileVersionFromEmpty(
     return response.json();
 }
 
-export async function getItemWithSize(folder_id: number): Promise<Folder> {
-    const response = await get(`/api/docman_items/${encodeURIComponent(folder_id)}?with_size=true`);
-
-    return response.json();
+export function getItemWithSize(folder_id: number): ResultAsync<Folder, Fault> {
+    return getJSON<Folder>(uri`/api/docman_items/${folder_id}?with_size=true`);
 }
