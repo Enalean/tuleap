@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spacing);
 
 /**
@@ -49,7 +48,7 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
  */
 %tlp-table-th {
     padding: $tlp-table-cell-padding;
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     color: var(--tlp-main-color);
     font-weight: 600;
 
@@ -77,7 +76,7 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
     }
 
     > tbody {
-        background: var(--tlp-white-color);
+        background: var(--tlp-structure-background-color);
 
         &.tlp-table-tbody-hidden {
             display: none;
@@ -103,7 +102,10 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
         > tr.tlp-table-row-success,
         > tr.tlp-table-row-success > th,
         > tr.tlp-table-row-success > td {
-            background: var(--tlp-success-color-lighter-90);
+            background: light-dark(
+                var(--tlp-success-color-lighter-90),
+                var(--tlp-success-color-darker-20)
+            );
         }
 
         > tr.tlp-table-row-success:hover,
@@ -112,13 +114,19 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
         > tr.tlp-table-row-success:focus-within,
         > tr.tlp-table-row-success:focus-within > th,
         > tr.tlp-table-row-success:focus-within > td {
-            background: var(--tlp-success-color-lighter-80);
+            background: light-dark(
+                var(--tlp-success-color-lighter-80),
+                var(--tlp-success-color-darker-10)
+            );
         }
 
         > tr.tlp-table-row-danger,
         > tr.tlp-table-row-danger > th,
         > tr.tlp-table-row-danger > td {
-            background: var(--tlp-danger-color-lighter-90);
+            background: light-dark(
+                var(--tlp-danger-color-lighter-90),
+                var(--tlp-danger-color-darker-40)
+            );
 
             &:not(.tlp-table-cell-actions) {
                 text-decoration: line-through;
@@ -140,7 +148,10 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
         > tr.tlp-table-row-danger:focus-within,
         > tr.tlp-table-row-danger:focus-within > th,
         > tr.tlp-table-row-danger:focus-within > td {
-            background: var(--tlp-danger-color-lighter-80);
+            background: light-dark(
+                var(--tlp-danger-color-lighter-80),
+                var(--tlp-danger-color-darker-30)
+            );
         }
 
         > tr > th,
