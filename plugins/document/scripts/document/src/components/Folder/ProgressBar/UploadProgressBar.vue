@@ -20,6 +20,7 @@
 <template>
     <div
         class="document-file-upload-progress"
+        data-test="progress-bar"
         v-bind:class="{ 'document-file-upload-progress-canceled': is_canceled }"
     >
         <span class="document-file-upload-progress-value">{{ item.progress }}%</span>
