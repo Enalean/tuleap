@@ -62,20 +62,19 @@ import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import { useStore } from "vuex";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT, USER_ID } from "../../../configuration-keys";
+import { PROJECT, ROOT_ID, USER_ID } from "../../../configuration-keys";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{ destination: Folder }>();
 
-const { folder_content, current_folder } = useState<
-    Pick<State, "folder_content" | "current_folder">
->(["folder_content", "current_folder"]);
+const { folder_content } = useState<Pick<State, "folder_content">>(["folder_content"]);
 
 const store = useStore();
 
 const user_id = strictInject(USER_ID);
 const project = strictInject(PROJECT);
+const root_folder_id = strictInject(ROOT_ID);
 const clipboard = useClipboardStore(store, project.id, user_id);
 
 const can_item_be_pasted = computed((): boolean => {
@@ -118,7 +117,7 @@ async function doPasteItem(): Promise<void> {
 
     await clipboard.pasteItem({
         destination_folder: props.destination,
-        current_folder: current_folder.value,
+        root_folder_id,
     });
 }
 </script>

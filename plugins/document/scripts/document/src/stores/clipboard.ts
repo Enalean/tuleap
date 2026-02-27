@@ -47,7 +47,7 @@ import type { Store } from "vuex";
 
 export interface PastePayload {
     destination_folder: Folder;
-    current_folder: Folder;
+    root_folder_id: number;
 }
 
 function buildBaseStorageKey(project_id: number, user_id: number): string {
@@ -100,15 +100,7 @@ export function useClipboardStore(
                     }
                     emitter.emit("new-item-has-just-been-created", { id: pasted_item_id });
 
-                    await store.dispatch(
-                        "adjustItemToContentAfterItemCreationInAFolder",
-                        {
-                            parent: payload.destination_folder,
-                            current_folder: payload.current_folder,
-                            item_id: pasted_item_id,
-                        },
-                        { root: true },
-                    );
+                    await store.dispatch("loadFolder", payload.root_folder_id, { root: true });
                 } catch (exception) {
                     this.pastingHasFailed();
                     await store.dispatch("error/handleGlobalModalError", exception, { root: true });
