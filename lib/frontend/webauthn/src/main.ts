@@ -48,6 +48,7 @@ export function openTargetModalIdAfterAuthentication(
         .map((): Modal | null => {
             button.disabled = false;
 
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync(
                 "tuleap-webauthn",
                 { fr_FR, pt_BR },

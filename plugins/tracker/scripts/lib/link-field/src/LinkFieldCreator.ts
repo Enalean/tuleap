@@ -77,6 +77,7 @@ export const LinkFieldCreator = (
     user_identifier: UserIdentifier,
     user_locale: LocaleString,
 ): LinkFieldCreator => {
+    // eslint-disable-next-line deprecate/function
     const gettext_provider = initGettextSync(
         "tuleap-plugin-tracker-link-field",
         fr_FR,

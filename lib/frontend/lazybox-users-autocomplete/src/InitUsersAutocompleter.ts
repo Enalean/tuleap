@@ -84,6 +84,7 @@ export const initUsersAutocompleter = (
     fetch_matching_users_callback: FetchMatchingUsers = fetchMatchingUsers,
     is_multiple: boolean = true,
 ): void => {
+    // eslint-disable-next-line deprecate/function
     const gettext_provider = initGettextSync("lazybox-users-autocomplete", { fr_FR }, locale);
 
     const users_transformer = UsersToLazyboxItemsTransformer();

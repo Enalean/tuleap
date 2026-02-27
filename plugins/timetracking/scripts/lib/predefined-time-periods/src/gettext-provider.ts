@@ -20,6 +20,7 @@
 import { getLocaleWithDefault, initGettextSync } from "@tuleap/gettext";
 import fr_FR from "../po/fr_FR.po";
 
+// eslint-disable-next-line deprecate/function
 export const gettext_provider = initGettextSync(
     "plugin-timetracking/predefined-time-periods",
     { fr_FR },

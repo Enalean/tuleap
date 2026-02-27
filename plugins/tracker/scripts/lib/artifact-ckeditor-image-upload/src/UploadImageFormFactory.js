@@ -26,6 +26,7 @@ import { HelpBlockFactory } from "./HelpBlockFactory";
 import { disablePasteOfImages } from "./paste-image-disabler";
 
 export const UploadImageFormFactory = (doc, locale) => {
+    // eslint-disable-next-line deprecate/function
     const gettext_provider = initGettextSync("rich-text-editor", { fr_FR, pt_BR }, locale);
 
     return {

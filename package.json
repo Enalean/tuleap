@@ -112,8 +112,7 @@
       "safer-buffer": "npm:@nolyfill/safer-buffer@^1",
       "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1",
       "string.prototype.trimend": "npm:@nolyfill/string.prototype.trimend@^1",
-      "minimatch@9.0.1": "^9.0.7",
-      "minimatch@3.0.8": "^3.1.4"
+      "minimatch@9.0.1": "^9.0.7"
     }
   }
 }
