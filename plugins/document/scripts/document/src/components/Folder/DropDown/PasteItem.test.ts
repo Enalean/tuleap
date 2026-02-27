@@ -32,11 +32,11 @@ import {
     TYPE_EMPTY,
     TYPE_FOLDER,
 } from "../../../constants";
-import type { Folder, Item, RootState } from "../../../type";
+import type { Item, RootState } from "../../../type";
 import { useClipboardStore } from "../../../stores/clipboard";
 import type { Store } from "vuex";
 import emitter from "../../../helpers/emitter";
-import { PROJECT, USER_ID } from "../../../configuration-keys";
+import { PROJECT, ROOT_ID, USER_ID } from "../../../configuration-keys";
 import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 const mocked_store = { store: { dispatch: vi.fn() } } as unknown as Store<RootState>;
@@ -46,9 +46,9 @@ describe("PasteItem", () => {
         user_can_write: true,
         type: TYPE_FOLDER,
     } as Item;
-    const current_folder = {} as Folder;
     let store: ReturnType<typeof useClipboardStore>;
     let emitMock: Mock;
+    const root_folder_id = 27363872;
 
     beforeEach(() => {
         emitMock = vi.spyOn(emitter, "emit");
@@ -56,7 +56,6 @@ describe("PasteItem", () => {
 
     function createWrapper(
         destination: Item,
-        current_folder: Folder,
         operation_type: string | null,
         item_title: string | null,
         pasting_in_progress: boolean,
@@ -81,7 +80,6 @@ describe("PasteItem", () => {
                 ...getGlobalTestOptions(
                     {
                         state: {
-                            current_folder,
                             folder_content: [],
                         } as unknown as RootState,
                     },
@@ -90,6 +88,7 @@ describe("PasteItem", () => {
                 provide: {
                     [USER_ID.valueOf()]: 1,
                     [PROJECT.valueOf()]: new ProjectBuilder(1).build(),
+                    [ROOT_ID.valueOf()]: root_folder_id,
                 },
             },
             props: { destination },
@@ -103,27 +102,21 @@ describe("PasteItem", () => {
     it(`Given an item is in the clipboard
         And the inspected item is a folder the user can write
         Then item can be pasted`, async () => {
-        const wrapper = createWrapper(
-            destination,
-            current_folder,
-            CLIPBOARD_OPERATION_COPY,
-            "My item",
-            false,
-        );
+        const wrapper = createWrapper(destination, CLIPBOARD_OPERATION_COPY, "My item", false);
         expect(wrapper.text()).toContain("My item");
 
         await wrapper.trigger("click");
 
         expect(store.pasteItem).toHaveBeenCalledWith({
             destination_folder: destination,
-            current_folder,
+            root_folder_id,
         });
         expect(emitMock).toHaveBeenCalledWith("hide-action-menu");
     });
 
     it(`Given no item is in the clipboard
         Then no item can be pasted`, () => {
-        const wrapper = createWrapper(destination, current_folder, null, "", true);
+        const wrapper = createWrapper(destination, null, "", true);
 
         expect(wrapper.html()).toBe("<!--v-if-->");
     });
@@ -136,13 +129,7 @@ describe("PasteItem", () => {
             type: TYPE_EMPTY,
         } as Item;
 
-        const wrapper = createWrapper(
-            destination,
-            current_folder,
-            CLIPBOARD_OPERATION_COPY,
-            "My item",
-            true,
-        );
+        const wrapper = createWrapper(destination, CLIPBOARD_OPERATION_COPY, "My item", true);
 
         expect(wrapper.html()).toBe("<!--v-if-->");
     });
@@ -155,13 +142,7 @@ describe("PasteItem", () => {
             type: TYPE_FOLDER,
         } as Item;
 
-        const wrapper = createWrapper(
-            destination,
-            current_folder,
-            CLIPBOARD_OPERATION_COPY,
-            "My item",
-            true,
-        );
+        const wrapper = createWrapper(destination, CLIPBOARD_OPERATION_COPY, "My item", true);
 
         expect(wrapper.html()).toBe("<!--v-if-->");
     });
@@ -169,13 +150,7 @@ describe("PasteItem", () => {
     it(`Given an item is being pasted
         Then the action is marked as disabled
         And the menu is not closed if the user tries to click on it`, () => {
-        const wrapper = createWrapper(
-            destination,
-            current_folder,
-            CLIPBOARD_OPERATION_COPY,
-            "My item",
-            true,
-        );
+        const wrapper = createWrapper(destination, CLIPBOARD_OPERATION_COPY, "My item", true);
 
         expect(wrapper.attributes().disabled).toBe("");
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
@@ -192,7 +167,6 @@ describe("PasteItem", () => {
 
         const wrapper = createWrapper(
             destination,
-            current_folder,
             CLIPBOARD_OPERATION_CUT,
             "My item",
             true,
@@ -207,13 +181,7 @@ describe("PasteItem", () => {
         Then the item can not be pasted`, () => {
         vi.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(true);
 
-        const wrapper = createWrapper(
-            destination,
-            current_folder,
-            CLIPBOARD_OPERATION_CUT,
-            "My item",
-            true,
-        );
+        const wrapper = createWrapper(destination, CLIPBOARD_OPERATION_CUT, "My item", true);
 
         expect(wrapper.html()).toBe("<!--v-if-->");
     });
@@ -224,13 +192,7 @@ describe("PasteItem", () => {
         vi.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(false);
         vi.spyOn(clipboard_helpers, "isItemDestinationIntoItself").mockReturnValue(true);
 
-        const wrapper = createWrapper(
-            destination,
-            current_folder,
-            CLIPBOARD_OPERATION_CUT,
-            "My item",
-            true,
-        );
+        const wrapper = createWrapper(destination, CLIPBOARD_OPERATION_CUT, "My item", true);
 
         expect(wrapper.html()).toBe("<!--v-if-->");
     });
