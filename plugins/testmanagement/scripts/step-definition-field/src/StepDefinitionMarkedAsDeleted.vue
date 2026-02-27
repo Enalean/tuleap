@@ -29,7 +29,10 @@
         <div class="ttm-definition-step-description-deleted">
             <div
                 v-dompurify-html="step.raw_description"
-                v-bind:class="{ 'ttm-definition-step-description-text': is_text }"
+                v-bind:class="{
+                    'ttm-definition-step-description-text':
+                        step.description_format === TEXT_FORMAT_TEXT,
+                }"
             ></div>
             <section class="ttm-definition-step-expected">
                 <step-definition-arrow-expected />
@@ -40,9 +43,8 @@
                     <div
                         v-dompurify-html="step.raw_expected_results"
                         v-bind:class="{
-                            'ttm-definition-step-description-text': is_text(
-                                step.description_format,
-                            ),
+                            'ttm-definition-step-description-text':
+                                step.description_format === TEXT_FORMAT_TEXT,
                         }"
                     ></div>
                 </div>
@@ -52,12 +54,10 @@
 </template>
 
 <script setup lang="ts">
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
-import { useGetters } from "vuex-composition-helpers";
 import type { Step } from "./Step";
-
-const { is_text } = useGetters(["is_text"]);
 
 defineProps<{
     step: Step;

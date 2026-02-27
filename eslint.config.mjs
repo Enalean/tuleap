@@ -223,7 +223,6 @@ const config_for_remaining_vue_javascript = {
         "plugins/baseline/scripts/baseline/src/**/*.vue",
         "plugins/document/**/*.vue",
         "plugins/pullrequest/scripts/create-pullrequest-button/**/*.vue",
-        "plugins/testmanagement/scripts/step-definition-field/**/*.vue",
         "plugins/tracker/scripts/workflow-transitions/**/*.vue",
     ],
     rules: {

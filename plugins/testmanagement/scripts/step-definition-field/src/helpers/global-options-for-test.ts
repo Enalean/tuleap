@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const state = {
-    steps: [],
-};
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
 
-export default state;
+export function getGlobalTestOptions(): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true })],
+    };
+}

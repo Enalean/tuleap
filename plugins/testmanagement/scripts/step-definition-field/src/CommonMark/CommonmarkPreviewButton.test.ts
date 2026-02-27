@@ -20,7 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CommonmarkPreviewButton from "./CommonmarkPreviewButton.vue";
-import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
+import { getGlobalTestOptions } from "../helpers/global-options-for-test";
 
 describe("CommonmarkPreviewButton", () => {
     it.each([
@@ -65,6 +65,8 @@ describe("CommonmarkPreviewButton", () => {
         expect(icon_classes).toContain("fa-circle-notch");
         expect(icon_classes).toContain("fa-spin");
 
-        expect(wrapper.find("[data-test=button-commonmark-preview]").element.disabled).toBe(true);
+        expect(
+            wrapper.find("[data-test=button-commonmark-preview]").attributes("disabled"),
+        ).toBeDefined();
     });
 });

@@ -28,3 +28,4 @@ export const UPLOAD_URL: StrictInjectionKey<string> = Symbol("upload_url");
 export const UPLOAD_FIELD_NAME: StrictInjectionKey<string> = Symbol("upload_field_name");
 export const UPLOAD_MAX_SIZE: StrictInjectionKey<string> = Symbol("upload_max_size");
 export const IS_DRAGGING: StrictInjectionKey<Ref<boolean>> = Symbol("is_dragging");
+export const STEPS: StrictInjectionKey<Ref<Array<Step>>> = Symbol("steps");
