@@ -31,9 +31,6 @@ use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-/**
- * @psalm-immutable
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EditReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {

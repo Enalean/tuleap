@@ -63,7 +63,6 @@ final class MilestoneControllerTest extends TestCase
     private PlanningMilestonePaneFactory&MockObject $pane_factory;
     private Planning_MilestoneController $milestone_controller;
     private BreadCrumb $service_breadcrumb;
-    private BreadCrumb $top_backlog_breadcrumb;
 
     #[\Override]
     public function setUp(): void
@@ -100,9 +99,8 @@ final class MilestoneControllerTest extends TestCase
         ]);
         $request->setCurrentUser(UserTestBuilder::anActiveUser()->withMemberOf($project)->build());
 
-        $this->pane_factory           = $this->createMock(PlanningMilestonePaneFactory::class);
-        $this->service_breadcrumb     = new BreadCrumb(new BreadCrumbLink('Backlog', '/plugins/agiledashboard/?group_id=102&action=show-top&pane=topplanning-v2'));
-        $this->top_backlog_breadcrumb = new BreadCrumb(new BreadCrumbLink('Top backlog', '/fake_url'));
+        $this->pane_factory       = $this->createMock(PlanningMilestonePaneFactory::class);
+        $this->service_breadcrumb = new BreadCrumb(new BreadCrumbLink('Backlog', '/plugins/agiledashboard/?group_id=102&action=show-top&pane=topplanning-v2'));
 
         $this->milestone_controller = new Planning_MilestoneController(
             $request,

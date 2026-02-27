@@ -95,7 +95,7 @@ final class MilestoneReportCriterionProviderTest extends TestCase
 
         $this->uplanned_criterion_provider->expects($this->once())->method('formatUnplannedAsSelectboxOption')->willReturn('');
 
-        self::assertMatchesRegularExpression('/<select name="additional_criteria\[agiledashboard_milestone]"/', $this->provider->getCriterion($this->task_tracker, $this->user));
+        self::assertMatchesRegularExpression('/<select name="additional_criteria\[agiledashboard_milestone]"/', (string) $this->provider->getCriterion($this->task_tracker, $this->user));
     }
 
     public function testItSelectsTheGivenMilestone(): void
