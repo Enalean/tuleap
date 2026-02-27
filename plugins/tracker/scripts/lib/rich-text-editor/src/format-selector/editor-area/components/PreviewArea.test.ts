@@ -39,6 +39,7 @@ describe(`PreviewArea`, () => {
     beforeEach(() => {
         const doc = document.implementation.createHTMLDocument();
         mount_point = doc.createElement("div");
+        // eslint-disable-next-line deprecate/function
         gettext_provider = initGettextSync("rich-text-editor", {}, "en_US");
     });
 

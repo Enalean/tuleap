@@ -86,6 +86,7 @@ export class RichTextEditorFactory {
         doc: Document,
         locale: string,
     ): RichTextEditorFactory {
+        // eslint-disable-next-line deprecate/function
         const gettext_provider = initGettextSync("rich-text-editor", { fr_FR, pt_BR }, locale);
         const document_adapter = new FlamingParrotDocumentAdapter(doc);
         const builder = new FlamingParrotEditorAreaBuilder(
@@ -119,6 +120,7 @@ export class RichTextEditorFactory {
         doc: Document,
         locale: string,
     ): RichTextEditorFactory {
+        // eslint-disable-next-line deprecate/function
         const gettext_provider = initGettextSync("rich-text-editor", { fr_FR, pt_BR }, locale);
         const document_adapter = new BurningParrotDocumentAdapter(doc);
         const builder = new BurningParrotEditorAreaBuilder(

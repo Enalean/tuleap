@@ -29,6 +29,7 @@ export function createListPicker(
     source_select_box: HTMLSelectElement,
     options: ListPickerOptions,
 ): ListPicker {
+    // eslint-disable-next-line deprecate/function
     const gettext_provider = initGettextSync(
         "tuleap-list-picker",
         { fr_FR, pt_BR },

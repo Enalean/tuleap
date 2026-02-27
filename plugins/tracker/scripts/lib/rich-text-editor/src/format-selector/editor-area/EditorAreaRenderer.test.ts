@@ -73,6 +73,7 @@ describe(`EditorAreaRenderer`, () => {
         gettext_provider: GettextProvider,
         state: EditorAreaStateInterface;
     beforeEach(() => {
+        // eslint-disable-next-line deprecate/function
         gettext_provider = initGettextSync("rich-text-editor", {}, "en_US");
         state = createState("reduplicatory", "archdruid");
         renderer = new EditorAreaRenderer(gettext_provider);

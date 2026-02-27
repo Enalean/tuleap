@@ -39,6 +39,7 @@ describe("feedback-display", () => {
         });
 
         it("Clear existing feedbacks, display the success one and inform that emails have been sent", () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             displaySuccess(
@@ -61,6 +62,7 @@ describe("feedback-display", () => {
         });
 
         it("can displaySuccess multiple times in a row", () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             displaySuccess(
@@ -94,6 +96,7 @@ describe("feedback-display", () => {
         });
 
         it("Extracts emails that are in error to display a warning", () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             displaySuccess(
@@ -116,6 +119,7 @@ describe("feedback-display", () => {
         });
 
         it("should display users that are already project members", () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             displaySuccess(
@@ -140,6 +144,7 @@ describe("feedback-display", () => {
         });
 
         it("should display known users that are have been added to project members", () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             displaySuccess(
@@ -164,6 +169,7 @@ describe("feedback-display", () => {
         });
 
         it("should display known users that are not alive", () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             displaySuccess(
@@ -189,6 +195,7 @@ describe("feedback-display", () => {
         });
 
         it("should display known users that are restricted", () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             displaySuccess(

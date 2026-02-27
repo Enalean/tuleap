@@ -61,6 +61,7 @@ describe("send-notifications", () => {
         });
 
         it("Creates invitation and displays success feedback", async () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             email_field.value = "peter@example.com, wendy@example.com";
@@ -97,6 +98,7 @@ describe("send-notifications", () => {
         });
 
         it("Creates invitation into a project and displays success feedback", async () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             email_field.value = "peter@example.com, wendy@example.com";
@@ -141,6 +143,7 @@ describe("send-notifications", () => {
         });
 
         it("Tries to create invitation and displays error", async () => {
+            // eslint-disable-next-line deprecate/function
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
             email_field.value = "peter@example.com, wendy@example.com";

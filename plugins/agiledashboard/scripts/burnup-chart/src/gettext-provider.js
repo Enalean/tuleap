@@ -20,4 +20,5 @@
 import { initGettextSync } from "@tuleap/gettext";
 import fr_FR from "../po/fr_FR.po";
 
+// eslint-disable-next-line deprecate/function
 export const buildProvider = (locale) => initGettextSync("burnup-chart", { fr_FR }, locale);

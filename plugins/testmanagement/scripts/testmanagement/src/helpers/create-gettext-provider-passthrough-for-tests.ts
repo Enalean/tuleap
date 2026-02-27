@@ -21,5 +21,6 @@ import type { GettextProvider } from "@tuleap/gettext";
 import { initGettextSync } from "@tuleap/gettext";
 
 export function createGettextProviderPassthrough(): GettextProvider {
+    // eslint-disable-next-line deprecate/function
     return initGettextSync("tuleap-testmanagement", {}, "en_US");
 }

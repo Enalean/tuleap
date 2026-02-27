@@ -22,5 +22,6 @@ import french_translations from "../../../po/fr_FR.po";
 import { initGettextSync } from "@tuleap/gettext";
 
 export function initGettextForDocumentExport(locale: string): GettextProvider {
+    // eslint-disable-next-line deprecate/function
     return initGettextSync("tuleap-testmanagement", french_translations, locale);
 }
