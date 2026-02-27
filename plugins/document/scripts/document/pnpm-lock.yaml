@@ -95,12 +95,6 @@ dependencies:
   mitt:
     specifier: ^3.0.0
     version: 3.0.0
-  moment:
-    specifier: ^2.29.4
-    version: 2.29.4
-  moment-timezone:
-    specifier: ^0.5.41
-    version: 0.5.41
   neverthrow:
     specifier: 6.0.0
     version: 6.0.0
@@ -753,16 +747,6 @@ packages:
 
   /mitt@3.0.0:
     resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
-    dev: false
-
-  /moment-timezone@0.5.41:
-    resolution: {integrity: sha512-e0jGNZDOHfBXJGz8vR/sIMXvBIGJJcqFjmlg9lmE+5KX1U7/RZNMswfD8nKnNCnQdKTIj50IaRKwl1fvMLyyRg==}
-    dependencies:
-      moment: 2.29.4
-    dev: false
-
-  /moment@2.29.4:
-    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
   /nanoid@3.3.8:

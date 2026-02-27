@@ -23,7 +23,6 @@ import {
     getObsolescenceDateValueInput,
     formatObsolescenceDateValue,
 } from "./obsolescence-date-value";
-import moment from "moment/moment";
 
 describe("getObsolescenceDateValueInput", () => {
     it(`Given a "permanent" date value
@@ -33,13 +32,20 @@ describe("getObsolescenceDateValueInput", () => {
     });
     it(`Given a "today" date value
     Then the returned date should be the current date`, () => {
-        const expected_date = moment().format("YYYY-MM-DD");
+        const date = new Date();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const expected_date = `${date.getFullYear()}-${month}-${date.getDate()}`;
         const date_result = getObsolescenceDateValueInput("today");
         expect(expected_date).toStrictEqual(date_result);
     });
     it(`Given a number of month after the current date
     Then the returned date should be the current + 6 months`, () => {
-        const expected_date = moment().add(6, "M").format("YYYY-MM-DD");
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 7).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        const expected_date = `${year}-${month}-${day}`;
         const date_result = getObsolescenceDateValueInput("6");
         expect(expected_date).toStrictEqual(date_result);
     });

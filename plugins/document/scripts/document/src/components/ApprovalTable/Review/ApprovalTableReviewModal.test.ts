@@ -22,7 +22,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import ApprovalTableReviewModal from "./ApprovalTableReviewModal.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { USER_LOCALE, USER_TIMEZONE } from "../../../configuration-keys";
+import { DATE_FORMATTER } from "../../../configuration-keys";
 import { ItemBuilder } from "../../../../tests/builders/ItemBuilder";
 import { ApprovalTableBuilder } from "../../../../tests/builders/ApprovalTableBuilder";
 import { ApprovalTableReviewerBuilder } from "../../../../tests/builders/ApprovalTableReviewerBuilder";
@@ -37,6 +37,9 @@ let refresh_data_event_call_count = 0;
 
 describe(ApprovalTableReviewModal, () => {
     let trigger: HTMLButtonElement;
+    const mock_formatter = {
+        format: vi.fn((date: string) => date),
+    };
 
     function getWrapper(): VueWrapper<InstanceType<typeof ApprovalTableReviewModal>> {
         return shallowMount(ApprovalTableReviewModal, {
@@ -49,8 +52,7 @@ describe(ApprovalTableReviewModal, () => {
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
-                    [USER_LOCALE.valueOf()]: "fr_FR",
-                    [USER_TIMEZONE.valueOf()]: "Europe/Paris",
+                    [DATE_FORMATTER.valueOf()]: mock_formatter,
                 },
                 stubs: {
                     RouterLink: RouterLinkStub,

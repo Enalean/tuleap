@@ -27,9 +27,8 @@
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { Item } from "../../type";
-import { USER_LOCALE, USER_TIMEZONE } from "../../configuration-keys";
+import { DATE_FORMATTER } from "../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { IntlFormatter } from "@tuleap/date-helper";
 
 const { $gettext } = useGettext();
 
@@ -37,9 +36,7 @@ const props = defineProps<{
     item: Item;
 }>();
 
-const user_locale = strictInject(USER_LOCALE);
-const user_timezone = strictInject(USER_TIMEZONE);
-const formatter = IntlFormatter(user_locale, user_timezone, "date");
+const date_formatter = strictInject(DATE_FORMATTER);
 
 const obsolescence_date = computed((): string => {
     const obsolescence_property = props.item.properties.find(
@@ -49,7 +46,7 @@ const obsolescence_date = computed((): string => {
 });
 
 const formatted_full_date = computed((): string => {
-    return formatter.format(obsolescence_date.value);
+    return date_formatter.format(obsolescence_date.value);
 });
 
 const is_obsolete = computed((): boolean => {

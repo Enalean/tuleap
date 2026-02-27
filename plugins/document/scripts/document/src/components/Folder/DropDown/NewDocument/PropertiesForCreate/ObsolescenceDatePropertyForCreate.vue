@@ -70,7 +70,6 @@
 import DateFlatPicker from "../../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
 import { getObsolescenceDateValueInput } from "../../../../../helpers/properties-helpers/obsolescence-date-value";
 import emitter from "../../../../../helpers/emitter";
-import moment from "moment/moment";
 import { useGettext } from "vue3-gettext";
 import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -108,9 +107,9 @@ function updateDatePickerValue(event: Event) {
 }
 
 function checkDateValidity(date: string) {
-    const current_date = moment();
+    const today = new Date().toISOString().split("T")[0];
     error_message.value = "";
-    if (current_date.isSameOrAfter(date, "day")) {
+    if (today >= date) {
         error_message.value = error.value;
     }
 }

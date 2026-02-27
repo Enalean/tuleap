@@ -1,28 +1,28 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DocumentRelativeDate > should display a tlp-relative-date element 1`] = `
+exports[`DocumentRelativeDate > should display a tlp-relative-date element formated for hours 1`] = `
 <tlp-relative-date
-  absolute-date="2021-10-06 00:00"
+  absolute-date="2021-10-06"
   class="tlp-date-on-top"
   date="2021-10-06"
   locale="en-US"
   placement="top"
   preference="relative"
-  title="2021-10-06 00:00"
+  title="2021-10-06"
 >
   4 years ago
 </tlp-relative-date>
 `;
 
-exports[`DocumentRelativeDate > should display a tlp-relative-date element with placement on right 1`] = `
+exports[`DocumentRelativeDate > should display a tlp-relative-date element with placement on right formated for date time 1`] = `
 <tlp-relative-date
-  absolute-date="2021-10-06 00:00"
+  absolute-date="2021-10-06"
   class="tlp-date-on-right"
   date="2021-10-06"
   locale="en-US"
   placement="right"
   preference="relative"
-  title="2021-10-06 00:00"
+  title="2021-10-06"
 >
   4 years ago
 </tlp-relative-date>

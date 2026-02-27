@@ -342,7 +342,7 @@ describe("creation properties transformer", () => {
             {
                 short_name: "custom property",
                 name: "field_1",
-                value: "2019-08-30T00:00:00+02:00",
+                value: "2019-08-30T00:00:00+00:00",
                 type: "date",
                 is_multiple_value_allowed: false,
                 is_required: false,

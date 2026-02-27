@@ -17,22 +17,23 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
-import moment from "moment/moment";
 
 export function getObsolescenceDateValueInput(select_date_value: string): string {
-    const current_date = moment();
+    const current_date = new Date();
     let date;
     switch (select_date_value) {
         case "permanent":
             date = "";
             break;
         case "today":
-            date = current_date.format("YYYY-MM-DD");
+            date = current_date.toISOString().split("T")[0];
             break;
-        default:
-            date = moment(current_date, "YYYY-MM-DD")
-                .add(select_date_value, "M")
-                .format("YYYY-MM-DD");
+        default: {
+            const months_to_add = parseInt(select_date_value, 10);
+            const future_date = new Date(current_date);
+            future_date.setMonth(future_date.getMonth() + months_to_add);
+            date = future_date.toISOString().split("T")[0];
+        }
     }
     return date;
 }

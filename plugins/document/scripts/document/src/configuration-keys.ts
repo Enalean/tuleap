@@ -22,6 +22,7 @@ import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { LocaleString } from "@tuleap/locale";
 import type { CsrfToken, ListOfSearchResultColumnDefinition, SearchCriteria } from "./type";
+import type { IntlFormatter } from "@tuleap/date-helper";
 
 export interface Project {
     readonly id: number;
@@ -49,13 +50,13 @@ export const USER_CAN_DRAGNDROP: StrictInjectionKey<boolean> = Symbol("user-can-
 export const MAX_SIZE_UPLOAD: StrictInjectionKey<number> = Symbol("max-size-upload");
 export const WARNING_THRESHOLD: StrictInjectionKey<number> = Symbol("warning-threshold");
 export const MAX_ARCHIVE_SIZE: StrictInjectionKey<number> = Symbol("max-archive-size");
-export const DATE_TIME_FORMAT: StrictInjectionKey<string> = Symbol("date-time-format");
+export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("date-formatter");
+export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("date-time-formatter");
 export const IS_CHANGELOG_PROPOSED_AFTER_DND: StrictInjectionKey<boolean> = Symbol(
     "is-changelog-proposed-after-dnd",
 );
 export const IS_DELETION_ALLOWED: StrictInjectionKey<boolean> = Symbol("is-deletion-allowed");
 export const USER_LOCALE: StrictInjectionKey<LocaleString> = Symbol("user-locale");
-export const USER_TIMEZONE: StrictInjectionKey<string> = Symbol("user-timezone");
 export const RELATIVE_DATES_DISPLAY: StrictInjectionKey<RelativeDatesDisplayPreference> =
     Symbol("relative-dates-display");
 export const SEARCH_CRITERIA: StrictInjectionKey<SearchCriteria> = Symbol("search-criteria");

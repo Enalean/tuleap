@@ -130,7 +130,7 @@
             </div>
             <div class="tlp-property" v-if="reviewer.review_date">
                 <label class="tlp-label">{{ $gettext("Review date") }}</label>
-                <p>{{ formatter.format(reviewer.review_date) }}</p>
+                <p>{{ date_formatter.format(reviewer.review_date) }}</p>
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="comment">{{ $gettext("Add a comment") }}</label>
@@ -184,11 +184,10 @@ import { createModal } from "@tuleap/tlp-modal";
 import { putReview } from "../../../api/approval-table-rest-querier";
 import UserBadge from "../../User/UserBadge.vue";
 import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
-import { USER_LOCALE, USER_TIMEZONE } from "../../../configuration-keys";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { IntlFormatter } from "@tuleap/date-helper";
 import ApprovalTableReviewPopover from "./ApprovalTableReviewPopover.vue";
 import emitter from "../../../helpers/emitter";
+import { DATE_FORMATTER } from "../../../configuration-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const props = defineProps<{
     item: Item;
@@ -197,9 +196,7 @@ const props = defineProps<{
     table: ApprovalTable;
 }>();
 
-const user_locale = strictInject(USER_LOCALE);
-const user_timezone = strictInject(USER_TIMEZONE);
-const formatter = IntlFormatter(user_locale, user_timezone, "short-month");
+const date_formatter = strictInject(DATE_FORMATTER);
 
 const modal_div = ref<HTMLDivElement>();
 const is_reviewing = ref<boolean>(false);

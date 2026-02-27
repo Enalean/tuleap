@@ -26,9 +26,18 @@ import QuickLookPropertyDate from "./QuickLookPropertyDate.vue";
 import * as date_formatter from "../../helpers/date-formatter";
 import type { Property } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { DATE_TIME_FORMAT, RELATIVE_DATES_DISPLAY, USER_LOCALE } from "../../configuration-keys";
+import {
+    DATE_FORMATTER,
+    DATE_TIME_FORMATTER,
+    RELATIVE_DATES_DISPLAY,
+    USER_LOCALE,
+} from "../../configuration-keys";
 
 describe("QuickLookPropertyDate", () => {
+    const mock_formatter = {
+        format: vi.fn((date: string) => date),
+    };
+
     function getWrapper(
         property: Property,
         is_obsolescence_date = false,
@@ -43,7 +52,8 @@ describe("QuickLookPropertyDate", () => {
                     "document-relative-date": true,
                 },
                 provide: {
-                    [DATE_TIME_FORMAT.valueOf()]: "d/m/Y H:i",
+                    [DATE_FORMATTER.valueOf()]: mock_formatter,
+                    [DATE_TIME_FORMATTER.valueOf()]: mock_formatter,
                     [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
                     [RELATIVE_DATES_DISPLAY.valueOf()]: "relative_first-absolute_shown",
                 },

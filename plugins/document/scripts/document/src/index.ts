@@ -23,15 +23,13 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./components/App.vue";
 import { createInitializedStore } from "./store";
 import { createInitializedRouter } from "./router/router";
-import moment from "moment";
-import "moment-timezone";
 import { createPinia } from "pinia";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
-import { getLocaleWithDefault, toBCP47 } from "@tuleap/locale";
-import { getTimezoneOrThrow } from "@tuleap/date-helper";
+import { getLocaleWithDefault } from "@tuleap/locale";
+import { getTimezoneOrThrow, IntlFormatter } from "@tuleap/date-helper";
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
 import {
     ICON_LINK,
@@ -49,7 +47,8 @@ import {
 import type { SearchCriterion, SearchListOption } from "./type";
 import {
     CSRF_TOKEN,
-    DATE_TIME_FORMAT,
+    DATE_FORMATTER,
+    DATE_TIME_FORMATTER,
     EMBEDDED_ARE_ALLOWED,
     FILENAME_PATTERN,
     FORBID_WRITERS_TO_DELETE,
@@ -72,7 +71,6 @@ import {
     USER_ID,
     USER_IS_ADMIN,
     USER_LOCALE,
-    USER_TIMEZONE,
     WARNING_THRESHOLD,
 } from "./configuration-keys";
 
@@ -100,7 +98,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user_can_create_wiki = Boolean(
         getAttributeOrThrow(vue_mount_point, "data-user-can-create-wiki"),
     );
-    const date_time_format = getAttributeOrThrow(document.body, "data-date-time-format");
     const user_id = Number.parseInt(getAttributeOrThrow(document.body, "data-user-id"), 10);
     const max_files_dragndrop = Number.parseInt(
         getAttributeOrThrow(vue_mount_point, "data-max-files-dragndrop"),
@@ -178,9 +175,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         getAttributeOrThrow(vue_mount_point, "data-other-item-types"),
     );
 
-    moment.tz(user_timezone);
-    moment.locale(toBCP47(user_locale));
-
     const app = createApp(App, {
         csrf_token_name,
         csrf_token,
@@ -195,6 +189,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const pinia = createPinia();
     app.use(pinia);
+
+    const date_formatter = IntlFormatter(user_locale, user_timezone, "date");
+    const date_time_formatter = IntlFormatter(user_locale, user_timezone, "date-with-time");
 
     app.use(gettext);
     app.use(
@@ -228,11 +225,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(MAX_SIZE_UPLOAD, max_size_upload)
         .provide(WARNING_THRESHOLD, warning_threshold)
         .provide(MAX_ARCHIVE_SIZE, max_archive_size)
-        .provide(DATE_TIME_FORMAT, date_time_format)
+        .provide(DATE_FORMATTER, date_formatter)
+        .provide(DATE_TIME_FORMATTER, date_time_formatter)
         .provide(IS_CHANGELOG_PROPOSED_AFTER_DND, is_changelog_proposed_after_dnd)
         .provide(IS_DELETION_ALLOWED, is_deletion_allowed)
         .provide(USER_LOCALE, user_locale)
-        .provide(USER_TIMEZONE, user_timezone)
         .provide(RELATIVE_DATES_DISPLAY, relative_dates_display)
         .provide(SEARCH_CRITERIA, search_criteria)
         .provide(SEARCH_COLUMNS, search_columns)
