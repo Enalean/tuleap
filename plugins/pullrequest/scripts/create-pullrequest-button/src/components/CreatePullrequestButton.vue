@@ -31,17 +31,26 @@
 </template>
 
 <script>
+import { inject } from "vue";
+import { CAN_CREATE_PULLREQUEST, HAS_ERROR_WHILE_LOADING_BRANCHES } from "../injection-keys.ts";
+
 export default {
     name: "CreatePullrequestButton",
     props: {
         showModal: Function,
     },
+    setup() {
+        const can_create_pullrequest = inject(CAN_CREATE_PULLREQUEST);
+        const has_error_while_loading_branches = inject(HAS_ERROR_WHILE_LOADING_BRANCHES);
+
+        return {
+            can_create_pullrequest,
+            has_error_while_loading_branches,
+        };
+    },
     computed: {
         is_button_disabled() {
-            return (
-                !this.$store.getters.can_create_pullrequest &&
-                !this.$store.state.has_error_while_loading_branches
-            );
+            return !this.can_create_pullrequest && !this.has_error_while_loading_branches;
         },
         button_title() {
             return this.is_button_disabled

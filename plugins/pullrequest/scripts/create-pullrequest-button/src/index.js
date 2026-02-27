@@ -21,7 +21,6 @@ import { createApp } from "vue";
 import App from "./components/App.vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
-import { createInitializedStore } from "./store/index.js";
 import "../themes/style.scss";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -66,8 +65,6 @@ const initButton = async (container) => {
         user_can_see_parent_repository,
     });
 
-    const store = createInitializedStore();
-    app.use(store);
     app.use(gettext);
     app.mount(mount_point);
 };

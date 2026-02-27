@@ -33,6 +33,21 @@ import { createModal } from "@tuleap/tlp-modal";
 import CreatePullrequestButton from "./CreatePullrequestButton.vue";
 import CreatePullrequestModal from "./CreatePullrequestModal.vue";
 import CreatePullrequestErrorModal from "./CreatePullrequestErrorModal.vue";
+import { buildPullrequestState } from "../helpers/pullrequest-state";
+import {
+    SOURCE_BRANCHES,
+    DESTINATION_BRANCHES,
+    SELECTED_SOURCE_BRANCH,
+    SELECTED_DESTINATION_BRANCH,
+    CREATE_ERROR_MESSAGE,
+    HAS_ERROR_WHILE_LOADING_BRANCHES,
+    IS_CREATING_PULLREQUEST,
+    CAN_CREATE_PULLREQUEST,
+    INIT_PULLREQUEST_DATA,
+    CREATE_PULLREQUEST,
+    RESET_SELECTION,
+} from "../injection-keys.ts";
+import { provide } from "vue";
 
 export default {
     name: "App",
@@ -49,6 +64,28 @@ export default {
         parent_project_id: Number,
         user_can_see_parent_repository: Boolean,
     },
+    setup() {
+        const pullrequest_state = buildPullrequestState();
+
+        provide(SOURCE_BRANCHES, pullrequest_state.source_branches);
+        provide(DESTINATION_BRANCHES, pullrequest_state.destination_branches);
+        provide(SELECTED_SOURCE_BRANCH, pullrequest_state.selected_source_branch);
+        provide(SELECTED_DESTINATION_BRANCH, pullrequest_state.selected_destination_branch);
+        provide(CREATE_ERROR_MESSAGE, pullrequest_state.create_error_message);
+        provide(
+            HAS_ERROR_WHILE_LOADING_BRANCHES,
+            pullrequest_state.has_error_while_loading_branches,
+        );
+        provide(IS_CREATING_PULLREQUEST, pullrequest_state.is_creating_pullrequest);
+        provide(CAN_CREATE_PULLREQUEST, pullrequest_state.can_create_pullrequest);
+        provide(INIT_PULLREQUEST_DATA, pullrequest_state.init);
+        provide(CREATE_PULLREQUEST, pullrequest_state.create);
+        provide(RESET_SELECTION, pullrequest_state.resetSelection);
+
+        return {
+            pullrequest_state,
+        };
+    },
     data() {
         return {
             modal: null,
@@ -61,7 +98,7 @@ export default {
         },
     },
     mounted() {
-        this.$store.dispatch("init", {
+        this.pullrequest_state.init({
             repository_id: this.repository_id,
             project_id: this.project_id,
             parent_repository_id: this.parent_repository_id,
@@ -79,14 +116,14 @@ export default {
     },
     methods: {
         showModal() {
-            if (this.$store.state.has_error_while_loading_branches) {
+            if (this.pullrequest_state.has_error_while_loading_branches.value) {
                 this.error_modal.toggle();
             } else {
                 this.modal.toggle();
             }
         },
         resetModal() {
-            this.$store.commit("resetSelection");
+            this.pullrequest_state.resetSelection();
         },
     },
 };

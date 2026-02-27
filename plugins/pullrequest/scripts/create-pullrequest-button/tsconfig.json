@@ -1,0 +1,12 @@
+{
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
+    "compilerOptions": {
+        "skipLibCheck": true,
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "src/**/*"
+    ]
+}

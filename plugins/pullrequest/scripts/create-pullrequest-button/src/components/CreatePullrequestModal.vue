@@ -107,20 +107,42 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { inject } from "vue";
+import {
+    SOURCE_BRANCHES,
+    DESTINATION_BRANCHES,
+    SELECTED_SOURCE_BRANCH,
+    SELECTED_DESTINATION_BRANCH,
+    CREATE_ERROR_MESSAGE,
+    IS_CREATING_PULLREQUEST,
+    CREATE_PULLREQUEST,
+} from "../injection-keys.ts";
 
 export default {
     name: "CreatePullrequestModal",
     props: {
         displayParentRepositoryWarning: Boolean,
     },
+    setup() {
+        const source_branches = inject(SOURCE_BRANCHES);
+        const destination_branches = inject(DESTINATION_BRANCHES);
+        const selected_source_branch = inject(SELECTED_SOURCE_BRANCH);
+        const selected_destination_branch = inject(SELECTED_DESTINATION_BRANCH);
+        const create_error_message = inject(CREATE_ERROR_MESSAGE);
+        const is_creating_pullrequest = inject(IS_CREATING_PULLREQUEST);
+        const create_pullrequest = inject(CREATE_PULLREQUEST);
+
+        return {
+            source_branches,
+            destination_branches,
+            selected_source_branch,
+            selected_destination_branch,
+            create_error_message,
+            is_creating_pullrequest,
+            create_pullrequest,
+        };
+    },
     computed: {
-        ...mapState([
-            "source_branches",
-            "destination_branches",
-            "create_error_message",
-            "is_creating_pullrequest",
-        ]),
         is_button_disabled() {
             return (
                 this.is_creating_pullrequest ||
@@ -138,18 +160,20 @@ export default {
         },
         source_branch: {
             get() {
-                return this.$store.state.selected_source_branch;
+                return this.selected_source_branch;
             },
             set(value) {
-                this.$store.commit("setSelectedSourceBranch", value);
+                this.selected_source_branch = value;
+                this.create_error_message = "";
             },
         },
         destination_branch: {
             get() {
-                return this.$store.state.selected_destination_branch;
+                return this.selected_destination_branch;
             },
             set(value) {
-                this.$store.commit("setSelectedDestinationBranch", value);
+                this.selected_destination_branch = value;
+                this.create_error_message = "";
             },
         },
         create_label() {
@@ -182,10 +206,7 @@ export default {
     },
     methods: {
         create() {
-            this.$store.dispatch("create", {
-                source_branch: this.source_branch,
-                destination_branch: this.destination_branch,
-            });
+            this.create_pullrequest();
         },
     },
 };

@@ -17,13 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const can_create_pullrequest = (state) => {
-    const has_an_unique_branch =
-        state.source_branches.length === 1 && state.destination_branches.length === 1;
+export function redirectTo(new_href: string): void {
+    const parser = document.createElement("a");
+    parser.href = new_href;
 
-    return (
-        !has_an_unique_branch &&
-        state.source_branches.length > 0 &&
-        state.destination_branches.length > 0
-    );
-};
+    const original_request_uri = window.location.pathname + window.location.search;
+    const new_request_uri = parser.pathname + parser.search;
+    const are_request_uri_the_same = original_request_uri === new_request_uri;
+
+    window.location.href = new_href;
+    if (are_request_uri_the_same) {
+        window.location.reload();
+    }
+}
