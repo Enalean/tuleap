@@ -21,6 +21,9 @@ import Gettext from "node-gettext";
 import type { GettextParserPoFile, GettextProvider } from "./types";
 import { DEFAULT_LOCALE } from "@tuleap/locale";
 
+/**
+ * @deprecated Use initGettext instead
+ */
 export function initGettextSync(
     domain: string,
     translations: GettextParserPoFile | Record<string, GettextParserPoFile>,
