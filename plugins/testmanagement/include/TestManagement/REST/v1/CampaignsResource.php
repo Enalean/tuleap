@@ -596,8 +596,8 @@ class CampaignsResource
      * @url GET {id}/testmanagement_executions
      *
      * @param int $id     Id of the campaign
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
+     * @param int $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int $offset Position of the first element to display {@from path} {@min 0}
      * @param string $definition_format The format of the artifact defintion retrieved {@from path} {@choice minimal,full}
      *
      * @return ExecutionRepresentation[]
