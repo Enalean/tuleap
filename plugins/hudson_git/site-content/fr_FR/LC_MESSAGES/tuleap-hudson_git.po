@@ -138,7 +138,7 @@ msgstr ""
 "déclenchera une opération de 'polling'. Plus de détails dans la"
 
 msgid "Jenkins token is missing."
-msgstr ""
+msgstr "Le jeton Jenkins est manquant."
 
 msgid "Jenkins webhook successfully removed"
 msgstr "Le webhook Jenkins a été enlevé avec succès"
