@@ -20,11 +20,6 @@
 <template>
     <sidebar-container>
         <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">
-                    {{ $gettext("Add fields") }}
-                </h1>
-            </div>
             <div class="tlp-pane-section">
                 <div class="tlp-form-element">
                     <input

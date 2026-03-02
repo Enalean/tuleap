@@ -21,9 +21,6 @@ msgstr "Ajouter une valeur"
 msgid "Add another file"
 msgstr "Ajouter un autre fichier"
 
-msgid "Add fields"
-msgstr "Ajouter des champs"
-
 msgid ""
 "An error occurred during one of your last actions. Please refresh the page "
 "to get back in a consistent state."
