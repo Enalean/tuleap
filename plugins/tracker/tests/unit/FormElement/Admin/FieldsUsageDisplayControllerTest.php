@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\StructureRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -54,6 +55,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             $this->createStub(StructureRepresentationBuilder::class),
             $this->createStub(FormElementRepresentationsBuilder::class),
             IncludeAssetsBuilder::build(),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -81,6 +83,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             $this->createStub(StructureRepresentationBuilder::class),
             $this->createStub(FormElementRepresentationsBuilder::class),
             IncludeAssetsBuilder::build(),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -118,6 +121,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             $structure_representation_builder,
             $form_element_representations_builder,
             IncludeAssetsBuilder::build(),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         ob_start();

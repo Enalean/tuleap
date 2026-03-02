@@ -1,0 +1,22 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-testmanagement-tracker-admin-fields",
+  "homepage": "https://www.tuleap.com",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/gettext": "workspace:^",
+    "@tuleap/tlp-badge": "workspace:^",
+    "hybrids": "^9.1.22"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:^"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false"
+  }
+}
