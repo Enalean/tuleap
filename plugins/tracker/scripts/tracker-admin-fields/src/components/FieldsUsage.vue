@@ -28,7 +28,7 @@
             <error-state v-if="has_error" />
             <h2>{{ $gettext("Fields usage") }}</h2>
 
-            <div class="tlp-alert-info">
+            <div class="tlp-alert-info tracker-structure-feedback-under-development">
                 <p class="tlp-alert-title">
                     {{ $gettext("This section is under heavy development") }}
                 </p>
@@ -108,5 +108,11 @@ provide(OPEN_REFRESH_AFTER_FAULT_MODAL, (fault: Fault) => {
     grid-template-columns: 300px 1fr;
     gap: var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing);
+}
+
+.tracker-structure-feedback-under-development:has(
+        + .tracker-layout-warning-hack-to-hide-scrolling-content-beneath
+    ) {
+    margin: 0;
 }
 </style>
