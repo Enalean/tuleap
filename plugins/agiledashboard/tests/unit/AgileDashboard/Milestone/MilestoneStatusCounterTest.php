@@ -105,34 +105,49 @@ final class MilestoneStatusCounterTest extends TestCase
 
     public function testItFetchesTheStatusOfReturnedArtifactsAtSublevel(): void
     {
-        // Level 0
-        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([['id' => 35], ['id' => 36]]);
+        $this->backlog_dao
+            ->method('getBacklogArtifacts')
+            ->with(12)
+            ->willReturn([['id' => 35], ['id' => 36]]);
 
-        // Level -1
-        $this->artifact_dao->method('getChildrenForArtifacts')->with([35, 36])->willReturn(
-            [['id' => 38], ['id' => 39], ['id' => 40]]
-        );
-        $matcher = $this->exactly(2);
+        $this->artifact_dao
+            ->method('getChildrenForArtifacts')
+            ->with([35, 36])
+            ->willReturn([['id' => 38], ['id' => 39], ['id' => 40]]);
 
-        $this->artifact_dao->expects($matcher)->method('getArtifactsStatusByIds')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame([35, 36], $parameters[0]);
-                return [
+        $expected_calls = [
+            [
+                'args'   => [[35, 36]],
+                'return' => [
                     ['id' => 36, 'status' => Artifact::STATUS_OPEN],
                     ['id' => 35, 'status' => Artifact::STATUS_CLOSED],
-                ];
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame([38, 39, 40], $parameters[0]);
-                return [
+                ],
+            ],
+            [
+                'args'   => [[38, 39, 40]],
+                'return' => [
                     ['id' => 38, 'status' => Artifact::STATUS_OPEN],
                     ['id' => 39, 'status' => Artifact::STATUS_CLOSED],
                     ['id' => 40, 'status' => Artifact::STATUS_CLOSED],
-                ];
-            }
-        });
+                ],
+            ],
+        ];
+
+        $this->artifact_dao
+            ->expects($this->exactly(count($expected_calls)))
+            ->method('getArtifactsStatusByIds')
+            ->willReturnCallback(function (array $args) use (&$expected_calls) {
+                $expected = array_shift($expected_calls);
+
+                self::assertNotNull($expected);
+                self::assertSame($expected['args'], [$args]);
+
+                return $expected['return'];
+            });
+
 
         $result = $this->counter->getStatus($this->user, 12);
+
         $this->assertEquals([
             Artifact::STATUS_OPEN   => 2,
             Artifact::STATUS_CLOSED => 3,
@@ -141,28 +156,39 @@ final class MilestoneStatusCounterTest extends TestCase
 
     public function testItDoesntCountBacklogElementNotReadable(): void
     {
-        $artifact       = ArtifactTestBuilder::anArtifact(35)
-            ->userCannotView($this->user)
-            ->build();
-        $other_artifact = ArtifactTestBuilder::anArtifact(36)
-            ->userCanView($this->user)
-            ->build();
-        $matcher        = $this->exactly(2);
-        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $artifact, $other_artifact) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(35, $parameters[0]);
-                return $artifact;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(36, $parameters[0]);
-                return $other_artifact;
-            }
-        });
+        $artifact_35 = ArtifactTestBuilder::anArtifact(35)->userCannotView($this->user)->build();
+        $artifact_36 = ArtifactTestBuilder::anArtifact(36)->userCanView($this->user)->build();
 
-        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([['id' => 35], ['id' => 36]]);
-        $this->artifact_dao->method('getArtifactsStatusByIds')->willReturn([['id' => 36, 'status' => Artifact::STATUS_OPEN]]);
-        $this->artifact_dao->method('getChildrenForArtifacts')->willReturn([]);
+        $expected_calls = [
+            ['args' => [35], 'return' => $artifact_35],
+            ['args' => [36], 'return' => $artifact_36],
+        ];
+
+        $this->artifact_factory
+            ->expects($this->exactly(count($expected_calls)))
+            ->method('getArtifactById')
+            ->willReturnCallback(function (int $id) use (&$expected_calls) {
+                $expected = array_shift($expected_calls);
+                self::assertNotNull($expected);
+                self::assertSame($expected['args'][0], $id);
+                return $expected['return'];
+            });
+
+        $this->backlog_dao
+            ->method('getBacklogArtifacts')
+            ->with(12)
+            ->willReturn([['id' => 35], ['id' => 36]]);
+
+        $this->artifact_dao
+            ->method('getArtifactsStatusByIds')
+            ->willReturn([['id' => 36, 'status' => Artifact::STATUS_OPEN]]);
+
+        $this->artifact_dao
+            ->method('getChildrenForArtifacts')
+            ->willReturn([]);
+
         $result = $this->counter->getStatus($this->user, 12);
+
         $this->assertEquals([
             Artifact::STATUS_OPEN   => 1,
             Artifact::STATUS_CLOSED => 0,
@@ -171,49 +197,58 @@ final class MilestoneStatusCounterTest extends TestCase
 
     public function testItDoesntCountSubElementsNotReadable(): void
     {
-        $artifact_36 = ArtifactTestBuilder::anArtifact(36)
-            ->userCanView($this->user)
-            ->build();
-        $artifact_37 = ArtifactTestBuilder::anArtifact(37)
-            ->userCannotView($this->user)
-            ->build();
-        $artifact_38 = ArtifactTestBuilder::anArtifact(38)
-            ->userCanView($this->user)
-            ->build();
-        $matcher     = $this->exactly(3);
+        $artifact_36 = ArtifactTestBuilder::anArtifact(36)->userCanView($this->user)->build();
+        $artifact_37 = ArtifactTestBuilder::anArtifact(37)->userCannotView($this->user)->build();
+        $artifact_38 = ArtifactTestBuilder::anArtifact(38)->userCanView($this->user)->build();
 
-        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $artifact_36, $artifact_37, $artifact_38) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(36, $parameters[0]);
-                return $artifact_36;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(37, $parameters[0]);
-                return $artifact_37;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame(38, $parameters[0]);
-                return $artifact_38;
-            }
-        });
+        $expected_factory_calls = [
+            ['args' => [36], 'return' => $artifact_36],
+            ['args' => [37], 'return' => $artifact_37],
+            ['args' => [38], 'return' => $artifact_38],
+        ];
 
-        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn([['id' => 36]]);
-        $matcher = $this->exactly(2);
-        $this->artifact_dao->expects($matcher)->method('getArtifactsStatusByIds')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame([36], $parameters[0]);
-                return [['id' => 36, 'status' => Artifact::STATUS_OPEN]];
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame([37, 38], $parameters[0]);
-                return [['id' => 38, 'status' => Artifact::STATUS_OPEN]];
-            }
-        });
-        $this->artifact_dao->method('getChildrenForArtifacts')->willReturn(
-            [['id' => 37], ['id' => 38]]
-        );
+        $this->artifact_factory
+            ->expects($this->exactly(count($expected_factory_calls)))
+            ->method('getArtifactById')
+            ->willReturnCallback(function (int $id) use (&$expected_factory_calls) {
+                $expected = array_shift($expected_factory_calls);
+                self::assertNotNull($expected);
+                self::assertSame($expected['args'][0], $id);
+                return $expected['return'];
+            });
+
+        $this->backlog_dao
+            ->method('getBacklogArtifacts')
+            ->with(12)
+            ->willReturn([['id' => 36]]);
+
+        $expected_status_calls = [
+            [
+                'args'   => [[36]],
+                'return' => [['id' => 36, 'status' => Artifact::STATUS_OPEN]],
+            ],
+            [
+                'args'   => [[37, 38]],
+                'return' => [['id' => 38, 'status' => Artifact::STATUS_OPEN]],
+            ],
+        ];
+
+        $this->artifact_dao
+            ->expects($this->exactly(count($expected_status_calls)))
+            ->method('getArtifactsStatusByIds')
+            ->willReturnCallback(function (array $ids) use (&$expected_status_calls) {
+                $expected = array_shift($expected_status_calls);
+                self::assertNotNull($expected);
+                self::assertSame($expected['args'], [$ids]);
+                return $expected['return'];
+            });
+
+        $this->artifact_dao
+            ->method('getChildrenForArtifacts')
+            ->willReturn([['id' => 37], ['id' => 38]]);
 
         $result = $this->counter->getStatus($this->user, 12);
+
         $this->assertEquals([
             Artifact::STATUS_OPEN   => 2,
             Artifact::STATUS_CLOSED => 0,

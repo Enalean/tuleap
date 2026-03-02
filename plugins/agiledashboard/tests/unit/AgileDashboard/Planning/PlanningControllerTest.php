@@ -143,7 +143,7 @@ final class PlanningControllerTest extends TestCase
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
-            ->withParam('planning_id', 42)
+            ->withParam('planning_id', '42')
             ->build();
 
         $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/agiledashboard/?group_id=101&action=admin'));
@@ -167,7 +167,7 @@ final class PlanningControllerTest extends TestCase
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
-            ->withParam('planning_id', 42)
+            ->withParam('planning_id', '42')
             ->build();
 
         $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/agiledashboard/?group_id=101&action=admin'));
@@ -210,7 +210,7 @@ final class PlanningControllerTest extends TestCase
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
-            ->withParam('planning_id', 1)
+            ->withParam('planning_id', '1')
             ->build();
 
         try {

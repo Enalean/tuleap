@@ -1319,354 +1319,7 @@
       <code><![CDATA[$non_planning_rows]]></code>
     </DeprecatedMethod>
   </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/MilestoneReportCriterionProviderTest.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->provider->getCriterion($this->task_tracker, $this->user)]]></code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/MilestoneStatusCounterTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
-  </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Sidebar/PromotedMilestoneBuilderTest.php">
-    <ImpureMethodCall>
-      <code><![CDATA[aChangeset]]></code>
-      <code><![CDATA[aDateField]]></code>
-      <code><![CDATA[aDateField]]></code>
-      <code><![CDATA[aPlanning]]></code>
-      <code><![CDATA[aProject]]></code>
-      <code><![CDATA[aStringField]]></code>
-      <code><![CDATA[aTracker]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[aValue]]></code>
-      <code><![CDATA[anActiveUser]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[assertFalse]]></code>
-      <code><![CDATA[assertTrue]]></code>
-      <code><![CDATA[assertTrue]]></code>
-      <code><![CDATA[assertTrue]]></code>
-      <code><![CDATA[assertTrue]]></code>
-      <code><![CDATA[assertTrue]]></code>
-      <code><![CDATA[assertTrue]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[inTracker]]></code>
-      <code><![CDATA[inTracker]]></code>
-      <code><![CDATA[inTracker]]></code>
-      <code><![CDATA[isNothing]]></code>
-      <code><![CDATA[isNothing]]></code>
-      <code><![CDATA[isNothing]]></code>
-      <code><![CDATA[isNothing]]></code>
-      <code><![CDATA[isNothing]]></code>
-      <code><![CDATA[isNothing]]></code>
-      <code><![CDATA[isNothing]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[once]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setFieldValue]]></code>
-      <code><![CDATA[setUserCanRead]]></code>
-      <code><![CDATA[setUserCanRead]]></code>
-      <code><![CDATA[userCanView]]></code>
-      <code><![CDATA[userCannotView]]></code>
-      <code><![CDATA[withChangesets]]></code>
-      <code><![CDATA[withId]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTimestamp]]></code>
-      <code><![CDATA[withTitleField]]></code>
-    </ImpureMethodCall>
-    <InaccessibleProperty>
-      <code><![CDATA[$this->artifact]]></code>
-      <code><![CDATA[$this->changeset]]></code>
-      <code><![CDATA[$this->end_field]]></code>
-      <code><![CDATA[$this->planning_factory]]></code>
-      <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->retrieve_semantic_title_field]]></code>
-      <code><![CDATA[$this->retrieve_semantic_title_field]]></code>
-      <code><![CDATA[$this->start_field]]></code>
-      <code><![CDATA[$this->timeframe_builder]]></code>
-      <code><![CDATA[$this->title_field]]></code>
-      <code><![CDATA[$this->tracker]]></code>
-      <code><![CDATA[$this->user]]></code>
-    </InaccessibleProperty>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$this->planning_factory]]></code>
-      <code><![CDATA[$this->timeframe_builder]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-    </PossiblyUndefinedMethod>
-  </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Sidebar/PromotedMilestoneListBuilderTest.php">
-    <ImpureMethodCall>
-      <code><![CDATA[aProject]]></code>
-      <code><![CDATA[aProject]]></code>
-      <code><![CDATA[aProject]]></code>
-      <code><![CDATA[aProject]]></code>
-      <code><![CDATA[aTracker]]></code>
-      <code><![CDATA[aTracker]]></code>
-      <code><![CDATA[aTracker]]></code>
-      <code><![CDATA[aTracker]]></code>
-      <code><![CDATA[aTracker]]></code>
-      <code><![CDATA[aTracker]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[anArtifact]]></code>
-      <code><![CDATA[assertCount]]></code>
-      <code><![CDATA[assertCount]]></code>
-      <code><![CDATA[assertCount]]></code>
-      <code><![CDATA[assertCount]]></code>
-      <code><![CDATA[assertCount]]></code>
-      <code><![CDATA[assertCount]]></code>
-      <code><![CDATA[assertCount]]></code>
-      <code><![CDATA[assertCount]]></code>
-      <code><![CDATA[assertCount]]></code>
-      <code><![CDATA[assertSame]]></code>
-      <code><![CDATA[assertSame]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[buildPromotedMilestoneList]]></code>
-      <code><![CDATA[buildPromotedMilestoneList]]></code>
-      <code><![CDATA[buildPromotedMilestoneList]]></code>
-      <code><![CDATA[buildPromotedMilestoneList]]></code>
-      <code><![CDATA[buildWithDefaults]]></code>
-      <code><![CDATA[buildWithDefaults]]></code>
-      <code><![CDATA[buildWithDefaults]]></code>
-      <code><![CDATA[buildWithDefaults]]></code>
-      <code><![CDATA[buildWithNothing]]></code>
-      <code><![CDATA[buildWithPlanningArtifactMilestone]]></code>
-      <code><![CDATA[buildWithPlanningArtifactMilestone]]></code>
-      <code><![CDATA[buildWithPlanningArtifactMilestone]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[getMilestoneList]]></code>
-      <code><![CDATA[getMilestoneList]]></code>
-      <code><![CDATA[getMilestoneList]]></code>
-      <code><![CDATA[getMilestoneList]]></code>
-      <code><![CDATA[getMilestoneList]]></code>
-      <code><![CDATA[getMilestoneList]]></code>
-      <code><![CDATA[getMilestoneList]]></code>
-      <code><![CDATA[getMilestoneList]]></code>
-      <code><![CDATA[getMilestoneList]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturnOnConsecutiveCalls]]></code>
-      <code><![CDATA[willReturnOnConsecutiveCalls]]></code>
-      <code><![CDATA[willReturnOnConsecutiveCalls]]></code>
-      <code><![CDATA[willReturnOnConsecutiveCalls]]></code>
-      <code><![CDATA[withId]]></code>
-      <code><![CDATA[withId]]></code>
-      <code><![CDATA[withId]]></code>
-      <code><![CDATA[withId]]></code>
-      <code><![CDATA[withId]]></code>
-      <code><![CDATA[withId]]></code>
-      <code><![CDATA[withMilestones]]></code>
-      <code><![CDATA[withMilestones]]></code>
-      <code><![CDATA[withMilestones]]></code>
-      <code><![CDATA[withMilestones]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-      <code><![CDATA[withTitle]]></code>
-    </ImpureMethodCall>
-  </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/Admin/PlanningEditionPresenterBuilderTest.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$event_name]]></code>
-      <code><![CDATA[$params]]></code>
-    </MissingClosureParamType>
-    <MissingImmutableAnnotation>
-      <code><![CDATA[class implements ModificationBan {]]></code>
-    </MissingImmutableAnnotation>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$presenter->milestone_tracker_modification_ban->message]]></code>
-    </PossiblyNullPropertyFetch>
-  </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/Admin/UpdateRequestValidatorTest.php">
-    <MissingImmutableAnnotation>
-      <code><![CDATA[class implements ModificationBan {]]></code>
-    </MissingImmutableAnnotation>
-  </file>
   <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/ArtifactLinkerTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$this->corp_id]]></code>
-      <code><![CDATA[$this->product_id]]></code>
-      <code><![CDATA[$this->release_id]]></code>
-      <code><![CDATA[$this->release_id]]></code>
-      <code><![CDATA[$this->release_id]]></code>
-      <code><![CDATA[$this->release_id]]></code>
-      <code><![CDATA[$this->release_id]]></code>
-      <code><![CDATA[1]]></code>
-      <code><![CDATA[9001]]></code>
-      <code><![CDATA[[
-                'pane'        => 'details',
-                'planning_id' => 666,
-                'aid'         => $this->release_id,
-                'action'      => 'show',
-            ]]]></code>
-    </InvalidArgument>
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-    </MissingParamType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[addArtifact]]></code>
     </UndefinedInterfaceMethod>
@@ -1684,11 +1337,6 @@
       <code><![CDATA[$new_dropdown_current_context_section->links]]></code>
       <code><![CDATA[$new_dropdown_current_context_section->links]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/MilestoneControllerTest.php">
-    <UnusedProperty>
-      <code><![CDATA[$top_backlog_breadcrumb]]></code>
-    </UnusedProperty>
   </file>
   <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/MilestoneFactoryGetBareMilestoneByArtifactIdTest.php">
     <PossiblyNullReference>
@@ -1733,11 +1381,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/PlanningControllerTest.php">
-    <InvalidArgument>
-      <code><![CDATA[1]]></code>
-      <code><![CDATA[42]]></code>
-      <code><![CDATA[42]]></code>
-    </InvalidArgument>
     <UnusedProperty>
       <code><![CDATA[$planning_controller]]></code>
     </UnusedProperty>
@@ -15971,13 +15614,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[hydrateRepositoryObject]]></code>
-      <code><![CDATA[hydrateRepositoryObject]]></code>
-    </DeprecatedMethod>
-    <InvalidArgument>
-      <code><![CDATA[$row]]></code>
-    </InvalidArgument>
     <InvalidOperand>
       <code><![CDATA[strtotime($deletionDate)]]></code>
     </InvalidOperand>
@@ -15985,18 +15621,13 @@
       <code><![CDATA[$backend]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
       <code><![CDATA[$operation_type]]></code>
-      <code><![CDATA[$order_by]]></code>
-      <code><![CDATA[$owner_id]]></code>
       <code><![CDATA[$path]]></code>
       <code><![CDATA[$permission_type]]></code>
       <code><![CDATA[$permission_type]]></code>
       <code><![CDATA[$projectId]]></code>
       <code><![CDATA[$projectId]]></code>
       <code><![CDATA[$projectId]]></code>
-      <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
@@ -16014,7 +15645,6 @@
       <code><![CDATA[$repository_id]]></code>
       <code><![CDATA[$repository_id]]></code>
       <code><![CDATA[$repository_id]]></code>
-      <code><![CDATA[$scope]]></code>
       <code><![CDATA[$ugroup_ids]]></code>
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
@@ -16028,12 +15658,10 @@
       <code><![CDATA[getDeletedRepositoriesByProjectId]]></code>
       <code><![CDATA[getDeletedRepositoriesToPurge]]></code>
       <code><![CDATA[getForksOfRepositoryForUser]]></code>
-      <code><![CDATA[getPaginatedOpenRepositories]]></code>
       <code><![CDATA[getProjectRepositoriesOwners]]></code>
       <code><![CDATA[getProjectRepositoryById]]></code>
       <code><![CDATA[getProjectRepositoryByName]]></code>
       <code><![CDATA[getUGroupsByRepositoryPermissions]]></code>
-      <code><![CDATA[hydrateRepositoryObject]]></code>
       <code><![CDATA[isRepositoryExisting]]></code>
       <code><![CDATA[searchAllGerritRepositoriesOfProject]]></code>
       <code><![CDATA[searchDeletedRepositoryById]]></code>
@@ -16046,16 +15674,10 @@
     <PossiblyFalseOperand>
       <code><![CDATA[strtotime($deletionDate)]]></code>
     </PossiblyFalseOperand>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$results]]></code>
-    </PossiblyInvalidArgument>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$projectId]]></code>
       <code><![CDATA[empty($userId)]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedDocblockClass>
-      <code><![CDATA[type]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/GitLegacyURLRedirectController.php">
     <PossiblyUndefinedArrayOffset>
@@ -17227,15 +16849,9 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/git/include/GitRepositoryFactory.php">
-    <DeprecatedMethod>
-      <code><![CDATA[hydrateRepositoryObject]]></code>
-      <code><![CDATA[hydrateRepositoryObject]]></code>
-      <code><![CDATA[hydrateRepositoryObject]]></code>
-    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$full_path]]></code>
       <code><![CDATA[$full_path]]></code>
-      <code><![CDATA[$row]]></code>
       <code><![CDATA['gitolite/repositories']]></code>
       <code><![CDATA['gitroot']]></code>
     </InvalidArgument>
@@ -18624,33 +18240,6 @@
     </InaccessibleProperty>
   </file>
   <file src="plugins/git/tests/unit/CommitMetadata/AuthorRetrieverTest.php">
-    <ImpureFunctionCall>
-      <code><![CDATA[touch]]></code>
-    </ImpureFunctionCall>
-    <ImpureMethodCall>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[buildWithDefaults]]></code>
-      <code><![CDATA[commit]]></code>
-      <code><![CDATA[createStub]]></code>
-      <code><![CDATA[exec]]></code>
-      <code><![CDATA[fromUser]]></code>
-      <code><![CDATA[fromUsername]]></code>
-      <code><![CDATA[getAuthor]]></code>
-      <code><![CDATA[getAuthor]]></code>
-      <code><![CDATA[getGitCommand]]></code>
-      <code><![CDATA[init]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[setLocalCommiter]]></code>
-    </ImpureMethodCall>
-    <InaccessibleProperty>
-      <code><![CDATA[$this->author_retriever]]></code>
-      <code><![CDATA[$this->git_exec]]></code>
-      <code><![CDATA[$this->git_folder]]></code>
-      <code><![CDATA[$this->user_manager]]></code>
-    </InaccessibleProperty>
     <PossiblyUndefinedMethod>
       <code><![CDATA[method]]></code>
       <code><![CDATA[method]]></code>
@@ -19346,22 +18935,6 @@
       <code><![CDATA[$total_number_repositories]]></code>
       <code><![CDATA[$total_number_repositories]]></code>
     </NullReference>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-    </PossiblyUndefinedMethod>
-    <UndefinedClass>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[\PHPUnit\Framework\MockObject\MockObject|GitDao]]></code>
-    </UndefinedClass>
   </file>
   <file src="plugins/git/tests/unit/Reference/CommitDetailsCrossReferenceInformationBuilderTest.php">
     <PossiblyNullReference>
@@ -36226,7 +35799,6 @@
   <file src="plugins/tracker/include/FormElement/Field/List/Bind/User/ListFieldUserBindValue.php">
     <DeprecatedMethod>
       <code><![CDATA[getAvatarUrl]]></code>
-      <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$display_name]]></code>
@@ -36239,10 +35811,8 @@
       <code><![CDATA[$user_name]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[fetchCard]]></code>
       <code><![CDATA[fetchFormatted]]></code>
       <code><![CDATA[fetchFormattedForCSV]]></code>
-      <code><![CDATA[fetchUserDisplayName]]></code>
       <code><![CDATA[getAPIValue]]></code>
       <code><![CDATA[getFullRESTValue]]></code>
       <code><![CDATA[getFullRESTValueForAnonymous]]></code>
@@ -37206,9 +36776,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$layout]]></code>
     </ArgumentTypeCoercion>
-    <DeprecatedMethod>
-      <code><![CDATA[groupAddHistory]]></code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$date]]></code>
       <code><![CDATA[$force_absolute_ranking]]></code>
@@ -37250,9 +36817,6 @@
       <code><![CDATA[setFormElementFactory]]></code>
       <code><![CDATA[setTracker]]></code>
     </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$this->getTracker()->getProject()->getId()]]></code>
-    </PossiblyInvalidArgument>
     <PossiblyNullIterator>
       <code><![CDATA[$xml->properties->attributes()]]></code>
     </PossiblyNullIterator>
@@ -40826,7 +40390,6 @@
       <code><![CDATA[$extraction_path]]></code>
       <code><![CDATA[$extraction_path]]></code>
       <code><![CDATA[$extraction_path]]></code>
-      <code><![CDATA[$send_notifications]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[flattenChangesetArray]]></code>
@@ -47242,9 +46805,6 @@
     <MissingParamType>
       <code><![CDATA[$extraction_path]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$xml_fields_mapping]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[activateArtlinkV2]]></code>
       <code><![CDATA[disableArtifactLinkTypes]]></code>
@@ -57385,11 +56945,7 @@
       <code><![CDATA[$myscope]]></code>
       <code><![CDATA[$myservice_short_name]]></code>
       <code><![CDATA[$nature]]></code>
-      <code><![CDATA[$reference_value]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$reference_value]]></code>
-    </MissingPropertyType>
   </file>
   <file src="src/common/FRS/LicenseAgreement/Admin/SaveLicenseAgreementController.php">
     <InvalidReturnType>
@@ -77402,37 +76958,6 @@
     </MissingReturnType>
   </file>
   <file src="tests/unit/common/Project/Admin/Reference/Edition/EditReferencePresenterBuilderTest.php">
-    <ImpureMethodCall>
-      <code><![CDATA[aUser]]></code>
-      <code><![CDATA[aUser]]></code>
-      <code><![CDATA[addNature]]></code>
-      <code><![CDATA[addNature]]></code>
-      <code><![CDATA[addNature]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[assertEquals]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[buildReferencePresenter]]></code>
-      <code><![CDATA[buildReferencePresenter]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[createMock]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[withEditableReference]]></code>
-      <code><![CDATA[withSiteAdministrator]]></code>
-      <code><![CDATA[withoutSiteAdministrator]]></code>
-    </ImpureMethodCall>
-    <InaccessibleProperty>
-      <code><![CDATA[$this->builder]]></code>
-      <code><![CDATA[$this->event_manager]]></code>
-      <code><![CDATA[$this->service_dao]]></code>
-    </InaccessibleProperty>
     <UnusedProperty>
       <code><![CDATA[$event_manager]]></code>
     </UnusedProperty>

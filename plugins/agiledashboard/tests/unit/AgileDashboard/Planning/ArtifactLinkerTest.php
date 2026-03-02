@@ -98,7 +98,7 @@ final class ArtifactLinkerTest extends TestCase
         $this->linker = new Planning_ArtifactLinker($this->artifact_factory, $planning_factory);
     }
 
-    private function getArtifact($id, Tracker $tracker, array $ancestors): Artifact&MockObject
+    private function getArtifact(int $id, Tracker $tracker, array $ancestors): Artifact&MockObject
     {
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getId')->willReturn($id);
@@ -119,7 +119,7 @@ final class ArtifactLinkerTest extends TestCase
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
-            ->withParam('link-artifact-id', $this->release_id)
+            ->withParam('link-artifact-id', (string) $this->release_id)
             ->build();
 
         $this->linker->linkBacklogWithPlanningItems($request, $task, null);
@@ -134,7 +134,7 @@ final class ArtifactLinkerTest extends TestCase
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
-            ->withParam('link-artifact-id', $this->release_id)
+            ->withParam('link-artifact-id', (string) $this->release_id)
             ->build();
 
         $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
@@ -145,7 +145,7 @@ final class ArtifactLinkerTest extends TestCase
         $this->corp->expects($this->once())->method('linkArtifact')->with($this->theme_id, $this->user);
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
-            ->withParam('child_milestone', $this->product_id)
+            ->withParam('child_milestone', (string) $this->product_id)
             ->build();
 
         $this->linker->linkBacklogWithPlanningItems($request, $this->theme, null);
@@ -161,7 +161,7 @@ final class ArtifactLinkerTest extends TestCase
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
-            ->withParam('child_milestone', 9001)
+            ->withParam('child_milestone', '9001')
             ->build();
 
         $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
@@ -173,7 +173,7 @@ final class ArtifactLinkerTest extends TestCase
         $this->product->expects($this->once())->method('linkArtifact')->with($this->epic_id, $this->user);
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
-            ->withParam('child_milestone', $this->release_id)
+            ->withParam('child_milestone', (string) $this->release_id)
             ->build();
         $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
     }
@@ -194,7 +194,7 @@ final class ArtifactLinkerTest extends TestCase
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
-            ->withParam('link-artifact-id', $this->corp_id)
+            ->withParam('link-artifact-id', (string) $this->corp_id)
             ->build();
 
         $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->theme, null);
@@ -207,7 +207,7 @@ final class ArtifactLinkerTest extends TestCase
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
-            ->withParam('link-artifact-id', $this->release_id)
+            ->withParam('link-artifact-id', (string) $this->release_id)
             ->build();
 
         $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
@@ -220,7 +220,7 @@ final class ArtifactLinkerTest extends TestCase
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
-            ->withParam('child_milestone', $this->release_id)
+            ->withParam('child_milestone', (string) $this->release_id)
             ->build();
 
         $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
@@ -231,7 +231,7 @@ final class ArtifactLinkerTest extends TestCase
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
-            ->withParam('link-to-milestone', 1)
+            ->withParam('link-to-milestone', '1')
             ->build();
 
         $this->release->expects($this->once())
@@ -247,9 +247,8 @@ final class ArtifactLinkerTest extends TestCase
             $this->epic,
             [
                 'pane'        => 'details',
-                'planning_id' => 666,
-                'aid'         => $this->release_id,
-                'action'      => 'show',
+                'planning_id' => '666',
+                'aid'         => (string) $this->release_id,
             ]
         );
     }

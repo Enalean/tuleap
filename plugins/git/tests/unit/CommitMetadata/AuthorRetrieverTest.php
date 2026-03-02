@@ -29,9 +29,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserName;
 
-/**
- * @psalm-immutable
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorRetrieverTest extends TestCase
 {

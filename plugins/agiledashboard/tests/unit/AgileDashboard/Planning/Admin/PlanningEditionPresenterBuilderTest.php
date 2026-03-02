@@ -110,6 +110,9 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
             function (RootPlanningEditionEvent $event) {
                 $event->prohibitMilestoneTrackerModification(
                     new class implements ModificationBan {
+                        /**
+                         * @psalm-mutation-free
+                         */
                         #[\Override]
                         public function getMessage(): string
                         {
@@ -135,7 +138,7 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
         $burnup_presenter = $presenter->warning_list[0];
         self::assertSame('/plugins/tracker?tracker=127&func=admin-formElements', $burnup_presenter->url);
         self::assertTrue($presenter->has_warning);
-        self::assertSame('Cannot update milestone', $presenter->milestone_tracker_modification_ban->message);
+        self::assertSame('Cannot update milestone', $presenter->milestone_tracker_modification_ban?->message);
     }
 
     public function testBuildAddsAWarningFromAnEvent(): void
@@ -207,7 +210,7 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
     {
         $this->event_manager->addClosureOnEvent(
             Planning_Controller::AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
-            function ($event_name, $params) {
+            function (string $event_name, array &$params): void {
                 $params['view'] = 'Cardwall configuration';
             }
         );

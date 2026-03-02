@@ -103,6 +103,9 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
         $this->modification_ban = new class implements ModificationBan {
+            /**
+             * @psalm-mutation-free
+             */
             #[\Override]
             public function getMessage(): string
             {

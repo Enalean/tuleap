@@ -43,9 +43,6 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 
-/**
- * @psalm-immutable
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PromotedMilestoneBuilderTest extends TestCase
 {
@@ -54,11 +51,11 @@ final class PromotedMilestoneBuilderTest extends TestCase
     private \Tuleap\Tracker\Tracker $tracker;
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
     private \Tuleap\Tracker\FormElement\Field\String\StringField $title_field;
-    private SemanticTimeframeBuilder|\PHPUnit\Framework\MockObject\MockObject $timeframe_builder;
+    private SemanticTimeframeBuilder&\PHPUnit\Framework\MockObject\MockObject $timeframe_builder;
     private \Tuleap\Tracker\FormElement\Field\Date\DateField $start_field;
     private \Tuleap\Tracker\FormElement\Field\Date\DateField $end_field;
     private \Tracker_Artifact_Changeset $changeset;
-    private PlanningFactory|\PHPUnit\Framework\MockObject\MockObject $planning_factory;
+    private PlanningFactory&\PHPUnit\Framework\MockObject\MockObject $planning_factory;
     private RetrieveSemanticTitleField $retrieve_semantic_title_field;
 
     #[\Override]
