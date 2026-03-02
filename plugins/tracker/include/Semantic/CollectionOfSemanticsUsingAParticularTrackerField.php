@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic;
 
 use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
 
-final class CollectionOfSemanticsUsingAParticularTrackerField
+class CollectionOfSemanticsUsingAParticularTrackerField
 {
     private \Tuleap\Tracker\Tracker $tracker;
     /**
