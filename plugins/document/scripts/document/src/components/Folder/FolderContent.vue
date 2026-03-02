@@ -48,6 +48,17 @@
                             v-bind:item="item"
                             v-bind:is_quick_look_displayed="toggle_quick_look"
                         />
+                        <tr
+                            v-if="is_folder_content_empty"
+                            data-test="document-folder-content-empty"
+                        >
+                            <td
+                                v-bind:colspan="toggle_quick_look ? 1 : 3"
+                                class="tlp-table-cell-empty"
+                            >
+                                {{ $gettext("There isn't any document to display") }}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -105,6 +116,7 @@ const quick_look_dropzone_class = computed(() => {
 const should_display_preview = computed(
     () => toggle_quick_look.value && currently_previewed_item.value !== null,
 );
+const is_folder_content_empty = computed(() => folder_content.value.length === 0);
 
 onMounted(() => {
     emitter.on("toggle-quick-look", toggleQuickLook);

@@ -1001,6 +1001,9 @@ msgstr ""
 msgid "There is no upload in progress"
 msgstr ""
 
+msgid "There isn't any document to display"
+msgstr ""
+
 msgid "There isn't any item"
 msgstr ""
 
