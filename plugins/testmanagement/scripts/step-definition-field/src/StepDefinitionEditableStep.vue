@@ -40,7 +40,7 @@
         />
         <textarea
             ref="description"
-            class="ttm-definition-step-description-textarea"
+            class="tlp-textarea ttm-definition-step-description-textarea"
             v-bind:id="description_id"
             v-bind:name="'artifact[' + field_id + '][description][]'"
             v-bind:data-help-id="description_help_id"
@@ -59,14 +59,17 @@
             v-dompurify-html="interpreted_description"
             data-test="description-preview"
         ></div>
-        <div class="alert alert-error" v-if="is_preview_in_error" data-test="description-error">
+        <div class="tlp-alert-danger" v-if="is_preview_in_error" data-test="description-error">
             {{ $gettext("There was an error in the Markdown preview:") }}
             {{ error_text }}
         </div>
-        <p class="text-info tracker-richtexteditor-help shown" v-bind:id="description_help_id"></p>
+        <p
+            class="tlp-text-info tracker-richtexteditor-help shown"
+            v-bind:id="description_help_id"
+        ></p>
 
         <section class="ttm-definition-step-expected">
-            <step-definition-arrow-expected />
+            <i class="fa-solid fa-arrow-turn-up fa-rotate-90" aria-hidden="true"></i>
             <div class="ttm-definition-step-expected-edit">
                 <div class="ttm-definition-step-expected-edit-title">
                     {{ $gettext("Expected results") }}
@@ -79,7 +82,7 @@
                 />
                 <textarea
                     ref="expected_results"
-                    class="ttm-definition-step-expected-results-textarea"
+                    class="tlp-textarea ttm-definition-step-expected-results-textarea"
                     v-bind:id="expected_results_id"
                     v-bind:name="'artifact[' + field_id + '][expected_results][]'"
                     v-bind:data-help-id="expected_results_help_id"
@@ -99,7 +102,7 @@
                     data-test="expected-results-preview"
                 ></div>
                 <div
-                    class="alert alert-error"
+                    class="tlp-alert-danger"
                     v-if="is_preview_in_error"
                     data-test="expected-results-error"
                 >
@@ -107,7 +110,7 @@
                     {{ error_text }}
                 </div>
                 <div
-                    class="muted tracker-richtexteditor-help shown"
+                    class="tlp-text-muted tracker-richtexteditor-help shown"
                     v-bind:id="expected_results_help_id"
                 ></div>
             </div>
@@ -120,7 +123,6 @@ import type CKEDITOR from "ckeditor4";
 import { ref, computed, onMounted, watch, onUnmounted } from "vue";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { PossibleCKEditorOptions } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";

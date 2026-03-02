@@ -23,7 +23,7 @@
         type="button"
         v-on:click="onClick"
     >
-        <i class="far fa-trash-alt"></i>
+        <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
         {{ $gettext("Delete") }}
     </button>
 </template>

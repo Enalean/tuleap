@@ -24,8 +24,13 @@
             {{ $gettext("There isn't any step defined yet. Start by adding one.") }}
         </p>
         <div>
-            <button type="button" class="btn btn-primary" v-on:click="onClick" data-test="add-step">
-                <i class="fa-solid fa-plus"></i>
+            <button
+                type="button"
+                class="tlp-button-primary"
+                v-on:click="onClick"
+                data-test="add-step"
+            >
+                <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
                 {{ $gettext("Add step") }}
             </button>
         </div>

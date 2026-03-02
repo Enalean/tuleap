@@ -23,10 +23,10 @@
             <button
                 v-if="areThereAtLeastTwoSteps"
                 type="button"
-                class="ttm-definition-reorder-steps-button btn btn-small"
+                class="tlp-button-secondary tlp-button-small ttm-definition-reorder-button"
                 v-on:click="toggleIsDragging"
             >
-                <i class="fas fa-sync fa-rotate-90"></i>
+                <i class="fa-solid fa-sync fa-rotate-90 tlp-button-icon" aria-hidden="true"></i>
                 <span v-if="is_dragging" key="stop-reordering">
                     {{ $gettext("Stop reordering steps") }}
                 </span>
@@ -35,11 +35,11 @@
             <div class="ttm-definition-step-add-bar" v-show="!is_dragging">
                 <button
                     type="button"
-                    class="btn btn-primary"
+                    class="tlp-button-primary"
                     v-on:click="onClick"
                     data-test="add-step"
                 >
-                    <i class="fa-solid fa-plus"></i>
+                    <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
                     {{ $gettext("Add step") }}
                 </button>
             </div>
