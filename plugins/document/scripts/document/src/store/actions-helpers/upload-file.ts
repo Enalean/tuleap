@@ -110,14 +110,22 @@ export function uploadVersion(
     dropped_file: File,
     updated_file: FakeItem | ItemFile,
     new_version: CreatedItemFileProperties,
-): Upload {
+): void {
     if (context.state.current_folder === null) {
         throw new Error("State error: current_folder is null");
     }
 
+    const item_in_store = context.state.folder_content.find(
+        (item): item is FakeItem | ItemFile => item.id === updated_file.id,
+    );
+
+    if (!item_in_store) {
+        throw new Error(`State error: item #${updated_file.id} not found in folder_content`);
+    }
+
     const parent_folder = getParentFolder(
         context.state.folder_content,
-        updated_file,
+        item_in_store,
         context.state.current_folder,
     );
 
@@ -128,32 +136,34 @@ export function uploadVersion(
             filetype: dropped_file.type,
         },
         onProgress: (bytes_uploaded, bytes_total): void => {
-            updateItemProgress(bytes_total, updated_file, bytes_uploaded, context, parent_folder);
+            updateItemProgress(bytes_total, item_in_store, bytes_uploaded, context, parent_folder);
         },
         onSuccess: async (): Promise<void> => {
-            updated_file.progress = null;
-            updated_file.is_uploading_new_version = false;
-            updated_file.last_update_date = new Date().toISOString();
-            context.commit("removeFileFromUploadsList", updated_file);
+            item_in_store.progress = null;
+            item_in_store.is_uploading_new_version = false;
+            item_in_store.last_update_date = new Date().toISOString();
+            context.commit("removeFileFromUploadsList", item_in_store);
 
-            const new_item_version = await getItem(updated_file.id);
-            if (updated_file.level) {
-                new_item_version.level = updated_file.level;
+            const new_item_version = await getItem(item_in_store.id);
+            if (item_in_store.level) {
+                new_item_version.level = item_in_store.level;
             }
 
             context.commit("replaceFileWithNewVersion", {
-                existing_item: updated_file,
+                existing_item: item_in_store,
                 new_version: new_item_version,
             });
-            context.commit("replaceUploadingFileWithActualFile", [updated_file, new_item_version]);
+            context.commit("replaceUploadingFileWithActualFile", [item_in_store, new_item_version]);
             emitter.emit("item-has-just-been-updated", { item: new_item_version });
         },
         onError: (error: Error | DetailedError): void => {
-            updated_file.upload_error = getMessageFromError(error);
+            item_in_store.upload_error = getMessageFromError(error);
         },
     });
+
+    item_in_store.uploader = uploader;
+
     uploader.start();
-    return uploader;
 }
 
 export function uploadVersionFromEmpty(

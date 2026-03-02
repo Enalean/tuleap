@@ -25,6 +25,7 @@ import { FakeItemBuilder } from "../../tests/builders/FakeItemBuilder";
 import type { FolderContentItem, State } from "../type";
 import { TYPE_FILE } from "../constants";
 import { FolderBuilder } from "../../tests/builders/FolderBuilder";
+import { markItemAsUpdated } from "./mutations-folder-content";
 
 describe("Store mutations", () => {
     describe("foldFolderContent", () => {
@@ -806,6 +807,18 @@ describe("Store mutations", () => {
             expect(state.folded_by_map).toStrictEqual({
                 42: [43, 44, 45, folder.id],
             });
+        });
+    });
+
+    describe("markItemAsUpdated", () => {
+        it("marks the matching item as updated", () => {
+            const state = new StateBuilder()
+                .withFolderContent([new FakeItemBuilder(1).build(), new FakeItemBuilder(2).build()])
+                .build();
+            const payload = { item: new ItemBuilder(2).build() };
+            markItemAsUpdated(state, payload);
+            expect(state.folder_content[1].updated).toBe(true);
+            expect(state.folder_content[0].updated).toBe(false);
         });
     });
 });

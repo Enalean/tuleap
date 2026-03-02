@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { FakeItem } from "../../src/type";
+import type { ApprovalTable, FakeItem, FileProperties } from "../../src/type";
 
 export class FakeItemBuilder {
     private readonly id: number;
@@ -24,6 +24,9 @@ export class FakeItemBuilder {
     private type: string = "file";
     private title: string = "";
     private file_type: string = "";
+    private file_properties: FileProperties | null = null;
+    private approval_table: ApprovalTable | null = null;
+    private progress: number | null = null;
 
     constructor(id: number) {
         this.id = id;
@@ -49,9 +52,24 @@ export class FakeItemBuilder {
         return this;
     }
 
+    public withFileProperties(file_properties: FileProperties): this {
+        this.file_properties = file_properties;
+        return this;
+    }
+
+    public withApprovalTable(approval_table: ApprovalTable): this {
+        this.approval_table = approval_table;
+        return this;
+    }
+
+    public withProgress(progress: number): this {
+        this.progress = progress;
+        return this;
+    }
+
     public build(): FakeItem {
         return {
-            approval_table: null,
+            approval_table: this.approval_table,
             file_type: this.file_type,
             has_approval_table: false,
             id: this.id,
@@ -60,10 +78,14 @@ export class FakeItemBuilder {
             is_uploading_in_collapsed_folder: false,
             is_uploading_new_version: false,
             parent_id: this.parent_id,
-            progress: null,
+            progress: this.progress,
             title: this.title,
             type: this.type,
             upload_error: null,
+            item_icon: "fa-regular fa-file document-empty-icon",
+            file_properties: this.file_properties,
+            lock_info: null,
+            updated: false,
         };
     }
 }

@@ -110,6 +110,7 @@ export const createNewFileVersionFromModal = async (
         const updated_item = await getItem(item.id);
         item.updated = true;
         context.commit("replaceFolderContentByItem", updated_item, { root: true });
+        context.commit("markItemAsUpdated", { item });
         emitter.emit("item-is-being-uploaded");
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -139,6 +140,7 @@ export const createNewEmbeddedFileVersionFromModal = async (
         const updated_item = await getItem(item.id);
         item.updated = true;
         context.commit("replaceFolderContentByItem", updated_item, { root: true });
+        context.commit("markItemAsUpdated", { item });
         emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -159,7 +161,7 @@ export const createNewWikiVersionFromModal = async (
         await postWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
         const updated_item = await getItem(item.id);
         context.commit("replaceFolderContentByItem", updated_item, { root: true });
-        item.updated = true;
+        context.commit("markItemAsUpdated", { item });
         emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -188,7 +190,7 @@ export const createNewLinkVersionFromModal = async (
         );
         const updated_item = await getItem(item.id);
         context.commit("replaceFolderContentByItem", updated_item, { root: true });
-        item.updated = true;
+        context.commit("markItemAsUpdated", { item });
         emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -236,7 +238,7 @@ export const createNewVersionFromEmpty = async (
                 break;
         }
         const updated_item = await getItem(item.id);
-        updated_item.updated = true;
+        context.commit("markItemAsUpdated", { item });
         if (selected_type === TYPE_LINK || selected_type === TYPE_EMBEDDED) {
             emitter.emit("item-has-just-been-updated", { item });
         } else {

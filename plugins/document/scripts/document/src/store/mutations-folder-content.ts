@@ -306,3 +306,12 @@ export function removeItemFromFolderContent(state: State, item_to_remove: Folder
 export function updateCurrentItemForQuickLokDisplay(state: State, item: FolderContentItem): void {
     state.currently_previewed_item = item;
 }
+
+export function markItemAsUpdated(state: State, payload: { readonly item: Item }): void {
+    const item_from_state = state.folder_content.find((item) => item.id === payload.item.id);
+    if (!item_from_state) {
+        return;
+    }
+
+    item_from_state.updated = true;
+}

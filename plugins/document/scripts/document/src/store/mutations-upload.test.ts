@@ -19,7 +19,13 @@
 
 import { describe, expect, it } from "vitest";
 import * as mutations from "./mutations-upload";
-import type { FakeItem, FileProperties, Folder, ItemFile, State } from "../type";
+import type { FakeItem, FileProperties, Folder, ItemFile, State, LockInfo } from "../type";
+import { FakeItemBuilder } from "../../tests/builders/FakeItemBuilder";
+import { FileBuilder } from "../../tests/builders/FileBuilder";
+import { UserBuilder } from "../../tests/builders/UserBuilder";
+import { ApprovalTableBuilder } from "../../tests/builders/ApprovalTableBuilder";
+import { setNewVersionUploadState } from "./mutations-upload";
+import { StateBuilder } from "../../tests/builders/StateBuilder";
 
 describe("Store mutations", () => {
     describe("addFileInUploadsList", () => {
@@ -291,45 +297,36 @@ describe("Store mutations", () => {
 
     describe("replaceFileWithNewVersion", () => {
         it("should override item properties with the uploaded ones", () => {
-            const random_item = {
-                id: 1,
-                title: "tutu.txt",
-                is_uploading_in_collapsed_folder: false,
-                progress: 0,
-            } as FakeItem;
-            const existing_item = {
-                id: 2,
-                title: "titi.txt",
-                file_properties: {
-                    download_href: "plugins/document/2/1",
-                    file_size: 123,
-                    file_type: "image/jpeg",
-                } as FileProperties,
-                lock_info: {
-                    locked_by: { id: 137, uri: "users/137", user_url: "/users/user_url" },
-                    lock_date: "2019-04-01T18:17:07+04:00",
-                } as LockInfo,
-                has_approval_table: true,
-                is_approval_table_enabled: true,
-                approval_table: {
-                    approval_state: "Approved",
-                },
-            } as ItemFile;
-            const new_version = {
-                id: 2,
-                title: "titi.txt",
-                file_properties: {
-                    download_href: "plugins/document/2/2",
-                    file_size: 456,
-                    file_type: "image/jpeg",
-                },
-                lock_info: null,
-                has_approval_table: true,
-                is_approval_table_enabled: true,
-                approval_table: {
-                    approval_state: "Not yet",
-                },
-            } as ItemFile;
+            const random_item = new FakeItemBuilder(1).withTitle("tutu.txt").build();
+
+            const lock_info = {
+                locked_by: new UserBuilder(128).build(),
+                lock_date: "2019-04-01T18:17:07+04:00",
+            } as LockInfo;
+            const file_properties = {
+                download_href: "plugins/document/2/1",
+                file_size: 123,
+                file_type: "image/jpeg",
+            } as FileProperties;
+            const existing_item = new FileBuilder(2)
+                .withLockInfo(lock_info)
+                .withFileProperties(file_properties)
+                .withApprovalTable(
+                    new ApprovalTableBuilder(35).withApprovalState("Rejected").build(),
+                )
+                .build();
+
+            const updated_file_properties = {
+                download_href: "plugins/document/2/2",
+                file_size: 456,
+                file_type: "image/jpeg",
+            } as FileProperties;
+            const new_version = new FakeItemBuilder(2)
+                .withFileProperties(updated_file_properties)
+                .withApprovalTable(
+                    new ApprovalTableBuilder(35).withApprovalState("Approved").build(),
+                )
+                .build();
 
             const state = {
                 folder_content: [random_item, existing_item],
@@ -338,6 +335,23 @@ describe("Store mutations", () => {
             mutations.replaceFileWithNewVersion(state, { existing_item, new_version });
 
             expect(state.folder_content).toStrictEqual([random_item, new_version]);
+        });
+    });
+
+    describe("setNewVersionUploadState", () => {
+        it("does nothing when item is not found", () => {
+            const state = new StateBuilder().withFolderContent([]).build();
+            setNewVersionUploadState(state, { item_id: 999, is_uploading_new_version: true });
+            expect(state.folder_content).toHaveLength(0);
+        });
+        it("adds fake item properties for file upload", () => {
+            const item = new FakeItemBuilder(1).withProgress(42).build();
+            const state = new StateBuilder().withFolderContent([item]).build();
+
+            setNewVersionUploadState(state, { item_id: 1, is_uploading_new_version: true });
+            expect(item.progress).toBeNull();
+            expect(item.upload_error).toBeNull();
+            expect(item.is_uploading_new_version).toBe(true);
         });
     });
 });

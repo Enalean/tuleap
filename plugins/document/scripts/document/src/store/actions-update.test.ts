@@ -175,6 +175,7 @@ describe("actions-update", () => {
             expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
                 root: true,
             });
+            expect(context.commit).toHaveBeenCalledWith("markItemAsUpdated", { item });
         });
 
         it("handles error when there is a problem with the version creation", async () => {
@@ -256,6 +257,7 @@ describe("actions-update", () => {
             expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
                 root: true,
             });
+            expect(context.commit).toHaveBeenCalledWith("markItemAsUpdated", { item });
         });
         it("handles error when there is a problem with the update", async () => {
             const item = { id: 45 } as Embedded;
@@ -298,11 +300,12 @@ describe("actions-update", () => {
             ]);
             expect(postWiki).toHaveBeenCalled();
             expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", {
-                item: { ...item, updated: true },
+                item: { ...item },
             });
             expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
                 root: true,
             });
+            expect(context.commit).toHaveBeenCalledWith("markItemAsUpdated", { item });
         });
         it("throws an error when there is a problem with the update", async () => {
             const item = { id: 45 } as Wiki;
@@ -346,8 +349,9 @@ describe("actions-update", () => {
             ]);
             expect(postLinkVersion).toHaveBeenCalled();
             expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", {
-                item: { ...item, updated: true },
+                item: { ...item },
             });
+            expect(context.commit).toHaveBeenCalledWith("markItemAsUpdated", { item });
             expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
                 root: true,
             });
@@ -479,6 +483,7 @@ describe("actions-update", () => {
                 "updateCurrentItemForQuickLokDisplay",
                 updated_item,
             );
+            expect(context.commit).toHaveBeenCalledWith("markItemAsUpdated", { item });
         });
 
         it("should update the empty document to embedded_file document", async () => {
@@ -520,6 +525,7 @@ describe("actions-update", () => {
                 "updateCurrentItemForQuickLokDisplay",
                 updated_item,
             );
+            expect(context.commit).toHaveBeenCalledWith("markItemAsUpdated", { item });
         });
 
         it("should update the empty document to file document", async () => {
@@ -565,6 +571,7 @@ describe("actions-update", () => {
                 "updateCurrentItemForQuickLokDisplay",
                 updated_item,
             );
+            expect(context.commit).toHaveBeenCalledWith("markItemAsUpdated", { item });
         });
 
         it("should failed the update", async () => {

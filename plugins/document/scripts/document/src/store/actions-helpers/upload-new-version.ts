@@ -18,7 +18,7 @@
  */
 import { createNewVersion } from "../../api/rest-querier";
 import type { ActionContext } from "vuex";
-import type { ApprovalTable, ItemFile, RootState, CreatedItemFileProperties } from "../../type";
+import type { ApprovalTable, ItemFile, RootState } from "../../type";
 import { uploadVersion } from "./upload-file";
 
 export async function uploadNewVersion(
@@ -46,18 +46,10 @@ export async function uploadNewVersion(
     }
 
     context.commit("addFileInUploadsList", item);
-    item.progress = null;
-    item.upload_error = null;
-    item.is_uploading_new_version = false;
+    context.commit("setNewVersionUploadState", {
+        item_id: item.id,
+        is_uploading_new_version: true,
+    });
 
-    uploadVersionAndAssignUploader(context, item, uploaded_file, new_version);
-}
-
-function uploadVersionAndAssignUploader(
-    context: ActionContext<RootState, RootState>,
-    item: ItemFile,
-    uploaded_file: File,
-    new_version: CreatedItemFileProperties,
-): void {
-    item.uploader = uploadVersion(context, uploaded_file, item, new_version);
+    uploadVersion(context, uploaded_file, item, new_version);
 }

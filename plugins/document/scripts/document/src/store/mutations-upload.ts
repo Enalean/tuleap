@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FakeItem, Folder, State, ApprovableDocument, ItemFile, Item } from "../type";
+import type { FakeItem, Folder, State, ItemFile, Item } from "../type";
 import { isFakeItem, isFolder } from "../helpers/type-check-helper";
+import { TYPE_FILE } from "../constants";
 
 export function addFileInUploadsList(state: State, file: FakeItem): void {
     removeFileFromUploadsList(state, file);
@@ -122,21 +123,29 @@ export function resetFolderIsUploading(state: State, folder_to_reset: Folder): v
 
 export interface ReplaceFilePayload {
     existing_item: ItemFile;
-    new_version: ItemFile;
+    new_version: FakeItem;
 }
 
 export function replaceFileWithNewVersion(state: State, payload: ReplaceFilePayload): void {
-    payload.existing_item.file_properties = payload.new_version.file_properties;
-    payload.existing_item.lock_info = payload.new_version.lock_info;
-
-    replaceApprovalTables(payload.existing_item, payload.new_version);
+    const index = state.folder_content.findIndex(
+        (item): item is ItemFile => item.type === TYPE_FILE && item.id === payload.existing_item.id,
+    );
+    if (index === -1) {
+        return;
+    }
+    state.folder_content[index] = payload.new_version;
 }
 
-function replaceApprovalTables(
-    existing_item: ApprovableDocument,
-    new_version: ApprovableDocument,
+export function setNewVersionUploadState(
+    state: State,
+    payload: { readonly item_id: number; readonly is_uploading_new_version: boolean },
 ): void {
-    existing_item.has_approval_table = new_version.has_approval_table;
-    existing_item.is_approval_table_enabled = new_version.is_approval_table_enabled;
-    existing_item.approval_table = new_version.approval_table;
+    const item_from_state = state.folder_content.find((item) => item.id === payload.item_id);
+    if (!item_from_state || !isFakeItem(item_from_state)) {
+        return;
+    }
+
+    item_from_state.progress = null;
+    item_from_state.upload_error = null;
+    item_from_state.is_uploading_new_version = payload.is_uploading_new_version;
 }

@@ -79,6 +79,7 @@ export class ApprovalTableBuilder {
             reviewers: [],
             state: "disabled",
             reminder_occurence: 0,
+            version_open_href: "",
         };
     }
 }
