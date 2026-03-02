@@ -1,30 +1,36 @@
 <div class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally">{{# dgettext }}tuleap-docman | Document{{/ dgettext }}</h1>
+    <h1 class="tlp-framed-horizontally">
+        {{# dgettext }}tuleap-docman | Document{{/ dgettext }}
+    </h1>
 
-    <nav class="tlp-tabs">
+    <nav class="tlp-tabs" data-test="document-download-limit-tabs">
         {{# tabs }}
-            <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}">{{ label }}</a>
+            <a
+                class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}"
+                href="{{ url }}"
+            >
+                {{ label }}
+            </a>
         {{/ tabs }}
     </nav>
 
     <div class="tlp-framed-horizontally">
         <form class="tlp-pane" method="post">
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
+            {{# csrf_token }}{{> csrf_token_input }}{{/ csrf_token }}
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
                         <i class="tlp-pane-title-icon fa fa-upload"></i>
-                        {{# dgettext }}tuleap-docman | File upload limits{{/ dgettext }}
+                        {{# dgettext }}
+                            tuleap-docman | File upload limits
+                        {{/ dgettext }}
                     </h1>
                 </div>
                 <section class="tlp-pane-section">
                     <div class="tlp-form-element">
                         <label for="number-of-files" class="tlp-label">
                             {{# dgettext }}
-                                tuleap-docman
-                                | Maximum number of files
+                                tuleap-docman | Maximum number of files
                             {{/ dgettext }}
                         </label>
                         <input
@@ -38,15 +44,16 @@
                         >
                         <p class="tlp-text-info">
                             <i class="far fa-life-ring"></i>
-                            {{# dgettext }} tuleap-docman | This limit prevents a user to upload more than x files at a time.{{/ dgettext }}
+                            {{# dgettext }}
+                                tuleap-docman | This limit prevents a user to upload more than x files at a time.
+                            {{/ dgettext }}
                         </p>
                     </div>
 
                     <div class="tlp-form-element">
                         <label for="file-max-size" class="tlp-label">
                             {{# dgettext }}
-                                tuleap-docman
-                                | Maximum files size (in Bytes)
+                                tuleap-docman | Maximum files size (in Bytes)
                             {{/ dgettext }}
                         </label>
                         <input
@@ -60,14 +67,18 @@
                         >
                         <p class="tlp-text-info">
                             <i class="far fa-life-ring"></i>
-                            {{# dgettext }} tuleap-docman | This limit prevents a user to upload a file which size exceed x Bytes.{{/ dgettext }}
+                            {{# dgettext }}
+                                tuleap-docman | This limit prevents a user to upload a file which size exceed x Bytes.
+                            {{/ dgettext }}
                         </p>
                     </div>
 
                     <div class="tlp-pane-section-submit">
                         <button class="tlp-button-primary" type="submit">
                             <i class="fa-solid fa-save tlp-button-icon"></i>
-                            {{# dgettext }} tuleap-docman | Save settings {{/ dgettext }}
+                            {{# dgettext }}
+                                tuleap-docman | Save settings
+                            {{/ dgettext }}
                         </button>
                     </div>
                 </section>

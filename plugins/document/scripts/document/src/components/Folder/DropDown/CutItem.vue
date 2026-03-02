@@ -27,6 +27,7 @@
         v-bind:disabled="clipboard.pasting_in_progress"
         v-if="can_cut_item"
         data-shortcut-cut
+        data-test="cut-item"
     >
         <i class="fa-solid fa-fw fa-scissors tlp-dropdown-menu-item-icon"></i>
         {{ $gettext("Cut") }}

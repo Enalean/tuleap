@@ -20,8 +20,17 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa-fw document-folder-content-icon" v-bind:class="item.item_icon"></i>
-        <a v-bind:href="document_link_url" class="document-folder-subitem-link" draggable="false">
+        <i
+            data-test="embedded-icon"
+            class="fa-fw document-folder-content-icon"
+            v-bind:class="item.item_icon"
+        ></i>
+        <a
+            v-bind:href="document_link_url"
+            class="document-folder-subitem-link"
+            draggable="false"
+            data-test="embedded-cell-title"
+        >
             {{ item.title
             }}<i
                 class="fas document-action-icon"

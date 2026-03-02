@@ -39,6 +39,7 @@
                                     size="5"
                                     value="{{ max_archive_size }}"
                                     placeholder="2000"
+                                    data-test="error-threshold"
                             >
                             <span class="tlp-append tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{# dgettext }}tuleap-document | Megabytes{{/ dgettext }}">
                                 {{# dgettext }}tuleap-document | MB {{/ dgettext }}
@@ -66,6 +67,7 @@
                                     size="5"
                                     value="{{ warning_threshold }}"
                                     placeholder="50"
+                                    data-test="warning-threshold"
                             >
                             <span class="tlp-append tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{# dgettext }}tuleap-document | Megabytes{{/ dgettext }}">
                                 {{# dgettext }}tuleap-document | MB {{/ dgettext }}
@@ -77,7 +79,7 @@
                     </div>
 
                     <div class="tlp-pane-section-submit">
-                        <button class="tlp-button-primary" type="submit">
+                        <button class="tlp-button-primary" type="submit" data-test="save-settings">
                             <i class="fa-solid fa-save tlp-button-icon"></i>
                             {{# dgettext }} tuleap-document | Save settings {{/ dgettext }}
                         </button>

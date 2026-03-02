@@ -22,7 +22,11 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa-fw document-folder-content-icon" v-bind:class="item.item_icon"></i>
+        <i
+            data-test="link-icon"
+            class="fa-fw document-folder-content-icon"
+            v-bind:class="item.item_icon"
+        ></i>
         <a
             v-bind:href="item.link_properties.link_url"
             class="document-folder-subitem-link"
