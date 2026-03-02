@@ -34,7 +34,8 @@ describe("getObsolescenceDateValueInput", () => {
     Then the returned date should be the current date`, () => {
         const date = new Date();
         const month = String(date.getMonth() + 1).padStart(2, "0");
-        const expected_date = `${date.getFullYear()}-${month}-${date.getDate()}`;
+        const day = String(date.getDate()).padStart(2, "0");
+        const expected_date = `${date.getFullYear()}-${month}-${day}`;
         const date_result = getObsolescenceDateValueInput("today");
         expect(expected_date).toStrictEqual(date_result);
     });
