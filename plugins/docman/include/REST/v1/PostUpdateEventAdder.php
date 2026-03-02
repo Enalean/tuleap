@@ -27,29 +27,13 @@ use EventManager;
 use ProjectManager;
 use Tuleap\Docman\Version\Version;
 
-class PostUpdateEventAdder
+readonly class PostUpdateEventAdder
 {
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var DocmanItemsEventAdder
-     */
-    private $items_event_adder;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
     public function __construct(
-        ProjectManager $project_manager,
-        DocmanItemsEventAdder $items_event_adder,
-        EventManager $event_manager,
+        private ProjectManager $project_manager,
+        private DocmanItemsEventAdder $items_event_adder,
+        private EventManager $event_manager,
     ) {
-        $this->project_manager   = $project_manager;
-        $this->items_event_adder = $items_event_adder;
-        $this->event_manager     = $event_manager;
     }
 
     public function triggerPostUpdateEvents(Docman_Item $item, \PFUser $user, ?Version $version): void
