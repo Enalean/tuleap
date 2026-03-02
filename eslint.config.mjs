@@ -312,6 +312,7 @@ const config_for_cypress = {
     files: ["tests/e2e/full/cypress/**/*.ts", "plugins/*/tests/e2e/**/*.ts"],
     plugins: {
         "no-only-tests": plugin_no_only_tests,
+        cypress: plugin_cypress,
     },
     rules: {
         "cypress/require-data-selectors": "error",
