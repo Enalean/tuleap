@@ -28,8 +28,8 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
-                    style: path.resolve(__dirname, "themes/default/css/style.scss"),
-                    tracker_encryption: path.resolve(__dirname, "scripts/encrypted_field.js"),
+                    style: path.resolve(__dirname, "themes/style.scss"),
+                    tracker_encryption: path.resolve(__dirname, "src/encrypted_field.js"),
                 },
             },
         },

@@ -200,7 +200,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         if ($this->currentRequestIsForPlugin() || strpos($_SERVER['REQUEST_URI'], 'plugins/tracker') == true) {
             $layout = $params['layout'];
             assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->includeFooterJavascriptFile(new \Tuleap\Layout\JavascriptViteAsset($this->getAssets(), 'scripts/encrypted_field.js')->getFileURL());
+            $layout->includeFooterJavascriptFile(new \Tuleap\Layout\JavascriptViteAsset($this->getAssets(), 'src/encrypted_field.js')->getFileURL());
         }
     }
 
@@ -208,15 +208,15 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     public function cssfile($params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/tracker') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('themes/default/css/style.scss') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('themes/style.scss') . '" />';
         }
     }
 
     private function getAssets(): IncludeViteAssets
     {
         return new IncludeViteAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/tracker_encryption/'
+            __DIR__ . '/../scripts/encrypted-field/frontend-assets',
+            '/assets/tracker_encryption/encrypted-field/'
         );
     }
 
