@@ -175,6 +175,15 @@ class ListFieldStaticBind extends ListFieldBind
         return '';
     }
 
+    #[\Override]
+    public function formatValueById(int $value_id): string
+    {
+        if ($value_id === self::NONE_VALUE || ! isset($this->values[$value_id])) {
+            return '';
+        }
+        return $this->formatChangesetValue(['id' => $value_id]);
+    }
+
     private function formatChangesetValueObject(Tracker_FormElement_Field_List_Value $value)
     {
         if (isset($this->decorators[$value->getId()])) {

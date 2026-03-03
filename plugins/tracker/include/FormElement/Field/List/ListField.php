@@ -300,9 +300,17 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
             return $cache[$this->getId()][$changeset_id];
         }
 
-        //We have to fetch all values of the changeset as we are a list of value
-        //This is the case only if we are multiple but an old changeset may
-        //contain multiple values
+        if ($value !== null) {
+            // $value is pre-fetched from the initial SQL query (single-select fields only) when used in
+            // \Tracker_Report_Renderer_Table::fetchTBody, re-use the value instead of fetching again.
+            $changeset_value                      = $this->getBind()->formatValueById((int) $value);
+            $cache[$this->getId()][$changeset_id] = $changeset_value;
+            return $changeset_value;
+        }
+
+        // We have to fetch all values of the changeset as we are a list of value
+        // This is the case only if we are multiple but an old changeset may
+        // contain multiple values
         $values = [];
         foreach ($this->getBind()->getChangesetValues($changeset_id) as $v) {
             $val = $this->getBind()->formatChangesetValue($v);
