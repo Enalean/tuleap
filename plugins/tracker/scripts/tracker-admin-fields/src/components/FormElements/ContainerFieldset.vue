@@ -22,7 +22,10 @@
         class="draggable-wrapper"
         draggable="true"
         v-bind:data-element-id="fieldset.field.field_id"
-        v-bind:class="{ 'drek-hide': dragged_field_id === fieldset.field.field_id }"
+        v-bind:class="{
+            'drek-hide': dragged_field_id === fieldset.field.field_id,
+            'highlight-layout-issue': is_layout_warning_displayed && has_layout_issue,
+        }"
     >
         <div class="draggable-form-element">
             <section class="tlp-pane">
@@ -39,6 +42,7 @@
                     >
                         <display-form-elements
                             v-bind:elements="fieldset.children"
+                            v-bind:parent="fieldset"
                             v-if="fieldset.children.length"
                         />
                     </div>
@@ -57,19 +61,27 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { Fieldset } from "../../type";
-import { DRAGGED_FIELD_ID } from "../../injection-symbols";
+import type { Column, Fieldset } from "../../type";
+import { DRAGGED_FIELD_ID, IS_LAYOUT_WARNING_DISPLAYED } from "../../injection-symbols";
 import DisplayFormElements from "../DisplayFormElements.vue";
 import FieldsetLayout from "./FieldsetLayout.vue";
 import LabelForField from "./LabelForField.vue";
+import { computed } from "vue";
+import { isColumnWrapper } from "../../helpers/is-column-wrapper";
 
 const { $gettext } = useGettext();
 
 const dragged_field_id = strictInject(DRAGGED_FIELD_ID);
+const is_layout_warning_displayed = strictInject(IS_LAYOUT_WARNING_DISPLAYED);
 
-defineProps<{
+const props = defineProps<{
     fieldset: Fieldset;
+    parent: Column | Fieldset | null;
 }>();
+
+const has_layout_issue = computed(
+    () => props.parent !== null || props.fieldset.children.some((child) => !isColumnWrapper(child)),
+);
 </script>
 
 <style lang="scss" scoped>

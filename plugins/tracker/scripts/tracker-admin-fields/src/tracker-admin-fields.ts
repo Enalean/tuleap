@@ -29,6 +29,7 @@ import {
     CURRENT_USER,
     DRAGGED_FIELD_ID,
     FIELDS,
+    IS_LAYOUT_WARNING_DISPLAYED,
     IS_USER_LOADING,
     TRACKER_COLOR,
     TRACKER_ID,
@@ -79,5 +80,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(TRACKER_COLOR, getAttributeOrThrow(mount_point, "data-tracker-color"))
         .provide(FIELDS, JSON.parse(getAttributeOrThrow(mount_point, "data-fields")))
         .provide(DRAGGED_FIELD_ID, ref(null))
+        .provide(IS_LAYOUT_WARNING_DISPLAYED, ref(true))
         .mount(mount_point);
 });

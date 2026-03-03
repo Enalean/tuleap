@@ -23,7 +23,11 @@
         v-bind:class="{ 'column-contains-columns': does_column_contain_columns }"
         v-bind:data-container-id="column.field.field_id"
     >
-        <display-form-elements v-if="column.children.length" v-bind:elements="column.children" />
+        <display-form-elements
+            v-if="column.children.length"
+            v-bind:elements="column.children"
+            v-bind:parent="column"
+        />
     </div>
 </template>
 

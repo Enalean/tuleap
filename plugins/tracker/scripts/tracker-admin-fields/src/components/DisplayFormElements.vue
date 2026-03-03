@@ -19,139 +19,165 @@
 
 <template>
     <template v-for="(element, index) of elements" v-bind:key="index">
-        <container-fieldset v-if="isFieldset(element)" v-bind:fieldset="element" />
+        <container-fieldset
+            v-if="isFieldset(element)"
+            v-bind:fieldset="element"
+            v-bind:parent="parent"
+        />
         <container-column-wrapper
             v-else-if="isColumnWrapper(element)"
             v-bind:column_wrapper="element"
+            v-bind:parent="parent"
         />
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
             v-else-if="isTextField(element.field)"
+            v-bind:class="classes"
         >
             <field-text v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isStringField(element.field)"
         >
             <field-string v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isIntField(element.field)"
         >
             <field-int v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isFloatField(element.field)"
         >
             <field-float v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isDateField(element.field)"
         >
             <field-date v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isSelectField(element.field)"
         >
             <field-select v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isCheckbox(element.field)"
         >
             <field-checkbox v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isRadioButton(element.field)"
         >
             <field-radio v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isStaticText(element.field)"
         >
             <field-static-text v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isAnIdField(element.field)"
         >
             <field-id v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isStaticUserText(element.field)"
         >
             <field-static-user-text v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isStaticDateText(element.field)"
         >
             <field-static-date-text v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isLineSeparator(element.field)"
         >
             <line-separator v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isLineBreak(element.field)"
         >
             <line-break v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isAnArtifactLinkField(element.field)"
         >
             <field-link v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isAFileField(element.field)"
         >
             <field-file v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isCrossReferenceField(element.field)"
         >
             <field-cross-reference v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isAPriorityField(element.field)"
         >
             <field-priority v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isComputedField(element.field)"
         >
             <field-computed v-bind:field="element.field" />
         </draggable-wrapper>
         <draggable-wrapper
             v-bind:field_id="element.field.field_id"
+            v-bind:class="classes"
             v-else-if="isAnOpenStaticListField(element.field)"
         >
             <field-open-static-list v-bind:field="element.field" />
         </draggable-wrapper>
-        <draggable-wrapper v-bind:field_id="element.field.field_id" v-else>
+        <draggable-wrapper v-bind:field_id="element.field.field_id" v-bind:class="classes" v-else>
             <base-field v-bind:field="element.field" />
         </draggable-wrapper>
     </template>
 </template>
 
 <script setup lang="ts">
-import type { ElementWithChildren } from "../type";
+import { computed } from "vue";
+import type { Column, ElementWithChildren, Fieldset } from "../type";
 import {
     DATE_FIELD,
     FLOAT_FIELD,
@@ -221,10 +247,26 @@ import FieldOpenStaticList from "./FormElements/OpenListField/FieldOpenStaticLis
 import DraggableWrapper from "./DraggableWrapper.vue";
 import FieldPriority from "./FormElements/FieldPriority.vue";
 import FieldComputed from "./FormElements/FieldComputed.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { IS_LAYOUT_WARNING_DISPLAYED } from "../injection-symbols";
 
-defineProps<{
+const props = defineProps<{
     elements: ElementWithChildren["children"];
+    parent: Column | Fieldset | null;
 }>();
+
+const is_layout_warning_displayed = strictInject(IS_LAYOUT_WARNING_DISPLAYED);
+const classes = computed(() => {
+    if (!is_layout_warning_displayed.value) {
+        return "";
+    }
+
+    if (props.parent === null) {
+        return "highlight-layout-issue";
+    }
+
+    return "";
+});
 
 function isDateField(field: StructureFields): field is EditableDateFieldStructure {
     return field.type === DATE_FIELD;

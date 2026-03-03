@@ -20,6 +20,7 @@
 <template>
     <div
         class="tlp-form-element column-wrapper"
+        v-bind:class="classes"
         draggable="false"
         v-bind:data-element-id="column_wrapper.identifier"
     >
@@ -33,12 +34,35 @@
 </template>
 
 <script setup lang="ts">
-import type { ColumnWrapper } from "../../type";
+import type { Column, ColumnWrapper, Fieldset } from "../../type";
 import ContainerColumn from "./ContainerColumn.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { IS_LAYOUT_WARNING_DISPLAYED } from "../../injection-symbols";
+import { isFieldset } from "../../helpers/is-fieldset";
+import { computed } from "vue";
 
-defineProps<{
+const is_layout_warning_displayed = strictInject(IS_LAYOUT_WARNING_DISPLAYED);
+
+const props = defineProps<{
     column_wrapper: ColumnWrapper;
+    parent: Column | Fieldset | null;
 }>();
+
+const classes = computed(() => {
+    if (!is_layout_warning_displayed.value) {
+        return "";
+    }
+
+    if (props.parent === null) {
+        return "highlight-layout-issue";
+    }
+
+    if (isFieldset(props.parent)) {
+        return "";
+    }
+
+    return "highlight-layout-issue";
+});
 </script>
 
 <style lang="scss" scoped>
