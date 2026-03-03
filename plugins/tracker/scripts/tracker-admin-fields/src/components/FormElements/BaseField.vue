@@ -21,7 +21,7 @@
     <div class="tlp-form-element">
         <template v-if="does_external_component_exists">
             <label-for-field v-bind:field="field" />
-            <component v-bind:is="component_name" />
+            <component v-bind:is="component_name" v-bind:field_id="field.field_id" />
         </template>
         <label v-else class="tlp-label">{{ field.label }}</label>
     </div>
@@ -35,6 +35,6 @@ const props = defineProps<{
     field: StructureFields;
 }>();
 
-const component_name = `tuleap-field-${props.field.type}`;
+const component_name = `tuleap-field-${props.field.type}`.toLowerCase();
 const does_external_component_exists = customElements.get(component_name) !== undefined;
 </script>
