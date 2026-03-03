@@ -23,7 +23,7 @@ import type { User } from "@tuleap/core-rest-api-types";
 import type { Option } from "@tuleap/option";
 import type { ColorName } from "@tuleap/core-constants";
 import type { Fault } from "@tuleap/fault";
-import type { ElementWithChildren } from "./type";
+import type { ElementWithChildren, FieldConfigurationWarningsCollection } from "./type";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 
 export const CURRENT_USER: StrictInjectionKey<Option<User>> = Symbol();
@@ -37,5 +37,7 @@ export const FIELDS: StrictInjectionKey<ReadonlyArray<StructureFields>> = Symbol
 export const OPEN_REFRESH_AFTER_FAULT_MODAL: StrictInjectionKey<(fault: Fault) => void> = Symbol();
 export const DRAGGED_FIELD_ID: StrictInjectionKey<Ref<null | number>> = Symbol();
 export const IS_LAYOUT_WARNING_DISPLAYED: StrictInjectionKey<Ref<boolean>> = Symbol();
+export const FIELDS_CONFIGURATION_WARNINGS: StrictInjectionKey<FieldConfigurationWarningsCollection> =
+    Symbol();
 export const HANDLE_REMOVE_FIELD: StrictInjectionKey<(removed_field: StructureFields) => void> =
     Symbol();

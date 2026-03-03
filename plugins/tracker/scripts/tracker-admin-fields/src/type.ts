@@ -47,3 +47,17 @@ export interface Fieldset extends ElementWithChildren {
 export interface Column extends ElementWithChildren {
     readonly field: StructureFields;
 }
+
+export type ConfigurationWarningLink = Readonly<{
+    url: string;
+    label: string;
+}>;
+
+export type ConfigurationWarnings = Readonly<{
+    message: string;
+    links: readonly ConfigurationWarningLink[];
+}>;
+
+export type FieldConfigurationWarningsCollection = Readonly<{
+    [field_id: number]: readonly ConfigurationWarnings[];
+}>;

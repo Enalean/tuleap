@@ -28,7 +28,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 use Tuleap\User\ProvideCurrentUser;
 
-final readonly class ChartMessageFetcher
+final readonly class ChartMessageFetcher implements FetchChartConfigurationWarnings
 {
     public function __construct(
         private Tracker_HierarchyFactory $hierarchy_factory,
@@ -38,6 +38,7 @@ final readonly class ChartMessageFetcher
     ) {
     }
 
+    #[\Override]
     public function fetchWarnings(TrackerField $field, ChartFieldUsage $usage): ChartConfigurationWarningCollection
     {
         $tracker = $field->getTracker();

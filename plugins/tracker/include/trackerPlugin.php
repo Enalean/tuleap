@@ -185,12 +185,15 @@ use Tuleap\Tracker\Creation\TrackerCreationProcessorController;
 use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use Tuleap\Tracker\FormElement\Admin\FieldsConfigurationWarningsRetriever;
 use Tuleap\Tracker\FormElement\Admin\FieldsUsageConfiguration;
 use Tuleap\Tracker\FormElement\Admin\FieldsUsageDisplayController;
 use Tuleap\Tracker\FormElement\Admin\ListOfLabelDecoratorsForFieldBuilder;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\DateFormatter;
@@ -1866,6 +1869,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $ugroup_manager                = new \UGroupManager();
         $permissions_functions_wrapper = new PermissionsFunctionsWrapper();
+        $event_manager                 = EventManager::instance();
 
         return new FieldsUsageDisplayController(
             $this->getTrackerFactory(),
@@ -1891,12 +1895,25 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 new TypePresenterFactory(
                     new TypeDao(),
                     new ArtifactLinksUsageDao(),
-                    new SystemTypePresenterBuilder(\EventManager::instance()),
+                    new SystemTypePresenterBuilder($event_manager),
                 ),
                 ListOfLabelDecoratorsForFieldBuilder::build(),
             ),
+            new FieldsConfigurationWarningsRetriever(
+                $formelement_factory,
+                new ChartMessageFetcher(
+                    Tracker_HierarchyFactory::instance(),
+                    new ChartConfigurationFieldRetriever(
+                        $formelement_factory,
+                        SemanticTimeframeBuilder::build(),
+                        $this->getBackendLogger(),
+                    ),
+                    $event_manager,
+                    UserManager::instance()
+                ),
+            ),
             new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'),
-            \EventManager::instance(),
+            $event_manager,
         );
     }
 

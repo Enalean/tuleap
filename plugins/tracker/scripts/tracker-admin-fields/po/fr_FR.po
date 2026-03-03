@@ -55,6 +55,9 @@ msgstr "Réduire"
 msgid "Computed value"
 msgstr "Valeur calculée"
 
+msgid "Configuration warnings"
+msgstr "Avertissements de configuration"
+
 msgid "Cross references"
 msgstr "Références croisées"
 
@@ -81,6 +84,9 @@ msgstr "Éditer"
 
 msgid "Expand"
 msgstr "Étendre"
+
+msgid "Fake image of a burndown"
+msgstr "Fausse image d'un burndown"
 
 msgid "Field configuration"
 msgstr "Configuration du champ"

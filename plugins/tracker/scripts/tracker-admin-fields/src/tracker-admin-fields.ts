@@ -30,6 +30,7 @@ import {
     DRAGGED_FIELD_ID,
     FIELDS,
     IS_LAYOUT_WARNING_DISPLAYED,
+    FIELDS_CONFIGURATION_WARNINGS,
     IS_USER_LOADING,
     TRACKER_COLOR,
     TRACKER_ID,
@@ -81,5 +82,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(FIELDS, JSON.parse(getAttributeOrThrow(mount_point, "data-fields")))
         .provide(DRAGGED_FIELD_ID, ref(null))
         .provide(IS_LAYOUT_WARNING_DISPLAYED, ref(true))
+        .provide(
+            FIELDS_CONFIGURATION_WARNINGS,
+            JSON.parse(getAttributeOrThrow(mount_point, "data-configuration-warnings")),
+        )
         .mount(mount_point);
 });

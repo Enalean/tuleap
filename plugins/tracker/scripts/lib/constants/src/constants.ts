@@ -47,6 +47,7 @@ export type TextFieldIdentifier = "text";
 export type LineBreak = "linebreak";
 export type Separator = "separator";
 export type StaticRichText = "staticrichtext";
+export type BurndownFieldIdentifier = "burndown";
 
 export const ARTIFACT_ID_FIELD: ArtifactIdFieldIdentifier = "aid";
 export const ARTIFACT_ID_IN_TRACKER_FIELD: ArtifactIdInTrackerFieldIdentifier = "atid";
@@ -75,6 +76,7 @@ export const TEXT_FIELD: TextFieldIdentifier = "text";
 export const LINE_BREAK = "linebreak";
 export const SEPARATOR = "separator";
 export const STATIC_RICH_TEXT = "staticrichtext";
+export const BURNDOWN_FIELD: BurndownFieldIdentifier = "burndown";
 
 type DefaultValueDateTypeToday = 0;
 type DefaultValueDateTypeSpecificDate = 1;
@@ -105,7 +107,7 @@ export const STRUCTURAL_FIELDS: ReadonlyArray<StructuralFieldIdentifier> = [
 export type ReadOnlyFieldIdentifier =
     | ArtifactIdFieldIdentifier
     | ArtifactIdInTrackerFieldIdentifier
-    | "burndown"
+    | BurndownFieldIdentifier
     | CrossReferenceFieldIdentifier
     | LastUpdateDateFieldIdentifier
     | LastUpdateByFieldIdentifier
@@ -116,7 +118,7 @@ export type ReadOnlyFieldIdentifier =
 export const READ_ONLY_FIELDS: ReadonlyArray<ReadOnlyFieldIdentifier> = [
     ARTIFACT_ID_FIELD,
     ARTIFACT_ID_IN_TRACKER_FIELD,
-    "burndown",
+    BURNDOWN_FIELD,
     CROSS_REFERENCE_FIELD,
     LAST_UPDATED_BY_FIELD,
     LAST_UPDATE_DATE_FIELD,
