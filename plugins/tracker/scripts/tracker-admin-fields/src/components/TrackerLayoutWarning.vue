@@ -18,8 +18,12 @@
   -->
 
 <template>
-    <div class="tlp-alert-warning" v-if="recommendations.length > 0">
-        <p class="tlp-alert-title">{{ $gettext("Tracker layout evolution") }}</p>
+    <div
+        class="tracker-layout-warning-hack-to-hide-scrolling-content-beneath"
+        v-if="should_show_warning"
+    ></div>
+    <div class="tlp-alert-warning tracker-layout-warning" v-if="should_show_warning">
+        <p class="tlp-alert-title">{{ $gettext("Layout recommendations") }}</p>
         <p>
             {{
                 $gettext(
@@ -53,11 +57,32 @@
                 {{ recommendation }}
             </li>
         </ul>
+        <button
+            type="button"
+            class="tlp-button-warning tlp-button-outline tlp-button-small"
+            v-on:click="is_open = false"
+        >
+            {{ $gettext("Close") }}
+        </button>
+    </div>
+    <div class="tracker-layout-warning-show-button-container" v-if="should_show_button">
+        <button
+            type="button"
+            class="tlp-button-secondary tlp-button-outline"
+            v-on:click="is_open = true"
+        >
+            {{ $gettext("Layout recommendations") }}
+        </button>
+        <span
+            class="tlp-badge-rounded tlp-badge-warning tracker-layout-warning-show-button-counter"
+        >
+            {{ recommendations.length }}
+        </span>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { TRACKER_ROOT } from "../injection-symbols";
 import { useGettext } from "vue3-gettext";
@@ -98,4 +123,40 @@ const recommendations = computed(() => [
         ? [$gettext("Fieldsets should be placed at the root level of the tracker.")]
         : []),
 ]);
+
+const is_open = ref(true);
+const should_show_warning = computed(() => recommendations.value.length > 0 && is_open.value);
+const should_show_button = computed(
+    () => recommendations.value.length > 0 && is_open.value === false,
+);
 </script>
+
+<style scoped lang="scss">
+.tracker-layout-warning {
+    position: sticky;
+    z-index: 2;
+    top: var(--tlp-medium-spacing);
+}
+
+.tracker-layout-warning-hack-to-hide-scrolling-content-beneath {
+    position: sticky;
+    z-index: 2;
+    top: 0;
+    width: 100%;
+    height: var(--tlp-medium-spacing);
+    background: var(--tlp-background-color);
+}
+
+.tracker-layout-warning-show-button-container {
+    display: flex;
+    position: relative;
+    justify-content: flex-end;
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.tracker-layout-warning-show-button-counter {
+    position: absolute;
+    top: calc(var(--tlp-medium-spacing) / -2);
+    right: calc(var(--tlp-medium-spacing) / -2);
+}
+</style>

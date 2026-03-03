@@ -138,6 +138,9 @@ msgstr "Date de mise à jour"
 msgid "Layout & structure"
 msgstr "Organisation & structure"
 
+msgid "Layout recommendations"
+msgstr "Recommandations de structure"
+
 msgid "Move element"
 msgstr "Déplacer l'élément"
 
@@ -155,7 +158,7 @@ msgid ""
 "layouts across the platform."
 msgstr ""
 "De nouvelles contraintes ont été introduites afin de garantir des mises en "
-"page cohérentes des formulaires d’artefacts sur l’ensemble de la plateforme. "
+"page cohérentes des formulaires d’artefacts sur l’ensemble de la plateforme."
 
 msgid "No fields"
 msgstr "Aucun champ"
@@ -257,9 +260,6 @@ msgstr ""
 
 msgid "Three columns layout"
 msgstr "Agencement sur trois colonnes"
-
-msgid "Tracker layout evolution"
-msgstr "Évolution de la structure de tracker"
 
 msgid "Two columns layout"
 msgstr "Agencement sur deux colonnes"
