@@ -18,8 +18,9 @@
  */
 
 import { post, recursiveGet } from "@tuleap/tlp-fetch";
+import type { Branch } from "../helpers/pullrequest-helper";
 
-export function getBranches(repository_id) {
+export function getBranches(repository_id: number): Promise<Branch[]> {
     return recursiveGet("/api/git/" + repository_id + "/branches", {
         params: {
             limit: 50,
@@ -28,11 +29,11 @@ export function getBranches(repository_id) {
 }
 
 export async function createPullrequest(
-    source_repository_id,
-    source_branch_name,
-    destination_repository_id,
-    destination_branch_name,
-) {
+    source_repository_id: number,
+    source_branch_name: string,
+    destination_repository_id: number,
+    destination_branch_name: string,
+): Promise<{ id: number }> {
     const headers = {
         "content-type": "application/json",
     };
