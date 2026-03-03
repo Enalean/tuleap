@@ -879,9 +879,6 @@ msgstr "Approbation"
 msgid "Review date"
 msgstr "Date d'approbation"
 
-msgid "Review:"
-msgstr "Approbation :"
-
 msgid "Reviewers"
 msgstr "Approbateurs"
 
@@ -951,6 +948,12 @@ msgstr "Afficher"
 
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
+
+msgid "Show less"
+msgstr "Moins"
+
+msgid "Show more"
+msgstr "Plus"
 
 msgid "Size"
 msgstr "Taille"
@@ -1200,6 +1203,9 @@ msgstr "Label de la version"
 
 msgid "Version name"
 msgstr "Nom de version"
+
+msgid "Version not found"
+msgstr "Version introuvable"
 
 msgid "Versions"
 msgstr "Versions"

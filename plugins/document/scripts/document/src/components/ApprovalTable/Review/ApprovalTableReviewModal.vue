@@ -55,24 +55,15 @@
                 </div>
                 <div class="tlp-property">
                     <label class="tlp-label">{{ $gettext("Document version") }}</label>
-                    <router-link
-                        v-if="table.version_id !== null"
-                        v-bind:to="{
-                            name: 'item_version',
-                            params: {
-                                folder_id: item.parent_id,
-                                item_id: item.id,
-                                version_id: table.version_id,
-                            },
-                        }"
-                    >
-                        {{ table.version_label }}
-                    </router-link>
+                    <a v-bind:href="table.version_open_href" v-if="table.version_id !== null">
+                        {{ table.version_label ? table.version_label : table.version_number }}
+                    </a>
                     <template v-else>
-                        <p>{{ table.version_label }}</p>
+                        <p>{{ $gettext("Version not found") }}</p>
                     </template>
                 </div>
             </div>
+
             <div class="tlp-modal-body-section">
                 <h2 class="tlp-modal-subtitle">{{ $gettext("Approval cycle details") }}</h2>
                 <div class="tlp-property">
@@ -92,9 +83,32 @@
                 </div>
                 <div class="tlp-property">
                     <label class="tlp-label">{{ $gettext("Requester comment") }}</label>
-                    <p v-if="table.description !== ''">
-                        {{ table.description }}
-                    </p>
+
+                    <div v-if="table.description !== ''">
+                        <Teleport to="body">
+                            <div
+                                ref="hidden_preview"
+                                class="hidden-description-to-compute-show-comment"
+                            >
+                                {{ table.description }}
+                            </div>
+                        </Teleport>
+                        <p
+                            class="comment-preview"
+                            v-bind:class="{ expanded: show_full_comment }"
+                            v-dompurify-html="table.post_processed_description"
+                        ></p>
+
+                        <button
+                            v-if="is_truncated"
+                            class="tlp-button-primary tlp-button-outline tlp-button-mini"
+                            data-test="show-more-button"
+                            v-on:click="show_full_comment = !show_full_comment"
+                        >
+                            {{ show_full_comment ? $gettext("Show less") : $gettext("Show more") }}
+                        </button>
+                    </div>
+
                     <p v-else class="tlp-property-empty">{{ $gettext("No comment") }}</p>
                 </div>
             </div>
@@ -102,7 +116,7 @@
         <div class="tlp-modal-body modal-form-section">
             <div class="tlp-form-element">
                 <label class="tlp-label" for="review">
-                    {{ $gettext("Review:") }}
+                    {{ $gettext("Review") }}
                     <i
                         class="fa-solid fa-circle-question"
                         ref="popover_trigger"
@@ -170,6 +184,7 @@
                     class="tlp-button-icon fa-solid fa-spin fa-circle-notch"
                     aria-hidden="true"
                 ></i>
+                <i v-else class="tlp-button-icon fa-solid fa-paper-plane" aria-hidden="true"></i>
                 {{ $gettext("Send my review") }}
             </button>
         </div>
@@ -178,7 +193,7 @@
 
 <script setup lang="ts">
 import type { ApprovalTable, ApprovalTableReviewer, Item } from "../../../type";
-import { onMounted, onUnmounted, ref } from "vue";
+import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { putReview } from "../../../api/approval-table-rest-querier";
@@ -206,6 +221,25 @@ const review_value = ref<string>(props.reviewer.state);
 const comment_value = ref<string>(props.reviewer.comment);
 const notification_value = ref<boolean>(props.reviewer.notification);
 const popover_trigger = ref<HTMLElement>();
+const show_full_comment = ref<boolean>(false);
+const hidden_preview = ref<HTMLElement | null>(null);
+const is_truncated = ref(false);
+
+watch(
+    () => props.table.description,
+    () => {
+        nextTick(() => {
+            if (hidden_preview.value) {
+                const el = hidden_preview.value;
+                const line_height = parseFloat(getComputedStyle(el).lineHeight);
+                const max_height = line_height * 3;
+
+                is_truncated.value = el.scrollHeight > max_height;
+            }
+        });
+    },
+    { immediate: true },
+);
 
 onMounted(() => {
     if (modal_div.value === undefined || popover_trigger.value === undefined) {
@@ -255,5 +289,22 @@ function onReview(): void {
 
 .comment-input {
     resize: vertical;
+}
+
+.comment-preview {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.comment-preview.expanded {
+    -webkit-line-clamp: unset;
+    max-height: none;
+}
+
+.hidden-description-to-compute-show-comment {
+    visibility: hidden;
+    position: absolute;
 }
 </style>

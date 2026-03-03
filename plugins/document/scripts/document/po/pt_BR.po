@@ -821,9 +821,6 @@ msgstr ""
 msgid "Review date"
 msgstr ""
 
-msgid "Review:"
-msgstr ""
-
 msgid "Reviewers"
 msgstr ""
 
@@ -890,6 +887,12 @@ msgid "Show"
 msgstr ""
 
 msgid "Show error details"
+msgstr ""
+
+msgid "Show less"
+msgstr ""
+
+msgid "Show more"
 msgstr ""
 
 msgid "Size"
@@ -1113,6 +1116,9 @@ msgid "Version label"
 msgstr ""
 
 msgid "Version name"
+msgstr ""
+
+msgid "Version not found"
 msgstr ""
 
 msgid "Versions"
