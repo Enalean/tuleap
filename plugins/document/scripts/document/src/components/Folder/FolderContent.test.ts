@@ -58,10 +58,19 @@ describe("FolderContent", () => {
     });
 
     it(`Should not display preview when component is rendered`, () => {
+        state.folder_content = [];
         const wrapper = factory();
 
         expect(wrapper.find("[data-test=document-quick-look]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-folder-owner-information]").exists()).toBeTruthy();
+    });
+
+    it(`Given user access to an obsolete docuement for an empty folder, then a specific table empty state is displayed`, () => {
+        state.folder_content = [];
+
+        const wrapper = factory();
+
+        expect(wrapper.find("[data-test=document-folder-content-empty]").exists()).toBeTruthy();
     });
 
     describe("toggleQuickLook", () => {

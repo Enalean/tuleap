@@ -1079,6 +1079,9 @@ msgstr "Il n'y a pas d'historique"
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
 
+msgid "There isn't any document to display"
+msgstr "Il n'y a aucun document à afficher"
+
 msgid "There isn't any item"
 msgstr "Il n'y a aucun élément"
 

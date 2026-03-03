@@ -27,7 +27,12 @@ export interface RootGetter {
 import type { FakeItem, Item, State } from "../type";
 import { isFakeItem } from "../helpers/type-check-helper";
 
-export const is_folder_empty = (state: State): boolean => state.folder_content.length === 0;
+export const is_folder_empty = (state: State): boolean => {
+    if (state.toggle_quick_look && state.currently_previewed_item !== null) {
+        return false;
+    }
+    return state.folder_content.length === 0;
+};
 
 export const current_folder_title =
     (state: State): ((show_document_in_title: boolean) => string) =>

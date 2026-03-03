@@ -96,6 +96,62 @@ describe("Store getters", () => {
         });
     });
 
+    describe("is_folder_empty", () => {
+        it("returns true when folder_content is empty and not in preview mode", () => {
+            const folder_content: Array<FolderContentItem> = [];
+            const is_empty = getters.is_folder_empty({
+                folder_content,
+                toggle_quick_look: false,
+                currently_previewed_item: null,
+            } as State);
+
+            expect(is_empty).toBe(true);
+        });
+
+        it("returns false when folder_content has items", () => {
+            const is_empty = getters.is_folder_empty({
+                folder_content: [{ id: 1 } as Item],
+                toggle_quick_look: false,
+                currently_previewed_item: null,
+            } as State);
+
+            expect(is_empty).toBe(false);
+        });
+
+        it("returns false when in preview mode with a previewed item, even if folder_content is empty", () => {
+            const folder_content: Array<FolderContentItem> = [];
+            const is_empty = getters.is_folder_empty({
+                folder_content,
+                toggle_quick_look: true,
+                currently_previewed_item: { id: 10, title: "Obsolete Document" } as Item,
+            } as State);
+
+            expect(is_empty).toBe(false);
+        });
+
+        it("returns true when in preview mode but currently_previewed_item is null", () => {
+            const folder_content: Array<FolderContentItem> = [];
+            const is_empty = getters.is_folder_empty({
+                folder_content,
+                toggle_quick_look: true,
+                currently_previewed_item: null,
+            } as State);
+
+            expect(is_empty).toBe(true);
+        });
+
+        it("returns true when not in preview mode even with a currently_previewed_item set", () => {
+            const folder_content: Array<FolderContentItem> = [];
+            const is_empty = getters.is_folder_empty({
+                folder_content,
+                toggle_quick_look: false,
+                currently_previewed_item: { id: 10, title: "Document" } as Item,
+            } as State);
+
+            expect(is_empty).toBe(true);
+        });
+    });
+
     describe("global_upload_progress", () => {
         it("returns the global upload progress by computing the mean of all progress values", () => {
             const global_progress = getters.global_upload_progress({
