@@ -24,8 +24,8 @@ use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
 class Tracker_Report_RendererFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const string MAPPING_KEY = 'plugin_tracker_renderer';
-    private Tracker_Report_Session $report_session;
+    public const string MAPPING_KEY                 = 'plugin_tracker_renderer';
+    private ?Tracker_Report_Session $report_session = null;
 
     /**
      * A protected constructor; prevents direct creation of object
@@ -46,19 +46,15 @@ class Tracker_Report_RendererFactory //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     /**
      * Hold an instance of the class
-     * @var self|null
      */
-    protected static $_instance; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    private static ?Tracker_Report_RendererFactory $instance = null;
 
-    /**
-     * @return Tracker_Report_RendererFactory
-     */
-    public static function instance()
+    public static function instance(): self
     {
-        if (! isset(self::$_instance)) {
-            self::$_instance = new self();
+        if (self::$instance === null) {
+            self::$instance = new self();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
 
@@ -282,9 +278,7 @@ class Tracker_Report_RendererFactory //phpcs:ignore PSR1.Classes.ClassDeclaratio
                     'renderer_type' => $type,
                 ]
             );
-            if ($this->report_session) {
-                $this->report_session->setHasChanged();
-            }
+            $this->report_session?->setHasChanged();
             switch ($type) {
                 case Tracker_Report_Renderer::TABLE:
                     $session->set("$renderer_id.chunksz", 15);
@@ -449,7 +443,7 @@ class Tracker_Report_RendererFactory //phpcs:ignore PSR1.Classes.ClassDeclaratio
                     if (isset($row['sort'])) {
                         $instance->setSort($row['sort']);
                         if ($store_in_session) {
-                            $this->report_session->set("{$row['id']}.sort", $row['sort']);
+                            $this->report_session?->set("{$row['id']}.sort", $row['sort']);
                         }
                     }
                     break;
@@ -474,7 +468,7 @@ class Tracker_Report_RendererFactory //phpcs:ignore PSR1.Classes.ClassDeclaratio
             $this->renderers[$row['id']] = $instance;
 
             if ($instance) {
-                if ($store_in_session && isset($this->report_session)) {
+                if ($store_in_session && $this->report_session !== null) {
                     //override the row in the current session
                     //do not traverse the row with a foreach since some info should not be put in the session
                     // (like SimpleXMLElement during an xml import)
