@@ -24,6 +24,7 @@
             type="button"
             class="tlp-button-primary tlp-button-outline tlp-modal-action"
             data-dismiss="modal"
+            data-test="close-modal"
         >
             {{ $gettext("Cancel") }}
         </button>

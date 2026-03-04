@@ -17,12 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { deleteDocumentDisplayedInQuickLook, openQuickLook } from "../support/helpers";
+import {
+    assertTreeViewRowContains,
+    deleteDocumentDisplayedInQuickLook,
+    openQuickLook,
+} from "../support/helpers";
 import type {
     ProjectServiceResponse,
     CreatedItemResponse,
 } from "@tuleap/plugin-document-rest-api-types";
 import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
+import { createFolderWithContent } from "../support/create-document";
 
 describe("Document", () => {
     let project_unixname: string;
@@ -318,8 +323,8 @@ describe("Document", () => {
         cy.get("[data-test=document-modal-submit-button-create-folder]").click();
 
         cy.log("Tree view display folder, then files");
-        assertRows(0, "Z folder", false);
-        assertRows(1, "aa.txt", false);
+        assertTreeViewRowContains(0, "Z folder", false);
+        assertTreeViewRowContains(1, "aa.txt", false);
 
         cy.log("Use quicklook dropdown to create a folder inside folder");
         cy.get("[data-test=document-tree-content]")
@@ -336,9 +341,9 @@ describe("Document", () => {
         cy.get("[data-test=document-new-item-title]").type("sub folder");
         cy.get("[data-test=document-modal-submit-button-create-folder]").click();
 
-        assertRows(0, "Z folder", false);
-        assertRows(1, "sub folder", false);
-        assertRows(2, "aa.txt", false);
+        assertTreeViewRowContains(0, "Z folder", false);
+        assertTreeViewRowContains(1, "sub folder", false);
+        assertTreeViewRowContains(2, "aa.txt", false);
 
         cy.log("Fold main folder");
         cy.get("[data-test=document-tree-content]")
@@ -348,9 +353,9 @@ describe("Document", () => {
             });
 
         cy.log("Sub elements are no longer displayed when folder is fold");
-        assertRows(0, "Z folder", false);
-        assertRows(1, "sub folder", true);
-        assertRows(2, "aa.txt", false);
+        assertTreeViewRowContains(0, "Z folder", false);
+        assertTreeViewRowContains(1, "sub folder", true);
+        assertTreeViewRowContains(2, "aa.txt", false);
 
         cy.log("Create a new folder inside folded folder");
         cy.get("[data-test=document-tree-content]")
@@ -363,10 +368,10 @@ describe("Document", () => {
         cy.get("[data-test=document-new-item-title]").type("An other sub folder");
         cy.get("[data-test=document-modal-submit-button-create-folder]").click();
 
-        assertRows(0, "Z folder", false);
-        assertRows(1, "An other sub folder", true);
-        assertRows(2, "sub folder", true);
-        assertRows(3, "aa.txt", false);
+        assertTreeViewRowContains(0, "Z folder", false);
+        assertTreeViewRowContains(1, "An other sub folder", true);
+        assertTreeViewRowContains(2, "sub folder", true);
+        assertTreeViewRowContains(3, "aa.txt", false);
     });
 
     it(`Copy/paste`, () => {
@@ -376,10 +381,10 @@ describe("Document", () => {
         createFolderWithContent("AA", "./_fixtures/aa.txt");
         createFolderWithContent("BB", "./_fixtures/bb.txt");
 
-        assertRows(0, "AA", false);
-        assertRows(1, "aa.txt", false);
-        assertRows(2, "BB", false);
-        assertRows(3, "bb.txt", false);
+        assertTreeViewRowContains(0, "AA", false);
+        assertTreeViewRowContains(1, "aa.txt", false);
+        assertTreeViewRowContains(2, "BB", false);
+        assertTreeViewRowContains(3, "bb.txt", false);
 
         cy.log("user can copy/paste an item from folder AA to folder BB");
         cy.get("[data-test=document-tree-content]")
@@ -395,11 +400,11 @@ describe("Document", () => {
                 cy.get("[data-test=paste-item]").click({ force: true });
             });
 
-        assertRows(0, "AA", false);
-        assertRows(1, "aa.txt", false);
-        assertRows(2, "BB", false);
-        assertRows(3, "aa.txt", false);
-        assertRows(4, "bb.txt", false);
+        assertTreeViewRowContains(0, "AA", false);
+        assertTreeViewRowContains(1, "aa.txt", false);
+        assertTreeViewRowContains(2, "BB", false);
+        assertTreeViewRowContains(3, "aa.txt", false);
+        assertTreeViewRowContains(4, "bb.txt", false);
 
         cy.log("user can cut/paste folder BB into folder AA");
         cy.get("[data-test=document-tree-content]")
@@ -414,11 +419,11 @@ describe("Document", () => {
                 // button is displayed on tr::hover, so we need to force click
                 cy.get("[data-test=paste-item]").click({ force: true });
             });
-        assertRows(0, "BB", false);
-        assertRows(1, "AA", false);
-        assertRows(2, "aa.txt", false);
-        assertRows(3, "aa.txt", false);
-        assertRows(4, "bb.txt", false);
+        assertTreeViewRowContains(0, "BB", false);
+        assertTreeViewRowContains(1, "AA", false);
+        assertTreeViewRowContains(2, "aa.txt", false);
+        assertTreeViewRowContains(3, "aa.txt", false);
+        assertTreeViewRowContains(4, "bb.txt", false);
     });
 });
 
@@ -526,42 +531,4 @@ function checkThatEmptyHasTheCorrectType(
             cy.get(`[data-test=${type}-icon]`).should("have.class", icon_type);
             cy.get(`[data-test=${type}-icon]`).should("have.class", icon_color);
         });
-}
-
-function createFolderWithContent(folder_name: string, file_path: string): void {
-    cy.get("[data-test=document-header-actions]").within(() => {
-        cy.get("[data-test=document-item-action-new-button]").click();
-
-        cy.get("[data-test=document-new-folder-creation-button]").click();
-    });
-
-    cy.get("[data-test=document-new-folder-modal]").within(() => {
-        cy.get("[data-test=document-new-item-title]").type(folder_name);
-        cy.get("[data-test=document-modal-submit-button-create-folder]").click();
-    });
-
-    cy.get("[data-test=document-tree-content]")
-        .contains("tr", folder_name)
-        .within(() => {
-            cy.get("[data-test=toggle]").click();
-            // button is displayed on tr::hover, so we need to force click
-            cy.get("[data-test=document-drop-down-button]").click({ force: true });
-            cy.get("[data-test=document-folder-content-creation]").click();
-            // force is needed because button is displayed at hover
-            cy.get("[data-test=document-new-file-creation-button]").click({ force: true });
-        });
-
-    cy.get("[data-test=document-new-file-upload]").selectFile(file_path);
-    cy.get("[data-test=document-modal-submit-button-create-item]").click();
-}
-
-function assertRows(index: number, docuent_name: string, is_hidden: boolean): void {
-    cy.get("[data-test=document-tree-content] tr")
-        .eq(index)
-        .find("td")
-        .eq(0)
-        .contains(docuent_name);
-    cy.get("[data-test=document-tree-content] tr")
-        .eq(index)
-        .should(is_hidden ? "have.class" : "not.have.class", "document-tree-item-hidden");
 }
