@@ -1316,7 +1316,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         if ($column['field']->isUsed()) {
                             $field_name = $column['field']->getPrefixedName();
                             $value      = isset($row[$field_name]) ? $row[$field_name] : null;
-                            $html      .= '<td data-column-id="' . $purifier->purify($key) . '">';
+                            $html      .= '<td data-column-id="' . $purifier->purify($key) . '" data-column-name="' . $purifier->purify($column['field']->getName()) . '">';
 
                             if (isset($column['artlink_nature'])) {
                                 $html .= $column['field']->fetchChangesetValueForType(
@@ -1733,7 +1733,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $already_seen       = [];
 
         foreach ($columns as $column) {
-            if (! $column['field']->isUsed() || $column['field']->isMultiple()) {
+            if (! $column['field']->isUsed() || $column['field']->isMultiple() || $column['field']->hadMultipleValues()) {
                 continue;
             }
 

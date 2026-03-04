@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="from-msb-to-sb" full-name="From MSB to SB" description="" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Membres du projet">
+      <members>
+        <member format="username">ProjectMember</member>
+      </members>
+    </ugroup>
+  </ugroups>
+</project>

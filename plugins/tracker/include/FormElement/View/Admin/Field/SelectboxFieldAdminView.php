@@ -60,7 +60,7 @@ class SelectboxFieldAdminView extends ListFieldAdminView
                 $change_type_form .= '<input type="hidden" name="tracker" value="' . $html_purifier->purify((string) $this->formElement->getTrackerId()) . '" />';
                 $change_type_form .= '<input type="hidden" name="formElement" value="' . $html_purifier->purify((string) $this->formElement->getId()) . '" />';
                 $change_type_form .= '<input type="hidden" name="change-type" value="' . $html_purifier->purify($type) . '" />';
-                $change_type_form .= '<button type="submit" class="btn-link">' . $html_purifier->purify($labels[$type] ?? '') . '</button>';
+                $change_type_form .= '<button type="submit" class="btn-link" data-test="' . $html_purifier->purify($this->formElement->getName()) . '-change-type-' . $html_purifier->purify($type) . '">' . $html_purifier->purify($labels[$type] ?? '') . '</button>';
                 $change_type_form .= '</form>';
                 $change_links[]    = $change_type_form;
             }

@@ -74,6 +74,10 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_elements_2->method('isMultiple')->willReturn(false);
         $this->form_elements_3->method('isMultiple')->willReturn(false);
 
+        $this->form_elements_1->method('hadMultipleValues')->willReturn(false);
+        $this->form_elements_2->method('hadMultipleValues')->willReturn(false);
+        $this->form_elements_3->method('hadMultipleValues')->willReturn(false);
+
         $this->form_elements_1->method('getQuerySelect')->willReturn('a.id AS `artifact_id`');
         $this->form_elements_1->method('getQueryFrom')->willReturn('');
 

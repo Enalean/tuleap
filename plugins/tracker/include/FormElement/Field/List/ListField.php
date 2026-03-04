@@ -652,6 +652,17 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
         return new ListValueDao();
     }
 
+    private ?bool $had_multiple_values = null;
+
+    #[Override]
+    public function hadMultipleValues(): bool
+    {
+        if ($this->had_multiple_values === null) {
+            $this->had_multiple_values = (new ListChangesetValueDao())->fieldHasMultipleStoredValues($this->id);
+        }
+        return $this->had_multiple_values;
+    }
+
     #[Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
