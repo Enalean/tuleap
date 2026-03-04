@@ -1,0 +1,180 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "displayName": "Tuleap Query Language",
+    "name": "tql",
+    "patterns": [
+        {
+            "match": "/{2}.*",
+            "name": "comment.line.double-slash"
+        },
+        {
+            "match": "-{2}.*",
+            "name": "comment.line.double-dash"
+        },
+        {
+            "match": "'(?:[^\\\\]|\\\\.)*?(?:'|$)",
+            "name": "string.quoted.simple"
+        },
+        {
+            "match": "\"(?:[^\\\\]|\\\\.)*?(?:\"|$)",
+            "name": "string.quoted.double"
+        },
+        {
+            "match": "(?i)\\d+[dwmy]",
+            "name": "constant.character"
+        },
+        {
+            "match": "\\d+(?:\\.\\d+)?",
+            "name": "constant.numeric"
+        },
+        {
+            "match": "(?i)and\\b",
+            "name": "keyword.control"
+        },
+        {
+            "match": "(?i)from\\b",
+            "name": "keyword.control"
+        },
+        {
+            "match": "(?i)or\\b",
+            "name": "keyword.control"
+        },
+        {
+            "match": "(?i)select\\b",
+            "name": "keyword.control"
+        },
+        {
+            "match": "(?i)where\\b",
+            "name": "keyword.control"
+        },
+        {
+            "match": "(?i)order\\s*by\\b",
+            "name": "keyword.control"
+        },
+        {
+            "match": "(?i)artifact\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)between\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)by\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)child\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)children\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)covered\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)covering\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)from\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)in\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)is\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)linked\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)myself\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)not\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)now\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)open\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)parent\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)to\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)tracker\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)type\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)with\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)without\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)linked\\s*from\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)asc\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)ascending\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)desc\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)descending\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "(?i)my_projects\\b",
+            "name": "keyword.other"
+        },
+        {
+            "match": "[=<>!+-]+",
+            "name": "keyword.operator"
+        },
+        {
+            "match": "[()]",
+            "name": "keyword.other"
+        },
+        {
+            "match": "@[.\\w-]+",
+            "name": "constant.language"
+        },
+        {
+            "match": "/[.\\w-]+/",
+            "name": "variable.other"
+        }
+    ],
+    "scopeName": "source.tql"
+}

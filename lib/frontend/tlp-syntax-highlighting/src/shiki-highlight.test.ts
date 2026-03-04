@@ -147,4 +147,29 @@ describe("Shiki", () => {
             }),
         );
     });
+
+    it("can highlight tql", async () => {
+        const pre_element = doc.createElement("pre");
+        const element = doc.createElement("code");
+        pre_element.appendChild(element);
+        element.classList.add("language-tql");
+        const code_content = "SELECT @pretty_title FROM @project = MY_PROJECTS() WHERE @id >= 1";
+        element.textContent = code_content;
+
+        await syntaxHighlightElement(element);
+
+        expect(loadLanguage).toHaveBeenCalledWith(
+            expect.objectContaining({
+                displayName: "Tuleap Query Language",
+                name: "tql",
+            }),
+        );
+        expect(codeToHtml).toHaveBeenCalledWith(
+            code_content,
+            expect.objectContaining({
+                lang: "tql",
+                themes: { light: "github-light-default", dark: "github-dark-default" },
+            }),
+        );
+    });
 });

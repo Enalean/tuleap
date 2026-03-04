@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { BundledLanguage, SpecialLanguage } from "shiki";
+import type { BundledLanguage, BundledTheme, HighlighterGeneric, SpecialLanguage } from "shiki";
 import { bundledLanguages, createHighlighter, createJavaScriptRegexEngine } from "shiki";
 import { markPotentiallyDangerousBidirectionalUnicodeText } from "./bidirectional-unicode-text";
 import DOMPurify from "dompurify";
@@ -46,19 +46,9 @@ export async function syntaxHighlightElement(element: HTMLElement): Promise<void
         language = "text";
     }
 
-    const parent_pre_tag = element.parentElement;
-    if (!(parent_pre_tag instanceof HTMLPreElement)) {
-        return;
-    }
-
     const highlighter = await highlighter_promise;
 
-    const used_language: BundledLanguage | SpecialLanguage = isABundledLanguage(language)
-        ? language
-        : "text";
-    if (!highlighter.getLoadedLanguages().includes(used_language)) {
-        await highlighter.loadLanguage(used_language);
-    }
+    const used_language = await loadLanguage(highlighter, language);
 
     const host = document.createElement("div");
     host.innerHTML = DOMPurify.sanitize(
@@ -78,7 +68,31 @@ export async function syntaxHighlightElement(element: HTMLElement): Promise<void
         return;
     }
 
-    pre_tag.classList.forEach((value) => parent_pre_tag.classList.add(value));
+    const parent_pre_tag = element.parentElement;
+    if (parent_pre_tag) {
+        pre_tag.classList.forEach((value) => parent_pre_tag.classList.add(value));
+    }
     element.classList.forEach((value) => code_tag.classList.add(value));
     element.replaceWith(code_tag);
+}
+
+async function loadLanguage(
+    highlighter: HighlighterGeneric<BundledLanguage, BundledTheme>,
+    language: string,
+): Promise<string> {
+    if (highlighter.getLoadedLanguages().includes(language)) {
+        return language;
+    }
+
+    if (language === "tql") {
+        await highlighter.loadLanguage(await import("./langs/tql.json"));
+        return language;
+    }
+
+    const used_language: BundledLanguage | SpecialLanguage = isABundledLanguage(language)
+        ? language
+        : "text";
+    await highlighter.loadLanguage(used_language);
+
+    return used_language;
 }
