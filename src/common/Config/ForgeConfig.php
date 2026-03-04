@@ -29,6 +29,7 @@ use Tuleap\Config\ConfigValueEnvironmentProvider;
 use Tuleap\Config\GetConfigKeys;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\DB\DBProxy;
 use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\ServerHostname;
 
@@ -112,6 +113,7 @@ class ForgeConfig
     {
         self::loadDatabaseInc();
         self::loadDatabaseParametersFromEnvironment();
+        DBProxy::instance()->activateProxyForMatchingURLS();
     }
 
     private static function loadCoreDefaultsFromAttributes(): void

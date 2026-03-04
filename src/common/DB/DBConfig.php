@@ -122,6 +122,16 @@ final class DBConfig
         );
     }
 
+    public static function getPDODSNThroughProxy(string $database_name): string
+    {
+        return sprintf(
+            'mysql:host=%s;port=%d;dbname=%s',
+            \ForgeConfig::get(DBProxy::PROXY_HOST),
+            \ForgeConfig::get(DBProxy::PROXY_PORT, self::DEFAULT_MYSQL_PORT),
+            $database_name
+        );
+    }
+
     public static function isUsingDefaultPort(): bool
     {
         return (int) \ForgeConfig::get(self::CONF_PORT, self::DEFAULT_MYSQL_PORT) === self::DEFAULT_MYSQL_PORT;
