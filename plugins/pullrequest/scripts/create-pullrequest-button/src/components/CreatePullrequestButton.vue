@@ -30,33 +30,26 @@
     </button>
 </template>
 
-<script>
-import { inject } from "vue";
-import { CAN_CREATE_PULLREQUEST, HAS_ERROR_WHILE_LOADING_BRANCHES } from "../injection-keys.ts";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+import { CAN_CREATE_PULLREQUEST, HAS_ERROR_WHILE_LOADING_BRANCHES } from "../injection-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
-export default {
-    name: "CreatePullrequestButton",
-    props: {
-        showModal: Function,
-    },
-    setup() {
-        const can_create_pullrequest = inject(CAN_CREATE_PULLREQUEST);
-        const has_error_while_loading_branches = inject(HAS_ERROR_WHILE_LOADING_BRANCHES);
+defineProps<{
+    showModal: () => void;
+}>();
 
-        return {
-            can_create_pullrequest,
-            has_error_while_loading_branches,
-        };
-    },
-    computed: {
-        is_button_disabled() {
-            return !this.can_create_pullrequest && !this.has_error_while_loading_branches;
-        },
-        button_title() {
-            return this.is_button_disabled
-                ? this.$gettext("No pull request can currently be created")
-                : "";
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const can_create_pullrequest = strictInject(CAN_CREATE_PULLREQUEST);
+const has_error_while_loading_branches = strictInject(HAS_ERROR_WHILE_LOADING_BRANCHES);
+
+const is_button_disabled = computed(
+    () => !can_create_pullrequest.value && !has_error_while_loading_branches.value,
+);
+
+const button_title = computed(() =>
+    is_button_disabled.value ? $gettext("No pull request can currently be created") : "",
+);
 </script>
