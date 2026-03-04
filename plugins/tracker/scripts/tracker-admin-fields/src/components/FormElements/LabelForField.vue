@@ -82,6 +82,8 @@ const should_label_be_displayed = computed(
 }
 
 .edit-button {
+    align-self: flex-start;
+    min-width: fit-content;
     transition: opacity 250ms ease-in-out;
     opacity: 0;
 

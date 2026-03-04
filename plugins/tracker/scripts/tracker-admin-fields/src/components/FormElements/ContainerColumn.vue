@@ -43,7 +43,7 @@ const does_column_contain_columns = computed(
 
 <style lang="scss" scoped>
 .column {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     border: 1px dashed var(--tlp-border-color);
     border-radius: var(--tlp-medium-radius);
 
