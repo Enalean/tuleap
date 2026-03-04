@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\FormElement;
+declare(strict_types=1);
 
-interface ChartFieldUsage
+namespace Tuleap\AgileDashboard\AgileDashboard\FormElement;
+
+use Tuleap\Tracker\FormElement\ChartFieldUsage;
+
+/**
+ * @psalm-immutable
+ */
+final class BurnupChartFieldUsage implements ChartFieldUsage
 {
-    public bool $uses_start_date { get; }
-    public bool $uses_duration { get; }
-    public bool $uses_capacity { get; }
-    public bool $uses_hierarchy { get; }
-    public bool $uses_remaining_effort { get; }
+    public bool $uses_start_date       = true;
+    public bool $uses_duration         = true;
+    public bool $uses_capacity         = false;
+    public bool $uses_hierarchy        = false;
+    public bool $uses_remaining_effort = false;
+
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
 }

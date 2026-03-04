@@ -37,6 +37,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_Report_Criteria;
+use Tuleap\AgileDashboard\AgileDashboard\FormElement\BurnupChartFieldUsage;
 use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\BurnupEffortCalculatorForArtifact;
 use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsCalculator;
@@ -52,7 +53,6 @@ use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
-use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
@@ -105,9 +105,7 @@ class Burnup extends TrackerField implements Tracker_FormElement_Field_ReadOnly,
     #[Override]
     public function fetchAdminFormElement()
     {
-        $field_usage = $this->getChartFieldUsage();
-
-        $html  = $this->getChartMessageFetcher()->fetchWarnings($this, $field_usage);
+        $html  = $this->getChartMessageFetcher()->fetchWarnings($this, BurnupChartFieldUsage::build());
         $html .= '<img src="' . AGILEDASHBOARD_BASE_URL . '/images/fake-burnup-admin.png" />';
 
         return $html;
@@ -419,26 +417,6 @@ class Burnup extends TrackerField implements Tracker_FormElement_Field_ReadOnly,
     protected function validate(Artifact $artifact, $value)
     {
         return true;
-    }
-
-    /**
-     * @return ChartFieldUsage
-     */
-    private function getChartFieldUsage()
-    {
-        $use_start_date       = true;
-        $use_duration         = true;
-        $use_capacity         = true;
-        $use_hierarchy        = false;
-        $use_remaining_effort = false;
-
-        return new ChartFieldUsage(
-            $use_start_date,
-            $use_duration,
-            $use_capacity,
-            $use_hierarchy,
-            $use_remaining_effort
-        );
     }
 
     private function getBurnupDataBuilder(): BurnupDataBuilder

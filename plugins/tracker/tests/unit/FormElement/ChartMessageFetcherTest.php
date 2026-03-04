@@ -30,6 +30,7 @@ use Tracker_HierarchyFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\Test\Builders\ChartFieldUsageTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -63,7 +64,7 @@ final class ChartMessageFetcherTest extends TestCase
 
     public function testItDisplaysWarningsWhenFieldsAreMissingInChartConfiguration(): void
     {
-        $chart_configuration = new ChartFieldUsage(true, true, false, false, false);
+        $chart_configuration = ChartFieldUsageTestBuilder::aChart()->usingStartDate()->usingDuration()->build();
 
         $this->configuration_field_retriever->method('getStartDateField')->willThrowException(new Tracker_FormElement_Chart_Field_Exception());
         $this->configuration_field_retriever->method('getEndDateField')->willThrowException(new Tracker_FormElement_Chart_Field_Exception());
@@ -79,7 +80,7 @@ final class ChartMessageFetcherTest extends TestCase
 
     public function testItDoesNotDisplayAnyErrorsWhenNoFieldsAreMissingInChartConfiguration(): void
     {
-        $chart_configuration = new ChartFieldUsage(true, true, false, false, false);
+        $chart_configuration = ChartFieldUsageTestBuilder::aChart()->usingStartDate()->usingDuration()->build();
 
         $start_date_field = DateFieldBuilder::aDateField(985)->build();
 
@@ -93,7 +94,7 @@ final class ChartMessageFetcherTest extends TestCase
 
     public function testItRendersAWarningForAnyTrackerChildThatHasNoEffortField(): void
     {
-        $chart_configuration = new ChartFieldUsage(false, false, false, false, true);
+        $chart_configuration = ChartFieldUsageTestBuilder::aChart()->usingRemainingEffort()->build();
 
         $bugs   = TrackerTestBuilder::aTracker()->withId(124)->withName('Bugs')->build();
         $chores = TrackerTestBuilder::aTracker()->withId(125)->withName('Chores')->build();
