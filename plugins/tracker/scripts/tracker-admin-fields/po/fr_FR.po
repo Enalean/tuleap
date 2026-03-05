@@ -67,6 +67,9 @@ msgstr "Date"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Delete:"
+msgstr "Supprimer : "
+
 msgid "Display in & out references"
 msgstr "Liste des objets étant référencés par l'artifact ou le référençant"
 
@@ -120,20 +123,6 @@ msgstr "Flottant"
 msgid "Id"
 msgstr "Id"
 
-msgid ""
-"If you click on \"Delete\" button, the field will be DEFINITELY deleted, you "
-"cannot use it again."
-msgstr ""
-"Si vous cliquez sur le bouton  \"Supprimer\", le champ sera supprimé "
-"DEFINITIVEMENT, vous ne pourrez plus l'utiliser."
-
-msgid ""
-"If you click on \"Unuse\" button, the field will be disabled, it is possible "
-"to use it again later."
-msgstr ""
-"Si vous cliquez sur le bouton \"Inutiliser\", le champ sera inutilisé, il "
-"est possible de le réactiver par la suite."
-
 msgid "Important:"
 msgstr "Important :"
 
@@ -157,6 +146,13 @@ msgstr "Recommandations de structure"
 
 msgid "Move element"
 msgstr "Déplacer l'élément"
+
+msgid ""
+"Moves the field to the \"Unused Fields\" folder in the palette. The field is "
+"not deleted and can be reused later."
+msgstr ""
+"Déplace le champs vers le dossier \"Champs Inutilisés\" dans la palette. Le "
+"champ n'est pas supprimé et peut être réutilisé plus tard."
 
 msgid "Multi selectbox"
 msgstr "Liste à choix multiple"
@@ -200,6 +196,10 @@ msgstr "Liste ouverte"
 
 msgid "Per tracker id"
 msgstr "Id dans le tracker"
+
+msgid "Permanently deletes this field. This action cannot be undone."
+msgstr ""
+"Supprimer définitivement ce champ. Cette action ne peut pas être annulée."
 
 msgid "Permissions on artifact"
 msgstr "Permissions sur l'artifact"
@@ -281,11 +281,11 @@ msgstr "Agencement sur deux colonnes"
 msgid "Unuse"
 msgstr "Inutiliser"
 
-msgid "Unuse or delete the field"
-msgstr "Inutiliser ou supprimer le champ"
+msgid "Unuse:"
+msgstr "Inutiliser : "
 
-msgid "Warning!"
-msgstr "Attention !"
+msgid "What do you want to do with the field \"%{field_name}\"?"
+msgstr "Que souhaitez-vous faire avec le champ \"%{field_name}\" ?"
 
 msgid ""
 "You can drag'n drop existing fields to change layout, change are saved "
@@ -302,6 +302,9 @@ msgstr ""
 msgid "You cannot bind this field to all registered users"
 msgstr ""
 "Vous ne pouvez pas lier ce champ à l'ensemble des utilisateurs enregistrés"
+
+msgid "You're about to remove a field"
+msgstr "Vous êtes sur le point de supprimer un champ"
 
 msgid ""
 "Your current layout is not broken per se. You are encouraged, though not "

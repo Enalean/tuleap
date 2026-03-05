@@ -38,7 +38,7 @@
         >
             <div class="tlp-modal-header">
                 <h1 class="tlp-modal-title" id="remove-or-delete-modal-label">
-                    {{ $gettext("Unuse or delete the field") }}
+                    {{ $gettext("You're about to remove a field") }}
                 </h1>
                 <button
                     class="tlp-modal-close"
@@ -50,20 +50,24 @@
                 </button>
             </div>
             <div class="tlp-modal-body">
-                <h2 class="tlp-modal-subtitle">{{ $gettext("Warning!") }}</h2>
+                <h2 class="tlp-modal-subtitle">
+                    {{ modal_subtitle }}
+                </h2>
                 <p>
+                    <strong>
+                        {{ $gettext("Unuse:") }}
+                    </strong>
                     {{
                         $gettext(
-                            'If you click on "Delete" button, the field will be DEFINITELY deleted, you cannot use it again.',
+                            'Moves the field to the "Unused Fields" folder in the palette. The field is not deleted and can be reused later.',
                         )
                     }}
                 </p>
                 <p>
-                    {{
-                        $gettext(
-                            'If you click on "Unuse" button, the field will be disabled, it is possible to use it again later.',
-                        )
-                    }}
+                    <strong>
+                        {{ $gettext("Delete:") }}
+                    </strong>
+                    {{ $gettext("Permanently deletes this field. This action cannot be undone.") }}
                 </p>
             </div>
             <div class="tlp-modal-footer">
@@ -82,6 +86,7 @@
                     {{ $gettext("Unuse") }}
                 </button>
                 <button type="button" disabled class="tlp-button-danger tlp-modal-action">
+                    <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true" />
                     {{ $gettext("Delete") }}
                 </button>
             </div>
@@ -99,6 +104,7 @@ import { HANDLE_REMOVE_FIELD, TRACKER_ROOT } from "../../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { canCurrentFormElementBeRemoved } from "../../../helpers/can-current-form-element-be-removed";
 import { useRouter } from "vue-router";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
     field: StructureFields;
@@ -111,8 +117,15 @@ const modal_element: Ref<HTMLElement | null> = ref(null);
 let modal: Modal | null = null;
 
 const router = useRouter();
+const { interpolate, $gettext } = useGettext();
 
 const modal_id = computed((): string => `remove-or-delete-modal-${props.field.field_id}`);
+
+const modal_subtitle = computed((): string =>
+    interpolate($gettext('What do you want to do with the field "%{field_name}"?'), {
+        field_name: props.field.label,
+    }),
+);
 
 function displayRemoveOrDeletionModal(): void {
     if (modal_element.value === null) {
