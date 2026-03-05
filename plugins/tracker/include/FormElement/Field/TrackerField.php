@@ -1602,6 +1602,17 @@ abstract class TrackerField extends TrackerFormElement implements Tracker_Report
     }
 
     /**
+     * The field currently doesn't allow multiple values but might have in the past
+     *
+     * This is kind of specific to List fields that allow moving from MSB to SB (for instance). This produces situation
+     * where one might expect only one value per artifact, but previous changeset might have several values.
+     */
+    public function hadMultipleValues(): bool
+    {
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function canBeUsedToSortReport()

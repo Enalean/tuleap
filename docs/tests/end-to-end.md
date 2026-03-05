@@ -91,20 +91,22 @@ Once the container has started, you should be able to launch the Cypress
 electron app. The test structure respects the Tuleap distinction between
 core and plugins.
 
+Before writing a test you need to install cypress with `cypress install`
+
 To write tests in Tuleap core, go in core folder and run
-`npx cypress open`
+`cypress open` (you might need to run `cypress verify` before as well)
 
 ``` bash
 $> cd tuleap/tests/e2e/full/
-$> npx cypress open
+$> cypress open
 ```
 
 To write tests in plugins, go in plugin folder and run
-`npx cypress open`
+`cypress open`
 
 ``` bash
 $> cd tuleap/plugins/<plugin_name>/tests/e2e/cypress/
-$> npx cypress open
+$> cypress open
 ```
 
 The electron app will be able to run only when the Tuleap container is

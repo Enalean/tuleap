@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tracker id="T1066" parent_id="0" allow_copy="1" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1" enable_move_artifacts="1">
+  <name><![CDATA[From MSB to SB]]></name>
+  <item_name><![CDATA[from_msb_to_sb]]></item_name>
+  <description><![CDATA[]]></description>
+  <color><![CDATA[panther-pink]]></color>
+  <cannedResponses/>
+  <formElements>
+    <formElement type="fieldset" ID="F27564" rank="0" id="27564" tracker_id="1066" parent_id="0">
+      <name><![CDATA[details]]></name>
+      <label><![CDATA[Details]]></label>
+      <formElements>
+        <formElement type="column" ID="F27565" rank="0" id="27565" tracker_id="1066" parent_id="27564">
+          <name><![CDATA[c1]]></name>
+          <label><![CDATA[c1]]></label>
+          <formElements>
+            <formElement type="string" ID="F27566" rank="0" id="27566" tracker_id="1066" parent_id="27565">
+              <name><![CDATA[title]]></name>
+              <label><![CDATA[Title]]></label>
+              <properties size="30"/>
+            </formElement>
+            <formElement type="msb" ID="F27567" rank="1" id="27567" tracker_id="1066" parent_id="27565">
+              <name><![CDATA[list]]></name>
+              <label><![CDATA[List]]></label>
+              <properties size="7"/>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V_16961_3016" label="A" is_hidden="0"/>
+                  <item ID="V_16962_3017" label="B" is_hidden="0"/>
+                  <item ID="V_16963_3018" label="C" is_hidden="0"/>
+                  <item ID="V_16964_3019" label="D" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+    </formElement>
+  </formElements>
+  <semantics>
+    <semantic type="tooltip"/>
+    <semantic type="plugin_cardwall_card_fields"/>
+  </semantics>
+  <rules>
+    <date_rules/>
+    <list_rules/>
+  </rules>
+  <reports>
+    <report id="REPORT_3328" is_default="0">
+      <name><![CDATA[Default]]></name>
+      <description><![CDATA[The system default artifact report]]></description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="F27567"/>
+        </criteria>
+        <criteria rank="1">
+          <field REF="F27566"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer ID="R4732" type="table" rank="0" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="F27566"/>
+            <field REF="F27567"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+  </reports>
+  <permissions>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="field" REF="F27566" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F27566" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F27566" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F27567" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F27567" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F27567" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+  </permissions>
+</tracker>
