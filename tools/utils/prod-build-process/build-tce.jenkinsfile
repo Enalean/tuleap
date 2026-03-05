@@ -48,7 +48,11 @@ node('agent-one-time-use') {
     }
 
     stage('Sign packages') {
-        lib_signing.signPackages(packages_directory, env.VAULT, 'gpg/sign/tuleap-community-rpm-signing', 'vault-role-community-signing-key', 'ci-write');
+        withCredentials([
+            usernamePassword(credentialsId: 'vault-role-community-signing-key', passwordVariable: 'VAULT_SECRET_ID', usernameVariable: 'VAULT_ROLE_ID')
+        ]) {
+            sh "VAULT_ADDR=\$VAULT VAULT_SIGN_PATH_TO_KEY='gpg/sign/tuleap-community-rpm-signing' '${tuleap_sources_directory}/tools/utils/prod-build-process/sign_packages.sh' '${packages_directory}'"
+        }
     }
 
     stage('Build repositories') {
