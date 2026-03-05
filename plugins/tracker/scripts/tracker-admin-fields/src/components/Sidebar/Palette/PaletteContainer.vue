@@ -44,133 +44,23 @@
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import SidebarContainer from "../SidebarContainer.vue";
-import type { CategoryOfPaletteFields } from "./type";
 import PaletteCategory from "./PaletteCategory.vue";
+import { UNUSED_FIELDS } from "../../../injection-symbols";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { getCategories } from "../../../helpers/get-categories";
 
-const { $gettext } = useGettext();
+const gettext_provider = useGettext();
+const { $gettext } = gettext_provider;
 
-const categories: ReadonlyArray<CategoryOfPaletteFields> = [
-    {
-        label: $gettext("Fields"),
-        fields: [
-            {
-                label: $gettext("String"),
-                icon: "fa-solid fa-t",
-            },
-            {
-                label: $gettext("Text"),
-                icon: "fa-solid fa-t",
-            },
-            {
-                label: $gettext("Integer"),
-                icon: "fa-solid fa-3",
-            },
-            {
-                label: $gettext("Float"),
-                icon: "fa-solid fa-3",
-            },
-            {
-                label: $gettext("Date"),
-                icon: "fa-solid fa-calendar-days",
-            },
-            {
-                label: $gettext("Selectbox"),
-                icon: "fa-solid fa-list",
-            },
-            {
-                label: $gettext("Multi selectbox"),
-                icon: "fa-solid fa-list",
-            },
-            {
-                label: $gettext("Open list"),
-                icon: "fa-solid fa-list",
-            },
-            {
-                label: $gettext("Radio"),
-                icon: "fa-regular fa-circle-dot",
-            },
-            {
-                label: $gettext("Checkbox"),
-                icon: "fa-regular fa-square-check",
-            },
-            {
-                label: $gettext("File upload"),
-                icon: "fa-solid fa-upload",
-            },
-            {
-                label: $gettext("Artifact link"),
-                icon: "fa-solid fa-link",
-            },
-            {
-                label: $gettext("Permissions on artifact"),
-                icon: "fa-solid fa-lock",
-            },
-            {
-                label: $gettext("Shared field"),
-                icon: "fa-solid fa-shapes",
-            },
-            {
-                label: $gettext("Last update by"),
-                icon: "fa-solid fa-user",
-            },
-            {
-                label: $gettext("Last update date"),
-                icon: "fa-solid fa-calendar-days",
-            },
-            {
-                label: $gettext("Submitted by"),
-                icon: "fa-solid fa-user",
-            },
-            {
-                label: $gettext("Submitted on"),
-                icon: "fa-solid fa-calendar-days",
-            },
-            {
-                label: $gettext("Artifact id"),
-                icon: "fa-solid fa-hashtag",
-            },
-            {
-                label: $gettext("Per tracker id"),
-                icon: "fa-solid fa-hashtag",
-            },
-            {
-                label: $gettext("Cross references"),
-                icon: "fa-solid fa-arrows-turn-to-dots",
-            },
-            {
-                label: $gettext("Computed value"),
-                icon: "fa-solid fa-calculator",
-            },
-            {
-                label: $gettext("Rank"),
-                icon: "fa-solid fa-arrow-up-short-wide",
-            },
-        ].toSorted((a, b) => a.label.localeCompare(b.label)),
-    },
-    {
-        label: $gettext("Layout & structure"),
-        fields: [
-            {
-                label: $gettext("Fieldset"),
-                icon: "fa-regular fa-square",
-            },
-            {
-                label: $gettext("Separator"),
-                icon: "fa-solid fa-minus",
-            },
-            {
-                label: $gettext("Static text"),
-                icon: "fa-solid fa-align-left",
-            },
-        ].toSorted((a, b) => a.label.localeCompare(b.label)),
-    },
-];
+const unused_fields = strictInject(UNUSED_FIELDS);
+
+const categories = ref(getCategories(unused_fields, gettext_provider));
 
 const search = ref("");
 const matching = computed(() =>
     search.value.trim() === ""
-        ? categories
-        : categories.filter((category) =>
+        ? categories.value
+        : categories.value.filter((category) =>
               category.fields.some((field) =>
                   field.label.toLowerCase().includes(search.value.trim().toLowerCase()),
               ),

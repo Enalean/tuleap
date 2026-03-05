@@ -104,6 +104,7 @@ import { HANDLE_REMOVE_FIELD, TRACKER_ROOT } from "../../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { canCurrentFormElementBeRemoved } from "../../../helpers/can-current-form-element-be-removed";
 import { useGettext } from "vue3-gettext";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
     field: StructureFields;
@@ -116,6 +117,7 @@ const modal_element: Ref<HTMLElement | null> = ref(null);
 let modal: Modal | null = null;
 
 const { interpolate, $gettext } = useGettext();
+const router = useRouter();
 
 const modal_id = computed((): string => `remove-or-delete-modal-${props.field.field_id}`);
 
@@ -144,6 +146,7 @@ function removeField(): void {
         () => {
             handleRemoveField(props.field);
             modal?.hide();
+            router.push({ name: "fields-usage" });
         },
         (fault) => {
             throw Error(String(fault));

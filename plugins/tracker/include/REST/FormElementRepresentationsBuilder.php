@@ -103,6 +103,16 @@ class FormElementRepresentationsBuilder
         );
     }
 
+    public function buildUnusedFormElementRepresentationInTrackerContext(Tracker $tracker, PFUser $user): array
+    {
+        return $this->buildRepresentations(
+            $this->form_element_factory->getUnusedFormElementForTracker($tracker),
+            $tracker,
+            null,
+            $user,
+        );
+    }
+
     /**
      * @return Tracker_REST_FormElementRepresentation[]
      */

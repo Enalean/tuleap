@@ -115,6 +115,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
 
         $form_element_representations_builder = $this->createStub(FormElementRepresentationsBuilder::class);
         $form_element_representations_builder->method('buildRepresentationsInTrackerContextIgnoringReadPermission')->willReturn([]);
+        $form_element_representations_builder->method('buildUnusedFormElementRepresentationInTrackerContext')->willReturn([]);
 
         $configuration_warnings_retriever = $this->createStub(FieldsConfigurationWarningsRetriever::class);
         $configuration_warnings_retriever->method('retrieveWarnings')->willReturn([]);

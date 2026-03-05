@@ -300,6 +300,9 @@ msgstr "Inutiliser"
 msgid "Unuse:"
 msgstr "Inutiliser :"
 
+msgid "Unused fields"
+msgstr "Champs inutilisés"
+
 msgid "What do you want to do with the field \"%{field_name}\"?"
 msgstr "Que souhaitez-vous faire avec le champ \"%{field_name}\" ?"
 

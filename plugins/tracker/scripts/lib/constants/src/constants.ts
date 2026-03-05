@@ -77,6 +77,7 @@ export const LINE_BREAK = "linebreak";
 export const SEPARATOR = "separator";
 export const STATIC_RICH_TEXT = "staticrichtext";
 export const BURNDOWN_FIELD: BurndownFieldIdentifier = "burndown";
+export const SHARED_FIELD = "shared";
 
 type DefaultValueDateTypeToday = 0;
 type DefaultValueDateTypeSpecificDate = 1;
