@@ -39,7 +39,7 @@ class TrackerFieldsTest extends TrackerBase
         $field_id = $this->getStaticSelectboxFieldId();
 
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', "tracker_fields/$field_id"));
-        self::assertEquals(['OPTIONS', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testPATCHLabelUpdatesTheLabel(): void
@@ -162,6 +162,26 @@ class TrackerFieldsTest extends TrackerBase
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream((string) $body)));
 
         self::assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testDELETEAField(): void
+    {
+        $field_id = $this->getFieldToRemoveId();
+        $response = $this->getResponse($this->request_factory->createRequest('DELETE', "tracker_fields/$field_id"));
+
+        self::assertEquals(204, $response->getStatusCode());
+    }
+
+    public function testDELETEAFieldThrowsAnExceptionIfUserIsNotAdmin(): void
+    {
+        $field_id = $this->getUserSelectboxFieldId();
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', "tracker_fields/$field_id"),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
+        );
+
+        self::assertEquals(403, $response->getStatusCode());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -323,6 +343,13 @@ class TrackerFieldsTest extends TrackerBase
         $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
 
         return $this->getFieldId($tracker_json['fields'], self::FIELD_STATIC_RADIOBUTTON_SHOTNAME);
+    }
+
+    private function getFieldToRemoveId(): int
+    {
+        $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
+
+        return $this->getFieldId($tracker_json['fields'], 'field_to_remove');
     }
 
     private function getFieldId(array $tracker_fields_json, $field_shortname)

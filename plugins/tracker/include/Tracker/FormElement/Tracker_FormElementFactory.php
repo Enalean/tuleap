@@ -32,6 +32,7 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\DeleteFormElement;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
@@ -74,7 +75,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements RemoveField, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElementFactory implements DeleteFormElement, RemoveField, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string FIELD_STRING_TYPE                 = 'string';
     public const string FIELD_TEXT_TYPE                   = 'text';
@@ -1327,11 +1328,8 @@ class Tracker_FormElementFactory implements RemoveField, RetrieveUsedFields, Add
         return $success;
     }
 
-    /**
-     * Delete permanently the formElement
-     * @param boolean true if success
-     */
-    public function deleteFormElement($form_element_id)
+    #[Override]
+    public function deleteFormElement(int $form_element_id): bool
     {
         $form_element = $this->getFormElementById($form_element_id);
         if (! $form_element) {
@@ -1341,7 +1339,7 @@ class Tracker_FormElementFactory implements RemoveField, RetrieveUsedFields, Add
         //TODO: remove changeset values? or simply mark the formElement as deleted to be able to retrieve history?
         $success = $this->getDao()->delete($form_element);
         if ($success) {
-            $this->getEventManager()->dispatch(new FormElementDeletedEvent((int) $form_element_id));
+            $this->getEventManager()->dispatch(new FormElementDeletedEvent($form_element_id));
             unset($this->formElements[$form_element_id]);
             unset($this->formElements_by_formElementcomponent[$form_element->parent_id]);
         }

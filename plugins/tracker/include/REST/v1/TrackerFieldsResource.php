@@ -59,11 +59,11 @@ class TrackerFieldsResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}
      *
-     * @param string $id Id of the tracker field
+     * @param int $id Id of the tracker field
      */
     public function optionsId($id)
     {
-        Header::allowOptionsPatch();
+        Header::allowOptionsPatchDelete();
     }
 
     /**
@@ -201,6 +201,43 @@ class TrackerFieldsResource extends AuthenticatedResource
             [],
             null,
             ListOfLabelDecoratorsForFieldBuilder::build()->getLabelDecorators($field),
+        );
+    }
+
+    /**
+     * Delete permanently tracker field
+     *
+     * This route permanently removes a field. To disable a field, use the PATCH route.
+     *
+     * @url DELETE {id}
+     * @access protected
+     *
+     * @param int $id Id of the tracker field
+     *
+     * @status 204
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    protected function delete(int $id): void
+    {
+        $this->checkAccess();
+        $this->optionsId($id);
+
+        $user_manager = UserManager::instance();
+        $user         = $user_manager->getCurrentUser();
+
+        $field = $this->getFormElement($id, $user);
+
+        if (! $field->getTracker()->userIsAdmin($user)) {
+            throw new RestException(403, 'User is not tracker administrator.');
+        }
+
+        new TrackerFieldDELETEHandler(
+            Tracker_FormElementFactory::instance(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        )->handle($field)->mapErr(
+            static fn(Fault $fault) => FaultMapper::mapToRestException($fault)
         );
     }
 
