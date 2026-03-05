@@ -31,6 +31,8 @@ use PlanningFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\ChartConfigurationWarningCollection;
+use Tuleap\Tracker\FormElement\Event\ExternalTrackerChartConfigurationWarningMessage;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -65,8 +67,21 @@ final class MessageFetcherTest extends TestCase
 
         $this->tracker         = TrackerTestBuilder::aTracker()->build();
         $this->backlog_tracker = TrackerTestBuilder::aTracker()->build();
-        $this->field           = IntegerFieldBuilder::anIntField(145)->build();
+        $this->field           = IntegerFieldBuilder::anIntField(145)->inTracker($this->tracker)->build();
         $this->user            = UserTestBuilder::buildWithDefaults();
+    }
+
+    private function fetchWarningsCollection(): ChartConfigurationWarningCollection
+    {
+        $warnings = new ChartConfigurationWarningCollection();
+        $this->message_fetcher->collectWarningsRelatedToPlanningConfiguration(
+            new ExternalTrackerChartConfigurationWarningMessage(
+                $warnings,
+                $this->user,
+                $this->field,
+            ),
+        );
+        return $warnings;
     }
 
     public function testItDoesNotAddWarningsIfAllIsWellConfigured(): void
@@ -79,18 +94,14 @@ final class MessageFetcherTest extends TestCase
         $this->semantic_done_factory->method('getInstanceByTracker')->with($this->backlog_tracker)->willReturn($semantic_done);
         $this->initial_effort_factory->method('getByTracker')->with($this->backlog_tracker)->willReturn($initial_effort);
 
-        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->user, $this->tracker);
-
-        self::assertEmpty($warnings);
+        self::assertEmpty($this->fetchWarningsCollection()->warnings);
     }
 
     public function testItReturnsAWarningIfTrackerIsNotAPlanningTracker(): void
     {
         $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->tracker)->willReturn(null);
 
-        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->user, $this->tracker);
-
-        self::assertNotEmpty($warnings);
+        self::assertNotEmpty($this->fetchWarningsCollection()->warnings);
     }
 
     public function testItReturnsAWarningIfBacklogTrackerDoesNotHaveSemanticDone(): void
@@ -102,11 +113,9 @@ final class MessageFetcherTest extends TestCase
         $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->tracker)->willReturn($planning);
         $this->semantic_done_factory->method('getInstanceByTracker')->with($this->backlog_tracker)->willReturn($semantic_done);
         $this->initial_effort_factory->method('getByTracker')->with($this->backlog_tracker)->willReturn($initial_effort);
-        $semantic_done->method('getUrl');
+        $semantic_done->method('getUrl')->willReturn('https://www.example.com');
 
-        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->user, $this->tracker);
-
-        self::assertNotEmpty($warnings);
+        self::assertNotEmpty($this->fetchWarningsCollection()->warnings);
     }
 
     public function testItReturnsAWarningIfBacklogTrackerDoesNotHaveSemanticInitialEffort(): void
@@ -119,9 +128,7 @@ final class MessageFetcherTest extends TestCase
         $this->semantic_done_factory->method('getInstanceByTracker')->with($this->backlog_tracker)->willReturn($semantic_done);
         $this->initial_effort_factory->method('getByTracker')->with($this->backlog_tracker)->willReturn($initial_effort);
 
-        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->user, $this->tracker);
-
-        self::assertNotEmpty($warnings);
+        self::assertNotEmpty($this->fetchWarningsCollection()->warnings);
     }
 
     private function getPlanning(): Planning

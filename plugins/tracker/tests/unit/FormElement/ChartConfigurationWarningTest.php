@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-interface ChartFieldUsage
+use Tuleap\Test\PHPUnit\TestCase;
+
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class ChartConfigurationWarningTest extends TestCase
 {
-    public bool $uses_start_date { get; }
-    public bool $uses_duration { get; }
-    public bool $uses_capacity { get; }
-    public bool $uses_remaining_effort { get; }
+    public function testGetAsHTML(): void
+    {
+        $warning = ChartConfigurationWarning::fromMessage('This is a warning.');
+
+        self::assertSame("<li>$warning->message</li>", $warning->getAsHTML());
+    }
 }

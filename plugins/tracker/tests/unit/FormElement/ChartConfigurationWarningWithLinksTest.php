@@ -22,22 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-/**
- * @psalm-immutable
- */
-final class BurndownChartFieldUsage implements ChartFieldUsage
+use Tuleap\Test\PHPUnit\TestCase;
+
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class ChartConfigurationWarningWithLinksTest extends TestCase
 {
-    public bool $uses_start_date       = true;
-    public bool $uses_duration         = true;
-    public bool $uses_capacity         = false;
-    public bool $uses_remaining_effort = true;
-
-    private function __construct()
+    public function testGetAsHTML(): void
     {
-    }
+        $warning = ChartConfigurationWarningWithLinks::fromMessageAndLinks(
+            'There are some issues with the following trackers:',
+            new ChartConfigurationWarningLink('https://example.com', 'Bugs'),
+            new ChartConfigurationWarningLink('https://example.com', 'Tasks'),
+        );
 
-    public static function build(): self
-    {
-        return new self();
+        self::assertSame(
+            '<li>' . $warning->message . ' <a href="https://example.com">Bugs</a>, <a href="https://example.com">Tasks</a></li>',
+            $warning->getAsHTML(),
+        );
     }
 }

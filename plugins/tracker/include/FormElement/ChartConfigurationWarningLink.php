@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-interface ChartFieldUsage
+use Codendi_HTMLPurifier;
+
+final readonly class ChartConfigurationWarningLink
 {
-    public bool $uses_start_date { get; }
-    public bool $uses_duration { get; }
-    public bool $uses_capacity { get; }
-    public bool $uses_remaining_effort { get; }
+    public function __construct(public string $url, public string $label)
+    {
+    }
+
+    public function getAsHTML(): string
+    {
+        $purifier       = Codendi_HTMLPurifier::instance();
+        $purified_url   = $purifier->purify($this->url);
+        $purified_label = $purifier->purify($this->label);
+
+        return '<a href="' . $purified_url . '">' . $purified_label . '</a>';
+    }
 }

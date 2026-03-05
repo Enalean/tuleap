@@ -3486,11 +3486,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"The tracker doesn't have a \"capacity\" Integer or Computed field or you "
-"don't have the permission to access it."
-msgstr ""
-
-msgid ""
 "The tracker doesn't have a \"capacity\" Integer or Float or Computed field "
 "or you don't have the permission to access it."
 msgstr ""

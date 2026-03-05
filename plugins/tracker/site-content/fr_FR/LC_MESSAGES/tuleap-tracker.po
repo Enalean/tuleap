@@ -3964,13 +3964,6 @@ msgid ""
 msgstr "Le tracker ne semble pas permettre l'édition d'artifact par mail."
 
 msgid ""
-"The tracker doesn't have a \"capacity\" Integer or Computed field or you "
-"don't have the permission to access it."
-msgstr ""
-"Le tracker n'a pas de champ \"capacity\" de type Entier ou Calculé ou bien "
-"vous n'avez pas la permission d'y accéder."
-
-msgid ""
 "The tracker doesn't have a \"capacity\" Integer or Float or Computed field "
 "or you don't have the permission to access it."
 msgstr ""

@@ -57,10 +57,7 @@ class ChartConfigurationFieldRetriever
         $this->logger                     = $logger;
     }
 
-    /**
-     * @return TrackerField
-     */
-    public function getCapacityField(Tracker $tracker)
+    public function getCapacityField(Tracker $tracker): TrackerField
     {
         $field = $this->form_element_field_factory->getNumericFieldByName(
             $tracker,
@@ -78,10 +75,9 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @return TrackerField
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function getDurationField(Tracker $tracker, PFUser $user)
+    public function getDurationField(Tracker $tracker, PFUser $user): TrackerField
     {
         $semantic = $this->semantic_timeframe_builder->getSemantic($tracker);
 
@@ -97,10 +93,9 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @return TrackerField
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function getEndDateField(Tracker $tracker, PFUser $user)
+    public function getEndDateField(Tracker $tracker, PFUser $user): TrackerField
     {
         $semantic = $this->semantic_timeframe_builder->getSemantic($tracker);
 
@@ -116,10 +111,9 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @return TrackerField
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function getStartDateField(Tracker $tracker, PFUser $user)
+    public function getStartDateField(Tracker $tracker, PFUser $user): TrackerField
     {
         $semantic = $this->semantic_timeframe_builder->getSemantic($tracker);
 
@@ -134,10 +128,7 @@ class ChartConfigurationFieldRetriever
         return $field;
     }
 
-    /**
-     * @return bool|TrackerField
-     */
-    public function getBurndownRemainingEffortField(Artifact $artifact, PFUser $user)
+    public function getBurndownRemainingEffortField(Artifact $artifact, PFUser $user): ?TrackerField
     {
         return $this->form_element_field_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),
@@ -146,21 +137,15 @@ class ChartConfigurationFieldRetriever
         );
     }
 
-    /**
-     * @return bool
-     */
-    public function doesRemainingEffortFieldExists(Tracker $tracker)
+    public function doesRemainingEffortFieldExists(Tracker $tracker): bool
     {
-        return ! $this->form_element_field_factory->getNumericFieldByName(
+        return $this->form_element_field_factory->getNumericFieldByName(
             $tracker,
             self::REMAINING_EFFORT_FIELD_NAME
-        );
+        ) !== null;
     }
 
-    /**
-     * @return bool
-     */
-    public function doesCapacityFieldExist(Tracker $tracker)
+    public function doesCapacityFieldExist(Tracker $tracker): bool
     {
         try {
             $this->getCapacityField($tracker);

@@ -31,8 +31,7 @@ final class BurnupChartFieldUsage implements ChartFieldUsage
 {
     public bool $uses_start_date       = true;
     public bool $uses_duration         = true;
-    public bool $uses_capacity         = false;
-    public bool $uses_hierarchy        = false;
+    public bool $uses_capacity         = true;
     public bool $uses_remaining_effort = false;
 
     private function __construct()

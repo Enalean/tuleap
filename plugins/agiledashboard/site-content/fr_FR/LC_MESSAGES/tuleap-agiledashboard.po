@@ -357,17 +357,11 @@ msgstr "Scrum activé avec succès."
 msgid "See documentation for more details."
 msgstr "Voir la documentation pour plus de détails."
 
-#, php-format
-msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
-msgstr ""
-"La sémantique done n'est pas définie pour le tracker <a href=\"%s\">%s</a>"
+msgid "Semantic done is not defined for tracker:"
+msgstr "La sémantique done n'est pas définie pour le tracker :"
 
-#, php-format
-msgid ""
-"Semantic initial effort is not defined for tracker  <a href=\"%s\">%s</a>"
-msgstr ""
-"La sémantique effort estimé n'est pas définie pour le tracker <a "
-"href=\"%s\">%s</a>"
+msgid "Semantic initial effort is not defined for tracker:"
+msgstr "La sémantique effort estimé n'est pas définie pour le tracker :"
 
 msgid "Service Backlog is disabled."
 msgstr "Le service Backlog est désactivé."
