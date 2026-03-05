@@ -82,9 +82,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { TRACKER_ROOT } from "../injection-symbols";
+import { IS_LAYOUT_WARNING_DISPLAYED, TRACKER_ROOT } from "../injection-symbols";
 import { useGettext } from "vue3-gettext";
 import { isFieldset } from "../helpers/is-fieldset";
 import { flatMapFieldsets } from "../helpers/flat-map-fieldsets";
@@ -124,7 +124,7 @@ const recommendations = computed(() => [
         : []),
 ]);
 
-const is_open = ref(true);
+const is_open = strictInject(IS_LAYOUT_WARNING_DISPLAYED);
 const should_show_warning = computed(() => recommendations.value.length > 0 && is_open.value);
 const should_show_button = computed(
     () => recommendations.value.length > 0 && is_open.value === false,

@@ -23,7 +23,7 @@
         class="tracker-admin-fields-container-dropzone"
         v-bind:data-container-id="ROOT_CONTAINER_ID"
     >
-        <display-form-elements v-bind:elements="tracker_root.children" />
+        <display-form-elements v-bind:elements="tracker_root.children" v-bind:parent="null" />
     </div>
 </template>
 

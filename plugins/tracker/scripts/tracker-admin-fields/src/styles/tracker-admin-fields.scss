@@ -20,6 +20,7 @@
 @use "pkg:@tuleap/tlp-date-picker";
 @use "pkg:@tuleap/plugin-tracker-link-field";
 @use "dragndrop";
+@use "layout-issues";
 
 .badge-container {
     display: flex;
