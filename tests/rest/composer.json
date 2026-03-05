@@ -11,6 +11,6 @@
     "phpunit/phpunit": "^12.5",
     "guzzlehttp/guzzle": "^7.3",
     "psr/http-factory": "^1.0",
-    "azjezz/psl": "^4.0"
+    "azjezz/psl": "^5.0"
   }
 }
