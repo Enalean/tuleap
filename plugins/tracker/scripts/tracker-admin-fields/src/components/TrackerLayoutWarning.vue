@@ -22,7 +22,7 @@
         class="tracker-layout-warning-hack-to-hide-scrolling-content-beneath"
         v-if="should_show_warning"
     ></div>
-    <div class="tlp-alert-warning tracker-layout-warning" v-if="should_show_warning">
+    <div class="tlp-alert-info tracker-layout-warning" v-if="should_show_warning">
         <p class="tlp-alert-title">{{ $gettext("Layout recommendations") }}</p>
         <p>
             {{
@@ -59,7 +59,7 @@
         </ul>
         <button
             type="button"
-            class="tlp-button-warning tlp-button-outline tlp-button-small"
+            class="tlp-button-info tlp-button-outline tlp-button-small"
             v-on:click="is_open = false"
         >
             {{ $gettext("Close") }}
@@ -73,9 +73,7 @@
         >
             {{ $gettext("Layout recommendations") }}
         </button>
-        <span
-            class="tlp-badge-rounded tlp-badge-warning tracker-layout-warning-show-button-counter"
-        >
+        <span class="tlp-badge-rounded tlp-badge-info tracker-layout-warning-show-button-counter">
             {{ recommendations.length }}
         </span>
     </div>

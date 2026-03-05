@@ -28,7 +28,7 @@
             <error-state v-if="has_error" />
             <h2>{{ $gettext("Fields usage") }}</h2>
 
-            <div class="tlp-alert-info tracker-structure-feedback-under-development">
+            <div class="tlp-alert-warning tracker-structure-feedback-under-development">
                 <p class="tlp-alert-title">
                     {{ $gettext("This section is under heavy development") }}
                 </p>
