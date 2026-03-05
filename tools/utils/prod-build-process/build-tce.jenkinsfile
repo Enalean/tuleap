@@ -65,7 +65,7 @@ node('agent-one-time-use') {
         withCredentials([
             usernamePassword(credentialsId: 'vault-role-community-signing-key', passwordVariable: 'VAULT_SECRET_ID', usernameVariable: 'VAULT_ROLE_ID')
         ]) {
-            sh "VAULT_ADDR=\$VAULT VAULT_SIGN_PATH_TO_KEY='gpg/sign/tuleap-community-rpm-signing' '${tuleap_sources_directory}/tools/utils/prod-build-process/sign_repositories.sh'"
+            sh "VAULT_ADDR=\$VAULT VAULT_SIGN_PATH_TO_KEY='gpg/sign/tuleap-community-rpm-signing' '${tuleap_sources_directory}/tools/utils/prod-build-process/sign_repositories.sh' '${packages_directory}'"
         }
     }
 
