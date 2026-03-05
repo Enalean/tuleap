@@ -163,9 +163,10 @@ describe(`Artifact links usage`, () => {
 
             cy.get("[data-test=artifact-link-field]").within(() => {
                 cy.get("[data-test=lazybox]").click();
-                cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-                    .focus()
-                    .type(new_artifact_title);
+                cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus();
+                cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).type(
+                    new_artifact_title,
+                );
                 cy.get("[data-test=new-item-button]").click();
                 cy.get("[data-test=artifact-creator-submit]").click();
             });

@@ -193,7 +193,8 @@ function createIteration(program_project_name: string): void {
 function planUserStory(team_project_name: string, program_project_name: string): void {
     cy.log("plan the user story in team");
     cy.visitProjectService(team_project_name, "Backlog");
-    cy.get("[data-test=milestone]").click().get("[data-test=go-to-submilestone-planning]").click();
+    cy.get("[data-test=milestone]").click();
+    cy.get("[data-test=go-to-submilestone-planning]").click();
     cy.get("[data-test=backlog-item-details-link]")
         .invoke("data", "artifact-id")
         .then((user_story_id) => {

@@ -223,8 +223,7 @@ function assertOpenListHaveBeenCreatedWithSubElements(
             .parent()
             .find("[data-test=open-list-field] input")
             .first()
-            .type("{selectall}{del}")
-            .type(key);
+            .type("{selectAll}" + key);
         cy.get("[data-test=administration-field-label]")
             .contains(field_name)
             .parent()

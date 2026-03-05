@@ -35,6 +35,8 @@ export function registerKanbanCommands(): void {
         // eslint-disable-next-line cypress/require-data-selectors
         cy.get(source).trigger("mousedown", { which: 1 });
         // eslint-disable-next-line cypress/require-data-selectors
-        cy.get(destination).trigger("mousemove", { position: position }).trigger("mouseup");
+        cy.get(destination).trigger("mousemove", { position: position });
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(destination).trigger("mouseup");
     });
 }

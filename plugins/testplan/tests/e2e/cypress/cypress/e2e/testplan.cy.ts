@@ -88,11 +88,9 @@ describe("Test plan", function () {
 
 function goToTestPlanOfMilestone(milestone_label: string): void {
     cy.visitProjectService("test-testplan-project", "Backlog");
-    cy.getContains("[data-test=milestone]", milestone_label)
-        .click()
-        .get("[data-test=milestone-info")
-        .get("[data-test=testplan]")
-        .click();
+    cy.getContains("[data-test=milestone]", milestone_label).click();
+    cy.get("[data-test=milestone-info");
+    cy.get("[data-test=testplan]").click();
 }
 
 function assertStatusOfTestReflectsCurrentStatus(campaign_label: string, new_status: string): void {
@@ -101,21 +99,20 @@ function assertStatusOfTestReflectsCurrentStatus(campaign_label: string, new_sta
     cy.contains("Update artifact").click();
     cy.get(`[data-test=mark-test-as-${new_status}]`).click();
     cy.contains("Release with campaigns").click();
-    cy.contains("Display list of backlog items with their tests definition")
-        .within(() => {
-            if (new_status === "blocked" || new_status === "failed") {
-                cy.get("[data-test=backlog-item-icon]").should(
-                    "have.class",
-                    "test-plan-backlog-item-coverage-icon-" + new_status,
-                );
-            } else {
-                cy.get("[data-test=backlog-item-icon]").should(
-                    "have.class",
-                    "test-plan-backlog-item-coverage-icon-notrun",
-                );
-            }
-        })
-        .click();
+    cy.contains("Display list of backlog items with their tests definition").within(() => {
+        if (new_status === "blocked" || new_status === "failed") {
+            cy.get("[data-test=backlog-item-icon]").should(
+                "have.class",
+                "test-plan-backlog-item-coverage-icon-" + new_status,
+            );
+        } else {
+            cy.get("[data-test=backlog-item-icon]").should(
+                "have.class",
+                "test-plan-backlog-item-coverage-icon-notrun",
+            );
+        }
+    });
+    cy.contains("Display list of backlog items with their tests definition").click();
     cy.contains("Update artifact")
         .parent()
         .within(() => {

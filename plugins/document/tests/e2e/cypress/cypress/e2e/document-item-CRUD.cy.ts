@@ -254,8 +254,8 @@ describe("Document", () => {
         cy.get("[data-test=document-download-limit-tabs]").within(() => {
             cy.contains("download").click();
         });
-        cy.get("[data-test=error-threshold]").clear().type("2");
-        cy.get("[data-test=warning-threshold]").clear().type("1");
+        cy.get("[data-test=error-threshold]").type("{selectAll}2");
+        cy.get("[data-test=warning-threshold]").type("{selectAll}1");
         cy.get("[data-test=save-settings]").click();
 
         cy.projectAdministratorSession();

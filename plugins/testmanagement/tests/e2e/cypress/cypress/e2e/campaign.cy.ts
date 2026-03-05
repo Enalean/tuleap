@@ -112,7 +112,7 @@ describe("TTM campaign", () => {
             cy.get("[data-test=test-campaign-edit-menu-trigger]").click();
             cy.get("[data-test=test-campaign-rename-campaign]").click();
 
-            cy.get("[data-test=campaign-label]").clear().type("My first campaign with tests");
+            cy.get("[data-test=campaign-label]").type("{selectAll}My first campaign with tests");
 
             cy.get("[data-test=edit-campaign-label-save-button]").click();
 
@@ -250,30 +250,30 @@ describe("TTM campaign", () => {
 
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(1000); // Need to wait until CKEditor is loaded
-            cy.get("[data-test=current-test-comment]")
-                .trigger("focus", { force: true })
-                .then(($element) => {
-                    fetch("data:image/gif;base64,R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=")
-                        .then(function (res) {
-                            return res.arrayBuffer();
-                        })
-                        .then(function (buf) {
-                            const file = new File([buf], "blank.gif", {
-                                type: "image/gif",
-                            });
-                            const data_transfer = new DataTransfer();
-                            data_transfer.items.add(file);
-
-                            const paste_event = Object.assign(
-                                new Event("paste", { bubbles: true, cancelable: true }),
-                                {
-                                    clipboardData: data_transfer,
-                                },
-                            );
-
-                            $element[0].dispatchEvent(paste_event);
+            cy.get("[data-test=current-test-comment]").as("commentElement");
+            cy.get("@commentElement").trigger("focus", { force: true });
+            cy.get("@commentElement").then(($element) => {
+                fetch("data:image/gif;base64,R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=")
+                    .then(function (res) {
+                        return res.arrayBuffer();
+                    })
+                    .then(function (buf) {
+                        const file = new File([buf], "blank.gif", {
+                            type: "image/gif",
                         });
-                });
+                        const data_transfer = new DataTransfer();
+                        data_transfer.items.add(file);
+
+                        const paste_event = Object.assign(
+                            new Event("paste", { bubbles: true, cancelable: true }),
+                            {
+                                clipboardData: data_transfer,
+                            },
+                        );
+
+                        $element[0].dispatchEvent(paste_event);
+                    });
+            });
             cy.contains("File successfully uploaded");
 
             changeTestStatus("failed");

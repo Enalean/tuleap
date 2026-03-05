@@ -71,12 +71,12 @@ describe("Document search", () => {
         cy.visitProjectService(project_unixname, "Documents");
 
         cy.log(`Searching for "ipsum"`);
-        cy.get("[data-test=document-search-box]").clear().type(`ipsum{enter}`);
+        cy.get("[data-test=document-search-box]").type(`{selectAll}ipsum{enter}`);
         cy.get("[data-test=search-results-table-body]").contains("tr", title);
 
         for (const term of ["ips*", "*psu*", "*loret"]) {
             cy.log(`Searching for "${term}"`);
-            cy.get("[data-test=global-search]").clear().type(`${term}`);
+            cy.get("[data-test=global-search]").type(`{selectAll}${term}`);
             cy.get("[data-test=submit]").click();
             cy.get("[data-test=search-results-table-body]").contains("tr", title);
         }
@@ -95,12 +95,12 @@ describe("Document search", () => {
 
         const term_without_wildcards = "psu";
         cy.log(`Searching for term without wildcard "${term_without_wildcards}"`);
-        cy.get("[data-test=global-search]").clear().type(`${term_without_wildcards}`);
+        cy.get("[data-test=global-search]").type(`{selectAll}${term_without_wildcards}`);
         cy.get("[data-test=submit]").click();
         cy.get("[data-test=search-results-table-body-empty]");
 
         cy.log("User can use the dropdown");
-        cy.get("[data-test=global-search]").clear().type(`lo*`);
+        cy.get("[data-test=global-search]").type(`{selectAll}lo*`);
         cy.get("[data-test=submit]").click();
 
         // Dropdown is only visible at hover, need to force visibility

@@ -99,14 +99,18 @@ describe("OIDC flow", function () {
         cy.get("[data-test=oauth2-edit-app-modal]")
             .filter(".tlp-modal-shown")
             .within(() => {
-                cy.get("[data-test=oauth2-edit-app-name]")
-                    .should("have.value", "Test OAuth2 App Management")
-                    .clear()
-                    .type("My OIDC App");
-                cy.get("[data-test=oauth2-edit-app-redirect-uri]")
-                    .should("have.value", "https://example.com")
-                    .clear()
-                    .type("https://example.com/redirect");
+                cy.get("[data-test=oauth2-edit-app-name]").should(
+                    "have.value",
+                    "Test OAuth2 App Management",
+                );
+                cy.get("[data-test=oauth2-edit-app-name]").type("{selectAll}My OIDC App");
+                cy.get("[data-test=oauth2-edit-app-redirect-uri]").should(
+                    "have.value",
+                    "https://example.com",
+                );
+                cy.get("[data-test=oauth2-edit-app-redirect-uri]").type(
+                    "{selectAll}https://example.com/redirect",
+                );
                 cy.get("[data-test=oauth2-edit-app-use-pkce]").should("be.checked").uncheck();
                 cy.get("[data-test=oauth2-edit-app-modal-submit-button]").click();
             });

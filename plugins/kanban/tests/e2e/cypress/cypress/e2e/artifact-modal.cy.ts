@@ -68,16 +68,16 @@ describe(`Artifact Modal`, function () {
 
                 getFieldWithLabel("Date", "[data-test=date-field]").within(() => {
                     // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=date-field-input]")
-                        .clear({ force: true })
-                        .type("2021-02-05", { force: true });
+                    cy.get("[data-test=date-field-input]").type("{selectAll}2021-02-05", {
+                        force: true,
+                    });
                 });
 
                 getFieldWithLabel("Datetime", "[data-test=date-field]").within(() => {
                     // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=date-field-input]")
-                        .clear({ force: true })
-                        .type("2021-02-04 16:54", { force: true });
+                    cy.get("[data-test=date-field-input]").type("{selectAll}2021-02-04 16:54", {
+                        force: true,
+                    });
                 });
 
                 getFieldWithLabel("Computed", "[data-test=computed-field]").within(() => {
@@ -214,47 +214,48 @@ describe(`Artifact Modal`, function () {
 
         cy.get("[data-test=artifact-modal-form]").within(() => {
             getFieldWithLabel("Title", "[data-test=string-field]").within(() => {
-                cy.get("[data-test=string-field-input]")
-                    .clear()
-                    .type("Editable Artifact " + anti_collision);
+                cy.get("[data-test=string-field-input]").type(
+                    "{selectAll}Editable Artifact " + anti_collision,
+                );
             });
 
             getFieldsetWithLabel("Other fields").within(() => {
                 getFieldWithLabel("String", "[data-test=string-field]").within(() => {
-                    cy.get("[data-test=string-field-input]").clear().type("Edit String value");
+                    cy.get("[data-test=string-field-input]").type("{selectAll}Edit String value");
                 });
 
                 getFieldWithLabel("Text", "[data-test=text-field]").within(() => {
                     cy.get("[data-test=format]").select("Markdown");
-                    cy.get("[data-test=textarea]").clear().type("Edit Text value");
+                    cy.get("[data-test=textarea]").type("{selectAll}Edit Text value");
                 });
 
                 getFieldWithLabel("Integer", "[data-test=int-field]").within(() => {
-                    cy.get("[data-test=int-field-input]").clear().type("87");
+                    cy.get("[data-test=int-field-input]").type("{selectAll}87");
                 });
 
                 getFieldWithLabel("Float", "[data-test=float-field]").within(() => {
-                    cy.get("[data-test=float-field-input]").clear().type("87.9");
+                    cy.get("[data-test=float-field-input]").type("{selectAll}87.9");
                 });
 
                 getFieldWithLabel("Date", "[data-test=date-field]").within(() => {
                     // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=date-field-input]")
-                        .clear({ force: true })
-                        // Escape to close the flatpickr popover
-                        .type("2021-05-27 {esc}", { force: true });
+                    // Escape to close the flatpickr popover
+                    cy.get("[data-test=date-field-input]").type("{selectAll}2021-05-27 {esc}", {
+                        force: true,
+                    });
                 });
 
                 getFieldWithLabel("Datetime", "[data-test=date-field]").within(() => {
                     // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=date-field-input]")
-                        .clear({ force: true })
-                        // Escape to close the flatpickr popover
-                        .type("2021-05-27 10:58 {esc}", { force: true });
+                    // Escape to close the flatpickr popover
+                    cy.get("[data-test=date-field-input]").type(
+                        "{selectAll}2021-05-27 10:58 {esc}",
+                        { force: true },
+                    );
                 });
 
                 getFieldWithLabel("Computed", "[data-test=computed-field]").within(() => {
-                    cy.get("[data-test=computed-field-input]").clear().type("13");
+                    cy.get("[data-test=computed-field-input]").type("{selectAll}13");
                 });
 
                 getFieldWithLabel("Attachments", "[data-test=file-field]").within(() => {

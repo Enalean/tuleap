@@ -68,7 +68,7 @@ describe(`Cardwall Report`, () => {
         cy.log("update an artifact from dashboard will redirect user on dashboard");
         cy.get("[data-test=direct-link-to-artifact]").click();
         cy.get("[data-test=edit-field-title]").click();
-        cy.get("[data-test=title]").clear().type("My first artifact edited");
+        cy.get("[data-test=title]").type("{selectAll}My first artifact edited");
         cy.get("[data-test=artifact-submit]").click();
 
         cy.get("[data-test=dashboard-project-title-name]").contains(project_name);

@@ -324,13 +324,6 @@ const config_for_cypress = {
     },
 };
 
-const config_to_temporarily_disable_cypress_unsafe_chain = {
-    files: ["plugins/*/tests/e2e/**/*.ts"],
-    rules: {
-        "cypress/unsafe-to-chain-command": "off", // We should fix this in a dedicated issue
-    },
-};
-
 const config_for_hexagonal_architecture_in_artifact_modal = {
     files: ["plugins/tracker/scripts/lib/artifact-modal/src/**/*.ts"],
     rules: {
@@ -473,7 +466,6 @@ export default defineConfig([
     config_for_typescript_tests,
     config_for_cypress_globals,
     config_for_cypress,
-    config_to_temporarily_disable_cypress_unsafe_chain,
     ...storybook.configs["flat/recommended"],
     config_for_hexagonal_architecture_in_artifact_modal,
     config_for_hexagonal_architecture_in_link_field,

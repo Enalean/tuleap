@@ -329,10 +329,8 @@ describe(`Backlog`, function () {
 
         hideEmptyStateSVGToNotConfuseDragAndDrop();
         // eslint-disable-next-line cypress/require-data-selectors
-        cy.get("body")
-            .type("{ctrl}", { release: false })
-            .get("[data-test=backlog-item]")
-            .click({ multiple: true });
+        cy.get("body").type("{ctrl}", { release: false });
+        cy.get("[data-test=backlog-item]").click({ multiple: true });
 
         cy.dragAndDrop(
             "[data-test=backlog-item-handle]",
@@ -469,10 +467,8 @@ describe(`Backlog`, function () {
 
         hideEmptyStateSVGToNotConfuseDragAndDrop();
         // eslint-disable-next-line cypress/require-data-selectors
-        cy.get("body")
-            .type("{ctrl}", { release: false })
-            .get("[data-test=backlog-item]")
-            .click({ multiple: true });
+        cy.get("body").type("{ctrl}", { release: false });
+        cy.get("[data-test=backlog-item]").click({ multiple: true });
 
         cy.dragAndDrop(
             "[data-test=backlog-item-handle]",
