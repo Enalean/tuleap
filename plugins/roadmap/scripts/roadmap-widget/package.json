@@ -30,7 +30,6 @@
     "@types/luxon": "^3.7.1",
     "@vitejs/plugin-vue": "^6.0.3",
     "@vue/test-utils": "^2.4.6",
-    "jest-environment-jsdom": "^29.7.0",
     "vue-demi": "0.14.10"
   },
   "scripts": {
