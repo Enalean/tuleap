@@ -30,7 +30,7 @@ pipeline {
                 dir ('sources') {
                     script {
                         actions = load 'tests/actions.groovy'
-                        actions.runInsideNixShell('pnpm install && TURBO_LOG_ORDER=grouped pnpm turbo run build-storybook --no-daemon --filter=@tuleap/tlp-doc')
+                        actions.runInsideNixShell('pnpm install && TURBO_LOG_ORDER=grouped pnpm turbo run build-storybook --filter=@tuleap/tlp-doc')
                     }
                 }
             }
