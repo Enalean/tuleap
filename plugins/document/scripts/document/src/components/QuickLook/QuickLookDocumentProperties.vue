@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <section class="tlp-pane-section document-quick-look-properties">
+    <section class="tlp-pane-section document-quick-look-properties" data-test="properties-list">
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
                 <label for="document-id" class="tlp-label">{{ $gettext("Id") }}</label>

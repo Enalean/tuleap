@@ -151,10 +151,10 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //p
                 $table .= '<tr>';
 
                 $table .= '<td >';
-                $table .=     '<i class="' . $purifier->purify($item_icon->getIconWithColor()) . '"></i>&nbsp;';
+                $table .= '<i class="' . $purifier->purify($item_icon->getIconWithColor()) . '"></i>&nbsp;';
                 $table .= '<span style="white-space: nowrap;">';
                 $url    = $document_url_builder->getUrl($item);
-                $table .= '<a data-help-window href="' . $url . '">';
+                $table .= '<a data-help-window href="' . $url . '" data-test="obsolete-document-link">';
                 $table .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
                 $table .= '</a>';
                 $table .= '</span>';

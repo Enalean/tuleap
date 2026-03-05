@@ -13,6 +13,7 @@
                         type="button"
                         class="tlp-button-primary tlp-table-actions-element docman-admin-properties-modal-button"
                         data-target-modal-id="docman-admin-properties-create-value-modal"
+                        data-test="create-new-list-value-button"
                     >
                         <i class="tlp-button-icon fas fa-plus" aria-hidden="true"></i>
                         {{# dgettext }}tuleap-docman | Create value{{/ dgettext }}
@@ -128,7 +129,7 @@
                 <label class="tlp-label" for="docman-admin-properties-create-value-name">
                     {{# dgettext }}tuleap-docman | Name{{/ dgettext }}
                 </label>
-                <input type="text" class="tlp-input" id="docman-admin-properties-create-value-name" name="name">
+                <input type="text" class="tlp-input" data-test="new-list-value" id="docman-admin-properties-create-value-name" name="name">
             </div>
 
             <div class="tlp-form-element">
@@ -156,7 +157,7 @@
             <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{# gettext}}Cancel{{/ gettext }}
             </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="create-list-value-button">
                 {{# gettext}}Create{{/ gettext }}
             </button>
         </div>
