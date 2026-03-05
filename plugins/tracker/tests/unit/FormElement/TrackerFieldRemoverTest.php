@@ -37,14 +37,14 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\RemoveFieldStub;
+use Tuleap\Tracker\Test\Stub\FormElement\UnuseFormElementStub;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class TrackerFieldRemoverTest extends TestCase
 {
     private StringField $field;
 
-    private RemoveFieldStub $form_element_factory_remove;
+    private UnuseFormElementStub $unuse_dao;
 
     private TrackerFactory&MockObject $tracker_factory;
     private Tracker_Workflow_Trigger_RulesManager&Stub $rules_manager;
@@ -59,10 +59,10 @@ final class TrackerFieldRemoverTest extends TestCase
         $tracker     = TrackerTestBuilder::aTracker()->withProject($project)->build();
         $this->field = StringFieldBuilder::aStringField(1)->inTracker($tracker)->build();
 
-        $this->form_element_factory_remove = RemoveFieldStub::build();
-        $this->project_history             = AddHistoryStub::build();
-        $this->tracker_factory             = $this->createMock(TrackerFactory::class);
-        $this->rules_manager               = $this->createStub(Tracker_Workflow_Trigger_RulesManager::class);
+        $this->unuse_dao       = UnuseFormElementStub::build();
+        $this->project_history = AddHistoryStub::build();
+        $this->tracker_factory = $this->createMock(TrackerFactory::class);
+        $this->rules_manager   = $this->createStub(Tracker_Workflow_Trigger_RulesManager::class);
 
         $this->current_user = UserTestBuilder::buildWithDefaults();
     }
@@ -74,12 +74,13 @@ final class TrackerFieldRemoverTest extends TestCase
             $this->rules_manager
         );
 
-        $field_remover = new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory, $this->project_history);
+        $field_remover = new TrackerFieldRemover($this->unuse_dao, $this->tracker_factory, $this->project_history);
         $value         = $field_remover->remove($this->field, $this->current_user);
 
         self::assertTrue(Result::isErr($value));
-        self::assertSame(0, $this->form_element_factory_remove->call_count);
+        self::assertSame(0, $this->unuse_dao->call_count);
         self::assertSame(0, $this->project_history->call_count);
+        self::assertTrue($this->field->use_it);
     }
 
     public function testItReturnsOkIfTheCurrentFieldCanBeRemoved(): void
@@ -89,11 +90,12 @@ final class TrackerFieldRemoverTest extends TestCase
             $this->rules_manager
         );
 
-        $field_remover = new TrackerFieldRemover($this->form_element_factory_remove, $this->tracker_factory, $this->project_history);
+        $field_remover = new TrackerFieldRemover($this->unuse_dao, $this->tracker_factory, $this->project_history);
         $value         = $field_remover->remove($this->field, $this->current_user);
 
         self::assertTrue(Result::isOk($value));
-        self::assertSame(1, $this->form_element_factory_remove->call_count);
+        self::assertSame(1, $this->unuse_dao->call_count);
         self::assertSame(1, $this->project_history->call_count);
+        self::assertFalse($this->field->use_it);
     }
 }

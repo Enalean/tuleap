@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-final class TrackerFieldAdder
+final readonly class TrackerFieldAdder
 {
     public function __construct(private UseFormElement $dao)
     {

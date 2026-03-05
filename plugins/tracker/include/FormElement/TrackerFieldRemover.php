@@ -31,15 +31,14 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\FieldUsedInTriggerFault;
-use Tuleap\Tracker\FormElement\Field\RemoveField;
 
 /**
- * In that context remove an element means to unuse it, the field is not delete.
+ * In that context remove an element means to unuse it, the field is not deleted.
  */
 final readonly class TrackerFieldRemover
 {
     public function __construct(
-        private RemoveField $form_element_factory,
+        private UnuseFormElement $dao,
         private TrackerFactory $tracker_factory,
         private AddHistory $project_history_dao,
     ) {
@@ -58,7 +57,8 @@ final readonly class TrackerFieldRemover
         if ($is_used_in_trigger) {
             return Result::err(FieldUsedInTriggerFault::build());
         }
-        $this->form_element_factory->removeFormElement($field->id);
+        $this->dao->unuseFormElement($field);
+        $field->use_it = false;
 
         $project              = $field->getTracker()->getProject();
         $project_history_enum = TrackerFormElementHistoryEntry::build(TrackerFormElementHistoryEntry::Unused->value);

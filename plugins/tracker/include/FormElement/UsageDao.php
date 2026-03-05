@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\FormElement;
 use Override;
 use Tuleap\DB\DataAccessObject;
 
-final class UsageDao extends DataAccessObject implements UseFormElement
+final class UsageDao extends DataAccessObject implements UseFormElement, UnuseFormElement
 {
     #[Override]
     public function useFormElement(TrackerFormElement $form_element): void
@@ -33,6 +33,16 @@ final class UsageDao extends DataAccessObject implements UseFormElement
         $this->getDB()->update(
             'tracker_field',
             ['use_it' => true],
+            ['id' => $form_element->getId()]
+        );
+    }
+
+    #[Override]
+    public function unuseFormElement(TrackerFormElement $form_element): void
+    {
+        $this->getDB()->update(
+            'tracker_field',
+            ['use_it' => false],
             ['id' => $form_element->getId()]
         );
     }
