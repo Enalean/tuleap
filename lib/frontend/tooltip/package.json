@@ -14,8 +14,8 @@
     }
   },
   "dependencies": {
-    "dompurify": "^3.2.4",
-    "@tuleap/option": "workspace:^"
+    "@tuleap/option": "workspace:^",
+    "dompurify": "^3.3.2"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

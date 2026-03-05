@@ -30,7 +30,7 @@
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/vue-strict-inject": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "hybrids": "^9.1.13",
     "lit-html": "^2.8.0",
     "marked": "^4.0.10",

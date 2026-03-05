@@ -29,7 +29,7 @@
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "dragula": "^3.7.2",
     "jquery": "^3.7.1",
     "jquery-ui": "^1.14.1",

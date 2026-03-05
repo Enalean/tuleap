@@ -15,6 +15,6 @@
   "dependencies": {
     "@tuleap/dom": "workspace:*",
     "@tuleap/tlp-modal": "workspace:^",
-    "dompurify": "^3.2.4"
+    "dompurify": "^3.3.2"
   }
 }

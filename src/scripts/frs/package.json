@@ -13,7 +13,7 @@
     "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:^",
     "@tuleap/tlp-modal": "workspace:^",
-    "dompurify": "^3.2.4"
+    "dompurify": "^3.3.2"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

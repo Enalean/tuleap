@@ -5,7 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  dompurify: ^3.2.4
   safer-buffer: npm:@nolyfill/safer-buffer@^1
   lodash-es: ^4.17.23
 
@@ -674,8 +673,9 @@ packages:
       robust-predicates: 3.0.2
     dev: false
 
-  /dompurify@3.2.6:
-    resolution: {integrity: sha512-/2GogDQlohXPZe6D6NOgQvXLPSYBqIWMnZ8zzOhn09REE4eyAzb+Hed3jhoM9OkuaJ8P6ZGTTVWQKAi8ieIzfQ==}
+  /dompurify@3.3.2:
+    resolution: {integrity: sha512-6obghkliLdmKa56xdbLOpUZ43pAR6xFy1uOrxBaIDjT+yaRuuybLjGS9eVBoSR/UPU5fq3OXClEHLJNGvbxKpQ==}
+    engines: {node: '>=20'}
     optionalDependencies:
       '@types/trusted-types': 2.0.7
     dev: false
@@ -776,7 +776,7 @@ packages:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.11
       dayjs: 1.11.13
-      dompurify: 3.2.6
+      dompurify: 3.3.2
       katex: 0.16.22
       khroma: 2.1.0
       lodash-es: 4.17.23
