@@ -97,13 +97,10 @@ import RecursionOptions from "../PropertiesForCreateOrUpdate/RecursionOptions.vu
 import emitter from "../../../../helpers/emitter";
 import type { Item, Property } from "../../../../type";
 import { computed, onMounted, ref } from "vue";
-import { useStore } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { IS_STATUS_PROPERTY_USED, PROJECT } from "../../../../configuration-keys";
 import { PROJECT_PROPERTIES } from "../../../../injection-keys";
 import type { DocumentProperties } from "../../../../helpers/properties/document-properties";
-
-const $store = useStore();
 
 const props = defineProps<{
     itemProperty: Array<Property>;
@@ -127,7 +124,7 @@ const has_recursion_property = computed((): boolean => {
 
 onMounted((): void => {
     if (project_properties.value === null) {
-        props.document_properties.loadProjectProperties($store, project.id).map((properties) => {
+        props.document_properties.loadProjectProperties(project.id).map((properties) => {
             project_properties.value = properties;
             return null;
         });

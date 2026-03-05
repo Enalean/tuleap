@@ -680,8 +680,8 @@ describe("document-properties", () => {
         let getProjectProperties: MockInstance;
 
         beforeEach(() => {
+            vi.resetAllMocks();
             getProjectProperties = vi.spyOn(properties_rest_querier, "getProjectProperties");
-            vi.clearAllMocks();
         });
 
         it(`load project properties definition`, async () => {
@@ -691,18 +691,19 @@ describe("document-properties", () => {
 
             getProjectProperties.mockReturnValue(okAsync(properties));
 
-            const result = await document_properties.loadProjectProperties(context, 102);
+            const result = await document_properties.loadProjectProperties(102);
 
             expect(result.isOk()).toBe(true);
             expect(result.unwrapOr(null)).toStrictEqual(properties);
         });
 
         it("Handle error when properties project load fails", async () => {
-            getProjectProperties.mockReturnValue(errAsync(Fault.fromMessage("Oh no!")));
+            const fault = Fault.fromMessage("Oh no!");
+            getProjectProperties.mockReturnValue(errAsync(fault));
 
-            await document_properties.loadProjectProperties(context, 102);
+            await document_properties.loadProjectProperties(102);
 
-            expect(context.dispatch).toHaveBeenCalled();
+            expect(emitter.emit).toHaveBeenCalledWith("global-modal-error", fault);
         });
     });
 });

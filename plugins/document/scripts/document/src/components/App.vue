@@ -33,7 +33,7 @@
             "
         />
         <router-view v-else />
-        <global-error-modal v-if="has_global_modal_error" />
+        <global-error-modal />
         <post-item-deletion-notification />
     </div>
 </template>
@@ -61,7 +61,6 @@ const {
     has_document_permission_error,
     has_document_loading_error,
     has_document_lock_error,
-    has_global_modal_error,
 } = useNamespacedState<
     Pick<
         ErrorState,
@@ -70,7 +69,6 @@ const {
         | "has_document_permission_error"
         | "has_document_loading_error"
         | "has_document_lock_error"
-        | "has_global_modal_error"
     >
 >("error", [
     "has_folder_permission_error",
@@ -78,7 +76,6 @@ const {
     "has_document_permission_error",
     "has_document_loading_error",
     "has_document_lock_error",
-    "has_global_modal_error",
 ]);
 const { is_uploading } = useGetters<Pick<RootGetter, "is_uploading">>(["is_uploading"]);
 const show_document_in_title = strictInject(SHOW_DOCUMENT_IN_TITLE);

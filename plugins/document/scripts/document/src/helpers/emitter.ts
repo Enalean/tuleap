@@ -31,6 +31,7 @@ import type {
     Folder,
     FolderContentItem,
 } from "../type";
+import type { Fault } from "@tuleap/fault";
 
 export interface DeleteItemEvent {
     item: Item;
@@ -174,6 +175,8 @@ export type Events = {
     "item-has-been-created-under-the-fold": ItemHasBeenCreatedUnderTheFoldEvent;
 
     "approval-table-refresh-data": void;
+
+    "global-modal-error": Fault;
 };
 
 export default mitt<Events>();

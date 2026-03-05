@@ -39,7 +39,7 @@
         </div>
         <div class="tlp-modal-body">
             <p>{{ $gettext("It seems an action you tried to perform can't be done.") }}</p>
-            <template v-if="has_more_details">
+            <template v-if="error_message !== null && error_message !== ''">
                 <a
                     v-if="!is_more_shown"
                     class="document-error-modal-link"
@@ -48,7 +48,7 @@
                 >
                     {{ $gettext("Show error details") }}
                 </a>
-                <pre v-if="is_more_shown" data-test="details">{{ global_modal_error_message }}</pre>
+                <pre v-if="is_more_shown" data-test="details">{{ error_message }}</pre>
             </template>
         </div>
         <div class="tlp-modal-footer">
@@ -72,39 +72,41 @@
     </div>
 </template>
 <script setup lang="ts">
+import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import { computed, ref, onMounted } from "vue";
-import { useNamespacedMutations, useNamespacedState } from "vuex-composition-helpers";
-import type { ErrorState } from "../../../store/error/module";
+import { onMounted, onUnmounted, ref } from "vue";
+import emitter from "../../../helpers/emitter";
+import type { Fault } from "@tuleap/fault";
 
+const error_message = ref<string | null>(null);
 const is_more_shown = ref(false);
-
-const { global_modal_error_message } = useNamespacedState<
-    Pick<ErrorState, "global_modal_error_message">
->("error", ["global_modal_error_message"]);
-
-const { resetErrors } = useNamespacedMutations("error", ["resetErrors"]);
-
-const has_more_details = computed((): boolean => {
-    if (!global_modal_error_message.value) {
-        return false;
-    }
-    return global_modal_error_message.value.length > 0;
-});
-
 const root_element = ref<InstanceType<typeof HTMLElement>>();
+const modal = ref<Modal | null>(null);
 
 onMounted((): void => {
     if (root_element.value) {
-        const modal = createModal(root_element.value, { destroy_on_hide: true });
-        modal.show();
-        modal.addEventListener("tlp-modal-hidden", reset);
+        modal.value = createModal(root_element.value);
+        modal.value.addEventListener("tlp-modal-hidden", reset);
+
+        emitter.on("global-modal-error", onGlobalModalError);
     }
 });
 
-function reset() {
-    resetErrors();
+onUnmounted(() => {
+    emitter.off("global-modal-error", onGlobalModalError);
+});
+
+function onGlobalModalError(fault: Fault): void {
+    error_message.value = fault.toString();
+
+    modal.value?.show();
 }
+
+function reset() {
+    error_message.value = null;
+    is_more_shown.value = false;
+}
+
 function reloadPage(): void {
     window.location.reload();
 }

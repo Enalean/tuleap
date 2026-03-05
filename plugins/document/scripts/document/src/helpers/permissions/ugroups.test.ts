@@ -20,9 +20,8 @@
 import { describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/rest-querier";
 import { loadProjectUserGroups } from "./ugroups";
-import type { RootState, UserGroup } from "../../type";
+import type { UserGroup } from "../../type";
 import { okAsync } from "neverthrow";
-import type { ActionContext } from "vuex";
 
 describe("User groups", () => {
     it("filters special service user groups from the list", async () => {
@@ -49,10 +48,7 @@ describe("User groups", () => {
             ]),
         );
 
-        const filtered_ugroups = await loadProjectUserGroups(
-            {} as ActionContext<RootState, RootState>,
-            102,
-        );
+        const filtered_ugroups = await loadProjectUserGroups(102);
 
         expect(filtered_ugroups.isOk()).toBe(true);
         expect(filtered_ugroups.unwrapOr(null)).toEqual([

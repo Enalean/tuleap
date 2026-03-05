@@ -18,11 +18,11 @@
  */
 
 import { getProjectUserGroups } from "../../api/rest-querier";
-import type { RootState, UserGroup } from "../../type";
+import type { UserGroup } from "../../type";
 import { PROJECT_ADMINISTRATORS_ID, PROJECT_MEMBERS_ID } from "@tuleap/core-constants";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { ActionContext } from "vuex";
+import emitter from "../emitter";
 
 function isUGroupAServiceSpecialUGroup(project_id: number, ugroup: UserGroup): boolean {
     return (
@@ -33,7 +33,6 @@ function isUGroupAServiceSpecialUGroup(project_id: number, ugroup: UserGroup): b
 }
 
 export function loadProjectUserGroups(
-    context: ActionContext<RootState, RootState>,
     project_id: number,
 ): ResultAsync<ReadonlyArray<UserGroup>, Fault> {
     return getProjectUserGroups(project_id)
@@ -41,7 +40,7 @@ export function loadProjectUserGroups(
             ugroups.filter((ugroup) => !isUGroupAServiceSpecialUGroup(project_id, ugroup)),
         )
         .mapErr((fault) => {
-            context.dispatch("error/handleGlobalModalError", fault, { root: true });
+            emitter.emit("global-modal-error", fault);
             return fault;
         });
 }

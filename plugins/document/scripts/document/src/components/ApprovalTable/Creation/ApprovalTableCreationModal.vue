@@ -118,7 +118,6 @@ import type { Lazybox } from "@tuleap/lazybox";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT, USER_LOCALE } from "../../../configuration-keys";
 import { loadProjectUserGroups } from "../../../helpers/permissions/ugroups";
-import { useStore } from "vuex-composition-helpers";
 import { createListPicker } from "@tuleap/list-picker";
 import { useGettext } from "vue3-gettext";
 import { initUsersAutocompleter } from "@tuleap/lazybox-users-autocomplete";
@@ -126,7 +125,6 @@ import type { User } from "@tuleap/core-rest-api-types";
 import { postApprovalTable } from "../../../api/approval-table-rest-querier";
 
 const { $gettext } = useGettext();
-const $store = useStore();
 
 const props = defineProps<{ item: Item }>();
 
@@ -163,7 +161,7 @@ onMounted(() => {
         dismiss_on_backdrop_click: true,
     });
 
-    loadProjectUserGroups($store, project.id).match(
+    loadProjectUserGroups(project.id).match(
         (groups) => {
             user_groups.value = groups;
         },

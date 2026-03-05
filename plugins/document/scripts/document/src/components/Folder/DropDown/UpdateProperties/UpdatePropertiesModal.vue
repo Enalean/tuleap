@@ -99,9 +99,9 @@ const form = ref<HTMLFormElement>();
 
 const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
 const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
-const { has_modal_error, has_global_modal_error } = useNamespacedState<
-    Pick<ErrorState, "has_modal_error" | "has_global_modal_error">
->("error", ["has_modal_error", "has_global_modal_error"]);
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
 
 const modal_title = computed(() => sprintf($gettext('Edit "%s" properties'), props.item.title));
 const obsolescence_date_value = computed(() => {
@@ -131,10 +131,6 @@ onMounted(() => {
     emitter.on("update-owner-property", updateOwnerValue);
     emitter.on("update-custom-property", updateCustomProperty);
     emitter.on("update-obsolescence-date-property", updateObsolescenceDateProperty);
-
-    if (has_global_modal_error.value) {
-        return;
-    }
 
     modal = createModal(form.value);
 

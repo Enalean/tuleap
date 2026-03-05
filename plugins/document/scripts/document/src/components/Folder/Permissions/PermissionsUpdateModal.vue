@@ -157,7 +157,7 @@ function setPermissionsToUpdateFromItem(): void {
 async function show(): Promise<void> {
     modal?.show();
     if (project_user_groups.value === null) {
-        await loadProjectUserGroups($store, project.id).match(
+        await loadProjectUserGroups(project.id).match(
             (user_groups) => {
                 project_user_groups.value = user_groups;
             },

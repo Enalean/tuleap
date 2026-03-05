@@ -163,13 +163,11 @@ import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
 import type { User } from "@tuleap/core-rest-api-types";
 import { loadProjectUserGroups } from "../../../helpers/permissions/ugroups";
-import { useStore } from "vuex-composition-helpers";
 import { PROJECT, USER_LOCALE } from "../../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { initUsersAutocompleter } from "@tuleap/lazybox-users-autocomplete";
 
 const { $gettext } = useGettext();
-const $store = useStore();
 
 const props = defineProps<{
     item: Item;
@@ -210,7 +208,7 @@ onMounted(() => {
         throw new Error("Cannot find user lazybox element");
     }
 
-    loadProjectUserGroups($store, project.id).match(
+    loadProjectUserGroups(project.id).match(
         (groups) => {
             user_groups.value = groups;
         },

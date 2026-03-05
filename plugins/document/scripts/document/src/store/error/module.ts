@@ -32,8 +32,6 @@ export interface ErrorState {
     modal_error: string | null;
     has_document_lock_error: boolean;
     document_lock_error: string | null;
-    has_global_modal_error: boolean;
-    global_modal_error_message: string | null;
 }
 
 export default {
@@ -49,8 +47,6 @@ export default {
         modal_error: null,
         has_document_lock_error: false,
         document_lock_error: null,
-        has_global_modal_error: false,
-        global_modal_error_message: null,
     },
     getters,
     mutations,
