@@ -49,7 +49,7 @@ class ChartMessageFetcher
         $user = $this->current_user_provider->getCurrentUser();
 
         $warnings = [];
-        if ($usage->getUseStartDate()) {
+        if ($usage->uses_start_date) {
             try {
                 $this->configuration_field_retriever->getStartDateField($tracker, $user);
             } catch (Tracker_FormElement_Chart_Field_Exception $e) {
@@ -57,7 +57,7 @@ class ChartMessageFetcher
             }
         }
 
-        if ($usage->getUseDuration()) {
+        if ($usage->uses_duration) {
             try {
                 $this->configuration_field_retriever->getDurationField($tracker, $user);
             } catch (Tracker_FormElement_Chart_Field_Exception $exception_duration) {
@@ -70,7 +70,7 @@ class ChartMessageFetcher
             }
         }
 
-        if ($usage->getUseCapacity()) {
+        if ($usage->uses_capacity) {
             $warning_message = $this->fetchMissingCapacityFieldWarning(
                 $tracker,
                 ChartConfigurationFieldRetriever::CAPACITY_FIELD_NAME,
@@ -81,7 +81,7 @@ class ChartMessageFetcher
             }
         }
 
-        if ($usage->getUseRemainingEffort()) {
+        if ($usage->uses_remaining_effort) {
             $warning_message = $this->fetchMissingRemainingEffortWarning($tracker);
             if ($warning_message !== null) {
                 $warnings[] = $warning_message;

@@ -47,12 +47,12 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
+use Tuleap\Tracker\FormElement\BurndownChartFieldUsage;
 use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
-use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
@@ -440,7 +440,7 @@ class BurndownField extends TrackerField implements Tracker_FormElement_Field_Re
     public function fetchAdminFormElement()
     {
         $html  = '';
-        $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this, $this->getChartFieldUsage());
+        $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this, BurndownChartFieldUsage::build());
         $html .= '<img src="' . \trackerPlugin::TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
         $html .= '<a class="btn chart-cache-button-generate" disabled="disabled">' .
                  dgettext('tuleap-tracker', 'Force cache regeneration') .
@@ -716,23 +716,6 @@ class BurndownField extends TrackerField implements Tracker_FormElement_Field_Re
             $this->getBurdownConfigurationFieldRetriever(),
             EventManager::instance(),
             UserManager::instance()
-        );
-    }
-
-    private function getChartFieldUsage()
-    {
-        $use_start_date       = true;
-        $use_duration         = true;
-        $use_capacity         = false;
-        $use_hierarchy        = true;
-        $use_remaining_effort = true;
-
-        return new ChartFieldUsage(
-            $use_start_date,
-            $use_duration,
-            $use_capacity,
-            $use_hierarchy,
-            $use_remaining_effort
         );
     }
 
