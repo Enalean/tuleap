@@ -63,7 +63,7 @@
     "stylelint-prettier": "^5.0.0",
     "ts-jest": "^29.4.6",
     "tslib": "^2.8.1",
-    "turbo": "^2.3.3",
+    "turbo": "^2.8.13",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.43.0",
     "vite": "^6.4.1",
@@ -80,11 +80,11 @@
     "webpack-remove-empty-scripts": "^1.0.1"
   },
   "scripts": {
-    "typecheck": "TURBO_LOG_ORDER=grouped turbo run typecheck --no-daemon",
-    "build": "TURBO_LOG_ORDER=grouped turbo run build --no-daemon",
+    "typecheck": "TURBO_LOG_ORDER=grouped turbo run typecheck",
+    "build": "TURBO_LOG_ORDER=grouped turbo run build",
     "eslint": "eslint --config eslint.config.mjs",
     "stylelint": "stylelint --config stylelint.config.mjs",
-    "test": "TURBO_LOG_ORDER=grouped turbo run test --concurrency=1 --output-logs=new-only --continue --no-daemon"
+    "test": "TURBO_LOG_ORDER=grouped turbo run test --concurrency=1 --output-logs=new-only --continue"
   },
   "packageManager": "pnpm@8.15.9",
   "pnpm": {
