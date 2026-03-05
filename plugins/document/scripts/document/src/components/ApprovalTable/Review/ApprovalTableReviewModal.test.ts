@@ -99,4 +99,87 @@ describe(ApprovalTableReviewModal, () => {
         expect(putReview).toHaveBeenCalledWith(123, "comment_only", "This is my comment", false);
         expect(refresh_data_event_call_count).toBe(1);
     });
+
+    describe("Show more / Show less mechanism", () => {
+        afterEach(() => {
+            vi.restoreAllMocks();
+        });
+
+        function getWrapper(
+            description: string,
+        ): VueWrapper<InstanceType<typeof ApprovalTableReviewModal>> {
+            return shallowMount(ApprovalTableReviewModal, {
+                attachTo: document.body,
+                props: {
+                    item: new ItemBuilder(123).build(),
+                    trigger,
+                    reviewer: new ApprovalTableReviewerBuilder(102).build(),
+                    table: new ApprovalTableBuilder(35).withDescription(description).build(),
+                },
+                global: {
+                    ...getGlobalTestOptions({}),
+                    provide: {
+                        [DATE_FORMATTER.valueOf()]: mock_formatter,
+                    },
+                    stubs: {
+                        RouterLink: RouterLinkStub,
+                        Teleport: false,
+                    },
+                },
+            });
+        }
+
+        async function mountTruncatedWrapper(): Promise<
+            VueWrapper<InstanceType<typeof ApprovalTableReviewModal>>
+        > {
+            vi.spyOn(window, "getComputedStyle").mockReturnValue({
+                lineHeight: "20px",
+            } as CSSStyleDeclaration);
+
+            const wrapper = getWrapper(
+                "A very long comment that exceeds 3 lines of text in the preview area",
+            );
+
+            const hidden_element = wrapper.vm.$refs.hidden_preview as HTMLElement | undefined;
+            expect(hidden_element).toBeDefined();
+            Object.defineProperty(hidden_element, "scrollHeight", {
+                get: () => 100,
+                configurable: true,
+            });
+
+            await vi.runOnlyPendingTimersAsync();
+            return wrapper;
+        }
+
+        it("shows 'No comment' when description is empty", async () => {
+            const wrapper = getWrapper("");
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.find(".comment-preview").exists()).toBe(false);
+            expect(wrapper.find("[data-test=show-more-button]").exists()).toBe(false);
+            expect(wrapper.text()).toContain("No comment");
+        });
+
+        it("shows the full comment when it is not truncated", async () => {
+            const wrapper = getWrapper("A short comment");
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.find(".comment-preview").exists()).toBe(true);
+            expect(wrapper.find("[data-test=show-more-button]").exists()).toBe(false);
+        });
+
+        it("can expand/collapse comment when comment is truncated", async () => {
+            const wrapper = await mountTruncatedWrapper();
+
+            await wrapper.find("[data-test=show-more-button]").trigger("click");
+
+            expect(wrapper.find("[data-test=show-more-button]").text()).toContain("Show less");
+            expect(wrapper.find(".comment-preview").classes()).toContain("expanded");
+
+            await wrapper.find("[data-test=show-more-button]").trigger("click");
+
+            expect(wrapper.find("[data-test=show-more-button]").text()).toContain("Show more");
+            expect(wrapper.find(".comment-preview").classes()).not.toContain("expanded");
+        });
+    });
 });
