@@ -20,7 +20,7 @@
 <template>
     <div>
         <folder-header />
-        <div class="tlp-framed">
+        <div class="tlp-framed" data-test="document-tree-container">
             <clipboard-content-information />
             <drag-n-drop-handler v-if="!is_loading_folder" />
             <under-the-fold-notification v-if="!is_loading_folder" />
