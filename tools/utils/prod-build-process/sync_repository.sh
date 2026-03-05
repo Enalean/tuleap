@@ -2,10 +2,11 @@
 
 set -euxo pipefail
 
+current_dir="$(dirname "$(readlink -f "$0")")"
+
 if [ -z "${INSIDE_NIX_SHELL_SYNC_REPO:-}" ]; then
   export INSIDE_NIX_SHELL_SYNC_REPO=1
 
-  current_dir="$(dirname "$(readlink -f "$0")")"
   exec nix-shell -I nixpkgs="$current_dir"/../nix/pinned-nixpkgs.nix --packages rsync openssh curl jq --run "$0 $*"
 fi
 
@@ -13,16 +14,16 @@ build_tmp="$(mktemp -d)"
 
 set +x
 
-auth_token="$(curl --silent --fail -X POST -d "{\"role_id\":\"$ROLE_ID\",\"secret_id\":\"$SECRET_ID\"}" ${VAULT_ADDR}/v1/auth/approle/login | jq -r '.auth.client_token')"
+. "$current_dir/vault.sh"
+
+auth_token="$(get_vault_token)"
 
 function cleanup {
     rm -rf "$build_tmp"
     set +x
-    curl --silent --fail \
-        --header "X-Vault-Token: $auth_token" \
-        --request POST "$VAULT_ADDR/v1/auth/token/revoke-self"
+    revoke_vault_token "$auth_token"
 }
-trap cleanup EXIT
+trap cleanup EXIT INT TERM
 
 touch "$build_tmp"/key.json
 chmod 0600 "$build_tmp"/key.json
