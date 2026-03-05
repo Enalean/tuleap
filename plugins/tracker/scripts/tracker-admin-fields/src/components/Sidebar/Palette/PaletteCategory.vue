@@ -21,7 +21,7 @@
     <div class="category">
         <button
             type="button"
-            class="expand-collapse"
+            class="tlp-button-ghost"
             v-bind:title="title"
             v-on:click="toggle"
             data-test="expand-collapse"
@@ -104,16 +104,5 @@ watch(
 
 .field:last-child {
     margin-bottom: 0;
-}
-
-.expand-collapse {
-    padding: 0;
-    border: 0;
-    background: none;
-    font-size: 1rem;
-
-    &:focus {
-        box-shadow: var(--tlp-shadow-focus);
-    }
 }
 </style>

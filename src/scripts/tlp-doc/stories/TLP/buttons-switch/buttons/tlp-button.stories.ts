@@ -35,6 +35,7 @@ type ButtonProps = {
     with_icon_on_left: boolean;
     with_icon_on_right: boolean;
     ellipsis_button: boolean;
+    ghost_button: boolean;
 };
 
 const BUTTON_SIZES = ["default", "large", "small", "mini"];
@@ -83,6 +84,15 @@ function getButton(args: ButtonProps): TemplateResult {
 </button>`;
 }
 
+function getGhostButton(): TemplateResult {
+    //prettier-ignore
+    return html`
+<button type="button" class="tlp-button-ghost" title="Expand">
+    <i class="fa-fw fa-solid fa-caret-right" role="img" aria-label="Expand"></i>
+</button>
+Container to expand`;
+}
+
 function getLink(args: ButtonProps): TemplateResult {
     //prettier-ignore
     return html`
@@ -104,6 +114,9 @@ const meta: Meta<ButtonProps> = {
         },
     },
     render: (args) => {
+        if (args.ghost_button) {
+            return getGhostButton();
+        }
         if (args.element === "link") {
             return getLink(args);
         }
@@ -123,6 +136,7 @@ const meta: Meta<ButtonProps> = {
         with_icon_on_left: false,
         with_icon_on_right: false,
         ellipsis_button: false,
+        ghost_button: false,
     },
     argTypes: {
         type: {
@@ -203,6 +217,38 @@ export const Button: Story = {};
 export const EllipsisButton: Story = {
     args: {
         ellipsis_button: true,
+    },
+    argTypes: {
+        label: {
+            name: "Label",
+            control: false,
+        },
+        element: {
+            name: "Element",
+            control: false,
+        },
+        wide: {
+            name: "Wide",
+            control: false,
+        },
+        outline: {
+            name: "Outline",
+            control: false,
+        },
+        with_icon_on_left: {
+            name: "With icon on left",
+            control: false,
+        },
+        with_icon_on_right: {
+            name: "With icon on right",
+            control: false,
+        },
+    },
+};
+
+export const GhostButton: Story = {
+    args: {
+        ghost_button: true,
     },
     argTypes: {
         label: {

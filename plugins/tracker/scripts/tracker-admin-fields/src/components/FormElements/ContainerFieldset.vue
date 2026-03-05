@@ -32,6 +32,22 @@
                 <div class="tlp-pane-container" draggable="true" data-not-drag-handle="true">
                     <div class="tlp-pane-header fieldset-header">
                         <h1 class="tlp-pane-title fieldset-title">
+                            <button
+                                type="button"
+                                v-bind:title="toggle_label"
+                                v-on:click="toggle"
+                                class="tlp-button-ghost expand-collapse"
+                            >
+                                <i
+                                    v-bind:class="
+                                        is_collapsed
+                                            ? 'fa-fw fa-solid fa-caret-right'
+                                            : 'fa-fw fa-solid fa-caret-down'
+                                    "
+                                    role="img"
+                                    v-bind:aria-label="toggle_label"
+                                ></i>
+                            </button>
                             <label-for-field v-bind:field="fieldset.field" />
                         </h1>
                         <fieldset-layout v-bind:fieldset="fieldset" />
@@ -39,6 +55,7 @@
                     <div
                         class="tlp-pane-section tracker-admin-fields-container-dropzone"
                         v-bind:data-container-id="fieldset.field.field_id"
+                        v-bind:hidden="is_collapsed"
                     >
                         <display-form-elements
                             v-bind:elements="fieldset.children"
@@ -59,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Column, Fieldset } from "../../type";
@@ -66,7 +84,6 @@ import { DRAGGED_FIELD_ID, IS_LAYOUT_WARNING_DISPLAYED } from "../../injection-s
 import DisplayFormElements from "../DisplayFormElements.vue";
 import FieldsetLayout from "./FieldsetLayout.vue";
 import LabelForField from "./LabelForField.vue";
-import { computed } from "vue";
 import { isColumnWrapper } from "../../helpers/is-column-wrapper";
 
 const { $gettext } = useGettext();
@@ -78,6 +95,14 @@ const props = defineProps<{
     fieldset: Fieldset;
     parent: Column | Fieldset | null;
 }>();
+
+const is_collapsed = ref(false);
+const toggle_label = computed(() =>
+    is_collapsed.value ? $gettext("Expand") : $gettext("Collapse"),
+);
+function toggle(): void {
+    is_collapsed.value = !is_collapsed.value;
+}
 
 const has_layout_issue = computed(
     () => props.parent !== null || props.fieldset.children.some((child) => !isColumnWrapper(child)),
@@ -98,6 +123,8 @@ const has_layout_issue = computed(
 }
 
 .fieldset-title {
+    display: flex;
+    gap: var(--tlp-small-spacing);
     flex: 1 0 auto;
 }
 
@@ -113,5 +140,9 @@ const has_layout_issue = computed(
 
 .draggable-wrapper:hover .draggable-handle {
     opacity: 1;
+}
+
+.expand-collapse {
+    color: var(--tlp-dimmed-color);
 }
 </style>
