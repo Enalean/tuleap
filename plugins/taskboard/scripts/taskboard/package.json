@@ -18,7 +18,7 @@
     "@tuleap/tlp-popovers": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "fscreen": "^1.2.0",
     "mitt": "^3.0.0",
     "mustache": "^4.2.0",

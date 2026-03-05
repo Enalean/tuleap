@@ -27,7 +27,7 @@
     "@tuleap/tlp-styles": "workspace:^",
     "@tuleap/tlp-syntax-highlighting": "workspace:*",
     "@tuleap/tooltip": "workspace:^",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "lit-html": "^2.8.0"
   },
   "devDependencies": {

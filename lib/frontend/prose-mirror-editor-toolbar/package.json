@@ -18,7 +18,7 @@
     "@tuleap/gettext": "workspace:^",
     "@tuleap/prose-mirror-editor": "workspace:^",
     "@tuleap/tlp-popovers": "workspace:^",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "hybrids": "9.1.6",
     "sprintf-js": "^1.1.3"
   },

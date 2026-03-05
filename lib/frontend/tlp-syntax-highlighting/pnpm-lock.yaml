@@ -12,8 +12,8 @@ dependencies:
     specifier: workspace:*
     version: link:../tlp-swatch-colors
   dompurify:
-    specifier: ^3.2.4
-    version: 3.3.1
+    specifier: ^3.3.2
+    version: 3.3.2
   shiki:
     specifier: ^3.21.0
     version: 3.21.0
@@ -125,8 +125,9 @@ packages:
       dequal: 2.0.3
     dev: false
 
-  /dompurify@3.3.1:
-    resolution: {integrity: sha512-qkdCKzLNtrgPFP1Vo+98FRzJnBRGe4ffyCea9IwHB1fyxPOeNTHpLKYGd4Uk9xvNoH0ZoOjwZxNptyMwqrId1Q==}
+  /dompurify@3.3.2:
+    resolution: {integrity: sha512-6obghkliLdmKa56xdbLOpUZ43pAR6xFy1uOrxBaIDjT+yaRuuybLjGS9eVBoSR/UPU5fq3OXClEHLJNGvbxKpQ==}
+    engines: {node: '>=20'}
     optionalDependencies:
       '@types/trusted-types': 2.0.7
     dev: false

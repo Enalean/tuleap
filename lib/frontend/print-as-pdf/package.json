@@ -18,7 +18,7 @@
   "dependencies": {
     "@tuleap/fault": "workspace:^",
     "@tuleap/html-escaper": "workspace:^",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "neverthrow": "^6.0.0",
     "print-js": "^1.6.0"
   },

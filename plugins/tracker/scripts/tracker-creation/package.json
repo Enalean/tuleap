@@ -12,7 +12,7 @@
     "@tuleap/tlp-styles": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:^",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "mustache": "^4.2.0",
     "slugify": "^1.6.1",
     "vue": "^3.4.38",

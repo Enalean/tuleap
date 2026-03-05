@@ -21,7 +21,7 @@
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "hybrids": "^9.1.6",
     "neverthrow": "6.0.0"
   },

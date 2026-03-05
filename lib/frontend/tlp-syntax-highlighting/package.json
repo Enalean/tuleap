@@ -17,7 +17,7 @@
   "dependencies": {
     "@tuleap/potentially-dangerous-bidirectional-characters": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "shiki": "^3.21.0"
   },
   "devDependencies": {

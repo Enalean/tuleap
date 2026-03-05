@@ -78,8 +78,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../../lib/frontend/tooltip
   dompurify:
-    specifier: ^3.2.4
-    version: 3.2.4
+    specifier: ^3.3.2
+    version: 3.3.2
   dragula:
     specifier: ^3.7.2
     version: 3.7.3
@@ -258,8 +258,9 @@ packages:
     resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
     dev: false
 
-  /dompurify@3.2.4:
-    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
+  /dompurify@3.3.2:
+    resolution: {integrity: sha512-6obghkliLdmKa56xdbLOpUZ43pAR6xFy1uOrxBaIDjT+yaRuuybLjGS9eVBoSR/UPU5fq3OXClEHLJNGvbxKpQ==}
+    engines: {node: '>=20'}
     optionalDependencies:
       '@types/trusted-types': 2.0.7
     dev: false
@@ -318,7 +319,7 @@ packages:
   /jsonfile@4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.11
+      graceful-fs: 4.2.6
     dev: false
 
   /jsonfile@5.0.0:
