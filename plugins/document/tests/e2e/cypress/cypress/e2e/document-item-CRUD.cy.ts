@@ -88,7 +88,7 @@ describe("Document", () => {
         openQuickLook("My new folder");
         deleteDocumentDisplayedInQuickLook();
 
-        cy.get("[data-test=document-tree-content]").should("not.exist");
+        cy.get("[data-test=document-tree-container]").should("not.contain", "My new folder");
     });
 
     it("Empty CRUD", () => {
@@ -105,7 +105,10 @@ describe("Document", () => {
         openQuickLook("My new empty document");
         deleteDocumentDisplayedInQuickLook();
 
-        cy.get("[data-test=document-tree-content]").should("not.exist");
+        cy.get("[data-test=document-tree-container]").should(
+            "not.contain",
+            "My new empty document",
+        );
     });
 
     it("Empty Item can be converted", () => {
@@ -168,7 +171,7 @@ describe("Document", () => {
         });
         deleteDocumentDisplayedInQuickLook();
 
-        cy.get("[data-test=document-tree-content]").should("not.exist");
+        cy.get("[data-test=document-tree-container]").should("not.contain", "My new link document");
     });
 
     it("Embedded file CRUD", () => {
@@ -208,7 +211,7 @@ describe("Document", () => {
 
         deleteDocumentDisplayedInQuickLook();
 
-        cy.get("[data-test=document-tree-content]").should("not.exist");
+        cy.get("[data-test=document-tree-container]").should("not.contain", "My new html content");
     });
 
     it(`user can download a folder as a zip archive`, () => {
@@ -515,7 +518,7 @@ function createEmptyAndOpenConvertModal(type: string): void {
 
     cy.get("[data-test=document-quick-look]").within(() => {
         cy.get("[data-test=document-new-item]").click();
-        cy.get(`[data-test=document-new-${type}-creation-button]`).click();
+        cy.get(`[data-test=document-new-${type}-creation-button]`).click({ force: true });
     });
 }
 
