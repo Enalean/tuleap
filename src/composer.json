@@ -46,7 +46,7 @@
     }
   ],
   "require": {
-    "azjezz/psl": "^4.0",
+    "azjezz/psl": "^5.0",
     "cocur/slugify": "^4.0",
     "cuyz/valinor": "^2.0",
     "embed/embed": "^4.3",
