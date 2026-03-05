@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2026-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { MountingOptions } from "@vue/test-utils";
-import { createGettext } from "vue3-gettext";
-import { getRouter } from "../router/fields-usage-router";
+import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 
-export function getGlobalTestOptions(): MountingOptions<unknown>["global"] {
+export function buildField(field_id: number, type: string): StructureFields {
+    // Only used in the test context.
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return {
-        plugins: [getRouter("/"), createGettext({ silent: true })],
-    };
+        field_id,
+        type,
+        name: `field_${field_id}`,
+        label: `Field ${field_id}`,
+    } as StructureFields;
 }

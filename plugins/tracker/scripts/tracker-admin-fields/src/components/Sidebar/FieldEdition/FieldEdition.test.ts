@@ -19,7 +19,7 @@
 
 import { describe, expect, it } from "vitest";
 import FieldEdition from "./FieldEdition.vue";
-import { FIELDS } from "../../../injection-symbols";
+import { FIELDS, HANDLE_REMOVE_FIELD, TRACKER_ROOT } from "../../../injection-symbols";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
@@ -48,6 +48,8 @@ describe("FieldEdition", () => {
                             label_decorators: [],
                         },
                     ],
+                    [HANDLE_REMOVE_FIELD.valueOf()]: () => {},
+                    [TRACKER_ROOT.valueOf()]: { children: [] },
                 },
             },
         });
