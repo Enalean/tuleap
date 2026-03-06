@@ -19,7 +19,6 @@
   },
   "pnpm": {
     "overrides": {
-      "argparse": "npm:@types/argparse@^2",
       "assert": "npm:@nolyfill/assert@^1",
       "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1",
       "hasown": "npm:@nolyfill/hasown@^1",
@@ -31,7 +30,8 @@
       "json-stable-stringify": "npm:@nolyfill/json-stable-stringify@^1",
       "side-channel": "npm:@nolyfill/side-channel@^1",
       "typed-array-buffer": "npm:@nolyfill/typed-array-buffer@^1",
-      "which-typed-array": "npm:@nolyfill/which-typed-array@^1"
+      "which-typed-array": "npm:@nolyfill/which-typed-array@^1",
+      "dompurify@3.2.6": "^3.3.2"
     }
   }
 }

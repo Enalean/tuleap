@@ -109,3 +109,9 @@ id = "RUSTSEC-2024-0384"
 reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
 
 ### TO BE FIXED
+
+# monaco-editor - bundled DOMPurify
+[[IgnoredVulns]]
+id = "CVE-2026-0540"
+reason = "No impact, no a production dependency in Tuleap and it's bundled within the Monaco Editor anyway"
+ignoreUntil = 2026-04-06
