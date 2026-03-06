@@ -173,6 +173,7 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-main-color-transparent-90: #{color.adjust($tlp-main-color, $alpha: - 0.9)};
     --tlp-info-color-darker-05: #{color.adjust($tlp-info-color, $lightness: - 5%)};
     --tlp-info-color-darker-10: #{color.adjust($tlp-info-color, $lightness: - 10%)};
+    --tlp-info-color-darker-20: #{color.adjust($tlp-info-color, $lightness: - 20%)};
     --tlp-info-color-darker-30: #{color.adjust($tlp-info-color, $lightness: - 30%)};
     --tlp-info-color-darker-50: #{color.adjust($tlp-info-color, $lightness: - 50%)};
     --tlp-info-color-darker-70: #{color.adjust($tlp-info-color, $lightness: - 70%)};

@@ -770,6 +770,9 @@ msgstr ""
 msgid "Paste"
 msgstr "Coller"
 
+msgid "Pending"
+msgstr "En attente"
+
 msgid "Permanent"
 msgstr "Permanent"
 
