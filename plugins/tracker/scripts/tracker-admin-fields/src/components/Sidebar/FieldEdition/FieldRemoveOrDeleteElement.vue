@@ -98,12 +98,11 @@ import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 import type { Ref } from "vue";
 import { computed, onBeforeUnmount, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
-import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
 import { patchJSON, uri } from "@tuleap/fetch-result";
 import { HANDLE_REMOVE_FIELD, TRACKER_ROOT } from "../../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { canCurrentFormElementBeRemoved } from "../../../helpers/can-current-form-element-be-removed";
-import { useRouter } from "vue-router";
 import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
@@ -116,7 +115,6 @@ const tracker_root = strictInject(TRACKER_ROOT);
 const modal_element: Ref<HTMLElement | null> = ref(null);
 let modal: Modal | null = null;
 
-const router = useRouter();
 const { interpolate, $gettext } = useGettext();
 
 const modal_id = computed((): string => `remove-or-delete-modal-${props.field.field_id}`);
@@ -133,7 +131,6 @@ function displayRemoveOrDeletionModal(): void {
     }
     modal = createModal(modal_element.value);
     modal.show();
-    modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => router.push({ name: "fields-usage" }));
 }
 
 onBeforeUnmount(() => {
