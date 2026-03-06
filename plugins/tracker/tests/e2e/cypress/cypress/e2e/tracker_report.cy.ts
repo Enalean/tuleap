@@ -70,9 +70,8 @@ function createArtifactWithValues(title: string): void {
 
     cy.get("[data-test=link-type-select]").first().select("is Child of");
     cy.get("[data-test=link-field-add-link-input]").click();
-    cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-        .focus()
-        .type("Linked Artifact");
+    cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus();
+    cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).type("Linked Artifact");
     cy.get("[data-test=new-item-button]").click();
     cy.get("[data-test=artifact-creator-submit]").click();
     cy.wait("@getArtifact");

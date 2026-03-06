@@ -34,7 +34,7 @@ function createAndUpdateArtifact(title: string, edited_title: string): void {
     cy.wait("@createArtifact", { timeout: 60000 });
 
     cy.get("[data-test=edit-field-title]").click();
-    cy.get("[data-test=title]").clear().type(edited_title);
+    cy.get("[data-test=title]").type("{selectAll}" + edited_title);
     cy.get("[data-test=artifact-submit]").click();
 }
 
@@ -183,7 +183,7 @@ describe("Tracker notifications", () => {
         );
         cy.get("[data-test=edit-field-category]").click();
         cy.get("[data-test=edit-field-summary_1]").click();
-        cy.get("[data-test=summary_1]").clear().type("My updated conditional notification");
+        cy.get("[data-test=summary_1]").type("{selectAll}My updated conditional notification");
         cy.get("[data-test=tracker-artifact-value-category]").within(() => {
             cy.searchItemInListPickerDropdown("User interface").click();
         });
@@ -209,7 +209,7 @@ describe("Tracker notifications", () => {
 
         cy.get("[data-test=edit-field-assigned_to_1]").click();
         cy.get("[data-test=edit-field-summary_1]").click();
-        cy.get("[data-test=summary_1]").clear().type("My third conditional notification");
+        cy.get("[data-test=summary_1]").type("{selectAll}My third conditional notification");
         cy.get("[data-test=tracker-artifact-value-assigned_to_1]").within(() => {
             cy.searchItemInListPickerDropdown("ProjectMember").click();
         });
@@ -270,7 +270,7 @@ describe("Tracker notifications", () => {
         cy.wait("@createArtifact", { timeout: 60000 });
 
         cy.get("[data-test=edit-field-title]").click();
-        cy.get("[data-test=title]").clear().type("Last artifact");
+        cy.get("[data-test=title]").type("{selectAll}Last artifact");
         cy.get("[data-test=edit-field-status]").click();
         selectLabelInListPickerDropdown("Under review", 0);
         cy.get("[data-test=edit-field-assigned_to]").click();
@@ -309,7 +309,7 @@ describe("Tracker notifications", () => {
         cy.assertEmailWithContentReceived("RegularUser@example.com", "Artifact B");
 
         cy.get("[data-test=edit-field-title]").click();
-        cy.get("[data-test=title]").clear().type("AnOther artifact");
+        cy.get("[data-test=title]").type("{selectAll}AnOther artifact");
         cy.get("[data-test=artifact-submit]").click();
 
         cy.log("When artifact is updated, nobody receive an email");

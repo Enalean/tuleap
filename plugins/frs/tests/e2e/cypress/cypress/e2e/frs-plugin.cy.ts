@@ -74,12 +74,11 @@ describe("FRS plugin", () => {
 
                     cy.get("[data-test=download-file]").click();
                     cy.get("[data-test=modal-agreement-title]").contains("Download agreement");
-                    cy.get("[data-test=accept-download-agreements]")
-                        .click()
-                        .then(() => {
-                            const download_folder = Cypress.config("downloadsFolder");
-                            cy.readFile(download_folder + "/release-file.txt").should("exist");
-                        });
+                    cy.get("[data-test=accept-download-agreements]").click();
+                    cy.then(() => {
+                        const download_folder = Cypress.config("downloadsFolder");
+                        cy.readFile(download_folder + "/release-file.txt").should("exist");
+                    });
 
                     cy.get(`[data-test=linked-artifacts]`).click();
 

@@ -117,7 +117,8 @@ describe(`Taskboard`, function () {
                 `[data-column-id=${on_going_column.id}][data-swimlane-id=${quality_sunshine_swimlane.id}]`,
             ).within(() => {
                 cy.log("And move it with keyboard shortcut");
-                cy.get("[data-test=child-card]").first().focus().type("{shift}l");
+                cy.get("[data-test=child-card]").first().focus();
+                cy.get("[data-test=child-card]").first().type("{shift}l");
             });
 
             cy.log("Card is present in review column");
@@ -138,7 +139,7 @@ describe(`Taskboard`, function () {
                 })
                 .then(($label_editor) => {
                     expect($label_editor.val()).to.equal("Lonesome Galaxy");
-                    cy.wrap($label_editor).clear().type("Deserted Torpedo{enter}");
+                    cy.wrap($label_editor).type("{selectAll}Deserted Torpedo{enter}");
                 });
 
             // Edit back the name for repeatability
@@ -147,8 +148,7 @@ describe(`Taskboard`, function () {
                     cy.wrap(card).find("[data-test=card-edit-button]").click();
                     cy.wrap(card)
                         .find("[data-test=label-editor]")
-                        .clear()
-                        .type("Lonesome Galaxy{enter}");
+                        .type("{selectAll}Lonesome Galaxy{enter}");
                 },
             );
         });
@@ -166,7 +166,7 @@ describe(`Taskboard`, function () {
                         "[data-test=edit-remaining-effort]",
                     );
                     expect(remaining_effort_input.val()).to.equal("5");
-                    cy.wrap(remaining_effort_input).clear().type("2");
+                    cy.wrap(remaining_effort_input).type("{selectAll}2");
                     cy.get('[data-test="save"]').click();
                 });
 
@@ -181,7 +181,7 @@ describe(`Taskboard`, function () {
                         "[data-test=edit-remaining-effort]",
                     );
                     expect(remaining_effort_input.val()).to.equal("2");
-                    cy.wrap(remaining_effort_input).clear().type("5");
+                    cy.wrap(remaining_effort_input).type("{selectAll}5");
                     cy.get('[data-test="save"]').click();
                 });
         });

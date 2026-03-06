@@ -193,7 +193,7 @@ describe(`Planning view Explicit Backlog`, function () {
 
             cy.log("Update release configuration");
             cy.get("[data-test=edit-planning-configuration]").click();
-            cy.get("[data-test=planning-name-input]").clear().type("My new release name");
+            cy.get("[data-test=planning-name-input]").type("{selectAll}My new release name");
             cy.get("[data-test=update-planning-configuration]").click();
             cy.get("[data-test=feedback]").should("contain", "Planning succesfully updated");
 

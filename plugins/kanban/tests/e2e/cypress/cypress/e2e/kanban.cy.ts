@@ -25,7 +25,9 @@ function createCardInColumn(column_name: string, drag_to_collapsed_column_label:
         cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
 
         cy.get("[data-test=add-in-place-button]").click();
-        cy.get("[data-test=add-in-place-label-input]").clear().type(drag_to_collapsed_column_label);
+        cy.get("[data-test=add-in-place-label-input]").type(
+            "{selectAll}" + drag_to_collapsed_column_label,
+        );
         cy.get("[data-test=add-in-place-submit]").first().click();
         cy.wait("@createCard", { timeout: 1000 });
     });

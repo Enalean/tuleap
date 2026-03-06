@@ -99,13 +99,13 @@ describe("Pull request", function () {
 
             cy.log("Edit title of a pullrequest");
             cy.get("[data-test=pull-request-open-title-modal-button]").click();
-            cy.get("[data-test=pull-request-edit-title-input]").clear().type("My updated title");
+            cy.get("[data-test=pull-request-edit-title-input]").type("{selectAll}My updated title");
             cy.get("[data-test=pull-request-save-changes-button]").click();
             cy.get("[data-test=pullrequest-title]").contains("My updated title");
 
             cy.log("Edit description of a pullrequest");
             cy.get("[data-test=button-edit-description-comment]").click();
-            cy.get("[data-test=writing-zone-textarea]").first().clear().type("My description");
+            cy.get("[data-test=writing-zone-textarea]").first().type("{selectAll}My description");
             cy.get("[data-test=button-save-edition]").click();
             cy.get("[data-test=description-content]").contains("My description");
 

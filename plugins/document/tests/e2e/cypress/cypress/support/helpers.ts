@@ -30,7 +30,7 @@ export function openQuickLook(document_title: string): void {
 
 export function updateWikiPage(page_content: string): void {
     cy.get("[data-test=php-wiki-edit-page]").contains("Edit").click();
-    cy.get("[data-test=textarea-wiki-content]").clear().type(page_content);
+    cy.get("[data-test=textarea-wiki-content]").type(`{selectAll}${page_content}`);
     cy.get("[data-test=edit-page-action-buttons]").contains("Save").click();
 }
 

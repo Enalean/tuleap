@@ -290,7 +290,7 @@ describe("Git", function () {
                         "have.length",
                         1,
                     );
-                    cy.get("[data-test=create_repository_name]").clear().type("Koenigsegg.git");
+                    cy.get("[data-test=create_repository_name]").type("{selectAll}Koenigsegg.git");
                     cy.root().submit();
                     cy.get("[data-test=git-repository-create-modal-body-error]").should(
                         "have.length",
@@ -310,7 +310,7 @@ describe("Git", function () {
                         cy.get("[data-test=git-repository-card-admin-link]").click();
                     });
                 cy.get("[data-test=repository-general-settings-form]").within(() => {
-                    cy.get("[data-test=repository-description]").clear().type("description");
+                    cy.get("[data-test=repository-description]").type("{selectAll}description");
                     cy.root().submit();
                 });
                 cy.get("[data-test=repository-description]").contains("description");

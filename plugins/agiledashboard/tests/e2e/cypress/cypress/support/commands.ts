@@ -47,7 +47,6 @@ export function registerBacklogCommands(): void {
             drop_zone_selector?: string,
         ) => {
             cy.getContains(source_selector, source_label).trigger("mousedown", { button: 1 });
-            // eslint-disable-next-line cypress/no-force -- the drop zone might not be considered visible
             cy.getContains(destination_selector, destination_label)
                 .then((destination) => {
                     if (drop_zone_selector === undefined) {
@@ -55,8 +54,14 @@ export function registerBacklogCommands(): void {
                     }
                     return cy.wrap(destination).find(drop_zone_selector);
                 })
-                .trigger("mousemove", { position: "top", force: true })
-                .trigger("mouseup", { force: true });
+                .as("dragTarget");
+            // eslint-disable-next-line cypress/no-force -- the drop zone might not be considered visible
+            cy.get<JQuery<HTMLElement>>("@dragTarget").trigger("mousemove", {
+                position: "top",
+                force: true,
+            });
+            // eslint-disable-next-line cypress/no-force -- the drop zone might not be considered visible
+            cy.get<JQuery<HTMLElement>>("@dragTarget").trigger("mouseup", { force: true });
         },
     );
 }

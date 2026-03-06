@@ -98,7 +98,7 @@ describe("Time tracking", function () {
         cy.get("[data-test=timetracking-delete-confirm]").first().click();
 
         cy.get("[data-test=timetracking-update-time]").click();
-        cy.get("[data-test=timetracking-edit-row-time]").clear().type("01:00");
+        cy.get("[data-test=timetracking-edit-row-time]").type("{selectAll}01:00");
         // datepicker lib add readonly attribute to the input field so we need to force
         // eslint-disable-next-line cypress/no-force
         cy.get("[data-test=timetracking-edit-row-date]").type("{selectAll}2020-03-02", {
@@ -127,12 +127,10 @@ describe("Time tracking", function () {
         cy.get("[data-test=timetracking-switch-reading-mode]").click();
 
         //vue flat picker needs to force clear/type
-        cy.get("[data-test=timetracking-start-date]")
-            .clear({ force: true })
-            .type("2020-03-01", { force: true });
-        cy.get("[data-test=timetracking-end-date]")
-            .clear({ force: true })
-            .type("2020-03-10", { force: true });
+        cy.get("[data-test=timetracking-start-date]").type("{selectAll}2020-03-01", {
+            force: true,
+        });
+        cy.get("[data-test=timetracking-end-date]").type("{selectAll}2020-03-10", { force: true });
 
         //can be invisible due to flat picker who isn't closed by type command
         cy.get("[data-test=timetracking-search-for-dates]").click({ force: true });
@@ -140,11 +138,11 @@ describe("Time tracking", function () {
         cy.get("[data-test=timetracking-details]").first().click();
 
         cy.get("[data-test=timetracking-edit-time]").first().click();
-        cy.get("[data-test=timetracking-time]").clear().type("04:00");
+        cy.get("[data-test=timetracking-time]").type("{selectAll}04:00");
         cy.get("[data-test=timetracking-submit-time]").click();
 
         cy.get("[data-test=button-set-add-mode]").first().click();
-        cy.get("[data-test=timetracking-time]").first().clear().type("04:00");
+        cy.get("[data-test=timetracking-time]").first().type("{selectAll}04:00");
         cy.get("[data-test=timetracking-submit-time]").first().click();
 
         cy.get("[data-test=timetracking-delete-time]").first().click();
@@ -223,13 +221,13 @@ describe("Time tracking", function () {
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
         cy.get("[data-test=query-displayer]").click();
         cy.get("[data-test=predefined-periods-select]").select("last_7_days");
-        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-            .focus()
-            .type("ProjectMember");
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus();
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).type(
+            "ProjectMember",
+        );
         cy.get("[data-test=lazybox-item]").click();
-        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-            .focus()
-            .type("ARegularUser");
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus();
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).type("ARegularUser");
         cy.get("[data-test=lazybox-item]").click();
         cy.get("[data-test=save-button]").click();
 

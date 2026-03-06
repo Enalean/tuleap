@@ -78,7 +78,7 @@ describe("Artifact Mass Change", function () {
         cy.visit(`/plugins/tracker/?tracker=${this.issue_tracker_id}`);
         cy.get("[data-test=masschange-button]").click();
         cy.get("[data-test=masschange-button-all").click();
-        cy.get("[data-test=masschange-new-comment").clear().type("Hello @ProjectAdministrator");
+        cy.get("[data-test=masschange-new-comment").type("{selectAll}Hello @ProjectAdministrator");
         cy.get("[data-test=masschange-submit]").click();
         cy.assertEmailWithContentReceived(
             "ProjectAdministrator@example.com",
