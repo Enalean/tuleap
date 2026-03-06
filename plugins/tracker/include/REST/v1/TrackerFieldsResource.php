@@ -156,7 +156,7 @@ class TrackerFieldsResource extends AuthenticatedResource
 
         new RestFieldUseHandler(
             new TrackerFieldRemover(
-                $form_element_factory,
+                $usage_dao,
                 TrackerFactory::instance(),
                 new ProjectHistoryDao()
             ),

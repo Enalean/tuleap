@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2026-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Stub;
+namespace Tuleap\Tracker\FormElement;
 
-use Override;
-use Tuleap\Tracker\FormElement\Field\RemoveField;
-
-final class RemoveFieldStub implements RemoveField
+interface UnuseFormElement
 {
-    private(set) int $call_count = 0;
-
-    private function __construct()
-    {
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
-
-    #[Override]
-    public function removeFormElement(int $form_element_id): bool
-    {
-        $this->call_count++;
-        return true;
-    }
+    public function unuseFormElement(TrackerFormElement $form_element): void;
 }

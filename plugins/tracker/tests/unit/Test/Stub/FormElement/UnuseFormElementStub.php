@@ -20,9 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field;
+namespace Tuleap\Tracker\Test\Stub\FormElement;
 
-interface RemoveField
+use Override;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
+use Tuleap\Tracker\FormElement\UnuseFormElement;
+
+final class UnuseFormElementStub implements UnuseFormElement
 {
-    public function removeFormElement(int $form_element_id): bool;
+    private(set) int $call_count = 0;
+
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    #[Override]
+    public function unuseFormElement(TrackerFormElement $form_element): void
+    {
+        $this->call_count++;
+    }
 }

@@ -49,7 +49,6 @@ use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
-use Tuleap\Tracker\FormElement\Field\RemoveField;
 use Tuleap\Tracker\FormElement\Field\RetrieveAnyTypeOfUsedFormElementById;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -75,7 +74,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements DeleteFormElement, RemoveField, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElementFactory implements DeleteFormElement, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string FIELD_STRING_TYPE                 = 'string';
     public const string FIELD_TEXT_TYPE                   = 'text';
@@ -1309,23 +1308,6 @@ class Tracker_FormElementFactory implements DeleteFormElement, RemoveField, Retr
             }
         }
         return false;
-    }
-
-    /**
-     * Unuse the formElement
-     */
-    #[Override]
-    public function removeFormElement(int $form_element_id): bool
-    {
-        $success = false;
-        if ($form_element = $this->getFormElementById($form_element_id)) {
-            //Don't use anymore the field
-            $form_element->use_it = false;
-            //remove the field from its container
-            $form_element->parent_id = 0;
-            $success                 = $this->getDao()->save($form_element);
-        }
-        return $success;
     }
 
     #[Override]

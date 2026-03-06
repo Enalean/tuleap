@@ -306,7 +306,7 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
                 break;
             case Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE:
                 $field_remover = new TrackerFieldRemover(
-                    $this->getFormElementFactory(),
+                    new UsageDao(),
                     TrackerFactory::instance(),
                     new ProjectHistoryDao()
                 );
