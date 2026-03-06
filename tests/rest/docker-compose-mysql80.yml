@@ -1,4 +1,12 @@
 services:
+  proxysql-mysql80:
+    image: ${DOCKER_REGISTRY:-docker.io}/proxysql/proxysql:3.0.5@sha256:a8a90427035b0daafb64262334c70f9feb690a9a997c090fc4d846584b99f367
+    volumes:
+      - ../etc/DBConfig/sqlproxy-84.cnf:/etc/proxysql.cnf:ro,cached
+    depends_on:
+      mysql80:
+        condition: service_healthy
+    restart: on-failure
   mysql80:
     image: ${DOCKER_REGISTRY:-docker.io}/mysql:8.0
     environment:
@@ -8,3 +16,7 @@ services:
     tmpfs: /tmp
     cap_add:
       - SYS_NICE
+    healthcheck:
+      test: mysql --host=127.0.0.1 --user=root --password=welcome0 --execute="SHOW DATABASES;"
+      interval: 1s
+      start_period: 20s

@@ -19,8 +19,6 @@
  *
  */
 
-use ParagonIE\EasyDB\Factory;
-use Tuleap\DB\DBConfig;
 use Tuleap\REST\RESTTestDataBuilder;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
@@ -39,40 +37,9 @@ $data_builder
 
 
 // Load PHPWiki fixture
-$phpwiki_fixtures = [
-    [
-        'path' => __DIR__ . '/../_fixtures/phpwiki/rest-test-wiki-group-list',
-        'table' => 'wiki_group_list',
-    ],
-    [
-        'path' => __DIR__ . '/../_fixtures/phpwiki/rest-test-wiki-page',
-        'table' => 'wiki_page',
-    ],
-    [
-        'path' => __DIR__ . '/../_fixtures/phpwiki/rest-test-wiki-nonempty',
-        'table' => 'wiki_nonempty',
-    ],
-    [
-        'path' => __DIR__ . '/../_fixtures/phpwiki/rest-test-wiki-version',
-        'table' => 'wiki_version',
-    ],
-    [
-        'path' => __DIR__ . '/../_fixtures/phpwiki/rest-test-wiki-recent',
-        'table' => 'wiki_recent',
-    ],
-];
-
-$db_with_load_infile = Factory::fromArray([
-    DBConfig::getPDODSN(\ForgeConfig::get(DBConfig::CONF_DBNAME)),
-    \ForgeConfig::get(DBConfig::CONF_DBUSER),
-    \ForgeConfig::get(DBConfig::CONF_DBPASSWORD),
-    [\PDO::MYSQL_ATTR_LOCAL_INFILE => 1],
-]);
-
-foreach ($phpwiki_fixtures as $phpwiki_fixture) {
-    $path  = $phpwiki_fixture['path'];
-    $table = $phpwiki_fixture['table'];
-    $db_with_load_infile->run("LOAD DATA LOCAL INFILE '$path' INTO TABLE $table CHARACTER SET ascii");
+$db_tables_dao = new \Tuleap\DAO\DBTablesDao();
+foreach (glob(__DIR__ . '/../_fixtures/phpwiki/*.sql') as $phpwiki_fixture_sql_file) {
+    $db_tables_dao->updateFromFile($phpwiki_fixture_sql_file);
 }
 
 // Avoid 3rd party service call (IHaveBeenPwned) during tests

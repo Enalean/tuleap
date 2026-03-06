@@ -1,0 +1,29 @@
+# DO NOT USE IN PRODUCTION
+# This fill is meant to be used in dedicated, ephemeral and non accessible test environments
+
+datadir="/var/lib/proxysql"
+
+admin_variables=
+{
+	admin_credentials="admin:admin;radmin:radmin"
+	mysql_ifaces="0.0.0.0:6032"
+}
+
+mysql_variables=
+{
+	default_query_timeout=60000
+	interfaces="0.0.0.0:3306"
+	server_version="8.4.8"
+	monitor_enabled=false
+}
+
+mysql_servers =
+(
+    { address="mysql84" , port=3306, hostgroup=0 },
+)
+
+mysql_users =
+(
+    { username = "root" , password = "welcome0", default_hostgroup = 0, active = 1 },
+    { username = "tuleapadm" , password = "welcome0", default_hostgroup = 0, active = 1 }
+)

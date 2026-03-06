@@ -98,6 +98,16 @@ pipeline {
                 }
             }
         }
+
+        stage ('MySQL 8.4 without ProxySQL') {
+            failFast false
+            parallel {
+                stage('REST') {
+                    steps { script { actions.runRESTTests('mysql84', '84', false) } }
+                    post { always { junit 'results/api-rest/*/*' } }
+                }
+            }
+        }
     }
     post {
         always {
