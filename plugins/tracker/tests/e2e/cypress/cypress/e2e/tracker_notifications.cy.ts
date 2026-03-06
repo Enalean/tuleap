@@ -52,7 +52,6 @@ function addUserToUnsusbscribeNotifications(user: string): void {
 }
 
 function configureTrackerForStatusChangeNotifications(project_name: string): void {
-    cy.projectAdministratorSession();
     cy.createNewPublicProject(project_name, "issues");
     cy.visitProjectAdministration(project_name);
     cy.addProjectMember(project_name, "ProjectMember");
@@ -76,7 +75,6 @@ function configureTrackerForStatusChangeNotifications(project_name: string): voi
 
 describe("Tracker notifications", () => {
     it("Sends calendar events", function () {
-        cy.projectAdministratorSession();
         const project_name = "calendar-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "scrum").then((project_id) => {
             cy.addProjectMember(project_name, "projectMember");
@@ -318,7 +316,6 @@ describe("Tracker notifications", () => {
     });
 
     it("Tracker notifications - can not add invalid users", function () {
-        cy.projectAdministratorSession();
         const project_name = "invalid-notif-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "issues");
         cy.visitProjectAdministration(project_name);

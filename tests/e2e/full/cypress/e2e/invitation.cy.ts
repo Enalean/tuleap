@@ -36,7 +36,6 @@ describe("Invitations", () => {
             project_name = `test-invitations-${anti_collision}`;
             invitee_email = `email-${anti_collision}@example.com`;
 
-            cy.projectAdministratorSession();
             cy.createNewPublicProject(project_name, "issues");
             cy.addProjectMember(project_name, "projectMember");
             cy.projectAdministratorSession();

@@ -52,7 +52,6 @@ describe("Writers", function () {
     }
 
     it("have specifics permissions", function () {
-        cy.projectAdministratorSession();
         const project_name = "document-perm-" + getAntiCollisionNamePart();
         const document_name = "Document " + getAntiCollisionNamePart();
         createAProjectWithAnEmptyDocument(project_name, document_name);
@@ -86,8 +85,6 @@ describe("Writers", function () {
     });
 
     it("projectMember can ask permission to see a document he can not access", function () {
-        cy.projectAdministratorSession();
-
         cy.createNewPublicProject(permission_project_name, "issues")
             .then((project_id) =>
                 cy.getFromTuleapAPI<ProjectServiceResponse>(
@@ -144,7 +141,6 @@ describe("Writers", function () {
     });
 
     it(`Folder permissions inheritance`, () => {
-        cy.projectAdministratorSession();
         cy.createNewPublicProject(folder_permissions_project_name, "issues");
         cy.visitProjectService(folder_permissions_project_name, "Documents");
 

@@ -24,7 +24,6 @@ describe(`Bot Mattermost`, function () {
         cy.addBotMattermost("My bot");
 
         cy.log("configure backlog notifications");
-        cy.projectAdministratorSession();
         const project_name = "ad-mattermost-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "scrum");
         cy.visitProjectService(project_name, "Backlog");

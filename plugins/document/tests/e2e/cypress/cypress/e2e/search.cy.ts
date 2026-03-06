@@ -45,7 +45,6 @@ describe("Document search", () => {
     }
 
     it("User can search", () => {
-        cy.projectAdministratorSession();
         cy.log("Create a new project");
         const title = `Lorem ipsum doloret`;
         createAProjectWithSearchableDocument(title);

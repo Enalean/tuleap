@@ -55,7 +55,6 @@ describe("TTM campaign", () => {
 
     it("As project administrator", () => {
         cy.log("Creates a project with TTM with users");
-        cy.projectAdministratorSession();
         cy.createNewPublicProject(ttm_project_name, "agile_alm");
 
         cy.log("Create a campaign");
@@ -211,7 +210,6 @@ describe("TTM campaign", () => {
         });
 
         it("TTM file upload", () => {
-            cy.projectAdministratorSession();
             cy.createNewPublicProject(file_project_name, "agile_alm");
             cy.addProjectMember(file_project_name, "ProjectMember");
             cy.projectAdministratorSession();
@@ -360,7 +358,6 @@ describe("TTM campaign", () => {
                 "/api/v1/testmanagement_campaigns/*/testmanagement_executions*",
             ).as("updateCampaign");
             cy.log("Creates a project with TTM with users");
-            cy.projectAdministratorSession();
             cy.createNewPublicProject(bot_project_name, "agile_alm");
 
             cy.log("Create a campaign");

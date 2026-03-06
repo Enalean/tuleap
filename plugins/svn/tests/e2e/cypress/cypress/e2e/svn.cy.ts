@@ -87,7 +87,6 @@ describe("SVN", function () {
         });
 
         it("should be able to manage notifications", function () {
-            cy.projectAdministratorSession();
             const project_name = "svn-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "scrum");
             cy.visitProjectAdministration(project_name);

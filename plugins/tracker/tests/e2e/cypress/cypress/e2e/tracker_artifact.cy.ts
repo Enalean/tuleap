@@ -290,7 +290,6 @@ describe("Tracker artifacts", function () {
         before(function () {
             project_name = "tracker-" + getAntiCollisionNamePart();
 
-            cy.projectAdministratorSession();
             cy.log("Create a new project");
             cy.createNewPublicProject(project_name, "issues").as("project_id");
         });

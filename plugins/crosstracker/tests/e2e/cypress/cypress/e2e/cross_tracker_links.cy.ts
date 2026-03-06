@@ -24,9 +24,9 @@ describe("CrossTracker artifact links", function () {
 
     before(function () {
         project_name = "xts-link-" + getAntiCollisionNamePart();
-        cy.projectMemberSession();
-
         cy.createNewPublicProject(project_name, "agile_alm").as("project_id");
+        cy.projectAdministratorSession();
+        cy.addProjectMember(project_name, "ProjectMember");
     });
 
     /**

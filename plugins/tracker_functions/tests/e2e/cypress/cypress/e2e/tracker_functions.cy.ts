@@ -21,7 +21,6 @@ import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe("Tuleap Functions for Trackers", () => {
     it("Show milestones below backlog", () => {
-        cy.projectAdministratorSession();
         const project_name = "tracker-func-" + getAntiCollisionNamePart();
         cy.createNewPublicProjectFromAnotherOne(project_name, "tracker-functions-template").then(
             () => {

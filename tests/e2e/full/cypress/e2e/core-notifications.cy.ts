@@ -72,7 +72,6 @@ context("Platform notifications", function () {
     });
 
     it("Notifications for membership management", function () {
-        cy.projectAdministratorSession();
         cy.log("sends a notification when a project member is added");
         cy.createNewPublicProject(project_member, "issues");
         cy.addProjectMember(project_member, "ProjectMember");

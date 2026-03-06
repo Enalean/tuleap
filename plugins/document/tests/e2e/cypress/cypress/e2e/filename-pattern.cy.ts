@@ -39,7 +39,6 @@ describe("Document filename pattern", () => {
     }
 
     it("administrator can define a specific pattern", () => {
-        cy.projectAdministratorSession();
         cy.createNewPublicProject(project_unixname, "issues");
         cy.createNewPublicProject(no_pattern_project_unixname, "issues");
 

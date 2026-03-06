@@ -24,7 +24,6 @@ describe("Approval table workflow", () => {
 
     before(() => {
         project_name = "approval-table-" + getAntiCollisionNamePart();
-        cy.projectAdministratorSession();
         cy.createNewPublicProject(project_name, "issues").as("project_id");
         cy.addProjectMember(project_name, "ProjectMember");
     });

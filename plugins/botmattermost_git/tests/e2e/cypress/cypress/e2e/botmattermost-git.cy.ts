@@ -23,7 +23,6 @@ describe(`Bot Mattermost`, function () {
     it(`can configure git notifications`, function () {
         cy.addBotMattermost("My bot");
         cy.log("configure git notifications");
-        cy.projectAdministratorSession();
         const project_name = "git-mattermost-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "agile_alm");
         cy.visitProjectService(project_name, "Git");

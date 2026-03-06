@@ -26,7 +26,6 @@ describe("Document properties", () => {
     let document_all_properties_project_name: string;
 
     before(() => {
-        cy.projectAdministratorSession();
         project_unixname = "doc-properties-" + getAntiCollisionNamePart();
         document_status_properties_project_name = "doc-status-" + getAntiCollisionNamePart();
         document_obsolescence_properties_project_name = "doc-date-" + getAntiCollisionNamePart();

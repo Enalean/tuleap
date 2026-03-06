@@ -33,7 +33,6 @@ function getNextMonth(): string {
 
 describe("Sidebar", () => {
     it("Show milestones below backlog", () => {
-        cy.projectAdministratorSession();
         const project_name = "sidebar-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "scrum").then(() => {
             cy.addProjectMember(project_name, "projectMember");

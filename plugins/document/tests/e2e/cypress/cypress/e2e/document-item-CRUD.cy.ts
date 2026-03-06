@@ -36,25 +36,20 @@ describe("Document", () => {
     let project_copy_paste: string;
     before(() => {
         project_unixname = "docman-" + getAntiCollisionNamePart();
-        cy.projectAdministratorSession();
         cy.createNewPublicProject(project_unixname, "issues").as("project_id");
 
-        cy.projectAdministratorSession();
         project_name = "document-project-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "issues");
         cy.addProjectMember(project_name, "projectMember");
 
-        cy.projectAdministratorSession();
         project_size = "document-size-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_size, "issues");
 
-        cy.projectAdministratorSession();
         project_copy_paste = "document-copy-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_copy_paste, "issues");
     });
 
     it("document versioning", function () {
-        cy.projectAdministratorSession();
         createProjectWithAVersionnedEmbededFile();
 
         cy.log("delete a given version of a document");
@@ -211,7 +206,6 @@ describe("Document", () => {
     });
 
     it(`user can download a folder as a zip archive`, () => {
-        cy.projectAdministratorSession();
         const project_name = "download-" + getAntiCollisionNamePart();
         createProjectWithDownloadableDocuments(project_name);
 

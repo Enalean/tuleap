@@ -137,7 +137,6 @@ describe("Project admin", function () {
         project_access_log = "access-" + anti_collision;
         service_site_admin = "service-" + anti_collision;
         project_reference = "reference-" + anti_collision;
-        cy.projectAdministratorSession();
         cy.createNewPublicProject(project_access_log, "agile_alm").as("access_project_id");
         cy.createNewPublicProject(project_reference, "agile_alm").as("project_reference_id");
     });
@@ -221,7 +220,8 @@ describe("Project admin", function () {
             createNewPublicProject(project_name);
             cy.visitProjectAdministration(project_name);
             addUser("SecondProjectAdministrator");
-            addAdminUser("SecondProjectAdministrator");
+            cy.addProjectAdministrator(project_name, "SecondProjectAdministrator");
+            cy.projectAdministratorSession();
             cy.visitProjectAdministration(project_name);
             cy.get("[data-test=admin-nav-groups]").click();
             cy.get(`[data-test=ugroup-${project_admin_group_id}-details]`).click();
@@ -239,8 +239,6 @@ describe("Project admin", function () {
             cy.get("[data-test=project-visibility]").click();
             cy.get("[data-test=project-admin-can-choose-visibility]").uncheck();
             cy.get("[data-test=project-settings-submit]").click();
-
-            cy.projectAdministratorSession();
 
             cy.createNewPrivateProject(project_visibility);
 
@@ -586,19 +584,6 @@ function createNewPrivateProject(project_name: string): void {
 function addUser(user_name: string): void {
     cy.visitProjectAdministrationInCurrentProject();
     cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
-    // ignore rule for select2
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-search__field").type(`${user_name}{enter}`);
-    // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".select2-result-user").click();
-    cy.get('[data-test="project-admin-submit-add-member"]').click();
-}
-
-function addAdminUser(user_name: string): void {
-    cy.visitProjectAdministrationInCurrentProject();
-    cy.get("[data-test=admin-nav-groups]").click();
-    cy.get(`[data-test=ugroup-${project_admin_group_id}-details]`).click();
-    cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
     // ignore rule for select2
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".select2-search__field").type(`${user_name}{enter}`);

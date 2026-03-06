@@ -49,7 +49,6 @@ describe("Git", function () {
         update_repository_name: string;
 
     before(() => {
-        cy.projectAdministratorSession();
         const anti_collision = getAntiCollisionNamePart();
         git_project_name = "git-project-" + anti_collision;
         git_admin_project_name = "gadmin-" + anti_collision;
@@ -87,6 +86,9 @@ describe("Git", function () {
             cy.get("[data-test=create_repository_name]").type("RegularUserRepo");
             cy.root().submit();
         });
+        cy.log("In order to fork user must be a member of at least one project");
+        cy.addProjectMember(user_fork_project_name, "ARegularUser");
+        cy.addProjectAdministrator(user_fork_project_name, "ARegularUser");
     });
 
     context("Project administrators", function () {

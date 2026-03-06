@@ -24,8 +24,9 @@ describe(`Cardwall Report`, () => {
 
     beforeEach(() => {
         project_name = "cardwall-" + getAntiCollisionNamePart();
-        cy.projectMemberSession();
         cy.createNewPublicProject(project_name, "issues");
+        cy.addProjectMember(project_name, "ProjectMember");
+        cy.addProjectAdministrator(project_name, "ProjectMember");
     });
 
     it(`Cardwall in user dashboard`, function () {
