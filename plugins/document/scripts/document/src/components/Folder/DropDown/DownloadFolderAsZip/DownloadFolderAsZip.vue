@@ -45,9 +45,6 @@ import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { MAX_ARCHIVE_SIZE, PROJECT, WARNING_THRESHOLD } from "../../../../configuration-keys";
 import type { DocumentProperties } from "../../../../helpers/properties/document-properties";
-import { useStore } from "vuex-composition-helpers";
-
-const $store = useStore();
 
 const props = defineProps<{
     item: Folder;
@@ -78,44 +75,39 @@ function shouldWarnOSXUser(total_size: number, nb_files: number): boolean {
 async function checkFolderSize(): Promise<void> {
     is_retrieving_folder_size.value = true;
 
-    const folder_properties = await props.document_properties.getFolderProperties(
-        $store,
-        props.item,
-    );
+    const folder_properties = await props.document_properties.getFolderProperties(props.item);
     is_retrieving_folder_size.value = false;
 
-    if (folder_properties === null) {
-        return;
-    }
+    folder_properties.apply((folder_properties) => {
+        // max_archive_size is in MB, total_size in Bytes. Let's convert it to Bytes first.
+        const max_archive_size_in_Bytes = max_archive_size * Math.pow(10, 6);
+        const { total_size, nb_files } = folder_properties;
 
-    // max_archive_size is in MB, total_size in Bytes. Let's convert it to Bytes first.
-    const max_archive_size_in_Bytes = max_archive_size * Math.pow(10, 6);
-    const { total_size, nb_files } = folder_properties;
+        if (total_size > max_archive_size_in_Bytes) {
+            emitter.emit("show-max-archive-size-threshold-exceeded-modal", {
+                detail: { current_folder_size: total_size },
+            });
 
-    if (total_size > max_archive_size_in_Bytes) {
-        emitter.emit("show-max-archive-size-threshold-exceeded-modal", {
-            detail: { current_folder_size: total_size },
-        });
+            return;
+        }
 
-        return;
-    }
+        // warning_threshold is in MB, total_size in Bytes. Let's convert it to Bytes first.
+        const warning_threshold_in_Bytes = warning_threshold * Math.pow(10, 6);
+        const should_warn_osx_user = shouldWarnOSXUser(total_size, nb_files);
 
-    // warning_threshold is in MB, total_size in Bytes. Let's convert it to Bytes first.
-    const warning_threshold_in_Bytes = warning_threshold * Math.pow(10, 6);
-    const should_warn_osx_user = shouldWarnOSXUser(total_size, nb_files);
+        if (total_size > warning_threshold_in_Bytes) {
+            emitter.emit("show-archive-size-warning-modal", {
+                detail: {
+                    current_folder_size: total_size,
+                    folder_href: folder_href.value,
+                    should_warn_osx_user,
+                },
+            });
 
-    if (total_size > warning_threshold_in_Bytes) {
-        emitter.emit("show-archive-size-warning-modal", {
-            detail: {
-                current_folder_size: total_size,
-                folder_href: folder_href.value,
-                should_warn_osx_user,
-            },
-        });
+            return;
+        }
 
-        return;
-    }
-
-    redirectToUrl(folder_href.value);
+        redirectToUrl(folder_href.value);
+    });
 }
 </script>

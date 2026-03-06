@@ -56,7 +56,7 @@ describe("document-properties", () => {
     describe("getFolderProperties", () => {
         it("Given a folder item, it's properties are fetched and returned", async () => {
             const getItemWithSize = vi.spyOn(rest_querier, "getItemWithSize").mockReturnValue(
-                Promise.resolve(
+                okAsync(
                     new FolderBuilder(3)
                         .withTitle("Project Documentation")
                         .withFolderProperties({
@@ -68,12 +68,11 @@ describe("document-properties", () => {
             );
 
             const properties = await document_properties.getFolderProperties(
-                context,
                 new FolderBuilder(3).withTitle("Project Documentation").build(),
             );
 
             expect(getItemWithSize).toHaveBeenCalled();
-            expect(properties).toStrictEqual({
+            expect(properties.unwrapOr(null)).toStrictEqual({
                 total_size: 102546950,
                 nb_files: 27,
             });
@@ -82,16 +81,15 @@ describe("document-properties", () => {
         it("Handles errors when it fails", async () => {
             const getItemWithSize = vi
                 .spyOn(rest_querier, "getItemWithSize")
-                .mockReturnValue(Promise.reject("error"));
+                .mockReturnValue(errAsync(Fault.fromMessage("Oh no!")));
 
             const folder = await document_properties.getFolderProperties(
-                context,
                 new FolderBuilder(3).withTitle("Project Documentation").build(),
             );
 
             expect(getItemWithSize).toHaveBeenCalled();
-            expect(folder).toBeNull();
-            expect(context.dispatch).toHaveBeenCalled();
+            expect(folder.isNothing()).toBe(true);
+            expect(emitter.emit).toHaveBeenCalled();
         });
     });
 

@@ -29,6 +29,7 @@ import type { Folder } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
 import { MAX_ARCHIVE_SIZE, PROJECT, WARNING_THRESHOLD } from "../../../../configuration-keys";
 import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
+import { Option } from "@tuleap/option";
 
 describe("DownloadFolderAsZip", () => {
     let item: Folder;
@@ -61,28 +62,26 @@ describe("DownloadFolderAsZip", () => {
     }
 
     it("Opens the modal when the folder size exceeds the max_archive_size threshold", async () => {
-        getFolderProperties.mockImplementation(() => {
-            return Promise.resolve({ total_size: 2000000 });
-        });
+        getFolderProperties.mockResolvedValue(Option.fromValue({ total_size: 2000000 }));
         const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper();
         await wrapper.trigger("click");
 
-        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(item);
         expect(emitMock).toHaveBeenCalledWith("show-max-archive-size-threshold-exceeded-modal", {
             detail: { current_folder_size: 2000000 },
         });
     });
 
     it("Opens the warning modal when the size exceeds the warning_threshold", async () => {
-        getFolderProperties.mockImplementation(() => {
-            return Promise.resolve({ total_size: 600000, nb_files: 100000 });
-        });
+        getFolderProperties.mockResolvedValue(
+            Option.fromValue({ total_size: 600000, nb_files: 100000 }),
+        );
         const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper();
         await wrapper.trigger("click");
 
-        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(item);
         expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
@@ -95,9 +94,7 @@ describe("DownloadFolderAsZip", () => {
 
     it("Opens the warning modal when user is on OSX and archive size exceeds or equals 4GB", async () => {
         const four_GB = 4 * Math.pow(10, 9);
-        getFolderProperties.mockImplementation(() => {
-            return Promise.resolve({ total_size: four_GB });
-        });
+        getFolderProperties.mockResolvedValue(Option.fromValue({ total_size: four_GB }));
         const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper(2 * four_GB);
 
@@ -105,7 +102,7 @@ describe("DownloadFolderAsZip", () => {
 
         await wrapper.trigger("click");
 
-        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(item);
         expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: four_GB,
@@ -117,9 +114,9 @@ describe("DownloadFolderAsZip", () => {
     });
 
     it("Opens the warning modal when user is on OSX and archive size contains more than 64k files", async () => {
-        getFolderProperties.mockImplementation(() => {
-            return Promise.resolve({ total_size: 600000, nb_files: 100000 });
-        });
+        getFolderProperties.mockResolvedValue(
+            Option.fromValue({ total_size: 600000, nb_files: 100000 }),
+        );
         const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper();
 
@@ -127,7 +124,7 @@ describe("DownloadFolderAsZip", () => {
 
         await wrapper.trigger("click");
 
-        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(item);
         expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
@@ -140,9 +137,7 @@ describe("DownloadFolderAsZip", () => {
 
     it(`Sets the location to the download URI instead of simply using href
         so that people can't just skip the max threshold modal`, async () => {
-        getFolderProperties.mockImplementation(() => {
-            return Promise.resolve({ total_size: 10 });
-        });
+        getFolderProperties.mockResolvedValue(Option.fromValue({ total_size: 10 }));
         const redirect = vi.spyOn(location_helper, "redirectToUrl").mockImplementation(() => {
             //Do nothing
         });
@@ -151,7 +146,7 @@ describe("DownloadFolderAsZip", () => {
 
         await wrapper.get("[data-test=download-as-zip-button]").trigger("click");
 
-        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(item);
         expect(emitMock).not.toHaveBeenCalled();
         expect(redirect).toHaveBeenCalledWith(
             "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
