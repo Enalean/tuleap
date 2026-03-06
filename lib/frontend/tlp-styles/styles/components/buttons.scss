@@ -241,6 +241,19 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
 /**
  * Types
  */
+.tlp-button-ghost {
+    padding: 0;
+    transition: box-shadow $tlp-button-box-shadow-timing ease-in-out;
+    border: 0;
+    background: none;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:focus {
+        box-shadow: var(--tlp-shadow-focus);
+    }
+}
+
 .tlp-button-primary {
     @extend %-tlp-button;
     @include -tlp-button-type(

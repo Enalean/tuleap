@@ -60,6 +60,7 @@ const should_label_be_displayed = computed(
 <style lang="scss" scoped>
 .label-container {
     display: flex;
+    flex: 1 0 auto;
     align-items: center;
     justify-content: space-between;
     margin: 0 0 var(--tlp-small-spacing);
