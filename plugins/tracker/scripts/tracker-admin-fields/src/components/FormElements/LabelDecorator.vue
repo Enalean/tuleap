@@ -49,4 +49,8 @@ defineProps<{
 i {
     margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
 }
+
+span {
+    text-transform: none;
+}
 </style>

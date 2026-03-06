@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
@@ -115,6 +116,11 @@ class Transition_PostActionFactory
     public function isFieldUsedInPostActions(TrackerField $field)
     {
         return $this->getSubFactories()->isFieldUsedInPostActions($field);
+    }
+
+    public function isFieldsetUsedInPostActions(FieldsetContainer $field): bool
+    {
+        return $this->getSubFactories()->isFieldsetUsedInPostActions($field);
     }
 
     /**

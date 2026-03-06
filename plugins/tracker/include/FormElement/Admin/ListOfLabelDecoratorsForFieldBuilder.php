@@ -40,6 +40,7 @@ use Tracker_Workflow_Trigger_RulesProcessor;
 use Tracker_Workflow_WorkflowUser;
 use TrackerFactory;
 use Transition_PostActionFactory;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -47,6 +48,7 @@ use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Workflow\FieldDependencies\FieldDependenciesUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\GlobalRulesUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\PostAction\WorkflowActionUsageByFieldProvider;
+use Tuleap\Tracker\Workflow\PostAction\WorkflowActionUsageByFieldsetProvider;
 use Tuleap\Tracker\Workflow\Transition\Condition\WorkflowConditionUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\Transition\WorkflowTransitionUsageByFieldProvider;
 use Tuleap\Tracker\Workflow\Trigger\ParentsTriggersUsageByFieldProvider;
@@ -87,6 +89,11 @@ final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOf
             new WorkflowRulesManagerLoopSafeGuard($logger)
         );
 
+        $post_action_factory = new Transition_PostActionFactory(
+            EventManager::instance(),
+            BackendLogger::getDefaultLogger(),
+        );
+
         return new self(new WorkflowFieldUsageDecoratorsProvider(
             new GlobalRulesUsageByFieldProvider(
                 new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $form_element_factory)
@@ -97,13 +104,11 @@ final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOf
             new TriggersUsageByFieldProvider($trigger_rule_manager, $triggers_dao),
             new ParentsTriggersUsageByFieldProvider($trigger_rule_manager, $triggers_dao, new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance())),
             new WorkflowConditionUsageByFieldProvider(Workflow_Transition_ConditionFactory::build()),
-            new WorkflowActionUsageByFieldProvider(new Transition_PostActionFactory(
-                EventManager::instance(),
-                BackendLogger::getDefaultLogger(),
-            )),
+            new WorkflowActionUsageByFieldProvider($post_action_factory),
             new WorkflowTransitionUsageByFieldProvider(
                 WorkflowFactory::instance()
             ),
+            new WorkflowActionUsageByFieldsetProvider($post_action_factory)
         ));
     }
 
@@ -114,7 +119,14 @@ final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOf
         if ($form_element instanceof TrackerField) {
             $decorators = array_merge(
                 $form_element->getUsagesInSemantics()->getLabelDecorators(),
-                $this->workflow_field_usage_decorators->getLabelDecorators($form_element)
+                $this->workflow_field_usage_decorators->getLabelDecoratorsForField($form_element),
+            );
+        }
+
+        if ($form_element instanceof FieldsetContainer) {
+            $decorators = array_merge(
+                $decorators,
+                $this->workflow_field_usage_decorators->getLabelDecoratorsForFieldset($form_element),
             );
         }
 

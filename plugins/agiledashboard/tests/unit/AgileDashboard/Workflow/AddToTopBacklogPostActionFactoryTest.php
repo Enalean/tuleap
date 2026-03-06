@@ -132,4 +132,9 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
         self::assertInstanceOf(AddToTopBacklog::class, $post_actions[0]);
         self::assertEquals(1, $post_actions[0]->getId());
     }
+
+    public function testItReturnsAlwaysFalseSinceThereIsNoFieldsetUsedInThisPostAction(): void
+    {
+        $this->assertFalse($this->factory->isFieldsetUsedInPostActions($this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class)));
+    }
 }

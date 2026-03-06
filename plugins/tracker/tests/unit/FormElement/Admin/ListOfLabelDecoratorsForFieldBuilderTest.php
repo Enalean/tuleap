@@ -31,6 +31,7 @@ use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByFieldStub;
+use Tuleap\Tracker\Test\Stub\Workflow\PostAction\ProvideWorkflowActionUsageByFieldsetStub;
 use Tuleap\Tracker\Test\Stub\Workflow\PostAction\ProvideWorkflowActionUsageByFieldStub;
 use Tuleap\Tracker\Test\Stub\Workflow\ProvideGlobalRulesUsageByFieldStub;
 use Tuleap\Tracker\Test\Stub\Workflow\Transition\Condition\ProvideWorkflowConditionUsageByFieldStub;
@@ -54,7 +55,8 @@ final class ListOfLabelDecoratorsForFieldBuilderTest extends TestCase
             ProvideParentsTriggersUsageByFieldStub::withoutParentTriggers(),
             ProvideWorkflowConditionUsageByFieldStub::withoutWorkflowCondition(),
             ProvideWorkflowActionUsageByFieldStub::withoutWorkflowAction(),
-            ProvideWorkflowTransitionUsageByFieldStub::withoutWorkflowTransition()
+            ProvideWorkflowTransitionUsageByFieldStub::withoutWorkflowTransition(),
+            ProvideWorkflowActionUsageByFieldsetStub::withoutWorkflowAction(),
         ));
 
         $field = $this->getFormElement($has_semantic, $has_notifications);

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
@@ -78,6 +79,11 @@ class Transition_PostActionSubFactories
     public function isFieldUsedInPostActions(TrackerField $field)
     {
         return array_any($this->factories, fn($factory) => $factory->isFieldUsedInPostActions($field));
+    }
+
+    public function isFieldsetUsedInPostActions(FieldsetContainer $fieldset): bool
+    {
+        return array_any($this->factories, fn($factory): bool => $factory->isFieldsetUsedInPostActions($fieldset));
     }
 
     /**
