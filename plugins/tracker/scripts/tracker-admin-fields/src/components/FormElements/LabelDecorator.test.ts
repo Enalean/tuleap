@@ -18,11 +18,24 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { shallowMount } from "@vue/test-utils";
+import { mount, shallowMount } from "@vue/test-utils";
 import LabelDecorator from "./LabelDecorator.vue";
-import type { LabelDecorator as Decorator } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    BaseFieldStructure,
+    LabelDecorator as Decorator,
+} from "@tuleap/plugin-tracker-rest-api-types";
+import { getRouter } from "../../router/fields-usage-router";
 
 describe("LabelDecorator", () => {
+    const field: BaseFieldStructure = {
+        field_id: 123,
+        name: "summary",
+        label: "Summary",
+        has_notifications: false,
+        required: false,
+        label_decorators: [],
+    };
+
     it("should display the label and no icon, no link", () => {
         const decorator: Decorator = {
             label: "Title",
@@ -32,12 +45,17 @@ describe("LabelDecorator", () => {
         const wrapper = shallowMount(LabelDecorator, {
             props: {
                 decorator,
+                field,
+            },
+            global: {
+                plugins: [getRouter("/")],
             },
         });
 
         expect(wrapper.text()).toContain("Title");
         expect(wrapper.find("[data-test=icon]").exists()).toBe(false);
         expect(wrapper.find("[data-test=link]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=field-edition]").exists()).toBe(false);
     });
 
     it("should display the label and no icon if icon is empty string", () => {
@@ -50,11 +68,17 @@ describe("LabelDecorator", () => {
         const wrapper = shallowMount(LabelDecorator, {
             props: {
                 decorator,
+                field,
+            },
+            global: {
+                plugins: [getRouter("/")],
             },
         });
 
         expect(wrapper.text()).toContain("Title");
         expect(wrapper.find("[data-test=icon]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=link]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=field-edition]").exists()).toBe(false);
     });
 
     it("should display the label and no link if link is empty string", () => {
@@ -67,11 +91,16 @@ describe("LabelDecorator", () => {
         const wrapper = shallowMount(LabelDecorator, {
             props: {
                 decorator,
+                field,
+            },
+            global: {
+                plugins: [getRouter("/")],
             },
         });
 
         expect(wrapper.text()).toContain("Title");
         expect(wrapper.find("[data-test=link]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=field-edition]").exists()).toBe(false);
     });
 
     it("should display the label and the icon and no link", () => {
@@ -84,12 +113,17 @@ describe("LabelDecorator", () => {
         const wrapper = shallowMount(LabelDecorator, {
             props: {
                 decorator,
+                field,
+            },
+            global: {
+                plugins: [getRouter("/")],
             },
         });
 
         expect(wrapper.text()).toContain("Title");
         expect(wrapper.find("[data-test=icon]").exists()).toBe(true);
         expect(wrapper.find("[data-test=link]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=field-edition]").exists()).toBe(false);
     });
 
     it("should display the label and the icon and link", () => {
@@ -103,11 +137,39 @@ describe("LabelDecorator", () => {
         const wrapper = shallowMount(LabelDecorator, {
             props: {
                 decorator,
+                field,
+            },
+            global: {
+                plugins: [getRouter("/")],
             },
         });
 
         expect(wrapper.text()).toContain("Title");
         expect(wrapper.find("[data-test=icon]").exists()).toBe(true);
         expect(wrapper.find("[data-test=link]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=field-edition]").exists()).toBe(false);
+    });
+
+    it("should display the label and the icon and a link to edition if action is to edit the field", () => {
+        const decorator: Decorator = {
+            icon: "fa-bug",
+            action: "field-edition",
+            label: "Title",
+            description: "The title",
+        };
+
+        const wrapper = mount(LabelDecorator, {
+            props: {
+                decorator,
+                field,
+            },
+            global: {
+                plugins: [getRouter("/")],
+            },
+        });
+
+        expect(wrapper.text()).toContain("Title");
+        expect(wrapper.find("[data-test=icon]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=field-edition]").exists()).toBe(true);
     });
 });

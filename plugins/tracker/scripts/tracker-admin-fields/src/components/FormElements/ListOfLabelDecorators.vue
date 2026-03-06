@@ -22,6 +22,7 @@
         v-for="(decorator, key) of field.label_decorators"
         v-bind:key="key"
         v-bind:decorator="decorator"
+        v-bind:field="field"
     />
 </template>
 

@@ -123,6 +123,7 @@ final readonly class ListOfLabelDecoratorsForFieldBuilder implements BuildListOf
                 dgettext('tuleap-tracker', 'Notifications'),
                 dgettext('tuleap-tracker', 'People selected in this field may receive notifications.'),
                 'fa-solid fa-bell',
+                'field-edition',
             );
         }
 
