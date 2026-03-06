@@ -193,6 +193,21 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // p
         self::assertEquals('-', $bind->formatArtifactValue(0));
     }
 
+    public function testFormatValueByIdReturnsLabelForValidValue(): void
+    {
+        self::assertSame('10', $this->bind->formatValueById(431));
+    }
+
+    public function testFormatValueByIdReturnsEmptyStringForNoneValue(): void
+    {
+        self::assertSame('', $this->bind->formatValueById(100));
+    }
+
+    public function testFormatValueByIdReturnsEmptyStringForUnknownValue(): void
+    {
+        self::assertSame('', $this->bind->formatValueById(999));
+    }
+
     /**
      * @param array<int, string> $values
      */

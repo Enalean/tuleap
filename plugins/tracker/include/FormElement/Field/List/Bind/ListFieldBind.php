@@ -217,6 +217,15 @@ abstract class ListFieldBind implements Tracker_FormElement_Field_Shareable, Tra
      */
     abstract public function formatChangesetValue($value);
 
+    public function formatValueById(int $value_id): string
+    {
+        if ($value_id === self::NONE_VALUE) {
+            return '';
+        }
+        $value = $this->getValue($value_id);
+        return $value !== null ? ($this->formatChangesetValue($value) ?? '') : '';
+    }
+
     /**
      * @return string
      */

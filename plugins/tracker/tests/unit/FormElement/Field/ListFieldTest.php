@@ -576,6 +576,41 @@ final class ListFieldTest extends TestCase
         self::assertFalse($this->list_field->isValid($artifact, [101, 9999]));
     }
 
+    public function testFetchChangesetValueUsesFastPathWhenValueIsPreFetched(): void
+    {
+        $this->bind->expects($this->once())->method('formatValueById')->with(42)->willReturn('My Value');
+        $this->bind->expects($this->never())->method('getChangesetValues');
+
+        $result = $this->list_field->fetchChangesetValue(100, 555, 42);
+        self::assertSame('My Value', $result);
+    }
+
+    public function testFetchChangesetValueFallsBackToDBWhenValueIsNull(): void
+    {
+        $this->bind->expects($this->never())->method('formatValueById');
+        $this->bind->method('getChangesetValues')->willReturnMap([
+            [666, [['id' => 42]]],
+        ]);
+        $this->bind->method('formatChangesetValue')->willReturnMap([
+            [['id' => 42], 'DB Value'],
+        ]);
+
+
+        $result = $this->list_field->fetchChangesetValue(100, 666, null);
+        self::assertSame('DB Value', $result);
+    }
+
+    public function testFetchChangesetValueReturnsEmptyStringWhenPreFetchedValueIsNone(): void
+    {
+        $this->bind->expects($this->once())->method('formatValueById')->willReturnMap([
+            [100, ''],
+        ]);
+        $this->bind->expects($this->never())->method('getChangesetValues');
+
+        $result = $this->list_field->fetchChangesetValue(100, 777, 100);
+        self::assertSame('', $result);
+    }
+
     public function testDoestExportCriteriaInvalidValueToXML(): void
     {
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><root/>');
