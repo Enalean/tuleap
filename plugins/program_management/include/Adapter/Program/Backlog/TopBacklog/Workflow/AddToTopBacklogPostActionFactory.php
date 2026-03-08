@@ -125,6 +125,12 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
     }
 
     #[\Override]
+    public function isFieldsetUsedInPostActions(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer $fieldset): bool
+    {
+        return false;
+    }
+
+    #[\Override]
     public function duplicate(Transition $from_transition, int $to_transition_id, array $field_mapping): void
     {
         $postactions = $this->loadPostActions($from_transition);

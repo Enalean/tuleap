@@ -104,6 +104,12 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
         return false;
     }
 
+    #[\Override]
+    public function isFieldsetUsedInPostActions(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer $fieldset): bool
+    {
+        return $this->hidden_fieldsets_dao->isFieldsetUsedInPostAction($fieldset->getID());
+    }
+
     /**
      * Duplicate postactions of a transition
      *

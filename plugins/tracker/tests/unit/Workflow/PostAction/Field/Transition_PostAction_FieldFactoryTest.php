@@ -406,4 +406,9 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
 
         $this->assertFalse($this->factory->isFieldUsedInPostActions($field));
     }
+
+    public function testItReturnsAlwaysFalseSinceThereIsNoFieldsetUsedInThisPostAction(): void
+    {
+        $this->assertFalse($this->factory->isFieldsetUsedInPostActions($this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class)));
+    }
 }

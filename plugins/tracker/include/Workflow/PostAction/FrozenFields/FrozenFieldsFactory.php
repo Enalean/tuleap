@@ -95,6 +95,12 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
         return $this->frozen_dao->isFieldUsedInPostAction($field->getId());
     }
 
+    #[\Override]
+    public function isFieldsetUsedInPostActions(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer $fieldset): bool
+    {
+        return false;
+    }
+
     /**
      * Duplicate postactions of a transition
      *

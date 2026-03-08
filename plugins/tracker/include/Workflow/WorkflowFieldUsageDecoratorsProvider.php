@@ -23,10 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow;
 
 use Tuleap\Tracker\FormElement\Admin\LabelDecorator;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\FieldDependencies\ProvideFieldDependenciesUsageByField;
 use Tuleap\Tracker\Workflow\PostAction\ProvideWorkflowActionUsageByField;
+use Tuleap\Tracker\Workflow\PostAction\ProvideWorkflowActionUsageByFieldset;
 use Tuleap\Tracker\Workflow\Transition\Condition\ProvideWorkflowConditionUsageByField;
 use Tuleap\Tracker\Workflow\Transition\ProvideWorkflowTransitionUsageByField;
 use Tuleap\Tracker\Workflow\Trigger\ProvideParentsTriggersUsageByField;
@@ -42,6 +45,7 @@ readonly class WorkflowFieldUsageDecoratorsProvider
         private ProvideWorkflowConditionUsageByField $condition_usage,
         private ProvideWorkflowActionUsageByField $action_usage,
         private ProvideWorkflowTransitionUsageByField $transition_usage,
+        private ProvideWorkflowActionUsageByFieldset $action_usage_by_fieldset,
     ) {
     }
 
@@ -90,7 +94,7 @@ readonly class WorkflowFieldUsageDecoratorsProvider
         );
     }
 
-    private function getWorkflowActionsLabelDecorator(TrackerField $field): LabelDecorator
+    private function getWorkflowActionsLabelDecorator(TrackerFormElement $field): LabelDecorator
     {
         return LabelDecorator::buildWithUrl(
             dgettext('tuleap-tracker', 'Workflow action'),
@@ -111,7 +115,7 @@ readonly class WorkflowFieldUsageDecoratorsProvider
     /**
      * @return LabelDecorator[]
      */
-    public function getLabelDecorators(TrackerField $field): array
+    public function getLabelDecoratorsForField(TrackerField $field): array
     {
         $decorators = [];
 
@@ -145,6 +149,17 @@ readonly class WorkflowFieldUsageDecoratorsProvider
 
         if ($this->transition_usage->isFieldUsedInWorkflowTransitions($field)) {
             $decorators[] = $this->getWorkflowTransitionsLabelDecorator($field);
+        }
+
+        return $decorators;
+    }
+
+    public function getLabelDecoratorsForFieldset(FieldsetContainer $fieldset): array
+    {
+        $decorators = [];
+
+        if ($this->action_usage_by_fieldset->isFieldsetUsedInWorkflowActions($fieldset)) {
+            $decorators[] = $this->getWorkflowActionsLabelDecorator($fieldset);
         }
 
         return $decorators;

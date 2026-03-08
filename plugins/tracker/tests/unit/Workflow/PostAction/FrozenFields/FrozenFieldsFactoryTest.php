@@ -130,4 +130,9 @@ XML;
         $this->assertInstanceOf(FrozenFields::class, $action);
         $this->assertCount(1, $action->getFieldIds());
     }
+
+    public function testItReturnsAlwaysFalseSinceThereIsNoFieldsetUsedInThisPostAction(): void
+    {
+        $this->assertFalse($this->frozen_fields_factory->isFieldsetUsedInPostActions($this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class)));
+    }
 }

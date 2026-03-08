@@ -131,4 +131,9 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
     {
         $this->assertFalse($this->factory->isFieldUsedInPostActions($this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class)));
     }
+
+    public function testItReturnsAlwaysFalseSinceThereIsNoFieldsetUsedInThisPostAction(): void
+    {
+        $this->assertFalse($this->factory->isFieldsetUsedInPostActions($this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class)));
+    }
 }

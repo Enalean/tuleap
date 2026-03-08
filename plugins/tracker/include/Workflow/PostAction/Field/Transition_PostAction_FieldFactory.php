@@ -222,6 +222,12 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         return false;
     }
 
+    #[\Override]
+    public function isFieldsetUsedInPostActions(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer $fieldset): bool
+    {
+        return false;
+    }
+
     /**
      * @see Transition_PostActionSubFactory::getInstanceFromXML()
      */

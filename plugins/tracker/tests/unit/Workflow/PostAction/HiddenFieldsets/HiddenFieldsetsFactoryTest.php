@@ -127,4 +127,24 @@ XML;
         $this->assertInstanceOf(HiddenFieldsets::class, $action);
         $this->assertCount(1, $action->getFieldsets());
     }
+
+    public function testItReturnsTrueIfThereIsFieldsetUsedInThisPostAction(): void
+    {
+        $this->hidden_fieldsets_dao->method('isFieldsetUsedInPostAction')->willReturn(true);
+
+        $fieldset = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
+        $fieldset->method('getID')->willReturn(101);
+
+        $this->assertTrue($this->hidden_fieldsets_factory->isFieldsetUsedInPostActions($fieldset));
+    }
+
+    public function testItReturnsFalseIfThereIsNoFieldsetUsedInThisPostAction(): void
+    {
+        $this->hidden_fieldsets_dao->method('isFieldsetUsedInPostAction')->willReturn(false);
+
+        $fieldset = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
+        $fieldset->method('getID')->willReturn(102);
+
+        $this->assertfalse($this->hidden_fieldsets_factory->isFieldsetUsedInPostActions($fieldset));
+    }
 }
