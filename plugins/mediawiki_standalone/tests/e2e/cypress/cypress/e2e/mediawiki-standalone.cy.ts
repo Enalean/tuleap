@@ -21,7 +21,6 @@ import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe("MediaWiki Standalone", () => {
     it("Manage permissions", () => {
-        cy.projectAdministratorSession();
         const project_name = "mw-standalone-" + getAntiCollisionNamePart();
         cy.createNewPublicProjectFromAnotherOne(project_name, "mediawiki-standalone-tpl").then(
             () => {

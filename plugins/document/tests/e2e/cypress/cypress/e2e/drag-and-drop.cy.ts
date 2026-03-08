@@ -26,17 +26,14 @@ describe("Document properties", () => {
     const slowing_delay_for_progress_bar_in_ms = 1000;
     const max_wait_for_progress_bar_in_ms = 1000;
     before(() => {
-        cy.projectAdministratorSession();
         project_name = "document-dnd-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "issues");
         cy.addProjectMember(project_name, "projectMember");
 
-        cy.projectAdministratorSession();
         multi_drag_and_drop_project_name = "multi-dnd-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(multi_drag_and_drop_project_name, "issues");
         cy.addProjectMember(multi_drag_and_drop_project_name, "projectMember");
 
-        cy.projectAdministratorSession();
         multi_drag_and_dropsub_folder_project_name =
             "multi-dnd-sub-folder-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(multi_drag_and_dropsub_folder_project_name, "issues");

@@ -21,7 +21,6 @@ import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe("Project flag", function () {
     before(function () {
-        cy.projectAdministratorSession();
         const project_name = "project-flag-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "agile_alm").as("project_id");
     });

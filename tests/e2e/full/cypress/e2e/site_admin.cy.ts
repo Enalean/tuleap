@@ -140,7 +140,6 @@ describe("Site admin", function () {
         });
 
         it("Can delete a project", function () {
-            cy.projectAdministratorSession();
             const project_name = "delete-project-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "scrum");
 
@@ -164,7 +163,6 @@ describe("Site admin", function () {
     context("Project quota", function () {
         let project_name: string;
         before(function () {
-            cy.projectAdministratorSession();
             project_name = "project-quota-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "scrum").as("project_id");
         });

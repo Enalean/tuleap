@@ -22,8 +22,6 @@ import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe("Switch To", () => {
     it("has keyboard navigation", () => {
-        cy.projectAdministratorSession();
-
         const project_name = "switch-to-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "kanban")
             .then((project_id) => {

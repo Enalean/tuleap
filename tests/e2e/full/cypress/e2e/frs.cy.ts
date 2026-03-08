@@ -28,7 +28,6 @@ describe("Frs", function () {
         let project_name: string;
         before(() => {
             project_name = "frs-" + getAntiCollisionNamePart();
-            cy.projectAdministratorSession();
             cy.createNewPublicProject(project_name, "agile_alm").as("project_id");
         });
 
@@ -167,7 +166,6 @@ describe("Frs", function () {
 
         context("Hidden packages", function () {
             it("can create a new hidden package", function () {
-                cy.projectAdministratorSession();
                 const project_name = "frs-hidden-" + getAntiCollisionNamePart();
                 cy.createNewPublicProject(project_name, "agile_alm");
                 cy.visitProjectService(project_name, "Files");

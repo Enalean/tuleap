@@ -25,7 +25,6 @@ describe(`Computed fields`, function () {
 
     before(function () {
         project_name = "computed-" + getAntiCollisionNamePart();
-        cy.projectAdministratorSession();
         cy.createNewPublicProject(project_name, "issues");
         cy.enableService(project_name, "agiledashboard");
         cy.addProjectMember(project_name, "ProjectMember");

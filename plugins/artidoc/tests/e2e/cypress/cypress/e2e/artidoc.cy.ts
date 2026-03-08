@@ -67,7 +67,6 @@ describe("Artidoc", () => {
     const project_name = "artidoc-" + getAntiCollisionNamePart();
 
     before(() => {
-        cy.projectAdministratorSession();
         cy.createNewPublicProjectFromAnotherOne(project_name, "artidoc-template-project")
             .then((project_id) => {
                 cy.addProjectMember(project_name, "projectMember");

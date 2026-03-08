@@ -128,6 +128,7 @@ export function registerGeneralCommands(): void {
     Cypress.Commands.add(
         "createNewPublicProject",
         (project_name: string, xml_template: string): Cypress.Chainable<number> => {
+            cy.projectAdministratorSession();
             const payload = {
                 shortname: project_name,
                 description: "",
@@ -150,6 +151,7 @@ export function registerGeneralCommands(): void {
     Cypress.Commands.add(
         "createNewPublicProjectFromAnotherOne",
         (project_name: string, project_template: string): Cypress.Chainable<number> => {
+            cy.projectAdministratorSession();
             const get_project_template_url =
                 "https://tuleap/api/projects?query=" +
                 encodeURIComponent(JSON.stringify({ shortname: project_template }));
@@ -180,6 +182,7 @@ export function registerGeneralCommands(): void {
     );
 
     Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => {
+        cy.projectAdministratorSession();
         const payload = {
             shortname: project_name,
             description: "",

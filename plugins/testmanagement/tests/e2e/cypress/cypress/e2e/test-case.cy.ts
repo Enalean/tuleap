@@ -29,7 +29,6 @@ describe(`TestManagement test case`, function () {
     context(`As project administrator`, function () {
         it(`Can create a test case`, function () {
             cy.log("Create a project with TTM");
-            cy.projectAdministratorSession();
             cy.createNewPublicProject(project_name, "agile_alm");
 
             cy.visitProjectService(project_name, "Trackers");

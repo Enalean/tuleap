@@ -30,7 +30,6 @@ describe(`Link field of Artifact Modal`, function () {
 
     before(function () {
         cy.log("Create a new project for repeatability");
-        cy.projectAdministratorSession();
         const project_name = "artifact-links-modal-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "scrum");
         cy.getProjectId(project_name)

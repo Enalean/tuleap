@@ -21,7 +21,6 @@ import { getAntiCollisionNamePart } from "@tuleap/cypress-utilities-support";
 
 describe("Artifact Mass Change", function () {
     beforeEach(function () {
-        cy.projectAdministratorSession();
         const project_name = "masschange-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "issues").then((project_id) => {
             cy.addProjectMember(project_name, "ProjectMember");

@@ -44,7 +44,6 @@ describe("Core", function () {
     });
 
     it("restricted users can request access to a project they are not members of", function () {
-        cy.projectAdministratorSession();
         cy.createNewPrivateProject(restricted_project_notification);
 
         cy.updatePlatformVisibilityAndAllowRestricted();
@@ -65,7 +64,6 @@ describe("Core", function () {
     });
 
     it("users can request access to a private project", function () {
-        cy.projectAdministratorSession();
         cy.createNewPrivateProject(private_project_notification);
 
         cy.regularUserSession();

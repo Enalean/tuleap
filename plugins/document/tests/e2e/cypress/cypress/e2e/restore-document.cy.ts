@@ -28,7 +28,6 @@ describe("Document restoration", () => {
     let project_shortname: string;
 
     before(() => {
-        cy.projectMemberSession();
         project_shortname = "doc-restore-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_shortname, "issues").then((project_id) =>
             cy
@@ -81,6 +80,7 @@ describe("Document restoration", () => {
                     cy.visit(`/plugins/document/${project_shortname}/versions/${item}`);
                 }),
         );
+        cy.addProjectMember(project_shortname, "ProjectMember");
     });
 
     it("site administrator must be able to restore a document", function () {

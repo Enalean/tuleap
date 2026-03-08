@@ -357,7 +357,6 @@ describe(`Tracker Workflow`, () => {
         });
 
         it(`Workflow PostActions on transitions`, function () {
-            cy.projectAdministratorSession();
             const project_name = "transitions-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "issues");
             cy.addProjectMember(project_name, "projectMember");

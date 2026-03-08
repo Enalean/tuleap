@@ -68,6 +68,25 @@ export function registerProjectAdminCommands(): void {
     );
 
     Cypress.Commands.add(
+        "addProjectAdministrator",
+        (project_unix_name: string, user_name: string): void => {
+            const project_admin_group_id = 4;
+            cy.projectAdministratorSession();
+            cy.visitProjectAdministration(project_unix_name);
+            cy.get("[data-test=admin-nav-groups]").click();
+            cy.get(`[data-test=ugroup-${project_admin_group_id}-details]`).click();
+            cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
+            // ignore rule for select2
+
+            cy.get(".select2-search__field").type(`${user_name}{enter}`);
+
+            cy.get(".select2-result-user").click();
+            cy.get('[data-test="project-admin-submit-add-member"]').click();
+            preventAccidentallyContinuingTheTestAsProjectAdmin();
+        },
+    );
+
+    Cypress.Commands.add(
         "removeProjectMember",
         (project_unix_name: string, user_name: string): void => {
             cy.projectAdministratorSession();

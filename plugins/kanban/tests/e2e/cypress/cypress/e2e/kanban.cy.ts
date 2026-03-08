@@ -36,7 +36,6 @@ function createCardInColumn(column_name: string, drag_to_collapsed_column_label:
 describe("Kanban service", () => {
     let project_name: string;
     before(function () {
-        cy.projectAdministratorSession();
         project_name = "kanban-" + getAntiCollisionNamePart();
         cy.createNewPublicProject(project_name, "kanban").then((project_id) => {
             const TITLE_FIELD_NAME = "title";
@@ -133,7 +132,6 @@ describe("Kanban service", () => {
         });
 
         it(`kanban in project dashboard`, function () {
-            cy.projectAdministratorSession();
             const project_name = "filtered-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "kanban").then((project_id) => {
                 const TITLE_FIELD_NAME = "title";
@@ -380,7 +378,6 @@ describe("Kanban service", () => {
         });
 
         it("can collapse column", function () {
-            cy.projectAdministratorSession();
             const project_name = "collapse-" + getAntiCollisionNamePart();
             cy.createNewPublicProject(project_name, "kanban")
                 .then((project_id) => {

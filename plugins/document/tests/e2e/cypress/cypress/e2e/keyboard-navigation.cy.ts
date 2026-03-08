@@ -27,7 +27,6 @@ describe("Keyboard navigation in Document", () => {
     });
 
     it("user can navigate and manipulate items using keyboard shortcuts", () => {
-        cy.projectAdministratorSession();
         cy.log("Creates a project with document service");
         cy.createNewPublicProject(project_unixname, "issues");
         cy.visitProjectService(project_unixname, "Documents");
