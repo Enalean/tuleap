@@ -38,6 +38,7 @@ describe("SelectBoxField", () => {
                     field_id: 170,
                     label: "Proceed",
                     name: "proceed",
+                    description: "",
                     type: "sb",
                     bindings: { type: "static" },
                     required: false,

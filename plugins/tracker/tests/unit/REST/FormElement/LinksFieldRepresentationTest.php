@@ -38,6 +38,7 @@ final class LinksFieldRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $link_field->method('getId')->willReturn(666);
         $link_field->method('getName')->willReturn('the_link_field');
         $link_field->method('getLabel')->willReturn('The links');
+        $link_field->method('getDescription')->willReturn('Description');
         $link_field->method('isCollapsed')->willReturn(false);
         $link_field->method('isRequired')->willReturn(true);
         $link_field->method('hasNotifications')->willReturn(false);
@@ -65,10 +66,11 @@ final class LinksFieldRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
         );
 
-        self::assertEquals(666, $representation->field_id);
-        self::assertEquals('The links', $representation->label);
-        self::assertEquals('the_link_field', $representation->name);
-        self::assertEquals(['read', 'update', 'create'], $representation->permissions);
+        self::assertSame(666, $representation->field_id);
+        self::assertSame('The links', $representation->label);
+        self::assertSame('the_link_field', $representation->name);
+        self::assertSame('Description', $representation->description);
+        self::assertSame(['read', 'update', 'create'], $representation->permissions);
 
         self::assertFalse($representation->collapsed);
         self::assertTrue($representation->required);
@@ -81,7 +83,7 @@ final class LinksFieldRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEmpty($representation->bindings['list']);
         self::assertEmpty($representation->permissions_for_groups);
 
-        self::assertEquals([
+        self::assertEqualsCanonicalizing([
             TypeRepresentation::build('_is_child', 'Child', 'Parent'),
             TypeRepresentation::build('duplicate', 'Duplicated by', 'Duplicates'),
             TypeRepresentation::build('blocked_by', 'Blocked by', 'Blocked'),

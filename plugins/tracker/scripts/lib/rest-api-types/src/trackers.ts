@@ -75,6 +75,7 @@ export interface BaseFieldStructure {
     readonly has_notifications: boolean;
     readonly label: string;
     readonly label_decorators: ReadonlyArray<LabelDecorator>;
+    readonly description: string;
 }
 
 export interface UnknownFieldStructure extends BaseFieldStructure {

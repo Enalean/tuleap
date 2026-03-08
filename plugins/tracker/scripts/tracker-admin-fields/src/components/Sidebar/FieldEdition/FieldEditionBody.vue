@@ -32,6 +32,16 @@
         <label class="tlp-label" for="field-name">{{ $gettext("Name") }}</label>
         <input type="text" class="tlp-input" id="field-name" v-bind:value="field.name" />
     </div>
+
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="field-description">{{ $gettext("Description") }}</label>
+        <textarea
+            class="tlp-textarea"
+            id="field-description"
+            v-bind:value="field.description"
+            rows="3"
+        ></textarea>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -42,3 +52,10 @@ const { $gettext } = useGettext();
 
 defineProps<{ field: StructureFields }>();
 </script>
+
+<style lang="scss" scoped>
+textarea {
+    min-height: 3rem;
+    resize: vertical;
+}
+</style>

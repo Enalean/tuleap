@@ -99,6 +99,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
     public $default_value;
     public bool $has_notifications;
     public bool $is_used;
+    public string $description;
 
     /**
      * @param mixed $values
@@ -117,9 +118,10 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         public array $specific_properties,
         public array $label_decorators,
     ) {
-        $this->field_id = JsonCast::toInt($form_element->getId());
-        $this->name     = $form_element->getName();
-        $this->label    = $form_element->getLabel();
+        $this->field_id    = JsonCast::toInt($form_element->getId());
+        $this->name        = $form_element->getName();
+        $this->label       = $form_element->getLabel();
+        $this->description = $form_element->getDescription();
 
         if ($form_element instanceof TrackerField) {
             $this->required = JsonCast::toBoolean($form_element->isRequired());
