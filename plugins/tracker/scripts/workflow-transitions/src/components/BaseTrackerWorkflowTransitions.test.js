@@ -18,14 +18,14 @@
  *
  */
 
-import { shallowMount } from "@vue/test-utils";
-
+import { flushPromises, shallowMount } from "@vue/test-utils";
 import BaseTrackerWorkflowTransitions from "./BaseTrackerWorkflowTransitions.vue";
 import FirstConfigurationImpossibleWarning from "./FirstConfiguration/FirstConfigurationImpossibleWarning.vue";
 import FirstConfigurationSections from "./FirstConfiguration/FirstConfigurationSections.vue";
 import HeaderSection from "./Header/HeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
+import TransitionModal from "./TransitionModal/TransitionModal.vue";
 import { create } from "../support/factories.js";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests.js";
 
@@ -34,13 +34,15 @@ describe("BaseTrackerWorkflowTransitions", () => {
         is_current_tracker_load_failed,
         is_current_tracker_loading,
         has_selectbox_fields_getter,
-        current_tracker;
+        current_tracker,
+        show_transition_configuration_modal;
     beforeEach(() => {
         is_operation_running = false;
         is_current_tracker_load_failed = false;
         is_current_tracker_loading = false;
         has_selectbox_fields_getter = false;
         current_tracker = create("workflow", "field_not_defined");
+        show_transition_configuration_modal = jest.fn();
     });
     const getWrapper = () => {
         return shallowMount(BaseTrackerWorkflowTransitions, {
@@ -63,6 +65,8 @@ describe("BaseTrackerWorkflowTransitions", () => {
                             actions: {
                                 setUsedServiceName: jest.fn(),
                                 setIsSplitFeatureFlagEnabled: jest.fn(),
+                                showTransitionConfigurationModal:
+                                    show_transition_configuration_modal,
                             },
                             namespaced: true,
                         },
@@ -145,6 +149,18 @@ describe("BaseTrackerWorkflowTransitions", () => {
                 expect(
                     wrapper.find("[data-test=configuration-impossible-warning]").exists(),
                 ).toBeTruthy();
+            });
+            it("shows a configuration modal if there is an transition id in the url", async () => {
+                window.history.replaceState({}, "", "/plugins/tracker/workflow/12/transitions/45");
+
+                const wrapper = getWrapper();
+                await flushPromises();
+
+                expect(show_transition_configuration_modal).toHaveBeenCalledWith(
+                    expect.anything(),
+                    { id: "45" },
+                );
+                expect(wrapper.findComponent(TransitionModal).exists()).toBeTruthy();
             });
         });
     });

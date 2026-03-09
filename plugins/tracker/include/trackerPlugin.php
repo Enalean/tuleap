@@ -2178,6 +2178,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $r->post('/webhooks/edit', $this->getRouteHandler('routePostWebhooksEdit'));
 
             $r->get('/workflow/{tracker_id:\d+}/transitions', $this->getRouteHandler('routeGetWorkflowTransitions'));
+            $r->get('/workflow/{tracker_id:\d+}/transitions/{transition_id:\d+}', $this->getRouteHandler('routeGetWorkflowTransitions'));
 
             $r->get('/move-artifacts/{tracker_id:\d+}', $this->getRouteHandler('routeGetMoveArtifactsAdmin'));
             $r->post('/move-artifacts/{tracker_id:\d+}', $this->getRouteHandler('routePostMoveArtifactsAdmin'));

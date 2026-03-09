@@ -18,6 +18,7 @@
  */
 
 import { FLOAT_FIELD, INT_FIELD } from "@tuleap/plugin-tracker-constants";
+import { removeTransitionIdFromUrl } from "../../helpers/url-synchronizer.ts";
 
 export {
     clearModalShown,
@@ -53,6 +54,7 @@ function clearModalShown(state) {
     state.is_modal_shown = false;
     state.is_modal_operation_failed = false;
     state.modal_operation_failure_message = null;
+    removeTransitionIdFromUrl();
 }
 
 function saveCurrentTransition(state, transition) {

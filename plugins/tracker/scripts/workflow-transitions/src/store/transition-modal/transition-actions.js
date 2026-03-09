@@ -26,6 +26,7 @@ import {
     putPostActions,
 } from "../../api/rest-querier.js";
 import { animateUpdated } from "../../helpers/item-animator.js";
+import { addTransitionIdToUrl } from "../../helpers/url-synchronizer.ts";
 
 export {
     showTransitionConfigurationModal,
@@ -37,6 +38,7 @@ export {
 };
 
 async function showTransitionConfigurationModal({ dispatch, commit }, transition) {
+    addTransitionIdToUrl(transition.id);
     commit("showModal");
     try {
         await Promise.all([
