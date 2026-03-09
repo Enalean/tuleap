@@ -1834,16 +1834,16 @@
         },
         {
             "name": "php-http/logger-plugin",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/logger-plugin.git",
-                "reference": "4a2b447a5ba1a95c3869512ee992f5ba7fd9aa5f"
+                "reference": "3f53402e3eb7413431ce17912f8fdf09cce19047"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/logger-plugin/zipball/4a2b447a5ba1a95c3869512ee992f5ba7fd9aa5f",
-                "reference": "4a2b447a5ba1a95c3869512ee992f5ba7fd9aa5f",
+                "url": "https://api.github.com/repos/php-http/logger-plugin/zipball/3f53402e3eb7413431ce17912f8fdf09cce19047",
+                "reference": "3f53402e3eb7413431ce17912f8fdf09cce19047",
                 "shasum": ""
             },
             "require": {
@@ -1882,9 +1882,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/logger-plugin/issues",
-                "source": "https://github.com/php-http/logger-plugin/tree/1.4.0"
+                "source": "https://github.com/php-http/logger-plugin/tree/1.5.0"
             },
-            "time": "2024-10-31T14:52:16+00:00"
+            "time": "2026-01-05T09:39:39+00:00"
         },
         {
             "name": "php-http/message",
