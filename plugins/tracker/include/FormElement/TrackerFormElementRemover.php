@@ -24,22 +24,22 @@ namespace Tuleap\Tracker\FormElement;
 
 use DateTimeImmutable;
 use PFUser;
-use TrackerFactory;
 use Tuleap\dao\AddHistory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Tracker\FormElement\Field\FieldUsedInTriggerFault;
+use Tuleap\Tracker\FormElement\Field\CannotRemoveFormElementFault;
+use Tuleap\Tracker\FormElement\Field\FieldUsedInSemanticsFault;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * In that context remove an element means to unuse it, the field is not deleted.
  */
-final readonly class TrackerFieldRemover
+final readonly class TrackerFormElementRemover
 {
     public function __construct(
         private UnuseFormElement $dao,
-        private TrackerFactory $tracker_factory,
         private AddHistory $project_history_dao,
     ) {
     }
@@ -53,10 +53,17 @@ final readonly class TrackerFieldRemover
             return Result::ok(null);
         }
 
-        $is_used_in_trigger = $this->tracker_factory->getTriggerRulesManager()->isUsedInTrigger($field);
-        if ($is_used_in_trigger) {
-            return Result::err(FieldUsedInTriggerFault::build());
+        if (! $field->canBeRemovedFromUsage()) {
+            return Result::err(CannotRemoveFormElementFault::build($field));
         }
+
+        if ($field instanceof TrackerField) {
+            $semantic_collection = $field->getUsagesInSemantics();
+            if ($semantic_collection->areThereSemanticsUsingField()) {
+                return Result::err(FieldUsedInSemanticsFault::build($field));
+            }
+        }
+
         $this->dao->unuseFormElement($field);
         $field->use_it = false;
 

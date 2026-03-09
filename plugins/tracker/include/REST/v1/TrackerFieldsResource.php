@@ -26,7 +26,6 @@ use PFUser;
 use ProjectHistoryDao;
 use Tracker_FormElementFactory;
 use Tracker_REST_FormElementRepresentation;
-use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\NeverThrow\Fault;
@@ -43,7 +42,7 @@ use Tuleap\Tracker\FormElement\Field\Files\Upload\FileToUploadCreator;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\UploadPathAllocator;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\TrackerFieldAdder;
-use Tuleap\Tracker\FormElement\TrackerFieldRemover;
+use Tuleap\Tracker\FormElement\TrackerFormElementRemover;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\UsageDao;
 use Tuleap\Tracker\REST\FormElement\RestFieldUseHandler;
@@ -155,9 +154,8 @@ class TrackerFieldsResource extends AuthenticatedResource
         $usage_dao            = new UsageDao();
 
         new RestFieldUseHandler(
-            new TrackerFieldRemover(
+            new TrackerFormElementRemover(
                 $usage_dao,
-                TrackerFactory::instance(),
                 new ProjectHistoryDao()
             ),
             new TrackerFieldAdder($usage_dao),

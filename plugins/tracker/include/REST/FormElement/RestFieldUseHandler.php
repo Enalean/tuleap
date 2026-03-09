@@ -27,12 +27,12 @@ use PFUser;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
 use Tuleap\Tracker\FormElement\TrackerFieldAdder;
-use Tuleap\Tracker\FormElement\TrackerFieldRemover;
+use Tuleap\Tracker\FormElement\TrackerFormElementRemover;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 final readonly class RestFieldUseHandler
 {
-    public function __construct(private TrackerFieldRemover $field_remover, private TrackerFieldAdder $field_adder)
+    public function __construct(private TrackerFormElementRemover $field_remover, private TrackerFieldAdder $field_adder)
     {
     }
 
