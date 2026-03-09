@@ -29,21 +29,22 @@ final readonly class LabelDecorator
         public string $description,
         public ?string $icon,
         public ?string $url,
+        public ?string $action,
     ) {
     }
 
     public static function build(string $label, string $description): self
     {
-        return new self($label, $description, null, null);
+        return new self($label, $description, null, null, null);
     }
 
-    public static function buildWithIcon(string $label, string $description, string $icon): self
+    public static function buildWithIcon(string $label, string $description, string $icon, string $action): self
     {
-        return new self($label, $description, $icon, null);
+        return new self($label, $description, $icon, null, $action);
     }
 
     public static function buildWithUrl(string $label, string $description, string $url): self
     {
-        return new self($label, $description, null, $url);
+        return new self($label, $description, null, $url, null);
     }
 }

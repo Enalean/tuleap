@@ -63,6 +63,7 @@ export type PermissionsArray = readonly [ReadPermission, CreatePermission?, Upda
 export interface LabelDecorator {
     readonly icon?: string;
     readonly url?: string;
+    readonly action?: "field-edition";
     readonly description: string;
     readonly label: string;
 }

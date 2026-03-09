@@ -33,14 +33,22 @@
         >
             {{ decorator.label }}
         </a>
+        <router-link
+            v-else-if="decorator.action === 'field-edition'"
+            v-bind:to="{ name: 'field-edition', params: { field_id: field.field_id } }"
+            data-test="field-edition"
+        >
+            {{ decorator.label }}
+        </router-link>
         <template v-else>{{ decorator.label }}</template>
     </span>
 </template>
 
 <script setup lang="ts">
-import type { LabelDecorator } from "@tuleap/plugin-tracker-rest-api-types";
+import type { BaseFieldStructure, LabelDecorator } from "@tuleap/plugin-tracker-rest-api-types";
 
 defineProps<{
+    field: BaseFieldStructure;
     decorator: LabelDecorator;
 }>();
 </script>
