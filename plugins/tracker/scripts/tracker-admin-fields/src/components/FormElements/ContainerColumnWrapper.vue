@@ -48,20 +48,30 @@ const props = defineProps<{
     parent: Column | Fieldset | null;
 }>();
 
-const classes = computed(() => {
+const layout_warning_classes = computed(() => {
     if (!is_layout_warning_displayed.value) {
-        return "";
+        return [];
     }
 
     if (props.parent === null) {
-        return "highlight-layout-issue";
+        return ["highlight-layout-issue"];
     }
 
     if (isFieldset(props.parent)) {
-        return "";
+        return [];
     }
 
-    return "highlight-layout-issue";
+    return ["highlight-layout-issue"];
+});
+
+const classes = computed(() => {
+    const classes = layout_warning_classes.value;
+
+    if (props.column_wrapper.columns.every((column) => column.children.length === 0)) {
+        classes.push("column-wrapper-with-only-empty-columns");
+    }
+
+    return classes;
 });
 </script>
 
@@ -69,5 +79,9 @@ const classes = computed(() => {
 .column-wrapper {
     display: flex;
     gap: var(--tlp-medium-spacing);
+}
+
+.column-wrapper-with-only-empty-columns {
+    min-height: 250px;
 }
 </style>

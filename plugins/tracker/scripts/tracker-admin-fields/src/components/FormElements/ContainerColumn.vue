@@ -20,7 +20,10 @@
 <template>
     <div
         class="column tracker-admin-fields-container-dropzone"
-        v-bind:class="{ 'column-contains-columns': does_column_contain_columns }"
+        v-bind:class="{
+            'column-contains-columns': does_column_contain_columns,
+            'column-contains-nothing': column.children.length === 0,
+        }"
         v-bind:data-container-id="column.field.field_id"
     >
         <display-form-elements
@@ -54,6 +57,10 @@ const does_column_contain_columns = computed(
     &.column-contains-columns,
     &:empty {
         padding: var(--tlp-medium-spacing);
+    }
+
+    &.column-contains-nothing {
+        background: var(--tlp-main-color-lighter-90);
     }
 }
 </style>

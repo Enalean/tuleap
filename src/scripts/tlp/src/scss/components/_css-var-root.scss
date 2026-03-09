@@ -162,7 +162,10 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
     --tlp-main-color-lighter-50: #{color.mix($tlp-main-color, common.$tlp-white-color, 50%)};
     --tlp-main-color-lighter-80: #{color.mix($tlp-main-color, common.$tlp-white-color, 20%)};
     --tlp-main-color-lighter-85: #{color.mix($tlp-main-color, common.$tlp-white-color, 15%)};
-    --tlp-main-color-lighter-90: #{color.mix($tlp-main-color, common.$tlp-white-color, 10%)};
+    --tlp-main-color-lighter-90: light-dark(
+        #{color.mix($tlp-main-color, common.$tlp-white-color, 10%)},
+        #{color.mix($tlp-main-color, $tlp-dark-color, 10%)}
+    );
     --tlp-main-color-transparent-15: #{color.adjust($tlp-main-color, $alpha: - 0.15)};
     --tlp-main-color-transparent-20: #{color.adjust($tlp-main-color, $alpha: - 0.2)};
     --tlp-main-color-transparent-30: #{color.adjust($tlp-main-color, $alpha: - 0.3)};
