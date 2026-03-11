@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2026-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2026 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,36 +25,26 @@ namespace Tuleap\Tracker\REST\FormElement;
 use Luracast\Restler\RestException;
 use Override;
 use PFUser;
-use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
-use Tuleap\Tracker\FormElement\TrackerFieldAdder;
-use Tuleap\Tracker\FormElement\TrackerFormElementRemover;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 
-final readonly class RestFieldUseHandler implements PatchHandler
+final readonly class BasicPropertiesHandler implements PatchHandler
 {
-    public function __construct(private TrackerFormElementRemover $field_remover, private TrackerFieldAdder $field_adder)
+    public function __construct(private FieldDao $dao)
     {
     }
 
     #[Override]
     public function handle(TrackerFormElement $field, TrackerFieldPatchRepresentation $patch, PFUser $current_user): void
     {
-        if ($patch->use_it === null) {
-            return;
-        }
-
-        if ($patch->use_it === true) {
-            $this->field_adder->add($field);
-        }
-
-        if ($patch->use_it === false) {
-            $this->field_remover->remove($field, $current_user)->mapErr(
-                static fn(Fault $fault) => throw new RestException(
-                    400,
-                    (string) $fault
-                )
-            );
+        if ($patch->label !== null) {
+            $label = trim($patch->label);
+            if ($label === '') {
+                throw new RestException(400, 'Label cannot be empty.');
+            }
+            $field->label = $label;
+            $this->dao->save($field);
         }
     }
 }

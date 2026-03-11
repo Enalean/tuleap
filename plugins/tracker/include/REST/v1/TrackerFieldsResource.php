@@ -45,6 +45,8 @@ use Tuleap\Tracker\FormElement\TrackerFieldAdder;
 use Tuleap\Tracker\FormElement\TrackerFormElementRemover;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\UsageDao;
+use Tuleap\Tracker\REST\FormElement\BasicPropertiesHandler;
+use Tuleap\Tracker\REST\FormElement\PatchHandler;
 use Tuleap\Tracker\REST\FormElement\RestFieldUseHandler;
 use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\FieldCannotBeMovedFault;
 use Tuleap\Tracker\REST\v1\MoveTrackerFormElement\FieldNotSavedFault;
@@ -140,27 +142,11 @@ class TrackerFieldsResource extends AuthenticatedResource
             throw new RestException(403, 'User is not tracker administrator.');
         }
 
-        $field_dao = new FieldDao();
-        if ($patch->label !== null) {
-            $label = trim($patch->label);
-            if ($label === '') {
-                throw new RestException(400, 'Label cannot be empty.');
-            }
-            $field->label = $label;
-            $field_dao->save($field);
+        foreach ($this->getPatchHandlers() as $patch_handler) {
+            $patch_handler->handle($field, $patch, $user);
         }
 
         $form_element_factory = Tracker_FormElementFactory::instance();
-        $usage_dao            = new UsageDao();
-
-        new RestFieldUseHandler(
-            new TrackerFormElementRemover(
-                $usage_dao,
-                new ProjectHistoryDao()
-            ),
-            new TrackerFieldAdder($usage_dao),
-        )->handle($field, $patch, $user);
-
         if ($patch->new_values !== null) {
             if (! $form_element_factory->isFieldASimpleListField($field)) {
                 throw new RestException(400, 'Field is not a simple list.');
@@ -180,7 +166,7 @@ class TrackerFieldsResource extends AuthenticatedResource
         if ($patch->move) {
             new PATCHMoveTrackerFieldHandler(
                 $form_element_factory,
-                $field_dao,
+                new FieldDao(),
             )
                 ->handle($field, $patch->move)
                 ->mapErr(function (Fault $fault) {
@@ -200,6 +186,25 @@ class TrackerFieldsResource extends AuthenticatedResource
             null,
             ListOfLabelDecoratorsForFieldBuilder::build()->getLabelDecorators($field),
         );
+    }
+
+    /**
+     * @return PatchHandler[]
+     */
+    private function getPatchHandlers(): array
+    {
+        $usage_dao = new UsageDao();
+
+        return [
+            new BasicPropertiesHandler(new FieldDao()),
+            new RestFieldUseHandler(
+                new TrackerFormElementRemover(
+                    $usage_dao,
+                    new ProjectHistoryDao()
+                ),
+                new TrackerFieldAdder($usage_dao),
+            ),
+        ];
     }
 
     /**
