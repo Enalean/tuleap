@@ -718,6 +718,9 @@ msgstr ""
 msgid "Paste"
 msgstr ""
 
+msgid "Pending"
+msgstr ""
+
 msgid "Permanent"
 msgstr ""
 

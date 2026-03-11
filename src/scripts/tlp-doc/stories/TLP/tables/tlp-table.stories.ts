@@ -182,7 +182,7 @@ function getTemplate(args: TableProps): TemplateResult {
 <div class="tlp-table-actions">
     <button type="button" class="tlp-button-primary tlp-table-actions-element"><i class="tlp-button-icon fa-solid fa-plus" aria-hidden="true"></i> Add user</button>
     <button type="button" class="tlp-button-primary tlp-button-outline tlp-table-actions-element"><i class="tlp-button-icon fa-solid fa-download" aria-hidden="true"></i> Export CSV</button>
-</div>` : html ``}
+</div>` : html``}
 <table class="tlp-table">
     <thead>
         <tr>
@@ -332,6 +332,26 @@ function getTemplate(args: TableProps): TemplateResult {
             </td>
             <td class="tlp-table-cell-numeric">89</td>
             <td class="tlp-table-cell-numeric">$250</td>
+            <td class="tlp-table-cell-actions">
+                <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" href="https://example.com">
+                    <i class="tlp-button-icon fa-solid fa-hand-peace" aria-hidden="true"></i> Peace
+                </a>
+                <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline" href="https://example.com">
+                    <i class="tlp-button-icon fa-regular fa-trash-can" aria-hidden="true"></i> Remove
+                </a>
+            </td>
+        </tr>
+        <tr class="tlp-table-row-info">
+            <td class="tlp-table-cell-numeric">
+                <a href="https://example.com">43</a>
+            </td>
+            <td>John Paul</td>
+            <td>Jones</td>
+            <td>
+                <span class="tlp-badge-info tlp-badge-outline">Pending</span>
+            </td>
+            <td class="tlp-table-cell-numeric">34</td>
+            <td class="tlp-table-cell-numeric">$847.90</td>
             <td class="tlp-table-cell-actions">
                 <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" href="https://example.com">
                     <i class="tlp-button-icon fa-solid fa-hand-peace" aria-hidden="true"></i> Peace

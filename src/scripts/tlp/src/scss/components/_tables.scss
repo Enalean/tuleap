@@ -154,6 +154,27 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
             );
         }
 
+        > tr.tlp-table-row-info,
+        > tr.tlp-table-row-info > th,
+        > tr.tlp-table-row-info > td {
+            background: light-dark(
+                var(--tlp-info-color-lighter-90),
+                var(--tlp-info-color-darker-30)
+            );
+        }
+
+        > tr.tlp-table-row-info:hover,
+        > tr.tlp-table-row-info:hover > th,
+        > tr.tlp-table-row-info:hover > td,
+        > tr.tlp-table-row-info:focus-within,
+        > tr.tlp-table-row-info:focus-within > th,
+        > tr.tlp-table-row-info:focus-within > td {
+            background: light-dark(
+                var(--tlp-info-color-lighter-80),
+                var(--tlp-info-color-darker-20)
+            );
+        }
+
         > tr > th,
         > tr > td {
             padding: $tlp-table-cell-padding;
@@ -211,6 +232,7 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
             }
         }
     }
+
     /* stylelint-enable */
 }
 

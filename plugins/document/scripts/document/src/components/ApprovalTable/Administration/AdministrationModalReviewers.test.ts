@@ -114,6 +114,107 @@ describe("AdministrationModalReviewers", () => {
         ]);
     });
 
+    it("should not have tlp-table-row-info or pending badge on any row initially", async () => {
+        const wrapper = getWrapper();
+
+        await vi.runOnlyPendingTimersAsync();
+
+        for (const row of wrapper.findAll("[data-test=reviewer-row]")) {
+            expect(row.classes()).not.toContain("tlp-table-row-info");
+            expect(row.find("[data-test=pending-badge]").exists()).toBe(false);
+        }
+    });
+
+    it("should mark only the moved reviewer as pending when rank changes", async () => {
+        const wrapper = getWrapper();
+
+        await vi.runOnlyPendingTimersAsync();
+
+        await wrapper
+            .findAll("[data-test=reviewer-row]")[1]
+            .find("[data-test=rank-up]")
+            .trigger("click");
+
+        const rows = wrapper.findAll("[data-test=reviewer-row]");
+        expect(rows[0].classes()).toContain("tlp-table-row-info");
+        expect(rows[0].find("[data-test=pending-badge]").exists()).toBe(true);
+        expect(rows[1].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[1].find("[data-test=pending-badge]").exists()).toBe(false);
+        expect(rows[2].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[2].find("[data-test=pending-badge]").exists()).toBe(false);
+        expect(rows[3].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[3].find("[data-test=pending-badge]").exists()).toBe(false);
+        expect(rows[4].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[4].find("[data-test=pending-badge]").exists()).toBe(false);
+    });
+
+    it("should mark last reviewer as pending when moved up", async () => {
+        const wrapper = getWrapper();
+
+        await vi.runOnlyPendingTimersAsync();
+
+        await wrapper
+            .findAll("[data-test=reviewer-row]")[4]
+            .find("[data-test=rank-up]")
+            .trigger("click");
+
+        const rows = wrapper.findAll("[data-test=reviewer-row]");
+        expect(rows[0].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[0].find("[data-test=pending-badge]").exists()).toBe(false);
+        expect(rows[1].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[1].find("[data-test=pending-badge]").exists()).toBe(false);
+        expect(rows[2].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[2].find("[data-test=pending-badge]").exists()).toBe(false);
+        expect(rows[3].classes()).toContain("tlp-table-row-info");
+        expect(rows[3].find("[data-test=pending-badge]").exists()).toBe(true);
+        expect(rows[4].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[4].find("[data-test=pending-badge]").exists()).toBe(false);
+    });
+
+    it("should only mark the moved reviewer as pending when moved to top", async () => {
+        const wrapper = getWrapper();
+
+        await vi.runOnlyPendingTimersAsync();
+
+        await wrapper
+            .findAll("[data-test=reviewer-row]")[4]
+            .find("[data-test=rank-top]")
+            .trigger("click");
+
+        const rows = wrapper.findAll("[data-test=reviewer-row]");
+        expect(rows[0].classes()).toContain("tlp-table-row-info");
+        expect(rows[0].find("[data-test=pending-badge]").exists()).toBe(true);
+        expect(rows[1].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[1].find("[data-test=pending-badge]").exists()).toBe(false);
+        expect(rows[2].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[2].find("[data-test=pending-badge]").exists()).toBe(false);
+        expect(rows[3].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[3].find("[data-test=pending-badge]").exists()).toBe(false);
+        expect(rows[4].classes()).not.toContain("tlp-table-row-info");
+        expect(rows[4].find("[data-test=pending-badge]").exists()).toBe(false);
+    });
+
+    it("should remove pending badge when reviewer is moved back to original position", async () => {
+        const wrapper = getWrapper();
+
+        await vi.runOnlyPendingTimersAsync();
+
+        await wrapper
+            .findAll("[data-test=reviewer-row]")[1]
+            .find("[data-test=rank-up]")
+            .trigger("click");
+
+        await wrapper
+            .findAll("[data-test=reviewer-row]")[1]
+            .find("[data-test=rank-up]")
+            .trigger("click");
+
+        for (const row of wrapper.findAll("[data-test=reviewer-row]")) {
+            expect(row.classes()).not.toContain("tlp-table-row-info");
+            expect(row.find("[data-test=pending-badge]").exists()).toBe(false);
+        }
+    });
+
     it("Should send a reminder to the reviewer", async () => {
         const postReminder = vi
             .spyOn(rest_querier, "postApprovalTableReviewerReminder")

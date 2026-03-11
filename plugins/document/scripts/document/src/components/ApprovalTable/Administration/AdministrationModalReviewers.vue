@@ -45,12 +45,15 @@
                 v-else
                 v-for="(reviewer, index) in table_reviewers_value"
                 v-bind:key="reviewer.user.id"
+                v-bind:class="{ 'tlp-table-row-info': ranked_reviewer_ids.has(reviewer.user.id) }"
                 data-test="reviewer-row"
             >
                 <td>
                     <user-badge v-bind:user="reviewer.user" />
                 </td>
-                <td>{{ translateReviewStatus(reviewer.state, $gettext) }}</td>
+                <td>
+                    {{ translateReviewStatus(reviewer.state, $gettext) }}
+                </td>
                 <td>
                     <button
                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
@@ -88,6 +91,12 @@
                     >
                         <i class="fa-solid fa-angles-down tlp-button-icon"></i>
                     </button>
+                    <span
+                        v-if="ranked_reviewer_ids.has(reviewer.user.id)"
+                        class="tlp-badge-info tlp-badge-outline"
+                        data-test="pending-badge"
+                        >{{ $gettext("Pending") }}</span
+                    >
                 </td>
                 <td class="tlp-table-cell-actions">
                     <button
@@ -192,6 +201,10 @@ const table_reviewers_group_to_add_value = defineModel<Array<UserGroup>>(
 const is_sending_reminder = defineModel<boolean>("is_sending_reminder");
 
 const is_sending_to = ref<number | null>(null);
+const ranked_reviewer_ids = ref<Set<number>>(new Set());
+const original_reviewer_indices = ref<Map<number, number>>(
+    new Map(table_reviewers_value.value.map((reviewer, index) => [reviewer.user.id, index])),
+);
 const user_group_picker = ref<HTMLSelectElement>();
 const user_lazybox = ref<Lazybox>();
 const list_picker = ref<ListPicker>();
@@ -253,11 +266,20 @@ onUnmounted(() => {
 });
 
 function updateRank(updated_reviewer: ApprovalTableReviewer, new_rank: number): void {
-    table_reviewers_value.value = rearrangeReviewersTable(
+    const new_table = rearrangeReviewersTable(
         table_reviewers_value.value,
         updated_reviewer,
         new_rank,
     );
+    table_reviewers_value.value = new_table;
+    const new_pending = new Set(ranked_reviewer_ids.value);
+    new_pending.add(updated_reviewer.user.id);
+    new_table.forEach((reviewer, index) => {
+        if (original_reviewer_indices.value.get(reviewer.user.id) === index) {
+            new_pending.delete(reviewer.user.id);
+        }
+    });
+    ranked_reviewer_ids.value = new_pending;
 }
 
 function removeReviewer(removed_reviewer: ApprovalTableReviewer): void {
