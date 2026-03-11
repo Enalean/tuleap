@@ -20,18 +20,20 @@
 <template>
     <div class="tlp-modal" role="dialog">
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title">{{ create_label }}</h1>
+            <h1 class="tlp-modal-title">{{ $gettext("Create a pull request") }}</h1>
             <button
                 class="tlp-modal-close"
                 type="button"
                 data-dismiss="modal"
-                v-bind:aria-label="close_label"
+                v-bind:aria-label="$gettext('Close')"
             >
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-feedback" v-if="displayParentRepositoryWarning">
-            <div class="tlp-alert-warning">{{ no_permission_message }}</div>
+            <div class="tlp-alert-warning">
+                {{ $gettext("You don't have permission to see parent repository's branches.") }}
+            </div>
         </div>
         <div class="tlp-modal-body">
             <div class="tlp-alert-danger" v-if="create_error_message">
@@ -43,7 +45,7 @@
                     <label
                         class="tlp-label"
                         for="git-repository-actions-pullrequest-modal-body-source"
-                        >{{ source_branch_label }}<i class="fa-solid fa-asterisk"></i></label
+                        >{{ $gettext("Source branch") }}<i class="fa-solid fa-asterisk"></i></label
                     ><select
                         class="tlp-select"
                         id="git-repository-actions-pullrequest-modal-body-source"
@@ -51,7 +53,9 @@
                         required
                         v-model="source_branch"
                     >
-                        <option value="" selected disabled>{{ choose_source }}</option>
+                        <option value="" selected disabled>
+                            {{ $gettext("Choose source branch…") }}
+                        </option>
                         <option
                             v-for="branch of source_branches"
                             v-bind:value="branch"
@@ -65,7 +69,8 @@
                     <label
                         class="tlp-label"
                         for="git-repository-actions-pullrequest-modal-body-destination"
-                        >{{ destination_branch_label }}<i class="fa-solid fa-asterisk"></i></label
+                        >{{ $gettext("Destination branch")
+                        }}<i class="fa-solid fa-asterisk"></i></label
                     ><select
                         class="tlp-select"
                         id="git-repository-actions-pullrequest-modal-body-destination"
@@ -73,7 +78,9 @@
                         required
                         v-model="destination_branch"
                     >
-                        <option value="" selected disabled>{{ choose_destination }}</option>
+                        <option value="" selected disabled>
+                            {{ $gettext("Choose destination branch") }}
+                        </option>
                         <option
                             v-for="branch of destination_branches"
                             v-bind:value="branch"
@@ -91,23 +98,26 @@
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
             >
-                {{ cancel_label }}
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
-                v-on:click="create()"
+                v-on:click="create_pullrequest()"
                 v-bind:disabled="is_button_disabled"
                 data-test="pull-request-create-button"
             >
-                <i v-bind:class="is_creating_pullrequest_icon_class"></i>{{ create_button }}
+                <i v-bind:class="is_creating_pullrequest_icon_class"></i
+                >{{ $gettext("Create the pull request") }}
             </button>
         </div>
     </div>
 </template>
 
-<script>
-import { inject } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+import type { ExtendedBranch } from "../helpers/pullrequest-helper.ts";
 import {
     SOURCE_BRANCHES,
     DESTINATION_BRANCHES,
@@ -116,98 +126,55 @@ import {
     CREATE_ERROR_MESSAGE,
     IS_CREATING_PULLREQUEST,
     CREATE_PULLREQUEST,
-} from "../injection-keys.ts";
+} from "../injection-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
-export default {
-    name: "CreatePullrequestModal",
-    props: {
-        displayParentRepositoryWarning: Boolean,
-    },
-    setup() {
-        const source_branches = inject(SOURCE_BRANCHES);
-        const destination_branches = inject(DESTINATION_BRANCHES);
-        const selected_source_branch = inject(SELECTED_SOURCE_BRANCH);
-        const selected_destination_branch = inject(SELECTED_DESTINATION_BRANCH);
-        const create_error_message = inject(CREATE_ERROR_MESSAGE);
-        const is_creating_pullrequest = inject(IS_CREATING_PULLREQUEST);
-        const create_pullrequest = inject(CREATE_PULLREQUEST);
+defineProps<{
+    displayParentRepositoryWarning: boolean;
+}>();
 
-        return {
-            source_branches,
-            destination_branches,
-            selected_source_branch,
-            selected_destination_branch,
-            create_error_message,
-            is_creating_pullrequest,
-            create_pullrequest,
-        };
-    },
-    computed: {
-        is_button_disabled() {
-            return (
-                this.is_creating_pullrequest ||
-                !this.source_branch ||
-                !this.destination_branch ||
-                this.source_branch === this.destination_branch
-            );
-        },
-        is_creating_pullrequest_icon_class() {
-            if (!this.is_creating_pullrequest) {
-                return "fas fa-code-branch fa-rotate-270 tlp-button-icon";
-            }
+const { $gettext } = useGettext();
 
-            return "fa fa-spinner fa-spin tlp-button-icon";
-        },
-        source_branch: {
-            get() {
-                return this.selected_source_branch;
-            },
-            set(value) {
-                this.selected_source_branch = value;
-                this.create_error_message = "";
-            },
-        },
-        destination_branch: {
-            get() {
-                return this.selected_destination_branch;
-            },
-            set(value) {
-                this.selected_destination_branch = value;
-                this.create_error_message = "";
-            },
-        },
-        create_label() {
-            return this.$gettext("Create a pull request");
-        },
-        close_label() {
-            return this.$gettext("Close");
-        },
-        no_permission_message() {
-            return this.$gettext("You don't have permission to see parent repository's branches.");
-        },
-        source_branch_label() {
-            return this.$gettext("Source branch");
-        },
-        choose_source() {
-            return this.$gettext("Choose source branch…");
-        },
-        destination_branch_label() {
-            return this.$gettext("Destination branch");
-        },
-        choose_destination() {
-            return this.$gettext("Choose destination branch");
-        },
-        cancel_label() {
-            return this.$gettext("Cancel");
-        },
-        create_button() {
-            return this.$gettext("Create the pull request");
-        },
+const source_branches = strictInject(SOURCE_BRANCHES);
+const destination_branches = strictInject(DESTINATION_BRANCHES);
+const selected_source_branch = strictInject(SELECTED_SOURCE_BRANCH);
+const selected_destination_branch = strictInject(SELECTED_DESTINATION_BRANCH);
+const create_error_message = strictInject(CREATE_ERROR_MESSAGE);
+const is_creating_pullrequest = strictInject(IS_CREATING_PULLREQUEST);
+const create_pullrequest = strictInject(CREATE_PULLREQUEST);
+
+const source_branch = computed({
+    get(): ExtendedBranch | "" {
+        return selected_source_branch.value ?? "";
     },
-    methods: {
-        create() {
-            this.create_pullrequest();
-        },
+    set(value: ExtendedBranch | "") {
+        selected_source_branch.value = value;
+        create_error_message.value = "";
     },
-};
+});
+
+const destination_branch = computed({
+    get(): ExtendedBranch | "" {
+        return selected_destination_branch.value ?? "";
+    },
+    set(value: ExtendedBranch | "") {
+        selected_destination_branch.value = value;
+        create_error_message.value = "";
+    },
+});
+
+const is_button_disabled = computed(
+    () =>
+        is_creating_pullrequest.value ||
+        !source_branch.value ||
+        !destination_branch.value ||
+        source_branch.value === destination_branch.value,
+);
+
+const is_creating_pullrequest_icon_class = computed(() => {
+    if (!is_creating_pullrequest.value) {
+        return "fa-solid fa-code-branch fa-rotate-270 tlp-button-icon";
+    }
+    return "fa-solid fa-circle-notch fa-spin tlp-button-icon";
+});
 </script>

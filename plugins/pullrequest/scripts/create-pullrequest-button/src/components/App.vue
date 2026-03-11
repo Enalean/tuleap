@@ -22,13 +22,16 @@
         <create-pullrequest-button v-bind:show-modal="showModal" />
         <create-pullrequest-modal
             v-bind:display-parent-repository-warning="display_parent_repository_warning"
-            ref="modal"
+            ref="modal_ref"
         />
-        <create-pullrequest-error-modal ref="error_modal" />
+        <create-pullrequest-error-modal ref="error_modal_ref" />
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, onMounted, provide, ref } from "vue";
+import type { ComponentPublicInstance } from "vue";
+import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import CreatePullrequestButton from "./CreatePullrequestButton.vue";
 import CreatePullrequestModal from "./CreatePullrequestModal.vue";
@@ -46,85 +49,70 @@ import {
     INIT_PULLREQUEST_DATA,
     CREATE_PULLREQUEST,
     RESET_SELECTION,
-} from "../injection-keys.ts";
-import { provide } from "vue";
+} from "../injection-keys";
 
-export default {
-    name: "App",
-    components: {
-        CreatePullrequestButton,
-        CreatePullrequestModal,
-        CreatePullrequestErrorModal,
-    },
-    props: {
-        repository_id: Number,
-        project_id: Number,
-        parent_repository_id: Number,
-        parent_repository_name: String,
-        parent_project_id: Number,
-        user_can_see_parent_repository: Boolean,
-    },
-    setup() {
-        const pullrequest_state = buildPullrequestState();
+const props = defineProps<{
+    repository_id: number;
+    project_id: number;
+    parent_repository_id: number;
+    parent_repository_name: string;
+    parent_project_id: number;
+    user_can_see_parent_repository: boolean;
+}>();
 
-        provide(SOURCE_BRANCHES, pullrequest_state.source_branches);
-        provide(DESTINATION_BRANCHES, pullrequest_state.destination_branches);
-        provide(SELECTED_SOURCE_BRANCH, pullrequest_state.selected_source_branch);
-        provide(SELECTED_DESTINATION_BRANCH, pullrequest_state.selected_destination_branch);
-        provide(CREATE_ERROR_MESSAGE, pullrequest_state.create_error_message);
-        provide(
-            HAS_ERROR_WHILE_LOADING_BRANCHES,
-            pullrequest_state.has_error_while_loading_branches,
-        );
-        provide(IS_CREATING_PULLREQUEST, pullrequest_state.is_creating_pullrequest);
-        provide(CAN_CREATE_PULLREQUEST, pullrequest_state.can_create_pullrequest);
-        provide(INIT_PULLREQUEST_DATA, pullrequest_state.init);
-        provide(CREATE_PULLREQUEST, pullrequest_state.create);
-        provide(RESET_SELECTION, pullrequest_state.resetSelection);
+const pullrequest_state = buildPullrequestState();
 
-        return {
-            pullrequest_state,
-        };
-    },
-    data() {
-        return {
-            modal: null,
-            error_modal: null,
-        };
-    },
-    computed: {
-        display_parent_repository_warning() {
-            return !Number.isNaN(this.parent_repository_id) && !this.user_can_see_parent_repository;
-        },
-    },
-    mounted() {
-        this.pullrequest_state.init({
-            repository_id: this.repository_id,
-            project_id: this.project_id,
-            parent_repository_id: this.parent_repository_id,
-            parent_repository_name: this.parent_repository_name,
-            parent_project_id: this.parent_project_id,
-            user_can_see_parent_repository: this.user_can_see_parent_repository,
-        });
+provide(SOURCE_BRANCHES, pullrequest_state.source_branches);
+provide(DESTINATION_BRANCHES, pullrequest_state.destination_branches);
+provide(SELECTED_SOURCE_BRANCH, pullrequest_state.selected_source_branch);
+provide(SELECTED_DESTINATION_BRANCH, pullrequest_state.selected_destination_branch);
+provide(CREATE_ERROR_MESSAGE, pullrequest_state.create_error_message);
+provide(HAS_ERROR_WHILE_LOADING_BRANCHES, pullrequest_state.has_error_while_loading_branches);
+provide(IS_CREATING_PULLREQUEST, pullrequest_state.is_creating_pullrequest);
+provide(CAN_CREATE_PULLREQUEST, pullrequest_state.can_create_pullrequest);
+provide(INIT_PULLREQUEST_DATA, pullrequest_state.init);
+provide(CREATE_PULLREQUEST, pullrequest_state.create);
+provide(RESET_SELECTION, pullrequest_state.resetSelection);
 
-        const modal = this.$refs.modal.$el;
-        this.modal = createModal(modal);
-        this.modal.addEventListener("tlp-modal-hidden", this.resetModal);
+const display_parent_repository_warning = computed(
+    () => !Number.isNaN(props.parent_repository_id) && !props.user_can_see_parent_repository,
+);
 
-        const error_modal = this.$refs.error_modal.$el;
-        this.error_modal = createModal(error_modal);
-    },
-    methods: {
-        showModal() {
-            if (this.pullrequest_state.has_error_while_loading_branches.value) {
-                this.error_modal.toggle();
-            } else {
-                this.modal.toggle();
-            }
-        },
-        resetModal() {
-            this.pullrequest_state.resetSelection();
-        },
-    },
-};
+const modal_ref = ref<ComponentPublicInstance | null>(null);
+const error_modal_ref = ref<ComponentPublicInstance | null>(null);
+
+let modal: Modal | null = null;
+let error_modal: Modal | null = null;
+
+onMounted(() => {
+    pullrequest_state.init({
+        repository_id: props.repository_id,
+        project_id: props.project_id,
+        parent_repository_id: props.parent_repository_id,
+        parent_repository_name: props.parent_repository_name,
+        parent_project_id: props.parent_project_id,
+        user_can_see_parent_repository: props.user_can_see_parent_repository,
+    });
+
+    if (modal_ref.value) {
+        modal = createModal(modal_ref.value.$el);
+        modal.addEventListener("tlp-modal-hidden", resetModal);
+    }
+
+    if (error_modal_ref.value) {
+        error_modal = createModal(error_modal_ref.value.$el);
+    }
+});
+
+function showModal(): void {
+    if (pullrequest_state.has_error_while_loading_branches.value) {
+        error_modal?.toggle();
+    } else {
+        modal?.toggle();
+    }
+}
+
+function resetModal(): void {
+    pullrequest_state.resetSelection();
+}
 </script>
