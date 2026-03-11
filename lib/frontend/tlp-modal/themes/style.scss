@@ -33,7 +33,7 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
     margin: 5vh auto;
     border: 0;
     border-radius: $-tlp-modal-radius;
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     box-shadow: var(--tlp-modal-shadow);
     text-align: left;
     white-space: normal;
@@ -43,43 +43,43 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
     }
 }
 
-.tlp-modal-danger {
+.tlp-modal-info {
     .tlp-modal-title {
-        color: var(--tlp-danger-dark-color);
+        color: var(--tlp-info-text-color);
     }
 
     .tlp-modal-subtitle {
-        color: var(--tlp-dark-color);
-    }
-}
-
-.tlp-modal-warning {
-    .tlp-modal-title {
-        color: var(--tlp-warning-dark-color);
-    }
-
-    .tlp-modal-subtitle {
-        color: var(--tlp-dark-color);
+        color: var(--tlp-typo-default-text-color);
     }
 }
 
 .tlp-modal-success {
     .tlp-modal-title {
-        color: var(--tlp-success-dark-color);
+        color: var(--tlp-success-text-color);
     }
 
     .tlp-modal-subtitle {
-        color: var(--tlp-dark-color);
+        color: var(--tlp-typo-default-text-color);
     }
 }
 
-.tlp-modal-info {
+.tlp-modal-warning {
     .tlp-modal-title {
-        color: var(--tlp-info-dark-color);
+        color: var(--tlp-warning-text-color);
     }
 
     .tlp-modal-subtitle {
-        color: var(--tlp-dark-color);
+        color: var(--tlp-typo-default-text-color);
+    }
+}
+
+.tlp-modal-danger {
+    .tlp-modal-title {
+        color: var(--tlp-danger-text-color);
+    }
+
+    .tlp-modal-subtitle {
+        color: var(--tlp-typo-default-text-color);
     }
 }
 
@@ -91,7 +91,8 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
     border-bottom: 1px solid var(--tlp-border-light-color);
     border-top-left-radius: $-tlp-modal-radius;
     border-top-right-radius: $-tlp-modal-radius;
-    color: var(--tlp-dark-color);
+    background: var(--tlp-floating-element-background);
+    color: var(--tlp-typo-default-text-color);
 }
 
 .tlp-modal-close {
@@ -136,7 +137,7 @@ $-tlp-modal-radius: var(--tlp-x-large-radius);
 
 .tlp-modal-title {
     margin: 0;
-    color: var(--tlp-dark-color);
+    color: var(--tlp-typo-default-text-color);
     font-size: 1.375rem;
     font-weight: 500;
     line-height: 1.75rem;

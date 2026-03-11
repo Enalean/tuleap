@@ -125,7 +125,10 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
         #{color.mix($tlp-dark-color, common.$tlp-black-color, 50%)}
     );
     --tlp-grey-color: light-dark(var(--tlp-neutral-dark-color), #{$tlp-dimmed-color});
-    --tlp-backdrop-color: #{color.adjust(common.$tlp-black-color, $alpha: - 0.5)};
+    --tlp-backdrop-color: light-dark(
+        #{color.adjust(common.$tlp-black-color, $alpha: - 0.5)},
+        #{color.adjust(common.$tlp-black-color, $alpha: - 0.25)}
+    );
     --tlp-theme-orange: #{common.$tlp-theme-orange};
     --tlp-background-color-lighter-02: #{color.adjust($tlp-background-color, $lightness: 2%)};
     --tlp-background-color-lighter-03: #{color.adjust($tlp-background-color, $lightness: 3%)};
