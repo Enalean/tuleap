@@ -207,6 +207,9 @@ msgstr ""
 msgid "Permissions on artifact"
 msgstr "Permissions sur l'artifact"
 
+msgid "Please select user groups"
+msgstr "Veuillez sélectionner des groupes d'utilisateurs"
+
 msgid "Please use a select box or multi select box instead."
 msgstr "Merci d'utiliser une liste de choix ou une liste à choix multiple."
 
@@ -223,6 +226,10 @@ msgstr[1] "Recommandations :"
 
 msgid "Refresh"
 msgstr "Rafraîchir"
+
+msgid "Restrict access to this artifact for the following user groups:"
+msgstr ""
+"Restreindre l'accès à cet artifact pour les groupes d'utilisateurs suivants :"
 
 msgid "Save"
 msgstr "Sauvegarder"
