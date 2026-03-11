@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 @use "./includes/login";
 @use "pkg:@tuleap/burningparrot-sign-in";
 
@@ -45,7 +44,7 @@ body.homepage > #main-container {
     background-image: linear-gradient(
         to bottom,
         var(--tlp-background-color),
-        var(--tlp-white-color) 50%
+        var(--tlp-structure-background-color) 50%
     );
 
     @media screen and (max-width: $homepage-small-screen-width) {
@@ -97,14 +96,14 @@ body.homepage > #main-container {
 }
 
 $text-shadow-so-that-text-over-dark-background-is-somewhat-visible:
-    1px 1px 0 var(--tlp-white-color),
-    -1px 1px 0 var(--tlp-white-color),
-    1px -1px 0 var(--tlp-white-color),
-    -1px -1px 0 var(--tlp-white-color);
+    1px 1px 0 var(--tlp-structure-background-color),
+    -1px 1px 0 var(--tlp-structure-background-color),
+    1px -1px 0 var(--tlp-structure-background-color),
+    -1px -1px 0 var(--tlp-structure-background-color);
 
 .homepage-welcome-title {
     margin: 0 0 30px;
-    color: var(--tlp-dark-color);
+    color: var(--tlp-typo-default-text-color);
     font-size: 30px;
     font-weight: 600;
     line-height: 38px;
@@ -113,7 +112,7 @@ $text-shadow-so-that-text-over-dark-background-is-somewhat-visible:
 
 .homepage-welcome-text {
     margin: 0 0 30px;
-    color: var(--tlp-dark-color);
+    color: var(--tlp-typo-default-text-color);
     font-size: 18px;
     line-height: 30px;
     text-shadow: $text-shadow-so-that-text-over-dark-background-is-somewhat-visible;
@@ -147,7 +146,7 @@ $text-shadow-so-that-text-over-dark-background-is-somewhat-visible:
 
 .homepage-already-signed-in-title {
     margin: 0 0 40px;
-    color: var(--tlp-dark-color);
+    color: var(--tlp-typo-default-text-color);
     line-height: 38px;
     text-align: center;
 }
@@ -186,7 +185,7 @@ $text-shadow-so-that-text-over-dark-background-is-somewhat-visible:
 
 .homepage-background-light-circle {
     stroke: var(--tlp-main-color);
-    fill: var(--tlp-white-color);
+    fill: var(--tlp-structure-background-color);
 }
 
 .homepage-bottom-content {
@@ -305,7 +304,6 @@ $text-shadow-so-that-text-over-dark-background-is-somewhat-visible:
 .homepage > footer {
     position: relative;
     z-index: 3;
-    background: none;
     background-image: linear-gradient(
         to bottom,
         var(--tlp-dark-color),

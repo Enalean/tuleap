@@ -56,11 +56,11 @@ header.pinned .logo-svg-link {
 }
 
 .logo-svg-fill-default-text-color {
-    fill: var(--tlp-dark-color);
+    fill: var(--tlp-typo-default-text-color);
 }
 
 .logo-svg-fill-default-text-color-invert {
-    fill: var(--tlp-white-color);
+    fill: var(--tlp-structure-background-color);
 }
 
 .sidebar > .logo-svg-link {
@@ -84,7 +84,7 @@ header.pinned .logo-svg-link {
         }
 
         .logo-svg-fill-default-text-color-invert {
-            fill: var(--tlp-dark-color);
+            fill: var(--tlp-typo-default-text-color);
         }
     }
 }
