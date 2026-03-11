@@ -141,3 +141,9 @@ ignoreUntil = 2026-04-08
 id = "GO-2026-4603" # CVE-2026-27142
 reason = "No security impact for Tuleap"
 ignoreUntil = 2026-04-08
+
+# Composer
+[[IgnoredVulns]]
+id = "CVE-2026-30964"
+reason = "No security impact for Tuleap"
+ignoreUntil = 2026-04-11
