@@ -68,7 +68,10 @@ msgid "Delete"
 msgstr "Supprimer"
 
 msgid "Delete:"
-msgstr "Supprimer : "
+msgstr "Supprimer :"
+
+msgid "Description"
+msgstr "Description"
 
 msgid "Display in & out references"
 msgstr "Liste des objets étant référencés par l'artifact ou le référençant"
@@ -282,7 +285,7 @@ msgid "Unuse"
 msgstr "Inutiliser"
 
 msgid "Unuse:"
-msgstr "Inutiliser : "
+msgstr "Inutiliser :"
 
 msgid "What do you want to do with the field \"%{field_name}\"?"
 msgstr "Que souhaitez-vous faire avec le champ \"%{field_name}\" ?"

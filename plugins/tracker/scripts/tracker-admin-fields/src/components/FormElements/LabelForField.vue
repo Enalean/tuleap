@@ -20,7 +20,11 @@
 <template>
     <div class="label-container">
         <div class="label">
-            <span class="tlp-label" v-if="should_label_be_displayed">
+            <span
+                class="tlp-label"
+                v-if="should_label_be_displayed"
+                v-bind:title="field.description"
+            >
                 {{ field.label }}
                 <i
                     class="fa-solid fa-asterisk"

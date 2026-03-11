@@ -31,6 +31,7 @@ describe("LabelDecorator", () => {
         field_id: 123,
         name: "summary",
         label: "Summary",
+        description: "",
         has_notifications: false,
         required: false,
         label_decorators: [],

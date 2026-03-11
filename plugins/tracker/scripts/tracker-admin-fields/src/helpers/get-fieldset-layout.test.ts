@@ -48,6 +48,7 @@ describe("getFieldsetLayout", () => {
                 label: "Le fieldset",
                 type: CONTAINER_FIELDSET,
                 label_decorators: [],
+                description: "",
             },
             children,
         };
@@ -63,6 +64,7 @@ describe("getFieldsetLayout", () => {
                 label: "La column",
                 type: CONTAINER_COLUMN,
                 label_decorators: [],
+                description: "",
             },
             children,
         };

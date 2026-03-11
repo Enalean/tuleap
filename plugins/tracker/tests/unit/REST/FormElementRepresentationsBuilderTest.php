@@ -46,6 +46,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         $field1->method('getId')->willReturn(1);
         $field1->method('getName')->willReturn('field_01');
         $field1->method('getLabel')->willReturn('Field 01');
+        $field1->method('getDescription')->willReturn('Description 1');
         $field1->method('isRequired')->willReturn(false);
         $field1->method('hasNotifications')->willReturn(false);
         $field1->method('isCollapsed')->willReturn(false);
@@ -63,6 +64,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         $field2->method('getId')->willReturn(2);
         $field2->method('getName')->willReturn('field_02');
         $field2->method('getLabel')->willReturn('Field 02');
+        $field2->method('getDescription')->willReturn('Description 2');
         $field2->method('isRequired')->willReturn(false);
         $field2->method('isCollapsed')->willReturn(false);
         $field2->method('getDefaultRESTValue')->willReturn(null);
@@ -79,6 +81,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         $field3->method('getId')->willReturn(3);
         $field3->method('getName')->willReturn('field_03');
         $field3->method('getLabel')->willReturn('Field 03');
+        $field3->method('getDescription')->willReturn('Description 3');
         $field3->method('isRequired')->willReturn(false);
         $field3->method('hasNotifications')->willReturn(false);
         $field3->method('isCollapsed')->willReturn(false);
@@ -132,5 +135,8 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->assertCount(2, $collection);
         self::assertCount(1, $collection[0]->label_decorators);
         self::assertCount(0, $collection[1]->label_decorators);
+
+        self::assertSame('Description 1', $collection[0]->description);
+        self::assertSame('Description 3', $collection[1]->description);
     }
 }

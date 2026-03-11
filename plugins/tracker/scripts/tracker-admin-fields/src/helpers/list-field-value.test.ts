@@ -97,6 +97,7 @@ describe("list-field-value", () => {
                 field_id: 25,
                 label: "Users Group",
                 name: "users_group",
+                description: "",
                 required: false,
                 has_notifications: false,
                 label_decorators: [],

@@ -38,6 +38,7 @@ describe("FieldStaticUserText", () => {
                     required: false,
                     has_notifications: false,
                     label_decorators: [],
+                    description: "",
                 },
             },
             global: {
