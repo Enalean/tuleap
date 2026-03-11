@@ -315,13 +315,10 @@ msgstr ""
 msgid "See documentation for more details."
 msgstr ""
 
-#, php-format
-msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
+msgid "Semantic done is not defined for tracker:"
 msgstr ""
 
-#, php-format
-msgid ""
-"Semantic initial effort is not defined for tracker  <a href=\"%s\">%s</a>"
+msgid "Semantic initial effort is not defined for tracker:"
 msgstr ""
 
 msgid "Service Backlog is disabled."

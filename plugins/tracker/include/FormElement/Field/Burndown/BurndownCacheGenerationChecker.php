@@ -101,9 +101,15 @@ class BurndownCacheGenerationChecker
             $this->value_checker->doesUserCanReadRemainingEffort($artifact, $user) === true
             && $this->value_checker->hasStartDate($artifact, $user) === true
         ) {
+            $burndown_field = $this->field_retriever->getBurndownRemainingEffortField($artifact, $user);
+            if ($burndown_field === null) {
+                $this->logger->error('[isCacheCompleteForBurndown] Burndown field not found for tracker #' . $artifact->getTracker()->getId());
+                return false;
+            }
+
             $cached_days = $this->computed_dao->getCachedDays(
                 $artifact->getId(),
-                $this->field_retriever->getBurndownRemainingEffortField($artifact, $user)->getId()
+                $burndown_field->getId()
             );
             $timestamps  = [];
             foreach ($cached_days as $cached_day) {

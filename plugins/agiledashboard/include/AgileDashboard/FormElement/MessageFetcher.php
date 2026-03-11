@@ -21,12 +21,14 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
-use Codendi_HTMLPurifier;
 use PlanningFactory;
+use Tuleap\Tracker\FormElement\ChartConfigurationWarning;
+use Tuleap\Tracker\FormElement\ChartConfigurationWarningLink;
+use Tuleap\Tracker\FormElement\ChartConfigurationWarningWithLinks;
+use Tuleap\Tracker\FormElement\Event\ExternalTrackerChartConfigurationWarningMessage;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
-use Tuleap\Tracker\Tracker;
 
-readonly class MessageFetcher
+final readonly class MessageFetcher
 {
     public function __construct(
         private PlanningFactory $planning_factory,
@@ -35,18 +37,19 @@ readonly class MessageFetcher
     ) {
     }
 
-    /**
-     * @return array
-     */
-    public function getWarningsRelatedToPlanningConfiguration(\PFUser $user, Tracker $tracker)
+    public function collectWarningsRelatedToPlanningConfiguration(ExternalTrackerChartConfigurationWarningMessage $event): void
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $warnings = [];
-        $planning = $this->planning_factory->getPlanningByPlanningTracker($user, $tracker);
-
+        $planning = $this->planning_factory->getPlanningByPlanningTracker($event->user, $event->field->getTracker());
         if (! $planning) {
-            $warnings[] = '<li>' . dgettext('tuleap-agiledashboard', 'This tracker is not a planning tracker') . '</li>';
-            return $warnings;
+            $event->warnings->addWarning(
+                ChartConfigurationWarning::fromMessage(
+                    dgettext(
+                        'tuleap-agiledashboard',
+                        'This tracker is not a planning tracker'
+                    ),
+                ),
+            );
+            return;
         }
 
         foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
@@ -54,33 +57,29 @@ readonly class MessageFetcher
 
             $done_semantic = $this->semantic_done_factory->getInstanceByTracker($backlog_tracker);
             if (! $done_semantic->isSemanticDefined()) {
-                $warnings[] = '<li>' .
-                    sprintf(
+                $event->warnings->addWarning(
+                    ChartConfigurationWarningWithLinks::fromMessageAndLinks(
                         dgettext(
                             'tuleap-agiledashboard',
-                            'Semantic done is not defined for tracker <a href="%s">%s</a>'
+                            'Semantic done is not defined for tracker:'
                         ),
-                        $purifier->purify($done_semantic->getUrl()),
-                        $purifier->purify($backlog_tracker_name)
-                    ) .
-                    '</li>';
+                        new ChartConfigurationWarningLink($done_semantic->getUrl(), $backlog_tracker_name),
+                    )
+                );
             }
 
             $initial_effort_semantic = $this->initial_effort_factory->getByTracker($backlog_tracker);
             if (! $initial_effort_semantic->getField()) {
-                $warnings[] = '<li>' .
-                    sprintf(
+                $event->warnings->addWarning(
+                    ChartConfigurationWarningWithLinks::fromMessageAndLinks(
                         dgettext(
                             'tuleap-agiledashboard',
-                            'Semantic initial effort is not defined for tracker  <a href="%s">%s</a>'
+                            'Semantic initial effort is not defined for tracker:'
                         ),
-                        $purifier->purify($initial_effort_semantic->getUrl()),
-                        $purifier->purify($backlog_tracker_name)
-                    ) .
-                    '</li>';
+                        new ChartConfigurationWarningLink($initial_effort_semantic->getUrl(), $backlog_tracker_name),
+                    )
+                );
             }
         }
-
-        return $warnings;
     }
 }

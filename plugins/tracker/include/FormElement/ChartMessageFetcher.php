@@ -20,40 +20,36 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Codendi_HTMLPurifier;
-use EventManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_HierarchyFactory;
-use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
+use Tuleap\Tracker\FormElement\Event\ExternalTrackerChartConfigurationWarningMessage;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 use Tuleap\User\ProvideCurrentUser;
 
-class ChartMessageFetcher
+final readonly class ChartMessageFetcher
 {
     public function __construct(
-        private readonly Tracker_HierarchyFactory $hierarchy_factory,
-        private readonly ChartConfigurationFieldRetriever $configuration_field_retriever,
-        private readonly EventManager $event_manager,
-        private readonly ProvideCurrentUser $current_user_provider,
+        private Tracker_HierarchyFactory $hierarchy_factory,
+        private ChartConfigurationFieldRetriever $configuration_field_retriever,
+        private EventDispatcherInterface $event_manager,
+        private ProvideCurrentUser $current_user_provider,
     ) {
     }
 
-    /**
-     * @return string
-     */
-    public function fetchWarnings(TrackerField $field, ChartFieldUsage $usage)
+    public function fetchWarnings(TrackerField $field, ChartFieldUsage $usage): ChartConfigurationWarningCollection
     {
         $tracker = $field->getTracker();
         assert($tracker instanceof Tracker);
         $user = $this->current_user_provider->getCurrentUser();
 
-        $warnings = [];
+        $warnings = new ChartConfigurationWarningCollection();
         if ($usage->uses_start_date) {
             try {
                 $this->configuration_field_retriever->getStartDateField($tracker, $user);
             } catch (Tracker_FormElement_Chart_Field_Exception $e) {
-                $warnings[] = '<li>' . $e->getMessage() . '</li>';
+                $warnings->addWarning(ChartConfigurationWarning::fromMessage($e->getMessage()));
             }
         }
 
@@ -64,75 +60,60 @@ class ChartMessageFetcher
                 try {
                     $this->configuration_field_retriever->getEndDateField($tracker, $user);
                 } catch (Tracker_FormElement_Chart_Field_Exception $exception_end_date) {
-                    $warnings[] = '<li>' . $exception_duration->getMessage() . '</li>';
-                    $warnings[] = '<li>' . $exception_end_date->getMessage() . '</li>';
+                    $warnings->addWarning(ChartConfigurationWarning::fromMessage($exception_duration->getMessage()));
+                    $warnings->addWarning(ChartConfigurationWarning::fromMessage($exception_end_date->getMessage()));
                 }
             }
         }
 
         if ($usage->uses_capacity) {
-            $warning_message = $this->fetchMissingCapacityFieldWarning(
+            $this->fetchMissingCapacityFieldWarning(
+                $warnings,
                 $tracker,
-                ChartConfigurationFieldRetriever::CAPACITY_FIELD_NAME,
-                ['int', 'computed']
             );
-            if ($warning_message !== null) {
-                $warnings[] = $warning_message;
-            }
         }
 
         if ($usage->uses_remaining_effort) {
-            $warning_message = $this->fetchMissingRemainingEffortWarning($tracker);
-            if ($warning_message !== null) {
-                $warnings[] = $warning_message;
-            }
+            $this->fetchMissingRemainingEffortWarning($warnings, $tracker);
         }
 
-        $event = new MessageFetcherAdditionalWarnings($user, $field);
-        $this->event_manager->processEvent($event);
+        $event = new ExternalTrackerChartConfigurationWarningMessage($warnings, $user, $field);
+        $this->event_manager->dispatch($event);
 
-        $warnings = array_merge($warnings, $event->getWarnings());
-
-        if (count($warnings) > 0) {
-            return '<ul class="feedback_warning">' . implode('', $warnings) . '</ul>';
-        }
-
-        return null;
+        return $warnings;
     }
 
-    public function fetchMissingCapacityFieldWarning(Tracker $tracker, string $name, array $type): ?string
+    public function fetchMissingCapacityFieldWarning(ChartConfigurationWarningCollection $warnings, Tracker $tracker): void
     {
-        if (! $tracker->hasFormElementWithNameAndType($name, $type)) {
-            $warning = dgettext('tuleap-tracker', 'The tracker doesn\'t have a "capacity" Integer or Computed field or you don\'t have the permission to access it.');
+        try {
+            $this->configuration_field_retriever->getCapacityField($tracker);
+        } catch (Tracker_FormElement_Chart_Field_Exception $e) {
+            $warnings->addWarning(ChartConfigurationWarning::fromMessage($e->getMessage()));
+        }
+    }
 
-            return '<li>' . $warning . '</li>';
+    private function fetchMissingRemainingEffortWarning(ChartConfigurationWarningCollection $warnings, Tracker $tracker): void
+    {
+        $tracker_links = $this->getLinksToChildTrackersWithoutRemainingEffort($tracker);
+        if (count($tracker_links) === 0) {
+            return;
         }
 
-        return null;
+        $warnings->addWarning(
+            ChartConfigurationWarningWithLinks::fromMessageAndLinks(
+                dgettext('tuleap-tracker', 'Some child trackers don\'t have a "remaining_effort" Integer or Float or Computed field:'),
+                ...$tracker_links,
+            )
+        );
     }
 
     /**
-     * @return String
+     * @return ChartConfigurationWarningLink[]
      */
-    private function fetchMissingRemainingEffortWarning(Tracker $tracker)
-    {
-        $tracker_links = implode(', ', $this->getLinksToChildTrackersWithoutRemainingEffort($tracker));
-        if ($tracker_links) {
-            $warning = dgettext('tuleap-tracker', 'Some child trackers don\'t have a "remaining_effort" Integer or Float or Computed field:');
-
-            return "<li>$warning $tracker_links.</li>";
-        }
-
-        return null;
-    }
-
-    /**
-     * @return array of String
-     */
-    private function getLinksToChildTrackersWithoutRemainingEffort(Tracker $tracker)
+    private function getLinksToChildTrackersWithoutRemainingEffort(Tracker $tracker): array
     {
         return array_map(
-            function (Tracker $tracker): string {
+            function (Tracker $tracker): ChartConfigurationWarningLink {
                 return $this->getLinkToTracker($tracker);
             },
             $this->getChildTrackersWithoutRemainingEffort($tracker)
@@ -140,37 +121,33 @@ class ChartMessageFetcher
     }
 
     /**
-     * @return array of Tracker
+     * @return Tracker[]
      */
-    private function getChildTrackersWithoutRemainingEffort(Tracker $tracker)
+    private function getChildTrackersWithoutRemainingEffort(Tracker $tracker): array
     {
         return array_filter(
             $this->getChildTrackers($tracker),
-            [$this->configuration_field_retriever, 'doesRemainingEffortFieldExists']
+            fn(Tracker $child_tracker) => ! $this->configuration_field_retriever->doesRemainingEffortFieldExists($child_tracker),
         );
     }
 
     /**
-     * @return array of Tracker
+     * @return Tracker[]
      */
-    protected function getChildTrackers(Tracker $tracker)
+    protected function getChildTrackers(Tracker $tracker): array
     {
         return $this->hierarchy_factory->getChildren($tracker->getId());
     }
 
-    /**
-     * Renders a link to the given tracker.
-     *
-     * @return String
-     */
-    private function getLinkToTracker(Tracker $tracker)
+    private function getLinkToTracker(Tracker $tracker): ChartConfigurationWarningLink
     {
         $tracker_id   = $tracker->getId();
         $tracker_name = $tracker->getName();
-        $tracker_url  = \trackerPlugin::TRACKER_BASE_URL . "/?tracker=$tracker_id&func=admin-formElements";
+        $tracker_url  = \trackerPlugin::TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => $tracker_id, 'func' => 'admin-formElements']);
 
-        $hp = Codendi_HTMLPurifier::instance();
-
-        return '<a href="' . $tracker_url . '">' . $hp->purify($tracker_name) . '</a>';
+        return new ChartConfigurationWarningLink(
+            $tracker_url,
+            $tracker_name,
+        );
     }
 }

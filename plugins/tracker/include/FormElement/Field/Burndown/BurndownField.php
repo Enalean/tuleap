@@ -440,7 +440,7 @@ class BurndownField extends TrackerField implements Tracker_FormElement_Field_Re
     public function fetchAdminFormElement()
     {
         $html  = '';
-        $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this, BurndownChartFieldUsage::build());
+        $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this, BurndownChartFieldUsage::build())->getAsHTML();
         $html .= '<img src="' . \trackerPlugin::TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
         $html .= '<a class="btn chart-cache-button-generate" disabled="disabled">' .
                  dgettext('tuleap-tracker', 'Force cache regeneration') .

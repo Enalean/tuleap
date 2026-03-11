@@ -21,45 +21,17 @@
 namespace Tuleap\Tracker\FormElement\Event;
 
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\FormElement\ChartConfigurationWarningCollection;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-class MessageFetcherAdditionalWarnings implements Dispatchable
+final readonly class ExternalTrackerChartConfigurationWarningMessage implements Dispatchable
 {
-    public const string NAME = 'getMessageFetcherAdditionalWarnings';
+    public const string NAME = 'getExternalTrackerChartConfigurationWarningMessage';
 
-    /**
-     * @var TrackerField
-     */
-    private $field;
-
-    /**
-     * @var array
-     */
-    private $warnings = [];
-
-    public function __construct(public readonly \PFUser $user, TrackerField $field)
-    {
-        $this->field = $field;
-    }
-
-    /**
-     * @return TrackerField
-     */
-    public function getField()
-    {
-        return $this->field;
-    }
-
-    /**
-     * @return array
-     */
-    public function getWarnings()
-    {
-        return $this->warnings;
-    }
-
-    public function setWarnings(array $warnings)
-    {
-        $this->warnings = $warnings;
+    public function __construct(
+        public ChartConfigurationWarningCollection $warnings,
+        public \PFUser $user,
+        public TrackerField $field,
+    ) {
     }
 }

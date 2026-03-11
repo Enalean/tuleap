@@ -160,7 +160,7 @@ use Tuleap\Tracker\Config\GeneralSettingsEvent;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
 use Tuleap\Tracker\Events\CollectTrackerDependantServices;
-use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
+use Tuleap\Tracker\FormElement\Event\ExternalTrackerChartConfigurationWarningMessage;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
@@ -264,7 +264,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
             $this->addHook('codendi_daily_start');
             $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
-            $this->addHook(MessageFetcherAdditionalWarnings::NAME);
             $this->addHook(PermissionPerGroupPaneCollector::NAME);
             $this->addHook(ArtifactDeleted::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
@@ -1224,7 +1223,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    public function getMessageFetcherAdditionalWarnings(MessageFetcherAdditionalWarnings $event)
+    #[ListeningToEventClass]
+    public function getMessageFetcherAdditionalWarnings(ExternalTrackerChartConfigurationWarningMessage $event)
     {
         $message_fetcher = new MessageFetcher(
             $this->getPlanningFactory(),
@@ -1232,10 +1232,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->getSemanticDoneFactory()
         );
 
-        $field = $event->getField();
-
-        if ($field::class === Tuleap\AgileDashboard\FormElement\Burnup::class) {
-            $event->setWarnings($message_fetcher->getWarningsRelatedToPlanningConfiguration($event->user, $field->getTracker()));
+        if ($event->field instanceof Tuleap\AgileDashboard\FormElement\Burnup) {
+            $message_fetcher->collectWarningsRelatedToPlanningConfiguration($event);
         }
     }
 

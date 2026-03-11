@@ -22,22 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-/**
- * @psalm-immutable
- */
-final class BurndownChartFieldUsage implements ChartFieldUsage
+final class ChartConfigurationWarningCollection
 {
-    public bool $uses_start_date       = true;
-    public bool $uses_duration         = true;
-    public bool $uses_capacity         = false;
-    public bool $uses_remaining_effort = true;
+    /**
+     * @var list<ChartConfigurationWarningInterface>
+     */
+    public array $warnings = [];
 
-    private function __construct()
+    public function addWarning(ChartConfigurationWarningInterface $warning): void
     {
+        $this->warnings[] = $warning;
     }
 
-    public static function build(): self
+    public function getAsHTML(): string
     {
-        return new self();
+        if (count($this->warnings) === 0) {
+            return '';
+        }
+
+        $html_warnings = array_map(static fn (ChartConfigurationWarningInterface $warning) => $warning->getAsHTML(), $this->warnings);
+
+        return '<ul class="feedback_warning">' . implode('', $html_warnings) . '</ul>';
     }
 }

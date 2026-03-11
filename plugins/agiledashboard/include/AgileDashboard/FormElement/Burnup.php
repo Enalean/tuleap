@@ -105,7 +105,7 @@ class Burnup extends TrackerField implements Tracker_FormElement_Field_ReadOnly,
     #[Override]
     public function fetchAdminFormElement()
     {
-        $html  = $this->getChartMessageFetcher()->fetchWarnings($this, BurnupChartFieldUsage::build());
+        $html  = $this->getChartMessageFetcher()->fetchWarnings($this, BurnupChartFieldUsage::build())->getAsHTML();
         $html .= '<img src="' . AGILEDASHBOARD_BASE_URL . '/images/fake-burnup-admin.png" />';
 
         return $html;

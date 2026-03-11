@@ -29,7 +29,6 @@ final class ChartFieldUsageTestBuilder
     private bool $uses_start_date       = false;
     private bool $uses_duration         = false;
     private bool $uses_capacity         = false;
-    private bool $uses_hierarchy        = false;
     private bool $uses_remaining_effort = false;
 
     public static function aChart(): self
@@ -55,20 +54,24 @@ final class ChartFieldUsageTestBuilder
         return $this;
     }
 
+    public function usingCapacity(): self
+    {
+        $this->uses_capacity = true;
+        return $this;
+    }
+
     public function build(): ChartFieldUsage
     {
         return new class (
             $this->uses_start_date,
             $this->uses_duration,
             $this->uses_capacity,
-            $this->uses_hierarchy,
             $this->uses_remaining_effort,
         ) implements ChartFieldUsage {
             public function __construct(
                 public bool $uses_start_date,
                 public bool $uses_duration,
                 public bool $uses_capacity,
-                public bool $uses_hierarchy,
                 public bool $uses_remaining_effort,
             ) {
             }
