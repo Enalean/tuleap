@@ -49,7 +49,7 @@ final class NotificationsStatisticsController extends DispatchablePSR15Compatibl
     {
         $item_id = $request->getAttribute('item_id');
 
-        $items_request = $this->item_request_builder->buildFromItemId($item_id);
+        $items_request = $this->item_request_builder->buildFromItemId((int) $item_id);
         $item          = $items_request->getItem();
         $project       = $items_request->getProject();
         $current_user  = $this->user_manager->getCurrentUser();
