@@ -26,6 +26,10 @@ setup_database() {
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
 
+    if [ "${USE_PROXYSQL:-0}" == "1" ]; then
+        DB_HOST="proxysql-$DB_HOST"
+    fi
+
     echo "Use remote db $DB_HOST"
 
     # runner should have access to Tuleap conf, esp. database.inc because some tests pre-cond changes values directly
