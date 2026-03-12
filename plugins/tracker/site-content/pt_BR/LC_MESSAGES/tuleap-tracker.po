@@ -1768,9 +1768,6 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-msgid "Label cannot be empty"
-msgstr ""
-
 msgid "Last Update Date"
 msgstr ""
 
@@ -1979,9 +1976,6 @@ msgstr ""
 
 msgid "Name"
 msgstr "Nome"
-
-msgid "Name cannot be empty"
-msgstr ""
 
 msgid "Name is mandatory"
 msgstr ""

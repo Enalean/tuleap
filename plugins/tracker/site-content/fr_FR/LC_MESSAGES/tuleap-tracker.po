@@ -1992,9 +1992,6 @@ msgstr "Conserver la valeur"
 msgid "Label"
 msgstr "Label"
 
-msgid "Label cannot be empty"
-msgstr "Le label ne peut pas être vide"
-
 msgid "Last Update Date"
 msgstr "Date de dernière mise à jour"
 
@@ -2221,9 +2218,6 @@ msgstr "N/A"
 
 msgid "Name"
 msgstr "Nom"
-
-msgid "Name cannot be empty"
-msgstr "Le nom ne peut pas être vide"
 
 msgid "Name is mandatory"
 msgstr "Le nom est obligatoire"
