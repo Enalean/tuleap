@@ -46,8 +46,8 @@ function cleanup {
 trap cleanup EXIT
 
 if [ -n "${SETUP_ONLY:-}" ] && [ "$SETUP_ONLY" != "0" ]; then
-    $DOCKERCOMPOSE up -d "$DB_HOST"
+    $DOCKERCOMPOSE up -d "$DB_HOST" "proxysql-$DB_HOST"
     $DOCKERCOMPOSE run -e SETUP_ONLY=1 tests /usr/share/tuleap/tests/integration/bin/run.sh
 else
-    COMPOSE_MENU=0 $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --abort-on-container-exit --exit-code-from=tests "$DB_HOST" tests
+    COMPOSE_MENU=0 $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --abort-on-container-exit --exit-code-from=tests "$DB_HOST" "proxysql-$DB_HOST" tests
 fi

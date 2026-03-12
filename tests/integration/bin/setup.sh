@@ -21,9 +21,11 @@ setup_database() {
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
 
-    echo "Use remote db $DB_HOST"
+    if [ "${USE_PROXYSQL:-0}" == "1" ]; then
+        DB_HOST="proxysql-$DB_HOST"
+    fi
 
-    sleep 8
+    echo "Use remote db $DB_HOST"
 
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
         --skip-sanity-check \

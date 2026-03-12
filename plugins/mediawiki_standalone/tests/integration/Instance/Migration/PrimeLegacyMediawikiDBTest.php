@@ -60,16 +60,8 @@ final class PrimeLegacyMediawikiDBTest extends TestCase
         $db->run('DELETE FROM user WHERE user_name = ?', self::TEST_USER_NAME);
         $db->run(sprintf('DROP TABLE %s', $db->escapeIdentifier(self::MW_USER_TABLE)));
         $db->run(sprintf('DROP TABLE IF EXISTS %s', $db->escapeIdentifier(self::MAPPING_TABLE)));
-        try {
-            $db->run(sprintf('DROP DATABASE %s', $db->escapeIdentifier(self::ADDITIONAL_TEST_DB)));
-        } catch (\RuntimeException $exception) {
-            // If we are not testing a migration with a move to a single DB this table might not exist
-        }
-        try {
-            $db->run(sprintf('DROP TABLE %s', $db->escapeIdentifier(self::DB_PREFIX . self::TEST_TABLE_BASE_NAME)));
-        } catch (\RuntimeException $exception) {
-            // If we are not testing a migration with a move to a single DB this table might not exist
-        }
+        $db->run(sprintf('DROP DATABASE IF EXISTS %s', $db->escapeIdentifier(self::ADDITIONAL_TEST_DB)));
+        $db->run(sprintf('DROP TABLE IF EXISTS %s', $db->escapeIdentifier(self::DB_PREFIX . self::TEST_TABLE_BASE_NAME)));
     }
 
     public function testMappingTableCreation(): void

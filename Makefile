@@ -179,11 +179,12 @@ tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" USE_PROXYSQL="$(USE_PROXYSQL)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (84). DB to select the database to use (mysql80,mysql84). SEED to set the random seed order.
+tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (84). DB to select the database to use (mysql80,mysql84). SEED to set the random seed order. USE_PROXYSQL=0 to disable the use of ProxySQL.
 	$(eval PHP_VERSION ?= 84)
 	$(eval DB ?= mysql84)
 	$(eval SETUP_ONLY ?= 0)
-	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
+	$(eval USE_PROXYSQL ?= 1)
+	SETUP_ONLY="$(SETUP_ONLY)" USE_PROXYSQL="$(USE_PROXYSQL)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
 tests-e2e: ## Run E2E tests. DB to select the database to use (mysql80,mysql84).
 	$(eval DB ?= mysql84)
