@@ -2,15 +2,15 @@
   pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) { },
 }:
 let
-  version = "3.0.5";
+  version = "3.0.6";
   packagePatchVersion = "1";
   rpmEl9 = pkgs.fetchurl {
     url = "https://github.com/sysown/proxysql/releases/download/v${version}/proxysql-${version}-${packagePatchVersion}-almalinux9.x86_64.rpm";
-    hash = "sha256-aDlT+zTDUO9d10A3LWWSnxLq/tsZTbY5ZJp6skUwsJ8=";
+    hash = "sha256-w3kz18oPPUBiAitvBbyGf3d8GjkTvx6ZEsJ07oE1LJg=";
   };
   rpmEl10 = pkgs.fetchurl {
     url = "https://github.com/sysown/proxysql/releases/download/v${version}/proxysql-${version}-${packagePatchVersion}-almalinux10.x86_64.rpm";
-    hash = "sha256-Y4odzRlf2yDBJ9c04Ht1XtLAAy4PfGY8UESi/wn8h0U=";
+    hash = "sha256-e0m4+eWKcISWDAH7X6p3aCjrPFsv4ycVwOuf8fz7+t4=";
   };
 in
 pkgs.stdenvNoCC.mkDerivation {
