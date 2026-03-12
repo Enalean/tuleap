@@ -19,10 +19,10 @@
 
 <template>
     <h2 class="tlp-modal-subtitle">{{ $gettext("Approval table global settings") }}</h2>
-    <div class="tlp-property">
-        <label class="tlp-label">{{ $gettext("Attached to document version") }}</label>
-        <p>{{ table.version_number }}</p>
-    </div>
+    <approval-table-version-link
+        v-bind:table="table"
+        v-bind:label="$gettext('Attached to document version')"
+    />
     <div class="tlp-form-element">
         <label class="tlp-label" for="owner-lazybox">
             {{ $gettext("Approval requester") }}
@@ -62,6 +62,7 @@
 <script setup lang="ts">
 import type { ApprovalTable } from "../../../type";
 import { onMounted, ref } from "vue";
+import ApprovalTableVersionLink from "../ApprovalTableVersionLink.vue";
 import "@tuleap/lazybox";
 import type { Lazybox } from "@tuleap/lazybox";
 import type { User } from "@tuleap/core-rest-api-types";

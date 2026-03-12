@@ -21,6 +21,7 @@ import type { ApprovalTable } from "../../src/type";
 
 export class ApprovalTableBuilder {
     private readonly id: number;
+    private version_id: number | null = null;
     private version_number: number | null = null;
     private version_label: string = "";
     private notification_type: string = "";
@@ -30,6 +31,11 @@ export class ApprovalTableBuilder {
 
     constructor(id: number) {
         this.id = id;
+    }
+
+    public withVersionId(version_id: number): this {
+        this.version_id = version_id;
+        return this;
     }
 
     public withVersionNumber(version_number: number): this {
@@ -69,7 +75,7 @@ export class ApprovalTableBuilder {
             approval_state: this.approval_state,
             approval_request_date: "",
             has_been_approved: false,
-            version_id: null,
+            version_id: this.version_id,
             version_number: this.version_number,
             version_label: this.version_label,
             notification_type: this.notification_type,

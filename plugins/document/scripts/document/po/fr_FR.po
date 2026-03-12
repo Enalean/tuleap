@@ -996,13 +996,6 @@ msgstr "Abonnés"
 msgid "Summary"
 msgstr "Résumé"
 
-msgid ""
-"Table is not saved when you change it, please click on 'Update' button to "
-"save it."
-msgstr ""
-"La table n'est pas sauvegardée quand vous effectuez des changements, pensez "
-"à cliquer sur le bouton 'Mettre à jour' pour sauvegarder."
-
 msgid "Table status"
 msgstr "Status de la table"
 

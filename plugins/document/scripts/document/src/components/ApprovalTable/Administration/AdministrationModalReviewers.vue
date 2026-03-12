@@ -18,14 +18,8 @@
   -->
 
 <template>
+    <hr class="tlp-modal-separator" />
     <h2 class="tlp-modal-subtitle">{{ $gettext("Reviewers") }}</h2>
-    <div class="tlp-alert-info">
-        {{
-            $gettext(
-                "Table is not saved when you change it, please click on 'Update' button to save it.",
-            )
-        }}
-    </div>
     <table class="tlp-table reviewers-table">
         <thead>
             <tr>
@@ -45,7 +39,9 @@
                 v-else
                 v-for="(reviewer, index) in table_reviewers_value"
                 v-bind:key="reviewer.user.id"
-                v-bind:class="{ 'tlp-table-row-info': ranked_reviewer_ids.has(reviewer.user.id) }"
+                v-bind:class="{
+                    'tlp-table-row-info': ranked_reviewer_ids.has(reviewer.user.id),
+                }"
                 data-test="reviewer-row"
             >
                 <td>
