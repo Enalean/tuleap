@@ -215,7 +215,7 @@ final class XmlImportTest extends TestCase
         $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($artifact);
 
         $this->formelement_factory->method('getUsedFieldByName')->with(self::TRACKER_ID, 'summary')->willReturn($this->tracker_formelement_field_string);
-        $this->formelement_factory->method('getFormElementByName')->willReturn([]);
+        $this->formelement_factory->method('getFormElementByName')->willReturn(null);
 
         $this->external_field_extractor->expects($this->once())->method('extractExternalFieldsFromArtifact');
 
@@ -306,7 +306,7 @@ final class XmlImportTest extends TestCase
         $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($artifact);
 
         $this->formelement_factory->method('getUsedFieldByName')->with(self::TRACKER_ID, 'summary')->willReturn($this->tracker_formelement_field_string);
-        $this->formelement_factory->method('getFormElementByName')->willReturn([]);
+        $this->formelement_factory->method('getFormElementByName')->willReturn(null);
 
         $this->external_field_extractor->expects($this->once())->method('extractExternalFieldsFromArtifact');
 

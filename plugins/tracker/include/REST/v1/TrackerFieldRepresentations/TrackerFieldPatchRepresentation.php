@@ -33,6 +33,16 @@ class TrackerFieldPatchRepresentation
     public ?string $label = null;
 
     /**
+     * @var string | null The new description of the form element {@required false}
+     */
+    public ?string $description = null;
+
+    /**
+     * @var string | null The new name of the form element {@required false}
+     */
+    public ?string $name = null;
+
+    /**
      * @var array | null The new values for list field {@type string} {@required false}
      */
     public $new_values;
@@ -47,11 +57,13 @@ class TrackerFieldPatchRepresentation
      */
     public ?MoveTrackerFieldsPATCHRepresentation $move = null;
 
-    public function __construct(?string $label, array $new_values, ?bool $use_it, ?MoveTrackerFieldsPATCHRepresentation $move)
+    public function __construct(?string $name, ?string $label, ?string $description, array $new_values, ?bool $use_it, ?MoveTrackerFieldsPATCHRepresentation $move)
     {
-        $this->label      = $label;
-        $this->new_values = $new_values;
-        $this->use_it     = $use_it;
-        $this->move       = $move;
+        $this->label       = $label;
+        $this->new_values  = $new_values;
+        $this->use_it      = $use_it;
+        $this->move        = $move;
+        $this->name        = $name;
+        $this->description = $description;
     }
 }

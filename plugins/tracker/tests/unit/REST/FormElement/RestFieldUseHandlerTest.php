@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\REST\FormElement;
 use Override;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
 use Tuleap\Stubs\AddHistoryStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\FormElement\TrackerFieldAdder;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\TrackerFormElementRemover;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFieldPatchRepresentationTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\UnuseFormElementStub;
 use Tuleap\Tracker\Test\Stub\FormElement\UseFormElementStub;
@@ -68,7 +68,7 @@ final class RestFieldUseHandlerTest extends TestCase
 
     public function testItDoesNothingIfWeDoNotWantToUpdateTheUsageOfTheField(): void
     {
-        $patch = new TrackerFieldPatchRepresentation(null, [], null, null);
+        $patch = TrackerFieldPatchRepresentationTestBuilder::aPatch()->build();
 
         $field_remove_handler = new RestFieldUseHandler(new TrackerFormElementRemover($this->unuse_dao, $this->history_dao), new TrackerFieldAdder($this->form_element_factory_add));
         $field_remove_handler->handle($this->field, $patch, $this->current_user);
@@ -79,7 +79,7 @@ final class RestFieldUseHandlerTest extends TestCase
 
     public function testItEnablesTheUsageOfTheField(): void
     {
-        $patch = new TrackerFieldPatchRepresentation(null, [], true, null);
+        $patch = TrackerFieldPatchRepresentationTestBuilder::aPatch()->withUseIt(true)->build();
 
         $this->field = StringFieldBuilder::aStringField(1)->unused()->build();
 
@@ -92,7 +92,7 @@ final class RestFieldUseHandlerTest extends TestCase
 
     public function testItDisablesTheUsageOfTheField(): void
     {
-        $patch = new TrackerFieldPatchRepresentation(null, [], false, null);
+        $patch = TrackerFieldPatchRepresentationTestBuilder::aPatch()->withUseIt(false)->build();
 
         $field = $this->createStub(TrackerFormElement::class);
         $field->method('getId')->willReturn(52);
