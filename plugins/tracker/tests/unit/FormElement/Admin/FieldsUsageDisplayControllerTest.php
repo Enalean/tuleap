@@ -54,6 +54,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createStub(StructureRepresentationBuilder::class),
             $this->createStub(FormElementRepresentationsBuilder::class),
+            $this->createStub(FieldsConfigurationWarningsRetriever::class),
             IncludeAssetsBuilder::build(),
             EventDispatcherStub::withIdentityCallback(),
         );
@@ -82,6 +83,7 @@ final class FieldsUsageDisplayControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createStub(StructureRepresentationBuilder::class),
             $this->createStub(FormElementRepresentationsBuilder::class),
+            $this->createStub(FieldsConfigurationWarningsRetriever::class),
             IncludeAssetsBuilder::build(),
             EventDispatcherStub::withIdentityCallback(),
         );
@@ -114,12 +116,16 @@ final class FieldsUsageDisplayControllerTest extends TestCase
         $form_element_representations_builder = $this->createStub(FormElementRepresentationsBuilder::class);
         $form_element_representations_builder->method('buildRepresentationsInTrackerContextIgnoringReadPermission')->willReturn([]);
 
+        $configuration_warnings_retriever = $this->createStub(FieldsConfigurationWarningsRetriever::class);
+        $configuration_warnings_retriever->method('retrieveWarnings')->willReturn([]);
+
         $controller = new FieldsUsageDisplayController(
             RetrieveTrackerStub::withTracker($tracker),
             DisplayTrackerLayoutStub::build(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $structure_representation_builder,
             $form_element_representations_builder,
+            $configuration_warnings_retriever,
             IncludeAssetsBuilder::build(),
             EventDispatcherStub::withIdentityCallback(),
         );

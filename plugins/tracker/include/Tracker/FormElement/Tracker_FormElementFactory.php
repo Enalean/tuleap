@@ -50,6 +50,7 @@ use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifact
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\RetrieveAnyTypeOfUsedFormElementById;
+use Tuleap\Tracker\FormElement\Field\RetrieveBurndownField;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
@@ -74,7 +75,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements DeleteFormElement, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElementFactory implements RetrieveBurndownField, DeleteFormElement, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string FIELD_STRING_TYPE                 = 'string';
     public const string FIELD_TEXT_TYPE                   = 'text';
@@ -764,10 +765,8 @@ class Tracker_FormElementFactory implements DeleteFormElement, RetrieveUsedField
         return $this->getUsedFormElementsByType($tracker, [self::FIELD_BURNDOWN]);
     }
 
-    /**
-     * @return BurndownField|null
-     */
-    public function getABurndownField(PFUser $user, Tracker $tracker)
+    #[Override]
+    public function getABurndownField(PFUser $user, Tracker $tracker): ?BurndownField
     {
         $burndown_fields = $this->getUsedBurndownFields($tracker);
         if (count($burndown_fields) > 0 && $burndown_fields[0]->userCanRead($user)) {

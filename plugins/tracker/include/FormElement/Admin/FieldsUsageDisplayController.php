@@ -44,6 +44,7 @@ final readonly class FieldsUsageDisplayController implements DispatchableWithReq
         private \TemplateRendererFactory $renderer_factory,
         private StructureRepresentationBuilder $structure_representation_builder,
         private FormElementRepresentationsBuilder $form_element_representations_builder,
+        private FieldsConfigurationWarningsRetriever $fields_configuration_warnings_retriever,
         private IncludeAssetsGeneric $ckeditor_assets,
         private EventDispatcherInterface $event_dispatcher,
     ) {
@@ -95,6 +96,7 @@ final readonly class FieldsUsageDisplayController implements DispatchableWithReq
                     $current_user,
                     $this->form_element_representations_builder,
                     $this->structure_representation_builder,
+                    $this->fields_configuration_warnings_retriever,
                 ),
             );
         $tracker->displayFooter($this->layout);

@@ -45,6 +45,7 @@ import type {
     ShouldDisplayTime,
     CrossReferenceFieldIdentifier,
     FileFieldIdentifier,
+    BurndownFieldIdentifier,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -191,6 +192,10 @@ export interface FileFieldStructure extends BaseFieldStructure {
     readonly type: FileFieldIdentifier;
 }
 
+export interface BurndownFieldStructure extends BaseFieldStructure {
+    readonly type: BurndownFieldIdentifier;
+}
+
 type StaticField = LineBreakStructure | SeparatorStructure | StaticRichTextStructure;
 
 export type StructureFields =
@@ -207,7 +212,8 @@ export type StructureFields =
     | StaticField
     | UserFieldStructure
     | CrossReferenceStructure
-    | FileFieldStructure;
+    | FileFieldStructure
+    | BurndownFieldStructure;
 
 export interface StructureFormat {
     readonly id: number;

@@ -40,6 +40,7 @@ final readonly class FieldsUsageDisplayPresenter
         public string $color_value,
         public string $json_encoded_fields,
         public string $json_encoded_structure,
+        public string $json_encoded_warnings,
     ) {
     }
 
@@ -48,6 +49,7 @@ final readonly class FieldsUsageDisplayPresenter
         \PFUser $user,
         FormElementRepresentationsBuilder $form_element_representations_builder,
         StructureRepresentationBuilder $structure_representation_builder,
+        FieldsConfigurationWarningsRetriever $configuration_warnings_retriever,
     ): self {
         return new self(
             FieldsUsageDisplayController::getUrl($tracker),
@@ -57,6 +59,7 @@ final readonly class FieldsUsageDisplayPresenter
             $tracker->getColor()->value,
             encode($form_element_representations_builder->buildRepresentationsInTrackerContextIgnoringReadPermission($tracker, $user)),
             encode($structure_representation_builder->getStructureRepresentation($tracker)),
+            encode($configuration_warnings_retriever->retrieveWarnings($tracker, $user)),
         );
     }
 }
