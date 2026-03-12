@@ -63,7 +63,7 @@ select {
     transition: border-color 150ms linear;
     border: 1px solid var(--tlp-neutral-dark-color-darker-05);
     border-radius: var(--tlp-medium-radius);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     box-shadow: none;
     font-family: var(--tlp-font-family);
     font-size: 0.875rem;
@@ -104,8 +104,8 @@ textarea {
 
 select {
     padding: 0 (12px * 2 + 8px) 0 12px;
-    background: var(--tlp-white-color) url("@tuleap/tlp-styles/images/field-double-arrows.svg")
-        no-repeat;
+    background: var(--tlp-structure-background-color)
+        url("@tuleap/tlp-styles/images/field-double-arrows.svg") no-repeat;
     background-position: right 12px center;
     -moz-appearance: none; // stylelint-disable-line property-no-vendor-prefix
     -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
@@ -115,7 +115,7 @@ select {
     &.small {
         height: 32px;
         padding: 0 calc(var(--tlp-small-spacing) * 2 + 6px) 0 var(--tlp-small-spacing);
-        background: var(--tlp-white-color)
+        background: var(--tlp-structure-background-color)
             url("@tuleap/tlp-styles/images/field-double-arrows-small.svg") no-repeat;
         background-position: right var(--tlp-small-spacing) center;
         font-size: 0.8125rem;
@@ -124,7 +124,7 @@ select {
     &[multiple] {
         height: auto;
         padding: 8px 12px;
-        background: var(--tlp-white-color);
+        background: var(--tlp-structure-background-color);
     }
 }
 
@@ -758,7 +758,7 @@ select.input-small {
     padding: var(--tlp-medium-spacing);
     border-top: 1px solid var(--tlp-border-light-color);
     border-radius: 0 0 var(--tlp-x-large-radius) var(--tlp-x-large-radius);
-    background-color: var(--tlp-white-color);
+    background-color: var(--tlp-structure-background-color);
     text-align: right;
 }
 
@@ -813,7 +813,7 @@ select.input-small {
         position: sticky;
         top: variables-common.$navbar-height;
         border-bottom: 0;
-        background: var(--tlp-white-color);
+        background: var(--tlp-structure-background-color);
         background-clip: padding-box;
         box-shadow: inset 0 -2px 0 0 var(--tlp-main-color);
     }

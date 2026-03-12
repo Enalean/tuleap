@@ -35,7 +35,7 @@
     transition: background 100ms ease-in-out;
     border: 1px solid var(--tlp-border-color);
     border-radius: var(--tlp-large-radius);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     cursor: pointer;
     gap: var(--tlp-small-spacing);
 
@@ -94,7 +94,7 @@
     border: 1px solid var(--tlp-border-color);
     border-top: 0;
     border-bottom-color: var(--tlp-border-light-color);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
 }
 
 .planned-iteration-no-content {

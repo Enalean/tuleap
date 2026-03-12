@@ -58,7 +58,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 
 #git-repository-blob-file-rendered {
     padding: var(--tlp-medium-spacing);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
 
     pre {
         overflow-x: auto;
@@ -69,7 +69,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 #git-repository-blame-file {
     display: flex;
     width: 100%;
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     font-family: var(--tlp-font-family-mono);
     line-height: var(--tlp-code-line-height);
 }

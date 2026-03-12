@@ -82,7 +82,7 @@ const additional_class = computed(() => {
     }
 
     50% {
-        background: var(--tlp-white-color);
+        background: var(--tlp-structure-background-color);
     }
 
     100% {
@@ -110,7 +110,7 @@ const additional_class = computed(() => {
 @use "@/themes/includes/viewport-breakpoint";
 
 .artidoc-section-container {
-    --tuleap-artidoc-section-background: var(--tlp-white-color);
+    --tuleap-artidoc-section-background: var(--tlp-structure-background-color);
     --border-width: 4px;
 
     padding: var(--tlp-medium-spacing) 0 0

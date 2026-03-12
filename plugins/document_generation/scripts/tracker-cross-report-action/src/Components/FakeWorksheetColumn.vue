@@ -45,7 +45,7 @@ defineProps<{ tracker_name: string | null }>();
     height: calc(100% - var(--tlp-medium-spacing) - var(--tlp-medium-spacing));
     padding-top: var(--tlp-medium-spacing);
     padding-bottom: var(--tlp-medium-spacing);
-    background-color: var(--tlp-white-color);
+    background-color: var(--tlp-structure-background-color);
 }
 
 .worksheet-column-disabled {

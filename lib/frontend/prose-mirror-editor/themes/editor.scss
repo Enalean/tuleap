@@ -24,7 +24,7 @@
     position: relative;
     z-index: 2;
     border-radius: var(--tlp-form-element-border-radius);
-    background-color: var(--tlp-white-color);
+    background-color: var(--tlp-structure-background-color);
 
     &:focus-within {
         transition: box-shadow 350ms;

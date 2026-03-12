@@ -98,7 +98,7 @@ $accessibility-pattern-right-margin: 4px;
 
     @keyframes blink-kanban-card {
         0% {
-            background: var(--secondary-color, var(--tlp-white-color));
+            background: var(--secondary-color, var(--tlp-structure-background-color));
             box-shadow: var(--box-shadow, (inset 0 0 0 1px transparent, var(--tlp-card-shadow)));
         }
 
@@ -111,7 +111,7 @@ $accessibility-pattern-right-margin: 4px;
         }
 
         100% {
-            background: var(--secondary-color, var(--tlp-white-color));
+            background: var(--secondary-color, var(--tlp-structure-background-color));
             box-shadow: var(--box-shadow, (inset 0 0 0 1px transparent, var(--tlp-card-shadow)));
         }
     }
@@ -157,14 +157,14 @@ kanban-item {
         box-shadow 150ms ease-in-out,
         background-color 150ms ease-in-out;
     border-radius: var(--tlp-medium-radius);
-    background: var(--secondary-color, var(--tlp-white-color));
+    background: var(--secondary-color, var(--tlp-structure-background-color));
     box-shadow: var(--box-shadow, var(--tlp-card-shadow));
     cursor: move;
 }
 
 .kanban-item-content-type-border {
     flex: 0 0 auto;
-    border-left: 4px solid var(--item-type-color, var(--tlp-white-color));
+    border-left: 4px solid var(--item-type-color, var(--tlp-structure-background-color));
     border-top-left-radius: var(--tlp-medium-radius);
     border-bottom-left-radius: var(--tlp-medium-radius);
 }

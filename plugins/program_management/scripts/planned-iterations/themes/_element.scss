@@ -52,7 +52,7 @@ $accessibility-pattern-right-margin: 6px;
         calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
-    background: var(--secondary-color, var(--tlp-white-color));
+    background: var(--secondary-color, var(--tlp-structure-background-color));
     box-shadow: var(--tlp-card-shadow);
 
     &[class*="element-card-background-"] {

@@ -67,7 +67,7 @@ $thread-border-width: 2px;
     flex: 1;
     border: 1px solid var(--tlp-border-color);
     border-radius: var(--tlp-medium-radius);
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     box-shadow: var(--tlp-pane-shadow);
 
     &::before {

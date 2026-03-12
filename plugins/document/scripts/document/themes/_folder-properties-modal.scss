@@ -52,7 +52,7 @@
     > .tlp-label {
         position: relative;
         z-index: 2;
-        background: var(--tlp-white-color);
+        background: var(--tlp-structure-background-color);
         box-shadow: 0 10px 5px var(--tlp-white-color);
     }
 }
@@ -61,7 +61,7 @@
     position: relative;
     z-index: 2;
     margin: 12px 0 0;
-    background: var(--tlp-white-color);
+    background: var(--tlp-structure-background-color);
     box-shadow:
         0 3px 3px var(--tlp-white-color),
         0 -3px 3px var(--tlp-white-color);

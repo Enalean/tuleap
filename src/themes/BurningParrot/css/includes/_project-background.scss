@@ -81,7 +81,7 @@
             &.tlp-tab-active {
                 @include project-background.background-for-links;
 
-                border-top-color: var(--tlp-white-color);
+                border-top-color: var(--tlp-structure-background-color);
             }
 
             &:hover > .tlp-tab-menu,
@@ -90,7 +90,7 @@
             }
 
             > .tlp-tab-badge-append {
-                border-color: var(--tlp-white-color);
+                border-color: var(--tlp-structure-background-color);
                 background: var(--tlp-white-color-transparent-80);
                 color: var(--tlp-white-color);
             }
@@ -123,7 +123,7 @@
     .breadcrumb-project-privacy-icon {
         &.fa-lock,
         &.fa-tlp-lock-plus-r {
-            background: var(--tlp-white-color);
+            background: var(--tlp-structure-background-color);
             color: var(--tlp-dark-color);
         }
 
