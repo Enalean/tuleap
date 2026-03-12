@@ -20,7 +20,7 @@ services:
   proxysql-mysql80:
     image: ${DOCKER_REGISTRY:-docker.io}/proxysql/proxysql:3.0.5@sha256:a8a90427035b0daafb64262334c70f9feb690a9a997c090fc4d846584b99f367
     volumes:
-      - ../etc/DBConfig/sqlproxy-84.cnf:/etc/proxysql.cnf:ro,cached
+      - ../etc/DBConfig/sqlproxy-80.cnf:/etc/proxysql.cnf:ro,cached
     depends_on:
       mysql80:
         condition: service_healthy
