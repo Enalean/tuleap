@@ -62,6 +62,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
+use Tuleap\Tracker\FormElement\RetrieveFormElementByName;
 use Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker;
 use Tuleap\Tracker\FormElement\StaticField\LineBreak\LineBreakStaticField;
 use Tuleap\Tracker\FormElement\StaticField\RichText\RichTextStaticField;
@@ -75,7 +76,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements RetrieveBurndownField, DeleteFormElement, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElementFactory implements RetrieveFormElementByName, RetrieveBurndownField, DeleteFormElement, RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField, RetrieveFieldById, RetrieveAnyTypeOfUsedFormElementById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string FIELD_STRING_TYPE                 = 'string';
     public const string FIELD_TEXT_TYPE                   = 'text';
@@ -310,15 +311,8 @@ class Tracker_FormElementFactory implements RetrieveBurndownField, DeleteFormEle
         return null;
     }
 
-    /**
-     * Get a formElement by its short name
-     *
-     * @param int $tracker_id the tracker of the formElement to retrieve
-     * @param string $name the name of the formElement to retrieve
-     *
-     * @return TrackerField
-     */
-    public function getFormElementByName($tracker_id, $name)
+    #[Override]
+    public function getFormElementByName(int $tracker_id, string $name): ?TrackerFormElement
     {
         if (! isset($this->formElements_by_name[$tracker_id][$name])) {
             if ($row = $this->getDao()->searchByTrackerIdAndName($tracker_id, $name)->getRow()) {

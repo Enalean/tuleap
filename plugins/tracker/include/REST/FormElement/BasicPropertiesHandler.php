@@ -22,29 +22,69 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\FormElement;
 
-use Luracast\Restler\RestException;
 use Override;
 use PFUser;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\FormElement\FieldNameFormatter;
+use Tuleap\Tracker\FormElement\RetrieveFormElementByName;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 final readonly class BasicPropertiesHandler implements PatchHandler
 {
-    public function __construct(private FieldDao $dao)
+    public function __construct(private FieldDao $dao, private RetrieveFormElementByName $factory)
     {
     }
 
     #[Override]
     public function handle(TrackerFormElement $field, TrackerFieldPatchRepresentation $patch, PFUser $current_user): void
     {
+        $original_name        = $field->name;
+        $original_label       = $field->label;
+        $original_description = $field->description;
+
+        $this->setNewName($field, $patch);
+        $this->setNewLabel($field, $patch);
+        $this->setNewDescription($field, $patch);
+
+        if ($original_label !== $field->label || $original_description !== $field->description || $original_name !== $field->name) {
+            $this->dao->save($field);
+        }
+    }
+
+    private function setNewLabel(TrackerFormElement $field, TrackerFieldPatchRepresentation $patch): void
+    {
         if ($patch->label !== null) {
             $label = trim($patch->label);
             if ($label === '') {
-                throw new RestException(400, 'Label cannot be empty.');
+                throw new I18NRestException(400, dgettext('tuleap-tracker', 'Label cannot be empty'));
             }
             $field->label = $label;
-            $this->dao->save($field);
+        }
+    }
+
+    private function setNewDescription(TrackerFormElement $field, TrackerFieldPatchRepresentation $patch): void
+    {
+        if ($patch->description !== null) {
+            $field->description = trim($patch->description);
+        }
+    }
+
+    private function setNewName(TrackerFormElement $field, TrackerFieldPatchRepresentation $patch): void
+    {
+        if ($patch->name !== null) {
+            $name = FieldNameFormatter::getFormattedName($patch->name);
+            if ($name === '') {
+                throw new I18NRestException(400, dgettext('tuleap-tracker', 'Name cannot be empty'));
+            }
+
+            $existing_field = $this->factory->getFormElementByName($field->getTrackerId(), $name);
+            if ($existing_field !== null && $existing_field->getId() !== $field->getId()) {
+                throw new I18NRestException(400, dgettext('tuleap-tracker', 'Unable to change the name of the element, it is already in use by another one'));
+            }
+
+            $field->name = $name;
         }
     }
 }
