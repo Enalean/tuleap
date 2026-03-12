@@ -20,6 +20,7 @@ services:
       - tuleap
     depends_on:
       - mailhog
+      - ${DB_HOST}
 
   mailhog:
     image: ${DOCKER_REGISTRY:-docker.io}/mailhog/mailhog:v1.0.1

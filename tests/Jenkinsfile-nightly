@@ -67,7 +67,7 @@ pipeline {
             }
             post {
                 always {
-                    junit 'results/e2e/full-mysql84/*.xml'
+                    junit 'results/e2e/full-mysql84-with-proxysql/*.xml'
                 }
             }
         }
@@ -92,7 +92,7 @@ pipeline {
                     }
                     post {
                         always {
-                            junit 'results/e2e/full-mysql80/*.xml'
+                            junit 'results/e2e/full-mysql80-with-proxysql/*.xml'
                         }
                     }
                 }
@@ -109,6 +109,17 @@ pipeline {
                 stage('REST') {
                     steps { script { actions.runRESTTests('mysql84', '84', false) } }
                     post { always { junit 'results/api-rest/*/*' } }
+                }
+                stage('E2E tests') {
+                    options { retry(1) }
+                    steps {
+                        script { actions.runEndToEndTests('full', 'mysql84', false) }
+                    }
+                    post {
+                        always {
+                            junit 'results/e2e/full-mysql84-without-proxysql/*.xml'
+                        }
+                    }
                 }
             }
         }

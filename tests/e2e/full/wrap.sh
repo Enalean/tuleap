@@ -16,10 +16,10 @@ fi
 
 case "${1:-}" in
     "mysql80")
-    export DB_HOST="mysql80"
+    DB_FLAVOR="mysql80"
     ;;
     "mysql84")
-    export DB_HOST="mysql84"
+    DB_FLAVOR="mysql84"
     ;;
     *)
     echo "A database type must be provided as parameter. Allowed values are:"
@@ -28,15 +28,21 @@ case "${1:-}" in
     exit 1
 esac
 
+if [ "${USE_PROXYSQL:-}" == "1" ]; then
+    export DB_HOST="proxysql-${DB_FLAVOR}"
+else
+    export DB_HOST="${DB_FLAVOR}"
+fi
+
 project_name="$(echo -n "e2e-tests-${BUILD_TAG:-dev}-${DB_HOST}" | tr '.' '_' | tr '[A-Z]' '[a-z]')"
-DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f ./tests/e2e/compose-run-tests.yaml -f tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file $additional_compose_file -p $project_name"
+DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f ./tests/e2e/compose-run-tests.yaml -f tests/e2e/docker-compose-db-${DB_FLAVOR}.yml $plugins_compose_file $additional_compose_file -p $project_name"
 
 test_results_folder="./test_results_e2e_full-${DB_HOST}"
 if [ "$#" -eq "2" ]; then
     test_results_folder="$2"
 fi
 
-cypress_version="$(python3 -c 'import json,sys;print(json.load(sys.stdin)["version"], end="")' < ./node_modules/cypress/package.json)"
+cypress_version="$(php -r 'echo json_decode(stream_get_contents(STDIN))->version;' < ./node_modules/cypress/package.json)"
 
 clean_env() {
     $DOCKERCOMPOSE down --remove-orphans --volumes || true
@@ -66,6 +72,7 @@ $DOCKERCOMPOSE logs tuleap > "$test_results_folder/logs/tuleap.log"
 
 $DOCKERCOMPOSE logs test-phpunit > "$test_results_folder/logs/test-phpunit.log"
 $DOCKERCOMPOSE logs test-cypress > "$test_results_folder/logs/test-cypress.log"
+$DOCKERCOMPOSE logs "proxysql-$DB_FLAVOR" > "$test_results_folder/logs/proxysql.log"
 
 [ "$(docker inspect "$test_phpunit_container_id" --format='{{.State.ExitCode}}')" -eq 0 ]
 [ "$(docker inspect "$test_cypress_container_id" --format='{{.State.ExitCode}}')" -eq 0 ]
