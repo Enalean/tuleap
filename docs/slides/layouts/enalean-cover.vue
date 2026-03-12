@@ -6,7 +6,7 @@
         </div>
     </div>
 </template>
-<style scoped>
+<style scoped lang="scss">
 .cover {
     background: url("/img/background_cover.webp");
     background-repeat: no-repeat;
