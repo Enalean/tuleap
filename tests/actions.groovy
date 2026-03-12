@@ -63,9 +63,15 @@ def runDBTests(String db, String php, Boolean with_proxysql = true) {
     """
 }
 
-def runEndToEndTests(String flavor, String db) {
+def runEndToEndTests(String flavor, String db, Boolean with_proxysql = true) {
+    def proxysql_use_env='USE_PROXYSQL=1'
+    def proxysql_result_folder_part='with-proxysql'
+    if (! with_proxysql) {
+        proxysql_use_env='USE_PROXYSQL=0'
+        proxysql_result_folder_part='without-proxysql'
+    }
     dir ('sources') {
-        sh "tests/e2e/${flavor}/wrap.sh '${db}' '$WORKSPACE/results/e2e/${flavor}-${db}/'"
+        sh "${proxysql_use_env} tests/e2e/${flavor}/wrap.sh '${db}' '$WORKSPACE/results/e2e/${flavor}-${db}-${proxysql_result_folder_part}/'"
     }
 }
 

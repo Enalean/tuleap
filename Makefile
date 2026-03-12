@@ -186,13 +186,15 @@ tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP
 	$(eval USE_PROXYSQL ?= 1)
 	SETUP_ONLY="$(SETUP_ONLY)" USE_PROXYSQL="$(USE_PROXYSQL)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-e2e: ## Run E2E tests. DB to select the database to use (mysql80,mysql84).
+tests-e2e: ## Run E2E tests. DB to select the database to use (mysql80,mysql84). USE_PROXYSQL=0 to disable the use of ProxySQL.
 	$(eval DB ?= mysql84)
-	@tests/e2e/full/wrap.sh "$(DB)"
+	$(eval USE_PROXYSQL ?= 1)
+	@USE_PROXYSQL="$(USE_PROXYSQL)" tests/e2e/full/wrap.sh "$(DB)"
 
-tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql80,mysql84).
+tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql80,mysql84). USE_PROXYSQL=0 to disable the use of ProxySQL.
 	$(eval DB ?= mysql84)
-	@tests/e2e/full/wrap_for_dev_context.sh "$(DB)"
+	$(eval USE_PROXYSQL ?= 1)
+	@USE_PROXYSQL="$(USE_PROXYSQL)" tests/e2e/full/wrap_for_dev_context.sh "$(DB)"
 
 tests_cypress:
 	@$(MAKE) --no-print-directory tests-e2e

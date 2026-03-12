@@ -8,10 +8,10 @@ plugins_compose_file="$(find ./plugins/*/tests/e2e/ -name docker-compose.yml -pr
 
 case "${1:-}" in
     "mysql80")
-    export DB_HOST="mysql80"
+    DB_FLAVOR="mysql80"
     ;;
     "mysql84")
-    export DB_HOST="mysql84"
+    DB_FLAVOR="mysql84"
     ;;
     *)
     echo "A database type must be provided as parameter. Allowed values are:"
@@ -20,8 +20,14 @@ case "${1:-}" in
     exit 1
 esac
 
+if [ "${USE_PROXYSQL:-}" == "1" ]; then
+    export DB_HOST="proxysql-${DB_FLAVOR}"
+else
+    export DB_HOST="${DB_FLAVOR}"
+fi
+
 export TULEAP_NETWORK_INTERNAL="false"
-DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f ./tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file -p e2e-tests-${DB_HOST}"
+DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f ./tests/e2e/docker-compose-db-${DB_FLAVOR}.yml $plugins_compose_file -p e2e-tests-${DB_HOST}"
 
 test_results_folder='./test_results_e2e_full'
 if [ "$#" -eq "2" ]; then
