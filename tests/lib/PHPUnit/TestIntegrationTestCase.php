@@ -59,7 +59,7 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
         $this->savepoint_id = 'save' . random_int(0, 99999999999);
         $db                 = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->beginTransaction();
-        $db->run('SAVEPOINT ' . $this->savepoint_id);
+        $db->getPdo()->exec('SAVEPOINT ' . $this->savepoint_id);
     }
 
     #[\PHPUnit\Framework\Attributes\After]
@@ -67,7 +67,7 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::tearDown();
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('ROLLBACK TO ' . $this->savepoint_id);
+        $db->getPdo()->exec('ROLLBACK TO ' . $this->savepoint_id);
         $db->rollBack();
 
         ProjectManager::clearInstance();
