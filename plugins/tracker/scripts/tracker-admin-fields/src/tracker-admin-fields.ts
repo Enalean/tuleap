@@ -35,6 +35,7 @@ import {
     TRACKER_COLOR,
     TRACKER_ID,
     TRACKER_SHORTNAME,
+    UNUSED_FIELDS,
 } from "./injection-symbols";
 import type { User } from "@tuleap/core-rest-api-types";
 import { Option } from "@tuleap/option";
@@ -85,6 +86,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(
             FIELDS_CONFIGURATION_WARNINGS,
             JSON.parse(getAttributeOrThrow(mount_point, "data-configuration-warnings")),
+        )
+        .provide(
+            UNUSED_FIELDS,
+            ref(JSON.parse(getAttributeOrThrow(mount_point, "data-unused-fields"))),
         )
         .mount(mount_point);
 });

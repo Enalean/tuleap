@@ -73,6 +73,7 @@ import {
     TRACKER_ROOT,
     FIELDS,
     HANDLE_REMOVE_FIELD,
+    UNUSED_FIELDS,
 } from "../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import RefreshAfterErrorModal from "./RefreshAfterErrorModal.vue";
@@ -88,6 +89,7 @@ const props = defineProps<{
 }>();
 
 const fields = strictInject(FIELDS);
+const unused_fields = strictInject(UNUSED_FIELDS);
 
 const tracker_root = ref<ElementWithChildren>(mapContentStructureToFields(props.structure, fields));
 const current_structure = ref<readonly StructureFormat[]>(props.structure);
@@ -110,6 +112,7 @@ function handleRemoveField(removed_field: StructureFields): void {
     const filtered_fields = fields.filter((field) => field.field_id !== removed_field.field_id);
     provide(FIELDS, filtered_fields);
     tracker_root.value = mapContentStructureToFields(current_structure.value, filtered_fields);
+    unused_fields.value.push(removed_field);
 }
 </script>
 

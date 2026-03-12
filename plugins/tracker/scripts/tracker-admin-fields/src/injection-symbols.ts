@@ -41,3 +41,4 @@ export const FIELDS_CONFIGURATION_WARNINGS: StrictInjectionKey<FieldConfiguratio
     Symbol();
 export const HANDLE_REMOVE_FIELD: StrictInjectionKey<(removed_field: StructureFields) => void> =
     Symbol();
+export const UNUSED_FIELDS: StrictInjectionKey<Ref<StructureFields[]>> = Symbol();

@@ -39,6 +39,7 @@ final readonly class FieldsUsageDisplayPresenter
         public string $shortname,
         public string $color_value,
         public string $json_encoded_fields,
+        public string $json_encoded_unused_fields,
         public string $json_encoded_structure,
         public string $json_encoded_warnings,
     ) {
@@ -58,6 +59,7 @@ final readonly class FieldsUsageDisplayPresenter
             $tracker->getItemName(),
             $tracker->getColor()->value,
             encode($form_element_representations_builder->buildRepresentationsInTrackerContextIgnoringReadPermission($tracker, $user)),
+            encode($form_element_representations_builder->buildUnusedFormElementRepresentationInTrackerContext($tracker, $user)),
             encode($structure_representation_builder->getStructureRepresentation($tracker)),
             encode($configuration_warnings_retriever->retrieveWarnings($tracker, $user)),
         );

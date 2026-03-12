@@ -25,7 +25,8 @@ import EmptyState from "./EmptyState.vue";
 import TrackerStructure from "./TrackerStructure.vue";
 import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
 import ErrorState from "./ErrorState.vue";
-import { FIELDS } from "../injection-symbols";
+import { FIELDS, UNUSED_FIELDS } from "../injection-symbols";
+import { ref } from "vue";
 
 vi.mock("@tuleap/mention", () => ({
     initMentions(): void {
@@ -46,6 +47,7 @@ describe("FieldsUsage", () => {
                 ...getGlobalTestOptions(),
                 provide: {
                     [FIELDS.valueOf()]: [],
+                    [UNUSED_FIELDS.valueOf()]: ref([]),
                 },
             },
         });
@@ -77,6 +79,7 @@ describe("FieldsUsage", () => {
                             label_decorators: [],
                         },
                     ],
+                    [UNUSED_FIELDS.valueOf()]: ref([]),
                 },
             },
         });
@@ -107,6 +110,7 @@ describe("FieldsUsage", () => {
                             label_decorators: [],
                         },
                     ],
+                    [UNUSED_FIELDS.valueOf()]: ref([]),
                 },
             },
         });
