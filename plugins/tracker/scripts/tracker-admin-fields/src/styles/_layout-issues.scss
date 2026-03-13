@@ -18,5 +18,11 @@
  */
 
 .highlight-layout-issue:not(.drek-ghost) {
+    margin: 0 0 var(--tlp-medium-spacing);
     border: 2px dashed var(--tlp-info-color);
+    border-radius: var(--tlp-large-radius);
+
+    &:last-child {
+        margin: 0;
+    }
 }
