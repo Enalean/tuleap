@@ -19,12 +19,15 @@
 
 import * as mutations from "./transition-mutations.js";
 import { create } from "../../support/factories.js";
+import * as url_synchronizer from "../../helpers/url-synchronizer.ts";
 
 describe("Transition mutations", () => {
     let state;
 
     describe("showModal()", () => {
         beforeEach(() => {
+            window.history.replaceState({}, "", "/plugins/tracker/workflow/12/transitions/45");
+
             state = {
                 is_modal_shown: false,
                 is_loading_modal: false,
@@ -37,6 +40,23 @@ describe("Transition mutations", () => {
         it("will set the loading flag", () => expect(state.is_loading_modal).toBe(true));
         it("will reset the current transition", () => expect(state.current_transition).toBeNull());
         it("will set the modal shown flag", () => expect(state.is_modal_shown).toBe(true));
+    });
+
+    describe("clearModalShown", () => {
+        let removeTransitionIdFromUrl;
+
+        beforeEach(() => {
+            state = {
+                is_modal_shown: true,
+            };
+
+            removeTransitionIdFromUrl = jest.spyOn(url_synchronizer, "removeTransitionIdFromUrl");
+            mutations.clearModalShown(state);
+        });
+
+        it("will set to false the modal shown flag", () =>
+            expect(state.is_modal_shown).toBe(false));
+        it("will synchronize url", () => expect(removeTransitionIdFromUrl).toHaveBeenCalled());
     });
 
     describe("failModalOperation()", () => {

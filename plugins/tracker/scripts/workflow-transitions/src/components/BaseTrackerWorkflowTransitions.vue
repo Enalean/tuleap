@@ -117,9 +117,17 @@ export default {
         },
     },
 
-    mounted() {
-        this.$store.dispatch("loadTracker", this.trackerId);
+    async mounted() {
+        await this.$store.dispatch("loadTracker", this.trackerId);
         this.$store.dispatch("transitionModal/setUsedServiceName", this.used_services_names);
+
+        const current_transition_match = window.location.pathname.match(/transitions\/(\d+)$/);
+        const current_transition_id = current_transition_match ? current_transition_match[1] : null;
+        if (current_transition_id) {
+            await this.$store.dispatch("transitionModal/showTransitionConfigurationModal", {
+                id: current_transition_id,
+            });
+        }
     },
 };
 </script>

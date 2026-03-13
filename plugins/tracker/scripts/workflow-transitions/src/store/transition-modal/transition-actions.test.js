@@ -20,6 +20,7 @@
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as rest_querier from "../../api/rest-querier.js";
 import * as item_animator from "../../helpers/item-animator.js";
+import * as url_synchronizer from "../../helpers/url-synchronizer.ts";
 import {
     showTransitionConfigurationModal,
     loadTransition,
@@ -30,12 +31,16 @@ import {
 import { create, createList } from "../../support/factories.js";
 
 describe("Transition modal actions", () => {
-    let getUserGroups, getPostActions, context;
+    let getUserGroups, getPostActions, addTransitionIdToUrl, context;
 
     beforeEach(() => {
+        window.history.replaceState({}, "", "/plugins/tracker/workflow/12/transitions");
+
         getUserGroups = jest.spyOn(rest_querier, "getUserGroups");
 
         getPostActions = jest.spyOn(rest_querier, "getPostActions");
+
+        addTransitionIdToUrl = jest.spyOn(url_synchronizer, "addTransitionIdToUrl");
 
         context = {
             state: {},
@@ -50,9 +55,10 @@ describe("Transition modal actions", () => {
             transition = create("transition", { id: 1 });
         });
 
-        it("will first show the modal, load the transition, load the cached user groups, load the actions and clear the loading flag", async () => {
+        it("will first synchronize url, show the modal, load the transition, load the cached user groups, load the actions and clear the loading flag", async () => {
             await showTransitionConfigurationModal(context, transition);
 
+            expect(addTransitionIdToUrl).toHaveBeenCalledWith(transition.id);
             expect(context.commit).toHaveBeenCalledWith("showModal");
             expect(context.dispatch).toHaveBeenCalledWith("loadTransition", 1);
             expect(context.dispatch).toHaveBeenCalledWith("loadUserGroupsIfNotCached");
