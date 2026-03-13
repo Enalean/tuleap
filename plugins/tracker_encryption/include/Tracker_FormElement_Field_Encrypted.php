@@ -317,13 +317,12 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
     #[\Override]
     public function getChangesetValue($changeset, $value_id, $has_changed): ?Tracker_Artifact_ChangesetValue
     {
-        return new ChangesetValue(
-            $value_id,
-            $changeset,
-            $this,
-            $has_changed,
-            $this->getValueDao()->searchById($value_id)['value'] ?? ''
-        );
+        $row = $this->getValueDao()->searchById($value_id);
+        if ($row === null) {
+            return null;
+        }
+
+        return new ChangesetValue($value_id, $changeset, $this, $has_changed, $row['value']);
     }
 
     #[\Override]
