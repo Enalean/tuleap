@@ -934,11 +934,6 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-msgid ""
-"Table is not saved when you change it, please click on 'Update' button to "
-"save it."
-msgstr ""
-
 msgid "Table status"
 msgstr ""
 

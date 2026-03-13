@@ -57,7 +57,6 @@ describe(ApprovalTableDetails, () => {
                 .build(),
         );
 
-        expect(wrapper.find("[data-test=table-version-number]").text()).toBe("3");
         expect(wrapper.find("[data-test=table-notification]").text()).toBe("Disabled");
         expect(wrapper.find("[data-test=table-closed]").exists()).toBe(false);
     });

@@ -53,15 +53,10 @@
                     <label class="tlp-label">{{ $gettext("Document name") }}</label>
                     <p>{{ item.title }}</p>
                 </div>
-                <div class="tlp-property">
-                    <label class="tlp-label">{{ $gettext("Document version") }}</label>
-                    <a v-bind:href="table.version_open_href" v-if="table.version_id !== null">
-                        {{ table.version_label ? table.version_label : table.version_number }}
-                    </a>
-                    <template v-else>
-                        <p>{{ $gettext("Version not found") }}</p>
-                    </template>
-                </div>
+                <approval-table-version-link
+                    v-bind:table="table"
+                    v-bind:label="$gettext('Document version')"
+                />
             </div>
 
             <div class="tlp-modal-body-section">
@@ -200,6 +195,7 @@ import { putReview } from "../../../api/approval-table-rest-querier";
 import UserBadge from "../../User/UserBadge.vue";
 import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
 import ApprovalTableReviewPopover from "./ApprovalTableReviewPopover.vue";
+import ApprovalTableVersionLink from "../ApprovalTableVersionLink.vue";
 import emitter from "../../../helpers/emitter";
 import { DATE_FORMATTER } from "../../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";

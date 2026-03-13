@@ -22,14 +22,10 @@
         <label class="tlp-label">{{ $gettext("Approval requester") }}</label>
         <user-badge v-bind:user="table.table_owner" />
     </div>
-    <div class="tlp-property" v-if="table.version_number !== null">
-        <label class="tlp-label">{{ $gettext("Attached to document version") }}</label>
-        <p data-test="table-version-number">
-            <a v-bind:href="table.version_open_href">
-                {{ table.version_number }}
-            </a>
-        </p>
-    </div>
+    <approval-table-version-link
+        v-bind:table="table"
+        v-bind:label="$gettext('Attached to document version')"
+    />
     <div class="tlp-property">
         <label class="tlp-label">{{ $gettext("Notification type") }}</label>
         <p data-test="table-notification">
@@ -72,6 +68,7 @@ import UserBadge from "../../User/UserBadge.vue";
 import DocumentRelativeDate from "../../Date/DocumentRelativeDate.vue";
 import ApprovalTableReviewers from "./ApprovalTableReviewers.vue";
 import { translateNotificationType } from "../../../helpers/approval-table-helper";
+import ApprovalTableVersionLink from "../ApprovalTableVersionLink.vue";
 
 defineProps<{
     item: Item;

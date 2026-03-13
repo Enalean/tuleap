@@ -18,6 +18,7 @@
   -->
 
 <template>
+    <hr class="tlp-modal-separator" />
     <h2 class="tlp-modal-subtitle">{{ $gettext("Notifications") }}</h2>
     <div class="tlp-form-element">
         <label class="tlp-label" for="notification-type">
