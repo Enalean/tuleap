@@ -12,7 +12,8 @@ in
 buildToolsShell.overrideAttrs {
   name = "dev-tools";
   buildInputs = buildToolsShell.buildInputs ++ [
-    pkgs.osv-scanner
+    # OSV Scanner expects to use the same version than the one used to build packages, otherwise govulncheck can fail
+    (pkgs.osv-scanner.override { buildGoModule = pkgs.buildGoLatestModule; })
     pkgs.gcc # Used by OSV Scanner to perform call analysis
     pkgs.cdxgen
     pkgs.go_latest
