@@ -71,7 +71,7 @@ def runEndToEndTests(String flavor, String db, Boolean with_proxysql = true) {
         proxysql_result_folder_part='without-proxysql'
     }
     dir ('sources') {
-        sh "${proxysql_use_env} tests/e2e/${flavor}/wrap.sh '${db}' '$WORKSPACE/results/e2e/${flavor}-${db}-${proxysql_result_folder_part}/'"
+        runInsideNixShell("${proxysql_use_env} tests/e2e/${flavor}/wrap.sh '${db}' '$WORKSPACE/results/e2e/${flavor}-${db}-${proxysql_result_folder_part}/'")
     }
 }
 
