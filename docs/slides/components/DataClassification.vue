@@ -28,7 +28,7 @@ switch (props.level) {
         throw new Error(props.level + " is not a known classification level");
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .level {
     padding-right: 0.3em;
     padding-left: 0.3em;

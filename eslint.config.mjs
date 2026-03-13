@@ -205,6 +205,7 @@ const config_for_vue = {
         // Priority C: Recommended
         "vue/attributes-order": "off",
         // Uncategorized
+        "vue/block-lang": ["error", { style: { lang: "scss" } }],
         "vue/component-name-in-template-casing": ["error", "kebab-case"],
         "vue/match-component-file-name": "error",
         "vue/require-direct-export": "off",

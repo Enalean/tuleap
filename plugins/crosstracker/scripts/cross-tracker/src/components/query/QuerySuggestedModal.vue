@@ -128,7 +128,7 @@ function handleActionClick(): void {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .query-code-block {
     padding: 3px 0;
     background: transparent;
