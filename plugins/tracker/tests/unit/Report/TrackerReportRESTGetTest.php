@@ -109,7 +109,7 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
         $this->formelement_factory->expects($this->exactly(3))->method('getFormElementByName')
             ->willReturnCallback(fn (int $tracker_id, mixed $name) => match (true) {
-                $tracker_id === 444 && $name === '137' => IntegerFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
+                $tracker_id === 444 && $name === 137 => IntegerFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
                 $tracker_id === 444 && $name === 'my_field' => IntegerFieldBuilder::anIntField(1001)->withReadPermission($this->current_user, true)->build(),
                 $tracker_id === 444 && $name === 'my_other_field' => IntegerFieldBuilder::anIntField(1002)->withReadPermission($this->current_user, true)->build(),
             });

@@ -37,7 +37,6 @@ final class StringFieldBuilder
     /** @var array<string, mixed> */
     private array $specific_properties   = [];
     private ?StringField $original_field = null;
-    private string $description          = '';
 
     private function __construct(private readonly int $id)
     {
@@ -92,13 +91,6 @@ final class StringFieldBuilder
         return $this;
     }
 
-    public function withDescription(string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
     public function build(): StringField
     {
         $field = new StringField(
@@ -107,7 +99,7 @@ final class StringFieldBuilder
             15,
             $this->name,
             $this->label,
-            $this->description,
+            '',
             $this->use_it,
             'P',
             $this->is_required,
