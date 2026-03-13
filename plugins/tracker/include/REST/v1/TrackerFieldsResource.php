@@ -196,7 +196,7 @@ class TrackerFieldsResource extends AuthenticatedResource
         $usage_dao = new UsageDao();
 
         return [
-            new BasicPropertiesHandler(new FieldDao()),
+            new BasicPropertiesHandler(new FieldDao(), Tracker_FormElementFactory::instance()),
             new RestFieldUseHandler(
                 new TrackerFormElementRemover(
                     $usage_dao,
